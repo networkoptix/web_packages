@@ -118,17 +118,17 @@ Link works and suggests to log out user, if he was logged in, buttons operate co
 
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/activate/${code1}
-    Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Validate Login    ${EMAIL OWNER}
     Log Out
 
     Log In    ${email1}    ${password}
-    Go To    ${url}/activate/${code2}
-    Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
+    Go To    ${url}/activate/${code2}   
     Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
     Click Button    ${LOGGED IN CANCEL BUTTON}
+    Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Validate Log Out
     Log In    ${email2}    ${password}
 

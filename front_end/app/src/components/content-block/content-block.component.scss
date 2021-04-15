@@ -28,6 +28,10 @@
         border-bottom    : 1px solid $light3;
         position         : relative;
 
+        @include media-breakpoint-down(md) {
+            height : auto !important;
+        }
+
         h4 {
             margin : 0;
             width  : 100%;
@@ -43,6 +47,16 @@
             width               : 100%;
             background-position : left center;
             background-repeat   : no-repeat;
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        .card--header.fixed-header {
+            height : 3rem !important;
+
+            .header-top-bar {
+                flex-direction: row;
+            }
         }
     }
 

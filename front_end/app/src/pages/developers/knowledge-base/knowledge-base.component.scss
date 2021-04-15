@@ -226,9 +226,11 @@ $custom-xl: 1440px;
         counter-reset: line;
         & > * {
             position: relative;
+            display: block;
+        }
+        &:not(.no-numbers) > * {
             padding-left: 31px;
             min-height: 19px;
-            display: block;
             &:before {
                 width: 19px;
                 text-align: right;

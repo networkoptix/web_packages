@@ -154,9 +154,8 @@ class Command(BaseCommand):
         asset_type = AssetType.get_type_by_name(options['asset_type'])
         read_languages(settings.DEFAULT_SKIN)
         if not Customization.objects.filter(name=settings.CUSTOMIZATION).exists():
-            default_customization = Customization(name=settings.CUSTOMIZATION,
-                                                  default_language=Language.by_code('en_US'))
-            default_customization.save()
+            default_customization = Customization.objects.create(name=settings.CUSTOMIZATION,
+                                                                 default_language=Language.by_code('en_US'))
             default_customization.languages.add(Language.by_code('en_US'))
             default_customization.save()
 

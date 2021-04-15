@@ -37,6 +37,7 @@ export class NxActivateComponent implements OnInit {
     loading: boolean;
     reactivating;
     activationSuccess;
+    checkingActivation = false;
 
     private setupDefaults() {
         this.context = {
@@ -131,26 +132,33 @@ export class NxActivateComponent implements OnInit {
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
-            this.activationSuccess = false;
-            this.accountService.redirectToHome();
-
-            return;
-        } else {
-            this.sessionStorage.store('activationSuccess', '');
-        }
-
+        
         this.loading = true;
-
+        
         if (this.reactivating) {
             this.accountService.redirectAuthorised();
         }
-
+        
         this.accountInfo.email = this.accountService.email;
-
+        
         if (this.accountInfo.activateCode) {
-            this.accountService.logoutAuthorised().then(() => {
-                this.checkActivate();
+            this.checkingActivation = true;
+            this.accountService.logoutAuthorised(true).then((loggedOut) => {
+                if (loggedOut) {
+                    this.checkActivate().then(() => {
+                        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
+                            this.activationSuccess = false;
+                            this.accountService.redirectToHome();
+                        } else {
+                            this.sessionStorage.store('activationSuccess', '');
+                            this.activationSuccess = true;
+                        }
+                    }).catch(e => {
+                        console.error('activation error', e);
+                    }).finally(() => {
+                        this.checkingActivation = false;
+                    });
+                }
             });
         }
     }
@@ -158,11 +166,12 @@ export class NxActivateComponent implements OnInit {
     private checkActivate() {
         if (this.accountInfo.activateCode) {
             this.pageService.pageTitle = this.LANG.pageTitles.activateCode?.();
-            this.activate.run();
+            return new Promise((resolve, reject) => this.activate.run(resolve, reject));
         }
+        return Promise.reject()
     }
 
     login() {
-        this.dialogs.login(this.accountService, false, true);
+        this.dialogs.login(this.accountService, false, true, true);
     }
 }

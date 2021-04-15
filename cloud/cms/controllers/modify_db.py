@@ -320,7 +320,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     upload_errors = []
     # Only process non-translatable data structures if language is default.
     default_language = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language
-    process_nontranslatable = default_language == language
+    process_nontranslatable = language in (default_language, None)
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None

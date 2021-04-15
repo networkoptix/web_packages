@@ -104,5 +104,5 @@ Restart
     Open Change Password Dialog
     
 Teardown
-    Delete Account    ${ENV}    ${email}    ${lower upper password}
+    # Delete Account    ${ENV}   ${email}    ${lower upper password}
     Close Browser

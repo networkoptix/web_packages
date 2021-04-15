@@ -85,7 +85,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             });
     }
 
-    login(email: string, password: string, remember: boolean) {
+    login(email: string, password: string, remember: boolean, navigateHome = false) {
         this.sessionService.email = email;
 
         if (this.CONFIG.isLocal) {
@@ -137,17 +137,13 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
             if (result.data?.resultCode === this.CONFIG.responseOk) {
-                setTimeout(() => this.window.location.reload());
+                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(this.window.location.reload)
             }
             return result;
         });
     }
 
-    loginAllServers(login, password, remember) {
-        return Promise.resolve();
-    }
-
-    logout(doNotRedirect = false) {
+    logout(doNotRedirect = false, skipReload = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -159,12 +155,12 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect);
+                    this.logoutHelper(doNotRedirect, skipReload);
                 }
             });
     }
 
-    logoutHelper(doNotRedirect = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false) {
         this.cloudApi
             .logout()
             .finally(() => {
@@ -173,9 +169,9 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
-                            setTimeout(() => this.window.location.reload());
+                            setTimeout(() => !skipReload && this.window.location.reload());
                         });
-                } else {
+                } else if (!skipReload) {
                     setTimeout(() => {
                         this.window.location.reload();
                     });

@@ -11,6 +11,9 @@ export class NxProjectedCodeBlock implements AfterViewInit {
             (el: HTMLPreElement) => {
                 const nodes = el.innerHTML.split('<br>');
                 el.innerHTML = nodes.map(node => `<span>${node || '&nbsp;'}</span>`).join('');
+                if (nodes.length < 3) {
+                    el.classList.add('no-numbers');
+                }
             }
         );
     }

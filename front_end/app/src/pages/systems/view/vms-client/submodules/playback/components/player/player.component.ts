@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, isDevMode } from '@angular/core';
 import PlaybackService from '../../services/playback.service'
-import { PlaybackState } from '../../datatypes/PlaybackState'
+import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState'
 import { Subscription } from 'rxjs'
 import { PlaybackTransport } from '@pages/systems/view/view.types';
+import { LoggerDecorator } from '@pages/systems/view/vms-client/utils'
 
 
 @Component({
@@ -10,21 +11,12 @@ import { PlaybackTransport } from '@pages/systems/view/view.types';
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.styl'],
 })
+@LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
+  _log: Function
+  _warn: Function
 
   @Output() videoDblClick = new EventEmitter<boolean>();
-
-  protected _log (...args: any[]) {
-    if (isDevMode()) {
-      console.log.apply(console, ['PLAYER (WRAPPER) ::', ...arguments])
-    }
-  }
-
-  protected _warn (...args: any[]) {
-    if (isDevMode()) {
-      console.warn.apply(console, ['PLAYER (WRAPPER) ::', ...arguments])
-    }
-  }
 
   protected playbackSubscription: Subscription
   public transport: PlaybackTransport
@@ -65,10 +57,18 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onBufferingChange (s: boolean) {
-    this._log('on buffering change', s)
+    this._log('on buffering change', s, this.playback.state)
     setTimeout(() => this.showOverlay = s, 0)
     if (!s) {
-      this.playback.handleStarted()
+      switch (this.playback.state.mode) {
+        case PLAYBACK_MODE.LIVE:
+        case PLAYBACK_MODE.ARCHIVE:
+          if (!this.playback.state.started && !(<ArchivePlaybackState>this.playback.state).paused) {
+            this._log('triggering handle started')
+            this.playback.handleStarted()
+          }
+          break
+      }
     }
   }
 

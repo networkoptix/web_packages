@@ -1,7 +1,7 @@
-import { Injectable, OnDestroy } from '@angular/core'
+import { Injectable, OnDestroy, isDevMode } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 
-import assertNever from '../../../utils/assertNever'
+import { assertNever } from '../../../utils'
 
 import {
   PLAYBACK_MODE,
@@ -15,7 +15,6 @@ import {
 import { ms, percentage } from '../../../utils/type-aliases'
 
 import VideoManagementSystemService from '../../vms/services/vms.service'
-import { VMS_MODE } from '../../vms/datatypes/VmsState'
 
 import TimelineService from '../../timeline/services/timeline.service'
 import { IRecord } from '../../vms/datatypes/ICamera'
@@ -24,8 +23,23 @@ import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.typ
 
 @Injectable({
   providedIn: 'root',
- })
+})
 export class PlaybackService implements OnDestroy {
+
+  protected _logPrefix: string = 'PLAYBACK_SERVICE ::'
+  protected _logDisable: boolean = true
+
+  protected _log (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+        console.log.apply(console, [this._logPrefix, ...arguments])
+    }
+  }
+
+  protected _warn (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+          console.warn.apply(console, [this._logPrefix, ...arguments])
+      }
+  }
 
   constructor (
     protected vms: VideoManagementSystemService,
@@ -57,6 +71,15 @@ export class PlaybackService implements OnDestroy {
     return this._subject
   }
 
+  public livePaused$ = new BehaviorSubject<boolean | 'restartVideo'>(false)
+
+  public get livePaused () {
+    return <boolean | 'restartVideo'>!!this.livePaused$.value;
+  }
+
+  public set livePaused (value: boolean | 'restartVideo') {
+    this.livePaused$.next(value)
+  }
 
   protected _state: PlaybackState = createInitialStoppedState()
 
@@ -90,6 +113,7 @@ export class PlaybackService implements OnDestroy {
   }
 
   public playLive () {
+    this.livePaused = false
     if (!this.canPlayLive) {
       return
     }
@@ -99,7 +123,7 @@ export class PlaybackService implements OnDestroy {
       this._state.transport,
       this.vms.selectedCamera.getPosterUrl()
     )
-    // console.log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
+    this._log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
@@ -117,12 +141,12 @@ export class PlaybackService implements OnDestroy {
       this._state.transport,
       this.vms.selectedCamera.getPosterUrl(t)
     )
-    // console.log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
+    this._log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
 
   public stop () {
-    // console.log('PLAYBACK.STOP()')
+    this._log('PLAYBACK.STOP()')
     this._state = createInitialStoppedState(
       this._state.quality,
       this._state.transport,
@@ -133,17 +157,18 @@ export class PlaybackService implements OnDestroy {
   public pause () {
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.warn('pause request while playback mode is STOPPED')
+        this._warn('PAUSE request while playback mode is STOPPED')
         break
       case PLAYBACK_MODE.LIVE:
-        console.warn('pause request while playback mode is LIVE')
+        this._warn('PAUSE request while playback mode is LIVE (performing STOP instead)')
+        this.stop()
         break
       case PLAYBACK_MODE.ARCHIVE:
         if (!this._state.paused) {
           this._state.paused = true
           this._emit()
         } else {
-          console.warn('pause request while already paused')
+          this._warn('PAUSE request while already paused')
         }
         break
       default:
@@ -154,10 +179,10 @@ export class PlaybackService implements OnDestroy {
   public unpause () {
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.warn('unpause request while playback mode is STOPPED')
+        this._warn('UNPAUSE request while playback mode is STOPPED')
         break
       case PLAYBACK_MODE.LIVE:
-        console.warn('unpause request while playback mode is LIVE')
+        this._warn('UNPAUSE request while playback mode is LIVE')
         break
       case PLAYBACK_MODE.ARCHIVE:
         if (this._state.paused) {
@@ -165,7 +190,7 @@ export class PlaybackService implements OnDestroy {
           // this._emit()
           this.playArchive(this._state.currentTime)
         } else {
-          console.warn('unpause request while already unpaused')
+          this._warn('UNPAUSE request while already unpaused')
         }
         break
       default:
@@ -176,7 +201,14 @@ export class PlaybackService implements OnDestroy {
   public handleStarted (): void {
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.warn('playback started while playback mode is STOPPED')
+        this._warn('playback STARTED while playback mode is STOPPED') // ; this is probably LIVE')
+        // this._state = createInitialLiveState(
+        //   this.vms.selectedCamera.getLiveVideoUrl(this._state.transport, this._state.quality),
+        //   this._state.quality,
+        //   this._state.transport,
+        //   this.vms.selectedCamera.getPosterUrl(),
+        // )
+        // // note no break here
         break
       case PLAYBACK_MODE.LIVE:
         this._state.started = true
@@ -196,7 +228,7 @@ export class PlaybackService implements OnDestroy {
     switch (this._state.mode) {
 
       case PLAYBACK_MODE.STOPPED:
-        console.warn('playback time update while playback mode is STOPPED')
+        this._warn('playback time update while playback mode is STOPPED')
         break
 
       case PLAYBACK_MODE.LIVE:
@@ -250,7 +282,7 @@ export class PlaybackService implements OnDestroy {
       case PLAYBACK_MODE.ARCHIVE:
         const diff = thisFrameTime - this._previousFrameTime
         if (this._state.started && !this._state.paused) {
-          // console.log('started', diff, this._state.currentTime)
+          // this._log('started', diff, this._state.currentTime)
           this._state.currentTime += diff
 
           if (!this.isBeyondVisibleRange) {
@@ -266,7 +298,7 @@ export class PlaybackService implements OnDestroy {
 
           this._emit()
         } else {
-          // console.log('not started')
+          // this._log('not started')
         }
     }
 
@@ -303,10 +335,10 @@ export class PlaybackService implements OnDestroy {
   public handlePaused (): void {
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.warn('playback pause while playback mode is STOPPED')
+        this._warn('playback pause while playback mode is STOPPED')
         break
       case PLAYBACK_MODE.LIVE:
-        console.warn('playback pause while playback mode is LIVE')
+        this._warn('playback pause while playback mode is LIVE')
         break
       case PLAYBACK_MODE.ARCHIVE:
         this._state.paused = true
@@ -320,10 +352,10 @@ export class PlaybackService implements OnDestroy {
   public handleUnpaused (): void {
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:
-        console.warn('playback unpause while playback mode is STOPPED')
+        this._warn('playback unpause while playback mode is STOPPED')
         break
       case PLAYBACK_MODE.LIVE:
-        console.warn('playback unpause while playback mode is LIVE')
+        this._warn('playback unpause while playback mode is LIVE')
         break
       case PLAYBACK_MODE.ARCHIVE:
         this._state.paused = true
@@ -387,7 +419,7 @@ export class PlaybackService implements OnDestroy {
           const diff = nextChunkStart - (this._state as ArchivePlaybackState).currentTime;
           this._state.currentTime = nextChunkStart
           this._state.startTime += diff
-          // console.log('jump', diff, 'was', was, 'diff', diff, new Date(diff + this.timeline.visibleRange.start))
+          this._log('jump', diff, 'was', was, 'diff', diff, new Date(diff + this.timeline.visibleRange.start))
 
           // TODO: request scroll jump animation
           // this.timeline.jumpScrollTo(this._state.currentTime)
@@ -427,7 +459,7 @@ export class PlaybackService implements OnDestroy {
     if (this._state.quality === q) {
       return
     }
-    // console.log('changeQuality', this._state.quality, '->', q)
+    this._log('changeQuality', this._state.quality, '->', q)
     this._state.quality = q
     switch (this._state.mode) {
       case PLAYBACK_MODE.STOPPED:

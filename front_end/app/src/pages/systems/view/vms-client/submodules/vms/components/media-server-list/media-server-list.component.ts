@@ -4,10 +4,11 @@ import { Subscription } from 'rxjs'
 import { CookieService } from 'ngx-cookie-service'
 
 import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service'
-import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
-import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
-import ICamera from '../../datatypes/ICamera'
+import VmsState, { VMS_MODE }       from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
+import MediaServer                  from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
+import ICamera                      from '../../datatypes/ICamera'
 import { IConfig, NxConfigService } from '@services/nx-config'
+import { NxUtilsService }           from '../../../../../../../../services/utils.service';
 
 
 @Component({
@@ -66,7 +67,13 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         break
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
-        this._mediaservers = s.mediaServers
+        this._mediaservers = s.mediaServers;
+        this._mediaservers.map(server => {
+          server.name = NxUtilsService.htmlToEntity(server.name);
+          server.cameras.map(camera => {
+            camera.name = NxUtilsService.htmlToEntity(camera.name);
+          });
+        });
         setTimeout(() => {
           this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera.id : undefined
         }, 0)

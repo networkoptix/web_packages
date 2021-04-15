@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular
 import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service'
 import PlaybackService from '../../../playback/services/playback.service'
 import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState'
-import assertNever from '../../../../utils/assertNever'
+import { assertNever, ms, px } from '../../../../utils'
 import { Subscription } from 'rxjs'
 import * as df from 'dateformat'
 const dateformat = df.default || df
-import { ms, px } from '../../../../utils/type-aliases'
 
 
 const MARGIN = 5

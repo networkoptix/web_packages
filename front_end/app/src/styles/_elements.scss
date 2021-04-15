@@ -118,7 +118,7 @@ h1 .badge {
 }
 
 .disabled {
-    color  : $light10;
+    color  : $light10 !important;
     cursor : default !important;
 }
 

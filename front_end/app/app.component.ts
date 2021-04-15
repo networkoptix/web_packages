@@ -1,23 +1,23 @@
-import { Location }                                           from '@angular/common';
+import { Location }                                from '@angular/common';
 import {
-    Component, HostListener, Inject, ViewEncapsulation, ViewChild, ElementRef
-}                                                             from '@angular/core';
-import { ActivationStart, Event, Router }                     from '@angular/router';
-import { CookieService }                                      from 'ngx-cookie-service';
-import { DeviceDetectorService }                              from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout }            from 'rxjs/operators';
-import { fromEvent }                                          from 'rxjs';
-
-import { NxRibbonService }                         from './src/components/ribbon';
-import { WINDOW }                                  from './src/services/window-provider';
-import { NxApplyService }                          from './src/services/apply.service';
-import { NxAppStateService }                       from './src/services/nx-app-state.service';
-import { NxScrollMechanicsService }                from './src/services/scroll-mechanics.service';
-import { NxUriService }                            from './src/services/uri.service';
-import { NxPageService }                           from './src/services/page.service';
-import { NxBootstrapProvider }                     from './src/services/nx-bootstrap-provider';
-import { NxDialogsService }                        from './src/dialogs/dialogs.service';
-import { NxConfigService, IConfig }                from './src/services/nx-config';
+    Component, HostListener, Inject,
+    ViewEncapsulation, ViewChild, ElementRef
+}                                                  from '@angular/core';
+import { ActivationStart, Event, Router }          from '@angular/router';
+import { CookieService }                           from 'ngx-cookie-service';
+import { DeviceDetectorService }                   from 'ngx-device-detector';
+import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
+import { fromEvent }                               from 'rxjs';
+import { NxRibbonService }                         from '@components/ribbon';
+import { WINDOW }                                  from '@services/window-provider';
+import { NxApplyService }                          from '@services/apply.service';
+import { NxAppStateService }                       from '@services/nx-app-state.service';
+import { NxScrollMechanicsService }                from '@services/scroll-mechanics.service';
+import { NxUriService }                            from '@services/uri.service';
+import { NxPageService }                           from '@services/page.service';
+import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
+import { NxDialogsService }                        from '@dialogs/dialogs.service';
+import { NxConfigService, IConfig }                from '@services/nx-config';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -69,6 +69,48 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        // Minimum browser versions supported defined in .browserslistrc
+        // run "npx browserslist" to check
+        // no real need to update often unless some browser have major upgrade
+        // and we don't want to support previous releases
+        this.allowedDevices = {
+            windows: {
+                ie      : 9999, // IE is not supported
+                safari  : 13,
+                chrome  : 87,
+                firefox : 78
+            },
+            mac: {
+                safari  : 13,
+                chrome  : 87,
+                firefox : 78
+            },
+            linux: {
+                chrome  : 87,
+                firefox : 78
+            }
+        };
+
+        this.deviceInfo = this.deviceService.getDeviceInfo();
+        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
+
+        // Special case for Kyle's robot tests
+        // ... device detector doesn't detect it correctly
+        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
+            allowedDevice = undefined;
+        }
+
+        if (allowedDevice !== undefined) {
+            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
+            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
+
+            if (majorVersion < allowedVersion) {
+                // redirect
+                this.location.go('/browser');
+                return;
+            }
+        } // else -> unknown platform or device ... cross fingers and hope for the best
+
         this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
@@ -100,44 +142,6 @@ export class AppComponent {
             });
 
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
-
-        // TODO: Componentize this
-        this.allowedDevices = {
-            windows: {
-                ie      : 10,
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            mac: {
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            linux: {
-                chrome  : 64,
-                firefox : 60
-            }
-        };
-
-        this.deviceInfo = this.deviceService.getDeviceInfo();
-        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
-
-        // Special case for Kyle's robot tests
-        // ... device detector doesn't detect it correctly
-        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
-            allowedDevice = undefined;
-        }
-
-        if (allowedDevice !== undefined) {
-            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
-            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
-
-            if (majorVersion < allowedVersion) {
-                // redirect
-                this.location.go('/browser');
-            }
-        } // else -> unknown platform or device ... cross fingers and hope for the best
 
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);

@@ -1,12 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter, isDevMode } from '@angular/core';
 import PlaybackService from '../../../services/playback.service'
 import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState'
-import assertNever from '../../../../../utils/assertNever'
 import { Subscription } from 'rxjs'
 import Hls from 'hls.js'
-
-
-const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils'
 
 
 @Component({
@@ -14,24 +11,16 @@ const BASE64_SINGLE_TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANS
   templateUrl: './player-hls.component.html',
   styleUrls: ['./player-hls.component.styl'],
 })
+@LoggerDecorator('HLS PLAYER ::')
 export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  _log: Function
+  _warn: Function
 
   @ViewChild("video") videoView: ElementRef;
   @ViewChild("videoSource") videoSourceView: ElementRef;
 
   @Output() bufferingChange = new EventEmitter<boolean>();
-
-  protected _log (...args: any[]) {
-    if (isDevMode()) {
-      console.log.apply(console, ['HLS PLAYER ::', ...arguments])
-    }
-  }
-
-  protected _warn (...args: any[]) {
-    if (isDevMode()) {
-      console.warn.apply(console, ['HLS PLAYER ::', ...arguments])
-    }
-  }
 
   protected get $video (): HTMLVideoElement {
     return this.videoView?.nativeElement
@@ -67,11 +56,20 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
     switch (this.state.mode) {
       case PLAYBACK_MODE.STOPPED:
+        this.$video.pause()
+        this.$video.src = ''
+        this._log('react on stopped')
+        this.bufferingChange.emit(false)
         break
       case PLAYBACK_MODE.LIVE:
       case PLAYBACK_MODE.ARCHIVE:
         if (prevState.mode !== this.state.mode) {
           this._startPlayback()
+        }
+        if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
+          this.$video.pause()
+          this._log('react on pause')
+          this.bufferingChange.emit(false)
         }
         break
       default:
@@ -158,9 +156,21 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onVideoCanPlay (e: MediaStreamEvent) {
-    this._log('video can play')
+    this._log('video can play', this.state.mode, this.state)
     this.bufferingChange.emit(false)
-    this.videoView.nativeElement.play()
+    switch (this.state.mode) {
+      case PLAYBACK_MODE.LIVE:
+        this.videoView.nativeElement.play()
+        this._log('LIVE play()')
+        break
+      case PLAYBACK_MODE.ARCHIVE:
+        if (!this.state.paused) {
+          this.videoView.nativeElement.play()
+          this._log('ARCHIVE play()')
+        } else {
+          this._log('ARCHIVE yeat but remains stopped')
+        }
+    }
   }
 
   public onVideoEnded (e: MediaStreamEvent) {

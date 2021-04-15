@@ -4,7 +4,7 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { forkJoin }                  from 'rxjs';
-import { tap, catchError, map }      from 'rxjs/operators';
+import { tap, catchError, flatMap }  from 'rxjs/operators';
 
 import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
@@ -75,7 +75,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         }
     }
 
-    login(login, password, remember = false) {
+    login(login, password, remember = false, navigateHome = false) {
         return this.mediaServerApi.login(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
@@ -93,19 +93,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             );
     }
 
-    loginAllServers(login, password, remember = false) {
-        return this.mediaServerApi.getMediaServers(false).pipe(
-            map((servers: any) =>
-                forkJoin(servers.map((server) => {
-                    const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
-                    });
-                    return newServer.login(login, password, remember);
-                }))
-            )
-        ).toPromise();
-    }
-
-    logout(doNotRedirect = false) {
+    logout(doNotRedirect = false, skipReload = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -117,12 +105,12 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect);
+                    this.logoutHelper(doNotRedirect, skipReload);
                 }
             });
     }
 
-    logoutHelper(doNotRedirect = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false) {
         this.mediaServerApi
             .logout()
             .finally(() => {
@@ -133,13 +121,13 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
-                            setTimeout(() => this.window.location.reload());
+                            setTimeout(() => !skipReload && this.window.location.reload());
                         });
+                } else if (!skipReload) {
+                    setTimeout(() => {
+                        this.window.location.reload();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.window.location.reload();
-                });
             });
     }
 

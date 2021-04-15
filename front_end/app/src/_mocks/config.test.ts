@@ -547,9 +547,13 @@ export function setupConfig(): IConfig {
                     path : 'users'
                 },
                 servers: {
-                    id   : 'servers',
-                    icon : 'servers',
-                    path : 'servers'
+                    id          : 'servers',
+                    icon        : 'servers',
+                    path        : 'servers',
+                    statusIcons : {
+                        offline : 'device_offline',
+                        online  : ''
+                    }
                 },
                 cameras: {
                     id          : 'cameras',
@@ -557,7 +561,7 @@ export function setupConfig(): IConfig {
                     path        : 'cameras',
                     statusIcons : {
                         archive      : 'camera_archive',
-                        offline      : 'camera_offline',
+                        offline      : 'device_offline',
                         recording    : 'camera_recording',
                         scheduled    : 'camera_scheduled',
                         unauthorized : 'camera_unauthorized',

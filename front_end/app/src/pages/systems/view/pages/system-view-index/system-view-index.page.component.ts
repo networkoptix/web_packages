@@ -18,13 +18,17 @@ import { exception } from 'console'
 import { NxConfigService, IConfig } from '@services/nx-config'
 
 import sidebarLayout from '../sidebarLayout.cfg'
+import { LoggerDecorator } from '../../vms-client/utils'
 
 @Component({
   selector: 'nx-system-view-index-page',
   templateUrl: 'system-view-index.page.component.html',
   styleUrls: ['system-view-index.page.component.scss']
 })
+@LoggerDecorator('SYSTEM VIEW INDEX PAGE ::', true)
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
+  _log: Function
+  _warn: Function
 
   protected _state: VmsState
   protected _vmsStateSubscription: Subscription
@@ -118,7 +122,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     } else {
       this.$self.classList.remove('sidebarShown')
     }
-    // console.log('ux state change sidebar visibility', s.isSidebarShown)
+    // this._log('ux state change sidebar visibility', s.isSidebarShown)
     this.isSidebarShown = s.isSidebarShown
     setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220)
   }
@@ -128,7 +132,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   protected _setInitializationState (initialized, initializedWithError) {
-    // console.log('_setInitializationState', initialized, initializedWithError)
+    // this._log('_setInitializationState', initialized, initializedWithError)
     this.initialized = initialized
     this.$self.classList[initialized ? 'add' : 'remove']('initialized')
     this.initializedWithError = initializedWithError
@@ -153,17 +157,17 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
   protected _initSystem () {
     this.vms.reset()
-    // console.log('initSystem entered')
+    // this._log('initSystem entered')
 
     const createSystem = () => {
       return this.accountService.get().then(account => {
         if (!account) {
-          console.warn('accountService returned no account')
+          this._warn('accountService returned no account')
           return Promise.reject()
         }
         if (this.CONFIG.isLocal) {
           this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-          console.log('local system created', this.system)
+          this._log('local system created', this.system)
           return Promise.resolve()
         } else {
           this.system = this.systemService.createSystem(account.email, this.systemId)
@@ -190,12 +194,14 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
         // (check archive presence mode)
-        if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
+        if (this.system.userManager.permissions.isAdmin ||
+            this.system.userManager.isLiveViewer() ||
+            this.system.userManager.noPermissions) {
           return Promise.resolve();
         }
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
           const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length)
-          // console.log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
+          // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
           if (hasArchive) {
             const start = parseInt(response.reply[0].startTimeMs)
             const duration = parseInt(response.reply[0].durationMs)
@@ -206,22 +212,22 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         })
         // (full archive prefetch mode)
         // return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
-        //   // console.log('got camera archive range', cid, ar)
+        //   // this._log('got camera archive range', cid, ar)
         //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-        //     // console.log('empty archive')
+        //     // this._log('empty archive')
         //   } else try {
         //     archiveRanges[cid] = new SimpleTimeRange(
         //       parseInt(ar.reply[0].startTimeMs),
         //       parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
         //     )
         //     archives[cid] = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
-        //     console.log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
+        //     this._log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
         //   } catch (e) {
-        //     console.warn(e, 'caught while requesting camera archive ranges')
+        //     this._warn(e, 'caught while requesting camera archive ranges')
         //   }
         // })
       })).then(() => {
-        // console.log('archiveRanges', archiveRanges)
+        // this._log('archiveRanges', archiveRanges)
         this.vms.setMediaServers(this.systemId, mediaServers.map(ms => ({
           id: ms.id,
           name: ms.name,
@@ -263,7 +269,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             return result
           })
         })))
-        // console.log(`system ${this.system.id} view initialized`, this.hasCameras)
+        // this._log(`system ${this.system.id} view initialized`, this.hasCameras)
         this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {
@@ -279,7 +285,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
       })
     }).catch(e => {
-      console.warn(`system ${this.system.id} view initialization failed`, e)
+      this._warn(`system ${this.system.id} view initialization failed`, e)
       this._setInitializationState(true, true)
     })
   }
