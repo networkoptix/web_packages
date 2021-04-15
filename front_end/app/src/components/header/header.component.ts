@@ -449,7 +449,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             return path === '/' ? url === '/' : url.includes(path);
         });
         // Handling promise to satisfy the linter.
-        console.log('login called from header component');
         this.dialogs
             .login(this.accountService, !redirect)
             .then(() => {});

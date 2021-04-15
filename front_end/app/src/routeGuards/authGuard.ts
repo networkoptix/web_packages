@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
         if (window.location !== window.parent.location) {
             return false;
         }
-        console.log('requireLogin called from authGuard', route);
+
         return this.accountService.requireLogin().then((account) => {
             return account !== undefined;
         });
