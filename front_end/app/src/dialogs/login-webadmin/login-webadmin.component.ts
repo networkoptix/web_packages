@@ -14,6 +14,7 @@ import { NxProcessService }          from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { WINDOW }                    from '@services/window-provider';
+import { CookieService }             from 'ngx-cookie-service';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -57,6 +58,7 @@ export class LoginWebadminModalContent implements OnInit {
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
+        private cookieService: CookieService,
         public activeModal: NgbActiveModal,
         @Inject(DOCUMENT) private document: any,
         @Inject(WINDOW) protected window: Window
@@ -101,6 +103,8 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit() {
+        // remove leftover cookie
+        this.cookieService.delete('x-runtime-guid');
         // Check the url queryParams for next. if it exists set next equal to it.
         const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
         if (nextUrl && nextUrl.length > 1) {
