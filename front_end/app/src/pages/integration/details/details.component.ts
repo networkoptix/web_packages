@@ -122,14 +122,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                                 this.location.replaceState(newUrl, queryParams);
 
-                                if (this.plugin.pending || this.plugin.draft || this.account?.can_publish_integration) {
-                                    const ribbonActions: RibbonActionInput[] = [
-                                        {
-                                            type  : 'link',
-                                            text  : this.LANG.ribbon.integration.backToEditText,
-                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
-                                        }
-                                    ];
+                                if (this.plugin.pending || this.plugin.draft || this.plugin.canEdit || this.account?.can_publish_integration) {
+                                    const ribbonActions: RibbonActionInput[] = [];
 
                                     if (this.plugin.pending && this.account?.can_publish_integration) {
                                         this.acceptProcess = this.processService.createProcess(() => {
@@ -141,7 +135,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                             this.ribbonService.hide();
                                         });
 
-                                        ribbonActions.unshift(
+                                        ribbonActions.push(
                                             {
                                                 type  : 'process-button',
                                                 text  : this.LANG.ribbon.integration.accept?.(),
@@ -154,6 +148,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                             }
                                         );
                                     }
+
+                                    if (this.plugin.canEdit) {
+                                        ribbonActions.push({
+                                            type  : 'link',
+                                            text  : this.LANG.ribbon.integration.backToEditText,
+                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                        });
+                                    }
+
                                     const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
                                         preview ? this.LANG.ribbon.integration.previewRibbon?.() : this.LANG.ribbon.integration.publishedRibbon?.(),
