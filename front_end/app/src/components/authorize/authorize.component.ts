@@ -5,8 +5,8 @@ import {
 }                                     from '@angular/core';
 import { ActivatedRoute, Router }     from '@angular/router';
 import { UntilDestroy }               from '@ngneat/until-destroy';
-import { BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime }               from 'rxjs/operators';
+import { BehaviorSubject, defer, fromEvent } from 'rxjs';
+import { debounceTime, retryWhen, delay, take, map }   from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -125,6 +125,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
+        private accountService: NxAccountService,
         private router: Router,
         @Inject(WINDOW) private window: Window
         // private pageService: NxPageService,
@@ -241,10 +242,21 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.initialData.redirect_url = res.link;
                     this.currentState = AuthorizeState.confirm;
                 } else if (res?.link.startsWith('?code=')) {
-                    await this.cloudService.loginCode(res.link.slice(6));
-                    setTimeout(() => {
-                        this.router.navigate([this.CONFIG.redirect.authorised]);
-                    });
+                    const codeRes = await this.cloudService.loginCode(res.link.slice(6));
+                    console.log('codeRes', codeRes);
+                    defer(() => this.accountService.get())
+                        .pipe(map(res => {
+                            if (!res) {
+                                throw Error('undefined reponse from accountService get');
+                            }
+                            return res;
+                        }),
+                        retryWhen(errors => { console.log('err in retryWhen'); return errors.pipe(delay(500), take(10)); })
+                        )
+                        .subscribe(getRes => {
+                            console.log('getRes', getRes);
+                            this.router.navigate([this.CONFIG.redirect.authorised]);
+                        });
                 } else {
                     this.redirect(res.link);
                 }
