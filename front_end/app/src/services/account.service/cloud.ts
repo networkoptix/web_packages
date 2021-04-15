@@ -185,6 +185,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .then((account: Account) => {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
+                    console.log('login called from cloud.ts requireLogin');
                     return this.dialogs
                         .login(this, true, true).then((result) => {
                             this.storageService.loginRegister = true;

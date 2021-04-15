@@ -56,6 +56,7 @@ export class NxLandingComponent implements OnInit {
                         this.userEmail = this.accountService.email;
                     } else {
                         if (this.router.url.includes('/login')) {
+                            console.log('login called from landing component?');
                             this.login = this.dialogs.login(this.accountService, false, false);
                             this.pageService.pageTitle = this.LANG.pageTitles.login?.();
                             this.pageService.pageDescription = '';
