@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Вернуться к интерфейсам редактирования",
-            "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии."
+            "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Система не в сети. Некоторые настройки могут быть недоступны.",
         "systemsMerging": "Эта система в настоящее время участвует в операции объединения."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Не удалось отключить сервер от системы. Пожалуйста, проверьте, правильно ли вы ввели пароль, и подключен ли сервер к сети, и попробуйте снова.",
         "detachSystemSuccess": "Сервер был успешно отключен от системы.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Не удалось удалить сервер из системы.",

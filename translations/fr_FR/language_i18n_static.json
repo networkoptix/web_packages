@@ -623,7 +623,8 @@
             "accept": "Accepter",
             "reject": "Refuser",
             "backToEditText": "Retour aux interfaces d'édition",
-            "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique."
+            "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Impossible de détacher le serveur du système. Veuillez vérifier si le mot de passe que vous avez entré est correct et que le serveur est en ligne et réessayez.",
         "detachSystemSuccess": "Le serveur a été détaché du système avec succès.",
         "portWarning": "Les numéros de port inférieurs à 1024 sont restreints. Le serveur peut devenir inaccessible.",
-        "portMissing": "Le numéro de port est requis.",
         "refresh": "Rafraîchir",
         "refreshing": "Rafraîchissement...",
         "removeMediaserverFailed": "Impossible de supprimer le serveur du système.",

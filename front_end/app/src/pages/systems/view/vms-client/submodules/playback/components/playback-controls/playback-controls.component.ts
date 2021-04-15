@@ -3,6 +3,7 @@ import PlaybackService from '../../services/playback.service'
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState'
 import SelectionService from '../../../timeline/services/timeline.selection.service'
 import { Subscription } from 'rxjs'
+import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 
 
 type BtnClassesEnum = 'play' | 'pause'
@@ -13,7 +14,10 @@ type BtnClassesEnum = 'play' | 'pause'
   templateUrl: './playback-controls.component.html',
   styleUrls: ['./playback-controls.component.scss'],
 })
+@LoggerDecorator('PLAYBACK CONTROLS ::', true)
 export class PlaybackControlsComponent implements OnInit, OnDestroy {
+  _log: Function
+  _warn: Function
 
   @Input() enabled: boolean
 
@@ -26,6 +30,7 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
     if (!this.enabled) {
       return
     }
+    this._log('handle click')
     switch (this.btnClass) {
       case 'pause':
         this.togglePause() || this.stop()
@@ -102,6 +107,7 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
     if (!this.canStop) {
       return false
     }
+    this._log('playback.stop')
     this.playback.stop()
     return true
   }
@@ -111,21 +117,35 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
       return false
     }
     this.selection.reset()
+    this._log('playback.pause')
     this.playback.pause()
     return true
   }
 
   protected unpause () {
-    if (this.playback.canPlayLive || this.playback.livePaused) {
-      this.playLive()
-      this.playback.livePaused = false;
-      return true
+    this._log('upnause', this.playback.state)
+    switch (this.playback.state.mode) {
+      case PLAYBACK_MODE.ARCHIVE:
+        if (this.canUnpause) {
+          this._log('unpause -> archive unpause')
+          this.playback.unpause()
+          return true
+        } else {
+          return false
+        }
+        break
+      case PLAYBACK_MODE.LIVE:
+        if (this.playback.canPlayLive || this.playback.livePaused) {
+          this._log('unpause -> play Live')
+          this.playLive()
+          this.playback.livePaused = false;
+          return true
+        }
+        break
+      default:
+        return false
     }
-    if (!this.canUnpause) {
-      return false
-    }
-    this.playback.unpause()
-    return true
+
   }
 
   protected togglePause () {

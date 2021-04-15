@@ -28,7 +28,8 @@ const appRoutes: Routes = [
         children    : [
             {
                 path      : '',
-                component : NxAboutComponent
+                component : NxAboutComponent,
+                pathMatch : 'full'
             },
             {
                 path      : 'dev-tools',
@@ -50,19 +51,13 @@ const appRoutes: Routes = [
                 path     : ':kb-name',
                 children : [
                     {
+                        path      : ':level1',
+                        component : NxKnowledgeBaseComponent
+                    },
+                    {
                         path      : '',
                         component : NxKnowledgeBaseComponent,
                         pathMatch : 'full'
-                    },
-                    {
-                        path      : ':level1',
-                        component : NxKnowledgeBaseComponent,
-                        children  : [
-                            {
-                                path      : ':level2',
-                                component : NxKnowledgeBaseComponent
-                            }
-                        ]
                     }
                 ]
             }

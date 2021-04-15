@@ -10,7 +10,7 @@ Force Tags        integrations    Threaded
 
 *** Variables ***
 ${url}        ${ENV}/integrations
-${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
+${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Test Cases ***
@@ -179,7 +179,8 @@ Integration store shows nothing found when there are no published integrations
     ${loc}=   get location    
     ${dw}=   Replace String    ${loc}    https://    https://dw.
     Go To    ${dw}/integrations
-    Check Language Anonymous
+    Log In If Needed    ${EMAIL OWNER}    ${BASE PASSWORD}
+    # Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
 Anonymous and basic user does not see disabled integration store

@@ -131,7 +131,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.videoView.nativeElement.play()
           this._log('ARCHIVE play()')
         } else {
-          this._log('ARCHIVE yeat but remains stopped')
+          this._log('ARCHIVE could play but remains stopped')
         }
     }
   }

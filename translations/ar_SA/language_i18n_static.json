@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Back to the editing interfaces",
-            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."
+            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Failed to remove the server from system.",

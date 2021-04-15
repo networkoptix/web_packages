@@ -657,10 +657,11 @@ export interface BeingMerged {
 }
 
 export interface RibbonIntegration {
-    accept:         any;
-    reject:         any;
-    backToEditText: any;
-    previewRibbon:  any;
+    accept:          any;
+    reject:          any;
+    backToEditText:  any;
+    previewRibbon:   any;
+    publishedRibbon: any;
 }
 
 export interface Search {
@@ -688,7 +689,6 @@ export interface Servers {
     detachSystemFailed:       any;
     detachSystemSuccess:      any;
     portWarning:              any;
-    portMissing:              any;
     refresh:                  any;
     refreshing:               any;
     removeMediaserverFailed:  any;
@@ -1576,6 +1576,7 @@ const typeMap: any = {
         { json: "reject", js: "reject", typ: "any" },
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
+        { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },
@@ -1601,7 +1602,6 @@ const typeMap: any = {
         { json: "detachSystemFailed", js: "detachSystemFailed", typ: "any" },
         { json: "detachSystemSuccess", js: "detachSystemSuccess", typ: "any" },
         { json: "portWarning", js: "portWarning", typ: "any" },
-        { json: "portMissing", js: "portMissing", typ: "any" },
         { json: "refresh", js: "refresh", typ: "any" },
         { json: "refreshing", js: "refreshing", typ: "any" },
         { json: "removeMediaserverFailed", js: "removeMediaserverFailed", typ: "any" },

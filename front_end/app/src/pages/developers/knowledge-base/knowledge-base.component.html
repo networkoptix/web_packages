@@ -61,7 +61,7 @@
 
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
-        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch()" [innerHTML]="doc.title" class="doc-link"></a>
+        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title" class="doc-link"></a>
         <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
@@ -80,16 +80,15 @@
 </ng-template>
 <!-- End of Search Results Templates -->
 
-<div *ngIf="basePath" [ngClass]="basePath !== 'content' ? 'page-wrapper' : 'content-only'">
-    <nx-left-menu *ngIf="menuName" [menuName]="menuName"
+<div *ngIf="kbService.basePath" [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'">
+    <nx-left-menu *ngIf="kbService.menuName"
         [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
-        [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
         (onClick)="clearSearch()"
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
-    <div [ngClass]="{'knowledge-base': basePath !== 'content'}">
+    <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
-            <nx-search *ngIf="!previewAssetId"
+            <nx-search *ngIf="!kbService.previewAssetId"
                 [ngModel]="search"
                 (ngModelChange)="updateSearchQuery($event)"
                 [placeholder]="'Knowledge Base Search' | translate"
@@ -108,7 +107,7 @@
                             <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node, index:i}"></ng-container>
                         </ng-container>
                     </ng-template>
-                    <div *ngIf="basePath === 'content';else innerContent" class="card">
+                    <div *ngIf="kbService.basePath === 'content';else innerContent" class="card">
                         <ng-container *ngTemplateOutlet="innerContent"></ng-container>
                     </div>
                     <div #scriptDiv></div>

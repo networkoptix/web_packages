@@ -159,6 +159,14 @@ Log in to Auto Tests System
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
+Log in to system
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
+    ${url}=   Set Variable If
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
+    Go To    ${url}
+    Log In    ${email}    ${password}    validate=${False}    button=${None}
+    
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -325,7 +333,10 @@ Disconnect all systems from account
     FOR    ${sys}    IN    @{systems}
         Disconnect    ${ENV}    ${email}    ${password}    ${sys}
     END
-
+    
+Get Account Id By Email
+    [Arguments]    ${email}
+    
 # Replaced with "Restore password using API"
 Restore password
     [Arguments]    ${email}
@@ -364,7 +375,7 @@ Restore Password using API
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Click Element    ${USERS LIST LINK}
 
 Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -950,17 +961,17 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=4.1_test    ${storage string}=${EMPTY}
+    [Arguments]    ${name}     ${image}=${IMAGE 4.1}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old
     ${mac}=   Get Random MAC
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 -e VMS=old --privileged --mac-address=${mac} ${storage string} ${image}
+    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 ${VMS} --privileged --mac-address=${mac} ${storage string} ${image}
     ${results}    Execute Command    docker container port ${name}
     @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
     [Return]    ${port1}
 
 Setup Docker Server
-    [Arguments]    ${image}=4.1_test
+    [Arguments]    ${image}=${IMAGE 4.1} 
     ${server}=   Create Dictionary
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
@@ -1000,7 +1011,7 @@ Setup Custom Docker Server
     [Return]    ${server}
 
 Setup Docker System
-    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
+    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${cloud email}=${None}
     ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
     Set To Dictionary    ${system}    cont=${system}[cont]
@@ -1015,7 +1026,7 @@ Setup Docker System
     [Return]    ${system}
 
 Create Base Cloud System
-    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${add users}=${True}
+    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${add users}=${True}
     [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
     ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
     ...               where "Create Base Cloud System" is called
@@ -1176,3 +1187,7 @@ Delete All Text
     FOR    ${n}    IN RANGE    ${length}
         Press Keys    None     BACKSPACE 
     END
+
+Skip If Irrelevant
+    ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
+    Skip If    not ${relevant}    Test skipped - not relevant

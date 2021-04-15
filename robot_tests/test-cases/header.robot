@@ -305,7 +305,7 @@ Many systems: Links in Systems grid lead to proper pages
     END
 
 Many systems: Different page widths
-    [Tags]    threadable    diff_width    ui  d
+    [Tags]    threadable    diff_width    ui
     Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
     Log in to user and system    ${many systems owner}    ${main system}[id]
     Verify In System    ${main system}[name]
@@ -321,7 +321,7 @@ Many systems: Different page widths
 
 # Other cases
 Check header and dropdown content for not admins
-    [Tags]    threadable    other  CLOUD-6794
+    [Tags]    threadable    other    CLOUD-6794
     FOR    ${user}    IN    @{main system users}
         Log in to user and system    ${user}    ${main system}[id]
         Verify In System    ${main system}[name]    editable=False

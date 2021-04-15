@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Torna a les interfícies d'edició",
-            "previewRibbon": "Aquesta pàgina és una previsualització dels últims canvis i no coincideix amb la versió disponible públicament."
+            "previewRibbon": "Aquesta pàgina és una previsualització dels últims canvis i no coincideix amb la versió disponible públicament.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "El sistema està desconnectat. És possible que alguns paràmetres no estiguin disponibles.",
         "systemsMerging": "Aquest sistema està actualment en una operació de combinació."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "No s'ha pogut desvincular el servidor del sistema. Comproveu que la contrasenya que heu introduït és correcta i que el servidor està connectat i torneu-ho a intentar.",
         "detachSystemSuccess": "El servidor s'ha desvinculat correctament del sistema.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "No s'ha pogut eliminar el servidor del sistema.",

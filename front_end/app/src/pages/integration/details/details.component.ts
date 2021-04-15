@@ -122,7 +122,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                                 this.location.replaceState(newUrl, queryParams);
 
-                                if (this.plugin.pending || this.plugin.draft) {
+                                if (this.plugin.pending || this.plugin.draft || this.account?.can_publish_integration) {
                                     const ribbonActions: RibbonActionInput[] = [
                                         {
                                             type  : 'link',
@@ -131,11 +131,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         }
                                     ];
 
-                                    if (this.plugin.pending && this.account.can_publish_integration) {
+                                    if (this.plugin.pending && this.account?.can_publish_integration) {
                                         this.acceptProcess = this.processService.createProcess(() => {
                                             return this.cloudApiService.acceptReview(this.plugin.review_id);
                                         }, {
-                                            successMessage: this.LANG.account.agreementAccepted?.()
+                                            successMessage : this.LANG.account.agreementAccepted?.()
                                         }).then(() => {
                                             this.router.navigate([this.uriService.getURL()]);
                                             this.ribbonService.hide();
@@ -154,9 +154,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                             }
                                         );
                                     }
-
+                                    const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
-                                        this.LANG.ribbon.integration.previewRibbon?.(),
+                                        preview ? this.LANG.ribbon.integration.previewRibbon?.() : this.LANG.ribbon.integration.publishedRibbon?.(),
                                         ribbonActions
                                     );
                                 }

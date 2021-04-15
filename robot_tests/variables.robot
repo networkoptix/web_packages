@@ -112,6 +112,8 @@ ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM
 #In system settings
 ${SYSTEM NAME}                        //div/nx-editable-settings-heading//h2
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
+${SYSTEM OFFLINE HEADER}              //h2[@name="OFFLINE" and contains(text(),"${SYSTEM OFFLINE TEXT}")]
+${THIS SYSTEM IS OFFLINE}             //div[@name="OFFLINE" and contains(text(),"${THIS SYSTEM IS OFFLINE TEXT}")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[contains(@class, "edit-button")]
@@ -244,7 +246,7 @@ ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED D
 
 #Misc
 ${PAGE NOT FOUND}                     //h2[@name="404" and contains(text(),'${PAGE NOT FOUND TEXT}')]
-${TAKE ME HOME}                       //button[a="${GO TO MAIN PAGE TEXT}"]
+${TAKE ME HOME}                       //button/a[text()="${GO TO MAIN PAGE TEXT}"]
 ${404 ICON}                           //div[@name="404"]/svg-icon
 ${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
@@ -319,6 +321,7 @@ ${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
 ${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="${CANCEL BUTTON TEXT}"]
+${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]
 
 #svg icons
 ${USERS ICON}                      *[name()="svg-icon" and @data-src="/static/images/icons/standard/users.svg"]

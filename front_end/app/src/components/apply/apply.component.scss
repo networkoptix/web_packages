@@ -2,7 +2,7 @@
 
 .placeholder-text {
     color  : $light13;
-    
+
     &-no-changes {
         height: 32px;
         display : flex;
@@ -10,7 +10,7 @@
 }
 
 .unsaved-changes {
-    background: rgba($additional_light2, .8);
+    background: $additional_light2;
     border-top: 1px solid $light4;
     margin: -1px 0 -16px 0;
     position: sticky;

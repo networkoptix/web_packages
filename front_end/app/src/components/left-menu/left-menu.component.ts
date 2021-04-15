@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd }                    from '@angular/router';
 import { DOCUMENT, Location } from '@angular/common';
 import {
@@ -10,6 +10,7 @@ import { NxMenusService, MenuNode }                 from '../../services/menus.s
 import { IConfig, NxConfigService }                 from '../../services/nx-config';
 import { NxAccountService }                         from '@services/account.service';
 import { MenuStructure } from '@services/nx-config/base-config';
+import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
 
 export interface RelatedLinks {
     type: string,
@@ -18,15 +19,11 @@ export interface RelatedLinks {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-left-menu[menuName]',
+    selector    : 'nx-left-menu',
     templateUrl : 'left-menu.component.html',
     styleUrls   : ['left-menu.component.scss']
 })
-export class NxLeftMenuComponent {
-    @Input() menuName: string;
-    @Input() baseRoute: string;
-    @Input() showDefault = true;
-    @Input() allowEmpty = false;
+export class NxLeftMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter();
     @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
@@ -38,7 +35,6 @@ export class NxLeftMenuComponent {
     mouseLeave$ = new Subject();
     prefetchedDocuments = [];
     firstUrl = '';
-    activeNodeUrl = '';
     highlightedTopNode: string;
     ignoreQuery = true;
 
@@ -48,12 +44,13 @@ export class NxLeftMenuComponent {
         private menusService: NxMenusService,
         public location: Location,
         private accountService: NxAccountService,
+        public kbService: NxKnowledgebaseService,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.config;
     }
 
-    updateActive = (url: string) => {
+    updateActive = (activeAssetId, activeAssetState) => {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
@@ -64,12 +61,14 @@ export class NxLeftMenuComponent {
                     let newUrl = node.url;
                     if (currentQueryParams) {
                         newUrl += currentQueryParams;
+                    } else if (node.state) {
+                        newUrl += `?state=${node.state}`;
                     }
                     this.location.replaceState(newUrl);
                 }
 
-                this.activeNodeUrl = node.url;
-                // If activeNodeUrl is set we don't want firstUrl to be highlighted anymore
+                this.kbService.activeNode = node;
+                // If activeNode is set we don't want firstUrl to be highlighted anymore
                 this.firstUrl = '';
             }
             const name = node.display_name || node.name;
@@ -80,16 +79,16 @@ export class NxLeftMenuComponent {
             }
         };
         const relatedNodes = [];
-        const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetUrl = decodeURIComponent(url), action: string = 'update') => {
+        const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetState, action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.url === targetUrl || node.asset_id === targetAssetId) {
+                if (node.asset_id === targetAssetId && (!node.state && !this.kbService.activeAssetState || node.state === this.kbService.activeAssetState)) {
                     if (action === 'update') {
                         updateActiveRoutes(node, true);
                         if (node.next_item) {
                             this.relatedLinks.emit({ type: 'next', nodes: nodes.filter(node => !node.indented) });
                         } else {
                             node.related_asset_ids.forEach(id => {
-                                findActiveNode(this.menuNodes, id, this.baseRoute + id, 'findRelated');
+                                findActiveNode(this.menuNodes, id, targetState, 'findRelated');
                             });
                             this.relatedLinks.emit({ type: 'related', nodes: relatedNodes.filter(node => !node.indented) });
                         }
@@ -97,23 +96,13 @@ export class NxLeftMenuComponent {
                         relatedNodes.push(node);
                     }
                 } else if (node.nodes?.length) {
-                    findActiveNode(node.nodes, targetAssetId, targetUrl, action);
+                    findActiveNode(node.nodes, targetAssetId, targetState, action);
                 }
             };
             nodes.forEach(checkNode);
         };
-        const urlPieces = url.split('/');
-        const assetId = urlPieces[urlPieces.length - 1].split('-')[0];
-        let targetAssetId = parseInt(assetId);
-        if (isNaN(targetAssetId)) {
-            targetAssetId = -1;
-        }
-        findActiveNode(this.menuNodes, targetAssetId);
-        if (this.showDefault && !this.activeRouteNodes.length && this.menuNodes.length) {
-            const getFirstUrl = ([first, ...remaining]: MenuNode[] = []): string => first.url || getFirstUrl([...remaining, ...first.nodes]);
-            this.firstUrl = getFirstUrl(this.menuNodes);
-            this.updateActive(this.firstUrl);
-        }
+
+        findActiveNode(this.menuNodes, activeAssetId, activeAssetState);
         this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
     }
 
@@ -164,45 +153,28 @@ export class NxLeftMenuComponent {
         }
     }
 
-    mapParentNodeAndUrl(currentNode, parentNode?) {
-        currentNode.parentNode = parentNode;
-        if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
-            currentNode.url = this.baseRoute + (currentNode.urlified || currentNode.asset_id);
-        }
-        currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
-    }
-
     handleClick(event) {
         this.onClick.emit(event);
     }
 
-    ngOnChanges() {
-        this.accountService.accountSubject.pipe(
-            switchMap((account: any) => this.menusService.getMenu(
-                // eslint-disable-next-line camelcase
-                this.menuName, false, account?.is_superuser
-            ).pipe(
-                map((menu): [MenuNode[], any] => [menu.nodes, account])
-            )),
+    ngOnInit() {
+        this.kbService.menuSubject.pipe(
             untilDestroyed(this)
-        ).subscribe(([menu, account]) => {
-            this.menuNodes = this.allowEmpty ? menu : this.menusService.cleanEmptyNodes(menu, true);
-            this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
-            // eslint-disable-next-line camelcase
-            if (account?.is_superuser) {
-                this.menuNodes = this.menusService.addDraftAndPending(this.menuNodes);
-                this.ignoreQuery = false;
-                this.updateActive(this.location.path());
+        ).subscribe((menu) => {
+            if (menu?.nodes) {
+                this.menuNodes = menu.nodes;
+                // eslint-disable-next-line camelcase
+                if (this.kbService.account?.is_superuser) {
+                    this.ignoreQuery = false;
+                }
+            } else {
+                this.menuNodes = [];
             }
         });
-        this.router.events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                map((event: NavigationEnd) => event.url),
-                startWith(this.location.path()),
-                untilDestroyed(this)
-            )
-            .subscribe(url => Promise.resolve(url).then(url => this.updateActive(url.split(this.ignoreQuery ? '?' : null)[0])));
+
+        this.kbService.activeAssetIdSubject.subscribe(id => {
+            this.updateActive(id, this.kbService.activeAssetState);
+        });
     }
 };
 

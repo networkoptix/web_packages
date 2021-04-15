@@ -41,6 +41,20 @@
             "advanced": false
           },
           {
+            "name": "externalLink",
+            "label": "External Link",
+            "value": "",
+            "description": "Link to google docs or other external reference",
+            "type": "text",
+            "optional": true,
+            "advanced": true,
+            "unique": false,
+            "translatable": false,
+            "meta": {
+              "regex": "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+            }
+          },
+          {
             "name": "body",
             "label": "Body",
             "value": "",
@@ -71,6 +85,66 @@
             "type": "long_text",
             "advanced": true,
             "optional": true
+          },
+          {
+            "name": "additional-file-1",
+            "label": "Additional file 1",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "name": "additional-file-2",
+            "label": "Additional file 2",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "name": "additional-file-3",
+            "label": "Additional file 3",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "name": "additional-file-4",
+            "label": "Additional file 4",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "name": "additional-file-5",
+            "label": "Additional file 5",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
           }
         ]
       }

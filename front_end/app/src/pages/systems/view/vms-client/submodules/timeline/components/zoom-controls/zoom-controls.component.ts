@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
 import { float, int, ms } from '../../../../utils/type-aliases';
-import PlaybackService from '../../../playback/services/playback.service';
-import { VmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import PlaybackService                                from '../../../playback/services/playback.service';
+import { CameraSelectedVmsState } from '../../../vms/datatypes/VmsState';
+import VideoManagementSystemService                   from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 
 
@@ -17,67 +17,42 @@ type signType = int // -1 | 0 | 1
 export class ZoomControlsComponent implements OnInit, OnDestroy {
 
   protected timelineSubscription: Subscription
-  protected vmsSubscription: Subscription
   protected state: TimelineServiceStatus
   public disabled: boolean = true
+  public canZoomIn: boolean = false;
+  public canZoomOut: boolean = false;
 
   constructor (
     public timeline: TimelineService,
     public vms: VideoManagementSystemService,
     public playback: PlaybackService,
-    protected self: ElementRef,
   ) {
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
-    this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
-  }
-
-  public get $self (): HTMLElement {
-    return this.self.nativeElement as HTMLElement
   }
 
   protected _animationFrameRequestHandler: number
 
   public onAnimationFrame (): void {
     this.performZoomingStep()
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public ngOnInit (): void {
     this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange)
-    this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange)
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public ngOnDestroy (): void {
     this.timelineSubscription.unsubscribe()
-    this.vmsSubscription.unsubscribe()
     cancelAnimationFrame(this._animationFrameRequestHandler)
   }
 
-  public onTimelineSubjectChange (s: TimelineServiceStatus) {
-    this.state = s
-  }
+  public onTimelineSubjectChange (state: TimelineServiceStatus) {
+    this.state = state;
 
-  public onVmsSubjectChange (s: VmsState) {
-    switch (s.mode) {
-      case VMS_MODE.CAMERA_SELECTED:
-        this.disabled = !s.selectedCamera.hasArchive
-        break;
-      default:
-        this.disabled = true
-    }
-    // console.log('vms subject change, Disabled:', this.disabled)
-    this.$self.classList[!this.disabled ? 'add' : 'remove']('enabled')
-  }
-
-  public get canZoomIn (): boolean {
-    return this.state && this.state.zoom && this.state.zoom.canZoomIn
-  }
-
-  public get canZoomOut (): boolean {
-    return this.state && this.state.zoom && this.state.zoom.canZoomOut
+    this.disabled = !(<CameraSelectedVmsState> this.vms.subject.getValue()).selectedCamera.hasArchive;
+    this.canZoomIn = this.state?.zoom?.canZoomIn || false;
+    this.canZoomOut = this.state?.zoom?.canZoomOut || false;
   }
 
   protected _zoomingSign: signType = 0

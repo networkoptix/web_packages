@@ -41,5 +41,5 @@ export class SystemPermissions {
     editUsers = false;
     isAdmin = false;
     editCameras = false;
-    viewArchives = false
+    viewArchives = false;
 }

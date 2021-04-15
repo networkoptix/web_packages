@@ -623,7 +623,8 @@
             "accept": "Accettare",
             "reject": "Rifiutare",
             "backToEditText": "Torna alle interfacce di modifica",
-            "previewRibbon": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico."
+            "previewRibbon": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico.",
+            "publishedRibbon": "Questa pagina è la versione live disponibile pubblicamente."
         },
         "systemOffline": "Il sistema non è in linea. Alcune impostazioni potrebbero non essere disponibili.",
         "systemsMerging": "Questo sistema è attualmente attivato per l'operazione di unione."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Impossibile scollegare il server dal sistema. Verificare se la password inserita è corretta ed il server è online e riprovare.",
         "detachSystemSuccess": "Il server è stato scollegato correttamente dal sistema.",
         "portWarning": "I numeri di porta inferiori a 1024 sono limitati. Il server potrebbe diventare inaccessibile.",
-        "portMissing": "Port number is required.",
         "refresh": "Aggiornare",
         "refreshing": "Aggiornamento...",
         "removeMediaserverFailed": "Rimozione del server dal sistema non riuscita.",
@@ -802,7 +802,7 @@
             "required": "{number} più richiesti",
             "activated": "Licenza attivata",
             "inuse": "La chiave di licenza è già stata attivata e associata al server con ID hardware {hwid} in un altro sistema",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Licenza di prova attivata. A partire da oggi, puoi registrare fino a 4 telecamere per 30 giorni."
         }
     },
     "settingsConfig": {
@@ -887,7 +887,7 @@
         "osTimeChangeCheckPeriodMs": "Periodo di controllo della modifica dell'ora del sistema operativo",
         "syncTimeExchangePeriod": "Intervallo sincronizzazione orario per le richieste di rete",
         "syncTimeEpsilon": "Tempo di sincronizzazione epsilon. Il nuovo valore non viene applicato se il tempo delta è inferiore a epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Numero massimo di thread di sincronizzazione dell'archivio della telecamera virtuale",
         "updateNotificationsEnabled": "Notifiche di aggiornamento abilitate",
         "upnpPortMappingEnabled": "Funzione UPNP abilitata",
         "useTextEmailFormat": "Invia e-mail di testo",
@@ -896,7 +896,7 @@
         "videoTrafficEncryptionForced": "Forzare la Crittografia del traffico Video",
         "updateStatus": "Aggiorna stato",
         "watermarkSettings": "Impostazioni del watermark",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Quantità massima di connessioni HTTP che utilizzano la transcodifica per il server. Chrome apre 2 connessioni contemporaneamente, quindi chiude la prima. Si consiglia di impostare il valore> = 2 a questo parametro.",
         "maxEventLogRecords": "Numero massimo di record del registro degli eventi da conservare nel database. La quantità reale di record non eliminati può essere maggiore del 20% rispetto al valore specificato.",
         "forceLiveCacheForPrimaryStream": "Indica se memorizzare nella cache alcuni frame per lo stream principale. Valori: \"sì\" - sempre abilitato (può utilizzare molta RAM), \"no\" - sempre disabilitato tranne quando richiesto dalla riproduzione (ad es. HLS), \"auto\" - simile a \"no\", ma attivo quando si migliora l'esperienza dell'utente (ad esempio quando alcuni plug-in di Analytics funzionano sulla telecamera)."
     },
@@ -916,7 +916,7 @@
             "reserved": "Riservato",
             "inaccessible": "Inaccessibile",
             "changing": "Modifica della modalità...",
-            "disabled": "Disabled"
+            "disabled": "Non attivo"
         },
         "alreadyUsed": "Il percorso di archiviazione {url} è già utilizzato da un altro server.",
         "deleteExternalStorage": "Eliminare l'archiviazione esterna?",

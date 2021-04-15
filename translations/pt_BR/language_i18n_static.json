@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Voltar às interfaces de edição",
-            "previewRibbon": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente."
+            "previewRibbon": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
         "systemsMerging": "Este sistema está atualmente envolvido em uma operação de mesclagem."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Falha ao desconectar o servidor do sistema. Por favor, verifique se a senha inserida está correta e o servidor está online e tente novamente.",
         "detachSystemSuccess": "Servidor foi desanexado do sistema com sucesso.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Falha ao remover o servidor do sistema.",

@@ -11,7 +11,7 @@ import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@
   templateUrl: './player-hls.component.html',
   styleUrls: ['./player-hls.component.styl'],
 })
-@LoggerDecorator('HLS PLAYER ::')
+@LoggerDecorator('HLS PLAYER ::', true)
 export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   _log: Function
@@ -168,7 +168,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
           this.videoView.nativeElement.play()
           this._log('ARCHIVE play()')
         } else {
-          this._log('ARCHIVE yeat but remains stopped')
+          this._log('ARCHIVE could play but remains stopped')
         }
     }
   }

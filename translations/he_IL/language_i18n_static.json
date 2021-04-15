@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "חזרה לממשקי העריכה",
-            "previewRibbon": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור."
+            "previewRibbon": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "המערכת אינה מקוונת. ייתכן שהגדרות מסוימות אינן זמינות.",
         "systemsMerging": "מערכת זו מעורבת כעת בפעולת מיזוג."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "ניתוק השרת מהמערכת נכשל. אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת אינו במצב לא מקוון ונסה שוב.",
         "detachSystemSuccess": "השרת נותק בהצלחה מהמערכת.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "הסרת השרת מהמערכת נכשלה.",

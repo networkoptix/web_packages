@@ -140,14 +140,14 @@ export class NxAboutComponent {
                 });
 
                 this.aboutStructure = (about || []).map(mapToAboutStructure);
-                if (state) {
-                    this.showRibbon(id);
+                if (state || this.account?.is_superuser) {
+                    this.showRibbon(id, state);
                 }
             });
         });
     }
 
-    showRibbon(id) {
+    showRibbon(id, state) {
         const ribbonActions: RibbonActionInput[] = [
             {
                 type  : 'link',
@@ -156,7 +156,7 @@ export class NxAboutComponent {
             }
         ];
         this.ribbonService.show(
-            this.LANG.ribbon.integration.previewRibbon(),
+            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
             ribbonActions
         );
     }

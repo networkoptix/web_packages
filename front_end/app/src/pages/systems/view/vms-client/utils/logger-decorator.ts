@@ -26,7 +26,7 @@ export default LoggerDecorator
 /*
 Usage:
 
-@LoggerDecorator('COMPONENT PREFIX ::', false*) // * — optional, false by default
+@LoggerDecorator('COMPONENT PREFIX ::', true*) // * — optional, false by default
 class YourClass {
     // add these two lines, otherwise the linter will be spitting numerous curses
     _log: Function;

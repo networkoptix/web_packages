@@ -151,7 +151,7 @@ class CloudNotificationAdmin(admin.ModelAdmin):
                 users_by_customization.append({
                     "name": customization,
                     "users": ", ".join(list(Account.objects.filter(customization=customization)
-                                       .values_list("email", flat=True)))
+                                       .values_list("email", flat=True))).replace("{", "&#123;").replace("}", "&#125;")
                 })
             return format_html(pystache.render(CLOUD_NOTIFICATIONS_USERS_TEMPLATE,
                                                {"users_by_customization": users_by_customization}))

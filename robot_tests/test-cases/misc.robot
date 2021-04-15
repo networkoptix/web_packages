@@ -23,7 +23,11 @@ Failed to access system page correctly shows when going to a non-existent system
     FOR    ${x}   IN RANGE    4
         ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    ${SPACE}${SPACE}    ${SPACE}
     END        
-    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    //div[normalize-space()\="${THIS LINK IS BROKEN TEXT}"]    //button//a[@href\='/']/..
+    Wait Until Elements Are Visible      
+    ...    ${SYSTEM NO ACCESS}    
+    ...    //div[normalize-space()\="${THIS LINK IS BROKEN TEXT}"]    
+    ...    //button//a[@href\='/']/..
+    ...    timeout=120 
 
 The logo takes you to the home page when not logged in
     [Tags]    C41539

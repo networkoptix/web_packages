@@ -623,7 +623,8 @@
             "accept": "Zatwierdź",
             "reject": "Odrzuć",
             "backToEditText": "Powrót do edycji interfejsów",
-            "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją."
+            "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
+            "publishedRibbon": "Ta strona jest wersją dostępną publicznie."
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Nie udało się odłączyć serwera od systemu. Proszę sprawdzić, czy hasło jest prawidłowe i czy serwer jest online, i spróbować ponownie.",
         "detachSystemSuccess": "Serwer został pomyślnie odłączony od systemu.",
         "portWarning": "Numery portów mniejsze niż 1024 są ograniczone. Serwer może stać się niedostępny.",
-        "portMissing": "Numer portu jest wymagany.",
         "refresh": "Odśwież",
         "refreshing": "Odświeżanie...",
         "removeMediaserverFailed": "Nie udało się usunąć serwera z systemu.",

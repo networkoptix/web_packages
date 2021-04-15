@@ -419,6 +419,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     setRouteParams(resetUri?): Promise<any> {
+        const hasExistingParams = !!Object.values(this.params).filter(val => val).length;
         const queryParams: IParams = {};
 
         let selectedTags;
@@ -455,8 +456,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.uri.pageOffset = window.pageYOffset;
         // make sure we reset page on new model
         queryParams.page = undefined;
+        const hasUpdatedParams = !!Object.values(queryParams).filter(val => val).length;
+        const replaceUrl = hasExistingParams && hasUpdatedParams;
 
-        return this.uri.updateURI(this.uri.getURL(), queryParams);
+        return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
     }
 
     modelChanged(resetUri?) {

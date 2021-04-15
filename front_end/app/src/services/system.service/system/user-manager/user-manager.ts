@@ -37,10 +37,6 @@ export class UserManager {
         return this._accessRole;
     }
 
-    get noPermissions() {
-        return this.currentUser.permissions === '';
-    }
-
     set accessRole(accessRole) {
         this._accessRole = accessRole || '';
         this.checkPermissions();
@@ -56,10 +52,6 @@ export class UserManager {
         return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
     }
 
-    isLiveViewer() {
-        return ['Live Viewer', 'liveViewer'].includes(this._accessRole);
-    }
-
     isEmptyGuid(guid?: string) {
         return guid
             ? guid.replace(/[{}0-]/gi, '') === ''
@@ -71,24 +63,23 @@ export class UserManager {
     }
 
     checkPermissions() {
-        const isMine = this.isMine || this.currentUser?.isLocalOwner;
+        const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
+        let isAdmin = isMine || this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
+        if (!isAdmin && this.currentUser) {
+            isAdmin = this.isAdmin(this.currentUser);
+        }
         const permissions: SystemPermissions = {
             editAdmins   : isMine,
-            editUsers    : isMine,
-            isAdmin      : isMine,
-            editCameras  : isMine,
-            viewArchives : isMine
+            editUsers    : isAdmin,
+            isAdmin      : isAdmin,
+            editCameras  : isAdmin,
+            viewArchives : isAdmin
         };
-        if (!isMine && this.currentUser) {
-            const userRole = this.currentUser.role;
-            permissions.editUsers = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
-            permissions.isAdmin = this.isAdmin(this.currentUser);
-            permissions.editCameras = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.editCameraPermissionFlag) >= 0;
-            permissions.viewArchives = (this.currentUser.permissions || userRole.permissions).indexOf(this.CONFIG.accessRoles.viewArchivesPermissionFlag) >= 0;
-        } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole.toLowerCase()) > -1) {
-            permissions.editUsers = true;
-            permissions.isAdmin = true;
-            permissions.editCameras = true;
+
+        if (!isAdmin && this.currentUser) {
+            permissions.editUsers = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editUserPermissionFlag);
+            permissions.editCameras = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editCameraPermissionFlag);
+            permissions.viewArchives = this.currentUser.permissions.includes(this.CONFIG.accessRoles.viewArchivesPermissionFlag);
         }
 
         this.permissions = permissions;
@@ -157,7 +148,7 @@ export class UserManager {
     }
 
     normalizePermissionString(permissions: string): string {
-        return permissions.split('|').sort().join('|');
+        return Array.from(new Set(permissions.split('|').sort())).join('|');
     }
 
     processUsers(users: NxSystemUser[], accessRights = []) {
@@ -178,6 +169,8 @@ export class UserManager {
             }
             user.permissions = this.normalizePermissionString(user.permissions);
             user.role = this.findAccessRole(user);
+            // Update default permissions with role permissions
+            user.permissions = this.normalizePermissionString([user.permissions, user.role.permissions].join('|'));
             user.accessRole = user.role.name;
             // allMediaPermissionFlag exists if the all camera permission option selected
             if (!user.permissions.includes(this.CONFIG.accessRoles.allMediaPermissionFlag) && accessRights[user.id]) {

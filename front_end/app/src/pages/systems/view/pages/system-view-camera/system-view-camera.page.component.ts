@@ -170,7 +170,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.getRecordsInProgress = this.id
       createSystem().then(() => {
             this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-            if (this.system.userManager.isLiveViewer() || this.system.userManager.noPermissions) {
+            if (!this.system.userManager.permissions.viewArchives) {
                 this.getRecordsInProgress = undefined;
             } else {
                 this.system.getCameraRecords(this.id, 0, now, 1).then(async (ar) => {
@@ -348,7 +348,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public toggleFullScreen ($event?) {
       this._log('toggleFullScreen')
       $event?.stopPropagation()
-      this.ux.isFullScreen = !fullscreen.getElement()
+      // this.ux.isFullScreen = !fullscreen.getElement()
+      const canRequestFullscreen = fullscreen.request(this.self.nativeElement.parentElement)
+      if (!canRequestFullscreen) {
+        this.ux.alternateFullScreen$.next(!this.ux.alternateFullScreen$.value)
+        // Resets the alternateFullScreen to allow opening once fullscreen is closed
+        this.ux.alternateFullScreen$.next(false)
+      }
+      this.ux.isFullScreen =  canRequestFullscreen && !fullscreen.getElement()()
     }
 
     public stopSettingsClickPropagation ($event) {

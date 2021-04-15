@@ -143,22 +143,21 @@ export class NxActivateComponent implements OnInit {
         
         if (this.accountInfo.activateCode) {
             this.checkingActivation = true;
-            this.accountService.logoutAuthorised(true).then((loggedOut) => {
-                if (loggedOut) {
-                    this.checkActivate().then(() => {
+            this.checkActivate().catch(e => {
+                console.error('activation error', e);
+                this.activationSuccess = false;
+            }).finally(() => {
+                this.checkingActivation = false;
+                this.accountService.logoutAuthorised(true).then((loggedOut) => {
+                    if (loggedOut) {
                         if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
                             this.activationSuccess = false;
                             this.accountService.redirectToHome();
                         } else {
                             this.sessionStorage.store('activationSuccess', '');
-                            this.activationSuccess = true;
                         }
-                    }).catch(e => {
-                        console.error('activation error', e);
-                    }).finally(() => {
-                        this.checkingActivation = false;
-                    });
-                }
+                    }
+                });
             });
         }
     }

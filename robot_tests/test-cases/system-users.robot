@@ -1073,16 +1073,16 @@ Unsaved changes are not sent to the server
         Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
         Input Text    ${LOCAL USER NAME}    C76241
         Input Text    ${LOCAL USER EMAIL}    C76241
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL} 
         
         Log    Step 3
         @{check info} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${system['port']}
         Lists Should Be Equal     ${check info}    ${locals}  
         
         Log    Step 4
-        Click Button    ${ACCOUNT CANCEL}
+        Click Button    ${USER CANCEL}
         Sleep    .1
-        Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+        Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
         Page Should Not Contain Element   ${USER DISABLED MSG}
 # commented out because of CLOUD-6854
@@ -1117,11 +1117,11 @@ Unsaved changes are not sent to the server
 #        Click Element    ${LOCAL USER LOGIN}
 #        Sleep    1
 #        Input Content Editable Text    ${LOCAL USER LOGIN}    ${EMPTY}
-#        # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+#        # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
 #        # Click Button     ${ACCOUNT SAVE} 
 #        Page Should Contain    ${LOGIN IS REQUIRED TEXT}
 #        # Page Should Contain Element   ${ACCOUNT SAVE} 
-#        # Page Should Contain Element   ${ACCOUNT CANCEL}
+#        # Page Should Contain Element   ${USER CANCEL}
 #        Element Style Should Be    ${LOCAL USER LOGIN}     border-color    ${ERROR COLOR}
 #        
 #        Log    Step 3
@@ -1154,7 +1154,7 @@ Local User name field can be left blank
         
         Log    Step 2
         Input Text    ${LOCAL USER NAME}    ${EMPTY}
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         
@@ -1182,7 +1182,7 @@ Local User email field can be left blank
         
         Log    Step 2
         Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+        Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         
@@ -1482,7 +1482,7 @@ Local user list is not available for offline system
     Log    Step 2   
     ${results}    Execute Command    docker container start ${system 2['cont']}
     FOR    ${user}    IN    @{local users}
-        Wait Until Element Is Visible   //span[text()="Local+${user}"]    65
+        Wait Until Element Is Visible   //span[text()="Local+${user}"]    125
     END   
     Log    Step 3
     ${results}    Execute Command    docker container stop ${system 2['cont']}

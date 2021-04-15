@@ -623,7 +623,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Zpět na editační rozhraní",
-            "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi."
+            "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "Systém je offline. Některá nastavení nemusí být k dispozici.",
         "systemsMerging": "Tento systém se v současné době slučuje."
@@ -652,7 +653,6 @@
         "detachSystemFailed": "Nepodařilo se odpojit server od systému. Zkontrolujte, zda je zadané heslo správné a server je online a zkuste to znovu.",
         "detachSystemSuccess": "Server byl úspěšně odpojen od systému.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "portMissing": "Port number is required.",
         "refresh": "Refresh",
         "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Server se nepodařilo odebrat ze systému.",

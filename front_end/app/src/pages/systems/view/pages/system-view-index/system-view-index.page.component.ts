@@ -19,7 +19,10 @@ import { NxConfigService, IConfig } from '@services/nx-config'
 
 import sidebarLayout from '../sidebarLayout.cfg'
 import { LoggerDecorator } from '../../vms-client/utils'
+import { NxSystemsService } from '@services/systems.service';
+import { UntilDestroy }     from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'nx-system-view-index-page',
   templateUrl: 'system-view-index.page.component.html',
@@ -29,6 +32,7 @@ import { LoggerDecorator } from '../../vms-client/utils'
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   _log: Function
   _warn: Function
+  private systemsSubscription: Subscription;
 
   protected _state: VmsState
   protected _vmsStateSubscription: Subscription
@@ -37,6 +41,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
   public systemId: string
   public system: NxSystem
+  public systems: NxSystem[];
 
   protected CONFIG: IConfig;
 
@@ -91,6 +96,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected route: ActivatedRoute,
     protected accountService: NxAccountService,
     protected systemService: NxSystemService,
+    protected systemsService: NxSystemsService,
     protected vms: VideoManagementSystemService,
     protected timeline: TimelineService,
     protected ux: WebClientUxService,
@@ -108,6 +114,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._routerParamsSubscription = this.route.params.subscribe(this._onRouteChange)
     this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
     this.onResize({ target: { innerWidth: window.innerWidth } })
+
+    this.systemsSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
+      this.systems = systems;
+      this._initSystem();
+    });
   }
 
   public ngOnDestroy (): void {
@@ -165,16 +176,21 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           this._warn('accountService returned no account')
           return Promise.reject()
         }
+
         if (this.CONFIG.isLocal) {
           this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
           this._log('local system created', this.system)
-          return Promise.resolve()
-        } else {
-          this.system = this.systemService.createSystem(account.email, this.systemId)
-          return Promise.resolve()
+          return Promise.resolve();
+        } else if (this.systems) {
+          if (this.systems.filter(s => s.id === this.systemId).length) {
+            this.system = this.systemService.createSystem(account.email, this.systemId);
+            return Promise.resolve();
+          }
+          this.router.navigate(['/systems']);
+          return Promise.reject();
         }
-      })
-    }
+      });
+    };
 
     createSystem()
     .then(() => this.system.getMediaServersAndCameras())
@@ -194,9 +210,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       const now = Date.now()
       Promise.all(cameraIds.map(cid => {
         // (check archive presence mode)
-        if (this.system.userManager.permissions.isAdmin ||
-            this.system.userManager.isLiveViewer() ||
-            this.system.userManager.noPermissions) {
+        if (!this.system.userManager.permissions.viewArchives) {
           return Promise.resolve();
         }
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
@@ -285,8 +299,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
       })
     }).catch(e => {
-      this._warn(`system ${this.system.id} view initialization failed`, e)
-      this._setInitializationState(true, true)
+      console.warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
+      setTimeout(() => this._setInitializationState(true, true));
     })
   }
 

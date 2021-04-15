@@ -199,7 +199,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     ), options);
             }
             this.locked[user.email] = false;
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.setUser();
             this.applyService.reset();
         }, {
@@ -281,7 +281,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.selectedUser = { ...user };
             this.localUserName = this.selectedUser.name;
 

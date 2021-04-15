@@ -217,7 +217,8 @@ class CloudPortalAPI(object):
 #       print("Sleeping for 300 secs")
 #        time.sleep(300)
 
-    def create_systems_json(self, env, email, password):
+    @staticmethod
+    def create_systems_json(env, email, password):
         r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
 
         systemsDict = r.json()
@@ -276,7 +277,8 @@ class CloudPortalAPI(object):
             return 'SSL Error'
         return r.status_code
 
-    def add_camera(self, serverUrl, camuser, campassword, uniqueId, url, manufacturer):
+    @staticmethod
+    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer):
         body = {
             "user": camuser,
             "password": campassword,
@@ -292,7 +294,8 @@ class CloudPortalAPI(object):
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text
     
-    def turn_on_analytics(self, serverUrl):
+    @staticmethod
+    def turn_on_analytics(serverUrl):
 #         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
 #         cameraDict = r.json()
 #         cameraID = cameraDict["id"]      
