@@ -624,7 +624,7 @@
             "reject": "Verwerfen",
             "backToEditText": "Zurück zu den Bearbeitungsoberflächen",
             "previewRibbon": "Diese Seite ist eine Vorschau auf die neuesten Änderungen und entspricht nicht der öffentlich zugänglichen Version.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Diese Seite ist die Liveversion, die öffentlich verfügbar ist."
         },
         "systemOffline": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
         "systemsMerging": "Dieses System ist derzeit an einem Zusammenführungsvorgang beteiligt."
