@@ -55,6 +55,7 @@ $border-color: $light6;
     > player,
     > .offline-message {
       height: calc(100vh - 48px - 100px);
+      display: inline-table;
     }
 
     &.is-full-screen {

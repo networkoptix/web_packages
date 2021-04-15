@@ -32,9 +32,12 @@
             height : auto !important;
         }
 
-        h4 {
-            margin : 0;
+        header {
             width  : 100%;
+
+            h4 {
+                margin : 0;
+            }
         }
 
         &-logo {
