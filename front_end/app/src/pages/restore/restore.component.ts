@@ -202,6 +202,7 @@ export class NxRestoreComponent implements OnInit {
     }
 
     login() {
+        console.log('login called from restore component');
         this.dialogs.login(this.accountService, false, true);
     }
 
@@ -211,6 +212,7 @@ export class NxRestoreComponent implements OnInit {
             return path === '/' ? url === '/' : url.includes(path);
         });
         // Handling promise to satisfy the linter.
+        console.log('login called from restore loginRedirect function');
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 }

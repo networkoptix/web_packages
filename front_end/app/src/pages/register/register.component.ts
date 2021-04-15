@@ -75,6 +75,7 @@ export class NxRegisterComponent implements OnInit {
             return path === '/' ? url === '/' : url.includes(path);
         });
         // Handling promise to satisfy the linter.
+        console.log('login called from register component');
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
