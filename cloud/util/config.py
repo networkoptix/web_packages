@@ -19,7 +19,7 @@ def get_config(customization=None):
     if not conf_dir:
         conf_dir = os.path.dirname(__file__)
     file_path = os.path.join(conf_dir, customization, 'cloud_portal.yaml')  # normal case - working instance
-    if not os.path.exists(file_path) and (not PYTHON_RUNNING and not os.getenv('LOCAL_ENV', False)):
+    if not os.path.exists(file_path) and not PYTHON_RUNNING and os.getenv('INSTANCE_NAME') in ['prod', 'stage']:
         msg = f"To fix this problem run force update on the latest accepted review " \
               f"for {customization}'s cloud portal asset to fix the problem."
         logger.critical(msg)
