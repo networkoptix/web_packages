@@ -22,6 +22,7 @@ class SpecialStructures:
         self.add_function("%VMS_COMPANY_ID%", self.calc_vms_company_id, 'VMS Company Id', 'Company ID used by VMS')
         self.add_function('%VMS_MAC_COMPANY_ID%', self.calc_vms_mac_company_id, 'VMS Mac Company Id', 'Company ID used by VMS on Mac OS')
         self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable, 'VMS Windows Executable', 'VMS executable name on windows')
+        self.add_function('%VMS_ID%', self.calc_vms_id, 'VMS Id', 'VMS Id from vms pack')
 
     def add_function(self, tag: str, function, label='', description='', hidden=False, shortcut=False):
         self.function_dict[tag] = {
@@ -158,3 +159,7 @@ class SpecialStructures:
         if win_executable:
             return f'{win_executable}.exe'
         return '{win_executable}.exe'
+
+    @staticmethod
+    def calc_vms_id(asset: Asset):
+        return SpecialStructures.get_vms_default_ds_value(asset, '%VMS_ID%') or '{vmsId}'
