@@ -242,19 +242,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.initialData.redirect_url = res.link;
                     this.currentState = AuthorizeState.confirm;
                 } else if (res?.link.startsWith('?code=')) {
-                    const codeRes = await this.cloudService.loginCode(res.link.slice(6));
-                    console.log('codeRes', codeRes);
+                    await this.cloudService.loginCode(res.link.slice(6));
                     defer(() => this.accountService.get())
-                        .pipe(map(res => {
-                            if (!res) {
-                                throw Error('undefined reponse from accountService get');
-                            }
-                            return res;
-                        }),
-                        retryWhen(errors => { console.log('err in retryWhen'); return errors.pipe(delay(500), take(10)); })
+                        .pipe(
+                            map(res => {
+                                if (!res) {
+                                    throw Error('undefined response from accountService get');
+                                }
+                                return res;
+                            }),
+                            retryWhen(errors => errors.pipe(delay(500), take(10)))
                         )
-                        .subscribe(getRes => {
-                            console.log('getRes', getRes);
+                        .subscribe(() => {
                             this.router.navigate([this.CONFIG.redirect.authorised]);
                         });
                 } else {

@@ -102,14 +102,13 @@ export abstract class BaseAccount implements OnDestroy {
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.uriService.queryParamsSubject
             .subscribe((params: IParams) => {
-                console.log('params called from queryParamsSubject in base.ts', params);
                 if (params.auth) {
                     this.handleAuthKeyLogin(params.auth);
                 }
             });
 
         if (!this.CONFIG.isLocal) {
-            this.accountPoll = this.pollService.createPoll(() => { console.log('account called from poll in base.ts'); return this.cloudApi.account(true); }, this.CONFIG.updateInterval);
+            this.accountPoll = this.pollService.createPoll(() => this.cloudApi.account(true), this.CONFIG.updateInterval);
         }
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
@@ -240,7 +239,6 @@ export abstract class BaseAccount implements OnDestroy {
             }).catch(() => {
                 this.sessionService.email = '';
                 // If the key login fails ask the user to login manually.
-                console.log('login called from base.ts loginwithauthkey');
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
@@ -293,7 +291,6 @@ export abstract class BaseAccount implements OnDestroy {
 
     protected showLogin() {
         this.loginDialogActive = true;
-        console.log('login called from base.ts showLogin');
         return this.dialogs
             .login(this, true, true).then((result: any) => {
                 this.storageService.loginRegister = true;

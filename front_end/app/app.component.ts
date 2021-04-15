@@ -168,7 +168,6 @@ export class AppComponent {
         this.router.events.pipe(
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
-            console.log('queryParams gets set in router events subscribe in app component', queryParams);
             if ('debug' in queryParams) {
                 this.CONFIG.allowDebugMode = true;
             }

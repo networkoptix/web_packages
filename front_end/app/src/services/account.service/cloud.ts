@@ -70,7 +70,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         if (this.account && !forceUpdate) {
             return Promise.resolve(this.account);
         }
-        console.log('cloudApi accoutn called from get in cloud.ts');
+
         return this.cloudApi
             .account(true).toPromise()
             .then((account: Account|any) => {
@@ -185,7 +185,6 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .then((account: Account) => {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
-                    console.log('login called from cloud.ts requireLogin');
                     return this.dialogs
                         .login(this, true, true).then((result) => {
                             this.storageService.loginRegister = true;
