@@ -337,26 +337,45 @@
 
 
     function paste_handle_images(pasteEvent, editor) {
-        const clipContent = pasteEvent.clipboardData.getData('text/html');
-        if (pasteEvent.clipboardData.types.includes('text/html')) {
-            retrieveImageFromClipboardAsBase64(pasteEvent, function (b64Image) {
-                if (b64Image) {
-                    const imageSrc = /src="(.*?)"/igm.exec(clipContent)[1];
-                    const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
-                    // This isn't efficient and can be slow
-                    // TODO: CLOUD-6917: Upload images in the background
-                    if (pastedImg.length) {
-                        $(pastedImg).each(function() {
-                            $(this).attr('src', b64Image);
-                            this.dataset.mceSrc = b64Image;
-                        });
-                    } else {
-                        // CSP or something else blocked it, so we reinsert the image without the URL this time
-                        const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
-                        editor.insertContent(newContent);
-                    }
+        clipContent = pasteEvent.clipboardData.getData('text/html');
+        const file = [...pasteEvent.clipboardData.items].find(({ type }) => type === 'image/png')
+
+        const addBase64Image = (b64Image) => {
+            if (b64Image) {
+                const srcAttr = /src="(.*?)"/igm.exec(clipContent)
+                const imageSrc = srcAttr ? srcAttr[1] : '';
+                const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
+                // This isn't efficient and can be slow
+                // TODO: CLOUD-6917: Upload images in the background
+                if (pastedImg.length) {
+                    $(pastedImg).each(function() {
+                        $(this).attr('src', b64Image);
+                        this.dataset.mceSrc = b64Image;
+                    });
+                } else {
+                    // CSP or something else blocked it, so we reinsert the image without the URL this time
+                    const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
+                    editor.insertContent(newContent);
                 }
-            })
+            }
+        }
+        if (pasteEvent.clipboardData.types.includes('text/html')) {
+            retrieveImageFromClipboardAsBase64(pasteEvent, addBase64Image)
+        } else if (file) {
+            const blob = file.getAsFile()
+            const tempCanvas = document.createElement("canvas");
+            const ctx = tempCanvas.getContext('2d');
+            const img = new Image();
+            const url = window.URL || window.webkitURL;
+            img.onload = function(){
+                tempCanvas.width = this.width;
+                tempCanvas.height = this.height;
+                ctx.drawImage(img, 0, 0);
+                clipContent = `<meta charset="utf-8"><img src="" alt="${blob.name} (${this.width}×${this.height})"/>`
+                addBase64Image(tempCanvas.toDataURL("image/png"))
+            };
+            img.src = url.createObjectURL(blob);
+
         }
     }
 
