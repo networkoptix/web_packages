@@ -1,11 +1,11 @@
-import { filter, map, retry, retryWhen, skip, startWith, switchMap } from 'rxjs/operators';
-import { combineLatest, Observable, of, Subject }                   from 'rxjs';
+import { filter, map, retry, startWith, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subject }       from 'rxjs';
 
 import { ServerManager }                                    from '../server-manager/server-manager';
 import { StateManager }                                     from '@src/utils';
 import { BaseManager }                                      from '../base/base-manager';
 import { CurrentStorageState, currentStorageStateFactory }  from './current-storage-state';
-import { NxLogger }                                         from '@services/utils.service';
+import { NxLogger, fallback }                               from '@services/utils.service';
 
 export enum UpdateTriggers {
     INFO='info',
@@ -80,10 +80,10 @@ export class StorageState extends BaseManager {
      */
     storageState$ = combineLatest(
         [
-            this.#storageInfoStateManager.state$,
-            this.#storageMetricsStateManager.state$,
-            this.#storageStatsStateManager.state$,
-            this.#storageAnalyticsStateManager.state$
+            this.#storageInfoStateManager.state$.pipe(fallback([])),
+            this.#storageMetricsStateManager.state$.pipe(fallback({})),
+            this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
+            this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),

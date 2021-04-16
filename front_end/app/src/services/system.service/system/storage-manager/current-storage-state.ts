@@ -190,7 +190,7 @@ export const currentStorageStateFactory = (
         }
     }), {});
 
-    const storageStats = stats?.reply?.storages.reduce((
+    const storageStats = (stats?.reply?.storages || []).reduce((
         storagesStats, {
             storageId,
             isUsedForWriting,

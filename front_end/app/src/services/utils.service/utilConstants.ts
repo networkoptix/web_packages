@@ -1,3 +1,5 @@
+import { catchError } from 'rxjs/operators';
+
 const BYTE_UNITS: Byte[] = [
     'B',
     'kB',
@@ -100,3 +102,8 @@ export {
     toLocaleString,
     Exactly
 };
+
+/**
+* Provides a fallback value for errors.
+*/
+export const fallback = <T>(value: T) => catchError(() => Promise.resolve(value));
