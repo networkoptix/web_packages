@@ -189,9 +189,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.getRecordsInProgress = this.id
       createSystem().then(() => {
             this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-            if (!this.system.userManager.permissions.viewArchives) {
-                this.getRecordsInProgress = undefined;
-            } else {
+            if (this.system.userManager.permissions.viewArchives) {
                 this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
                     const [{ vmsTimeOffset, serverId }] = await this.system.getServerTimes();
                     const offsetsByServer = this.system.mediaservers.reduce((
@@ -235,15 +233,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                             }
                             console.log('non-empty archive', this.id, range, archive);
                             this.vms.setCameraRecords(this.id, range, archive);
-                            this._initSelectedCamera();
                         } catch (e) {
                             console.warn(e, 'caught while requesting camera archive ranges');
                         }
                     }
-                    this.getRecordsInProgress = undefined;
                 });
             }
         }).finally(() => {
+          this.getRecordsInProgress = undefined;
+          this._initSelectedCamera();
           this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
           });

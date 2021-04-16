@@ -116,7 +116,7 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
   }
 
   protected unpause () {
-    if (this.playback.canPlayLive || this.playback.livePaused) {
+    if (this.playback.livePaused) {
       this.playLive()
       this.playback.livePaused = false;
       return true
