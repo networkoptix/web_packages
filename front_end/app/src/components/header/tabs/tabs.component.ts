@@ -11,5 +11,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 })
 export class NxTabsComponent {
     @Input() node: MenuNode;
-    constructor(public headerService: NxHeaderService) {}
+    constructor(
+        public headerService: NxHeaderService
+    ) {}
 }

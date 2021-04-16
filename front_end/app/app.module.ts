@@ -3,7 +3,7 @@ import { BrowserModule, Title }                from '@angular/platform-browser';
 import { BrowserAnimationsModule }             from '@angular/platform-browser/animations';
 import {
     Location, PathLocationStrategy,
-    HashLocationStrategy, LocationStrategy,
+    LocationStrategy,
     CommonModule, DatePipe
 }                                              from '@angular/common';
 import {
@@ -122,7 +122,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
         {
             provide    : FIREBASE_OPTIONS,
             deps       : [NxConfigService],

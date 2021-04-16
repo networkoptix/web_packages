@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "https://localhost:8011",
+    "target": "https://localhost:8816",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -11,19 +11,19 @@
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://localhost:8011",
+    "target": "https://localhost:8816",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://localhost:8011",
+    "target": "https://localhost:8816",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/customization/*": {
-    "target": "https://localhost:8011",
+    "target": "https://localhost:8816",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
