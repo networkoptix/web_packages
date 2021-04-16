@@ -5,9 +5,11 @@ import { NxCloudApiService }                                from '../../../nx-cl
 import { NxSystemAPIService, NxSystemAPI, ResourceParam }   from '../../../system-api.service';
 import { NxUtilsService }                                   from '../../../utils.service';
 import { NxSystemServer, ModuleInfo, IParams }              from '../system-types';
+import { NxSystemRestAPI }                                  from '@services/system-rest-api.service';
+import { NxSystem }                                         from '../system';
 export class ServerManager {
     mediaserverConnections: {
-        [serverId: string]: NxSystemAPI;
+        [serverId: string]: NxSystemAPI | NxSystemRestAPI;
     };
 
     servers: NxSystemServer[] = []
@@ -18,7 +20,8 @@ export class ServerManager {
         private systemApiService: NxSystemAPIService,
         private currentUserEmail: string,
         private systemId: string,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
+        private system: NxSystem
     ) {}
 
     initSystemMediaServers() {
@@ -35,7 +38,8 @@ export class ServerManager {
                         this.currentUserEmail,
                         this.systemId,
                         server.id,
-                        unauthorizedCallback
+                        unauthorizedCallback,
+                        this.system.useRest
                     );
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
@@ -88,8 +92,8 @@ export class ServerManager {
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
 
-    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop', legacySystem = true) {
-        return this.mediaserverConnections[serverId].backupControl(action, legacySystem);
+    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
+        return this.mediaserverConnections[serverId].backupControl(action);
     }
 
     getLicenses() {

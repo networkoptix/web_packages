@@ -1,6 +1,5 @@
-import { ServerManager }    from '../server-manager/server-manager';
-import { NxSystem } from '../system';
-import { StorageState }     from './storage-state';
+import { NxSystem }     from '../system';
+import { StorageState } from './storage-state';
 
 /**
  * StorageManager extends StorageState which extends StorageBase.
@@ -46,8 +45,8 @@ export class StorageManager extends StorageState {
         return this.serverManager.rebuildArchive(serverId, type, action);
     }
 
-    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop', legacySystem = true) {
-        return this.serverManager.updateOrGetBackupControl(serverId, action, legacySystem);
+    updateOrGetBackupControl(serverId: string, action?: 'start' | 'stop') {
+        return this.serverManager.updateOrGetBackupControl(serverId, action);
     }
 
     getServerStats(serverId, useCache = false) {
@@ -62,6 +61,7 @@ export class StorageManager extends StorageState {
         const settings = (await this.system.updateOrGetSystemSettings().toPromise()).reply?.settings;
         try {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
+            await this.system.cameraManager.updateSystemServersCameras();
             const backup = this.system.cameraManager.cameras.some(
                 ({ backupPolicy }: any) => ['byDefault', 'on'].includes(backupPolicy)
             );
@@ -76,7 +76,7 @@ export class StorageManager extends StorageState {
             const custom = (!backupNewCameras && settings.backupNewCamerasByDefault !== 'true') ||
                 quality !== 'CameraBackupBoth' ||
                 !camerasHaveDefaults;
-            return { backup, custom, legacy: false };
+            return { backup, custom };
         } catch (_) {
             console.info('getting backup state for legacy system');
         }
@@ -88,7 +88,7 @@ export class StorageManager extends StorageState {
                 settings?.backupNewCamerasByDefault !== 'true' ||
                  !['CameraBackupDefault', 'CameraBackupLowQuality'].includes(settings?.backupQualities)
         );
-        return { backup, custom, legacy: true };
+        return { backup, custom };
     }
 
     updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {

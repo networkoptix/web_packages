@@ -142,7 +142,7 @@
     </header>
     <nx-section *ngIf="backupState$ | async">
         <div class="archive-backup-container">
-            <ng-container *ngIf="(customSettings && (legacySystem || isBackupOn.originalValue)); else defaultMessage">
+            <ng-container *ngIf="(customSettings && (!system.useRest || isBackupOn.originalValue)); else defaultMessage">
                 <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>
                 <p translate>You can reset backup settings to default to backup secondary streams from all cameras in real time.</p>
                 <button class="btn btn-default mt-3"

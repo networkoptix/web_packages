@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs';
 
 import { NxConfigService, IConfig }        from '../nx-config';
 import { NxLanguageProviderService }       from '../nx-language-provider';
 import { NxCloudApiService }               from '../nx-cloud-api';
 import { NxSystemsService }                from '../systems.service';
-import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { NxSystemAPIService }              from '../system-api.service';
 import { NxPollService }                   from '../poll.service';
 import { NxAppStateService }               from '../nx-app-state.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { NxRibbonService }                 from '@components/ribbon';
 import { NxSystem }                        from './system/system';
-import { Subject }                         from 'rxjs';
+import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
 
 @Injectable({
     providedIn: 'root'
@@ -62,13 +63,16 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
+        system.serverManager.getModuleInfo().toPromise().then(({ reply: { version } }) => {
+            system.setApiVersion(version || NxSystemRestAPI.supportedVersion);
+        });
         if (!skipPoll) {
             system.startPoll();
         }
         return system;
     }
 
-    createLocalSystem(mediaServer: NxSystemAPI, userId: string, userEmail = '') {
+    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
         if (this.system !== undefined) {
             return this.system;
         }
@@ -90,6 +94,7 @@ export class NxSystemService {
         );
         this.system.mediaserver = mediaServer;
         this.system.canMerge = true;
+        this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
         this.system.update();
         this.system.startPoll();
         if (!this.systemsService.systems) {
