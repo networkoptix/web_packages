@@ -45,7 +45,7 @@ require('./scripts/vendor/protocolcheck');
 
 export class AppComponent {
     deviceInfo: any;
-    allowedDevices: {};
+    browserBlacklist: {};
     isInIframe: boolean;
     newSystem: boolean;
 
@@ -69,44 +69,40 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
-        // Minimum browser versions supported defined in .browserslistrc
-        // run "npx browserslist" to check
-        // no real need to update often unless some browser have major upgrade
-        // and we don't want to support previous releases
-        this.allowedDevices = {
-            windows: {
-                ie      : 9999, // IE is not supported
-                safari  : 13,
-                chrome  : 87,
-                firefox : 78
-            },
-            mac: {
-                safari  : 13,
-                chrome  : 87,
-                firefox : 78
-            },
-            linux: {
-                chrome  : 87,
-                firefox : 78
-            }
+        /* No real need to update often unless some browser have major upgrade
+         * and we don't want to support previous releases
+         *
+         * IE and Edge are here just for reference
+         * Angular will not make it through here as they are not supported at all ... see index.html
+         */
+        this.browserBlacklist = {
+            ie                 : 9999,
+            'ms-edge'          : 9999,
+            'ms-edge-chromium' : 80,
+            safari             : 12,
+            chrome             : 80,
+            firefox            : 75,
+            opera              : 70
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
+        let browserMatchVersion = this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
 
         // Special case for Kyle's robot tests
         // ... device detector doesn't detect it correctly
         if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
-            allowedDevice = undefined;
+            browserMatchVersion = undefined;
         }
 
-        if (allowedDevice !== undefined) {
-            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
+        if (browserMatchVersion !== undefined) {
             const majorVersion = this.deviceInfo.browser_version.split('.')[0];
 
-            if (majorVersion < allowedVersion) {
-                // redirect
-                this.location.go('/browser');
+            if (majorVersion < browserMatchVersion) {
+                this.router.navigate(['/browser'])
+                    .catch((error) => console.error(error))
+                    .finally(() => {
+                        this.appStateService.ready = true;
+                    });
                 return;
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
