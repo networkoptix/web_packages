@@ -430,7 +430,12 @@ export class PlaybackService implements OnDestroy {
 
           // TODO: maybe the logic here should be very different, actually
         } else {
-          this.canPlayArchive ? this.playLive() : this.stop()
+          const lastChunk = this.vms.selectedCamera.archive.slice(-1).pop()
+          const LAST_MINUTE_SIZE = 1.5 * 60 * 1000 // 1.5 minutes
+          const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE
+          if (lastChunk.end < state.currentTime || state.currentTime >= lastMinuteStartMs) {
+            this.canPlayArchive ? this.playLive() : this.stop()
+          }
         }
       }
     }
@@ -526,6 +531,9 @@ function _getNextRecord (archive: Array<IRecord>, t: ms): IRecord {
     } else {
       l = (m > l) ? m : (l + 1)
     }
+  }
+  if (l === r && archive[l].start >= t) {
+    return archive[l];
   }
   return null
   // naive linear search approach
