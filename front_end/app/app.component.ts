@@ -1,4 +1,3 @@
-import { Location }                                from '@angular/common';
 import {
     Component, HostListener, Inject,
     ViewEncapsulation, ViewChild, ElementRef
@@ -59,7 +58,6 @@ export class AppComponent {
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
-        private location: Location,
         private applyService: NxApplyService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
@@ -107,7 +105,6 @@ export class AppComponent {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
@@ -143,7 +140,7 @@ export class AppComponent {
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.CONFIG.isInIframe = (window.location.pathname.indexOf('/embed') === 0 || window.location.search.indexOf('adminPreview=true') !== -1);
+        this.CONFIG.isInIframe = (this.window.location.pathname.indexOf('/embed') === 0 || this.window.location.search.indexOf('adminPreview=true') !== -1);
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
