@@ -88,7 +88,7 @@
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
     <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
-            <nx-search *ngIf="!kbService.previewAssetId"
+            <nx-search *ngIf="!kbService.contentAssetId"
                 [ngModel]="search"
                 (ngModelChange)="updateSearchQuery($event)"
                 [placeholder]="'Knowledge Base Search' | translate"

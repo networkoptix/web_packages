@@ -116,7 +116,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     fetchSearchHandler({ query, page }) {
-        return this.kbService.previewAssetId ? of({}) : this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+        return this.kbService.contentAssetId ? of({}) : this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
     }
 
     constructor(
@@ -141,7 +141,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     prefetchDocument({ assetId, state = null }) {
-        if (this.kbService.previewAssetId) {
+        if (this.kbService.contentAssetId) {
             return;
         }
         this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, assetId, state).pipe(untilDestroyed(this)).subscribe();
@@ -233,7 +233,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 this.kbService.basePath = snapshot.paramMap.get('name');
                 this.appStateService.altBackground = this.kbService.basePath !== 'content';
                 const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
-                if (this.kbService.menuName !== menuName) {
+                if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
                     this.kbService.menuName = menuName;
                 }
                 if (!this.kbService.menuName) {
@@ -244,7 +244,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                             if (snapshot.paramMap.get('level1')) {
                                 this.findKBWithArticle(assetId, assetParam);
                             } else {
-                                this.kbService.previewAssetId = assetId;
+                                this.kbService.contentAssetId = assetId;
                             }
                         }
                     } else {
@@ -252,6 +252,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                         this.pageService.show404();
                         return;
                     }
+                } else {
+                    this.kbService.contentAssetId = null;
                 }
                 return this.route.url;
             }),
@@ -261,6 +263,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 this.clearSearch();
                 const getFirstDoc = () => {
                     const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): MenuNode => !first ? undefined : ((first.asset_id && first) || traverseToFirst([...remaining, ...first.nodes]));
+                    if (this.kbService.contentAssetId) {
+                        return of(undefined);
+                    }
                     return this.kbService.getMenuObservable().pipe(
                         filter(menu => menu?.nodes.length > 0),
                         tap(menu => {
@@ -281,19 +286,25 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                     );
                 };
                 return getFirstDoc().pipe(
-                    switchMap(firstNode => {
+                    switchMap((firstNode?) => {
                         const assetParam = this.route.snapshot.paramMap.get('level1');
                         let assetId;
                         if (assetParam) {
                             assetId = parseInt(assetParam.split('-')[0]);
                         }
 
-                        const newAssetId = assetId || this.headerService.currentLocation.assetId || firstNode.asset_id || this.kbService.previewAssetId;
+                        const newAssetId = assetId || this.headerService.currentLocation.assetId || firstNode?.asset_id || this.kbService.contentAssetId;
                         this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
                         let state = this.route.snapshot.queryParamMap.get('state');
-                        if (!state && newAssetId === firstNode.asset_id && !assetId) {
+                        if (!this.kbService.contentAssetId && !state && newAssetId === firstNode.asset_id && !assetId) {
                             state = firstNode.state;
                         }
+
+                        if (newAssetId && !this.route.snapshot.paramMap.get('level1') && !this.kbService.contentAssetId) {
+                            this.router.navigate(['docs', this.kbService.basePath, this.kbService.kbName, newAssetId], { replaceUrl: true, queryParams: { state: state } });
+                            return EMPTY;
+                        }
+
                         this.kbService.activeAssetState = state;
                         this.kbService.activeAssetId = newAssetId;
                         if (!state && assetId && !this.kbService.assetIds.includes(assetId)) {

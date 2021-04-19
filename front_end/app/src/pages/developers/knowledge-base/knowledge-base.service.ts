@@ -23,7 +23,7 @@ export class NxKnowledgebaseService {
     account: Account
 
     basePath = '';
-    previewAssetId: number;
+    contentAssetId: number;
     kbName = '';
     assetIds = [];
     baseRoute = '';
