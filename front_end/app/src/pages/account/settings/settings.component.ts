@@ -102,6 +102,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
+            successMessage  : this.LANG.account.accountSavedSuccess(),
             errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
