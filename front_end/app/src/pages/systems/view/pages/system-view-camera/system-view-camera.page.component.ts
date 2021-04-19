@@ -115,7 +115,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get transportsAvailable () {
-      return Object.keys(this.availableTransportsAndResolutions)
+      return Object.keys(this.availableTransportsAndResolutions || {})
     }
 
     public get qualitiesAvailable () {
