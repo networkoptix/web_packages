@@ -27,7 +27,7 @@ import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.typ
 export class PlaybackService implements OnDestroy {
 
   protected _logPrefix: string = 'PLAYBACK_SERVICE ::'
-  protected _logDisable: boolean = false
+  protected _logDisable: boolean = true
 
   protected _log (...args: any[]) {
     if (isDevMode() && !this._logDisable) {
