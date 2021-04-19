@@ -19,6 +19,7 @@ import ICamera from '../datatypes/ICamera'
   providedIn: 'root',
  })
 export class VideoManagementSystemService {
+  static readonly statusRefreshInterval = 15000
 
   constructor (
     protected cookieService: CookieService,
@@ -62,14 +63,16 @@ export class VideoManagementSystemService {
     }
   }
 
-  public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>) {
+  public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {
     this._systemId = systemId
     const prevSelectedCameraId: GUID | undefined = this._state['selectedCameraId']
     this._state = createCameraNotSelectedState(systemId, mediaServers)
     if (prevSelectedCameraId) {
       this._state = createCameraSelectedState(this._state, prevSelectedCameraId)
     }
-    this._emit()
+    if (!updateCamerasOnly) {
+      this._emit()
+    }
   }
 
   public setCameraRecords (cameraId: string, range, records) {

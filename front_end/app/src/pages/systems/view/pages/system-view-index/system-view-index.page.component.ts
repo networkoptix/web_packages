@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
-import { Subscription } from 'rxjs'
+import { Subject, Subscription, timer } from 'rxjs'
 
 import { ServerTimeInfo, NxSystemService, NxMediaServer, NxCamera, NxSystem } from '../../../../../services/system.service'
 import { NxAccountService } from '../../../../../services/account.service'
@@ -21,6 +21,8 @@ import sidebarLayout from '../sidebarLayout.cfg'
 import { LoggerDecorator } from '../../vms-client/utils'
 import { NxSystemsService } from '@services/systems.service';
 import { UntilDestroy }     from '@ngneat/until-destroy';
+import { takeUntil } from 'rxjs/operators'
+import { NxUtilsService } from '@services/utils.service'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -50,6 +52,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   public isSidebarShown: boolean = false
 
   public hasCameras: boolean = true
+  private cancelPoll$ = new Subject<string>()
 
   // public animated: boolean = false
 
@@ -122,6 +125,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy (): void {
+    this.cancelPoll$.next('cancel')
     this._vmsStateSubscription.unsubscribe()
     this._routerParamsSubscription.unsubscribe()
     this._uxStateSubscription.unsubscribe()
@@ -192,6 +196,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       });
     };
 
+    let cachedMediaServers
+
     createSystem()
     .then(() => this.system.getMediaServersAndCameras())
     .then(mediaServers => {
@@ -252,8 +258,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         //   }
         // })
       })).then(() => {
-        // this._log('archiveRanges', archiveRanges)
-        this.vms.setMediaServers(this.systemId, mediaServers.map(ms => ({
+        // console.log('archiveRanges', archiveRanges)
+        cachedMediaServers = mediaServers.map(ms => ({
           id: ms.id,
           name: ms.name,
           url: ms.url,
@@ -276,8 +282,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             result.parseAdditionalParams(c.addParams)
             return result
           })
-        })))
-        // this._log(`system ${this.system.id} view initialized`, this.hasCameras)
+        }))
+
+        this.vms.setMediaServers(this.systemId, cachedMediaServers)
+        console.log(`system ${this.system.id} view initialized`, this.hasCameras)
         this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {
@@ -295,6 +303,27 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }).catch(e => {
       console.warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
       setTimeout(() => this._setInitializationState(true, true));
+    })
+    
+    this.cancelPoll$.next('cancel')
+    timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(
+      takeUntil(this.cancelPoll$)
+    ).subscribe(async() => {
+      const cameras = await this.system.cameraManager.getCameras().then(cameras => cameras.reduce((parsed, camera) => ({
+        ...parsed,
+        [NxUtilsService.cleanId(camera.id)]: camera
+      }), {}))
+      for (const serverId in cachedMediaServers) {
+        const server = cachedMediaServers[serverId]
+        for (const camera of server.cameras) {
+          const updatedCamera = cameras[camera.id]
+          if (updatedCamera) {
+            camera.status = updatedCamera.status
+            camera.name = updatedCamera.name
+          }
+        }
+        this.vms.setMediaServers(this.systemId, cachedMediaServers, true)
+      }
     })
   }
 

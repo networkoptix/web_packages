@@ -1,6 +1,6 @@
 import { Injectable }                        from '@angular/core';
 import { Observable, defer, Subject, timer } from 'rxjs';
-import { concatMap, takeUntil }              from 'rxjs/operators';
+import { concatMap, map, takeUntil }              from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -30,10 +30,10 @@ export class NxPollService {
         this.unsub$.next('done');
     }
 
-    createPoll<T>(apiCall: () => Observable<T> | Promise<T>, intervalDelay: number): Observable<T | string> {
+    createPoll<T>(apiCall: () => Observable<T> | Promise<T>, intervalDelay: number): Observable<any> {
         return timer(0, intervalDelay).pipe(
             takeUntil(this.unsub$),
-            concatMap(_ => defer(apiCall))
+            map(apiCall)
         );
     }
 }
