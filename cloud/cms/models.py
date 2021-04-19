@@ -1531,6 +1531,8 @@ class ExternalFile(models.Model):
         else:
             self.asset_ds_pair.remove(asset_ds_pair)
             self.save()
+            if not self.asset_ds_pair.count():
+                self.delete()
 
     def __str__(self):
         return self.file.name

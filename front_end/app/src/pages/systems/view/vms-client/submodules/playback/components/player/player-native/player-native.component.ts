@@ -94,6 +94,9 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     switch (sourceUrlExtension) {
       case 'mp4':
       case 'webm':
+      // case 'mpegts':
+      // case 'mpjpeg':
+      // case 'mkv':
         this._log('correct source format', sourceUrlExtension, sourceUrl)
         switch (this.state.mode) {
           case PLAYBACK_MODE.LIVE:

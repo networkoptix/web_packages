@@ -1,7 +1,7 @@
 import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
-import { prepareSyntheticListenerFunctionName } from '@angular/compiler/src/render3/util'
+import { PlaybackTransport } from '@pages/systems/view/view.types'
 
 
 interface NameValue {
@@ -37,8 +37,7 @@ export class Camera implements ICamera {
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
-    public readonly getLiveVideoUrl: (transport: string, quality: string) => string,
-    public readonly getArchiveVideoUrl: (t: ms, transport: string, quality: string) => string,
+    public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
     public readonly getPosterUrl: (t?: ms) => string,
   ) {
     this._initBirdView()
@@ -66,34 +65,53 @@ export class Camera implements ICamera {
     return this._rotation
   }
 
-  public get hasHlsStream (): boolean {
-    // console.log('camera media streams', this.id, this.name, this._mediaStreams)
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls'))
+  public get availableTransportsAndResolutions () {
+    return this.availableTransports.reduce((acc, t) => {
+      acc[t] = this._getAvailableResolutions(t)
+      return acc
+     }, {})
   }
 
-  public get hasLowQualityHlsStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && this._resolutionIsLow(s.resolution))
+  public get availableTransports () {
+    function isTransportSupported (t) {
+      switch (t) {
+        case 'hls':
+        case 'webm':
+        case 'mp4':
+          return true
+        default:
+          return false
+      }
+    }
+
+    const result = new Set()
+    this._mediaStreams
+      // .filter(s => s.resolution !== '*')
+      .map(s => s.transports.map(t => result.add(t)))
+    return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>
   }
 
-  public get hasHighQualityHlsStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && !this._resolutionIsLow(s.resolution))
-  }
-
-  public get hasWebmStream (): boolean {
-    console.log('camera media streams', this.id, this.name, this._mediaStreams)
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm'))
-  }
-
-  public get hasLowQualityWebmStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm') && this._resolutionIsLow(s.resolution))
-  }
-
-  public get hasHighQualityWebmStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'webm') && !this._resolutionIsLow(s.resolution))
+  protected _getAvailableResolutions (transport) {
+    const result = []
+    this._mediaStreams
+      .filter(s => s.resolution !== '*')
+      .map(s => s.transports.filter(t => t === transport) && result.push(s.resolution))
+    if (transport === 'hls') {
+      if (result.length === 1) {
+        return ['', 'hi']
+      } else {
+        const hlsResult = ['']
+        if (result.filter(r => this._resolutionIsLow(r)).length) {
+          hlsResult.push('lo')
+        }
+        if (result.filter(r => !this._resolutionIsLow(r)).length) {
+          hlsResult.push('hi')
+        }
+        return hlsResult
+      }
+    } else {
+      return result
+    }
   }
 
   protected _resolutionIsLow(s: string): boolean {

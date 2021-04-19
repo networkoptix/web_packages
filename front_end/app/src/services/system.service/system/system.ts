@@ -2,7 +2,7 @@ import {
     BehaviorSubject, of, Subscription,
     Observable, from, Subject
 }                               from 'rxjs';
-import { flatMap, takeUntil, tap }   from 'rxjs/operators';
+import { flatMap, takeUntil }   from 'rxjs/operators';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -17,8 +17,9 @@ import { NxPollService }                            from '../../poll.service';
 import { NxAppStateService }                        from '../../nx-app-state.service';
 import { SystemConfigSettings }                     from '../../system-api.types';
 import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
-import { trimIDs as trimIds }                      from '../../../utils/api_response_cleaners';
+import { trimIDs as trimIds }                       from '../../../utils/api_response_cleaners';
 import { NxRibbonService }                          from '@components/ribbon';
+import { NxSystemRestAPI }                          from '@services/system-rest-api.service';
 import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
@@ -52,9 +53,12 @@ export class NxSystem extends System {
     activeSubscription: Subscription;
     show404 = false;
     currentUserEmail: string;
-    mediaserver: NxSystemAPI;
+    mediaserver: NxSystemAPI | NxSystemRestAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
+
+    /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
+    #apiVersion = 0;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -62,6 +66,15 @@ export class NxSystem extends System {
     licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
+
+    /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
+    setApiVersion(version: string | number) {
+        this.#apiVersion = typeof version === 'string' ? parseFloat(version) : version;
+    }
+
+    get useRest() {
+        return this.#apiVersion >= NxSystemRestAPI.supportedVersion;
+    }
 
     get subscriberCount() {
         return this._subscribersCount.getValue();
@@ -157,7 +170,8 @@ export class NxSystem extends System {
              Other cases are not distinguishable
              */
             return this.updateSystemAuth(true);
-        });
+        },
+        this.useRest);
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
@@ -171,7 +185,8 @@ export class NxSystem extends System {
             this.systemApiService,
             this.currentUserEmail,
             this.id,
-            this.cloudApi
+            this.cloudApi,
+            this
         );
 
         this.cameraManager = new CameraManager(
@@ -516,52 +531,18 @@ export class NxSystem extends System {
         });
     }
 
-    public checkCameraThumbnail(cameraId) {
+    public checkCameraThumbnail (cameraId) {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.checkCameraThumbnail(cameraId)
         );
     }
 
-    public getCameraThumbnailUrl(cameraId, width = 128, height = 128, t?) {
+    public getCameraThumbnailUrl (cameraId, width = 128, height = 128, t?) {
         return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
     }
 
-    public getCameraLiveHlsUrl(cameraId) {
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getLiveHlsUrl(cameraId)
-        );
-    }
-
-    public getHlsUrl(cameraId, position?, resolution = 'hi') {
-        return this.ensureSystemAuth().then(
-            () => position === -1
-                ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
-                : this.mediaserver.getHlsUrl(cameraId, position, resolution)
-        );
-    }
-
-    public getWebmUrl(cameraId, position?, resolution = 'hi') {
-        return this.ensureSystemAuth().then(
-            () => position === -1
-                ? this.mediaserver.getLiveWebmUrl(cameraId, resolution)
-                : this.mediaserver.getWebmUrl(cameraId, position, resolution)
-        );
-    }
-
-    public unsafeGetCameraLiveHlsUrl(cameraId, resolution = 'hi') {
-        return this.mediaserver.getLiveHlsUrl(cameraId, resolution);
-    }
-
-    public unsafeGetHlsUrl(cameraId, position?, resolution = 'hi') {
-        return position === -1
-            ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
-            : this.mediaserver.getHlsUrl(cameraId, position, resolution);
-    }
-
-    public unsafeGetWebmUrl(cameraId, position?, resolution = 'hi') {
-        return position === -1
-            ? this.mediaserver.getLiveWebmUrl(cameraId, resolution)
-            : this.mediaserver.getWebmUrl(cameraId, position, resolution);
+    public getPlaybackUrl (cameraId, transport, resolution, position) {
+        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position)
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {

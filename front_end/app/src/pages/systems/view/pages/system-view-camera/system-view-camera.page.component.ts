@@ -6,7 +6,7 @@ import { NxAccountService } from '../../../../../services/account.service'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service'
 import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
-import ICamera, { SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
+import ICamera, { AvailableTransportsAndResolutions, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import PlaybackService from '../../vms-client/submodules/playback/services/playback.service'
 import { Subscription } from 'rxjs'
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
@@ -46,11 +46,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public settingsShown: boolean = false
 
-    public qualitiesAvailable: Array<PlaybackQuality> = []
-    public qualitySelected: PlaybackQuality
-
-    public transportsAvailable: Array<PlaybackTransport> = []
+    public availableTransportsAndResolutions: AvailableTransportsAndResolutions
     public transportSelected: PlaybackTransport
+    public qualitySelected: PlaybackQuality
 
     public controlsShown: boolean = false
     public canViewArchives = false;
@@ -107,37 +105,47 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       document.addEventListener('mozfullscreenchange', onFSC)
 
       this._getRecords()
-      this._updateStreamsAndQualitiesAvailable()
+      this._updateAvailableTransportsAndResolutions()
 
       this.$self.classList.add('animated')
     }
 
-    protected _updateStreamsAndQualitiesAvailable () {
-      this.qualitiesAvailable = []
-      this.transportsAvailable = []
-      if (!this.camera) {
-        return
+    protected _updateAvailableTransportsAndResolutions () {
+      this.availableTransportsAndResolutions = this.camera ? this.camera.availableTransportsAndResolutions : {}
+    }
+
+    public get transportsAvailable () {
+      return Object.keys(this.availableTransportsAndResolutions)
+    }
+
+    public get qualitiesAvailable () {
+      try {
+        return this.availableTransportsAndResolutions[this.transportSelected] || []
+      } catch {
+        return []
       }
-      if (this.camera.hasHlsStream) {
-        this.transportsAvailable.push('hls')
-        this.qualitiesAvailable.indexOf('auto') === -1 && this.qualitiesAvailable.push('auto')
-        if (this.camera.hasHighQualityHlsStream) {
-          this.qualitiesAvailable.indexOf('high') === -1 && this.qualitiesAvailable.push('high')
-        }
-        if (this.camera.hasLowQualityHlsStream) {
-          this.qualitiesAvailable.indexOf('low') === -1 && this.qualitiesAvailable.push('low')
-        }
+    }
+
+    public get qualitySelectedVerbose () {
+      return this.quality2Verbose(this.qualitySelected)
+    }
+
+    public get transportSelectedVerbose () {
+      return this.transport2Verbose(this.transportSelected)
+    }
+
+    public quality2Verbose (q: PlaybackQuality) {
+      switch (q) {
+        case 'hi': return 'High'
+        case 'lo': return 'Low'
+        case '': return 'Auto'
+      default:
+        return q
       }
-      if (this.camera.hasWebmStream) {
-        this.transportsAvailable.push('webm')
-        this.qualitiesAvailable.indexOf('auto') === -1 && this.qualitiesAvailable.push('auto')
-        if (this.camera.hasHighQualityHlsStream) {
-          this.qualitiesAvailable.indexOf('high') === -1 && this.qualitiesAvailable.push('high')
-        }
-        if (this.camera.hasLowQualityHlsStream) {
-          this.qualitiesAvailable.indexOf('low') === -1 && this.qualitiesAvailable.push('low')
-        }
-      }
+    }
+
+    public transport2Verbose (t: PlaybackTransport) {
+      return t.toLocaleUpperCase()
     }
 
     public getRecordsInProgress: string
@@ -216,16 +224,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                             }
                             this._log('non-empty archive', this.id, range, archive);
                             this.vms.setCameraRecords(this.id, range, archive);
-                            this._initSelectedCamera();
                         } catch (e) {
                             console.warn(e, 'caught while requesting camera archive ranges');
                         }
                     }
-                    this.getRecordsInProgress = undefined;
                 });
             }
         }).finally(() => {
-          this.system.userManager.getUsersDataFromTheSystem().then(() => {
+          this.getRecordsInProgress = undefined;
+          this._initSelectedCamera();
+          this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
           });
         });
@@ -290,7 +298,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.resetTransport()
       this.resetQuality()
       this._getRecords()
-      this._updateStreamsAndQualitiesAvailable()
+      this._updateAvailableTransportsAndResolutions()
 
       if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
         this.ux.isSidebarShown = false
@@ -391,7 +399,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetTransport () {
-      this.setTransport(this.cameraTransportStorage.get(this.id) || 'webm')
+      this.setTransport(this.cameraTransportStorage.get(this.id) || this.transportsAvailable[0] || 'webm')
     }
 
     public setTransport (st: PlaybackTransport) {
@@ -400,6 +408,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return
       }
       this.transportSelected = st
+      if (!this.qualitiesAvailable.includes(this.qualitySelected)) {
+        this.qualitySelected = this.qualitiesAvailable[0]
+        this.playback.changeQuality(this.qualitySelected)
+      }
       this.cameraTransportStorage.set(this.id, st)
       this.playback.changeTransport(st)
     }

@@ -216,12 +216,23 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
           const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length)
           // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
+          const extractChunk = chunk => {
+            let start, duration;
+            // 4.3 api response changed
+            if (chunk?.periods.length) {
+              start = parseInt(chunk.periods[0].startTimeMs);
+              duration = parseInt(chunk.periods[0].durationMs);
+            } else {
+              start = parseInt(chunk.startTimeMs);
+              duration = parseInt(chunk.durationMs);
+            }
+            const now = Date.now();
+            const end = (duration === -1) ? now : (start + duration);
+            return [start, end];
+          }
           if (hasArchive) {
-            const start = parseInt(response.reply[0].startTimeMs)
-            const duration = parseInt(response.reply[0].durationMs)
-            const now = Date.now()
-            const end = (duration === -1) ? now : (start + duration)
-            archiveRanges[cid] = new SimpleTimeRange(start, end)
+            const [start, end] = extractChunk(response.reply[0]);
+            archiveRanges[cid] = new SimpleTimeRange(start, end);
           }
         })
         // (full archive prefetch mode)
@@ -259,24 +270,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
               archiveRanges[c.id] || new SimpleTimeRange(0, 0),
               archives[c.id] || [],
               c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
-              (transport: string, quality: string) => {
-                switch (transport) {
-                  case 'hls':
-                    return this.system.unsafeGetCameraLiveHlsUrl(c.id, this._quality2resolution(quality))
-                  case 'webm':
-                  default:
-                    return this.system.unsafeGetWebmUrl(c.id, -1, this._quality2resolution(quality))
-                }
-              },
-              (t: ms, transport: string, quality: string) => {
-                switch (transport) {
-                  case 'hls':
-                    return this.system.unsafeGetHlsUrl(c.id, t, this._quality2resolution(quality))
-                  case 'webm':
-                  default:
-                    return this.system.unsafeGetWebmUrl(c.id, t, this._quality2resolution(quality))
-                }
-              },
+              (transport: string, quality: string, t?: ms) => this.system.getPlaybackUrl(c.id, transport, quality, t),
               (t?: ms) => this.system.getCameraThumbnailUrl(c.id, 128, 128, t)
             )
             result.parseAdditionalParams(c.addParams)

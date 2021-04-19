@@ -24,7 +24,13 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public showOverlay: boolean = false
 
   public get useNativePlayer () {
-    return this.transport === 'webm'
+    return (
+      this.transport === 'webm'
+      // || this.transport === 'mpegts'
+      // || this.transport === 'mpjpeg'
+      || this.transport === 'mp4'
+      // || this.transport === 'mkv'
+    )
   }
 
   public get useHlsPlayer () {

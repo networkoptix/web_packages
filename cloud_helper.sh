@@ -216,7 +216,7 @@ function build_webadmin_locally() {
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
     pushd $BUILD_DIR
-        . "$REPO/../webadmin/build.sh"
+        . "$REPO/webadmin/build.sh"
     popd
 }
 

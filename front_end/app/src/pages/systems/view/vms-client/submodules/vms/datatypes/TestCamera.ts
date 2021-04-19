@@ -31,30 +31,6 @@ export class TestCamera implements ICamera {
     this._initBirdView()
   }
 
-  public get hasHlsStream () {
-    return true
-  }
-
-  public get hasLowQualityHlsStream () {
-    return true
-  }
-
-  public get hasHighQualityHlsStream () {
-    return true
-  }
-
-  public get hasWebStream () {
-    return true
-  }
-
-  public get hasLowQualityWebmStream () {
-    return true
-  }
-
-  public get hasHighQualityWebmStream () {
-    return true
-  }
-
   public get isScheduleEnabled () {
     return false
   }
@@ -79,23 +55,23 @@ export class TestCamera implements ICamera {
     return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start)
   }
 
-  public getLiveVideoUrl (transport: string, quality: string) {
-    switch (transport) {
-      case 'hls':
-        return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-      case 'webm':
-      default:
-        return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
-    }
-  }
-
-  public getArchiveVideoUrl (t: ms, transport: string, quality: string) {
-    switch (transport) {
-      case 'hls':
-        return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
-      case 'webm':
-      default:
-        return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  public getVideoUrl (transport: string, quality: string, t: ms) {
+    if (!t) {
+      switch (transport) {
+        case 'hls':
+          return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+        case 'webm':
+        default:
+          return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+      }
+    } else {
+      switch (transport) {
+        case 'hls':
+          return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+        case 'webm':
+        default:
+          return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      }
     }
   }
 
@@ -112,6 +88,17 @@ export class TestCamera implements ICamera {
 
   protected _initBirdView () {
     this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive)
+  }
+
+  public get availableTransportsAndResolutions () {
+    return {
+      'hls': ['lo', 'hi', ''],
+      'webm': ['AxB'],
+    }
+  }
+
+  public get availableTransports () {
+    return ['hls', 'wemb']
   }
 }
 

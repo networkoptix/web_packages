@@ -19,9 +19,7 @@ import { LanguageI18NStaticTypes }   from '@services/../../language_i18n_static_
 import { IConfig, NxConfigService }  from '@services/nx-config';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 import { ChangedIdReturned }         from '@services/system-api.types';
-import {
-    LogLevel, NxLogger, NxUtilsService
-}                                    from '@services/utils.service';
+import { NxUtilsService }            from '@services/utils.service';
 import {
     CurrentStorageState, MODE, STORAGE_TYPES
 }                                    from '@services/system.service/system/storage-manager/current-storage-state';
@@ -178,11 +176,10 @@ export class NxSystemStorageComponent implements OnInit {
                     this.serverId, !!this.currentStorageState.onlineBackups
                 ).catch(err => {
                     console.error(err);
-                    return { backup: false, custom: false, legacy: true };
+                    return { backup: false, custom: false };
                 });
                 this.customSettings = backupState.custom;
                 this.isBackupOn.originalValue = backupState.backup;
-                this.legacySystem = backupState.legacy;
                 this.setupWatchers();
                 if (this.loading && this.currentStorageState.beingChecked) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -330,7 +327,7 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     setDefaultBackupSettings = async() => {
-        if (!this.legacySystem) {
+        if (this.system.useRest) {
             const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({
                 id,
                 backupPolicy      : 'CameraBackupDefault',
@@ -340,8 +337,8 @@ export class NxSystemStorageComponent implements OnInit {
             }));
             await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
         }
-        await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start', this.legacySystem);
-        if (this.legacySystem) {
+        await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
+        if (!this.system.useRest) {
             await this.system.updateOrGetSystemSettings({
                 backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
             }).toPromise();
@@ -378,14 +375,14 @@ export class NxSystemStorageComponent implements OnInit {
     turnOffBackup = async(retries = 5) => {
         this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = !retries;
         await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
-        if (!this.legacySystem) {
+        if (this.system.useRest) {
             const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({ id, backupPolicy: 'off' }));
             await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
         }
-        const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId, this.legacySystem ? null : 'stop', this.legacySystem);
+        const backupControlRes: any = await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
         const state = backupControlRes && backupControlRes.reply?.state;
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
-        if (this.legacySystem && state !== 'BackupState_None') {
+        if (!this.system.useRest && state !== 'BackupState_None') {
             await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
             return this.turnOffBackup(retries - 1);
         } else {

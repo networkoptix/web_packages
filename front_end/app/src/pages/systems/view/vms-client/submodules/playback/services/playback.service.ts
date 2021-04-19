@@ -118,7 +118,7 @@ export class PlaybackService implements OnDestroy {
       return
     }
     this._state = createInitialLiveState(
-      this.vms.selectedCamera.getLiveVideoUrl(this._state.transport, this._state.quality),
+      this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality),
       this._state.quality,
       this._state.transport,
       this.vms.selectedCamera.getPosterUrl()
@@ -135,7 +135,7 @@ export class PlaybackService implements OnDestroy {
       this.stop()
     }
     this._state = createInitialArchiveState(
-      this.vms.selectedCamera.getArchiveVideoUrl(t, this._state.transport, this._state.quality),
+      this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality, t),
       t,
       this._state.quality,
       this._state.transport,
