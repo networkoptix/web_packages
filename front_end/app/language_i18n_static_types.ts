@@ -822,7 +822,6 @@ export interface ToastMessage {
     nameFail:         any;
     reviewAccepted:   any;
     system:           ToastMessageSystem;
-    viewingReport:    any;
 }
 
 export interface ToastMessageSystem {
@@ -1720,7 +1719,6 @@ const typeMap: any = {
         { json: "nameFail", js: "nameFail", typ: "any" },
         { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
-        { json: "viewingReport", js: "viewingReport", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },

@@ -14,7 +14,7 @@ import { NxUtilsService }           from '@services/utils.service';
 export class NxEditableSettingsHeading {
     @Input() nameWatcher: Watcher<string>;
     @Input() editEnabled = true;
-    @HostBinding('style.width') width = 'auto'
+
     @Output() editModeState = new EventEmitter()
 
     CONFIG: IConfig;
@@ -36,12 +36,10 @@ export class NxEditableSettingsHeading {
     handleBlur() {
         this.editMode = false;
         this.editModeState.emit(false);
-        this.width = 'auto';
         this.handleBlankName();
     }
 
     handleFocus() {
-        this.width = '100%';
         this.editMode = true;
         this.editModeState.emit(true);
     }

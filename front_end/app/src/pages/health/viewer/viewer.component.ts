@@ -524,13 +524,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     system   : data.system || '-',
                     time
                 };
-                // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-                this.ribbonService.show(this.LANG.toastMessage.viewingReport?.(), [], 'alert');
-                setTimeout(() => {
-                    this.setHeaderHeight();
-                });
             };
-
             if (typeof file.file === 'function') {
                 file.file((file: File) => {
                     fileReader.readAsText(file);
