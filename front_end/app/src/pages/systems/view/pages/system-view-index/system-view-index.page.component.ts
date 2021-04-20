@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core'
+import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
 import { Subject, Subscription, timer } from 'rxjs'
 
-import { ServerTimeInfo, NxSystemService, NxMediaServer, NxCamera, NxSystem } from '../../../../../services/system.service'
+import { ServerTimeInfo, NxSystemService, NxMediaServer, NxSystem } from '../../../../../services/system.service'
 import { NxAccountService } from '../../../../../services/account.service'
 
 import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
@@ -20,9 +20,9 @@ import { NxConfigService, IConfig } from '@services/nx-config'
 import sidebarLayout from '../sidebarLayout.cfg'
 import { LoggerDecorator } from '../../vms-client/utils'
 import { NxSystemsService } from '@services/systems.service';
-import { UntilDestroy }     from '@ngneat/until-destroy';
-import { takeUntil } from 'rxjs/operators'
-import { NxUtilsService } from '@services/utils.service'
+import { UntilDestroy }                    from '@ngneat/until-destroy';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators'
+import { NxUtilsService }                  from '@services/utils.service'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -118,10 +118,14 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
     this.onResize({ target: { innerWidth: window.innerWidth } })
 
-    this.systemsSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
-      this.systems = systems;
-      this._initSystem();
-    });
+    this.systemsSubscription = this.systemsService.systemsSubject
+        .pipe(distinctUntilChanged())
+        .subscribe((systems) => {
+          if (systems.length) {
+            this.systems = systems;
+            this._initSystem();
+          }
+        });
   }
 
   public ngOnDestroy (): void {
@@ -155,13 +159,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   protected _onRouteChange (params) {
-    // if (params.systemId) {
       this.systemId = params.systemId || null
       this.system = undefined
       this.hasCameras = false
       this._setInitializationState(false, false)
-      this._initSystem()
-    // }
   }
 
   protected _quality2resolution (q) {
@@ -185,14 +186,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
           this._log('local system created', this.system)
           return Promise.resolve();
-        } else if (this.systems) {
-          if (this.systems.filter(s => s.id === this.systemId).length) {
-            this.system = this.systemService.createSystem(account.email, this.systemId);
-            return Promise.resolve();
-          }
-          this.router.navigate(['/systems']);
-          return Promise.reject();
+
         }
+
+        // _initSystem is called on systems subscription
+        if (this.systems.filter(s => s.id === this.systemId).length) {
+          this.system = this.systemService.createSystem(account.email, this.systemId);
+          return Promise.resolve();
+        }
+
+        return Promise.reject();
       });
     };
 
@@ -304,7 +307,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
       console.warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
       setTimeout(() => this._setInitializationState(true, true));
     })
-    
+
     this.cancelPoll$.next('cancel')
     timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(
       takeUntil(this.cancelPoll$)

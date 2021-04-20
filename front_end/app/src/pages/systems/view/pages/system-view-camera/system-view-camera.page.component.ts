@@ -292,13 +292,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _onRouteChange (params) {
-      this.id = params['cameraId'];
-      this._log('ROUTE CHANGE: NEW CAMERA', this.id)
-      this.vms.selectCamera(this.id)
-      this.resetTransport()
-      this.resetQuality()
-      this._getRecords()
-      this._updateAvailableTransportsAndResolutions()
+        this.id = params['cameraId'];
+        console.log('ROUTE CHANGE: NEW CAMERA', this.id)
+        this.vms.selectCamera(this.id)
+        this.playback.stop()
+        this.resetQuality()
+
+        if (this.vms.selectedCamera) {
+            this._getRecords()
+        }
 
       if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
         this.ux.isSidebarShown = false
