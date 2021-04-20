@@ -392,7 +392,7 @@ def restore_password(request):
             account.save()
     elif 'user_email' in request.data:
         user_email = request.data['user_email'].lower()
-        Account.reset_password(get_ip(request), user_email)
+        Account.reset_password(user_email, get_ip(request))
     else:
         raise APIRequestException('Parameters are missing', ErrorCodes.wrong_parameters,
                                   error_data={'code': ['This field is required.'],
