@@ -35,7 +35,6 @@ $border-color: $light6;
       }
     }
 
-    > player,
     > .offline-message {
       height: 100vh;
     }
@@ -49,17 +48,11 @@ $border-color: $light6;
 
   &.controls-shown {
     > .controls {
-      bottom: 0;
-    }
-
-    > player,
-    > .offline-message {
-      height: calc(100vh - 48px - 100px);
-      display: inline-table;
+      display: flex;
+      height: 100px;
     }
 
     &.is-full-screen {
-      > player,
       > .offline-message {
         height: calc(100% - 100px);
       }
@@ -253,14 +246,14 @@ $border-color: $light6;
   }
 
   > player {
+    display: flex;
     flex-grow: 1;
     flex-shrink: 0;
     background-color: $player-background;
-    height: calc(100% - 48px);
+    width: 100%;
     // transition: all .2s ease-in-out;
   }
   > .offline-message {
-    height: calc(100% - 48px);
     flex-grow: 1;
     flex-shrink: 0;
     display: flex;
@@ -302,72 +295,76 @@ $border-color: $light6;
     }
   }
 
+  .controls-toggling-ear-outer-wrapper {
+    position: relative;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .controls-toggling-ear--wrapper {
+      position : absolute;
+      top      : -16px;
+      left     : calc(50% - 70px/2);
+      width    : 16px;
+      height   : 40px;
+
+      @include bootstrap.media-breakpoint-down(md) {
+          content    : "";
+          position   : absolute;
+          top        : -50px;
+          width      : 70px;
+          height     : 50px;
+          background : transparent;
+      }
+
+      &.shown {
+          @include bootstrap.media-breakpoint-down(md) {
+              right : 0;
+          }
+
+          .controls-toggling-ear {
+              transform     : rotate(0deg);
+              border-radius : 2px 2px 0 0;
+
+              @include bootstrap.media-breakpoint-down(sm) {
+                  float : right;
+              }
+          }
+      }
+
+      .controls-toggling-ear {
+          width           : 40px;
+          height          : 16px;
+          background      : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
+          background-size : 16px 16px;
+          box-shadow      : 0 2px 0 0 rgba(0, 0, 0, 0.1);
+          cursor          : pointer;
+          opacity         : 0.8;
+
+          &:hover {
+              opacity : 1.0;
+          }
+
+          @include bootstrap.media-breakpoint-down(md) {
+              position : absolute;
+              bottom   : 0;
+              left     : 14px;
+          }
+
+          transform           : rotate(180deg);
+          border-radius       : 0 0 2px 2px;
+      }
+    }
+
   > .controls {
-    position: absolute;
-    bottom: -100px;
     // transition: all .2s ease-in-out;
     left: 0;
     right: 0;
-    height: 100px;
-    display: flex;
+    height: 0;
+    display: none;
     flex-direction: row;
     z-index: 100;
     background: $additional_light2;
-
-    > .controls-toggling-ear--wrapper {
-        position : absolute;
-        top      : -16px;
-        left     : calc(50% - 70px/2);
-        width    : 16px;
-        height   : 40px;
-
-        @include bootstrap.media-breakpoint-down(md) {
-            content    : "";
-            position   : absolute;
-            top        : -50px;
-            width      : 70px;
-            height     : 50px;
-            background : transparent;
-        }
-
-        &.shown {
-            @include bootstrap.media-breakpoint-down(md) {
-                right : 0;
-            }
-
-            .controls-toggling-ear {
-                transform     : rotate(0deg);
-                border-radius : 2px 2px 0 0;
-
-                @include bootstrap.media-breakpoint-down(sm) {
-                    float : right;
-                }
-            }
-        }
-
-        .controls-toggling-ear {
-            width           : 40px;
-            height          : 16px;
-            background      : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
-            background-size : 16px 16px;
-            box-shadow      : 0 2px 0 0 rgba(0, 0, 0, 0.1);
-            cursor          : pointer;
-            opacity         : 0.8;
-
-            &:hover {
-                opacity : 1.0;
-            }
-
-            @include bootstrap.media-breakpoint-down(md) {
-                position : absolute;
-                bottom   : 0;
-                left     : 14px;
-            }
-
-            transform           : rotate(180deg);
-            border-radius       : 0 0 2px 2px;
-        }
-    }
 
     > playback-controls {
       flex-grow: 0;

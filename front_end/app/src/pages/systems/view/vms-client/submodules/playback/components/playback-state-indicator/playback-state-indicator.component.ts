@@ -24,7 +24,7 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
   }
 
   public get isRecording () {
-    return this.vms.selectedCamera.isRecording
+    return this.vms.selectedCamera?.isRecording
   }
 
   constructor (

@@ -69,11 +69,12 @@
     <span>{{ camera.isOffline ? 'offline' : (camera.isUnauthorized ? 'authentication required' : 'error' ) }}</span>
   </div></ng-template>
 
-  <div *ngIf="canViewArchives" class="controls">
+  <div class="controls-toggling-ear-outer-wrapper">
     <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
       <div class="controls-toggling-ear"  (click)="handleControlsTogglingEarClick()"></div>
     </div>
-
+  </div>
+  <div class="controls">
     <playback-controls [enabled]="camera && showPlayer"></playback-controls>
     <zoom-controls></zoom-controls>
     <timeline *ngIf="showTimeline else noArchiveYet"></timeline>

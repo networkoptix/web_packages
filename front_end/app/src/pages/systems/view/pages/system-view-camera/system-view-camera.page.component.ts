@@ -145,7 +145,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public transport2Verbose (t: PlaybackTransport) {
-      return t.toLocaleUpperCase()
+      return t?.toLocaleUpperCase()
     }
 
     public getRecordsInProgress: string
