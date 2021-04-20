@@ -59,13 +59,20 @@ def split_blocks(html):
     return blocks
 
 
+def sub_files(value, datastructures, record_values):
+    for ds in datastructures:
+        if ds.name in record_values:
+            value = value.replace(ds.name, record_values[ds.name])
+    return value
+
+
 def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
-    ds_needed = ('title', 'shortDescription', 'body', 'script', 'styling')
     doc_structures = DataStructure.objects.filter(
-        context__asset_type__type=AssetType.ASSET_TYPES.documentation, name__in=ds_needed
+        context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )
+    doc_file_structures = doc_structures.filter(type=DataStructure.DATA_TYPES.external_file)
     if review:
         state = 'review'
     elif draft:
@@ -121,7 +128,9 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
-            doc_dict['blocks'] = values['body'].replace(S3_LINK, REPLACEMENT_LINK)
+            doc_dict['blocks'] = values['body']
+            doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
+            doc_dict['blocks'] = doc_dict['blocks'].replace(S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
             css = values['styling']
 
