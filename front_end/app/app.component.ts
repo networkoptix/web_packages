@@ -105,6 +105,7 @@ export class AppComponent {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
+        this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
