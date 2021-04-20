@@ -5,11 +5,6 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/api/systems/*": {
-    "target": "http://cloud-test.hdw.mx",
-    "secure": false,
-    "changeOrigin": true
-  },
   "/web/api/*": {
     "target": "https://10.1.5.196:7011",
     "secure": false,

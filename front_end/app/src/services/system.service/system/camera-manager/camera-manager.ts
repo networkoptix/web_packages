@@ -69,7 +69,8 @@ export class CameraManager {
                 params[name] = value;
                 return params;
             }, {});
-            const parentName = this.servers.find(server => server.id === parentId)?.name;
+
+            const parentName = this.servers?.find(server => server.id === parentId)?.name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');

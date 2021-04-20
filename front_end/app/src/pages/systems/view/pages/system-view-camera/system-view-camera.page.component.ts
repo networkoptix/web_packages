@@ -118,12 +118,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       return Object.keys(this.availableTransportsAndResolutions || {})
     }
 
-    public get qualitiesAvailable () {
-      try {
-        return this.availableTransportsAndResolutions[this.transportSelected] || []
-      } catch {
-        return []
-      }
+    public get qualitiesAvailable() {
+        try {
+            const qualities = this.availableTransportsAndResolutions[this.transportSelected] || [];
+            return qualities.map(item => this.quality2Verbose(item));
+        } catch {
+            return [];
+        }
     }
 
     public get qualitySelectedVerbose () {
@@ -341,18 +342,20 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       return this.camera && this.camera.hasArchive
     }
 
-    protected _initSelectedCamera () {
-      this._log('_initSelectedCamera')
-      this.playback.stop()
+    protected _initSelectedCamera() {
+        this._log('_initSelectedCamera');
+        this.playback.stop();
+        this.resetTransport();
+        this.resetQuality();
 
-      if (this.camera.hasArchive) {
-        this._log('timeline reset time', this.camera)
-        this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end)
-      }
+        if (this.camera.hasArchive) {
+            this._log('timeline reset time', this.camera);
+            this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
+        }
 
-      if (this.camera.isLive) {
-        this.playback.playLive()
-      }
+        if (this.camera.isLive) {
+            this.playback.playLive();
+        }
     }
 
     public toggleFullScreen ($event?) {
