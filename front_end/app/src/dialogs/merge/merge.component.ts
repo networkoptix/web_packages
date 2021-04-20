@@ -477,9 +477,15 @@ export class MergeModalContent {
                 }
 
                 if (this.nonCloudMerge || this.CONFIG.isLocal) {
+                    // if current system is not cloud and secondary system is cloud, merge settings should be taken from secondary
+                    const takeRemoteSettings = !this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId;
+                    if (takeRemoteSettings) {
+                        this.setPrimarySystem(this.targetSystem);
+                        this.setSystems();
+                    }
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, false, password).toPromise()
-                        : this.deprecatedMergeSystems(password);
+                        ? this.system.mergeSystems(this.serverUrl, false, takeRemoteSettings, password).toPromise()
+                        : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
                 }
@@ -593,9 +599,9 @@ export class MergeModalContent {
             });
     }
 
-    deprecatedMergeSystems(password: string) {
+    deprecatedMergeSystems(password: string, takeRemoteSettings = false) {
         const adminPassword = this.serverUrl.slice(this.serverUrl.indexOf('//admin') + 8, this.serverUrl.lastIndexOf('@'));
-        return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, password, adminPassword);
+        return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, password, adminPassword, takeRemoteSettings);
     }
 
     async precheckSystemMerge() {

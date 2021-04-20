@@ -1279,11 +1279,11 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
+    mergeSystems(url: string, dryRun: string, takeRemoteSettings = false, currentPassword?: string) {
         const data = {
             url,
             currentPassword,
-            takeRemoteSettings: false,
+            takeRemoteSettings,
             dryRun
         };
         return this.post<t.MergeSystems>('/api/mergeSystems', data);
@@ -1315,14 +1315,15 @@ export class NxSystemAPI {
     deprecatedMergeSystems(
         url: string,
         currentPassword: string,
-        adminPassword: string
+        adminPassword: string,
+        takeRemoteSettings = false
     ) {
         return this.getDigestKeys(adminPassword).then(({ getKey, postKey }) => {
             const data = {
                 getKey,
                 postKey,
                 currentPassword,
-                takeRemoteSettings: false,
+                takeRemoteSettings,
                 url
             };
             return this.post('/api/mergeSystems', data).toPromise();
