@@ -4,6 +4,7 @@ import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState'
 import { Subscription } from 'rxjs'
 import Hls from 'hls.js'
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils'
+import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor (
     public playback: PlaybackService,
+    public ux: WebClientUxService
   ) {
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
   }
@@ -40,6 +42,14 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public ngAfterViewInit (): void {
     this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
+    this.ux.alternateFullScreen$.subscribe(fullscreen => {
+      if (!fullscreen) return
+      try {
+        this.videoView.nativeElement.webkitEnterFullscreen()
+      } catch (e) {
+        console.error(e)
+      }
+    })
   }
 
   public ngOnDestroy (): void {
