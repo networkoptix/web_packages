@@ -62,8 +62,8 @@ def auto_refresh_token(func):
         except requests.exceptions.HTTPError as e:
             response_data = hasattr(res, "json") and res.json()
             if not refresh_token:
-                if response_data["resultCode"] in [ErrorCodes.not_authorized.value,
-                                                   ErrorCodes.account_not_activated.value]:
+                if response_data and response_data["resultCode"] in [ErrorCodes.not_authorized.value,
+                                                                     ErrorCodes.account_not_activated.value]:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
@@ -81,9 +81,6 @@ def auto_refresh_token(func):
 
 
 class TempLogin:
-    access_token = None
-    refresh_token = None
-
     def __init__(self, email, password):
         """Turns credentials into temporary tokens"""
         tokens = Auth.get_token(email, password)
@@ -95,12 +92,11 @@ class TempLogin:
         Auth.delete_token(self.refresh_token)
         Auth.delete_token(self.access_token)
 
-    @classmethod
-    def tokens(cls):
+    def tokens(self):
         """Returns the access and refresh tokens"""
         return {
-            'access_token': cls.access_token,
-            'refresh_token': cls.refresh_token
+            'access_token': self.access_token,
+            'refresh_token': self.refresh_token
         }
 
 
@@ -240,7 +236,6 @@ class System(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def unbind(request, system_id, headers=None):
         params = {
@@ -296,7 +291,7 @@ class Account(object):
 
     @staticmethod
     @lower_case_email
-    def register(ip, email, password, first_name, last_name, code=None):
+    def register(email, password, first_name, last_name, ip=None, code=None):
         logger.debug('cloud_api.Account.register: ' + email)
 
         headers = {
@@ -346,9 +341,9 @@ class Account(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def change_password(request, email, new_password, headers=None):
+        email = email.lower()
         password_ha1, password_ha1_sha256 = Account.encode_password(email, new_password)
         params = {
             'passwordHa1': password_ha1,
@@ -357,7 +352,6 @@ class Account(object):
         return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers)
 
     @staticmethod
-    @validate_response
     @auto_refresh_token
     def create_temporary_credentials(request,
                                      credential_type=None, expiration_period=None,
@@ -380,7 +374,7 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def reset_password(ip, email):
+    def reset_password(email, ip):
         params = {
             'email': email
         }
@@ -477,14 +471,12 @@ class Storage(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def _remove_from_system(request, system_id, storage_id, headers=None):
         return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def create(request, system_id, storage_size, headers=None):
         body = {
@@ -495,7 +487,6 @@ class Storage(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     def delete_from_system(request, system_id):
         storages = Storage.list_system_storages(request, system_id)
         logger.debug(f"Delete storage for system.\t SystemId: {system_id}")
@@ -508,7 +499,6 @@ class Storage(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def list_system_storages(request, system_id, headers=None):
         params = {
@@ -518,14 +508,12 @@ class Storage(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def list_cameras(request, storage_id, headers=None):
         return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers)
 
     @staticmethod
     @validate_response
-    @lower_case_email
     def move(request, destination_system_id, source_system_id):
         try:
             source_storages = Storage.list_system_storages(request, source_system_id)
@@ -553,7 +541,6 @@ class Storage(object):
 
     @staticmethod
     @validate_response
-    @lower_case_email
     @auto_refresh_token
     def statistics(request, storage_id, headers=None):
         return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/statistics", headers=headers)

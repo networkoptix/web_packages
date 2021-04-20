@@ -38,7 +38,7 @@ class AccountManager(models.Manager):
 
         # this line will send request to cloud_db and raise an exception if fails:
         try:
-            cloud_api_account.register(ip, email, password, first_name, last_name, code=code)
+            cloud_api_account.register(email, password, first_name, last_name, ip=ip, code=code)
         except APIException as a:
             if a.error_code == ErrorCodes.account_exists and not AccountManager.is_email_in_portal(email):
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
@@ -68,7 +68,7 @@ class AccountManager(models.Manager):
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
-        cloud_api_account.register(ip, email, password, first_name, last_name)
+        cloud_api_account.register(email, password, first_name, last_name, ip=ip)
         user = Account.objects.get(email=email)
         """
         When an account is created using cloud invites it is disabled because its registration
