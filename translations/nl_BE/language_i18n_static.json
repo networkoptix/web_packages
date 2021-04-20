@@ -624,7 +624,7 @@
             "reject": "Reject",
             "backToEditText": "Terug naar de bewerkingsinterfaces",
             "previewRibbon": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
@@ -762,8 +762,7 @@
             "rename": {
                 "success": "Systeemnaam opgeslagen"
             }
-        },
-        "viewingReport": "Je bekijkt een geïmporteerd rapport"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"

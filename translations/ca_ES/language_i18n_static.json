@@ -762,8 +762,7 @@
             "rename": {
                 "success": "S'ha desat el nom del sistema"
             }
-        },
-        "viewingReport": "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

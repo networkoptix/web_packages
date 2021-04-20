@@ -762,8 +762,7 @@
             "rename": {
                 "success": "Nombre del sistema guardado"
             }
-        },
-        "viewingReport": "Está viendo un informe importado"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Informe de salud del sistema {systemName}"

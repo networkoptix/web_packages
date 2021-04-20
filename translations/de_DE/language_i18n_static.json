@@ -762,8 +762,7 @@
             "rename": {
                 "success": "Systemname wurde gespeichert"
             }
-        },
-        "viewingReport": "Sie sehen einen importierten Bericht"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Bericht für System {systemName}"

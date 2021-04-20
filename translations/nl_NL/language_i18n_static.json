@@ -762,8 +762,7 @@
             "rename": {
                 "success": "Systeemnaam opgeslagen"
             }
-        },
-        "viewingReport": "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

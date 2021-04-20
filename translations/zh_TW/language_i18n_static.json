@@ -762,8 +762,7 @@
             "rename": {
                 "success": "系統名稱已儲存"
             }
-        },
-        "viewingReport": "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

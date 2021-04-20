@@ -762,8 +762,7 @@
             "rename": {
                 "success": "Rendszer neve mentve"
             }
-        },
-        "viewingReport": "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

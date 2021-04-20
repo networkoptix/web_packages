@@ -762,8 +762,7 @@
             "rename": {
                 "success": "שם המערכת נשמר"
             }
-        },
-        "viewingReport": "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"
