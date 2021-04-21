@@ -439,7 +439,7 @@ Save User
     [Return]    ${resp.json()}
 
 Save User Existing
-    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}    ${user id}
+    [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}   ${email}    ${user role id}    ${user id}
     &{data}=   Create Dictionary    email=${email}   id=${user id}   isCloud=${True}    isEnabled=${True}    name=${name}    permissions=${permissions}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10

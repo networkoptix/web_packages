@@ -976,7 +976,7 @@ Setup Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${full id}=   Execute Command    docker run -d --restart=always -p 7001 ${image}
+    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     ${port info}=   Execute Command    docker container port ${id}
