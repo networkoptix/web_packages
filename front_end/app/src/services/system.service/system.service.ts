@@ -12,6 +12,7 @@ import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types
 import { NxRibbonService }                 from '@components/ribbon';
 import { NxSystem }                        from './system/system';
 import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
+import { Router }                          from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -31,6 +32,7 @@ export class NxSystemService {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private appState: NxAppStateService,
+        private router: Router,
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
@@ -56,6 +58,7 @@ export class NxSystemService {
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.router,
                 currentUserEmail,
                 systemId,
                 serverId
@@ -86,6 +89,7 @@ export class NxSystemService {
             this.pollService,
             this.systemsService,
             this.ribbonService,
+            this.router,
             userEmail,
             '',
             '',

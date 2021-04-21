@@ -24,6 +24,7 @@ import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
 }                                                   from './system-types';
+import { Router }                                   from '@angular/router';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -126,6 +127,7 @@ export class NxSystem extends System {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
+        private router: Router,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -361,7 +363,6 @@ export class NxSystem extends System {
     }
 
     update = (): Promise<any> => {
-        this.ribbonService.hide();
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
@@ -374,6 +375,14 @@ export class NxSystem extends System {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
+                })
+                .finally(() => {
+                    // TODO: re-do ribbonService to handle multiple pages better
+                    // watch out: HM stopsPoll on navigate, but not on refresh
+                    const { url } = this.router;
+                    if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
+                        this.ribbonService.hide();
+                    }
                 });
         })).toPromise();
     };
