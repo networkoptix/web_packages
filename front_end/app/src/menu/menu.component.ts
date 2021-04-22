@@ -146,8 +146,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
-            if (this.menuService.hasUpdatedContent(changes.content.currentValue.level1)) {
-                this.menuService.content = this.menuService.sanitizeContent(changes.content.currentValue.level1);
+            const sanitizedContent = this.menuService.sanitizeContent(changes.content.currentValue.level1);
+            if (this.menuService.hasUpdatedContent(sanitizedContent)) {
+                this.menuService.content = sanitizedContent;
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
@@ -197,6 +198,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                         return;
                     }
 
+                    this.menuHeightFit = '';
+                    this.scrollHeightFit = '';
                     setTimeout(() => {
                         this.menuInit = false;
                         this.getMenuDimensions();
@@ -234,10 +237,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     resizeMenu() {
         if (this.autoFit && this.scrollArea) {
-            this.menuHeightFit = '';
-            this.scrollHeightFit = '';
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
+                    // TODO: might want to subtract more if ribbon exists
                     const windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
