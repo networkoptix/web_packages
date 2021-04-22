@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
-import { BehaviorSubject }  from 'rxjs';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
 import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
 import { NxHeaderService }      from '../../../services/nx-header.service';
@@ -38,6 +38,8 @@ export class NxAboutComponent {
     aboutCases = AboutTemplates;
     baseName = '';
     menuName = '';
+
+    accountSubscription: SubscriptionLike;
 
     get aboutStructure() {
         return this.aboutStructure$.value;
@@ -108,6 +110,14 @@ export class NxAboutComponent {
         });
         this.accountService.get().then(account => {
             this.account = account;
+            this.accountSubscription = this.accountService.accountSubject.subscribe(account => {
+                if (this.account !== account) {
+                    const url = this.router.url;
+                    this.router.navigateByUrl('/', { skipLocationChange : true }).then(_ => {
+                        this.router.navigateByUrl(url, { skipLocationChange : true });
+                    });
+                }
+            });
         }).then(_ => {
             this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(({ nodes: about, id }) => {
                 const mapToAboutNode = ({
