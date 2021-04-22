@@ -500,3 +500,30 @@ ${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[co
 
 ${CAMERA NAME}    VirtualCamera
 ${CAMERA IP}      172.17.0.1
+
+# Webadmin
+${CLOUD BLOCK}           //nx-system-admin-component//nx-block[contains(@header-style, "extended")]//div[contains(@class, "extended-header")]//header
+${CLOUD NAME}            ${CLOUD BLOCK}//div//h2[contains(text(), "${PRODUCT NAME}")]
+${CONNECTION STATUS}     ${CLOUD BLOCK}//nx-tag/a[contains(@class, "badge")]
+${CLOUD LINK}            ${CLOUD BLOCK}//a[@href="${ENV}"]
+${CONNECT TO CLOUD BUTTON}    //button/span[contains(text(), "${CONNECT TO CLOUD TEXT}")]/..
+
+# Webadmin - connect to cloud form
+${CONNECT TO CLOUD MODAL}             //cloud-connect-modal-content
+${CONNECT TO CLOUD FORM}              ${CONNECT TO CLOUD MODAL}/form[@name="connectForm']
+${CONNECT TO CLOUD MODAL HEADER}      ${CONNECT TO CLOUD FORM}/div[contains(@class, "modal-header")]
+${CONNECT TO CLOUD HEADER}            ${CONNECT TO CLOUD MODAL HEADER}/h1[contains(@class, "${CONNECT TO CLOUD TEXT}")]
+${CONNECT TO CLOUD X BUTTON}          ${CONNECT TO CLOUD MODAL HEADER}//button/div[contains(@class, "close-content")]/span[contains(@class, "close-icon")]/../..
+${CONNECT TO CLOUD MODAL BODY}        ${CONNECT TO CLOUD FORM}/div[contains(@class, "modal-body")]
+${CONNECT TO CLOUD MESSAGE}           ${CONNECT TO CLOUD MODAL BODY}/p
+${CONNECT TO CLOUD EMAIL INPUT}       ${CONNECT TO CLOUD MODAL BODY}//label[@for="login_email" and text()="Email"]/following-sibling::input[@id="login_email" and @name="login_email"]
+${CONNECT TO CLOUD EMAIL ERROR}       ${CONNECT TO CLOUD EMAIL INPUT}/../following-sibling::div[contains(@class, "clearfix")]/div[contains(@class, "input-error")]
+${CONNECT TO CLOUD PASSWORD INPUT}    ${CONNECT TO CLOUD MODAL BODY}//label[@for="login_password" and text()="Password"]/following-sibling::input[@id="login_password" and @name="login_password"]
+${CONNECT TO CLOUD PASSWORD ERROR}    ${CONNECT TO CLOUD PASSWORD INPUT}/following-sibling::div[contains(@class, "input-error")]
+${CONNECT TO CLOUD FORGOT PASSWORD LINK}    ${CONNECT TO CLOUD FORM}//a[contains(@href="${ENV}/restore_pasword")]
+${CONNECT TO CLOUD CREATE ACCOUNT LINK}     ${CONNECT TO CLOUD FORM}//a[contains(@href="${ENV}/register")]
+${CONNECT TO CLOUD MODAL FOOTER}      ${CONNECT TO CLOUD FORM}/div[contains(@class, "modal-footer")]
+${CONNECT TO CLOUD OK BUTTON}         ${CONNECT TO CLOUD MODAL FOOTER}//nx-process-button//button[contains(text(), "${OK TEXT}")]
+${CONNECT TO CLOUD CANCEL BUTTON}     ${CONNECT TO CLOUD MODAL FOOTER}//nx-cancel-button//button[contains(text(), "${CANCEL BUTTON TEXT}")]
+
+

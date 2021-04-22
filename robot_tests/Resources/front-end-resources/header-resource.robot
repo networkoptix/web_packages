@@ -133,22 +133,21 @@ Get External Links Names
 Check Drop Menu Systems Grid System
     [Arguments]    ${system list count}
     Wait Until Element is Visible    ${SYSTEMS DROPDOWN}
-    Sleep    1
-    Click Element    ${SYSTEMS DROPDOWN}
+    Slow    Click Element    ${SYSTEMS DROPDOWN}    timeout=2
     Wait Until Element is Visible    ${DROPDOWN SYSTEMS GRID}
 
     FOR    ${width}    ${columns}    ${max systems}    IN ZIP    ${WIDTHS}    ${COLUMNS SHOWN}    ${MAX SYSTEMS SHOWN}
         Set Window Size    ${width}    1080
         ${tiles}=   Get Element Count    ${SYSTEMS GRID TILES}
         ${tiles to show}=   Get Tiles to Show    ${system list count}    ${max systems}
-        Run keyword and continue on failure    Should be Equal As Integers    ${tiles}    ${tiles to show}
+        Should be Equal As Integers    ${tiles}    ${tiles to show}
         ${show additional}=   Show Additional    ${tiles}    ${tiles to show}
         ${additional}=   Set Variable If    ${show additional}    ${tiles} - ${tiles to show}
         ${system grid size}=   Get Element Size    ${SYSTEMS GRID}
         ${system tile size}=   Get Element Size    (${SYSTEMS GRID TILES})[1]
         ${is correct grid}=   Check Grid Size    ${system grid size}[0]    ${system tile size}[0]    ${columns}
         Should be True    ${is correct grid}
-        Run Keyword If    ${show additional button}    Verify extra systems number is correct    ${additional}
+        Run Keyword If    ${show additional}    Verify extra systems number is correct    ${additional}
     END
 
 Check Header Items

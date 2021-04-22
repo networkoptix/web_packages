@@ -29,10 +29,13 @@ System Admin Test Setup
 
 System Admin Test Restart
     Skip If Irrelevant
+    Go To    https://${QABURBANK IP}:${system}[port]
+    Wait until element is visible    Wait until element is visible    ${SYSTEM NAME}
     Run keyword and ignore error    Log Out
-    Run keyword and ignore error    Rename System    ${local auth}    ${system}[id]    ${system}[name]
+    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
     Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
     Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
+    Delete All Cookies
 
 # Waits
 Wait until settings are visible
@@ -264,6 +267,63 @@ Search For
     Validate Search Input
     Input Text    ${SEARCH INPUT}    ${text}
 
+# Webadmin - specific
+Validate Cloud Block
+    [Documentation]    check UI of the header extension for local admin
+    [Arguments]    ${connected}=${False}
+    Wait until elements are visible
+       ...    ${CLOUD NAME}
+       ...    ${CLOUD LINK}
+    Run Keyword If    ${connected}    Wait until elements are visible
+        ...    ${CONNECTION STATUS}\[contains(text(), "CONNECTED")]
+        ...    ${DISCONNECT FROM NX}
+            ...    ELSE    Wait until elements are visible
+                ...    ${CONNECTION STATUS}\[contains(text(), "NOT CONNECTED")]
+                ...    ${CONNECT TO CLOUD BUTTON}
+#                ...    ${OWNER YOU}
+
+Validate Connect To Cloud Form
+    Wait until elements are visible
+        ...    ${CONNECT TO CLOUD MESSAGE}
+        ...    ${CONNECT TO CLOUD HEADER}
+        ...    ${CONNECT TO CLOUD X BUTTON}
+        ...    ${CONNECT TO CLOUD EMAIL INPUT}
+        ...    ${CONNECT TO CLOUD PASSWORD INPUT}
+        ...    ${CONNECT TO CLOUD FORGOT PASSWORD LINK}
+        ...    ${CONNECT TO CLOUD CREATE ACCOUNT LINK}
+        ...    ${CONNECT TO CLOUD OK BUTTON}
+        ...    ${CONNECT TO CLOUD CANCEL BUTTON}
+
+Fill in login and password
+    [Arguments]    ${login}    ${password}
+    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${email}    timeout= 0.1
+    Slow    Input Text    ${CONNECT TO CLOUD PASSWORD INPUT}    ${password}    timeout= 0.1
+
+Close Connect to Cloud modal
+    Wait until element is visible    ${CONNECT TO CLOUD X BUTTON}
+    Click Button    ${CONNECT TO CLOUD X BUTTON}
+    Wait untile element is not visible    ${CONNECT TO CLOUD MODAL}
+
+Validate Email Input Error
+    [Arguments]    ${error text}
+    #TODO ADD CHECKING RED COLOR
+    Wait until element is visible    ${CONNECT TO CLOUD EMAIL ERROR}\[contains(text(), "${error text}")]
+
+Validate Password Input Error
+    [Arguments]    ${error text}
+    #TODO ADD CHECKING RED COLOR
+    Wait until element is visible    ${CONNECT TO CLOUD PASSWORD ERROR}\[contains(text(), "${error text}")]
+
+Connect To Cloud
+    [Arguments]    ${email}    ${password}    ${success}=${True}
+    Validate Connect To Cloud Form
+    Fill in login and password    ${email}    ${password}
+    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Run Keyword If    ${success}    Run Keywords
+       ...    Check For Alert    System connected to Nx Cloud    AND
+       ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
+       ...    Wait until element is visible   ${DISCONNECT FROM NX CLOUD}
+
 # API - based
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
@@ -280,4 +340,4 @@ Evaluate Log Level via API
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
-    Should Be True    $selected == $state
+    Should Be True    $selected == $stat

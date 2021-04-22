@@ -971,7 +971,7 @@ Create Docker Server
     [Return]    ${port1}
 
 Setup Docker Server
-    [Arguments]    ${image}=${IMAGE 4.1} 
+    [Arguments]    ${image}=${IMAGE}
     ${server}=   Create Dictionary
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
@@ -989,7 +989,7 @@ Setup Docker Server
     [Return]    ${server}
 
 Setup Custom Docker Server
-    [Arguments]    ${network}=host    ${image}=4.1_test
+    [Arguments]    ${network}=host    ${image}=${IMAGE}
     ${server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -1011,7 +1011,7 @@ Setup Custom Docker Server
     [Return]    ${server}
 
 Setup Docker System
-    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${cloud email}=${None}
+    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
     ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
     Set To Dictionary    ${system}    cont=${system}[cont]
@@ -1026,7 +1026,7 @@ Setup Docker System
     [Return]    ${system}
 
 Create Base Cloud System
-    [Arguments]    ${image}=${IMAGE 4.3}    ${network}=bridge    ${add users}=${True}
+    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
     [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
     ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
     ...               where "Create Base Cloud System" is called

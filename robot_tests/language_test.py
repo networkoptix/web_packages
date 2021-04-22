@@ -66,7 +66,7 @@ def runTest(key, langList):
 def discardLanguageResult(key):
 
     remove(path.join(loc, key, 'output.xml'))
-    remove(path.join(loc, key, 'log.html'))
+    remove(path.join(loc, key, 'log_sys_admin.html'))
     remove(path.join(loc, key, 'report.html'))
 
 

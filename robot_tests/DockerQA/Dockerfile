@@ -24,11 +24,11 @@ RUN apt-get update \
 # RUN rm /opt/networkoptix/mediaserver/bin/root-tool-bin
 
 # Copy files for container's and server's configs
-COPY entrypoint.sh config_helper.sh /opt/networkoptix/mediaserver/bin/
+COPY entrypoint.sh config_helper.sh /opt/networkoptix-metavms/mediaserver/bin/
 COPY patch-cloud-host.sh utils.sh /usr/local/bin/
 
 # Patch the cloud host
 RUN /usr/local/bin/patch-cloud-host.sh ${cloud_host}
 
 # Runs the media server on container start
-ENTRYPOINT ["/bin/sh", "-c", "/opt/networkoptix/mediaserver/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "-c", "/opt/networkoptix-metavms/mediaserver/bin/entrypoint.sh"]

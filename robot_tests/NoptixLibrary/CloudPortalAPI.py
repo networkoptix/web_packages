@@ -73,35 +73,6 @@ class CloudPortalAPI(object):
             # return systems
         return data.json()
 
-    def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
-        assert r.status_code == 200, 'Failed to get system settings'
-        return r.json()
-
-    def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudSystemID':
-                return obj['value']
-        else:
-            return 'Cannot find cloudSystemID key'
-
-    def get_local_system_name(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'systemName':
-                return obj['value']
-        else:
-            return 'Cannot find systemName key'
-
-    def get_local_system_owner(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudAccountName':
-                return obj['value']
-        else:
-            return 'Cannot find cloudAccountName key'
-
     def set_account_language(self, env, email, password, new_language='en_US'):
         with self.log_in(env, email, password) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
@@ -140,6 +111,39 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
+
+    @staticmethod
+    def get_system_settings(server_url, local_auth):
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
+        assert r.status_code == 200, 'Failed to get system settings'
+        return r.json()
+
+    @staticmethod
+    def get_cloud_system_id(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudSystemID':
+                return obj['value']
+        else:
+            return 'Cannot find cloudSystemID key'
+
+    @staticmethod
+    def get_local_system_name(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'systemName':
+                return obj['value']
+        else:
+            return 'Cannot find systemName key'
+
+    @staticmethod
+    def get_local_system_owner(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudAccountName':
+                return obj['value']
+        else:
+            return 'Cannot find cloudAccountName key'
 
     def subscribe_push_notification(self, env, email, password, token, name):
         authAscii = email+":"+password

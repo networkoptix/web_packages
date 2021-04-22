@@ -14,30 +14,99 @@ ${password}    ${BASE PASSWORD}
 Cloud block is visible for owner
     [Tags]    webadmin
     Log in to system    ${local system}    admin
-#    Log in as owner
-#    check cloud name
-#    check cloud link
-#    check "not connected"
-#    check connect to cloud btn
+    Validate Cloud Block    False
 
 Cloud block is not visible for not owner
-    [Tags]    webadmin
+    [Tags]    webadmin    deb
     Log in to system    ${local system}    local_viewer
-#    Check that block is not visible
+    Wait until element is not visible    ${CLOUD BLOCK}
+
+Connect To Cloud Form - email validation
+    [Tags]    webadmin    deb
+    ${broken emails}=   Create List    ${EMPTY}    ${SPACE}    dsfgdsgf    sdags@sfasf@    qa@qa@    qwerty@
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+
+    FOR    ${email}    IN    ${broken emails}
+        Click Button    ${CONNECT TO CLOUD BUTTON}
+        Validate Connect To Cloud Form
+        Fill in login and password    ${email}    ${password}
+        Validate Email Input Error    Please enter a valid Email
+        Close Connect to Cloud modal
+    END
+
+Connect To Cloud Form - negative scenarios
+    [Tags]    webadmin    deb
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Validate Connect To Cloud Form
+
+    Log    Step 1 - empty login and password
+    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Validate Email Input Error    Email is required
+    Validate Password Input Error    Password is required
+
+    Connect To Cloud    ${EMPTY}    ${EMPTY}    success=False
+    Validate Email Input Error    Email is required
+    Validate Password Input Error    Password is required
+
+    Log    Step 2 - empty password
+    Connect To Cloud    ${EMAIL BASE}    ${EMPTY}    success=False
+    Validate Password Input Error    Password is required
+
+    Log    Step 3 - empty login
+    Connect To Cloud    ${EMPTY}    ${password}    success=False
+    Validate Password Input Error    Email is required
+
+    Log    Step 4 - wrong password
+    Connect To Cloud    ${EMAIL BASE}    dsv34    success=False
+    Validate Password Input Error    Wrong password
+
+    Log    Step 5 - not existing account
+    Connect To Cloud    qa@test.com    ${EMPTY}    success=False
+    Validate Email Input Error    Account not found
+
+    Log    Step 6 - not activated account
+    ${email}=   Get Random Email
+    Register Account    Not    Activated    ${email}    ${password}
+    Connect To Cloud    ${email}    ${password}    success=False
+    ${error text}=   Get Text    ${CONNECT TO CLOUD PASSWORD ERROR}
+    Run keyword and continue on failure    Validate Email Input Error    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
+
+Connect To Cloud Form - cancel buttons works correctly
+    [Tags]    webadmin    deb
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Validate Connect To Cloud Form
+    Fill in login and email    ${system}[owner]    ${password}
+    Wait until elements are not visible    ${CONNECT TO CLOUD EMAIL ERROR}    ${CONNECT TO CLOUD PASSWORD ERROR}
+    Click Button    ${CONNECT TO CLOUD CANCEL BUTTON}
+    Wait until elements are not visible    ${CONNECT TO CLOUD MODAL}    ${DISCONNECT FROM NX CLOUD}
+    Validate Cloud Block    False
+
+    Log   Check that Cancel button doesn't trigger connection
+    ${cloud id}=   Get Cloud System Id    ${local auth}    https://${QABURBANK IP}:${system}[port]
+    Should be equal as strings    ${cloud id}    ${EMPTY}
 
 Local owner can connect system to cloud
-    [Tags]    webadmin
+    [Tags]    webadmin    deb
     Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Connect To Cloud    success
+    Validate Cloud Block    True
 
-Check UI for local owner when connected to cloud
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
+#Check UI for local owner when connected to cloud
+#    [Tags]    webadmin
+#    Log in to system    ${local system}    admin
 #    Connect system to cloud if not
 
-Check UI for local not owner
-    [Tags]    webadmin
-    Log in to system    ${local system}    local_viewer
-#   Connect system to cloud if not
+#Check UI for local not owner
+#    [Tags]    webadmin
+#    Log in to system    ${local system}    local_viewer
+##   Connect system to cloud if not
 #    Log In as not owner
 #   Cloud block:
 #   - Connected button
@@ -230,7 +299,7 @@ Correct items are shown for advanced viewer and below
 
 # Left search
 Left menu search: Position and style
-    [Tags]    C81759    webadmin    cloud    search    deb
+    [Tags]    C81759    webadmin    cloud    search
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -296,7 +365,7 @@ Left menu search: Availability for different users
     END
 
 Left menu search: Search mechanics
-    [Tags]    C81762    webadmin    cloud    search    deb
+    [Tags]    C81762    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
 
     Log    Step 1
