@@ -33,7 +33,7 @@ export class NxPollService {
     createPoll<T>(apiCall: () => Observable<T> | Promise<T>, intervalDelay: number): Observable<any> {
         return timer(0, intervalDelay).pipe(
             takeUntil(this.unsub$),
-            map(apiCall)
+            concatMap(apiCall)
         );
     }
 }

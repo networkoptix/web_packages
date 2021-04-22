@@ -164,7 +164,7 @@ export class NxSystemsService implements OnDestroy {
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap(() => this.processSystems(this.systems)),
+                tap((systems: NxSystemWithUserInfo[]) => this.processSystems(systems)),
                 distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
