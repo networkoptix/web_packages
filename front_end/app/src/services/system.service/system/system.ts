@@ -417,7 +417,7 @@ export class NxSystem extends System {
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
-        return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
+        return this.mediaserver.mergeSystems(url, dryRun, false, currentPassword);
     }
 
     checkMergeStatus(forceReload = true) {
