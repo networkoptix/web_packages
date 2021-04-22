@@ -279,7 +279,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     if (!this.CONFIG.isLocal) {
                         this.account = account;
                         // Starts the systems poll if starting on a system.
-                        if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
+                        if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
                             this.systemsService.getSystems(account.email);
                         }
 
@@ -293,7 +293,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     this.systemNoAccess = true;
                                     return;
                                 }
-
+                                if (this.systemId === this.system?.id) {
+                                    return;
+                                }
                                 this.system = this.systemService.createSystem(this.account.email, this.systemId);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {

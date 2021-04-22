@@ -484,7 +484,7 @@ export class MergeModalContent {
                         this.setSystems();
                     }
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, false, takeRemoteSettings, password).toPromise()
+                        ? this.system.mergeSystems(this.serverUrl, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);

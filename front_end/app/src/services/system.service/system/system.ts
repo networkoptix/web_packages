@@ -121,7 +121,6 @@ export class NxSystem extends System {
     constructor(
         CONFIG: IConfig,
         LANG: LanguageI18NStaticTypes,
-        private cancelPoll$: Subject<string>,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
@@ -179,9 +178,7 @@ export class NxSystem extends System {
         });
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
-        this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval).pipe(
-            takeUntil(this.cancelPoll$)
-        );
+        this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
@@ -348,9 +345,6 @@ export class NxSystem extends System {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else {
-            if (this.systemPoll instanceof Subscription) {
-                this.systemPoll.unsubscribe();
-            }
             if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }
@@ -416,8 +410,8 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
-        return this.mediaserver.mergeSystems(url, dryRun, false, currentPassword);
+    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+        return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
     }
 
     checkMergeStatus(forceReload = true) {

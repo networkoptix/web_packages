@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject }    from 'rxjs';
 
 import { NxConfigService, IConfig }        from '../nx-config';
 import { NxLanguageProviderService }       from '../nx-language-provider';
@@ -22,7 +21,6 @@ export class NxSystemService {
     LANG: LanguageI18NStaticTypes;
     private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
-    private cancelPoll$ = new Subject<string>();
 
     constructor(
         configService: NxConfigService,
@@ -41,9 +39,6 @@ export class NxSystemService {
     }
 
     createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
-        if (!skipPoll) {
-            this.cancelPoll$.next('cancel system polling');
-        }
         let system: NxSystem;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
@@ -52,7 +47,6 @@ export class NxSystemService {
             system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
-                this.cancelPoll$,
                 this.cloudApi,
                 this.systemApiService,
                 this.pollService,
@@ -79,11 +73,9 @@ export class NxSystemService {
         if (this.system !== undefined) {
             return this.system;
         }
-        this.cancelPoll$.next('cancel system polling');
         this.system = new NxSystem(
             this.CONFIG,
             this.LANG,
-            this.cancelPoll$,
             this.cloudApi,
             this.systemApiService,
             this.pollService,

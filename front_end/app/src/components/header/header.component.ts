@@ -499,14 +499,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                                 this.system.getInfoAndPermissions(false)
                                     .then(system => {
-                                        if (system) {
-                                            this.systems.find(sys => {
-                                                if (sys.id === this.headerService?.activeSystem?.id) {
-                                                    sys.moduleInfo = system.moduleInfo;
-                                                }
-                                            });
-                                            this.canSeeInfo = system.canViewInfo();
-                                        }
+                                        this.canSeeInfo = system?.canViewInfo() || false;
                                     })
                                     .catch(_ => {});
                             }

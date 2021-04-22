@@ -150,10 +150,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 delete previousValue.shownStatus;
             }
 
-            if (currentValue.id !== previousValue?.id) {
-                this.setServer();
+            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+                this.storagesLoading = true;
             } else {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
+            }
+            if (!this.applyService.locked) {
+                setTimeout(() => this.setServer());
             }
         }
         this.applyService.addWatchers([this.saveStorageWatcher]);
@@ -178,7 +181,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         this.applyService.setVisible(false);
         this.systemStorageChosen = false;
-        this.storagesLoading = true;
         this.serverLoaded = false;
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;

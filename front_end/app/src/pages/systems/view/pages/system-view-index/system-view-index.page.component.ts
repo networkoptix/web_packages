@@ -118,6 +118,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
     this.onResize({ target: { innerWidth: window.innerWidth } })
 
+    this.accountService.get().then((account) => {
+      if (account && this.CONFIG.isLocal && !this.systemsService.isPolling) {
+        this.systemsService.getSystems(account.email);
+      }
+    });
+
     this.systemsSubscription = this.systemsService.systemsSubject
         .pipe(distinctUntilChanged())
         .subscribe((systems) => {

@@ -1279,7 +1279,7 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: string, takeRemoteSettings = false, currentPassword?: string) {
+    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
         const data = {
             url,
             currentPassword,
