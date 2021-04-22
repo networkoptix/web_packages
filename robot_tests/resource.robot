@@ -881,7 +881,7 @@ Check Password Badge
     ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}  
 
-    Mouse Over    ${PASSWORD BADGE}
+    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Mouse Over    ${PASSWORD BADGE}
     Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD TOO COMMON TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE}/parent::nx-tag[@title="${PASSWORD SPECIAL CHARS TEXT}"]

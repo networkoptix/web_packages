@@ -195,14 +195,15 @@ First name is required
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
     Delete All Text    ${ACCOUNT FIRST NAME}
-    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
     Click Element    ${ACCOUNT LAST NAME}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+    Click Button    ${ACCOUNT SAVE}  
+    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Click Button    ${ACCOUNT SAVE}   
-    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
-    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}  
+    # Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    # Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 
@@ -212,14 +213,14 @@ Last name is required
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
     Delete All Text   ${ACCOUNT LAST NAME}
-    Wait Until Element Is Visible    ${LAST NAME IS REQUIRED}
     Click Element    ${ACCOUNT FIRST NAME}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+    Click Button    ${ACCOUNT SAVE}  
+    Wait Until Element Is Visible    ${LAST NAME IS REQUIRED}
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Click Button    ${ACCOUNT SAVE}   
-    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
-    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    # Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    # Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 

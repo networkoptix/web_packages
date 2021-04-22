@@ -181,7 +181,7 @@ ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='fi
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="button"]
+${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="reset"]
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]

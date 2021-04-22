@@ -4,9 +4,10 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Remove Temporary Users
+    [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
     FOR    ${user}    IN     @{TMP USERS}
-        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
+        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${sysIP}    ${user id}
     END
     # Open Browser and go to URL    ${url}
     # Log in to Auto Tests System    ${email}
