@@ -42,7 +42,7 @@
     <div class="section qualitySelection">
       <div class="caption">Quality</div>
       <div class="options" *ngIf="qualitiesAvailable.length else noQualitiesAvailable">
-        <div *ngFor="let q of qualitiesAvailable" class="option" [ngClass]="{ selected: qualitySelected === q }" (click)="setQuality(q)">{{ q }}</div>
+        <div *ngFor="let q of qualitiesAvailable" class="option" [ngClass]="{ selected: qualitySelected === q.toLowerCase() }" (click)="setQuality(q.toLowerCase())">{{ q }}</div>
       </div>
       <ng-template #noQualitiesAvailable>
         <div class="options">

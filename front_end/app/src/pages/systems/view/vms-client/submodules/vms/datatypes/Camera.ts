@@ -110,6 +110,7 @@ export class Camera implements ICamera {
         return hlsResult
       }
     } else {
+      result.unshift(''); // add "Auto"
       return result
     }
   }
