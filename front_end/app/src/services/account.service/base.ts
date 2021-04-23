@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
-import { NxDialogsService }                from '../../dialogs/dialogs.service';
+import { NxDialogsService }                from '@dialogs/dialogs.service';
 import { NxSessionService }                from '../session.service';
 import { NxApplyService }                  from '../apply.service';
 import { WINDOW }                          from '../window-provider';
@@ -15,9 +15,9 @@ import { NxAppStateService }               from '../nx-app-state.service';
 import { NxUriService }                    from '../uri.service';
 import { NxPollService }                   from '../poll.service';
 import { NxUtilsService }                  from '../utils.service';
-import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { NxSystemAPIService, NxSystemRestAPI } from '../system-api.service';
 import { Account }                         from './account';
-import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { NxStorageService }                from '../storage.service';
 
 interface IParams<Value = any> {
@@ -48,7 +48,7 @@ export abstract class BaseAccount implements OnDestroy {
     // Declare services that cause circular dependencies here instead of injecting in constructor
     protected dialogs: NxDialogsService;
     protected applyService: NxApplyService;
-    public mediaServerApi: NxSystemAPI;
+    public mediaServerApi: any;
 
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
@@ -115,9 +115,6 @@ export abstract class BaseAccount implements OnDestroy {
         // setTimeout(() => {
         this.dialogs = injector.get(NxDialogsService);
         this.applyService = injector.get(NxApplyService);
-        this.mediaServerApi = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => of(''));
-        // });
     }
 
     ngOnDestroy() {

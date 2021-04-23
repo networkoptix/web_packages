@@ -13,21 +13,6 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-export interface User {
-    canBeEdited: boolean;
-    canBeDeleted: boolean;
-    email: string;
-    id: string;
-    isCloud: boolean;
-    isAdmin?: boolean;
-    isEnabled: boolean;
-    userRoleId: string;
-    permissions: string;
-    // TODO: Remove the trash below after #VMS-2968
-    name: string;
-    fullName: string;
-}
-
 export interface AddResponseTypeHere extends IParams {}
 
 export { NxSystemAPI, NxSystemRestAPI };
