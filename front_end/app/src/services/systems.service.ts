@@ -55,7 +55,7 @@ export class NxSystemsService implements OnDestroy {
     }
 
     get isPolling() {
-        return this.systemsPoll.destination?.observers?.length > 0;
+        return this.systemsPoll?.destination?.observers?.length > 0;
     }
 
     processMerge<T extends {primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo}>(mergeInfo: T) {
