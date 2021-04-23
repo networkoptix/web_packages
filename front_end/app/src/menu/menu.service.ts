@@ -120,8 +120,8 @@ export class NxMenuService implements OnDestroy {
             const node = newContent.find(nC => nC.id === c.id).level3;
             if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
                 c.level3 = c.level3.map(menuItem => {
-                    delete menuItem.additionalText;
-                    return menuItem;
+                    const { additionalText, ...item } = menuItem;
+                    return item;
                 });
             }
             return c;
