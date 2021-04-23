@@ -129,8 +129,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         .subscribe((systems) => {
           if (systems.length) {
             this.systems = systems;
-            this._initSystem();
           }
+          this._initSystem();
         });
   }
 
