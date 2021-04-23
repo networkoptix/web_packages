@@ -119,7 +119,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     this.onResize({ target: { innerWidth: window.innerWidth } })
 
     this.accountService.get().then((account) => {
-      if (account && this.CONFIG.isLocal && !this.systemsService.isPolling) {
+      if (account && !this.CONFIG.isLocal && !this.systemsService.isPolling) {
         this.systemsService.getSystems(account.email);
       }
     });
