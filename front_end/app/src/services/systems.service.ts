@@ -50,6 +50,8 @@ export class NxSystemsService implements OnDestroy {
         this.CONFIG = configService.getConfig();
         if (!this.CONFIG.isLocal) {
             this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+        } else {
+            this.systemsSubject.next([]);
         }
         this.mergingSystems = new Set();
     }
