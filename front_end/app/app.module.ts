@@ -91,7 +91,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         NgxWebstorageModule.forRoot(),
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' })
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production && !environment.isLocal, registrationStrategy: 'registerImmediately' })
     ],
     providers: [
         NgbToast,
