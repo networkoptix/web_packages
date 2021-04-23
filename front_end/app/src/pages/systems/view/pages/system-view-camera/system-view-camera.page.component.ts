@@ -311,9 +311,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _onVmsStateChange (s: VmsState) {
       switch (s.mode) {
         case VMS_MODE.NOT_INITIALIZED:
+            this.vms.selectCamera(this.id);
+            break;
         case VMS_MODE.CAMERA_NOT_SELECTED:
           this.camera = undefined
-          this.vms.selectCamera(this.id)
           break
         case VMS_MODE.CAMERA_SELECTED:
           this.camera = s.selectedCamera

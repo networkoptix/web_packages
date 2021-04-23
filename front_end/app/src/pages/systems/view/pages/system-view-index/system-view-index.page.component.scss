@@ -67,18 +67,18 @@
 
     .nx-view-sidebar {
         position: absolute;
-
         width: 320px;
         left: -320px;
+        top: 0;
+        bottom: 0;
+        background-color: $additional_light2;
+        border-right: 1px solid $light6;
+        z-index: 20;
+
         @include bootstrap.media-breakpoint-down(sm) {
             width: 100%;
             left: -100%;
         }
-
-        top: 0;
-        bottom: 0;
-        background-color: $additional_light2;
-        z-index: 20;
 
         > .sidebar-toggling-ear--wrapper {
             position : absolute;
