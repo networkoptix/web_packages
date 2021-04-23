@@ -1266,7 +1266,9 @@ export class NxSystemAPI {
     public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
         let url;
         function hlsResolutionOrEmpty(res) {
-            if (res === 'hi' || res === 'lo') { return res; }
+            if (res === 'hi' || res === 'lo') {
+                return res;
+            }
             return '';
         }
         switch (transport) {

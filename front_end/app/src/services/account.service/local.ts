@@ -3,7 +3,8 @@ import {
 }                                    from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
-import { tap, catchError }  from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap, catchError }      from 'rxjs/operators';
 
 import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
@@ -59,6 +60,8 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             injector,
             nxSystemAPIService
         );
+        this.mediaServerApi = this.nxSystemAPIService
+            .createConnection(undefined, undefined, undefined, () => of(''), true);
     }
 
     async get(forceUpdate = false) {
@@ -87,7 +90,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                     const resultCode = errorLookup[errorText];
                     return Promise.resolve({ ...res, errorText, resultCode });
                 }),
-                tap(res => {
+                tap((res: any) => {
                     this.sessionService.loginState = (res.resultCode) ? undefined : login;
                 })
             );

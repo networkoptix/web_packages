@@ -1,6 +1,8 @@
-import { HttpClient }           from '@angular/common/http';
+import { environment } from '@environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location }             from '@angular/common';
 import { CookieService }        from 'ngx-cookie-service';
+import { retryWhen, tap, timeout } from 'rxjs/operators';
 
 import { NxHealthService }      from '../pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
@@ -8,6 +10,7 @@ import { IConfig }              from './nx-config';
 import { NxSystemAPI }          from './system-legacy-api.service';
 import { IParams }              from './system.service';
 import { NxUriCacheService }    from './uri-cache.service';
+import * as t                   from './system-api.types';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -23,6 +26,7 @@ import { NxUriCacheService }    from './uri-cache.service';
  */
 export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
+    private readonly token = 'X-Runtime-Guid';
 
     constructor(
         http: HttpClient,
@@ -50,6 +54,88 @@ export class NxSystemRestAPI extends NxSystemAPI {
             healthService,
             appState
         );
+    }
+
+    protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
+        let headers = new HttpHeaders();
+        params = params || {};
+
+        if (!environment.isLocal && this.authGet) {
+            params.auth = this.authGet;
+        }
+
+        if (environment.isLocal) {
+            headers = headers.set('Authorization', `Bearer ${this.cookieService.get(this.token)}`);
+        }
+
+        if (this.serverId) {
+            headers = headers.set('X-Server-Guid', this.serverId);
+        }
+
+        Object.entries(customHttpHeaders).forEach((entry) => {
+            headers = headers.set(...entry);
+        });
+        const fullUrl = `${this.urlBase}${url}`;
+        return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
+            retryWhen((request) => this.retryHandler(request)),
+            timeout(requestTimeout),
+            tap(undefined, (error) => {
+                if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                    this.appState.systemAvailable$.next(false);
+                }
+            })
+        );
+    }
+
+    public getCurrentUser(forceReload?: boolean) {
+        let customHeaders;
+        if (forceReload) { // Clean cache to
+            this.currentUser = undefined;
+            this.userRequest = undefined;
+            customHeaders = { 'reset-cache': 'reset' };
+        }
+        if (this.currentUser) { // We have user - return him right away
+            return Promise.resolve(this.currentUser);
+        }
+        if (this.userRequest) { // Currently requesting user
+            return this.userRequest;
+        }
+        if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
+            const endpoint = '/ec2/getUsers';
+            this.cacheService.addToCache(endpoint);
+            this.userRequest = this.get<Promise<t.NormalResponse<t.User>>>(endpoint, {}, customHeaders).toPromise()
+                .then((result: any) => {
+                    this.currentUser = result.find((user: t.User) => {
+                        return user.name.toLowerCase() === this.userEmail.toLowerCase();
+                    });
+                    return this.currentUser;
+                });
+        } else if (environment.isLocal) { // Local system mode ???
+            const endpoint = `/rest/v1/login/sessions/${this.cookieService.get(this.token)}`;
+            this.cacheService.addToCache(endpoint);
+            this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
+                .then((result :any) => {
+                    return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
+                })
+                .then((result) => {
+                    // Todo: convert result to match getCurrentUser result.
+                    this.currentUser = result[0];
+                    return this.currentUser;
+                });
+        } else {
+            this.userRequest = Promise.resolve(undefined);
+        }
+        this.userRequest.finally(() => {
+            this.userRequest = undefined; // Clear cache in case of errors
+        });
+        return this.userRequest;
+    }
+
+    loginToken(username: string, password: string, remember: boolean) {
+        return this.post('/rest/v1/login/sessions', { username, password, setCookie: remember })
+            .pipe(tap((res) => {
+                this.cookieService.set(this.token, res.token);
+            }));
     }
 
     backupControl(action?: 'start' | 'stop') {
