@@ -15,6 +15,7 @@ Library      Collections
 Library      OperatingSystem
 Library      NoptixImapLibrary
 Library      NoptixLibrary
+Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      pabot.PabotLib
@@ -1001,6 +1002,7 @@ Setup Custom Docker Server
     ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
                   ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
+
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
@@ -1016,7 +1018,7 @@ Setup Docker System
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
     Set To Dictionary    ${system}    cont=${system}[cont]
     ${auth}=   Create List    admin    ${base password}
-    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+    Slow    REST Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
     Return From Keyword If    not $cloud_email    ${system}
 
 #   Connect system to cloud if email is provided
@@ -1024,6 +1026,57 @@ Setup Docker System
     ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
     Set To Dictionary    ${system}    id=${id}
     [Return]    ${system}
+
+
+#  Getting 403 when savinf a user -> switch to REST API
+#Create Base Cloud System
+#    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
+#    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
+#    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
+#    ...               where "Create Base Cloud System" is called
+#
+#    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
+#    ${local auth}=   Create List    admin    ${base password}
+#    ${cloud auth}=   Create List    ${owner}    ${base password}
+#    Set Suite Variable    ${cloud auth}
+#    Set Suite Variable    ${local auth}
+#    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
+#    Set Suite Variable    ${system}
+#    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
+#    Return From Keyword If    not $add_users
+#
+#    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
+#    Set Suite Variable    ${email noperm}
+#    ${users}=   Create Dictionary
+#    ${local users}=    Create Dictionary
+#    FOR    ${role}    IN    @{permissions.keys()}
+#        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
+#        Sleep    2
+#        ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
+#        #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
+#        Save User
+#        ...    ${local auth}
+#        ...    ${server url}
+#        ...    ${email}
+#        ...    ${permissions}[${role}]
+#        ...    ${email}
+#        ...    Cloud User
+#        ...    ${base password}
+#
+#        Save User
+#        ...    ${local auth}
+#        ...    ${server url}
+#        ...    Local+${role}
+#        ...    ${permissions}[${role}]
+#        ...    noptixautoqa+local_${role}@gmail.com
+#        ...    Local User
+#        ...    ${base password}
+#        ...    is cloud=${False}
+#        Set To Dictionary    ${users}    ${role}=${email}
+#        Set To Dictionary    ${local users}    ${role}=Local+${role}
+#    END
+#    Set Suite Variable    ${users}
+#    Set Suite Variable    ${local users}
 
 Create Base Cloud System
     [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
@@ -1050,24 +1103,25 @@ Create Base Cloud System
         Sleep    2
         ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
         #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
-        Save User
+        REST Save User
         ...    ${local auth}
         ...    ${server url}
         ...    ${email}
-        ...    ${permissions}[${role}]    
+        ...    ${permissions}[${role}]
         ...    ${email}
         ...    Cloud User
-        ...    ${base password}
+        ...    password=${None}
+        ...    is_cloud=${True}
 
-        Save User    
-        ...    ${local auth}    
-        ...    ${server url}    
-        ...    Local+${role}    
-        ...    ${permissions}[${role}]    
-        ...    noptixautoqa+local_${role}@gmail.com    
-        ...    Local User    
-        ...    ${base password}    
-        ...    is cloud=${False}
+        REST Save User
+        ...    ${local auth}
+        ...    ${server url}
+        ...    Local+${role}
+        ...    ${permissions}[${role}]
+        ...    noptixautoqa+local_${role}@gmail.com
+        ...    Local User
+        ...    password=${base password}
+        ...    is_cloud=${False}
         Set To Dictionary    ${users}    ${role}=${email}
         Set To Dictionary    ${local users}    ${role}=Local+${role}
     END

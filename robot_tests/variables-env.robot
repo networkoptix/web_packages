@@ -61,7 +61,7 @@ ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${
 ...    liveViewer=GlobalAccessAllMediaPermission
 ...    advancedViewer=GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
 ...    custom=NoGlobalPermissions
-    
+
 &{role names}
 ...    cloudAdmin=${ADMIN TEXT}
 ...    viewer=${VIEWER TEXT}
