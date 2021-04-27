@@ -20,10 +20,10 @@
 
 .modal-footer {
     padding: 1rem;
-    &.next-button {
-        nx-process-button {
-            margin-right: 0;
-        }
+    display: flex;
+    justify-content: space-between !important;
+    &.next-button, nx-process-button, nx-process-button button, button.next-button {
+        margin-right: 0 !important;
     }
 }
 
