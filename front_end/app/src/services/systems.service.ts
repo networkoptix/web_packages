@@ -72,12 +72,11 @@ export class NxSystemsService implements OnDestroy {
     private removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
-
-            const message = NxLanguageProviderService.translate(
-                this.LANG.toastMessage.system.merge.success, {
-                    primaryName   : this.systemsMerging.primary.name,
-                    secondaryname : this.systemsMerging.secondary.name
-                });
+            const primaryName = this.systemsMerging.primary.name;
+            const secondaryName = this.systemsMerging.secondary.name;
+            const message = (primaryName && secondaryName) ? NxLanguageProviderService.translate(
+                this.LANG.dialogs.merge.mergeSuccess, { primaryName, secondaryName }
+            ) : this.LANG.toastMessage.system.merge.success();
             this.systemsMerging = {
                 primary   : undefined,
                 secondary : undefined

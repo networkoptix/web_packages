@@ -286,8 +286,9 @@ export interface DialogsMerge {
     enterSystemAddressTitle:    any;
     latestBuild:                any;
     mergeConfirmation:          any;
-    mergeSystemsTitle:          any;
     mergeFailedTitle:           any;
+    mergeSuccess:               any;
+    mergeSystemsTitle:          any;
     noServerFound:              any;
     newSystemDisplayName:       any;
     otherSystem:                any;
@@ -1239,8 +1240,9 @@ const typeMap: any = {
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
         { json: "latestBuild", js: "latestBuild", typ: "any" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "any" },
-        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "any" },
+        { json: "mergeSuccess", js: "mergeSuccess", typ: "any" },
+        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "noServerFound", js: "noServerFound", typ: "any" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "any" },
         { json: "otherSystem", js: "otherSystem", typ: "any" },
