@@ -1,5 +1,5 @@
-@use '../../../../../../styles/_theme_palette';
-@use '../../../../../../styles/theme_variables' as *;
+@use 'styles/_theme_palette';
+@use 'styles/theme_variables' as *;
 @use 'bootstrap_utils' as bootstrap;
 
 $header-background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));

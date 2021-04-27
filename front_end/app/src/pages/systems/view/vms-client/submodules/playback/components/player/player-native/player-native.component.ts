@@ -9,7 +9,7 @@ import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.se
 @Component({
   selector: 'player-native',
   templateUrl: './player-native.component.html',
-  styleUrls: ['./player-native.component.styl'],
+  styleUrls: ['./player-native.component.scss'],
 })
 @LoggerDecorator('NATIVE PLAYER ::', true)
 export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {

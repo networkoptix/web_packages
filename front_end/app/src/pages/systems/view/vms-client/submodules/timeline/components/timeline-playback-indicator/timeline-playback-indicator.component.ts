@@ -15,7 +15,7 @@ const PRIMARY_WIDTH = 140
 @Component({
   selector: 'timeline-playback-indicator',
   templateUrl: './timeline-playback-indicator.component.html',
-  styleUrls: ['./timeline-playback-indicator.component.styl'],
+  styleUrls: ['./timeline-playback-indicator.component.scss'],
 })
 export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
 

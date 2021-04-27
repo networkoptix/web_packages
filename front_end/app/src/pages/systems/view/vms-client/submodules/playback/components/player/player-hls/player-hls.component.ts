@@ -10,7 +10,7 @@ import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.se
 @Component({
   selector: 'player-hls',
   templateUrl: './player-hls.component.html',
-  styleUrls: ['./player-hls.component.styl'],
+  styleUrls: ['./player-hls.component.scss'],
 })
 @LoggerDecorator('HLS PLAYER ::', true)
 export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {

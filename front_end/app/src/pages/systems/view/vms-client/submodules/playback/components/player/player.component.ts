@@ -9,7 +9,7 @@ import { LoggerDecorator } from '@pages/systems/view/vms-client/utils'
 @Component({
   selector: 'player',
   templateUrl: './player.component.html',
-  styleUrls: ['./player.component.styl'],
+  styleUrls: ['./player.component.scss'],
 })
 @LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {

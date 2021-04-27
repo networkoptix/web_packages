@@ -17,7 +17,7 @@ const MOUSE_HIDE_UNTIL_PX = 8
 @Component({
   selector: 'timeline',
   templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.styl'],
+  styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
