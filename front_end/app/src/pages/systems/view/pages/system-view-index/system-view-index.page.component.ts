@@ -14,7 +14,7 @@ import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/
 import { ms } from '../../vms-client/utils/type-aliases'
 import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
-import { exception } from 'console'
+
 import { NxConfigService, IConfig } from '@services/nx-config'
 
 import sidebarLayout from '../sidebarLayout.cfg'
@@ -130,7 +130,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
           if (systems.length) {
             this.systems = systems;
           }
-          this._initSystem();
+          if (!this.system) {
+            this._log('systemsService -> initSystem', { ...systems })
+            this._initSystem();
+          }
         });
   }
 
@@ -178,8 +181,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
   }
 
   protected _initSystem () {
+    this._log('initSystem entered')
     this.vms.reset()
-    // this._log('initSystem entered')
 
     const createSystem = () => {
       return this.accountService.get().then(account => {
@@ -294,7 +297,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }))
 
         this.vms.setMediaServers(this.systemId, cachedMediaServers)
-        console.log(`system ${this.system.id} view initialized`, this.hasCameras)
+        this._log(`system ${this.system.id} view initialized`, this.hasCameras)
         this._setInitializationState(true, false)
 
         if (!this.route.snapshot.children.length) {
@@ -310,7 +313,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
       })
     }).catch(e => {
-      console.warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
+      this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
       setTimeout(() => this._setInitializationState(true, true));
     })
 
@@ -322,15 +325,21 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         ...parsed,
         [NxUtilsService.cleanId(camera.id)]: camera
       }), {}))
+      let anythingChanged = false
       for (const serverId in cachedMediaServers) {
         const server = cachedMediaServers[serverId]
         for (const camera of server.cameras) {
           const updatedCamera = cameras[camera.id]
-          if (updatedCamera) {
+          if (updatedCamera && camera.status !== updatedCamera.status && camera.name !== updatedCamera.name) {
+            this._log('camera updated', updatedCamera)
             camera.status = updatedCamera.status
             camera.name = updatedCamera.name
+            anythingChanged = true
           }
         }
+      }
+      if (anythingChanged) {
+        this._log('poll: setMediaServers')
         this.vms.setMediaServers(this.systemId, cachedMediaServers, true)
       }
     })

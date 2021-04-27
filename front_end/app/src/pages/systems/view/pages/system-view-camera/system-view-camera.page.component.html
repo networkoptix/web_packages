@@ -14,7 +14,11 @@
       isScheduleEnabled: camera.isScheduleEnabled}">
 
     <span class="glyph"></span>
-    <span class="name">{{ camera.name }} <span class="quality">({{ qualitySelected }})</span></span>
+    <span class="name">
+      {{ camera.name }}
+      (<span class="transport">{{ transportSelectedVerbose }}</span>,
+      <span class="quality">{{ qualitySelectedVerbose }}</span>)
+    </span>
 
     <div class="buttons">
       <div class="settings-toggler" (click)="toggleSettings($event)">
@@ -39,6 +43,17 @@
   </header>
 
   <div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
+    <div class="section transportSelection">
+      <div class="caption">Transport</div>
+      <div class="options" *ngIf="transportsAvailable.length else noTransportsAvailable">
+        <div *ngFor="let st of transportsAvailable" class="option" [ngClass]="{ selected: transportSelected === st }" (click)="setTransport(st)">{{ st }}</div>
+      </div>
+      <ng-template #noTransportsAvailable>
+        <div class="options">
+          <div class="option disabled">N/A</div>
+        </div>
+      </ng-template>
+    </div>
     <div class="section qualitySelection">
       <div class="caption">Quality</div>
       <div class="options" *ngIf="qualitiesAvailable.length else noQualitiesAvailable">

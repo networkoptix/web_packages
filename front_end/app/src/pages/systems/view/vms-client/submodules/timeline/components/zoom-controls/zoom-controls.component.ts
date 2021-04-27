@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
 import { float, int, ms } from '../../../../utils/type-aliases';
 import PlaybackService                                from '../../../playback/services/playback.service';
-import { CameraSelectedVmsState } from '../../../vms/datatypes/VmsState';
+import { CameraSelectedVmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import VideoManagementSystemService                   from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 
@@ -49,8 +49,12 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
   public onTimelineSubjectChange (state: TimelineServiceStatus) {
     this.state = state;
-
-    this.disabled = !(<CameraSelectedVmsState> this.vms.subject.getValue()).selectedCamera.hasArchive;
+    const vmsState = this.vms.subject.getValue()
+    if (vmsState.mode !== VMS_MODE.CAMERA_SELECTED) {
+      this.disabled = true
+    } else {
+      this.disabled = !vmsState.selectedCamera.hasArchive
+    }
     this.canZoomIn = this.state?.zoom?.canZoomIn || false;
     this.canZoomOut = this.state?.zoom?.canZoomOut || false;
   }

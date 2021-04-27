@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, isDevMode } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 import { CookieService } from 'ngx-cookie-service'
 import IMediaServer from '../datatypes/IMediaServer'
@@ -21,13 +21,30 @@ import ICamera from '../datatypes/ICamera'
 export class VideoManagementSystemService {
   static readonly statusRefreshInterval = 15000
 
+  protected _logPrefix: string = 'VMS_SERVICE ::'
+  protected _logDisable: boolean = true
+
+  protected _log (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+        console.log.apply(console, [this._logPrefix, ...arguments])
+    }
+  }
+
+  protected _warn (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+          console.warn.apply(console, [this._logPrefix, ...arguments])
+      }
+  }
+
   constructor (
     protected cookieService: CookieService,
   ) {
+    this._log('constructor')
     this.reset()
   }
 
   public reset () {
+    this._log('reset')
     this._state = createNotInitializedState()
     this._emit()
   }
@@ -35,6 +52,7 @@ export class VideoManagementSystemService {
   protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState())
 
   protected _emit (): void {
+    this._log('_emit', { ...this.state })
     this._subject.next(this.state)
   }
 
@@ -64,6 +82,7 @@ export class VideoManagementSystemService {
   }
 
   public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {
+    this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly)
     this._systemId = systemId
     const prevSelectedCameraId: GUID | undefined = this._state['selectedCameraId']
     this._state = createCameraNotSelectedState(systemId, mediaServers)
@@ -83,6 +102,8 @@ export class VideoManagementSystemService {
           c.setRecords(range, records)
         }
       })
+    } else {
+      this._warn('attempt to set camera records while in NOT_INITIALIZED state', cameraId, range, records)
     }
   }
 
@@ -93,7 +114,7 @@ export class VideoManagementSystemService {
 
   public selectCamera (cameraId: GUID) {
     if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
-      console.warn('attempt to select camera while VMS is not initialized yet')
+      this._warn('attempt to select camera while VMS is not initialized yet')
       return
     }
     this._state = createCameraSelectedState(this._state, cameraId)
@@ -104,7 +125,7 @@ export class VideoManagementSystemService {
 
   public clearCameraSelection () {
     if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
-      console.warn('attempt to clear camera selection while VMS is not initialized yet')
+      this._warn('attempt to clear camera selection while VMS is not initialized yet')
       return
     }
     this._state = createCameraNotSelectedState(this.systemId, this._state.mediaServers)

@@ -293,15 +293,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _onRouteChange (params) {
-        this.id = params['cameraId'];
-        console.log('ROUTE CHANGE: NEW CAMERA', this.id)
-        this.vms.selectCamera(this.id)
-        this.playback.stop()
-        this.resetQuality()
+      this.id = params['cameraId'];
+      console.log('ROUTE CHANGE: NEW CAMERA', this.id)
+      this.vms.selectCamera(this.id)
+      this.resetTransport()
+      this.resetQuality()
 
-        if (this.vms.selectedCamera) {
-            this._getRecords()
-        }
+
+      if (this.vms.selectedCamera) {
+        this._getRecords()
+      }
 
       if (window.innerWidth <= sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx) {
         this.ux.isSidebarShown = false
@@ -309,14 +310,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _onVmsStateChange (s: VmsState) {
+      this._log('VMS state change', { ...s })
       switch (s.mode) {
         case VMS_MODE.NOT_INITIALIZED:
-            this.vms.selectCamera(this.id);
-            break;
-        case VMS_MODE.CAMERA_NOT_SELECTED:
+          this._log('-> NOT_INITIALIZED')
           this.camera = undefined
+          break;
+        case VMS_MODE.CAMERA_NOT_SELECTED:
+          this._log('-> CAMERA_NOT_SELECTED')
+          this.vms.selectCamera(this.id);
           break
         case VMS_MODE.CAMERA_SELECTED:
+          this._log('-> CAMERA_SELECTED')
           this.camera = s.selectedCamera
           this._initSelectedCamera()
       }
@@ -340,7 +345,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get showTimeline (): boolean {
-      return this.camera && this.camera.hasArchive
+      return this.camera && this.camera.hasArchive && this.canViewArchives
     }
 
     protected _initSelectedCamera() {
@@ -405,7 +410,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetTransport () {
-      this.setTransport(this.cameraTransportStorage.get(this.id) || this.transportsAvailable[0] || 'webm')
+      this.setTransport(this.cameraTransportStorage.get(this.id) || (
+        this.transportsAvailable.includes('webm') ? 'webm' : this.transportsAvailable[0]
+      ))
     }
 
     public setTransport (st: PlaybackTransport) {

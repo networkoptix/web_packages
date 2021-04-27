@@ -52,11 +52,12 @@ $border-color: $light6;
       height: 100px;
     }
 
-    &.is-full-screen {
-      > .offline-message {
-        height: calc(100% - 100px);
-      }
+    // &.is-full-screen {
+    > .offline-message,
+    > player {
+      height: calc(100% - 100px);
     }
+    // }
   }
 
   > header {
@@ -251,6 +252,7 @@ $border-color: $light6;
     flex-shrink: 0;
     background-color: $player-background;
     width: 100%;
+    height: 100%;
     // transition: all .2s ease-in-out;
   }
   > .offline-message {
