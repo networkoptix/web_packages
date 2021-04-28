@@ -157,7 +157,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       const createSystem = () => {
         return this.accountService.get().then(account => {
           if (!account) {
-            console.warn('accountService returned no account')
+            this._warn('accountService returned no account')
             return Promise.reject()
           }
           if (this.CONFIG.isLocal) {
@@ -226,7 +226,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                             this._log('non-empty archive', this.id, range, archive);
                             this.vms.setCameraRecords(this.id, range, archive);
                         } catch (e) {
-                            console.warn(e, 'caught while requesting camera archive ranges');
+                            this._warn(e, 'caught while requesting camera archive ranges');
                         }
                     }
                 });
@@ -294,7 +294,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _onRouteChange (params) {
       this.id = params['cameraId'];
-      console.log('ROUTE CHANGE: NEW CAMERA', this.id)
+      this._log('ROUTE CHANGE: NEW CAMERA', this.id)
       this.vms.selectCamera(this.id)
       this.resetTransport()
       this.resetQuality()

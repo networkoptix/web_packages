@@ -64,8 +64,22 @@ $current-playback-indicator-color: black;
         background: #a8b6bf;
       }
 
-      &.grabbed {
-        // cursor: grabbing;
+      // &.grabbed {
+      //   cursor: grabbing; // Alex Pats banned it =)
+      // }
+    }
+
+    > .honest-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: red;
+      pointer-events: none;
+      opacity: 0.0;
+
+      &.visible {
+        opacity: 0.0; // set positive for debug, could be done from browser console, too
+        // opacity: 0.5;
       }
     }
   }
