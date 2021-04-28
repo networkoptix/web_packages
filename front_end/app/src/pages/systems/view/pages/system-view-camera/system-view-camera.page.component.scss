@@ -47,9 +47,8 @@ $border-color: $light6;
   }
 
   &.controls-shown {
-    > .controls {
-      display: flex;
-      height: 100px;
+    .player-and-controls-wrapper {
+      grid-template-rows: calc(100% - 100px) 100px;
     }
 
     // &.is-full-screen {
@@ -246,95 +245,106 @@ $border-color: $light6;
     }
   }
 
-  > player {
-    display: flex;
-    flex-grow: 1;
-    flex-shrink: 0;
-    background-color: $player-background;
-    width: 100%;
-    height: 100%;
-    // transition: all .2s ease-in-out;
-  }
-  > .offline-message {
-    flex-grow: 1;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    background: $player-background;
-    background-size: cover;
-    background-position: center;
-    // transition: all .2s ease-in-out;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: rgba($player-background, .3);
-      backdrop-filter: blur(15px) saturate(80%);
-  }
+  .player-and-controls-wrapper {
+    height             : 100%;
+    display            : grid;
+    grid-template-rows : 100%;
 
-    > svg {
-      width: 96px;
-      height: 100px;
-      stroke: $light1;
-      opacity: 0.6;
-      stroke-width: 3px;
+    .player-wrapper {
+      display          : flex;
+      flex-grow        : 1;
+      flex-shrink      : 0;
+      background-color : $player-background;
+      width            : 100%;
+
+      player {
+        display          : flex;
+        flex-grow        : 1;
+        width            : 100%;
+      }
+
+      .offline-message {
+        flex-grow           : 1;
+        flex-shrink         : 0;
+        display             : flex;
+        flex-direction      : column;
+        align-items         : center;
+        justify-content     : center;
+        text-transform      : uppercase;
+        background-color    : $player-background;
+        background-size     : cover;
+        background-position : center;
+        // transition: all .2s ease-in-out;
+        &::before {
+          content          : "";
+          position         : absolute;
+          top              : 0;
+          right            : 0;
+          bottom           : 0;
+          left             : 0;
+          background-color : rgba($player-background, .3);
+          backdrop-filter  : blur(15px) saturate(80%);
+        }
+
+        > svg {
+          width        : 96px;
+          height       : 100px;
+          stroke       : $light1;
+          opacity      : 0.6;
+          stroke-width : 3px;
+        }
+
+        > span {
+          color       : $light1;
+          margin-top  : 24px;
+          line-height : 48px;
+          opacity     : 0.6;
+          font-size   : 40px;
+          text-align  : center;
+          font-family : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+      }
     }
 
-    > span {
-      color: $light1;
-      margin-top: 24px;
-      line-height: 48px;
-      opacity: 0.6;
-      font-size: 40px;
-      text-align: center;
-      font-family : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
-  }
+    .controls-wrapper {
+      .controls-toggling-ear-outer-wrapper {
+        position : relative;
+        width    : 100%;
+        z-index  : 100;
+      }
 
-  .controls-toggling-ear-outer-wrapper {
-    position: relative;
-    width: 100%;
-    z-index: 100;
-  }
+      .controls-toggling-ear--wrapper {
+        position : absolute;
+        top      : -16px;
+        left     : calc(50% - 70px / 2);
+        width    : 16px;
+        height   : 40px;
 
-  .controls-toggling-ear--wrapper {
-      position : absolute;
-      top      : -16px;
-      left     : calc(50% - 70px/2);
-      width    : 16px;
-      height   : 40px;
-
-      @include bootstrap.media-breakpoint-down(md) {
+        @include bootstrap.media-breakpoint-down(md) {
           content    : "";
           position   : absolute;
           top        : -50px;
           width      : 70px;
           height     : 50px;
           background : transparent;
-      }
+        }
 
-      &.shown {
+        &.shown {
           @include bootstrap.media-breakpoint-down(md) {
-              right : 0;
+            right : 0;
           }
 
           .controls-toggling-ear {
-              transform     : rotate(0deg);
-              border-radius : 2px 2px 0 0;
+            transform     : rotate(0deg);
+            border-radius : 2px 2px 0 0;
 
-              @include bootstrap.media-breakpoint-down(sm) {
-                  float : right;
-              }
+            @include bootstrap.media-breakpoint-down(sm) {
+              float : right;
+            }
           }
-      }
+        }
 
-      .controls-toggling-ear {
+        .controls-toggling-ear {
           width           : 40px;
           height          : 16px;
           background      : $additional_light2 url('./img/arrow-down.png') no-repeat center center;
@@ -344,64 +354,72 @@ $border-color: $light6;
           opacity         : 0.8;
 
           &:hover {
-              opacity : 1.0;
+            opacity : 1.0;
           }
 
           @include bootstrap.media-breakpoint-down(md) {
-              position : absolute;
-              bottom   : 0;
-              left     : 14px;
+            position : absolute;
+            bottom   : 0;
+            left     : 14px;
           }
 
-          transform           : rotate(180deg);
-          border-radius       : 0 0 2px 2px;
+          transform       : rotate(180deg);
+          border-radius   : 0 0 2px 2px;
+        }
       }
-    }
 
-  > .controls {
-    // transition: all .2s ease-in-out;
-    left: 0;
-    right: 0;
-    height: 0;
-    display: none;
-    flex-direction: row;
-    z-index: 100;
-    background: $additional_light2;
+      .controls {
+        // transition: all .2s ease-in-out;
+        left           : 0;
+        right          : 0;
+        height         : 100px;
+        display        : flex;
+        flex-direction : row;
+        z-index        : 100;
+        background     : $additional_light2;
 
-    > playback-controls {
-      flex-grow: 0;
-      flex-shrink: 0;
-    }
+        playback-controls {
+          flex-grow   : 0;
+          flex-shrink : 0;
+          z-index     : 2;
+        }
 
-    > zoom-controls {
-      flex-grow: 0;
-      flex-shrink: 0;
-    }
+        zoom-controls {
+          flex-grow   : 0;
+          flex-shrink : 0;
+          z-index     : 2;
+        }
 
-    > timeline {
-      flex-grow: 1;
-      border: 1px solid $border-color;
-      background-color: white;
-    }
+        timeline {
+          flex-grow        : 1;
+          border           : 1px solid $border-color;
+          background-color : white;
+          z-index          : 2;
+        }
 
-    > .no-archive-message,
-    > .loading-archive-indicator {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-transform: uppercase;
-      font-size: 200%;
-      border-left: 1px solid $border-color;
-      border-right: 1px solid $border-color;
-      color: #a5b7c0;
-    }
+        .no-archive-message,
+        .loading-archive-indicator {
+          flex-grow        : 1;
+          display          : flex;
+          flex-direction   : column;
+          align-items      : center;
+          justify-content  : center;
+          text-transform   : uppercase;
+          font-size        : 200%;
+          border-left      : 1px solid $border-color;
+          border-right     : 1px solid $border-color;
+          color            : #a5b7c0;
+          background-color : $additional_light2;
+          z-index          : 2;
+        }
 
-    > playback-state-indicator {
-      flex-grow: 0;
-      flex-shrink: 0;
-      width: 64px;
+        playback-state-indicator {
+          flex-grow   : 0;
+          flex-shrink : 0;
+          width       : 64px;
+          z-index     : 2;
+        }
+      }
     }
   }
 }
