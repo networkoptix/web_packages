@@ -60,17 +60,6 @@ export class TimelineRecordsCanvasRendererService {
         this._drawRecord(ctx, r, startMs, pxPerMs)
       })
 
-      // visually extend the last record if the camera is still recording
-      if (this.vms.selectedCamera.isRecording) {
-        const lastRecord = this.vms.selectedCamera.archive[this.vms.selectedCamera.archive.length - 1]
-        if (lastRecord && (lastRecord.start <= endMs)) {
-          // const oldFill = ctx.fillStyle
-          // ctx.fillStyle = 'orange'
-          this._drawRecord(ctx, { start: lastRecord.end, end: endMs }, startMs, pxPerMs)
-          // ctx.fillStyle = oldFill
-        }
-      }
-
       const LAST_MINUTE_SIZE = 1.5 * 60 * 1000 // 1.5 minutes
       const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE
       if (endMs > lastMinuteStartMs && this.timeline.durationToCanvasWidth(LAST_MINUTE_SIZE) > 1) {

@@ -141,6 +141,9 @@ export class PlaybackService implements OnDestroy {
       this._state.transport,
       this.vms.selectedCamera.getPosterUrl(t)
     )
+    if (t >= this.vms.selectedCamera.archiveRange.end) {
+      this._state.started = true
+    }
     this._log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
     this._emit()
   }
@@ -434,7 +437,7 @@ export class PlaybackService implements OnDestroy {
           const LAST_MINUTE_SIZE = 1.5 * 60 * 1000 // 1.5 minutes
           const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE
           if (lastChunk && lastChunk.end < state.currentTime || state.currentTime >= lastMinuteStartMs) {
-            this.canPlayArchive ? this.playLive() : this.stop()
+            this.canPlayLive ? this.playLive() : this.stop()
           }
         }
       }
