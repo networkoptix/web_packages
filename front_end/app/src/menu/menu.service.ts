@@ -117,7 +117,7 @@ export class NxMenuService implements OnDestroy {
     // cleaning that up if it was added for hasUpdatedContent comparison
     cleanUpAdditionalTextIfNeeded(newContent) {
         return this.content.map(c => {
-            const node = newContent.find(nC => nC.id === c.id).level3;
+            const node = newContent.find(nC => nC.id === c.id)?.level3;
             if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
                 c.level3 = c.level3.map(menuItem => {
                     const { additionalText, ...item } = menuItem;

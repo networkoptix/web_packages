@@ -69,7 +69,7 @@
 
   <div class="player-and-controls-wrapper">
     <div class="player-wrapper">
-      <player *ngIf="camera && showPlayer else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
+      <player *ngIf="camera && showPlayerSection else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
           <svg viewBox="0 0 96 96" *ngIf="camera.isOffline">
@@ -96,7 +96,7 @@
         </div>
       </div>
       <div class="controls">
-        <playback-controls [enabled]="camera && showPlayer"></playback-controls>
+        <playback-controls [enabled]="camera && showPlayerSection"></playback-controls>
         <zoom-controls></zoom-controls>
         <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
         <ng-template #noArchiveYet>
