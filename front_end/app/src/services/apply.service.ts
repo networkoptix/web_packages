@@ -299,11 +299,6 @@ export class NxApplyService {
             (res) => {
                 this.reset();
                 return res;
-            },
-            (res) => {
-                // need to figure out how to reset
-                this.reset();
-                return res;
             }
         );
         if (discardFunction) {

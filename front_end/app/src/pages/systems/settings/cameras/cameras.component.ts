@@ -497,7 +497,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
-                return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning()));
+                return Promise.reject(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning()));
             }
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
@@ -537,7 +537,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     return res;
                 });
             });
-        });
+        }, { ignoreError: true });
     }
 
     handleBlur() {

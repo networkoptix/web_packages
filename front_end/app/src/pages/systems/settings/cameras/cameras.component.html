@@ -39,7 +39,7 @@
                         <nx-editable-settings-heading
                                 (editModeState)="editMode = $event"
                                 [nameWatcher]="cameraNameWatcher"
-                                [editEnabled]="system.userManager.permissions.isAdmin"
+                                [editEnabled]="system.userManager.permissions.isAdmin || system.userManager.permissions.editCameras"
                         ></nx-editable-settings-heading>
                         <button *ngIf="!editMode" class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                             <span>
@@ -163,6 +163,7 @@
                                             [class]="'pl-2'"
                                             [step]="1"
                                             [min]="1"
+                                            [placeholder]="selectedCamera.maxFps || 15"
                                             [max]="selectedCamera.maxFps || 15"
                                             [(ngModel)]="selectedFps"
                                     ></nx-numeric>
