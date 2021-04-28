@@ -55,8 +55,8 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     } else {
       this.disabled = !vmsState.selectedCamera.hasArchive
     }
-    this.canZoomIn = this.state?.zoom?.canZoomIn || false;
-    this.canZoomOut = this.state?.zoom?.canZoomOut || false;
+    this.canZoomIn = !this.disabled && this.state?.zoom?.canZoomIn || false;
+    this.canZoomOut = !this.disabled && this.state?.zoom?.canZoomOut || false;
   }
 
   protected _zoomingSign: signType = 0

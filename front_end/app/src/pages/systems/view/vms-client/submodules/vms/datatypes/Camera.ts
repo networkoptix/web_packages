@@ -120,7 +120,7 @@ export class Camera implements ICamera {
   }
 
   public get isLive () {
-    return this.status === 'Live' || this.status === 'Recording'
+    return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording'
   }
 
   public get isOnline () {

@@ -67,22 +67,24 @@
     </div>
   </div>
 
-  <player *ngIf="camera && showPlayer else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
-  <ng-template #noPlayer><div class="offline-message" [style.background-image]="previewUrl">
-    <svg viewBox="0 0 96 96" *ngIf="camera.isOffline">
-      <line x1="0" y1="0" x2="96" y2="96"/>
-      <line x1="96" y1="0" x2="0" y2="96"/>
-    </svg>
-    <svg viewBox="0 0 96 96" *ngIf="camera.isUnauthorized">
-      <path class="st0" d="M83,40h-7c0-5.9,0-11.6,0-11.6C76,12.7,63.5,0,48,0C32.5,0,20,12.7,20,28.4c0,0,0,5.8,0,11.6h-6
-        c-2.2,0-4,1.8-4,4v44c0,2.2,1.8,4,4,4h69c2.2,0,4-1.8,4-4V44C87,41.8,85.2,40,83,40z M23,28.4C23,14.4,34.2,3,48,3s25,11.4,25,25.4
-        V40H23V28.4z M84,88c0,0.6-0.4,1-1,1H14c-0.6,0-1-0.4-1-1V44c0-0.6,0.4-1,1-1h69c0.6,0,1,0.4,1,1V88z"/>
-      <path class="st0" d="M48.5,55c-3.6,0-6.5,2.9-6.5,6.5c0,3.1,2.1,5.6,5,6.3c0,0.1,0,0.1,0,0.2v9c0,0.8,0.7,1.5,1.5,1.5
-        c0.8,0,1.5-0.7,1.5-1.5v-9c0-0.1,0-0.1,0-0.2c2.9-0.7,5.1-3.2,5.1-6.3C55,57.9,52.1,55,48.5,55z M48.5,65c-1.9,0-3.5-1.6-3.5-3.5
-        s1.6-3.5,3.5-3.5s3.5,1.6,3.5,3.5S50.5,65,48.5,65z"/>
-    </svg>
-    <span>{{ camera.isOffline ? 'offline' : (camera.isUnauthorized ? 'authentication required' : 'error' ) }}</span>
-  </div></ng-template>
+  <player *ngIf="camera && showPlayerSection else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
+  <ng-template #noPlayer>
+      <div class="offline-message" [style.background-image]="previewUrl">
+      <svg viewBox="0 0 96 96" *ngIf="camera.isOffline">
+        <line x1="0" y1="0" x2="96" y2="96"/>
+        <line x1="96" y1="0" x2="0" y2="96"/>
+      </svg>
+      <svg viewBox="0 0 96 96" *ngIf="camera.isUnauthorized">
+        <path class="st0" d="M83,40h-7c0-5.9,0-11.6,0-11.6C76,12.7,63.5,0,48,0C32.5,0,20,12.7,20,28.4c0,0,0,5.8,0,11.6h-6
+          c-2.2,0-4,1.8-4,4v44c0,2.2,1.8,4,4,4h69c2.2,0,4-1.8,4-4V44C87,41.8,85.2,40,83,40z M23,28.4C23,14.4,34.2,3,48,3s25,11.4,25,25.4
+          V40H23V28.4z M84,88c0,0.6-0.4,1-1,1H14c-0.6,0-1-0.4-1-1V44c0-0.6,0.4-1,1-1h69c0.6,0,1,0.4,1,1V88z"/>
+        <path class="st0" d="M48.5,55c-3.6,0-6.5,2.9-6.5,6.5c0,3.1,2.1,5.6,5,6.3c0,0.1,0,0.1,0,0.2v9c0,0.8,0.7,1.5,1.5,1.5
+          c0.8,0,1.5-0.7,1.5-1.5v-9c0-0.1,0-0.1,0-0.2c2.9-0.7,5.1-3.2,5.1-6.3C55,57.9,52.1,55,48.5,55z M48.5,65c-1.9,0-3.5-1.6-3.5-3.5
+          s1.6-3.5,3.5-3.5s3.5,1.6,3.5,3.5S50.5,65,48.5,65z"/>
+      </svg>
+      <span>{{ camera.isOffline ? 'offline' : (camera.isUnauthorized ? 'authentication required' : 'error' ) }}</span>
+    </div>
+  </ng-template>
 
   <div class="controls-toggling-ear-outer-wrapper">
     <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
@@ -90,7 +92,7 @@
     </div>
   </div>
   <div class="controls">
-    <playback-controls [enabled]="camera && showPlayer"></playback-controls>
+    <playback-controls [enabled]="camera && showPlayerSection"></playback-controls>
     <zoom-controls></zoom-controls>
     <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
     <ng-template #noArchiveYet>

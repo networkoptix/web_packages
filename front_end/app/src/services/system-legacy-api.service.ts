@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Location }                            from '@angular/common';
-import md5                                     from 'md5';
-import { from, of, throwError, Observable }    from 'rxjs';
+import md5                                         from 'md5';
+import { from, of, throwError, Observable, EMPTY } from 'rxjs';
 import {
     flatMap, map, mergeMap, retryWhen, timeout, tap
-}                                              from 'rxjs/operators';
+}                                                  from 'rxjs/operators';
 
 import { NxConfigService, IConfig }            from './nx-config';
 import { ICamera, NxSystemUser }               from './system.service';
@@ -950,6 +950,10 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
+        if (!this.authGet) {
+            return EMPTY; // prevent unauthorized calls
+        }
+
         return this.getRequestAggregator<
             t.NormalResponse<[t.SystemTime, t.GetCameras]>
         >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(

@@ -1,7 +1,7 @@
 import { PlaybackQuality, PlaybackTransport } from "@pages/systems/view/view.types"
 import { ms, int } from "../../../utils/type-aliases"
 
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline' | 'Unauthorized'
+export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized'
 
 export interface ISimpleTimeRange {
   start: ms,

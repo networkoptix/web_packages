@@ -31,10 +31,15 @@ export class CameraManager {
 
     async getCameras(serverTimes?, cameras?) {
         if (!serverTimes || !cameras) {
-            [serverTimes, cameras] = await this.serverManager.mediaserver.getCamerasWithSeverTime().toPromise();
-            if (!cameras) {
-                return Promise.reject(new Error(`Request to server has failed ${cameras}`));
-            }
+            await this.serverManager.mediaserver
+                .getCamerasWithSeverTime().toPromise()
+                .then((response) => {
+                    if (!response) {
+                        cameras = [];
+                        return;
+                    }
+                    [serverTimes, cameras] = response;
+                });
         }
         const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
             const backupType = deprecatedBackupType || (<any>camera).backupQuality;

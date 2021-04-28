@@ -407,7 +407,7 @@ export class PlaybackService implements OnDestroy {
   }
 
   private _jumpOverTheGapIfNeeded () {
-    if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
+    if (this.vms.selectedCamera && this._state.mode === PLAYBACK_MODE.ARCHIVE) {
       const state = this._state as ArchivePlaybackState
 
       if (!_isThereRecord(this.vms.selectedCamera.archive, state.currentTime)) {
@@ -433,7 +433,7 @@ export class PlaybackService implements OnDestroy {
           const lastChunk = this.vms.selectedCamera.archive.slice(-1).pop()
           const LAST_MINUTE_SIZE = 1.5 * 60 * 1000 // 1.5 minutes
           const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE
-          if (lastChunk.end < state.currentTime || state.currentTime >= lastMinuteStartMs) {
+          if (lastChunk && lastChunk.end < state.currentTime || state.currentTime >= lastMinuteStartMs) {
             this.canPlayArchive ? this.playLive() : this.stop()
           }
         }

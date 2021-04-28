@@ -7,20 +7,23 @@ import TimelineService from '../../vms-client/submodules/timeline/services/timel
 import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service'
 import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
 import ICamera, { AvailableTransportsAndResolutions, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
-import PlaybackService from '../../vms-client/submodules/playback/services/playback.service'
-import { Subscription } from 'rxjs'
-import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState'
-import FpsMeterService from '@services/fps-meter.service'
+import PlaybackService           from '../../vms-client/submodules/playback/services/playback.service'
+import { Subject, Subscription } from 'rxjs'
+import VmsState, { VMS_MODE }    from '../../vms-client/submodules/vms/datatypes/VmsState'
+import FpsMeterService                          from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
-import { NxConfigService, IConfig } from '../../../../../services/nx-config'
-import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service'
-import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service'
-import sidebarLayout from '../sidebarLayout.cfg'
-import { NxUtilsService } from '@services/utils.service'
-import fullscreen from './fullscreen'
-import { LoggerDecorator } from '../../vms-client/utils'
+import { NxConfigService, IConfig }             from '../../../../../services/nx-config'
+import { CameraQualityStorageService }          from '../../services/cameraQualityStorage.service'
+import { CameraTransportStorageService }        from '../../services/cameraTransportStorage.service'
+import sidebarLayout                            from '../sidebarLayout.cfg'
+import { NxUtilsService }                       from '@services/utils.service'
+import fullscreen                               from './fullscreen'
+import { LoggerDecorator }                      from '../../vms-client/utils'
+import { PLAYBACK_MODE }                        from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { takeUntil }                            from 'rxjs/operators';
+import { UntilDestroy }                         from '@ngneat/until-destroy';
 
-
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-system-view-camera-page',
     templateUrl: 'system-view-camera.page.component.html',
@@ -52,6 +55,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public controlsShown: boolean = false
     public canViewArchives = false;
+    public showPlayerSection = false;
+    private unsub$ = new Subject();
 
     constructor (
       protected self: ElementRef,
@@ -233,7 +238,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             }
         }).finally(() => {
           this.getRecordsInProgress = undefined;
-          this._initSelectedCamera();
+          setTimeout(() => this._initSelectedCamera());
           this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
           });
@@ -336,14 +341,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         requestAnimationFrame(this._onAnimationFrame)
     }
 
-    public get showPlayer (): boolean {
-      return this.camera && this.camera.isLive || this.camera.hasArchive
-    }
-
-    public get showPlaybackControls (): boolean {
-      return this.showPlayer
-    }
-
     public get showTimeline (): boolean {
       return this.camera && this.camera.hasArchive && this.canViewArchives
     }
@@ -354,13 +351,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.resetTransport();
         this.resetQuality();
 
-        if (this.camera.hasArchive) {
+        this.unsub$.next('done');
+        this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state) => {
+            this.showPlayerSection = this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
+                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE;
+        });
+
+        if (this.camera?.hasArchive) {
             this._log('timeline reset time', this.camera);
             this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
         }
 
-        if (this.camera.isLive) {
-            this.playback.playLive();
+        if (this.camera?.isLive) {
+            setTimeout(() => this.playback.playLive());
         }
     }
 
