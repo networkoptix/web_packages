@@ -192,7 +192,8 @@ export class NxSystemAPI {
                 retryWhen((request) => this.retryHandler(request)),
                 timeout(requestTimeout),
                 tap(undefined, (error) => {
-                    if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                    // 'Gateway Timeout' is added for 'local' testing of webadmin
+                    if (this.CONFIG.isLocal && (error.name === 'TimeoutError' || error.statusText === 'Gateway Timeout')) {
                         this.appState.systemAvailable$.next(false);
                     }
                 })
