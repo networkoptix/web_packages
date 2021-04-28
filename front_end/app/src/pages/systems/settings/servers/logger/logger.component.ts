@@ -144,6 +144,11 @@ export class NxServerLoggerComponent implements OnChanges {
         this.init();
     }
 
+    ngOnDestroy() {
+        // cleans up formWatcher.valueSubject subscribe
+        this.cancelPrevious$.next('cancel');
+    }
+
     changeLog(selected, key) {
         this.systemLoggers[key].value = selected.value;
         this.systemLoggers[key].selected = selected;
