@@ -430,7 +430,7 @@ def asset_settings(request, asset_id):
             elif import_assets_from_json:
                 json_cache_id = uuid.uuid4()
                 PACKAGE_CACHE[json_cache_id] = loaded_json
-                task = async_import_assets_from_json.apply_async(args=[loaded_json, request.user.id, import_assets_from_json_publish])
+                task = async_import_assets_from_json.apply_async(args=[json_cache_id, request.user.id, import_assets_from_json_publish])
                 messages.info(request, 'Starting assets import')
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
