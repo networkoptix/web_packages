@@ -152,32 +152,19 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
             if (!NxUtilsService.isEqual(currentValue, previousValue)) {
                 this.storagesLoading = true;
+                if (!this.applyService.locked) {
+                    setTimeout(() => this.setServer());
+                }
             } else {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
             }
-            if (!this.applyService.locked) {
-                setTimeout(() => this.setServer());
-            }
         }
-        this.applyService.addWatchers([this.saveStorageWatcher]);
     }
 
     ngOnDestroy() {}
 
     setServer(): void {
         this.initForApplyService();
-
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.serverNameWatcher],
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                this.applyService.unsetInvalidField('port');
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
-                    this.selectDefaultStorage();
-                this.setSystemStorageChosen(this.selectedStorage);
-            }
-        );
 
         this.applyService.setVisible(false);
         this.systemStorageChosen = false;
@@ -206,7 +193,21 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checkIfOnline(this.parsedServerId).finally(() => {
             this.serverLoaded = true;
         });
+
         this.getCurrentStorages();
+
+        this.applyService.addWatchers([this.saveStorageWatcher]);
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.ipPortWatcher, this.serverNameWatcher],
+            this.saveSettings,
+            () => {
+                this.applyService.reset();
+                this.applyService.unsetInvalidField('port');
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
+                    this.selectDefaultStorage();
+                this.setSystemStorageChosen(this.selectedStorage);
+            }
+        );
     }
 
     initForApplyService(): void {
