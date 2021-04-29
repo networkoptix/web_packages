@@ -76,10 +76,10 @@ export class AppComponent {
         this.browserBlacklist = {
             ie                 : 9999,
             'ms-edge'          : 9999,
-            'ms-edge-chromium' : 80,
+            'ms-edge-chromium' : 84,
             safari             : 12,
-            chrome             : 80,
-            firefox            : 75,
+            chrome             : 76,
+            firefox            : 72,
             opera              : 70
         };
 
