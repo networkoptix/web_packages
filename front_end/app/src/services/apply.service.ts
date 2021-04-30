@@ -589,6 +589,12 @@ export class NxApplyService {
     }
 
     private extendApplyFunction(applyFunction: Process) {
+        const { name } = applyFunction.settings;
+        if (name) {
+            this.applyFunctions = this.applyFunctions.filter((aF: Process) => {
+                return aF.settings.name ? aF.settings.name !== name : true;
+            });
+        }
         this.applyFunctions.push(applyFunction);
     }
 

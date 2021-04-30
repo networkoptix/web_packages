@@ -146,7 +146,7 @@ export class NxSystemStorageComponent implements OnInit {
                 sources.every(loaded => loaded) &&
                 !this.updatingModes.length
             ) {
-                if (!state.locations.length && this.currentStorageState?.locations.length) {
+                if ((!state.locations.length && this.currentStorageState?.locations.length) || this.applyService.locked) {
                     return;
                 }
                 this.currentStorageState = state;
@@ -286,7 +286,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.isBackupOn.value = backup;
         };
         const updateBackup = () => this.isBackupOn.originalValue === this.backupState
-            ? Promise.resolve()
+            ? Promise.resolve('backupToggleNotUpdated')
             : this.backupState
                 ? this.setDefaultBackupSettings().catch(err => {
                     console.error(err);
@@ -297,16 +297,18 @@ export class NxSystemStorageComponent implements OnInit {
                     handleFailedBackupChange('StopFail');
                 });
 
-        if (!this.saveSettings) {
+        if (modeWatchers.length) {
             this.saveSettings = this.processService.createProcess(() => {
                 return Promise.all([
                     updateBackup(),
                     this.handleModeUpdate()
                 ]).then(res => {
-                    this.pollStats(true);
+                    if (res[1] !== 'storageModesNotUpdated') {
+                        this.pollStats(true);
+                    }
                     return res;
                 });
-            });
+            }, { name: 'saveSettingsServerStorage' });
             this.applyService.addWatchersAndFunctionsFromChild(
                 [this.isBackupOn, ...Object.values(this.modeWatchers)],
                 this.saveSettings,
@@ -317,7 +319,7 @@ export class NxSystemStorageComponent implements OnInit {
         } else {
             this.applyService.addWatchersAndFunctionsFromChild(
                 [this.isBackupOn],
-                this.processService.createProcess(updateBackup),
+                this.processService.createProcess(updateBackup, { name: 'updateBackup' }),
                 () => {
                     this.isBackupOn.reset();
                     this.backupState = this.isBackupOn.originalValue;
@@ -512,7 +514,9 @@ export class NxSystemStorageComponent implements OnInit {
         }
         this.beingUpdated = updating.filter(id => !this.updatingModes.includes(id));
         this.updatingModes = [...this.updatingModes, ...updating];
-        return this.currentStorageState.saveStorages().toPromise().catch(err => console.error(err));
+        return this.updatingModes.length
+            ? this.currentStorageState.saveStorages().toPromise().catch(err => console.error(err))
+            : Promise.resolve('storageModesNotUpdated');
     };
 
     checkIfChanged(id) {
