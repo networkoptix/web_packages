@@ -8,7 +8,7 @@ import TimelineExtendToNowService from '../../vms-client/submodules/timeline/ser
 import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service'
 import ICamera, { AvailableTransportsAndResolutions, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera'
 import PlaybackService           from '../../vms-client/submodules/playback/services/playback.service'
-import { Subject, Subscription } from 'rxjs'
+import { BehaviorSubject, Subject, Subscription } from 'rxjs'
 import VmsState, { VMS_MODE }    from '../../vms-client/submodules/vms/datatypes/VmsState'
 import FpsMeterService                          from '@services/fps-meter.service'
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service'
@@ -20,7 +20,7 @@ import { NxUtilsService }                       from '@services/utils.service'
 import fullscreen                               from './fullscreen'
 import { LoggerDecorator }                      from '../../vms-client/utils'
 import { PLAYBACK_MODE }                        from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { takeUntil }                            from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { UntilDestroy }                         from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
@@ -49,9 +49,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public settingsShown: boolean = false
 
-    public availableTransportsAndResolutions: AvailableTransportsAndResolutions
-    public transportSelected: PlaybackTransport
-    public qualitySelected: PlaybackQuality
+    public availableTransportsAndResolutions$ = new BehaviorSubject<AvailableTransportsAndResolutions>({})
+    public transports$ = new BehaviorSubject<PlaybackTransport[]>([])
+    public qualities$ = new BehaviorSubject<PlaybackQuality[]>([])
+    public selectedTransport$ = new BehaviorSubject<PlaybackTransport>(undefined)
+    public selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined)
 
     public controlsShown: boolean = false
     public canViewArchives = false;
@@ -74,10 +76,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       protected cameraTransportStorage: CameraTransportStorageService,
     ) {
       this.CONFIG = configService.getConfig();
-      this._onRouteChange = this._onRouteChange.bind(this)
-      this._onVmsStateChange = this._onVmsStateChange.bind(this)
-      this._onAnimationFrame = this._onAnimationFrame.bind(this)
-      this._onUxStateChange = this._onUxStateChange.bind(this)
     }
 
     public handleControlsTogglingEarClick () {
@@ -89,12 +87,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public ngOnInit (): void {
-      this._routeSubscription = this.route.params.subscribe(this._onRouteChange)
-      this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange)
-      this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange)
+      this._routeSubscription = this.route.params
+        .subscribe((params) => this._onRouteChange(params))
+      this._vmsStateSubscription = this.vms.subject
+        .subscribe((vmsState) => this._onVmsStateChange(vmsState))
+      this._uxStateSubscription = this.ux.subject
+        .subscribe((clientUxState) => this._onUxStateChange(clientUxState))
 
       this._animationFrameRequestHandler =
-        requestAnimationFrame(this._onAnimationFrame)
+        requestAnimationFrame(() => this._onAnimationFrame)
 
       const onFSC = e => {
         const fse = fullscreen.getElement()
@@ -113,31 +114,77 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this._updateAvailableTransportsAndResolutions()
 
       this.$self.classList.add('animated')
-    }
+      this.availableTransportsAndResolutions$
+        .pipe(filter((TaR) => TaR !== undefined))
+        .subscribe((transportsAndResolutions: AvailableTransportsAndResolutions) => {
+          this.transports = <PlaybackTransport[]>Object.keys(transportsAndResolutions)
+        })
 
-    protected _updateAvailableTransportsAndResolutions () {
-      this.availableTransportsAndResolutions = this.camera ? this.camera.availableTransportsAndResolutions : {}
-    }
-
-    public get transportsAvailable () {
-      return Object.keys(this.availableTransportsAndResolutions || {})
-    }
-
-    public get qualitiesAvailable() {
-        try {
-            const qualities = this.availableTransportsAndResolutions[this.transportSelected] || [];
-            return qualities.map(item => this.quality2Verbose(item));
-        } catch {
-            return [];
+      this.transports$.subscribe((transports) => {
+        if (!transports.includes(this.selectedTransport)) {
+          this.selectedTransport = transports.slice().shift()
         }
+        this.qualities = this.availableTransportsAndResolutions[this.selectedTransport]
+      })
+
+      this.qualities$.subscribe((qualities) => {
+        if (!qualities.includes(this.selectedQuality)) {
+          this.selectedQuality = <PlaybackQuality>qualities.slice().shift()
+        } else {
+          this.selectedQuality$.next(this.selectedQuality)
+        }
+      })
     }
 
-    public get qualitySelectedVerbose () {
-      return this.quality2Verbose(this.qualitySelected)
+    public get availableTransportsAndResolutions() {
+      return this.availableTransportsAndResolutions$.getValue()
     }
 
-    public get transportSelectedVerbose () {
-      return this.transport2Verbose(this.transportSelected)
+    public set availableTransportsAndResolutions(transportsAndResolutions: AvailableTransportsAndResolutions) {
+      this.availableTransportsAndResolutions$.next(transportsAndResolutions)
+    }
+
+    private get transports() {
+      return this.transports$.getValue()
+    }
+
+    private set transports(transports) {
+      this.transports$.next(transports || [])
+    }
+
+    private get selectedTransport(): PlaybackTransport {
+      return this.selectedTransport$.getValue()
+    }
+
+    private set selectedTransport(transport: PlaybackTransport) {
+      this._log('setTransport', transport)
+      if (this.selectedTransport !== transport) {
+        this.qualities = this.availableTransportsAndResolutions[transport]
+        this.cameraTransportStorage.set(this.id, transport)
+        this._log('transport change', transport)
+        this.playback.changeTransport(transport)
+      }
+      this.selectedTransport$.next(transport)
+    }
+
+    // eslint-disable-next-line accessor-pairs
+    private set qualities(qualities) {
+      this.qualities$.next(qualities?.map((quality) => this.quality2Verbose(quality)) || [])
+    }
+
+    private get selectedQuality(): PlaybackQuality {
+      return this.selectedQuality$.getValue()
+    }
+
+    private set selectedQuality(quality: PlaybackQuality) {
+      quality = (quality || 'auto').toLowerCase()
+      this._log('setQuality', quality)
+      if (this.selectedQuality !== quality) {
+        this.cameraQualityStorage.set(this.id, quality)
+        this._log('quality change', quality)
+        this.playback.changeQuality(this.revertQuality(quality))
+      }
+      this.selectedQuality$.next(quality)
     }
 
     public quality2Verbose (q: PlaybackQuality) {
@@ -150,11 +197,20 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
     }
 
-    public transport2Verbose (t: PlaybackTransport) {
-      return t?.toLocaleUpperCase()
+    public revertQuality (q: PlaybackQuality) {
+      switch(q) {
+        case 'high': return 'hi'
+        case 'low': return 'lo'
+        case 'auto': return 'lo'
+        default: return q
+      }
     }
 
     public getRecordsInProgress: string
+
+    protected _updateAvailableTransportsAndResolutions () {
+      this.availableTransportsAndResolutions = this.camera ? this.camera.availableTransportsAndResolutions : {}
+    }
 
     protected _getRecords () {
       this._log('_getRecords', this.id)
@@ -328,6 +384,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         case VMS_MODE.CAMERA_SELECTED:
           this._log('-> CAMERA_SELECTED')
           this.camera = s.selectedCamera
+          this._updateAvailableTransportsAndResolutions()
           this._initSelectedCamera()
       }
     }
@@ -338,7 +395,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
 
       this._animationFrameRequestHandler =
-        requestAnimationFrame(this._onAnimationFrame)
+        requestAnimationFrame(() => this._onAnimationFrame)
     }
 
     public get showTimeline (): boolean {
@@ -398,38 +455,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetQuality () {
-      this.setQuality(this.cameraQualityStorage.get(this.id) || 'auto')
-    }
-
-    public setQuality (q: PlaybackQuality) {
-      this._log('setQuality', q)
-      if (this.qualitySelected === q) {
-        return
-      }
-      this.qualitySelected = q
-      this.cameraQualityStorage.set(this.id, q)
-      this._log('quality change', q)
-      this.playback.changeQuality(q)
+      this.selectedQuality = this.cameraQualityStorage.get(this.id) || 'auto'
     }
 
     public resetTransport () {
-      this.setTransport(this.cameraTransportStorage.get(this.id) || (
-        this.transportsAvailable.includes('webm') ? 'webm' : this.transportsAvailable[0]
+      const transports = this.transports
+      this.selectedTransport = (this.cameraTransportStorage.get(this.id) || (
+        transports.includes('webm') ? 'webm' : transports[0]
       ))
-    }
-
-    public setTransport (st: PlaybackTransport) {
-      this._log('setTransport', st)
-      if (this.transportSelected === st) {
-        return
-      }
-      this.transportSelected = st
-      if (!this.qualitiesAvailable.includes(this.qualitySelected)) {
-        this.qualitySelected = this.qualitiesAvailable[0]
-        this.playback.changeQuality(this.qualitySelected)
-      }
-      this.cameraTransportStorage.set(this.id, st)
-      this.playback.changeTransport(st)
     }
 
     public onVideoDblClick (_: boolean) {
