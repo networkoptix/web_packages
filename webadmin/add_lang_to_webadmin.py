@@ -17,6 +17,7 @@ def adding_lang_to_webadmin_config():
     config["supportedLanguages"] = description.get("customLanguages", ["en_US"])
     config["companyLink"] = description.get("contact", {}).get("companyUrl")
     config["companyName"] = description.get("companyName")
+    config["trialLicenseKey"] = description.get("desktop", {}).get("trialLicenseKey")
 
     with open(config_path, 'w') as config_file:
         json.dump(config, config_file, indent=4,
