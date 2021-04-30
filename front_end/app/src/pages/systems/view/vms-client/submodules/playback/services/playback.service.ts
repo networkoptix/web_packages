@@ -127,7 +127,7 @@ export class PlaybackService implements OnDestroy {
     this._emit()
   }
 
-  public playArchive (t: ms) {
+  public playArchive (t: ms, paused = false) {
     if (!this.canPlayArchive(t)) {
       return
     }
@@ -141,7 +141,8 @@ export class PlaybackService implements OnDestroy {
       this._state.transport,
       this.vms.selectedCamera.getPosterUrl(t)
     )
-    if (t >= this.vms.selectedCamera.archiveRange.end) {
+    this._state.paused = paused
+    if (!paused && t >= this.vms.selectedCamera.archiveRange.end) {
       this._state.started = true
     }
     this._log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl)
@@ -164,7 +165,11 @@ export class PlaybackService implements OnDestroy {
         break
       case PLAYBACK_MODE.LIVE:
         this._warn('PAUSE request while playback mode is LIVE (performing STOP instead)')
-        this.stop()
+        if (this.canPlayArchive(0)) {
+          this.playArchive(Date.now(), true)
+        } else {
+          this.stop()
+        }
         break
       case PLAYBACK_MODE.ARCHIVE:
         if (!this._state.paused) {
