@@ -7,7 +7,7 @@
 
 {% block object-tools-items %}
     {% if user.is_superuser %}
-    <li><a href="{% url 'download_structure_from_db' original.id %}?get_values">Export Current Records</a></li>
+    <li><a onclick="event.preventDefault(); pollPackage()" href="{% url 'download_structure_from_db' original.id %}?get_values">Export Current Records</a></li>
     {% endif %}
     {{ block.super }}
 {% endblock %}
@@ -111,5 +111,10 @@
             <div>{{ current_versions.0.id }}</div>
         {% endif %}
     </div>
+    <script>
+        window.packageUrl = "{% url 'download_structure_from_db' original.id %}?get_values";
+        window.downloadUrl = "{% url 'celery_download_result' 'task_id' %}"
+    </script>
+    {% include "cms/async_partial.html" %}
     <script src="{% static 'js/assetChange.js' %}"></script>
 {% endblock %}

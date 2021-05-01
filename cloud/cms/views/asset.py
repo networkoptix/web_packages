@@ -560,7 +560,7 @@ def prepare_asset_exports(asset, asset_dict):
 def download_all_asset_structures(request, asset_type):
     last_asset = Asset.objects.filter(asset_type__type=asset_type).latest('contentversion')
     cache_key = f'all-asset-structures-{asset_type}-{last_asset.id}-{last_asset.version_id()}'
-    asset_type_name = AssetType.objects.get(type=asset_type)
+    asset_type_name = AssetType.objects.filter(type=asset_type).first()
     structure_info = PACKAGES_CACHE.get(cache_key)
     if not structure_info:
         task = make_structure.apply_async(kwargs={
