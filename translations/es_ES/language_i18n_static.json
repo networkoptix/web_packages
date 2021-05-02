@@ -260,7 +260,7 @@
             "latestBuild": "última versión",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de combinar los sistemas <strong>{primarySystem}</strong> y <strong>{secondarySystem}</strong>.</p><p>La configuración y el nombre se tomarán de <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "La fusión de sistemas falló",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Combinación de sistemas {primaryName} y {secondaryName} completada",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
             "noServerFound": "Servidor no encontrado",
             "newSystemDisplayName": "Nuevo sistema",
