@@ -451,7 +451,7 @@ Detailed info 2 servers
     Close Connection
 
 Offline system 1 server settings
-    [Tags]    C701200    threaded
+    [Tags]    C70950    threaded
     [Setup]    Server Settings Test Setup    server=${server 3}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
@@ -459,6 +459,7 @@ Offline system 1 server settings
     Close Connection
     Reload Page
     Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
+    Wait Until Element is Visible    ${SYSTEM OFFLINE HEADER} 
     Element Should not be Visible    ${PORT INPUT}
     Element Should not be Visible    ${RENAME SERVER BUTTON}
     Element Should not be Visible    ${RESTART SERVER BUTTON}
