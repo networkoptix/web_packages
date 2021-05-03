@@ -768,7 +768,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "系統資源報告瀏覽器{systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -912,7 +912,7 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
+            "main": "主要設定",
             "backup": "Backup",
             "notInUse": "Not in use",
             "reserved": "Reserved",

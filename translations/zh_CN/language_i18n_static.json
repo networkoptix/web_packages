@@ -2,7 +2,7 @@
     "language": "en_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
-    "For developers": "For developers",
+    "For developers": "开发人员适用",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "隐私政策",
     "Support": "技术支持",
@@ -768,7 +768,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "系统资源报告浏览器{systemName}"
     },
     "license": {
         "licenseTypeTitles": {
