@@ -399,7 +399,7 @@ Admin cannot change port via API
     Should Be Equal As Strings    ${resp.status_code}    401
 
 Check status
-    [Tags]    C701207
+    [Tags]    C70957
     Verify on Servers Page
     Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}    
     Select Server By Name    server 2
@@ -473,7 +473,7 @@ Online two servers
     Verify Server Buttons Are Enabled
     
 Offline two servers
-    [Tags]    C701205    threaded
+    [Tags]    C70955    threaded
     Select Server By Name    server 2
     Verify on Servers Page
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
