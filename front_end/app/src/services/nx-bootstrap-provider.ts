@@ -97,12 +97,13 @@ export class NxBootstrapProvider {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             this.CONFIG.dynamicMenus = data.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
-                    title      : name,
-                    desription : '',
-                    nodes      : nodes
+                    title       : name,
+                    description : '',
+                    nodes       : nodes
                 };
                 return menu;
             }, {});
+
             this.CONFIG.company = {
                 copyrightYear : data.copyrightYear,
                 links         : {
@@ -112,6 +113,7 @@ export class NxBootstrapProvider {
             };
             this.CONFIG.defaultLanguage = data.defaultLanguage;
             this.CONFIG.licenseTypes = data.licenseTypes;
+            this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.supportedLanguages = data.supportedLanguages;
         } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
