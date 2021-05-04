@@ -260,7 +260,7 @@
             "latestBuild": "nieuwste build",
             "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>Instellingen en de naam worden overgenomen van <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Samenvoegen van systemen {primaryName} en {secondaryName} voltooid",
             "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "noServerFound": "Geen server gevonden",
             "newSystemDisplayName": "Nieuw systeem",

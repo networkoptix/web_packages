@@ -260,7 +260,7 @@
             "latestBuild": "neueste Build",
             "mergeConfirmation": "<p class=\"mb-0\">Sie sind dabei, die Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong> zusammenzuführen.</p><p>Die Einstellungen und der Name werden von <strong>{primarySystem}</strong> übernommen.</p>",
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Zusammenführung der Systeme {primaryName} und {secondaryName} abgeschlossen",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "noServerFound": "Keine Server gefunden",
             "newSystemDisplayName": "Neues System",
