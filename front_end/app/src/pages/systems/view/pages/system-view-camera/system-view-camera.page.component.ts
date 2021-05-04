@@ -95,7 +95,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         .subscribe((clientUxState) => this._onUxStateChange(clientUxState))
 
       this._animationFrameRequestHandler =
-        requestAnimationFrame(() => this._onAnimationFrame)
+        requestAnimationFrame(() => this._onAnimationFrame())
 
       const onFSC = e => {
         const fse = fullscreen.getElement()
@@ -395,7 +395,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       }
 
       this._animationFrameRequestHandler =
-        requestAnimationFrame(() => this._onAnimationFrame)
+        requestAnimationFrame(() => this._onAnimationFrame())
     }
 
     public get showTimeline (): boolean {
