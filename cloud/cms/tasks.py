@@ -89,7 +89,9 @@ def async_import_assets_from_json(json_cache_id, user_id, publish=False):
 
 
 @shared_task
-def async_menu_import(menu_dict, menu_name, user_email, accept_reviews=False):
+def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False):
+    PACKAGE_CACHE = PackagesCache()
+    menu_dict = PACKAGE_CACHE[cache_key]
     menu = Menu.objects.get(name=menu_name)
     user = Account.objects.get(email=user_email)
     def update_progress(current, total, error = None):

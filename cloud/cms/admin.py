@@ -1226,7 +1226,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     conflicts = structure.check_asset_conflicts(file.get('assets', []))
                     if not conflicts or force:
                         conflicts = []
-                        task = async_menu_import.apply_async(args=[file, menu.name, request.user.email, accept_reviews])
+                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews])
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',
