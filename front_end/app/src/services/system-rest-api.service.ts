@@ -56,6 +56,26 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
+        const config = {
+            name     : systemName,
+            settings : Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
+            local    : {
+                password: password
+            },
+            cloud: {
+                systemId : cloudSystemID,
+                authKey  : cloudAuthKey,
+                owner    : owner
+            }
+        };
+        return this.post('/rest/v1/system/setup', config).toPromise();
+    }
+
+    private resetServer() {
+        return this.post('/rest/v1/system/reset');
+    }
+
     protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
@@ -149,5 +169,41 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     renameSystem(_, systemName: string) {
         return this.post('/api/systemSettings', { systemName }).toPromise().catch();
+    }
+
+    detachFromSystem(currentPassword?: string) {
+        return this.resetServer();
+    }
+
+    disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
+        return this.post('/rest/v1/system/cloudUnbind', { password: currentPassword }).toPromise();
+    }
+
+    // mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+    //     const data = {
+    //         mergeId         : '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    //         mergeInProgress : true
+    //     };
+    //     return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
+    // }
+
+    restoreFactorySettings(currentPassword?: string) {
+        return this.resetServer();
+    }
+
+    saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {
+        return this.post('/rest/v1/system/cloudBind', {
+            systemId : cloudSystemID,
+            authKey  : cloudAuthKey,
+            owner    : cloudAccountName
+        }).toPromise();
+    }
+
+    setupCloudSystem(systemName: string, cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string, systemSettings: t.SystemConfigSettings) {
+        return this.setupSystem(systemName, systemSettings, cloudSystemID, cloudAuthKey, cloudAccountName);
+    }
+
+    setupLocalSystem(systemName: string, password: string, systemSettings: t.SystemConfigSettings) {
+        return this.setupSystem(systemName, systemSettings, undefined, undefined, undefined, password);
     }
 }
