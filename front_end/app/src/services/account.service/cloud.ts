@@ -129,17 +129,18 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             }
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ error : { resultCode : result.resultCode } });
+        }).then(result => {
+            // Add the reload back until we solve the issues with configservice
+            // TODO: CLOUD-7267: Handle account changes without reload
+            if (result.data?.resultCode === this.CONFIG.responseOk) {
+                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload());
+            }
+            return result;
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
                 // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode : result.error.resultCode });
             }
-        }).then(result => {
-            // Add the reload back until we solve the issues with configservice
-            if (result.data?.resultCode === this.CONFIG.responseOk) {
-                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload);
-            }
-            return result;
         });
     }
 
