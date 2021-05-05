@@ -951,7 +951,7 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        if (!this.authGet) {
+        if (!environment.isLocal && !this.authGet) {
             return EMPTY; // prevent unauthorized calls
         }
 
