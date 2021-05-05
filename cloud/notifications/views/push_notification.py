@@ -18,11 +18,11 @@ from api.controllers.cloud_api import Account as Clouddb_Account, System as Clou
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
     api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException, clean_passwords
 from api.models import Account
-from cms.models import Asset, AssetType, Customization
+from cms.models import Asset, AssetType, Customization, get_cloud_portal_asset
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice
 from notifications.serializers import NotificationSerializer, SubscriptionSerializer, \
-    DeviceSubscriptionsSerializer, UnregisterDeviceSerializer
+    DeviceSubscriptionsSerializer, UnregisterDeviceSerializer, PROVIDERS_REVERSE_MAP
 
 import json
 import logging
@@ -35,9 +35,7 @@ def get_mobile_compatible_customization():
     mobile_customizations = caches['push_config'].get('mobile_customizations', {})
     current_customization = settings.CUSTOMIZATION
     if current_customization not in mobile_customizations:
-        current_portal = Asset.objects.get(
-            asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customizations__name=current_customization
-        )
+        current_portal = get_cloud_portal_asset(current_customization)
         mobile_customizations[current_customization] = current_portal.read_global_value(
             '%PUSH_CUSTOMIZATION%') or current_customization
         caches['push_config'].set('mobile_customizations', mobile_customizations)
@@ -188,7 +186,9 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
 
         if 'deviceToken' in self.kwargs:
             self.request.data['deviceToken'] = self.kwargs['deviceToken']
-            device = self.get_queryset().filter(registration_id=self.request.data['deviceToken']).first()
+            provider = self.request.query_params.get('provider') or self.request.data.get('provider', 'firebase_legacy')
+            provider = getattr(PushDevice.PROVIDERS, provider, PushDevice.PROVIDERS.firebase_legacy)
+            device = self.get_queryset().filter(registration_id=self.request.data['deviceToken'], provider=provider).first()
 
         return device
 
@@ -197,7 +197,8 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
             'type': PushDevice.TYPES[instance.type],
             'systems': [sub.system_id for sub in instance.subscriptions.all()],
             'deviceInfo': {'name': instance.name, 'model': instance.model, 'os': PushDevice.OS[instance.os]},
-            'isEnabled': instance.active
+            'isEnabled': instance.active,
+            'provider': PROVIDERS_REVERSE_MAP[instance.provider]
         }
 
     def retrieve(self, request, *args, **kwargs):

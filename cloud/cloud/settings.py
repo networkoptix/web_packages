@@ -32,6 +32,8 @@ import re
 import json
 import sys
 
+from botocore.config import Config
+
 from util.config import get_config
 from cloud.logger import downgrade_requests
 
@@ -524,6 +526,20 @@ INTEGRATION_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
 if LOCAL_ENVIRONMENT:
     AWS_STORAGE_BUCKET_NAME = 'cloud-portal'
+
+# SNS Config
+SNS_CLIENT = {
+    'service_name': 'sns',
+    'config': Config(
+        region_name=os.getenv('AWS_REGION', 'us-east-1')
+    )
+}
+# Uncomment if trying to use SNS from local env with credentials different from ~/.aws/credentials
+# Must set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY first
+# SNS_CLIENT['aws_access_key_id'] = AWS_ACCESS_KEY_ID
+# SNS_CLIENT['aws_secret_access_key'] = AWS_SECRET_ACCESS_KEY
+
+# End SNS Config
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
