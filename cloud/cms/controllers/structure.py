@@ -555,7 +555,7 @@ def update_asset_by_json(asset, asset_json, user):
                 ds_type = DataStructure.get_type_by_name(ds['type'])
                 if ds_type not in [DataStructure.DATA_TYPES.file,
                                    DataStructure.DATA_TYPES.image]:
-                    if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                    if ds_type in [DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file] and ds['value']:
                         files[ds['name']] = external_file_to_content_file(ds['value'])
                     elif ds_type == DataStructure.DATA_TYPES.html:
                         if ds_obj.meta_settings.get('upload_data_images', False):
