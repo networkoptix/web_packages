@@ -434,7 +434,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         // Resets the alternateFullScreen to allow opening once fullscreen is closed
         this.ux.alternateFullScreen$.next(false)
       }
-      this.ux.isFullScreen =  canRequestFullscreen && !fullscreen.getElement()()
+      this.ux.isFullScreen =  canRequestFullscreen && !fullscreen.getElement()
     }
 
     public stopSettingsClickPropagation ($event) {
