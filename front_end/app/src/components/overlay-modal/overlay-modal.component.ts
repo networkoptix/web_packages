@@ -81,17 +81,15 @@ export class NxOverlayModalComponent implements OnInit {
             }
             const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             system.update().then(() => {
-                system.getInfoAndPermissions().then(() => {
-                    this.system = system;
-                    this.getServers();
-                    this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
-                    this.routeSubscription = this.router.events.subscribe(route => {
-                        if (route instanceof NavigationEnd) {
-                            this.servers.forEach(server => {
-                                server.url = `${server.url}/#/${route.url}`;
-                            });
-                        }
-                    });
+                this.system = system;
+                this.getServers();
+                this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
+                this.routeSubscription = this.router.events.subscribe(route => {
+                    if (route instanceof NavigationEnd) {
+                        this.servers.forEach(server => {
+                            server.url = `${server.url}/#/${route.url}`;
+                        });
+                    }
                 });
             });
         });

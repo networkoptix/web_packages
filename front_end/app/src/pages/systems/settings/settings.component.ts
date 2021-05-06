@@ -93,7 +93,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private systemReady() {
-        this.settingsService.system = this.system;
         this.menuVisible = true;
     }
 
@@ -346,17 +345,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     });
                             });
                     } else {
-                        // this.systemsService.stopPoll();
                         if (!this.settingsService.system) {
                             this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                         }
                         this.system = this.settingsService.system;
                         this.system.update();
-                        this.system.getInfoAndPermissions();
                         this.systems = [this.system];
                         this.system.isAvailable = true;
                         this.system.isOnline = true;
-                        this.settingsService.system = this.system;
                         setTimeout(() => {
                             this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
                         });

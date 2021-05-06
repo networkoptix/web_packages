@@ -110,7 +110,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       document.addEventListener('webkitfullscreenchange', onFSC)
       document.addEventListener('mozfullscreenchange', onFSC)
 
-      this._getRecords()
       this._updateAvailableTransportsAndResolutions()
 
       this.$self.classList.add('animated')
@@ -134,6 +133,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
           this.selectedQuality$.next(this.selectedQuality)
         }
       })
+      this.accountService.get().then((account) => {
+        if (!account) {
+          console.warn('accountService returned no account')
+          return Promise.reject()
+        }
+        if (this.CONFIG.isLocal) {
+          this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+          this._log('local system created', this.system)
+        } else {
+          this.system = this.systemService.createSystem(account.email, this.vms.systemId)
+        }
+        this._getRecords()
+      });
     }
 
     public get availableTransportsAndResolutions() {
@@ -215,90 +227,70 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _getRecords () {
       this._log('_getRecords', this.id)
 
-      const createSystem = () => {
-        return this.accountService.get().then(account => {
-          if (!account) {
-            console.warn('accountService returned no account')
-            return Promise.reject()
-          }
-          if (this.CONFIG.isLocal) {
-            this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-            this._log('local system created', this.system)
-            return Promise.resolve()
-          } else {
-            this.system = this.systemService.createSystem(account.email, this.vms.systemId)
-            return Promise.resolve()
-          }
-        })
-      }
-
       const now = Date.now()
       if (this.getRecordsInProgress === this.id) {
         this._log('getRecords ALREADY in progress')
         return
       }
       this.getRecordsInProgress = this.id
-      createSystem().then(() => {
-            this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-            if (!this.system.userManager.permissions.viewArchives) {
-                this.getRecordsInProgress = undefined;
-            } else {
-                this.system.getCameraRecords(this.id, 0, now, 1).then(async (ar) => {
-                    const [{ vmsTimeOffset, serverId }] = await this.system.getServerTimes();
-                    const offsetsByServer = this.system.mediaservers.reduce((
-                        reduced, { id, addParams, timeInfo = {} }: any
-                    ) => ({
-                        ...reduced,
-                        [id]: serverId === id ? 0 : parseInt(
-                          timeInfo?.timeZoneOffset ??
-                          (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
-                          vmsTimeOffset
-                        ) - vmsTimeOffset
-                    }), {});
+      this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
+      if (!this.system.userManager.permissions.viewArchives) {
+        this.getRecordsInProgress = undefined;
+      } else {
+        this.system.getCameraRecords(this.id, 0, now, 1).then(async (ar) => {
+          const [{ vmsTimeOffset, serverId }] = await this.system.getServerTimes();
+          const offsetsByServer = this.system.mediaservers.reduce((
+            reduced, { id, addParams, timeInfo = {} }: any
+          ) => ({
+            ...reduced,
+            [id]: serverId === id ? 0 : parseInt(
+            timeInfo?.timeZoneOffset ??
+              (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
+              vmsTimeOffset
+            ) - vmsTimeOffset
+          }), {});
 
-                    const timezoneAdjusted = [];
-                    ar.reply.forEach(({ guid, periods }) => {
-                        const cleanId = NxUtilsService.cleanId(guid);
-                        periods.forEach(period => {
-                            timezoneAdjusted.push({
-                                ...period,
-                                startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
-                            });
-                        });
-                    });
-                    ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
-                    this._log('got camera archive range', this.id, ar);
-                    if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-                        this._log('empty archive');
-                    } else {
-                        try {
-                            const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
-                            const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
-                            const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
-                            const stillRecording = lastRecordDuration === -1;
-                            const now = Date.now();
-                            const archiveEndMs = stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration);
-                            const range = new SimpleTimeRange(firstRecordStartTimeMs, archiveEndMs);
-                            const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
-                            if (stillRecording) {
-                                archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
-                                this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
-                            }
-                            this._log('non-empty archive', this.id, range, archive);
-                            this.vms.setCameraRecords(this.id, range, archive);
-                        } catch (e) {
-                            console.warn(e, 'caught while requesting camera archive ranges');
-                        }
-                    }
-                });
-            }
-        }).finally(() => {
-          this.getRecordsInProgress = undefined;
-          setTimeout(() => this._initSelectedCamera());
-          this.system.userManager.getUsersDataFromTheSystem().then(_ => {
-            this.canViewArchives = this.system.userManager.permissions.viewArchives;
+          const timezoneAdjusted = [];
+          ar.reply.forEach(({ guid, periods }) => {
+            const cleanId = NxUtilsService.cleanId(guid);
+            periods.forEach(period => {
+              timezoneAdjusted.push({
+                ...period,
+                startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
+              });
+            });
           });
+          ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
+          this._log('got camera archive range', this.id, ar);
+          if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+            this._log('empty archive');
+          } else {
+            try {
+              const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
+              const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
+              const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
+              const stillRecording = lastRecordDuration === -1;
+              const now = Date.now();
+              const archiveEndMs = stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration);
+              const range = new SimpleTimeRange(firstRecordStartTimeMs, archiveEndMs);
+              const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
+              if (stillRecording) {
+                archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
+                this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
+              }
+              this._log('non-empty archive', this.id, range, archive);
+              this.vms.setCameraRecords(this.id, range, archive);
+            } catch (e) {
+              console.warn(e, 'caught while requesting camera archive ranges');
+            }
+          }
         });
+      }
+      this.getRecordsInProgress = undefined;
+      setTimeout(() => this._initSelectedCamera());
+      this.system.userManager.getUsersDataFromTheSystem().then(_ => {
+        this.canViewArchives = this.system.userManager.permissions.viewArchives;
+      });
     }
 
     public ngAfterViewInit () {
@@ -361,7 +353,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
       this.resetQuality()
 
 
-      if (this.vms.selectedCamera) {
+      if (this.vms.selectedCamera && this.system) {
         this._getRecords()
       }
 

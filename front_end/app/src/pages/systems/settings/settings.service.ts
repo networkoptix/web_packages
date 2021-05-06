@@ -21,15 +21,12 @@ export class NxSettingsService implements OnDestroy {
     }
 
     set system(system) {
+        this.system && this.system.stopPoll();
         this.systemSubject.next(system);
     }
 
     setSection(section) {
         this.selectedSectionSubject.next(section);
-    }
-
-    loadUsers() {
-        return this.system.getUsers(true);
     }
 
     ngOnDestroy() {
