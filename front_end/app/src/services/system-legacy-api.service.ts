@@ -952,7 +952,7 @@ export class NxSystemAPI {
 
     getCamerasWithSeverTime(): Observable<any> {
         if (!environment.isLocal && !this.authGet) {
-            return EMPTY; // prevent unauthorized calls
+            return EMPTY; // prevent unauthorized calls in cloud-portal
         }
 
         return this.getRequestAggregator<

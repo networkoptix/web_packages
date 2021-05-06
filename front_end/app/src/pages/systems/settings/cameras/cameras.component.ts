@@ -529,7 +529,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         : camera
                 );
 
-                return this.system.getCameras().then(res => {
+                return this.system.cameraManager.getCameras().then(res => {
                     this.setCamera();
                     this.toggleMotionGrid();
                     this.settingsService.system = this.system;
@@ -561,7 +561,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.showUnauthorized = false;
             return of('').pipe(
                 delay(cameraCredentialUpdateTimeout),
-                switchMap(() => from(this.system.getCameras()).pipe(
+                switchMap(() => from(this.system.cameraManager.getCameras()).pipe(
                     switchMap(cameras => {
                         const selectedCamera = cameras.find(({ id }) => id === this.selectedCamera.id);
                         const unauthorized = selectedCamera.status === 'Unauthorized';
