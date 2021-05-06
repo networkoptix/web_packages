@@ -260,7 +260,7 @@
             "latestBuild": "最新のビルド",
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{primarySystem}</strong> と <strong>{secondarySystem}</strong> のシステムを統合しようとしています。</p><p>設定と名称は <strong>{primarySystem}</strong> の値を使用します。</p>",
             "mergeFailedTitle": "システム統合が失敗しました",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました。",
             "mergeSystemsTitle": "現在のシステムと統合",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
