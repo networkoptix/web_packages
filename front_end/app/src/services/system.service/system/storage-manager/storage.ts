@@ -94,7 +94,7 @@ export class Storage extends StorageDataStructure {
     }
 
     get mode() {
-        if (!this.isWritable || !this.usedForWriting) {
+        if (!this.isWritable && !this.usedForWriting) {
             return MODE.NOT_IN_USE;
         }
         return this.isBackup ? MODE.BACKUP : MODE.MAIN;
@@ -129,12 +129,13 @@ export class Storage extends StorageDataStructure {
         if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE)) {
             return STORAGE_STATUS.INACCESSIBLE;
         }
-        if (!this.isOnline || !this.totalSpace) {
+        if (!this.isOnline && !this.totalSpace) {
             return STORAGE_STATUS.BEING_CHECKED;
         }
 
         if (
-            !this.isWritable ||
+            (!this.isWritable && !this.usedForWriting) ||
+            this.totalSpace < 0 ||
             this.storageStatus.includes('tooSmall') ||
             (this.storageId.startsWith('/') && !this.storageStatus.includes('removable')) ||
             this.storageStatus.includes('system') &&

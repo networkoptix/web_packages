@@ -167,7 +167,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.initForApplyService();
 
         this.applyService.setVisible(false);
-        this.systemStorageChosen = false;
         this.serverLoaded = false;
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
@@ -461,7 +460,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     name        : url,
                     isOnline,
                     isWritable,
-                    isNotSystem : !storageStatus?.includes('system'),
+                    isNotSystem : !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
                     selected,
                     id          : storageId,
                     value       : storageId,
