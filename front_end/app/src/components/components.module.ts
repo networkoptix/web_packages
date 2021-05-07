@@ -42,6 +42,7 @@ import { NxApplyComponent }                   from './apply/apply.component';
 import { NxPreLoaderComponent }               from './placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderComponent }         from './placeholders/page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
+import { NxPlayerPlaceholderComponent }       from './placeholders/player/player-placeholder.component';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
 import { NxLeftMenuComponent }                from './left-menu/left-menu.component';
@@ -113,6 +114,7 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         NxInfoBlockComponent,
         ToastsContainer,
         NxSystemTileComponent,
@@ -155,6 +157,7 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         ToastsContainer,
         NxInfoBlockComponent,
         NxOverlayModalComponent,
@@ -204,6 +207,7 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         ToastsContainer,
         NxInfoBlockComponent,
         NxSystemTileComponent,

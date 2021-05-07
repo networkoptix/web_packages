@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import PlaybackService from '../../../services/playback.service'
-import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState'
-import { Subscription } from 'rxjs'
-import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils'
-import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
+import PlaybackService                                                        from '../../../services/playback.service'
+import { PlaybackState, PLAYBACK_MODE, PLAYBACK_ERROR }                       from '../../../datatypes/PlaybackState'
+import { Subscription }                                                       from 'rxjs'
+import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                            from '@pages/systems/view/vms-client/utils'
+import { WebClientUxService }                                                                       from '@pages/systems/view/services/webclient-ux.service';
+import { HttpClient }                                                                               from '@angular/common/http';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor (
     public playback: PlaybackService,
-    public ux: WebClientUxService
+    public ux: WebClientUxService,
+    private http: HttpClient
   ) {
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
   }
@@ -48,6 +50,26 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(e)
       }
     })
+
+    this.videoView.nativeElement.addEventListener('error', (event: any) => {
+      // media errors should be debugged while serving webadmin locally
+      // as local proxy cannot be set to relay address and when returned result is JSON (error)
+      // will trigger CORB -- TT
+      if (event.target.error.message.startsWith(PLAYBACK_ERROR.DEMUXER_ERROR_COULD_NOT_OPEN)) {
+        this.http.get(event.target.src)
+            .subscribe((response: any) => {
+                  switch (response.error) {
+                    case '4':
+                      if (response.errorString === 'Cannot decrypt media') {
+                        this.playback.unplayableArchive();
+                      } else {
+                        this.playback.setError(response.errorString);
+                      }
+                      break;
+                  }
+            });
+      }
+    });
   }
 
   public ngOnDestroy (): void {

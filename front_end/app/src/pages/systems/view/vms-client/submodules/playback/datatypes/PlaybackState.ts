@@ -7,6 +7,9 @@ export enum PLAYBACK_MODE {
   ARCHIVE = 1,
   LIVE = 2,
 }
+export enum PLAYBACK_ERROR {
+  DEMUXER_ERROR_COULD_NOT_OPEN = 'DEMUXER_ERROR_COULD_NOT_OPEN'
+}
 
 export interface AbstractPlaybackState {
   mode: PLAYBACK_MODE,
@@ -27,8 +30,10 @@ export interface ArchivePlaybackState extends AbstractPlaybackState {
   currentTime: ms,
   started: boolean,
   paused: boolean,
+  encrypted: boolean,
   quality: PlaybackQuality,
   transport: PlaybackTransport,
+  error: string
 }
 
 export interface LivePlaybackState extends AbstractPlaybackState {
@@ -39,6 +44,7 @@ export interface LivePlaybackState extends AbstractPlaybackState {
   started: boolean,
   quality: PlaybackQuality,
   transport: PlaybackTransport,
+  error: string
 }
 
 export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState
@@ -54,7 +60,7 @@ export function createInitialStoppedState (
     mode: PLAYBACK_MODE.STOPPED,
     initializedAt: Date.now(),
     quality,
-    transport,
+    transport
   }
 }
 
@@ -71,11 +77,13 @@ export function createInitialArchiveState (
     posterUrl,
     started: false,
     paused: false,
+    encrypted: false,
     startTime: t,
     currentTime: t,
     quality,
     transport,
     initializedAt: Date.now(),
+    error: ''
   }
 }
 
@@ -94,5 +102,6 @@ export function createInitialLiveState (
     transport,
     currentTime: Date.now(),
     initializedAt: Date.now(),
+    error: ''
   }
 }

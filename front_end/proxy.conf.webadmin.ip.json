@@ -5,6 +5,12 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/web/media/*": {
+    "target": "https://10.1.5.196:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/web/api/*": {
     "target": "https://10.1.5.196:7001",
     "secure": false,

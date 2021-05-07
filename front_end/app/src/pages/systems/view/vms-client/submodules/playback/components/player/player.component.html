@@ -1,20 +1,35 @@
-<div
-    class="overlay"
-    [ngClass]="{ 'active': showOverlay }"
-    (click)="onClick($event)"
-    (dblclick)="onDblClick($event)"
->
-    <nx-pre-loader></nx-pre-loader>
+<div *ngIf="!showOverlay && (errorEncryption || errorPlayback); else player">
+    <nx-player-placeholder
+            *ngIf="errorEncryption"
+            svgFileName="camera_archive_encrypted"
+            [heading]="LANG.errorCodes.archiveEncrypted()"
+            [description]="LANG.errorCodes.archiveEncryptedMessage()">
+    </nx-player-placeholder>
+
+    <nx-player-placeholder
+            *ngIf="errorPlayback"
+            svgFileName="alert"
+            [heading]="LANG.common.cameraStates.error()"
+            [description]="errorPlaybackDescription">
+    </nx-player-placeholder>
 </div>
 
-<player-native
-    *ngIf="useNativePlayer"
-    (bufferingChange)="onBufferingChange($event)"
->
-</player-native>
+<ng-template #player>
+    <div
+        class="overlay"
+        [ngClass]="{ 'active': showOverlay }"
+        (click)="onClick($event)"
+        (dblclick)="onDblClick($event)">
+        <nx-pre-loader></nx-pre-loader>
+    </div>
 
-<player-hls
-    *ngIf="useHlsPlayer"
-    (bufferingChange)="onBufferingChange($event)"
->
-</player-hls>
+    <player-native
+        *ngIf="useNativePlayer"
+        (bufferingChange)="onBufferingChange($event)">
+    </player-native>
+
+    <player-hls
+        *ngIf="useHlsPlayer"
+        (bufferingChange)="onBufferingChange($event)">
+    </player-hls>
+</ng-template>

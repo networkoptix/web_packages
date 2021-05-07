@@ -149,6 +149,16 @@ export class PlaybackService implements OnDestroy {
     this._emit()
   }
 
+  public unplayableArchive() {
+      (<ArchivePlaybackState> this._state).encrypted = true;
+      this._emit();
+  }
+
+  public setError(error) {
+      (<ArchivePlaybackState> this._state).error = error;
+      this._emit();
+  }
+
   public stop () {
     this._log('PLAYBACK.STOP()')
     this._state = createInitialStoppedState(
