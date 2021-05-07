@@ -519,7 +519,9 @@ def generate_kb_path_from_var(article_dict):
     param_name = article_dict['param_name']
     if param_name and not param_name.startswith('-'):
         param_name = '-' + param_name
-    asset, created = Asset.objects.get_or_create(uuid=uuid)
+    asset, created = Asset.objects.get_or_create(
+        uuid=uuid, asset_type=AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
+    )
     if created:
         asset.name = name
         asset.save()
@@ -581,7 +583,7 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         asset_obj.save()
         update_asset_by_json(asset_obj, asset_dict, user)
 
-        if publish:
+        if publish and asset_obj.is_dirty:
             published = False
             # Send for review
             send_version_for_review(asset_obj, user, notify=False)
