@@ -37,7 +37,7 @@ $border-color: $light6;
 
     > .offline-message {
       height: 100vh;
-    }
+     }
   }
 
   &.sidebar-shown {
@@ -264,6 +264,7 @@ $border-color: $light6;
       }
 
       .offline-message {
+        max-width: 100%;
         flex-grow           : 1;
         flex-shrink         : 0;
         display             : flex;
