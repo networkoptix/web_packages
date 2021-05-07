@@ -126,7 +126,7 @@ export class Storage extends StorageDataStructure {
      * Need to add checking for inaccessible
      */
     get status(): STORAGE_STATUS {
-        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE)) {
+        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !this.isWritable) {
             return STORAGE_STATUS.INACCESSIBLE;
         }
         if (!this.isOnline && !this.totalSpace) {
