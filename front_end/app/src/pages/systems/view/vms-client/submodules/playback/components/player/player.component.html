@@ -27,6 +27,10 @@
         *ngIf="useNativePlayer"
         (bufferingChange)="onBufferingChange($event)">
     </player-native>
+<player-js
+        *ngIf="useJsPlayer"
+        (bufferingChange)="onBufferingChange($event)">
+</player-js>
 
     <player-hls
         *ngIf="useHlsPlayer"

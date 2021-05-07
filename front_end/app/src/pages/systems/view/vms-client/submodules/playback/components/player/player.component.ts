@@ -1,9 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, isDevMode } from '@angular/core';
-import PlaybackService                                                                  from '../../services/playback.service'
-import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE }                           from '../../datatypes/PlaybackState'
-import { Subscription }                                                                 from 'rxjs'
-import { PlaybackTransport }                                                            from '@pages/systems/view/view.types';
-import { LoggerDecorator }                                                              from '@pages/systems/view/vms-client/utils'
+import PlaybackService from '../../services/playback.service'
+import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState'
+import { Subscription } from 'rxjs'
+import { PlaybackTransport } from '@pages/systems/view/view.types';
+import { LoggerDecorator } from '@pages/systems/view/vms-client/utils'
 import { NxLanguageProviderService }                                                    from '../../../../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }                                                      from '../../../../../../../../../language_i18n_static_types';
 import { NxUtilsService }                                                               from '@services/utils.service';
@@ -44,6 +44,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public get useHlsPlayer () {
     const isNotMobile = !(this.utilsService.isMobile() || this.utilsService.isTablet())
     return isNotMobile && this.transport === 'hls'
+  }
+
+  public get useJsPlayer() {
+      return false;
   }
 
   constructor (
@@ -88,7 +92,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
       switch (this.playback.state.mode) {
         case PLAYBACK_MODE.LIVE:
         case PLAYBACK_MODE.ARCHIVE:
-          if (!this.playback.state.started && !(<ArchivePlaybackState> this.playback.state).paused) {
+          if (!this.playback.state.started && !(<ArchivePlaybackState>this.playback.state).paused) {
             this._log('triggering handle started')
             this.playback.handleStarted()
           }
@@ -112,6 +116,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public onDblClick (e: MouseEvent) {
     this.videoDblClick.emit(true)
   }
+
+
 }
 
 export default PlayerComponent
