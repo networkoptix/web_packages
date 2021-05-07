@@ -506,7 +506,7 @@ def download_current_structure(request, asset_id):
 def sub_doc_urls(matchobj):
     doc_url_pieces = matchobj.group(2).split('/')
     if len(doc_url_pieces) < 3:
-        return matchobj.string
+        return matchobj.group(0)
 
     base_path = doc_url_pieces[0]
     kb_path = doc_url_pieces[1]
@@ -516,12 +516,12 @@ def sub_doc_urls(matchobj):
     param_name = asset_param[len(param_id):]
 
     if not param_id.isdigit():
-        return matchobj.string
+        return matchobj.group(0)
 
     asset_id = int(param_id)
     asset = Asset.objects.filter(id=asset_id, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
     if not asset:
-        return matchobj.string
+        return matchobj.group(0)
 
     url_data = {
         'type': 'kb_article',
@@ -535,7 +535,7 @@ def sub_doc_urls(matchobj):
     return rf'{matchobj.group(1)}{doc_var}{matchobj.group(3)}'
 
 
-INTERNAL_DOC_REGEX = re.compile(r'(href=".*?\.\./docs/)(.*?)(")')
+INTERNAL_DOC_REGEX = re.compile(r'(href=\"(?:[./]*?|%CLOUD_LINK%/)docs/)(.*?)(\")')
 
 
 def prepare_doc_urls(asset_dict):
