@@ -86,6 +86,7 @@ export class StorageState extends BaseManager {
             this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
+        filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map((cur) => {
             if (
