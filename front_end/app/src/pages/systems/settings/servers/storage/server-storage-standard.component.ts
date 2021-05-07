@@ -127,6 +127,7 @@ export class NxSystemStorageComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.serverId.currentValue !== changes.serverId.previousValue) {
             this.loading = true;
+            this.currentStorageState = null;
             this.waitingForStorages = true;
         }
     }
@@ -164,7 +165,8 @@ export class NxSystemStorageComponent implements OnInit {
                         if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                         }
-                        this.modeWatchers[this.normalizeId(storageId)].value = mode;
+                        const watcher = this.modeWatchers[this.normalizeId(storageId)];
+                        watcher.value = watcher.originalValue = mode;
                     }
                     if (reservedOrBeingChecked) {
                         this.previouslyReserved.add(storageId);
@@ -193,7 +195,6 @@ export class NxSystemStorageComponent implements OnInit {
                 }
             }
         }, () => {
-            this.waitingForStorages = false;
             this.waitingForStorages = false;
             this.currentStorageState = null;
             this.setupWatchers();

@@ -296,6 +296,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         if (!this.serverOffline && (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id))) {
             this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
         }
+
+        if (this.serverOffline || this.serverUnavailable) {
+            this.storagesLoading = false;
+            this.dropdownStorages = [];
+        }
     }
 
     checkIfOnline = (serverId) => {
