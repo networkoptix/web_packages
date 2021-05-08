@@ -93,6 +93,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private systemReady() {
+        this.settingsService.system = this.system;
         this.menuVisible = true;
     }
 
