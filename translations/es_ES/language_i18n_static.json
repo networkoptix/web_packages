@@ -474,7 +474,9 @@
         "licenseFail": "Error al activar la licencia. Por favor intente nuevamente o contacte a soporte.",
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
-        "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red."
+        "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Control de Acceso",

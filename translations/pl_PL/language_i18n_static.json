@@ -474,7 +474,9 @@
         "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
-        "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe."
+        "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",

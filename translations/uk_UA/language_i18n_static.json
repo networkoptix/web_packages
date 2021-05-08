@@ -474,7 +474,9 @@
         "licenseFail": "Не вдалося активувати ліцензію. Будь ласка, спробуйте ще раз або зверніться до служби підтримки.",
         "licenseTimeout": "Не вдалося активувати ліцензію через таймаут підключення. Переконайтесь, що сервер підключений до Інтернету, і повторіть спробу.",
         "licenseServerError": "Не вдалося активувати ліцензію. Ліцензійний сервер не відповідає. Будь ласка, спробуйте ще раз або зверніться до служби підтримки.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Контроль доступу",

@@ -474,7 +474,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Não foi possível ativar a licença devido a um tempo limite de conexão. Por favor, certifique-se de que o servidor está online e tente novamente.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Controle de Acesso",

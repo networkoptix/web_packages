@@ -474,7 +474,9 @@
         "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter l'assistance.",
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
         "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance.",
-        "networkConnection": "Impossible de se connecter à %CLOUD_NAME%, veuillez vérifier votre connexion réseau."
+        "networkConnection": "Impossible de se connecter à %CLOUD_NAME%, veuillez vérifier votre connexion réseau.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Contrôle d'accès",

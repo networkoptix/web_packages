@@ -474,7 +474,9 @@
         "licenseFail": "ライセンスの有効化に失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスの有効化に失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
-        "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。"
+        "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "アクセスコントロール",

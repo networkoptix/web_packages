@@ -474,7 +474,9 @@
         "licenseFail": "无法激活授权。请重试或联系支持人员。",
         "licenseTimeout": "连接超时，激活授权失败。请确保服务器在线，然后重试。",
         "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系支持人员。",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "门禁管理",

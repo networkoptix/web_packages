@@ -474,7 +474,9 @@
         "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם התמיכה.",
         "licenseTimeout": "הפעלת הרישיון נכשלה עקב חוסר תגובה לחיבור. אנא וודא שהשרת מקוון ונסה שוב.",
         "licenseServerError": "הפעלת הרישיון נכשלה. שרת הרישיונות לא הגיב. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "בקרת כניסה",

@@ -474,7 +474,9 @@
         "licenseFail": "A licenc aktiválása nem sikerült. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
         "licenseTimeout": "A licenc aktiválása a kapcsolat időtúllépése miatt nem sikerült. Kérjük, ellenőrizze, hogy a kiszolgáló online-e, és próbálkozzon újra.",
         "licenseServerError": "A licenc aktiválása nem sikerült. A licencszerver nem válaszolt. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Hozzáférés vezérlés",

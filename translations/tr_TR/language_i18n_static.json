@@ -474,7 +474,9 @@
         "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun.",
         "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
         "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Erişim Kontrolü",
