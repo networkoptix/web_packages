@@ -574,11 +574,11 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         asset_obj = Asset.objects.filter(uuid=asset_dict['uuid']).first()
         if not asset_obj:
             asset_obj = Asset.objects.create(name=asset_dict['name'], uuid=asset_dict['uuid'], asset_type=asset_type)
-            asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
         elif increment_progress and str(asset_obj.asset_type) != str(asset_type):
             increment_progress(
                 f'Failed to import <b>"{asset_dict["name"]}"</b>, asset already exist as type <b>"{asset_obj.asset_type}"</b> but is being imported as <b>"{asset_type}"</b>')
             continue
+        asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
         asset_obj.name = asset_dict['name']
         asset_obj.save()
         update_asset_by_json(asset_obj, asset_dict, user)
