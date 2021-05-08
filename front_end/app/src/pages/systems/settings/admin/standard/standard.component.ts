@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, Inject, Input, ViewContainerRef,
+    Component, OnInit, Input,
     ViewChild, ElementRef, OnChanges, SimpleChanges
 }                                    from '@angular/core';
 
@@ -31,7 +31,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     limitSessionTimeUnits;
     limitSessionTimeItems;
     saveSettings: Process;
-    resetVideoEncryptionIfDisabled;
     setWarningMessageThroughApplyService;
     timeUnitTracker;
     selectElement;
@@ -50,13 +49,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
-    @ViewChild('timeUnitTracker', { static: false }) set el(el: ElementRef) {
-        if (el) {
-            this.timeUnitTracker = el;
-            this.updateTimeUnitInput(this.selectedTimeUnit);
-        }
-    }
-
+    // eslint-disable-next-line accessor-pairs
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
             this.selectElement = el;
@@ -108,6 +101,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         }
     }
 
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
+    }
+
     // removes watcher(s) if setting does not exist
     cleanUpWatchers(settings) {
         Object.keys(this.settingsWatchers).forEach(sw => {
@@ -119,7 +116,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     setWatcherValues(settings) {
         this.applyService.setVisible(false);
-        // this.applyService.hardReset();
+        // this.applyService.reset(true);
         const sw = this.settingsWatchers;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];
@@ -130,13 +127,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                  * so it needs custom code to handle
                  */
                 if (isNaN(curr)) {
-                    sw[setting].value = curr === 'true';
+                    sw[setting].originalValue = curr === 'true';
                 } else if (this.limitSessionTimeUnits) {
                     curr = parseInt(curr);
                     this.sessionLimitToggle = Boolean(curr);
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
-
-                    sw[setting].value = curr;
+                    this.updateTimeUnitInput(this.selectedTimeUnit);
+                    sw[setting].originalValue = curr;
                     this.timeValue = curr;
                     if (this.timeValue % 60 === 0) {
                         this.timeValue /= 60;
@@ -151,17 +148,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     initApplyService(): void {
-        this.resetVideoEncryptionIfDisabled = () => {
-            const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
-            const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
-            if (encryptVideo) {
-                this.applyService.setWarn('');
-            }
-            if (!encryptTraffic && encryptVideo) {
-                this.settingsWatchers.videoTrafficEncryptionForced.value = false;
-            }
-        };
-
         this.setWarningMessageThroughApplyService = () => {
             if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
                 this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
@@ -199,6 +185,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 if (sessionLimitMinutes?.originalValue) {
                     this.sessionLimitToggle = true;
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+                    this.updateTimeUnitInput(this.selectedTimeUnit);
                     this.timeValue = sessionLimitMinutes.originalValue;
                     if (this.timeValue % 60 === 0) {
                         this.timeValue /= 60;
@@ -215,24 +202,16 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     // sets input max value and updates hour/minutes
     updateTimeUnitInput(timeUnit) {
         this.currentMaxTimeUnit = timeUnit.max;
-        const el = this.timeUnitTracker;
-        if (el) {
-            if (el.nativeElement.value > this.currentMaxTimeUnit) {
-                el.nativeElement.value = this.currentMaxTimeUnit;
-            }
-            el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
-            if (this.selectedTimeUnit.value !== timeUnit.value) {
-                this.selectedTimeUnit = timeUnit;
-                this.updateLimitSessionValue(this.timeValue);
-            }
+        if (this.selectedTimeUnit.value !== timeUnit.value) {
+            this.selectedTimeUnit = timeUnit;
+            this.updateLimitSessionValue(this.timeValue);
         }
     }
 
-    storePreviousValue(ev) {
-        // prevents [.+-e] from being inputed
-        if (['.', '+', '-', 'e'].includes(ev.key)) {
-            ev.preventDefault();
+    storePreviousValue(e) {
+        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
+            e.preventDefault();
         }
         this.previousInputValue = this.timeValue;
     }
@@ -267,6 +246,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
             this.timeValue = this.selectedTimeUnit.default;
             this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;
+            this.updateTimeUnitInput(this.selectedTimeUnit);
         } else {
             this.timeValue = 0;
             this.settingsWatchers.sessionLimitMinutes.value = 0;

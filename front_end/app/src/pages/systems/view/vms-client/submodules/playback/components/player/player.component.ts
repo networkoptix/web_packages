@@ -1,226 +1,100 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import PlaybackService from '../../services/playback.service'
-import { PlaybackState, PLAYBACK_MODE, ArchivePlaybackState, LivePlaybackState } from '../../datatypes/PlaybackState'
-import assertNever from '../../../../utils/assertNever'
-import { Subscription } from 'rxjs'
-import { ms } from '../../../../utils/type-aliases'
-import Hls from 'hls.js'
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, isDevMode } from '@angular/core';
+import PlaybackService                                                                  from '../../services/playback.service'
+import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE }                           from '../../datatypes/PlaybackState'
+import { Subscription }                                                                 from 'rxjs'
+import { PlaybackTransport }                                                            from '@pages/systems/view/view.types';
+import { LoggerDecorator }                                                              from '@pages/systems/view/vms-client/utils'
+import { NxLanguageProviderService }                                                    from '../../../../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }                                                      from '../../../../../../../../../language_i18n_static_types';
 
 
 @Component({
   selector: 'player',
   templateUrl: './player.component.html',
-  styleUrls: ['./player.component.styl'],
+  styleUrls: ['./player.component.scss'],
 })
+@LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
+  _log: Function
+  _warn: Function
 
-  @ViewChild("video") videoView: ElementRef;
-  @ViewChild("videoSource") videoSourceView: ElementRef;
+  LANG: LanguageI18NStaticTypes;
 
   @Output() videoDblClick = new EventEmitter<boolean>();
 
-  protected subscription: Subscription
-  protected state: PlaybackState
+  protected playbackSubscription: Subscription
+  public transport: PlaybackTransport
 
-  constructor (
-    public playback: PlaybackService,
-  ) {
-    this.onSubjectChange = this.onSubjectChange.bind(this)
+  public showOverlay: boolean = false
+  public errorEncryption: boolean = false
+  public errorPlayback: boolean = false
+  public errorPlaybackDescription: string
+
+  public get useNativePlayer () {
+    return (
+      this.transport === 'webm'
+      // || this.transport === 'mpegts'
+      // || this.transport === 'mpjpeg'
+      || this.transport === 'mp4'
+      // || this.transport === 'mkv'
+    )
   }
 
-  public get mode () {
-    return this.playback.modeLiteral
+  public get useHlsPlayer () {
+    return this.transport === 'hls'
+  }
+
+  constructor (
+      translateService: NxLanguageProviderService,
+      public playback: PlaybackService
+  ) {
+    this.LANG = translateService.translations;
+    this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
   }
 
   public ngOnInit (): void {
-    // this.subscription = this.playback.subject.subscribe(this.onSubjectChange)
+    this.onPlaybackSubjectChange(this.playback.state)
   }
 
-  protected _animationFrameRequestHandler: number
-
-  public onAnimationFrame (): void {
-    this.videoTimeUpdateHandler()
-
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
-  }
 
   public ngAfterViewInit (): void {
-    this.subscription = this.playback.subject.subscribe(this.onSubjectChange)
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
   }
 
   public ngOnDestroy (): void {
-    this.subscription.unsubscribe()
+    this.playbackSubscription.unsubscribe()
   }
 
-  public onSubjectChange (s: PlaybackState) {
-    const prevState = { ...this.state }
-    this.state = {...s}
-    this._reactOnPlaybackStateChange(prevState)
-  }
-
-  public isBuffering: boolean = false
-
-  protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
-    switch (this.state.mode) {
-      case PLAYBACK_MODE.STOPPED:
-        if (prevState.mode !== this.state.mode) {
-          this._setPlaybackSource('')
-          this._stop()
-        }
-        break
-      case PLAYBACK_MODE.LIVE:
-        if (prevState.mode !== this.state.mode) {
-          this._startLive()
-        } else {
-          // if (prevState.sourceUrl !== this.state.sourceUrl) {
-          //   // console.log('gotta react on sourceUrl change LIVE',
-          //   //   this.state.sourceUrl.slice(this.state.sourceUrl.indexOf('?') + 1, this.state.sourceUrl.indexOf('?') + 3))
-          //   this.$video.pause()
-          //   this._setPlaybackSource(this.state.sourceUrl)
-          //   this.$video.currentTime = 0
-          //   this.$video.play()
-          // }
-        }
-        break
-      case PLAYBACK_MODE.ARCHIVE:
-        if (prevState.mode !== this.state.mode) {
-          this._startArchive()
-        } else {
-          const ps = prevState as ArchivePlaybackState
-          if (ps.paused && !this.state.paused) {
-            this.$video.play()
-          } else if (!ps.paused && this.state.paused) {
-            this.$video.pause()
-          // } else if (prevState.sourceUrl !== this.state.sourceUrl) {
-          //   // console.log('gotta react on sourceUrl change ARCHIVE',
-          //   //   this.state.sourceUrl.slice(this.state.sourceUrl.indexOf('?') + 1, this.state.sourceUrl.indexOf('?') + 3))
-          //   this.$video.pause()
-          //   this._setPlaybackSource(this.state.sourceUrl)
-          //   this.$video.currentTime = 0
-          //   this.$video.play()
-          }
-        }
-        break
-      default:
-        assertNever(this.state)
+  public onPlaybackSubjectChange (s: PlaybackState | ArchivePlaybackState) {
+    if (s.transport !== this.transport) {
+      this.transport = s.transport
     }
-    if (prevState.mode === this.state.mode && (this.state.mode !== PLAYBACK_MODE.STOPPED)) {
-      const ps = prevState as LivePlaybackState
-      if (ps.started && !this.state.started) {
-        setTimeout(() => this.isBuffering = true)
-      } else if (!ps.started && this.state.started) {
-        setTimeout(() => this.isBuffering = false)
+
+    this.errorPlayback = (<ArchivePlaybackState> s).error?.length > 0;
+    // No translation at this time ... we should re-jigger error messages
+    this.errorPlaybackDescription = (<ArchivePlaybackState> s).error;
+
+    this.errorEncryption = (<ArchivePlaybackState> s).encrypted;
+    this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
+  }
+
+  public onBufferingChange (s: boolean) {
+    this._log('on buffering change', s, this.playback.state)
+    setTimeout(() => this.showOverlay = s, 0)
+    if (!s) {
+      switch (this.playback.state.mode) {
+        case PLAYBACK_MODE.LIVE:
+        case PLAYBACK_MODE.ARCHIVE:
+          if (!this.playback.state.started && !(<ArchivePlaybackState> this.playback.state).paused) {
+            this._log('triggering handle started')
+            this.playback.handleStarted()
+          }
+          break
       }
     }
   }
 
-  protected get $video (): HTMLVideoElement {
-    return this.videoView.nativeElement
-  }
-
-  protected _stop () {
-    this._lastTimeUpdateTimeStamp = undefined
-    this.$video.pause()
-    this.$video.currentTime = 0
-  }
-
-  // public get isBuffering () {
-  //   return !!(this.state && this.state.mode !== PLAYBACK_MODE.STOPPED && !this.state.started)
-  // }
-
-  protected _setPlaybackSource (sourceUrl: string) {
-    this.videoSourceView.nativeElement.src = sourceUrl
-  }
-
-  protected _startLive () {
-    if (!this.state || this.state.mode !== PLAYBACK_MODE.LIVE)
-      return
-    this._stop()
-    this._unsafeStartPlayback()
-  }
-
-  protected _startArchive () {
-    if (!this.state || this.state.mode !== PLAYBACK_MODE.ARCHIVE)
-      return
-    this._stop()
-    this._unsafeStartPlayback()
-  }
-
-  protected _unsafeStartPlayback () {
-    const sourceUrl = this.state['sourceUrl']
-
-    if (sourceUrl.endsWith('mp4')) {
-      this._setPlaybackSource(sourceUrl)
-      setTimeout(() => this.isBuffering = true)
-      setTimeout(() => this.$video.play(), 1000)
-
-    } else if (sourceUrl.search('.m3u8') !== -1) {
-      if (Hls.isSupported()) {
-        setTimeout(() => this.isBuffering = true)
-        var hls = new Hls();
-        hls.loadSource(sourceUrl);
-        hls.attachMedia(this.$video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          this.$video.play();
-        });
-        hls.on(Hls.Events.FRAG_LOADED, () => {
-          if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
-            if (!this.playback.state.started) {
-              this.playback.handleStarted()
-            }
-          }
-        })
-      } else {
-        console.warn('HLS is not supported')
-      }
-
-    } else {
-      console.warn('unsopported video source', sourceUrl)
-    }
-  }
-
-  // public videoPauseHandler (e: MediaStreamEvent) {
-    // looks like it causes a loop
-    // this.playback.handlePaused()
-  // }
-
-  public videoPlayHandler (e: MediaStreamEvent) {
-    // this.playback.handleStarted()
-  }
-
-  protected _lastTimeUpdateTimeStamp: ms
-  protected _lastCurrentTime: ms
-
-  /*
-  browser doesn't fire video time update event too often,
-  so we use animation frame instead for smoother user experience
-  */
-  public videoTimeUpdateHandler () {
-    if (!this.state ||
-      this.state.mode === PLAYBACK_MODE.STOPPED ||
-      ((this.state.mode === PLAYBACK_MODE.ARCHIVE || this.state.mode === PLAYBACK_MODE.LIVE) && !this.state.started) ||
-      (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused)
-    ) {
-      this._lastTimeUpdateTimeStamp = undefined
-      return
-    }
-
-    const now = Date.now()
-    if (!this._lastTimeUpdateTimeStamp) {
-      this._lastCurrentTime = Math.round(this.$video.currentTime * 1000)
-    } else {
-      const diff = now - this._lastTimeUpdateTimeStamp
-      this._lastCurrentTime += diff
-    }
-    this.playback.handleTimeUpdate(this._lastCurrentTime)
-    this._lastTimeUpdateTimeStamp = now
-  }
-
-  public videoClickHandler (e: MouseEvent) {
-
+  public onClick (e: MouseEvent) {
     if (this.playback.canPause) {
       this.playback.pause()
     } else if (this.playback.canUnpause) {
@@ -232,7 +106,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public videoDblClickHandler (e: MouseEvent) {
+  public onDblClick (e: MouseEvent) {
     this.videoDblClick.emit(true)
   }
 }

@@ -18,14 +18,19 @@ import { Nx404Component }           from '../404/404.component';
 
 const appRoutes: Routes = [
     {
-        path : '',
-        component: Nx404Component
+        path        : '',
+        component   : Nx404Component,
+        canActivate : [DevelopersGuard]
     },
     {
-        path      : ':name',
-        component : NxAboutComponent,
+        path        : ':name',
         canActivate : [DevelopersGuard],
-        children  : [
+        children    : [
+            {
+                path      : '',
+                component : NxAboutComponent,
+                pathMatch : 'full'
+            },
             {
                 path      : 'dev-tools',
                 component : NxDevToolsComponent,
@@ -46,22 +51,16 @@ const appRoutes: Routes = [
                 path     : ':kb-name',
                 children : [
                     {
+                        path      : ':level1',
+                        component : NxKnowledgeBaseComponent
+                    },
+                    {
                         path      : '',
                         component : NxKnowledgeBaseComponent,
                         pathMatch : 'full'
-                    },
-                    {
-                        path      : ':level1',
-                        component : NxKnowledgeBaseComponent,
-                        children  : [
-                            {
-                                path      : ':level2',
-                                component : NxKnowledgeBaseComponent
-                            }
-                        ]
                     }
                 ]
-            },
+            }
         ]
     }
 ];

@@ -110,7 +110,6 @@
                                 name="trafficEncryptionForced"
                                 componentId="trafficEncryptionForced"
                                 [(ngModel)]="settingsWatchers.trafficEncryptionForced.value"
-                                (click)="resetVideoEncryptionIfDisabled()"
                                 #trafficEncryptionForced="ngModel">
                         </nx-checkbox>
 
@@ -124,23 +123,19 @@
                                     name="videoTrafficEncryptionForced"
                                     componentId="videoTrafficEncryptionForced"
                                     [(ngModel)]="settingsWatchers.videoTrafficEncryptionForced.value"
-                                    [disabled]="!settingsWatchers.trafficEncryptionForced.value"
                                     (click)="setWarningMessageThroughApplyService()"
                                     #videoTrafficEncryptionForced="ngModel">
                             </nx-checkbox>
 
                             <label class="control-label mb-0"
-                                   [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-label' : ''"
                                    for="videoTrafficEncryptionForced">
                                 <span translate>Encrypt video traffic</span>
                             </label>
                         </div>
                         <label id="videoTrafficEncryptionForcedHelpBlock"
                                class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                               [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-helper-block' : ''"
-                               for="videoTrafficEncryptionForced"
-                               translate>
-                            Only client-server video traffic can be encrypted.
+                               for="videoTrafficEncryptionForced">
+                            <span translate>Only client-server video traffic can be encrypted.</span>
                         </label>
                     </ng-container>
                     <div class="d-flex checkbox-block align-items-center mt-1"
@@ -159,15 +154,16 @@
                     </div>
                     <div *ngIf="sessionLimitToggle"
                          class="row ml-4 mt-2">
-                        <input #timeUnitTracker
-                               [ngModel]="timeValue"
-                               (ngModelChange)="updateLimitSessionValue($event)"
-                               [ngModelOptions]="{standalone: true}"
-                               (keydown)="storePreviousValue($event)"
-                               (keyup)="validationCheckForInput()"
-                               type="number"
-                               min="1"
-                               class="form-control time-unit-input">
+
+                        <div class="mr-2" style="width: 70px;">
+                            <nx-numeric
+                                    [class]="'pl-2'"
+                                    [min]="1"
+                                    [max]="currentMaxTimeUnit"
+                                    [(ngModel)]="timeValue"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (onChange)="updateLimitSessionValue($event)"></nx-numeric>
+                        </div>
                         <nx-select #selectorTracker
                                    class="time-unit-select"
                                    [items]="limitSessionTimeItems"

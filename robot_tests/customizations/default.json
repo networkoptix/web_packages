@@ -1,10 +1,11 @@
 {
-    "PRODUCT_NAME"               :    "Nx Witness Cloud",
+    "PRODUCT_NAME"               :    "Nx Cloud",
     "VMS_NAME"                   :    "Nx Witness",
+    "TRIAL LICENSE"              :    "0000-0000-0000-0005",
     "TEST EMAIL"                 :    "noptixautoqa",
     "AUTO SYS IP"                :    "https://10.1.5.126:7008",
     "AUTO SYS IP ONLY"		     :    "10.1.5.126:7008",
-    "ADVANCED SYS IP"			 :	  "https://10.1.5.126:7030",
+    "ADVANCED SYS IP"			 :	  "https://10.1.5.238:7030",
     "PRIVACY POLICY URL HREF"    :    "https://www.networkoptix.com/privacy-policy/",
     "PRIVACY POLICY URL FULL"    :    "https://www.networkoptix.com/privacy-policy/",
     "SUPPORT URL"                :    "https://support.networkoptix.com",
@@ -29,6 +30,9 @@
     "AUTO TESTS GOOD CAM ID"     :    "{838a6c54-76aa-cd65-e20c-79e5bfd3b85f}",
     "CUST LANGUAGE LIST"	     :	  "default_lang_list.json",
     "DEFAULT LANGUAGE"		     :	  "en_US",
+    "DISABLED STORAGE COLOR"     :    "rgba(165, 183, 192, 1)",
+    "DISABLED SWITCH COLOR"		 :    "rgba(185, 199, 206, 1)",
+    "ENABLED SWITCH COLOR"		 :    "rgba(58, 145, 30, 1)",
 
     "THEME COLOR"                : "#2FA2DB",
     "THEME COLOR RGB"            : "rgba(47, 162, 219, 1)",

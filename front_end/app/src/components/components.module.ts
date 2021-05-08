@@ -42,22 +42,24 @@ import { NxApplyComponent }                   from './apply/apply.component';
 import { NxPreLoaderComponent }               from './placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderComponent }         from './placeholders/page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
+import { NxPlayerPlaceholderComponent }       from './placeholders/player/player-placeholder.component';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
 import { NxLeftMenuComponent }                from './left-menu/left-menu.component';
 import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
 import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
-import { NxHeaderMainButtonComponent }        from './header/main-button/main-button.component';
-import { NxSystemTileComponent }              from './dropdowns/drop-menu/system-tile/system-tile.component';
-import { NxNavigationTileComponent }          from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
-import { NxAdditionalSystemsTileComponent }   from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
-import { NxTabsComponent }                    from './header/tabs/tabs.component';
-import { NxNavDropdownComponent }             from './header/nav-dropdown/nav-dropdown.component';
-import { NxOverlayModalComponent }            from './overlay-modal/overlay-modal.component';
-import { NxInfoBlockComponent }               from './info-block/info-block.component';
-import { NxImageComponent }                   from '@pages/health/table-components/image/image.component';
-import { NxEditableSettingsHeading }          from './editable/settings-heading/editable-settings-heading.component';
-import { QuicklinkModule }                    from 'ngx-quicklink';
+import { NxHeaderMainButtonComponent }      from './header/main-button/main-button.component';
+import { NxSystemTileComponent }            from './dropdowns/drop-menu/system-tile/system-tile.component';
+import { NxNavigationTileComponent }        from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxTabsComponent }                  from './header/tabs/tabs.component';
+import { NxNavDropdownComponent }           from './header/nav-dropdown/nav-dropdown.component';
+import { NxOverlayModalComponent }          from './overlay-modal/overlay-modal.component';
+import { NxInfoBlockComponent }             from './info-block/info-block.component';
+import { NxImageComponent }                 from '@pages/health/table-components/image/image.component';
+import { NxEditableSettingsHeading }        from './editable/settings-heading/editable-settings-heading.component';
+import { QuicklinkModule }                  from 'ngx-quicklink';
+import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
 
 @NgModule({
     imports: [
@@ -106,11 +108,13 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxPasswordValidationComponent,
         NxPasswordTagValidationComponent,
         NxEmailComponent,
+        NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         NxInfoBlockComponent,
         ToastsContainer,
         NxSystemTileComponent,
@@ -147,14 +151,15 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxPasswordValidationComponent,
         NxPasswordTagValidationComponent,
         NxEmailComponent,
+        NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         ToastsContainer,
         NxInfoBlockComponent,
-        NxRibbonService,
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
@@ -196,11 +201,13 @@ import { QuicklinkModule }                    from 'ngx-quicklink';
         NxPasswordValidationComponent,
         NxPasswordTagValidationComponent,
         NxEmailComponent,
+        NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxPlayerPlaceholderComponent,
         ToastsContainer,
         NxInfoBlockComponent,
         NxSystemTileComponent,

@@ -1,30 +1,26 @@
 import {
-    Component, OnInit, SimpleChanges, OnChanges,
-    OnDestroy, Input, Output, EventEmitter
+    Component, SimpleChanges, OnChanges, OnDestroy,
+    Input, Output, EventEmitter
 }                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import {
-    UntilDestroy, untilDestroyed
-}                                    from '@ngneat/until-destroy';
-import {
-    of, SubscriptionLike, Subject, Observable
-}                                                 from 'rxjs';
-import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
+import { ActivatedRoute }                from '@angular/router';
+import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+import { of, SubscriptionLike, Subject } from 'rxjs';
+import { catchError, filter }            from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
-}                                    from '../../../../../components/info-block/info-block.component';
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxMenuService }             from '../../../../../menu';
-import { ICamera, NxSystem }         from '../../../../../services/system.service';
-import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
-import { NxUtilsService }            from '../../../../../services/utils.service';
-import { NxToastService }            from '../../../../../dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+}                                    from '@components/info-block/info-block.component';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxApplyService, Watcher }   from '@services/apply.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxMenuService }             from '@src/menu';
+import { NxSystem }                  from '@services/system.service';
+import { NxUriService, ChildRoutes } from '@services/uri.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxToastService }            from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 interface DropdownStorage {
     name: string,
@@ -34,7 +30,8 @@ interface DropdownStorage {
     isWritable: boolean,
     isNotSystem: boolean,
     selected: boolean,
-    value: string
+    value: string,
+    freeSpace: number
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -43,7 +40,7 @@ interface DropdownStorage {
     templateUrl : 'server-standard.component.html',
     styleUrls   : ['server-standard.component.scss']
 })
-export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
+export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer;
     @Input() isOffline: boolean;
@@ -62,6 +59,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     previousInputValue: number;
     checking: boolean;
     _serverLoaded = false;
+    portBusy: boolean;
 
     dropdownStorages: any[] = [];
     saveStorageWatcher = new Watcher<boolean>(false);
@@ -118,6 +116,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.section = 'servers';
         this.fullInfoPath = '';
+
+        this.portBusy = false;
     }
 
     constructor(
@@ -137,21 +137,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
-        this.initForApplyService();
-
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.saveStorageWatcher, this.serverNameWatcher],
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId);
-            }
-        );
-
-        this.applyService.setVisible(false);
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
             this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
@@ -165,8 +150,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 delete previousValue.shownStatus;
             }
 
-            if (currentValue.id !== previousValue?.id) {
-                this.setServer();
+            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+                this.storagesLoading = true;
+                if (!this.applyService.locked) {
+                    setTimeout(() => this.setServer());
+                }
+            } else {
+                this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
             }
         }
     }
@@ -174,20 +164,23 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy() {}
 
     setServer(): void {
+        this.initForApplyService();
+
+        this.applyService.setVisible(false);
         this.serverLoaded = false;
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
-        const { ip, port } = this.selectedServer;
+        const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
-
-        this.renameDisabled = !this.system.permissions.editAdmins;
-        this.restartDisabled = !this.system.permissions.isAdmin;
-        this.detachDisabled = !this.system.permissions.editAdmins;
-        this.resetDisabled = !this.system.permissions.editAdmins;
-        this.portChangeDisabled = !this.system.permissions.editAdmins;
+        const { isAdmin, editAdmins } = this.system.userManager.permissions;
+        this.renameDisabled = !isAdmin;
+        this.restartDisabled = !isAdmin;
+        this.detachDisabled = !editAdmins;
+        this.resetDisabled = !editAdmins;
+        this.portChangeDisabled = !editAdmins;
 
         this.serverDetails = new InfoBlockSection([
             new InfoBlockLine(this.LANG.common.ip(), this.selectedServer.ip || '-'),
@@ -195,16 +188,36 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
         ]);
 
-        if (!this.applyService.locked) {
-            this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +port;
-        }
+        this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +serverPort;
+        this.checkIfOnline(this.parsedServerId).finally(() => {
+            this.serverLoaded = true;
+        });
+
         this.getCurrentStorages();
+
+        this.applyService.addWatchers([this.saveStorageWatcher]);
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.ipPortWatcher, this.serverNameWatcher],
+            this.saveSettings,
+            () => {
+                this.applyService.reset();
+                this.applyService.unsetInvalidField('port');
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
+                    this.selectDefaultStorage();
+                this.setSystemStorageChosen(this.selectedStorage);
+            }
+        );
     }
 
     initForApplyService(): void {
+        if (this.saveSettings) {
+            return;
+        }
         this.saveSettings = this.processService.createProcess(async() => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
+            let newPort;
+
             if (this.serverNameWatcher.changed) {
                 await this.system.renameServer(this.selectedServer.id, this.serverNameWatcher.value)
                     .then(() => {
@@ -218,20 +231,29 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
+
                         this.toastService.show(
                             NxLanguageProviderService.translate(
-                                this.LANG.toastMessage.nameFail?.(),
+                                this.LANG.toastMessage.nameFail,
                                 { type: this.LANG.common.server?.() }
                             ), options);
                     });
             }
+
             try {
                 if (!port.value) {
                     port.value = port.originalValue;
                 } else if (port.value !== port.originalValue) {
                     const portReturn = await this.system.changeServerPort(port.value, serverId);
-                    if (portReturn) {
-                        port.originalValue = port.value;
+                    switch (portReturn.error) {
+                        case '0':
+                            await this.system.update();
+                            newPort = port.originalValue = port.value;
+                            break;
+                        case '3':
+                            this.portBusy = true;
+                            port.value = port.originalValue;
+                            break;
                     }
                 }
                 if (this.saveStorageWatcher.value) {
@@ -251,8 +273,14 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             } catch (error) {
                 return Promise.reject(error);
             }
-            this.applyService.reset();
 
+            if (this.CONFIG.isLocal && newPort) {
+                setTimeout(() => {
+                    this.uriService.changePort(newPort);
+                });
+            }
+
+            this.applyService.reset();
             return Promise.resolve();
         });
     }
@@ -264,13 +292,22 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
+
+        if (!this.serverOffline && (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id))) {
+            this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
+        }
+
+        if (this.serverOffline || this.serverUnavailable) {
+            this.storagesLoading = false;
+            this.dropdownStorages = [];
+        }
     }
 
     checkIfOnline = (serverId) => {
         return this.system.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
             if (res) {
                 const servers: any[] = Object.entries(res).map(server => server[1]);
-                this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                this.setStatus(servers.find(server => NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)).status === 'Online'
                     ? '' : this.CONFIG.servers.status.offline);
                 this.applyService.setVisible(true);
             }
@@ -343,38 +380,34 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             .then(() => this.setStatus('resetting'));
     }
 
-    storePreviousValue(e) {
-        // prevents [.+-e] from being input
-        if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
-            e.preventDefault();
+    onPortChange(port) {
+        this.portBusy = false;
+        if (port && port >= this.CONFIG.servers.port.min && port < this.CONFIG.servers.port.max) {
+            this.ipPortWatcher.value = port;
         }
-        this.previousInputValue = this.ipPortWatcher.value;
-    }
-
-    validationCheckForInput() {
-        // checks if entering a value less than min or greater than max
-        // null exception for less than since it gets cast to 0
-        if (
-            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null) ||
-            this.ipPortWatcher.value > this.CONFIG.servers.port.max
-        ) {
-            this.ipPortWatcher.value = this.previousInputValue;
-        }
-        this.onPortChange();
-    }
-
-    onPortChange() {
-        if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
+        if (this.ipPortWatcher.value === null) {
+            this.applyService.setInvalidField('port');
+            return;
+        } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
             this.applyService.setWarn(this.LANG.servers.portWarning?.());
         } else {
             this.applyService.setWarn('');
         }
+        this.applyService.unsetInvalidField('port');
     }
 
-    async changeAnalyticsStorage(newStorage: Partial<DropdownStorage>) {
+    private setSystemStorageChosen(storage) {
         const hasMultipleStorages = this.dropdownStorages.length > 1;
-        this.systemStorageChosen = hasMultipleStorages && !newStorage.isNotSystem;
-        if (newStorage.id === this.currentAnalyticsDbId) return;
+        this.systemStorageChosen = hasMultipleStorages && storage && !storage.isNotSystem;
+    }
+
+    async changeAnalyticsStorage(newStorage) {
+        this.setSystemStorageChosen(newStorage);
+
+        if (newStorage.id === this.currentAnalyticsDbId) {
+            this.saveStorageWatcher.value = false;
+            return;
+        }
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
         const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();
@@ -397,11 +430,11 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             autohide  : true,
                             delay     : this.CONFIG.alertTimeout
                         };
-                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
+                        this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
                     } else if (closeRes === 'cancel') {
                         this.selectedStorage = { ...this.selectedStorage };
-                        this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
+                        this.setSystemStorageChosen(this.selectedStorage);
                     }
                     this.currentAnalyticsDbId = this.selectedStorage.id;
                     this.saveStorageWatcher.value = false;
@@ -409,17 +442,21 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         } else {
             this.selectedStorage = newStorage;
             this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
-            this.systemStorageChosen = hasMultipleStorages && !this.selectedStorage.isNotSystem;
         }
         this.checkingForDataAnalytics = false;
     }
 
     getCurrentStorages() {
+        if (this.storageSubscription) {
+            return;
+        }
         this.storageSubscription = this.system.storageManager.storageState$.pipe(
             filter(({ storageInfoLoaded, analyticsLoaded }) => storageInfoLoaded && analyticsLoaded)
         ).subscribe(({
             currentAnalyticsDbLocation,
-            analyticsDbTargetLocations
+            analyticsDbTargetLocations,
+            hasAnalyticsData,
+            hasCompatibleAnalyticsPlugins
         }) => {
             this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
             this.dropdownStorages = analyticsDbTargetLocations.map(({ url, isOnline, storageStatus, storageId, isWritable, freeSpace }) => {
@@ -428,20 +465,30 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     name        : url,
                     isOnline,
                     isWritable,
-                    isNotSystem : !storageStatus?.includes('system'),
+                    isNotSystem : !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
                     selected,
                     id          : storageId,
                     value       : storageId,
                     freeSpace
                 };
             });
-            this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+            if (!this.saveStorageWatcher.value) {
+                this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+            }
             this.storagesLoading = false;
-            this.serverLoaded = true;
+            this.showAnalytics = !!currentAnalyticsDbLocation || hasAnalyticsData || hasCompatibleAnalyticsPlugins;
+
+            this.setSystemStorageChosen(this.selectedStorage);
+
             if (this.saveStorageWatcher.value === undefined) {
                 this.saveStorageWatcher.value = false;
             }
-        });
+        }, () => {
+            this.currentAnalyticsDbId = null;
+            this.dropdownStorages = [];
+            this.storagesLoading = false;
+        }
+        );
     }
 
     selectDefaultStorage() {

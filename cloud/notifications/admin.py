@@ -151,7 +151,7 @@ class CloudNotificationAdmin(admin.ModelAdmin):
                 users_by_customization.append({
                     "name": customization,
                     "users": ", ".join(list(Account.objects.filter(customization=customization)
-                                       .values_list("email", flat=True)))
+                                       .values_list("email", flat=True))).replace("{", "&#123;").replace("}", "&#125;")
                 })
             return format_html(pystache.render(CLOUD_NOTIFICATIONS_USERS_TEMPLATE,
                                                {"users_by_customization": users_by_customization}))
@@ -217,15 +217,29 @@ class PushSubscriptionAdmin(admin.ModelAdmin):
 class PushNotificationAdmin(admin.ModelAdmin):
     search_fields = ('title', 'body', 'raw_system_id', 'raw_targets', 'devices__user__email', 'result_data')
     list_filter = ('customization', 'state')
-    list_display = ('short_title', 'customization', 'state', 'created_date_formatted', 'send_date_formatted', 'result_errors')
+    list_display = ('short_title', 'customization', 'state', 'raw_targets_formatted', 'raw_system_id',
+                    'created_date_formatted', 'send_date_formatted', 'delivery_interval', 'result_errors')
+    date_hierarchy = 'created_date'
+
+    def raw_targets_formatted(self, obj):
+        if len(obj.raw_targets) > 80:
+            return obj.raw_targets[:77] + '...'
+        return obj.raw_targets
+    raw_targets_formatted.short_description = 'Raw Targets'
 
     def created_date_formatted(self, obj):
         return obj.created_date.strftime('%B %d, %Y %H:%M:%S') if obj.created_date else ''
-    created_date_formatted.short_description = 'created_date'
+    created_date_formatted.short_description = 'Created Date'
 
     def send_date_formatted(self, obj):
         return obj.send_date.strftime('%B %d, %Y %H:%M:%S') if obj.send_date else ''
-    send_date_formatted.short_description = 'send_date'
+    send_date_formatted.short_description = 'Send Date'
+
+    def delivery_interval(self, obj):
+        if obj.send_date and obj.created_date:
+            return (obj.send_date - obj.created_date).total_seconds()
+        return None
+    delivery_interval.short_description = 'Delivery Time Interval'
 
     def short_title(self, obj):
         return obj.title if len(obj.title) < 50 else f'{obj.title[:47]}...'
@@ -239,5 +253,19 @@ class PushNotificationAdmin(admin.ModelAdmin):
                 return f'{error.group(0)}...'
         return ''
 
+    def get_readonly_fields(self, request, obj=None):
+        return list(set(
+            [field.name for field in self.opts.local_fields] +
+            [field.name for field in self.opts.local_many_to_many]
+        ))
 
-admin.site.register(PushDevice, GCMDeviceAdmin)
+
+@admin.register(PushDevice)
+class PushDeviceAdmin(GCMDeviceAdmin):
+    list_display = ('name', 'user', 'active', 'date_created', 'provider')
+
+    def get_readonly_fields(self, request, obj=None):
+        return list(set(
+            [field.name for field in self.opts.local_fields] +
+            [field.name for field in self.opts.local_many_to_many]
+        ))

@@ -6,13 +6,13 @@ import {
     tap, mergeMap
 }                                     from 'rxjs/operators';
 
-import { NxRibbonService }           from '../../components/ribbon';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxToastService }            from '../toast.service';
-import { NxApplyService }            from '../../services/apply.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxToastService }            from '@dialogs/toast.service';
+import { NxApplyService }            from '@services/apply.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-restart-server-content',
@@ -54,11 +54,11 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                const offline = !this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId).length;
-                if (offline) {
+                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                if (!haveOnlineServers) {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
                 }
-                this.applyService.isOnline$.next(!offline);
+                this.applyService.isOnline$.next(haveOnlineServers);
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(
@@ -90,6 +90,11 @@ export class RestartServerModalContent {
                                 }
                             }),
                             mergeMap(() => {
+                                if (NxConfigService.isLocal) {
+                                    // give the user chance to read the toaster
+                                    setTimeout(() => window.location.reload(), 2000);
+                                    throw Error('re-login on restart');
+                                }
                                 // makes sure that system is online
                                 return this.system.getInfo(true, false)
                                     .then(() => {
@@ -128,7 +133,7 @@ export class RestartServerModalContent {
                 err => {
                     this.system.currentServerNotBusy = true;
                     this.system.currentBusyServerIds.delete(this.serverId);
-                    let message = this.LANG.servers.restartFailed;
+                    let message = this.LANG.servers.restartFailed();
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline?.();
                         this.close(this.CONFIG.servers.status.offline);

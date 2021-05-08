@@ -12,7 +12,7 @@ const TIME_FORMAT_STRING = 'HH:MM:ss'
 @Component({
   selector: 'timeline-selection',
   templateUrl: './timeline-selection.component.html',
-  styleUrls: ['./timeline-selection.component.styl'],
+  styleUrls: ['./timeline-selection.component.scss'],
 })
 export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewInit {
 

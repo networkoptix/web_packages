@@ -286,8 +286,9 @@ export interface DialogsMerge {
     enterSystemAddressTitle:    any;
     latestBuild:                any;
     mergeConfirmation:          any;
-    mergeSystemsTitle:          any;
     mergeFailedTitle:           any;
+    mergeSuccess:               any;
+    mergeSystemsTitle:          any;
     noServerFound:              any;
     newSystemDisplayName:       any;
     otherSystem:                any;
@@ -578,12 +579,14 @@ export interface PageTitles {
     activate:               any;
     activateCode:           any;
     activateSuccess:        any;
+    articleTitle:           any;
     changePassword:         any;
     debug:                  any;
     default:                any;
     download:               any;
     downloadPlatform:       any;
     failedToAccessSystem:   any;
+    failedToAccessCamera:   any;
     integrations:           any;
     login:                  any;
     pageNotFound:           any;
@@ -656,10 +659,11 @@ export interface BeingMerged {
 }
 
 export interface RibbonIntegration {
-    accept:         any;
-    reject:         any;
-    backToEditText: any;
-    previewRibbon:  any;
+    accept:          any;
+    reject:          any;
+    backToEditText:  any;
+    previewRibbon:   any;
+    publishedRibbon: any;
 }
 
 export interface Search {
@@ -818,8 +822,8 @@ export interface SystemStatuses {
 export interface ToastMessage {
     cloudUnavailable: any;
     nameFail:         any;
+    reviewAccepted:   any;
     system:           ToastMessageSystem;
-    viewingReport:    any;
 }
 
 export interface ToastMessageSystem {
@@ -1236,8 +1240,9 @@ const typeMap: any = {
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
         { json: "latestBuild", js: "latestBuild", typ: "any" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "any" },
-        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "any" },
+        { json: "mergeSuccess", js: "mergeSuccess", typ: "any" },
+        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "noServerFound", js: "noServerFound", typ: "any" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "any" },
         { json: "otherSystem", js: "otherSystem", typ: "any" },
@@ -1499,12 +1504,14 @@ const typeMap: any = {
         { json: "activate", js: "activate", typ: "any" },
         { json: "activateCode", js: "activateCode", typ: "any" },
         { json: "activateSuccess", js: "activateSuccess", typ: "any" },
+        { json: "articleTitle", js: "articleTitle", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
         { json: "debug", js: "debug", typ: "any" },
         { json: "default", js: "default", typ: "any" },
         { json: "download", js: "download", typ: "any" },
         { json: "downloadPlatform", js: "downloadPlatform", typ: "any" },
         { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "any" },
+        { json: "failedToAccessCamera", js: "failedToAccessCamera", typ: "any" },
         { json: "integrations", js: "integrations", typ: "any" },
         { json: "login", js: "login", typ: "any" },
         { json: "pageNotFound", js: "pageNotFound", typ: "any" },
@@ -1572,6 +1579,7 @@ const typeMap: any = {
         { json: "reject", js: "reject", typ: "any" },
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
+        { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },
@@ -1713,8 +1721,8 @@ const typeMap: any = {
     "ToastMessage": o([
         { json: "cloudUnavailable", js: "cloudUnavailable", typ: "any" },
         { json: "nameFail", js: "nameFail", typ: "any" },
+        { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
-        { json: "viewingReport", js: "viewingReport", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },

@@ -1,6 +1,7 @@
-import { ms } from '../../../utils/type-aliases'
+import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
+import { PlaybackTransport } from '@pages/systems/view/view.types'
 
 
 interface NameValue {
@@ -24,6 +25,8 @@ export class Camera implements ICamera {
 
   protected _mediaStreams: Array<MediaStreamInfo> = []
 
+  protected _rotation: int = 0
+
   constructor (
     public readonly id: string,
     public readonly preferredServerId: string,
@@ -34,8 +37,8 @@ export class Camera implements ICamera {
     protected _archiveRange: ISimpleTimeRange,
     protected _archive: CameraArchive = [],
     public readonly thumbnailUrl: string | undefined = undefined,
-    public getLiveVideoUrl: (quality: string) => string,
-    public getArchiveVideoUrl: (t: ms, quality: string) => string,
+    public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+    public readonly getPosterUrl: (t?: ms) => string,
   ) {
     this._initBirdView()
   }
@@ -45,26 +48,71 @@ export class Camera implements ICamera {
     if (ms) {
       try {
         this._mediaStreams = JSON.parse(ms.value).streams
-        console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
+        // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
       } catch (e) {
         this._mediaStreams = []
         console.error('error parsing media streams', this.id, e)
       }
     }
+    const rotation = ps.find(p => p.name === 'rotation')
+    if (rotation) {
+      this._rotation = parseInt(rotation.value) || 0
+      // console.log('got camera rotation', this._rotation)
+    }
   }
 
-  public get hasHlsStream (): boolean {
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls'))
+  public get rotation () {
+    return this._rotation
   }
 
-  public get hasLowQualityHlsStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && this._resolutionIsLow(s.resolution))
+  public get availableTransportsAndResolutions () {
+    return this.availableTransports.reduce((acc, t) => {
+      acc[t] = this._getAvailableResolutions(t)
+      return acc
+     }, {})
   }
 
-  public get hasHighQualityHlsStream (): boolean {
-    if (!this.hasHlsStream) return false
-    return !!this._mediaStreams.find(s => s.transports.find(t => t === 'hls') && !this._resolutionIsLow(s.resolution))
+  public get availableTransports () {
+    function isTransportSupported (t) {
+      switch (t) {
+        case 'hls':
+        case 'webm':
+        case 'mp4':
+          return true
+        default:
+          return false
+      }
+    }
+
+    const result = new Set()
+    this._mediaStreams
+      // .filter(s => s.resolution !== '*')
+      .map(s => s.transports.map(t => result.add(t)))
+    return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>
+  }
+
+  protected _getAvailableResolutions (transport) {
+    const result = []
+    this._mediaStreams
+      .filter(s => s.resolution !== '*')
+      .map(s => s.transports.filter(t => t === transport) && result.push(s.resolution))
+    if (transport === 'hls') {
+      if (result.length === 1) {
+        return ['', 'hi']
+      } else {
+        const hlsResult = ['']
+        if (result.filter(r => this._resolutionIsLow(r)).length) {
+          hlsResult.push('lo')
+        }
+        if (result.filter(r => !this._resolutionIsLow(r)).length) {
+          hlsResult.push('hi')
+        }
+        return hlsResult
+      }
+    } else {
+      result.unshift(''); // add "Auto"
+      return result
+    }
   }
 
   protected _resolutionIsLow(s: string): boolean {
@@ -72,11 +120,15 @@ export class Camera implements ICamera {
   }
 
   public get isLive () {
-    return this.status === 'Live' || this.status === 'Recording'
+    return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording'
   }
 
   public get isOnline () {
     return this.status !== 'Offline'
+  }
+
+  public get isOffline () {
+    return this.status === 'Offline'
   }
 
   public get isRecording () {
@@ -85,6 +137,10 @@ export class Camera implements ICamera {
 
   public get isAuthorized () {
     return this.status !== 'Unauthorized'
+  }
+
+  public get isUnauthorized () {
+    return this.status === 'Unauthorized'
   }
 
   public get hasArchive () {

@@ -3,6 +3,7 @@ import { Location }                        from '@angular/common';
 import { ActivatedRoute, Router, Params }  from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
 import { NxConfigService, IConfig }        from './nx-config';
+import { WINDOW }                          from '@services/window-provider';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -30,7 +31,7 @@ export class NxUriService {
         configService: NxConfigService,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location,
+        @Inject(WINDOW) private window: Window,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.CONFIG = configService.config;
@@ -56,6 +57,10 @@ export class NxUriService {
 
     getURL() {
         return this.router.url.split('?')[0];
+    }
+
+    changePort(newPort): void {
+        this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`);
     }
 
     getURI(): Observable<Params> {

@@ -88,8 +88,8 @@ export interface Settings {
     maxRtpRetryCount: string,
     maxRtspConnectDurationSeconds: string,
     maxSceneItems: string,
-    maxWearableArchiveSynchronizationThreads: string,
-    maxWebMTranscoders: string,
+    maxVirtualCameraArchiveSynchronizationThreads: string,
+    maxHttpTranscodingSessions: string,
     metadataStorageChangePolicy: string,
     osTimeChangeCheckPeriodMs: string,
     primaryTimeServer: string,
@@ -669,7 +669,7 @@ export enum ActionTypes {
 
 export interface ServerNetworkSettings {
     dhcp: boolean;
-    dns_servers: string;
+    dnsServers: string;
     extraParams: IParams;
     ipAddr: string;
     mac: string;

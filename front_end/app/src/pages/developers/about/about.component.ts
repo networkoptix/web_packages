@@ -1,11 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntilDestroy }     from '@ngneat/until-destroy';
-import { BehaviorSubject }  from 'rxjs';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
 import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
 import { NxHeaderService }      from '../../../services/nx-header.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivationStart, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxMenusService } from '../../../services/menus.service';
+import { NxPageService } from '../../../services/page.service';
+import { NxAccountService, Account } from '../../../services/account.service';
+import { filter } from 'rxjs/operators';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -24,14 +31,15 @@ export enum AboutTemplates {
     styleUrls   : ['about.component.scss']
 })
 export class NxAboutComponent {
-    @Input() heading: string = 'Develop with %CLOUD_NAME%';
-    @Input() lead: string = '%CLOUD_NAME% is an extensible IP Video Development Platform created for software developers who want to create new Powered-by-%VMS_NAME% products and scalable integrations.'
-
     CONFIG: IConfig;
+    account: Account;
+    LANG: LanguageI18NStaticTypes;
     aboutStructure$ = new BehaviorSubject<AboutStructure>(null);
     aboutCases = AboutTemplates;
     baseName = '';
     menuName = '';
+
+    accountSubscription: SubscriptionLike;
 
     get aboutStructure() {
         return this.aboutStructure$.value;
@@ -66,46 +74,105 @@ export class NxAboutComponent {
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
         public router: Router,
+        private ribbonService: NxRibbonService,
+        languageService: NxLanguageProviderService,
+        private menusService: NxMenusService,
+        private pageService: NxPageService,
+        private accountService: NxAccountService,
         configService: NxConfigService
     ) {
         this.CONFIG = configService.config;
-        this.baseName = this.route.snapshot.paramMap.get('name');
+        this.LANG = languageService.translations;
+        this.loadMenu(this.route.snapshot.paramMap.get('name'));
+        this.router.events.pipe(
+            filter((event) => event instanceof ActivationStart),
+            untilDestroyed(this)
+        ).subscribe((event: any) => {
+            this.loadMenu(event?.snapshot?.params?.name);
+        });
+    }
+
+    loadMenu(baseName) {
+        this.aboutStructure = null;
+        if (!baseName) {
+            return;
+        }
+        this.baseName = baseName;
         this.menuName = this.CONFIG.docMenuMap[this.baseName]?.[''];
         if (!this.menuName) {
-            setTimeout(() => this.router.navigate([this.CONFIG.redirect.page404]));
+            setTimeout(this.pageService.show404);
             return;
         }
         const { state } = this.route.snapshot.queryParams;
-        this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(about => {
-            const mapToAboutNode = ({
-                name,
-                display_name: displayName,
-                asset_id: assetId,
-                new_window: newWindow,
-                asset,
-                assetKB,
-                url,
-                icon,
-                nodes
-            }): AboutNode => {
-                return ({
-                    title       : displayName || name || asset.title,
-                    displayName : displayName || name,
-                    nodes       : nodes && nodes.map(mapToAboutNode),
-                    url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
-                    assetId,
-                    asset,
-                    icon,
-                    newWindow
-                });
-            };
-            const mapToAboutStructure = (node):AboutStructureNode => ({
-                template : node.icon.split(' ')[0],
-                node     : mapToAboutNode(node)
-            });
-
-            this.aboutStructure = about.map(mapToAboutStructure);
+        this.menusService.getMenu(this.menuName).subscribe(menu => {
+            this.pageService.pageTitle = menu.title;
+            this.pageService.pageDescription = menu.description;
         });
+        this.accountService.get().then(account => {
+            this.account = account;
+            this.accountSubscription = this.accountService.accountSubject.subscribe(account => {
+                if (this.account !== account) {
+                    const url = this.router.url;
+                    this.router.navigateByUrl('/', { skipLocationChange : true }).then(_ => {
+                        this.router.navigateByUrl(url, { skipLocationChange : true });
+                    });
+                }
+            });
+        }).then(_ => {
+            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct, '', state).subscribe(({ nodes: about, id }) => {
+                const mapToAboutNode = ({
+                    name,
+                    subtitle,
+                    display_name: displayName,
+                    asset_id: assetId,
+                    new_window: newWindow,
+                    asset,
+                    assetKB,
+                    url,
+                    icon,
+                    nodes
+                }): AboutNode => {
+                    return ({
+                        title       : displayName || name || asset.title,
+                        subtitle,
+                        displayName : displayName || name,
+                        nodes       : nodes && nodes.map(mapToAboutNode),
+                        url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
+                        assetId,
+                        asset,
+                        icon,
+                        newWindow
+                    });
+                };
+                const mapToAboutStructure = (node): AboutStructureNode => ({
+                    template : node.icon.split(' ')[0],
+                    node     : mapToAboutNode(node)
+                });
+
+                this.aboutStructure = (about || []).map(mapToAboutStructure);
+                if (state || this.account?.is_superuser) {
+                    this.showRibbon(id, state);
+                }
+            });
+        });
+    }
+
+    showRibbon(id, state) {
+        const ribbonActions: RibbonActionInput[] = [
+            {
+                type  : 'link',
+                text  : this.LANG.ribbon.integration.backToEditText,
+                value : this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
+            }
+        ];
+        this.ribbonService.show(
+            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
+            ribbonActions
+        );
+    }
+
+    ngOnDestroy() {
+        this.ribbonService.hide();
     }
 };
 
@@ -115,6 +182,7 @@ export type AboutStructure = AboutStructureNode[]
 
 export interface AboutNode {
     title: string;
+    subtitle: string;
     displayName: string;
     assetId: number;
     asset: any;

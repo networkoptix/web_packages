@@ -30,7 +30,7 @@ Merge Systems Local
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
     &{data}=   Create Dictionary    name=${name}    customization=${customization}
-    Create Digest Session    bind session    ${cloud url}    auth=${auth}    disable_warnings=1
+    Create Session    bind session    ${cloud url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    bind session    /cdb/system/bind    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -62,8 +62,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
-    Log    ${bind json}
-    Sleep    5
+    Sleep    10
     ${Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}
@@ -76,7 +75,7 @@ Connect System to Cloud
 Rename System
     [Arguments]    ${auth}    ${system id}    ${new name}
     &{data}=   Create Dictionary    systemId=${system id}    name=${new name}
-    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    verify=False    disable_warnings=1
+    Create Session    Rename System session    ${ENV}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -84,14 +83,14 @@ Rename System
 Share
     [Arguments]    ${auth}    ${system id}    ${access role}    ${account email}
     &{data}=   Create Dictionary    systemId=${system id}    accessRole=${access role}    accountEmail=${account email}
-    Create Digest Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Share session    /cdb/system/share    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Get Cloud System Settings
     [Arguments]    ${auth}    ${system id}
-    Create Digest Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Get System Settings session   /cdb/system/get?systemId=${system id}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['systems'][0]}
@@ -99,10 +98,18 @@ Get Cloud System Settings
 Get Cloud System Users
     [Arguments]    ${auth}    ${system id}
     ${data}=   Create Dictionary    systemId=${system id}
-    Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
+    Create Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
+
+Get Account Info
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}
+    ${auth}=   Create List    ${email}    ${password}
+    Create Session    Get Account Info    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Account Info    /cdb/account/get
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
 
 # Alternative way to reset Account password - via cdb directly.
 # "Change Account Password" keyword is preferred.
@@ -156,6 +163,11 @@ Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
+    Sleep    2
+    Reload Page
+    Sleep    5
+    Reload Page
+    Sleep    5
     Go To    ${ENV}
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
@@ -173,10 +185,11 @@ Setup Local System
     @{auth}=   Create List    admin    admin
     &{data}=    Create Dictionary    password=${new password}    systemName=${system name}
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
+    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     ${auth}=   Create List    admin    ${new password}
-    Disable Stat Reports    ${auth}    ${server url}
+    Set System Settings via API    ${auth}    ${server url}    statisticsAllowed    false
+    Set System Settings via API    ${auth}    ${server url}    trafficEncryptionForced    false
     [Return]    ${resp.json()}
 
 Setup Cloud System
@@ -219,7 +232,7 @@ Restore Factory Defaults
 Detach Server From System
     [Arguments]    ${server url}    ${auth}
     &{data}=   Create Dictionary    currentPassword=${auth[1]}
-    Create Digest Session    Detach From System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
+    Create Session    Detach From System session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Post Request    Detach From System session     /api/detachFromSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
@@ -246,13 +259,16 @@ Get Server Name
     END
 
 Get Server Id
-    [Arguments]    ${system url}    ${system auth}    ${server name}
+    [Arguments]    ${system url}    ${system auth}    ${server name}=${None}
+    # Pass server name if there is more than one server ins the system
     Create Digest Session    Get Server Id session    ${system url}    auth=${system auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Get Server Id session     /ec2/getMediaServersEx    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    FOR    ${server}    IN    @{resp.json()}
-        ${status}=   Run Keyword And Return Status    Should Contain    ${server name}    ${server}[name]
-        Return From Keyword If    ${status}    ${server}[id]
+    ${data}=   Evaluate    $resp.json()
+
+    Return From Keyword If   not $server_name    ${data}[0][id]
+    FOR    ${server}    IN    @{data}
+        Return From Keyword If    "${server name}" == "${server}[name]"    ${server}[id]
     END
 
 Rename Server
@@ -282,7 +298,7 @@ Activate License
     [Arguments]    ${auth}    ${server url}    ${license}
     ${data}=   Create Dictionary    licenseKey=${license}
     Create Digest Session    Activate License session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
-    ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=10
+    ${resp}=    Post Request    Activate License session   /api/activateLicense    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
@@ -346,7 +362,16 @@ Get System Settings From Server
     Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Get Request    Get System Settings session   /api/systemSettings
     Should Be Equal As Strings    ${resp.status_code}    200
+    Should Be Equal As Strings    ${resp.json()}[error]    0
     Return From Keyword    ${resp.json()}[reply][settings]
+
+Get Log Level
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get Log Level session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get Log Level session   /api/logLevel
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Should Be Equal As Strings    ${resp.json}[error]    0
+    Return From Keyword    ${resp.json()}[reply]
 
 Get Users
     [Arguments]    ${auth}    ${server url}
@@ -384,7 +409,7 @@ Set All Camera Add Params
     ${resp}=   Post Request    Save camera add params     /ec2/setResourceParams    json=${camera json}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
-    
+
 Get User Roles
     [Arguments]    ${server url}    ${auth}
     Create Digest Session    Get user roles    ${server url}    auth=${auth}    disable_warnings=1
@@ -405,7 +430,7 @@ Save User
     ...    ${user role id}=${EMPTY}
     ...    ${is enabled}=${True}
     ...    ${is cloud}=${True}
-    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    password=${password}
+    &{data}=   Create Dictionary    email=${email}    name=${name}    permissions=${permissions}    isCloud=${is cloud}    isEnabled=${is enabled}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
@@ -414,7 +439,7 @@ Save User
     [Return]    ${resp.json()}
 
 Save User Existing
-    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}    ${user id}
+    [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}   ${email}    ${user role id}    ${user id}
     &{data}=   Create Dictionary    email=${email}   id=${user id}   isCloud=${True}    isEnabled=${True}    name=${name}    permissions=${permissions}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
@@ -477,29 +502,16 @@ Disable Stat Reports
     [Return]    ${resp.json()}
 
 Get Storages via API
-    [Arguments]    ${system}
-    Create Digest Session    returnedStorages    ${system}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    [Arguments]    ${server url}
+    Create Digest Session    returnedStorages    ${server url}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemStorages}=   Get Request    returnedStorages   /ec2/getStorages  timeout=10
     [Return]    ${systemStorages.json()}
-   
+
 Save Storages via API
-    [Arguments]    ${data}    ${system}
-    Create Digest Session    modifyStorage    ${system}    auth=${AUTO SYS AUTH}    disable_warnings=1
+    [Arguments]    ${data}    ${server url}
+    Create Digest Session    modifyStorage    ${server url}    auth=${AUTO SYS AUTH}    disable_warnings=1
     ${resp}=   Post Request    modifyStorage    /ec2/saveStorages   json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-
-Evaluate System Settings via API
-    [Arguments]    ${auth}    ${server url}    ${setting key}    ${expected value}
-    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    Dictionary should contain item    ${settings}    ${setting key}    ${expected value}
-
-Evaluate Log Level via API
-    [Arguments]    ${auth}    ${server url}    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${server url}    auth=${auth}     disable_warnings=1
-    ${logLevel}=   Get Request    returnedSetting   /api/logLevel  timeout=10
-    ${string}=   Convert To String    ${logLevel.json()}
-    ${selected} =    Convert To Lowercase    ${selected}
-    Should Contain    ${string}    ${setting}': '${selected}
 
 Set System Settings via API
     [Arguments]    ${auth}    ${server url}    ${setting key}    ${setting value}
@@ -508,3 +520,70 @@ Set System Settings via API
     Should be equal as strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
+# Misc
+Get Customizations
+    [Arguments]    ${auth}
+    Create Digest Session    Get Customizations Session    https://ireg.hdw.mx    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Customizations Session  /api/v1/public/products/nxcloud/instances/prod/    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    ${instance customizations}=   Set Variable    ${resp.json()}[instance_customizations]
+    ${customizations}=   Create List
+    FOR    ${obj}    IN    @{instance customizations}
+        Append To List    ${customizations}    ${obj}[domain]
+    END
+    [Return]    ${customizations}
+
+Set System Settings
+    [Arguments]    ${auth}    ${server url}    ${settings}
+    Create Digest Session    Set Setting Session    ${server url}    auth=${auth}     disable_warnings=1
+    ${query}=   Set Variable    /api/systemSettings?
+    FOR    ${key}    ${val}    IN ZIP    ${settings.keys()}    ${settings.values()}
+        ${query}=   Catenate    SEPARATOR=    ${query}    ${key}=${val}&
+    END
+    ${query}=   Evaluate    $query[:-1]    # remove last & from the query string
+    ${resp}=   Get Request    Set Setting Session   ${query}    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Get Relays
+    [Arguments]    ${auth}
+    Create Digest Session    Get Relays Session    https://ireg.hdw.mx    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Relays Session  /api/v1/public/products/traffic_relay/instances/?group__name=prod    timeout=10
+    Should be equal as strings    ${resp.status_code}    200
+    ${relays}=   Create List
+    FOR    ${obj}    IN    @{resp.json()}
+       Append To List    ${relays}    ${obj}[domain]
+    END
+    [Return]    ${relays}
+
+Get Camera User Attributes
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Get Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Camera Attributes   ec2/getCameraUserAttributesList    timeout=10
+    [Return]    ${resp.json()}
+
+Save Camera User Attributes
+    [Arguments]    ${server url}    ${auth}    ${data}
+    Create Digest Session    Save Camera Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Save Camera Attributes   ec2/saveCameraUserAttributesList   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
+Get Media Server Attributes
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Get Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Get Request    Get Media Server Attributes   ec2/getMediaServerUserAttributesList    timeout=10
+    [Return]    ${resp.json()}
+
+Save Media Server Attributes
+    [Arguments]    ${server url}    ${auth}    ${data}
+    Create Digest Session    Save Media Server Attributes    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Save Media Server Attributes   ec2/saveMediaServerUserAttributesList   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
+Add Virtual Camera
+    [Arguments]    ${server url}    ${auth}    ${camera name}
+    ${data}=   Create Dictionary    name=${camera name}
+
+    Create Digest Session    Add Camera Session    ${server url}    auth=${auth}     disable_warnings=1
+    ${resp}=   Post Request    Add Camera Session   /api/virtualCamera/add   json=${data}     timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200

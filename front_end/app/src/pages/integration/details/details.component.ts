@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location }                     from '@angular/common';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { DomSanitizer }                 from '@angular/platform-browser';
 import { UntilDestroy }                 from '@ngneat/until-destroy';
@@ -58,7 +59,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private location: Location
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -66,25 +68,17 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
-        this.pageService.setDesktopLayout();
-        this.menuDetailsSubscription = this.menuService
-            .selectedDetailsSection
-            .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            });
-
-        this.accountService.get().then(account => {
-            if (account) {
-                this.account = account;
-            }
-        });
-
+    setUpRouteSubscription() {
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {
                 if (results.params.id) {
+                    const assetParam = results.params.id;
+                    const paramParts = assetParam.split('-');
+                    const assetid = parseInt(paramParts[0]);
+                    if (isNaN(assetid) || (this.plugin?.id && this.plugin.id === assetid)) {
+                        return;
+                    }
                     this.integrationService.setIntegrationPlugin({});
 
                     // @ts-ignore
@@ -114,34 +108,34 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                             }]
                     };
 
-                    this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
+                    this.integrationSubscription = this.integrationService.getIntegrationBy(assetid, results.query.state)
                         .subscribe(result => {
                             if (result.length) {
-                                // @ts-ignore
-                                this.content.base += results.params.id;
-
                                 this.plugin = this.integrationService.format(result[0]);
 
-                                if (this.plugin.pending || this.plugin.draft) {
-                                    const ribbonActions: RibbonActionInput[] = [
-                                        {
-                                            type  : 'link',
-                                            text  : this.LANG.ribbon.integration.backToEditText,
-                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
-                                        }
-                                    ];
+                                this.content.base += this.plugin.urlified || assetid;
+                                const childPath = this.route.snapshot.firstChild.routeConfig.path;
+                                const newUrl = this.content.base + (childPath ? '/' + childPath : '');
+                                let queryParams = '';
+                                if (query) {
+                                    queryParams = new URLSearchParams(query).toString();
+                                }
+                                this.location.replaceState(newUrl, queryParams);
 
-                                    if (this.plugin.pending && this.account.can_publish_integration) {
+                                if (this.plugin.pending || this.plugin.draft || this.plugin.canEdit || this.account?.can_publish_integration) {
+                                    const ribbonActions: RibbonActionInput[] = [];
+
+                                    if (this.plugin.pending && this.account?.can_publish_integration) {
                                         this.acceptProcess = this.processService.createProcess(() => {
-                                            return this.cloudApiService.acceptIntegration(this.plugin.review_id);
+                                            return this.cloudApiService.acceptReview(this.plugin.review_id);
                                         }, {
-                                            successMessage: this.LANG.account.agreementAccepted?.()
+                                            successMessage : this.LANG.account.agreementAccepted?.()
                                         }).then(() => {
                                             this.router.navigate([this.uriService.getURL()]);
                                             this.ribbonService.hide();
                                         });
 
-                                        ribbonActions.unshift(
+                                        ribbonActions.push(
                                             {
                                                 type  : 'process-button',
                                                 text  : this.LANG.ribbon.integration.accept?.(),
@@ -155,8 +149,17 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         );
                                     }
 
+                                    if (this.plugin.canEdit) {
+                                        ribbonActions.push({
+                                            type  : 'link',
+                                            text  : this.LANG.ribbon.integration.backToEditText,
+                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                        });
+                                    }
+
+                                    const preview = this.plugin.pending || this.plugin.draft;
                                     this.ribbonService.show(
-                                        this.LANG.ribbon.integration.previewRibbon?.(),
+                                        preview ? this.LANG.ribbon.integration.previewRibbon?.() : this.LANG.ribbon.integration.publishedRibbon?.(),
                                         ribbonActions
                                     );
                                 }
@@ -171,15 +174,28 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                             }
                         }).add(() => {
                             if (!this.plugin) {
-                                this.router
-                                    .navigate([this.CONFIG.redirect.page404])
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
+                                this.pageService.show404();
                             }
                         });
                 }
             });
+    }
+
+    ngOnInit(): void {
+        this.pageService.setDesktopLayout();
+        this.menuDetailsSubscription = this.menuService
+            .selectedDetailsSection
+            .subscribe(selection => {
+                this.content.selectedDetailsSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+        this.accountService.get().then(account => {
+            if (account) {
+                this.account = account;
+            }
+            this.setUpRouteSubscription();
+        });
     }
 
     ngOnDestroy() {

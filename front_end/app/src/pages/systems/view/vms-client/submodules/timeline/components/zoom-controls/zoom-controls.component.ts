@@ -1,7 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs'
-import { float, int } from '../../../../utils/type-aliases';
+import { float, int, ms } from '../../../../utils/type-aliases';
+import PlaybackService                                from '../../../playback/services/playback.service';
+import { CameraSelectedVmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
+import VideoManagementSystemService                   from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+
 
 type signType = int // -1 | 0 | 1
 
@@ -12,11 +16,16 @@ type signType = int // -1 | 0 | 1
 })
 export class ZoomControlsComponent implements OnInit, OnDestroy {
 
-  protected subscription: Subscription
+  protected timelineSubscription: Subscription
   protected state: TimelineServiceStatus
+  public disabled: boolean = true
+  public canZoomIn: boolean = false;
+  public canZoomOut: boolean = false;
 
   constructor (
     public timeline: TimelineService,
+    public vms: VideoManagementSystemService,
+    public playback: PlaybackService,
   ) {
     this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this)
   }
@@ -25,46 +34,60 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
   public onAnimationFrame (): void {
     this.performZoomingStep()
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public ngOnInit (): void {
-    this.subscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange)
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
+    this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange)
+    this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
   public ngOnDestroy (): void {
-    this.subscription.unsubscribe()
+    this.timelineSubscription.unsubscribe()
     cancelAnimationFrame(this._animationFrameRequestHandler)
   }
 
-  public onTimelineSubjectChange (s: TimelineServiceStatus) {
-    this.state = s
-  }
-
-  public get canZoomIn (): boolean {
-    return this.state && this.state.zoom && this.state.zoom.canZoomIn
-  }
-
-  public get canZoomOut (): boolean {
-    return this.state && this.state.zoom && this.state.zoom.canZoomOut
+  public onTimelineSubjectChange (state: TimelineServiceStatus) {
+    this.state = state;
+    const vmsState = this.vms.subject.getValue()
+    if (vmsState.mode !== VMS_MODE.CAMERA_SELECTED) {
+      this.disabled = true
+    } else {
+      this.disabled = !vmsState.selectedCamera.hasArchive
+    }
+    this.canZoomIn = !this.disabled && this.state?.zoom?.canZoomIn || false;
+    this.canZoomOut = !this.disabled && this.state?.zoom?.canZoomOut || false;
   }
 
   protected _zoomingSign: signType = 0
+  protected _zoomingStartedTimestamp: ms
 
-  public startZooming (sign: signType) {
+  public startZooming ($event: MouseEvent, sign: signType) {
+    if ($event.button !== 0) {
+      return
+    }
     this._zoomingSign = sign
+    this._zoomingStartedTimestamp = Date.now()
   }
 
   public stopZooming () {
+    const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp
+    const fastClickEdge: ms = 200
+    if (sinceZoomingStarted < fastClickEdge) {
+      this.wheelZoom(40 * this._zoomingSign)
+    }
     this._zoomingSign = 0
   }
 
+  @HostListener('document:mouseup')
+  public onMouseUp () {
+    this.stopZooming()
+  }
+
   public performZoomingStep () {
-    if (this._zoomingSign)
+    if (this._zoomingSign) {
       this.wheelZoom(this._zoomingSign)
+    }
   }
 
   public wheelZoom (delta: int, offset: float = 0.5) {
@@ -75,7 +98,18 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     if (duration - durationDelta < MIN_DURATION) {
         durationDelta = duration - MIN_DURATION
     }
+    if (!this.playback.isBeyondVisibleRange) {
+      offset = this.playback.relativeOffset
+    }
     this.timeline.zoom(durationDelta, offset)
+  }
+
+  public fullZoomOut () {
+    this.timeline.fullZoomOut()
+  }
+
+  public strongZoomIn () {
+    this.wheelZoom(80)
   }
 }
 

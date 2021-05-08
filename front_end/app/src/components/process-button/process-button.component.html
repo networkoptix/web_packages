@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <button *ngIf="!textOnly; else textButton" class="btn {{buttonClass}} {{customButtonClass}}"
+    <button *ngIf="!textOnly; else textButton" class="btn {{buttonClass}} {{customButtonClass}} min-w-120"
             [ngClass]="{'processing' : process && process.processing}"
             [ngStyle]="{'cursor': buttonDisabled ? 'not-allowed' : 'pointer'}"
             [disabled]="buttonDisabled"
@@ -20,10 +20,11 @@
         </ng-container>
     </button>
     <ng-template #textButton>
-        <svg-icon [src]="CONFIG.images.dir + 'buttons/external.svg'"
-                  [svgStyle]="{'margin-right': '2px', 'width.px': '20'}"></svg-icon>
-        <span class="text-only"
-              (click)="clickHandler($event);"
-              translate>Open in %VMS_NAME%</span>
+        <span class="header-button-span">
+            <svg-icon [src]="CONFIG.images.dir + 'buttons/external.svg'"
+                      [svgStyle]="{'margin-right': '2px', 'width.px': '20'}"></svg-icon>
+            <span (click)="clickHandler($event);"
+                  translate>Open in %VMS_NAME%</span>
+        </span>
     </ng-template>
 </div>

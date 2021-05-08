@@ -1,13 +1,12 @@
 import {
     Inject, Injectable, Injector
-}                                     from '@angular/core';
-import { DOCUMENT, Location }         from '@angular/common';
-import { Router }                     from '@angular/router';
-import { forkJoin }                   from "rxjs";
-import { flatMap }                    from "rxjs/internal/operators";
-import { tap, catchError }            from 'rxjs/operators';
+}                                    from '@angular/core';
+import { DOCUMENT, Location }        from '@angular/common';
+import { Router }                    from '@angular/router';
+import { forkJoin }                  from 'rxjs';
+import { tap, catchError, flatMap }  from 'rxjs/operators';
 
-import { Exactly }                    from '../utils.service';
+import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
 import { NxCloudApiService }         from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';
@@ -76,14 +75,15 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         }
     }
 
-    login(login, password, remember = false) {
+    login(login, password, remember = false, navigateHome = false) {
         return this.mediaServerApi.login(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
                     const errorLookup = {
                         'Wrong password.'                                                                         : 'notAuthorized',
                         'Wrong username or password.'                                                             : 'notAuthorized',
-                        'This user on your IP is locked out due to many filed attempts. Please, try again later.' : 'accountBlocked'
+                        'This user on your IP is locked out due to many filed attempts. Please, try again later.' : 'accountBlocked',
+                        'The user is locked out due to several failed attempts. Please try again later.'          : 'accountBlocked'
                     };
                     const resultCode = errorLookup[errorText];
                     return Promise.resolve({ ...res, errorText, resultCode });
@@ -94,19 +94,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             );
     }
 
-    loginAllServers(login, password, remember = false) {
-        return this.mediaServerApi.getMediaServers(false).pipe(
-            flatMap((servers: any) =>
-                forkJoin(servers.map((server) => {
-                    const newServer = this.nxSystemAPIService.createConnection(login, undefined, server.id, () => {
-                    });
-                    return newServer.login(login, password, remember);
-                }))
-            )
-        ).toPromise();
-    }
-
-    logout(doNotRedirect = false) {
+    logout(doNotRedirect = false, skipReload = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -118,28 +106,29 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect);
+                    this.logoutHelper(doNotRedirect, skipReload);
                 }
             });
     }
 
-    logoutHelper(doNotRedirect = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false) {
         this.mediaServerApi
             .logout()
             .finally(() => {
-                this.sessionService.invalidateSession(); // Clear session
                 this.cookieService.deleteAll();
+                this.sessionService.invalidateSession(); // Clear session
+
                 if (!doNotRedirect) {
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
-                            setTimeout(() => this.window.location.reload());
+                            setTimeout(() => !skipReload && this.window.location.reload());
                         });
+                } else if (!skipReload) {
+                    setTimeout(() => {
+                        this.window.location.reload();
+                    });
                 }
-
-                setTimeout(() => {
-                    this.window.location.reload();
-                });
             });
     }
 

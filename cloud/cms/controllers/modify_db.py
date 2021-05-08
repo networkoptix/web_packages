@@ -45,7 +45,7 @@ def update_draft_state(review_id, target_state, user):
         review.reviewed_date = datetime.now()
         review.save()
 
-    review.update_between_published_and_current(user, target_state)
+    review.update_current_and_older(user, target_state)
 
     return None
 
@@ -107,7 +107,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
-    ).order_by('-pk').select_related('version__asset'):
+    ).order_by('-version_id').select_related('version__asset'):
         asset_id = review.version.asset.id
         if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
@@ -196,17 +196,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 upload_errors.extend(file_errors)
                 return False
 
-            md5 = hashlib.md5()
-            for chunk in request_file.chunks():
-                md5.update(chunk)
-
-            external_file = ExternalFile(data_structure=data_structure, asset=asset)
-            external_file.save()
-
-            external_file.file = request_file
-            external_file.md5 = md5.hexdigest()
-            external_file.size = request_file.size
-            external_file.save()
+            external_file = ExternalFile.objects.create(
+                asset=asset, data_structure=data_structure, file=request_file)
 
             new_record_value = external_file.file.url
 
@@ -285,17 +276,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
     def process_html():
         def upload_image(content_file):
-            md5 = hashlib.md5()
-            for chunk in content_file.chunks():
-                md5.update(chunk)
-
-            ext_file = ExternalFile(data_structure=data_structure, asset=asset)
-            ext_file.save()
-
-            ext_file.file = content_file
-            ext_file.md5 = md5.hexdigest()
-            ext_file.size = content_file.size
-            ext_file.save()
+            ext_file = ExternalFile.objects.create(
+                asset=asset, data_structure=data_structure, file=content_file)
 
             return f'src="{ext_file.file.url}"'
 
@@ -338,7 +320,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     upload_errors = []
     # Only process non-translatable data structures if language is default.
     default_language = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language
-    process_nontranslatable = default_language == language
+    process_nontranslatable = language in (default_language, None)
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = None
@@ -490,29 +472,36 @@ def remove_unused_records(asset):
             record.delete()
 
 
-def generate_preview_link(context=None, asset=None, state=""):
+def generate_preview_links(context=None, asset=None, state=""):
     params = urlencode({'state': state, 'id': asset.id})
     if asset:
         if asset.is_integration:
-            return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
+            yield ('Integrations Preview', f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}")
         elif asset.is_article:
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
             article_url = article_url.value if article_url else "tmp_url"
-            return f'/content/{article_url}?{params}'
+            yield ('Article Preview', f'/content/{article_url}?{params}')
         elif asset.is_agreement:
-            return f'/agreement?{params}'
+            yield ('Agreement Preview', f'/agreement?{params}')
         elif asset.is_documentation:
-            for node in asset.nodes.all():
-                menu = node.get_parent()
+            menus = {node.get_parent() for node in asset.nodes.all()}
+            for menu in sorted(menus, key=lambda menu: menu.type, reverse=True):
                 if menu.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]:
                     url = f'/docs/{menu.base_url}'
                     if menu.url:
                         url += f'/{menu.url}'
-                    url += f'/{asset.id}?{params}'
-                    return url
-            return None
+                    if menu.type == Menu.MENU_TYPES.docs_struct:
+                        yield (f'{menu.name} - Landing Menu Preview', f'{url}?{params}')
+                    else:
+                        url += f'/{asset.id}?{params}'
+                        yield (f'{menu.name} - KB Menu Preview' ,url)
+            yield ('Document Fallback Preview', f'/docs/content/{asset.id}?{params}')
 
-    return f"{context.url}?preview=true" if context and context.url else None
+    yield ('Other Preview', f"{context.url}?preview=true") if context and context.url else (None, None)
+
+def generate_preview_link(context=None, asset=None, state=""):
+    (_, default_preview) = next(generate_preview_links(context=context, asset=asset, state=state))
+    return default_preview
 
 
 def generate_preview(asset, context=None, version_id=None, send_to_review=False):
@@ -571,7 +560,7 @@ def asset_has_required_data(asset, version_id=None):
     return errors
 
 
-def send_version_for_review(asset, user):
+def send_version_for_review(asset, user, notify=True):
     old_version = ContentVersion.objects.filter(asset=asset, accepted_date=None).order_by('created_date').last()
 
     if old_version:
@@ -591,7 +580,9 @@ def send_version_for_review(asset, user):
 
     update_records_to_version(asset, Context.objects.filter(asset_type=asset.asset_type), version)
 
-    notify_version_ready(asset, version, user)
+    if notify:
+        notify_version_ready(asset, version, user)
+
     return []
 
 
@@ -677,7 +668,7 @@ def check_image_dimensions(data_structure_name,
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'width_ge' in meta_dimensions and meta_dimensions['width_ge'] > image_dimensions['width']:
-        error_msg = f"Image width must be equal to or more than {meta_dimensions['width_ge']}. Uploaded image's width is {image_dimensions['width']}." 
+        error_msg = f"Image width must be equal to or more than {meta_dimensions['width_ge']}. Uploaded image's width is {image_dimensions['width']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     return size_error_msgs

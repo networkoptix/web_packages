@@ -32,6 +32,8 @@ import re
 import json
 import sys
 
+from botocore.config import Config
+
 from util.config import get_config
 from cloud.logger import downgrade_requests
 
@@ -312,7 +314,7 @@ DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 if LOCAL_ENVIRONMENT:
     INSTALLED_APPS += ('silk',)
-    MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
+    # MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -417,8 +419,8 @@ LOGGING = {
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = BASE_DIR + '/static/integrations/'
-MEDIA_URL = '/integrations/'
+MEDIA_ROOT = BASE_DIR + '/static/media/'
+MEDIA_URL = '/media/'
 LOGOUT_REDIRECT_URL = "/logout"
 
 # whitelist for unauthorized IP addresses. Supports addresses with masks
@@ -474,12 +476,14 @@ on a part of your site, e.g. an API at /api/.
 
 Regex allows cors for the following api calls:
 1) /api/ping
-2) /api/login
+2) /api/account/login
 3) /api/systems/connect
 4) /api/systems/disconnect
+5) /api/systems/{cloud_system_id}/users
 These urls need to be whitelisted because mediaserver use them.
 """
-CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'  # Comment out for swagger-ui local.
+# Comment out for swagger-ui local.
+CORS_URLS_REGEX = r'^/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?)'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
@@ -495,6 +499,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.MenuNode',
                    'cms.models.AssetType',
                    'cms.models.LicenseType',
+                   'cms.models.SpecialStructure',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
                    'cms.models.ContributorAgreement',
@@ -524,6 +529,20 @@ INTEGRATION_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
 if LOCAL_ENVIRONMENT:
     AWS_STORAGE_BUCKET_NAME = 'cloud-portal'
+
+# SNS Config
+SNS_CLIENT = {
+    'service_name': 'sns',
+    'config': Config(
+        region_name=os.getenv('AWS_REGION', 'us-east-1')
+    )
+}
+# Uncomment if trying to use SNS from local env with credentials different from ~/.aws/credentials
+# Must set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY first
+# SNS_CLIENT['aws_access_key_id'] = AWS_ACCESS_KEY_ID
+# SNS_CLIENT['aws_secret_access_key'] = AWS_SECRET_ACCESS_KEY
+
+# End SNS Config
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -49,11 +49,17 @@ export class CurrentStorageState {
         return this.locations.filter(this.#countMainAndBackup(false)).length;
     }
 
+    get reindexing(): MODE[] {
+        const reindexingLocations = this.locations.filter(({ reindexing }) => reindexing).map(({ mode }) => mode);
+        const unique = new Set(reindexingLocations);
+        return [...unique];
+    }
+
     get freeSpace() {
         return this.locations.reduce((
             totalFreeSpace,
-            { freeSpace, isBackup }
-        ) => totalFreeSpace + (!isBackup ? freeSpace : 0), 0);
+            { freeSpace, isBackup, usedForWriting }
+        ) => totalFreeSpace + (!isBackup && usedForWriting ? freeSpace : 0), 0);
     }
 
     get serialized(): SaveStoragePayload[] {
@@ -74,6 +80,10 @@ export class CurrentStorageState {
 
     get currentAnalyticsDbLocation() {
         return this.locations.find(({ storageId }) => storageId === this.#metadataStorageId);
+    }
+
+    get beingChecked() {
+        return !!this.locations.find(({ storageStatus }) => storageStatus.includes('beingChecked'));
     }
 
     // Storage save methods
@@ -101,11 +111,24 @@ export class CurrentStorageState {
         state.locations.forEach(location => {
             location.currentStorageState = this;
         });
+        state.locations = state.locations.sort(this.#sortByTypeAndUrl);
         Object.assign(this, state);
         this.#parseAnalytics(analytics);
     }
 
     // Helpers
+    #sortByTypeAndUrl = (
+        { storageType: aType, url: aUrl },
+        { storageType: bType, url: bUrl }
+    ) => {
+        const { LOCAL, USB, NETWORK, SYSTEM_NETWORK, CLOUD } = STORAGE_TYPES;
+        const typeOrder = [LOCAL, USB, SYSTEM_NETWORK, NETWORK, CLOUD];
+        if (aType === bType) {
+            return aUrl < bUrl ? -1 : 1;
+        }
+        return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
+    }
+
     #countMainAndBackup = (
         main = true
     ) => ({
@@ -118,7 +141,7 @@ export class CurrentStorageState {
         this.#hasPlugins = hasPlugins;
     }
 
-    #checkCanStoreAnalytics = ({ storageType, isWritable, usedForWriting }: Storage) => storageType === STORAGE_TYPES.LOCAL && (isWritable || usedForWriting);
+    #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
 
     checkAnalytics = (storage: Storage) => ({
         analyticsDbLocation : storage.storageId === this.#metadataStorageId,
@@ -160,13 +183,14 @@ export const currentStorageStateFactory = (
             ...info,
             reservedSpace,
             serverId,
-            totalSpace: addParams.find(({
+            urlWithCredentials : info.url,
+            totalSpace         : addParams.find(({
                 name
-            }) => name === 'space').value
+            }) => name === 'space')?.value || 0
         }
     }), {});
 
-    const storageStats = stats?.reply?.storages.reduce((
+    const storageStats = (stats?.reply?.storages || []).reduce((
         storagesStats, {
             storageId,
             isUsedForWriting,

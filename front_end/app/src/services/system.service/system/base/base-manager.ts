@@ -1,5 +1,4 @@
 import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * This is currently used in StorageManager but I could see this being used elsewhere if we made it a little more generic.
@@ -7,7 +6,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
  */
 export class BaseManager {
     #serverId$ = new BehaviorSubject<string>(null);
-    public serverId$ = this.#serverId$.pipe(distinctUntilChanged());
+    public serverId$ = this.#serverId$;
 
     /**
      * Getter and setter for serverId. Updating serverId triggers state update.

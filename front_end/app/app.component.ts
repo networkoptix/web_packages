@@ -1,21 +1,22 @@
-import { Location }                                           from '@angular/common';
-import { Component, HostListener, Inject, ViewEncapsulation } from '@angular/core';
-import { ActivationStart, Event, Router }                     from '@angular/router';
-import { CookieService }                                      from 'ngx-cookie-service';
-import { DeviceDetectorService }                              from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout }            from 'rxjs/operators';
-import { fromEvent }                                          from 'rxjs';
-
-import { NxRibbonService }                         from './src/components/ribbon';
-import { WINDOW }                                  from './src/services/window-provider';
-import { NxApplyService }                          from './src/services/apply.service';
-import { NxAppStateService }                       from './src/services/nx-app-state.service';
-import { NxScrollMechanicsService }                from './src/services/scroll-mechanics.service';
-import { NxUriService }                            from './src/services/uri.service';
-import { NxPageService }                           from './src/services/page.service';
-import { NxBootstrapProvider }                     from './src/services/nx-bootstrap-provider';
-import { NxDialogsService }                        from './src/dialogs/dialogs.service';
-import { NxConfigService, IConfig }                from './src/services/nx-config';
+import {
+    Component, HostListener, Inject,
+    ViewEncapsulation, ViewChild, ElementRef
+}                                                  from '@angular/core';
+import { ActivationStart, Event, Router }          from '@angular/router';
+import { CookieService }                           from 'ngx-cookie-service';
+import { DeviceDetectorService }                   from 'ngx-device-detector';
+import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
+import { fromEvent }                               from 'rxjs';
+import { NxRibbonService }                         from '@components/ribbon';
+import { WINDOW }                                  from '@services/window-provider';
+import { NxApplyService }                          from '@services/apply.service';
+import { NxAppStateService }                       from '@services/nx-app-state.service';
+import { NxScrollMechanicsService }                from '@services/scroll-mechanics.service';
+import { NxUriService }                            from '@services/uri.service';
+import { NxPageService }                           from '@services/page.service';
+import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
+import { NxDialogsService }                        from '@dialogs/dialogs.service';
+import { NxConfigService, IConfig }                from '@services/nx-config';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -30,7 +31,7 @@ require('./scripts/vendor/protocolcheck');
         <div class="outerContainer"
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.heightWithRibbon : appStateService.heightWithoutRibbon }">
-            <div class="mainContainer" nxScrollHelper>
+            <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground}" nxScrollHelper #mainContainer>
                 <router-outlet></router-outlet>
             </div>
         </div>
@@ -43,11 +44,13 @@ require('./scripts/vendor/protocolcheck');
 
 export class AppComponent {
     deviceInfo: any;
-    allowedDevices: {};
+    browserBlacklist: {};
     isInIframe: boolean;
     newSystem: boolean;
 
     CONFIG: IConfig;
+
+    @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 
     constructor(
         bootstrapProvider: NxBootstrapProvider,
@@ -55,7 +58,6 @@ export class AppComponent {
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
-        private location: Location,
         private applyService: NxApplyService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
@@ -65,6 +67,44 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        /* No real need to update often unless some browser have major upgrade
+         * and we don't want to support previous releases
+         *
+         * IE and Edge are here just for reference
+         * Angular will not make it through here as they are not supported at all ... see index.html
+         */
+        this.browserBlacklist = {
+            ie                 : 9999,
+            'ms-edge'          : 9999,
+            'ms-edge-chromium' : 84,
+            safari             : 12,
+            chrome             : 76,
+            firefox            : 72,
+            opera              : 70
+        };
+
+        this.deviceInfo = this.deviceService.getDeviceInfo();
+        let browserMatchVersion = this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
+
+        // Special case for Kyle's robot tests
+        // ... device detector doesn't detect it correctly
+        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
+            browserMatchVersion = undefined;
+        }
+
+        if (browserMatchVersion !== undefined) {
+            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
+
+            if (majorVersion < browserMatchVersion) {
+                this.router.navigate(['/browser'])
+                    .catch((error) => console.error(error))
+                    .finally(() => {
+                        this.appStateService.ready = true;
+                    });
+                return;
+            }
+        } // else -> unknown platform or device ... cross fingers and hope for the best
+
         this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
@@ -72,8 +112,8 @@ export class AppComponent {
                 .finally(() => {
                     this.appStateService.ready = true;
                 });
-            this.appStateService.setHeaderVisibility(false);
-            this.appStateService.setFooterVisibility(false);
+            this.appStateService.headerVisibility = false;
+            this.appStateService.footerVisibility = false;
             return;
         } else if (bootstrapProvider.newSystem) {
             this.newSystem = true;
@@ -97,52 +137,14 @@ export class AppComponent {
 
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 
-        // TODO: Componentize this
-        this.allowedDevices = {
-            windows: {
-                ie      : 10,
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            mac: {
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            linux: {
-                chrome  : 64,
-                firefox : 60
-            }
-        };
-
-        this.deviceInfo = this.deviceService.getDeviceInfo();
-        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
-
-        // Special case for Kyle's robot tests
-        // ... device detector doesn't detect it correctly
-        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
-            allowedDevice = undefined;
-        }
-
-        if (allowedDevice !== undefined) {
-            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
-            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
-
-            if (majorVersion < allowedVersion) {
-                // redirect
-                this.location.go('/browser');
-            }
-        } // else -> unknown platform or device ... cross fingers and hope for the best
-
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.CONFIG.isInIframe = (window.location.pathname.indexOf('/embed') === 0 || window.location.search.indexOf('adminPreview=true') !== -1);
+        this.CONFIG.isInIframe = (this.window.location.pathname.indexOf('/embed') === 0 || this.window.location.search.indexOf('adminPreview=true') !== -1);
         if (this.CONFIG.isInIframe) {
-            this.appStateService.setHeaderVisibility(false);
-            this.appStateService.setFooterVisibility(false);
+            this.appStateService.headerVisibility = false;
+            this.appStateService.footerVisibility = false;
         }
 
         // Updates query params for components without routes.
@@ -150,6 +152,7 @@ export class AppComponent {
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
             this.uriService.queryParams = queryParams;
+            this.mainContainer.nativeElement.scrollTop = 0;
         });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {

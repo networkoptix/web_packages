@@ -151,6 +151,10 @@ img.light {
     margin-left: 160px !important;
 }
 
+.position-relative {
+    position: relative;
+}
+
 .nodots {
     padding-left: 0 !important;
 }
@@ -287,7 +291,7 @@ img.light {
 }
 
 #menuPreviewErrors {
-    float: right;
+    float: left;
     margin-bottom: 16px;
 }
 
@@ -348,4 +352,70 @@ img.light {
 
 .object-tools {
     top: 6px;
+}
+
+#download-button {
+    color: white;
+}
+
+.progress-bar.custom-download-transition {
+    transition: width 1s linear;
+}
+
+#preparing-package {
+    backdrop-filter: blur(1px) brightness(.9);
+}
+
+.state-label {
+    color: white !important;
+}
+
+.messagelist {
+    position: sticky;
+    top: 40px;
+}
+
+#preview-select-label {
+    text-align: center;
+    padding: 8px 16px;
+}
+
+#async-status-info {
+    position: relative;
+    display: block !important;
+    background: #dfd;
+}
+
+@-webkit-keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+.status-loader {
+    -webkit-animation: glyphicon-spin-r 2s infinite linear;
+    animation: glyphicon-spin-r 2s infinite linear;
+}
+
+#status-glpyh {
+    margin-left: -16px;
+    margin-right: 8px;
 }

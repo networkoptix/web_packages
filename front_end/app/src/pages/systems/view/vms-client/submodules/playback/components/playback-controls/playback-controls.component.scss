@@ -1,5 +1,4 @@
-@import 'styles/_theme_palette';
-
+@use '../../../../../../../../../styles/_theme_palette' as *;
 
 :host {
   display: inline-block;
@@ -8,10 +7,9 @@
   position: relative;
   z-index: 2;
 
-  > .button {
-    display: block;
+  > .playback-control-button {
     text-align: center;
-
+    border-left: 1px solid $light4;
     position: absolute;
     left: 0;
     top: 0;
@@ -29,24 +27,18 @@
       background-repeat: no-repeat;
       width: 20px;
       height: 20px;
+      opacity: 0.5;
     }
 
-    &.playLive {
+    &.play {
       > .glyph {
-        background-size: -2px -4px;
+        background-position: -2px -4px;
       }
     }
 
-    &.pauseToggle {
+    &.pause {
       > .glyph {
         background-position: -26px -2px;
-      }
-    }
-
-    &.stop {
-      > .glyph {
-        background-size: 192px 408px;
-        background-position: -26px -2px; // same as pause, TODO: change
       }
     }
 
@@ -54,19 +46,23 @@
     background-color: $additional_light2;
     transition: all .2s ease-in-out;
 
-    &:hover {
-      background-color: $additional_light3;
-    }
-    &:active {
-      background-color: $light5 !important;
-    }
-
     &.enabled {
       cursor: pointer;
       color: $light16;
+      z-index: 1;
 
+      > .glyph {
+        opacity: 1.0;
+      }
+
+      // &:hover {
+      //   background-color: $light4;
+      // }
       &:hover {
-        background-color: $light4;
+        background-color: $additional_light3;
+      }
+      &:active {
+        background-color: $light5 !important;
       }
     }
   }

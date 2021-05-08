@@ -88,6 +88,7 @@ class DocumentationPageSerializer(serializers.Serializer):
     blocks = DocumentationBlock(many=True)
     script = serializers.CharField(label='Script', allow_blank=True)
     id = serializers.CharField(label='Id')
+    reviewId = serializers.IntegerField(required=False)
 
 
 class DocumentsSerializer(serializers.Serializer):
@@ -112,6 +113,8 @@ class MenuSerializer(serializers.Serializer):
     display_name = serializers.CharField()
     asset = serializers.JSONField(label='Asset Data')
     assetKB = serializers.CharField(label='Asset Knowledebase Name')
+    pending = serializers.BooleanField()
+    draft = serializers.BooleanField()
 
 
 class ArticleSerializer(serializers.Serializer):

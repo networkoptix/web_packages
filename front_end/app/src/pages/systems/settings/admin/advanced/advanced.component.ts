@@ -117,6 +117,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             this.saveSettings
         );
         this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
+        this.applyService.reset();
 
         this.formWatcher.valueSubject.subscribe((values) => {
             if (values) {
@@ -134,11 +135,11 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     canSee(key) {
-        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key].type);
+        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key]?.type);
     }
 
     getAdvancedSettings() {
-        this.system.updateOrGetSystemSettings({ ignore: 'installedUpdateInformation,targetUpdateInformation' })
+        this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
@@ -151,30 +152,22 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     settingsToBeDisplayedOrUpdated = (settings) => {
-        const standardSettingsToExclude = [
-            'autoDiscoveryEnabled',
-            'statisticsAllowed',
-            'cameraSettingsOptimization',
-            'auditTrailEnabled',
-            'trafficEncryptionForced',
-            'videoTrafficEncryptionForced',
-            'sessionLimitMinutes'
-        ];
-
         Object.entries(settings).reduce((systemSettings, [key, value]) => {
-            if (standardSettingsToExclude.includes(key)) {
+            // CLOUD-6350: Refactor advanced global settings page
+            if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {
                 return systemSettings;
             }
-            if (!this.CONFIG.settingsConfig[key]) {
-                let type = 'text';
-                if (value === true || value === false ||
-                    value === 'true' || value === 'false') {
+            let type = this.CONFIG.settingsConfig[key]?.type;
+            if (type === undefined) {
+                type = 'text';
+                if (Number.isInteger(value)) {
+                    type = 'number';
+                } else if (['true', 'false'].includes(value as string)) {
                     type = 'checkbox';
                 }
-                this.CONFIG.settingsConfig[key] = { label: key, type: type };
+                this.CONFIG.settingsConfig[key] = { type };
             }
-
-            switch (this.CONFIG.settingsConfig[key].type) {
+            switch (type) {
                 case 'number':
                     systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
                     break;
@@ -184,6 +177,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 default:
                     systemSettings[key] = value;
             }
+
             return systemSettings;
         }, this.systemSettings);
     }

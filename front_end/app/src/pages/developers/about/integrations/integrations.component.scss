@@ -8,9 +8,10 @@ $desktop-breakpoint: 1265px;
 $large-desktop-breakpoint: 1477px;
 
 .heading-link {
-    @include typography.regular24;
+    @include typography.regular24dark9;
     cursor: pointer;
     margin-bottom: 48px;
+
     &:hover {
         text-decoration: underline;
     }
@@ -20,18 +21,18 @@ $large-desktop-breakpoint: 1477px;
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 36px auto 0 auto;
+    margin: 36px auto;
     padding: 0;
     color: $dark10;
 
     @media screen and (min-width: $tablet-breakpoint) {
         padding: 0 8px;
-        margin-top: 96px !important;
+        margin: 96px  auto!important;
     }
 
     &-wrapper {
         display: flex;
-        
+
         justify-content: center;
         flex-direction: row;
         margin: 0 -1rem -1rem 0;
@@ -65,7 +66,7 @@ $large-desktop-breakpoint: 1477px;
 .info-block{
     margin: 0 1rem 1rem 0;
     h3 {
-        @include typography.medium15;
+        @include typography.medium15dark9;
         margin-top: 0;
         margin-bottom: 16px;
     }
@@ -81,7 +82,7 @@ $large-desktop-breakpoint: 1477px;
     }
 
     h3 {
-        @include typography.medium15;
+        @include typography.medium15dark9;
     }
 
     .store-button {

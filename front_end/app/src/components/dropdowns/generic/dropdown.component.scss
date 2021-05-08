@@ -15,9 +15,8 @@ nx-select {
     }
 
     .additional-help {
-        @include typography.regular13;
+        @include typography.regular13light;
         margin-left: 0.25rem;
-        color : $light16;
     }
 
     .selected .additional-help {
@@ -83,6 +82,21 @@ nx-select {
             -ms-animation-delay     : 0.6s;
             -webkit-animation-delay : 0.6s;
             -moz-animation-delay    : 0.6s;
+        }
+    }
+    .dropdown-force-position, .force-position {
+        position: static !important;
+        & > button#genericSelect:active {
+            box-shadow: none !important;
+        }
+        & > .dropdown-menu {
+            transform: translateY(calc(100% - 22px));
+        }
+        & > button.dropdown-toggle {
+            height: 24px !important;
+            & > .arrow-flip > svg-icon {
+                bottom: 2px !important;
+            }
         }
     }
 }

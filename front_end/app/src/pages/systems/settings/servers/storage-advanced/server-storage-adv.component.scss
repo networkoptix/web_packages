@@ -29,11 +29,10 @@
     }
 
     th {
-        @include typography.medium13;
+        @include typography.medium13dark9;
         padding          : 5px 15px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
-        color            : $dark9;
     }
 
     th:last-child {
@@ -81,9 +80,8 @@
             }
 
             .tag {
-                @include typography.medium11;
+                @include typography.medium11light1;
                 margin-left    : 8px;
-                color          : $light1;
                 padding        : 4px 8px;
                 text-transform : uppercase;
                 border-radius  : 2px;
@@ -113,7 +111,7 @@
             align-items : flex-end;
 
             .cell-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
 
             .cell-ellipsis {
@@ -147,8 +145,7 @@
 }
 
 .text-muted {
-    @include typography.regular11;
-    color : $light16;
+    @include typography.regular11light16;
 }
 
 .item {
@@ -156,7 +153,7 @@
 }
 
 .help-block {
-    @include typography.regular11;
+    @include typography.regular11error;
     color            : $error;
     padding          : .25rem 0 .5rem;
     background-color : transparent;

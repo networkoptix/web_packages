@@ -14,6 +14,7 @@ import { NxSystem }                         from '@services/system.service';
 import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { map, startWith }                   from 'rxjs/operators';
+import { NxApplyService }                   from '@services/apply.service';
 
 /* Usage
  <nx-menu>
@@ -49,12 +50,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
     menuModel: any = {};
     navItems: any = [];
     navItemIdx: number;
-
-    private routeParamsSubscription: SubscriptionLike;
-    private navDirectionSubscription: SubscriptionLike;
-    private navSelectionSubscription: SubscriptionLike;
-    private resizeSubscription: SubscriptionLike;
-
     windowHeight: number;
     menuHeight: number;
 
@@ -64,6 +59,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
     scrollHeightFit: string;
     permHeight: number;
     menuInit: boolean;
+
+    private routeParamsSubscription: SubscriptionLike;
+    private navDirectionSubscription: SubscriptionLike;
+    private navSelectionSubscription: SubscriptionLike;
+    private resizeSubscription: SubscriptionLike;
+    private applyOnNavSubscription: SubscriptionLike;
+
+    private origLevel1: string;
+    private origLevel2: string;
+    private origLevel3: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -77,7 +82,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private router: Router,
         private route: ActivatedRoute,
         public menuService: NxMenuService,
-        private searchService: NxSearchService
+        private searchService: NxSearchService,
+        private applyService: NxApplyService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -119,7 +125,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             .subscribe(() => {
                 const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
                 if (item) {
-                    this.navItemIdx++;
+                    this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
                     this.menuService.navItemId = this.navItems[this.navItemIdx].id;
                     this.router
                         .navigate([`${this.content.base}/${item.path}`], { queryParams: { search: this.menuModel.query } })
@@ -140,8 +146,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
-            if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
-                this.menuService.content = changes.content.currentValue.level1;
+            const sanitizedContent = this.menuService.sanitizeContent(changes.content.currentValue.level1);
+            if (this.menuService.hasUpdatedContent(sanitizedContent)) {
+                this.menuService.content = sanitizedContent;
+                this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.fillerItemsBy(this.menuModel);
@@ -150,31 +158,59 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuContent = filtered;
             }
 
-            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection && this.autoFit) {
-                this.menuInit = true;
+            if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
+                if (this.autoFit) {
+                    this.menuInit = true;
+                }
+
+                if (this.applyService.locked) {
+                    this.origLevel1 = this.selectedLevel1;
+                    this.origLevel2 = this.selectedLevel2;
+                    this.origLevel3 = this.selectedLevel3;
+
+                    if (this.applyOnNavSubscription) {
+                        this.applyOnNavSubscription.unsubscribe();
+                    }
+
+                    this.applyOnNavSubscription = this.applyService.applyOnNavSubject.subscribe(status => {
+                        if (status === 'canceled') {
+                            this.selectedLevel1 = this.origLevel1;
+                            this.selectedLevel2 = this.origLevel2;
+                            this.selectedLevel3 = this.origLevel3;
+                        }
+                    });
+                }
             }
 
-            this.selectedLevel1 = changes.content.currentValue.selectedSection;
-            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
-            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+            if (!this.applyService.locked) {
+                this.selectedLevel1 = changes.content.currentValue.selectedSection;
+                this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
+                this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+            }
 
             this.transition = false;
 
-            if (changes.content.currentValue.selectedSection && this.autoFit && this.scrollArea) {
-                if (!this.menuInit) {
-                    return;
-                }
+            if (!this.applyService.locked && changes.content.currentValue.selectedSection) {
+                this.systemId = changes.content.currentValue.system?.id;
 
-                setTimeout(() => {
-                    this.menuInit = false;
-                    this.getMenuDimensions();
-                    this.resizeMenu();
-                });
+                if (this.autoFit && this.scrollArea) {
+                    if (!this.menuInit) {
+                        return;
+                    }
+
+                    this.menuHeightFit = '';
+                    this.scrollHeightFit = '';
+                    setTimeout(() => {
+                        this.menuInit = false;
+                        this.getMenuDimensions();
+                        this.resizeMenu();
+                    });
+                }
             }
         }
 
-        if (changes.content.currentValue.selectedSection) {
-            this.systemId = changes.content.currentValue.system?.id;
+        if (changes.searchable) {
+            this.isSearchable = changes.searchable.currentValue;
         }
     }
 
@@ -201,10 +237,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     resizeMenu() {
         if (this.autoFit && this.scrollArea) {
-            this.menuHeightFit = '';
-            this.scrollHeightFit = '';
             setTimeout(() => {
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
+                    // TODO: might want to subtract more if ribbon exists
                     const windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
                     this.menuHeightFit = windowHeightFit + 'px';
                     this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';

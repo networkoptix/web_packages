@@ -18,6 +18,10 @@ h2.get-started-heading {
     background: $light1;
     display: flex;
     justify-content: center;
+    margin-bottom: 84px;
+    @include bootstrap.media-breakpoint-down(xs) {
+        margin-bottom: 24px;
+    }
 
     .get-started-blocks {
         flex-grow: 1;
@@ -105,7 +109,7 @@ h2.get-started-heading {
         &:after {
             content: "";
             position: absolute;
-            bottom: 10px;
+            top: 85px;
             width: 95%;
             height: 100px;
             background: radial-gradient(ellipse farthest-corner at center center,
@@ -124,23 +128,24 @@ h2.get-started-heading {
     }
 
     .step-text {
+        z-index: 1;
         display: flex;
         flex: 0 0 auto;
         flex-direction: column;
         align-items: center;
+        text-align: center;
         @include bootstrap.media-breakpoint-down(xs) {
             align-items: flex-start !important;
             margin-left: 72px !important;
         }
 
         & > h3 {
-            @include typography.medium20;
+            @include typography.medium20dark9;
             margin-bottom: 2px;
         }
 
         & > span {
-            @include typography.regular14;
-            color: $brand_core !important;
+            @include typography.regular14brand;
         }
     }
 }

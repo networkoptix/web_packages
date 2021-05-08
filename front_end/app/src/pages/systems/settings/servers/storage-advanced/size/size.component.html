@@ -1,6 +1,6 @@
 
 <div class="container"
-     [ngbPopover]="store.status != STATUS.INACCESSIBLE ? popLegend : ''"
+     [ngbPopover]="!inaccessible ? popLegend : ''"
      popoverClass="size-popover"
      placement="bottom"
      [openDelay]="300"
@@ -9,17 +9,17 @@
 
     <div class="total-label" [innerHTML]="totalSpace"></div>
     <div class="bar available"
-        [ngClass]="{'full': store.status == STATUS.INACCESSIBLE}"
+        [ngClass]="{'full': inaccessible}"
         [style.width.%]="100"></div>
     <div class="bar used" 
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !usedPercentage}"
+        [ngClass]="{'hidden': inaccessible || !usedPercentage}"
         [style.width.%]="usedPercentage"></div>
     <div class="bar archive"
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !archivePercentage}"
+        [ngClass]="{'hidden': inaccessible || !archivePercentage}"
         [style.left.%]="usedPercentage"
         [style.width.%]="archivePercentage"></div>
     <div class="bar reserved"
-        [ngClass]="{'hidden': store.status == STATUS.INACCESSIBLE || !reservedPercentage}"
+        [ngClass]="{'hidden': inaccessible || !reservedPercentage}"
         [style.right.%]="0"
         [style.width.%]="reservedPercentage"></div>
 </div>

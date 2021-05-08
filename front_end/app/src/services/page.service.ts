@@ -1,5 +1,6 @@
 import { Injectable }               from '@angular/core';
 import { Title, Meta }              from '@angular/platform-browser';
+import { Router }                   from '@angular/router';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
@@ -14,14 +15,23 @@ export class NxPageService {
     constructor(
         configService: NxConfigService,
         private title: Title,
-        private meta: Meta
+        private meta: Meta,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
     }
 
     // called from app component
+    public get newLanguage() {
+        return this.LANG;
+    }
+
     public set newLanguage(language: LanguageI18NStaticTypes) {
         this.LANG = language;
+    }
+
+    public get pageTitle() {
+        return this.title.getTitle();
     }
 
     public set pageTitle(title: any) {
@@ -33,8 +43,16 @@ export class NxPageService {
         this.title.setTitle(txt);
     }
 
-	public set pageDescription(content: any) {
+    public get pageDescription() {
+        return this.meta.getTag('description');
+    }
+
+    public set pageDescription(content: any) {
         this.meta.updateTag({ name: 'description', content: content });
+    }
+
+    public get pageTitleRemoveHyphen() {
+        return this.title.getTitle().replace('- ', '');
     }
 
     public set pageTitleRemoveHyphen(title: any) {
@@ -52,5 +70,15 @@ export class NxPageService {
 
     setDesktopLayout() {
         this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
+    }
+
+    public show404 = () => {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 }

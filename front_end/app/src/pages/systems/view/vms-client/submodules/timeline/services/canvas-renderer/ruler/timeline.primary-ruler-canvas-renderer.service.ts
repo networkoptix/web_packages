@@ -143,9 +143,9 @@ export class TimelinePrimaryRulerCanvasRendererService {
     const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(time, i))
     // console.log(interval, this._intervalWeightAnimations[interval], this._intervalWeightAnimations[interval].get())
     const result = this._intervalWeightAnimations[interval]?.get() || 0
-    if (!this._intervalWeightAnimations[interval]) {
-      console.warn('_getIntervalWeight', 'no animation for the interval', time, intervalsReversed, this._intervalWeightAnimations)
-    }
+    // if (!this._intervalWeightAnimations[interval]) {
+      // console.warn('_getIntervalWeight', 'no animation for the interval', time, intervalsReversed, this._intervalWeightAnimations)
+    // }
     // if (result != ~~result) console.log('GIW', result)
     return result
     // const result = MAX_WEIGHT - [...intervals].reverse().findIndex(i => isAlignedByIrregularInterval(time, i))
@@ -199,7 +199,12 @@ export class TimelinePrimaryRulerCanvasRendererService {
     const relativeFontSize = lowerRelativeFontSize + (upperRelativeFontSize - lowerRelativeFontSize) * (s.weight - lowerWeight)
     const fontSize: px = Math.round(relativeFontSize * this.timeline.canvasGeometry.dpr)
     const format: string = primaryRulerDateFormats[s.interval]
-    ctx.fillStyle = `${color}${percentageToHex(opacity)}`
+
+    const labelLowerOpacity = lowerLabelCfg.opacity || lowerOpacity
+    const labelUpperOpacity = upperLabelCfg.opacity || upperOpacity
+    const labelOpacity = labelLowerOpacity + (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight)
+
+    ctx.fillStyle = `${color}${percentageToHex(labelOpacity)}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
     const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif'

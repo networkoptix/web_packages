@@ -21,8 +21,7 @@ a {
 }
 
 .badge {
-    @include typography.regular12nocolor;
-    color            : $light16 !important;
+    @include typography.regular12light;
     font-weight      : 400;
     background-color : $light4;
     line-height      : 18px;
@@ -33,7 +32,6 @@ a {
 
     &.large {
         @include typography.regular13nocolor;
-        color       : $light16;
         height      : 2rem !important;
         line-height : 2rem !important;
         padding     : 0 12px;
@@ -58,7 +56,7 @@ a {
 }
 
 .badge-selected {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     @include mixins.badge-selected($light16, $light17, $light18);
     cursor        : default !important;
     padding-right : 32px !important;
@@ -71,7 +69,7 @@ a {
 }
 
 .badge-brand-selected {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     @include mixins.badge-selected($brand_core, $brand_d1, $brand_d2);
     cursor : default !important;
 }

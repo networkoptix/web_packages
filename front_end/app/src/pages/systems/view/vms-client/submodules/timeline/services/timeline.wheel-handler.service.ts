@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 
-import { int, float } from '../../../utils/type-aliases'
+import { int, float, px } from '../../../utils/type-aliases'
 import TimelineService from './timeline.service'
 import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service'
 
@@ -20,7 +20,7 @@ export class TimelineWheelHandlerService {
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
       this.wheelScroll(e.deltaX)
     } else {
-      this.wheelZoom(-e.deltaY, e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr))
+      this.wheelZoom(e)
     }
     this.timeUnderMouse.handleMouseMove(e)
   }
@@ -46,7 +46,21 @@ export class TimelineWheelHandlerService {
     this.timeline.shiftVisibleRange(offset)
   }
 
-  public wheelZoom (delta: int, offset: float) {
+  public wheelZoom (e: WheelEvent) {
+    const delta: int = -e.deltaY
+    const edge_offset_px: px = 80
+    let offset: float
+    // console.log('wheel', e.offsetX, this.timeline.canvasGeometry.width, edge_offset_px, (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edge_offset_px))
+    if (e.offsetX < edge_offset_px) {
+      offset = 0
+      // console.log('left edge')
+    } else if (e.offsetX > (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edge_offset_px)) {
+      offset = 1.0
+      // console.log('right edge')
+    } else {
+      offset = e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
+      // console.log('normal')
+    }
     const duration = this.timeline.visibleRange.duration
     const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr
     const step = 0.002

@@ -68,7 +68,7 @@ header {
             box-shadow: none !important;
         }
         .btn-dropdown-toggle {
-            @include typography.regular13;
+            @include typography.regular13dark9;
             background-color : transparent !important;
             box-shadow       : none;
             border-radius    : 0;
@@ -112,8 +112,7 @@ header {
         max-width        : 100%;
 
         &.btn.btn-dropdown-toggle span .text-muted {
-            @include typography.regular14;
-            color : $light16 !important;
+            @include typography.regular14light;
         }
 
         &::after {
@@ -131,12 +130,6 @@ header {
         .ellipsis-mr {
             @include mixins.ellipsis;
             max-width : 95%;
-        }
-    }
-
-    .dropdown-menu > ul:last-of-type {
-        li:last-of-type {
-            margin-bottom : 4px;
         }
     }
 
@@ -165,14 +158,6 @@ header {
             list-style-type : none;
         }
 
-        &--footer {
-            li:last-of-type {
-                margin-bottom : 4px;
-            }
-
-            margin-bottom : 4px !important;
-        }
-
         .multi-column-dropdown {
             list-style : none;
             margin     : 0;
@@ -184,7 +169,7 @@ header {
             height   : auto;
 
             .dropdown-item {
-                @include typography.medium13;
+                @include typography.medium13dark9;
                 display         : flex;
                 align-items     : center;
                 padding         : 0;

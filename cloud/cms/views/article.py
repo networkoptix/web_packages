@@ -7,7 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language, 
+from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language,
                         AssetCustomizationReview, DataStructure)
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
@@ -50,7 +50,7 @@ def get_article(request, url_param, **kwargs):
             version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
             version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
-        ).order_by('-reviewed_date').first()
+        ).last()
         if article_review:
             # Check that that the asset's current url still matches
             article = article_review.version.asset
@@ -94,8 +94,13 @@ def get_article(request, url_param, **kwargs):
                 asset=article, language=language, version_id=version, draft=draft or review,
                 customization_name=settings.CUSTOMIZATION
             )
+            short_description = article_structures.filter(name='description').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review,
+                customization_name=settings.CUSTOMIZATION
+            )
             article_dict = {
                 "title": title,
+                "shortDescription": short_description,
                 "body": body
             }
 

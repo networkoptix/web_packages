@@ -21,20 +21,20 @@ import {
  */
 
 @Component({
-    selector     : 'nx-checkbox',
-    templateUrl  : 'checkbox.component.html',
-    styleUrls    : ['checkbox.component.scss'],
-    providers    : [
+    selector    : 'nx-checkbox',
+    templateUrl : 'checkbox.component.html',
+    styleUrls   : ['checkbox.component.scss'],
+    providers   : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxCheckboxComponent),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxCheckboxComponent),
+            multi       : true
         },
         {
-            provide    : NG_VALIDATORS,
-            useExisting: forwardRef(() => NxCheckboxComponent),
-            multi      : true,
-        },
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxCheckboxComponent),
+            multi       : true
+        }
     ],
     encapsulation: ViewEncapsulation.None
 })
@@ -46,7 +46,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
-    public value;
+    public value: any;
     public state: string;
 
     private touched: boolean;

@@ -138,7 +138,8 @@ def read_structure_json():
 
 def process_node(node_obj, node_struct):
     if not node_obj.touched:
-        node_obj.name = node_struct['name']
+        node_obj.name = node_struct.get('name', '')
+        node_obj.subtitle = node_struct.get('subtitle', '')
         node_obj.url = node_struct.get('url', '')
         node_obj.new_window = node_struct.get('new_window', False)
         node_obj.condition = node_struct.get('condition', '')
@@ -157,11 +158,16 @@ def process_node(node_obj, node_struct):
         enabled = node_struct.get('enabled', False)
         if node_obj.is_global:
             if type(enabled) is list:
-                node_obj.enabled.set(Customization.objects.filter(name__in=enabled))
+                customizations = Customization.objects.filter(name__in=enabled)
             elif enabled is True:
-                node_obj.enabled.set(Customization.objects.all())
+                customizations = Customization.objects.all()
             else:
-                node_obj.enabled.clear()
+                customizations = []
+
+            if node_obj.asset:
+                node_obj.asset.customizations.set(customizations)
+            else:
+                node_obj.enabled.set(customizations)
 
     for inner_node_structure in node_struct.get('nodes', []):
         inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
@@ -496,9 +502,37 @@ def update_asset_type(asset_type, asset_type_structure):
 
 
 def external_file_to_content_file(url):
-    file_content = requests.get(url).content
+    file_request = requests.get(url)
+    file_content = file_request.content
+    content_type = file_request.headers.get('Content-Type', 'image/png')
     filename = url.split('/')[-1]
-    return ContentFile(file_content, name=filename)
+    content_file = ContentFile(file_content, name=filename)
+    content_file.content_type = content_type
+    return content_file
+
+
+def generate_kb_path_from_var(article_dict):
+    base_path = article_dict['base']
+    kb_path = article_dict['kb']
+    uuid = article_dict['asset_uuid']
+    name = article_dict['asset_name']
+    param_name = article_dict['param_name']
+    if param_name and not param_name.startswith('-'):
+        param_name = '-' + param_name
+    asset, created = Asset.objects.get_or_create(
+        uuid=uuid, asset_type=AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
+    )
+    if created:
+        asset.name = name
+        asset.save()
+
+    return f'{base_path}/{kb_path}/{asset.id}{param_name}'
+
+
+def sub_vars(match_obj):
+    var_dict = json.loads(match_obj.group(1))
+    if var_dict.get('type', '') == 'kb_article':
+        return generate_kb_path_from_var(var_dict)
 
 
 def update_asset_by_json(asset, asset_json, user):
@@ -509,7 +543,12 @@ def update_asset_by_json(asset, asset_json, user):
 
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
-        context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        try:
+            context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        except Context.DoesNotExist:
+            # Skips updating if invalid context for asset_type
+            continue
+
         data_records = {}
         files = {}
         for ds in context["values"]:
@@ -518,31 +557,50 @@ def update_asset_by_json(asset, asset_json, user):
                 ds_type = DataStructure.get_type_by_name(ds['type'])
                 if ds_type not in [DataStructure.DATA_TYPES.file,
                                    DataStructure.DATA_TYPES.image]:
-                    if ds_type == DataStructure.DATA_TYPES.external_image and ds['value']:
+                    if ds_type in [DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file] and ds['value']:
                         files[ds['name']] = external_file_to_content_file(ds['value'])
-                    elif ds_type == DataStructure.DATA_TYPES.html and ds_obj.meta_settings.get('upload_data_images', False):
-                        ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                    elif ds_type == DataStructure.DATA_TYPES.html:
+                        if ds_obj.meta_settings.get('upload_data_images', False):
+                            ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                        ds["value"] = re.sub(r'{%(.*?)%}', sub_vars, ds["value"])
                     data_records[ds["name"]] = ds["value"]
         save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
 
 
-def import_assets_from_json(assets_list, user, publish=False):
+def import_assets_from_json(assets_list, user, publish=False, increment_progress=None):
     for asset_dict in assets_list:
         asset_type = AssetType.get_model_by_type(AssetType.get_type_by_name(asset_dict['type']))
-        asset_obj = Asset.objects.filter(name=asset_dict['name'], asset_type=asset_type).first()
+        # TODO: CLOUD-6671 Ask for confirmation if asset name does not match
+        asset_obj = Asset.objects.filter(uuid=asset_dict['uuid']).first()
         if not asset_obj:
-            asset_obj = Asset.objects.create(name=asset_dict['name'], asset_type=asset_type)
-            asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+            asset_obj = Asset.objects.create(name=asset_dict['name'], uuid=asset_dict['uuid'], asset_type=asset_type)
+        elif increment_progress and str(asset_obj.asset_type) != str(asset_type):
+            increment_progress(
+                f'Failed to import <b>"{asset_dict["name"]}"</b>, asset already exist as type <b>"{asset_obj.asset_type}"</b> but is being imported as <b>"{asset_type}"</b>')
+            continue
+        asset_obj.customizations.set(list(Customization.objects.filter(name__in=asset_dict['customizations'])))
+        asset_obj.name = asset_dict['name']
+        asset_obj.save()
         update_asset_by_json(asset_obj, asset_dict, user)
 
-        if publish:
+        if publish and asset_obj.is_dirty:
+            published = False
             # Send for review
-            send_version_for_review(asset_obj, user)
+            send_version_for_review(asset_obj, user, notify=False)
             asset_obj.change_preview_status(Asset.PREVIEW_STATUS.review)
 
             # Accept review
             for customization in asset_obj.customizations.all():
                 review = AssetCustomizationReview.objects.filter(version__asset=asset_obj, customization=customization).last()
-                update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
-            if asset_obj.is_documentation:
+                if review:
+                    published = True
+                    update_draft_state(review.id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
+            if asset_obj.is_documentation and published:
                 DOC_CACHE.clear_cache()
+        if increment_progress:
+            increment_progress()
+
+def check_asset_conflicts(assets_list):
+    assets_dict = {asset.get('uuid'): asset for asset in assets_list}
+    asset_obj_list = Asset.objects.filter(uuid__in=dict.keys(assets_dict))
+    return [f"Existing asset <b>\"{asset.name}\"</b> name conflicts with imported asset <b>\"{assets_dict[str(asset.uuid)]['name']}\"</b>. <b class=\"help\">(UUID: {asset.uuid})</b> " for asset in asset_obj_list if assets_dict[str(asset.uuid)]['name'] != asset.name]

@@ -62,6 +62,7 @@ $rem-baseline: 16px;
 
 $font-size-base : rem(13px); // Assumes the browser default, typically `16px`
 
+$font-size-xxxlg : rem(40px);
 $font-size-xxlg : rem(32px);
 $font-size-xlg : rem(24px);
 $font-size-lg : $font-size-base * 1.25;
@@ -74,7 +75,7 @@ $h3-font-size : rem(18px); // $font-size-base * 1.2;
 $h3-alt-size  : rem(17px);
 $h4-font-size : rem(15px); // $font-size-base * 1;
 $h5-font-size : rem(14px); // $font-size-base;
-$h6-font-size : rem(14px); // $font-size-base * .875;
+$h6-font-size : rem(13px); // $font-size-base * .875;
 
 $font-size-ssm : rem(11px);
 $font-size-20 : rem(20px);

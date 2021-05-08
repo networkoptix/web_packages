@@ -1,6 +1,8 @@
 @use "../../../../../styles/typography";
 @use '../../../../../../styles/theme_variables' as *;
 @use "../../../../../styles/mixins" as *;
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 form.form-horizontal {
     overflow: auto auto !important;
@@ -43,11 +45,12 @@ form.form-horizontal {
     }
 
     th {
-        @include typography.medium13;
+        @include typography.medium13dark9;
         padding          : 5px 0 5px 16px;
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
-        color            : $dark9;
+        height: 32px !important;
+
     }
 
     th:last-child {
@@ -55,10 +58,10 @@ form.form-horizontal {
     }
 
     td {
-        @include typography.regular13;
+        @include typography.regular13dark9;
+        max-height: 24px !important;
         padding          : 5px 0 5px 16px;
         background-color : $light1;
-        color            : $dark9;
         display          : flex;
         align-items      : center;
 
@@ -97,8 +100,14 @@ form.form-horizontal {
 }
 
 .header-top-bar {
-    display     : flex;
-    align-items : center;
+    display        : flex;
+    flex-direction : column;
+    align-items    : flex-start;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction : row;
+        align-items    : center;
+    }
 
     .header-title {
         display     : flex;
@@ -107,38 +116,11 @@ form.form-horizontal {
     }
 
     .server-buttons {
-        &:hover {
-            color : $dark15;
+        @include details-buttons;
 
-            svg-icon {
-                svg {
-                    g, path {
-                        fill : $dark15 !important;
-                    }
-                }
-            }
-        }
-
-        @include typography.regular13;
-        background-color : inherit;
-        color            : $light16;
-        display          : flex;
-        align-items      : center;
-        white-space      : nowrap;
-
-        svg-icon {
-            svg {
-                height : 20px;
-
-                g, path {
-                    fill : $light16 !important;
-                }
-            }
-        }
-
-        a {
-            text-decoration : none;
-            color           : inherit;
+        @include media-breakpoint-down(md) {
+            padding-left : 0 !important;
+            margin-top : 8px;
         }
     }
 }
@@ -153,7 +135,7 @@ form.form-horizontal {
         align-items : flex-end;
 
         .cell-title {
-            @include typography.regular13;
+            @include typography.regular13dark9;
         }
 
         .cell-ellipsis {
@@ -166,7 +148,7 @@ form.form-horizontal {
 
 .reindex-container {
     p {
-        @include typography.regular13;
+        @include typography.regular13dark9;
     }
 
     .tooltip-text {
@@ -179,14 +161,13 @@ form.form-horizontal {
             flex-grow: 1;
             padding-top: 2px;
             .progress-bar-header {
-                @include typography.medium12;
                 display: flex;
                 justify-content: space-between;
                 div {
-                    color: $brand_core;
+                    @include typography.medium12brand;
                 }
                 span {
-                    color: $dark9;
+                    @include typography.medium12dark9;
                 }
             }
             .reindex-progress-container {
@@ -203,14 +184,14 @@ form.form-horizontal {
 
 svg-icon.archive-warning {
     position: absolute;
-    right: 12px;
-    top: calc(50% - 10px);
     height: 20px;
     width: 20px;
+    transform: translateY(-22px);
 }
 
-.animate-rotation {
+.animate-rotation path{
     @include rotate;
+    transform-origin: center center !important;
 }
 
 svg-icon:not(.animate-rotation) .st0 {
@@ -218,13 +199,25 @@ svg-icon:not(.animate-rotation) .st0 {
 }
 
 .changing {
-    padding: 0 16px;
+    padding-left: 16px;
 }
 
 .disabled-action {
     pointer-events: none;
 }
 
-.no-storages-sizing {
-    height: 168px !important;
+.header-button-span {
+    color: $light16 !important;
+}
+
+button.btn.btn-dropdown-toggle.dropdown-toggle {
+    border-style: none !important;
+}
+
+nx-storage-size-component {
+    height: auto !important;
+}
+
+::ng-deep .show.tooltip {
+    pointer-events: none;
 }

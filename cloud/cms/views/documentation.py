@@ -8,7 +8,8 @@ from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
-from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu
+from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
+    AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
 from cms.views.integration import make_integrations_json
@@ -38,10 +39,10 @@ id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STR
 @handle_exceptions
 def get_page(request, doc_id):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'pending'
+    review = request.query_params.get('state') in ('pending', 'review')
     language = get_language_object_from_request(request)
 
-    doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation,id=doc_id).first()
+    doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()
 
     # If doc is not found, then return a 404
     if doc:
@@ -56,6 +57,42 @@ def get_page(request, doc_id):
             return api_success(ser.data)
 
     raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+
+
+def find_article(nodes, doc_id):
+    for node in nodes:
+        if node.asset and node.asset.id == doc_id or find_article(node.get('nodes', []), doc_id):
+            return True
+    return False
+
+
+@swagger_auto_schema(
+    method="GET",
+    operation_description="Returns the first knowledgebase found for an article",
+    responses={'200': openapi.Response('Article Knowledgebase', openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'base': openapi.Schema(type=openapi.TYPE_STRING),
+            'kb_name': openapi.Schema(type=openapi.TYPE_STRING)
+        }
+    ))}
+)
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def kb_for_article(request, doc_id):
+    doc = Asset.objects.filter(
+        id=doc_id, asset_type__type=AssetType.ASSET_TYPES.documentation, customizations__name=settings.CUSTOMIZATION,
+        contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+    ).first()
+    if not doc:
+        raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+    nodes = doc.nodes.all()
+    menus = {node.get_parent() for node in nodes}
+    for menu in menus:
+        if menu.base_url and menu.url and menu.enabled:
+            return {'base': menu.base_url, 'kb_name': menu.url}
+    raise APINotFoundException(error_data={'id': doc_id}, error_text='Kb not found')
 
 
 # Simple filter for checking that each space delimited string exists somewhere in the doc
@@ -224,18 +261,21 @@ def menu_to_endpoint(request, name):
     state = request.GET.get('state', '')
     menu_dict = not state and DOC_CACHE[cache_id]
     if not menu_dict:
-        menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
-        if not menu:
+        draft = state == 'draft' and request.user.is_superuser
+        review = state == 'review' and request.user.is_superuser
+        if (draft or review) and request.user.is_superuser:
+            menu_dict = Menu.generate_menu(menu_name=name, customization_name=settings.CUSTOMIZATION)
+        else:
+            menu_dict = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
+        if not menu_dict:
             raise APINotFoundException(f'Menu {name} not found')
-        menu_dict = menu['nodes']
-        base_url = menu['base_url']
+        base_url = menu_dict['base_url']
         cloud_portal = get_cloud_portal_asset()
         global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-        draft = state == 'draft'
-        review = state == 'pending'
+
         prepare_menu_dict(
-            menu_dict,
+            menu_dict['nodes'],
             base_url,
             language=language,
             global_contexts=global_contexts,
@@ -243,5 +283,6 @@ def menu_to_endpoint(request, name):
             draft=draft,
             review=review
         )
-        DOC_CACHE[cache_id] = menu_dict
+        if not (draft or review):
+            DOC_CACHE[cache_id] = menu_dict
     return api_success(menu_dict)

@@ -59,15 +59,11 @@
         position            : absolute !important;
         top                 : auto !important;
         left                : 16px !important;
-        z-index             : 9999 !important;
-        border-bottom-color : $light6 !important;
+        z-index             : 9990 !important;
+        border-bottom-color : $light4 !important;
 
         &.small-override {
             left: 12px !important;
-        }
-
-        &::after {
-            border-bottom-color : $light4 !important;
         }
     }
 }

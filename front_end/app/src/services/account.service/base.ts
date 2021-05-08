@@ -51,12 +51,11 @@ export abstract class BaseAccount implements OnDestroy {
     public mediaServerApi: NxSystemAPI;
 
     // Abstract methods implemented by cloud and local versions
-    abstract logoutHelper(doNotRedirect?: boolean): void;
+    abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
     abstract get(forceUpdate?: boolean): Promise<Account>;
-    abstract login(email: string, password: string, remember: boolean): any;
-    abstract logout(doNotRedirect?: boolean): void;
+    abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
+    abstract logout(doNotRedirect?: boolean, skipReload?): void;
     abstract requireLogin(): Promise<any>;
-    abstract loginAllServers(login: string, password: string, remember: boolean): Promise<any>;
 
     constructor(
         configService: NxConfigService,
@@ -75,7 +74,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected nxSystemAPIService: NxSystemAPIService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
+        languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
@@ -181,7 +180,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     redirectToHome() {
-        this.get()
+        return this.get()
             .then((account: Account) => {
                 if (account) {
                     this.router
@@ -253,7 +252,7 @@ export abstract class BaseAccount implements OnDestroy {
 
     // TODO: @Chris check for apply service in logout functions
 
-    logoutAuthorised() {
+    logoutAuthorised(skipReload = false) {
         return this.get()
             .then((account: Account) => {
                 // logoutAuthorisedLogoutButton
@@ -279,9 +278,11 @@ export abstract class BaseAccount implements OnDestroy {
                             ''
                         ).then((result) => {
                             if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
-                                return this.logout(true);
+                                this.logout(true, skipReload);
+                                return true;
                             } else {
-                                return this.redirectAuthorised();
+                                this.redirectAuthorised();
+                                return false;
                             }
                         });
                 }

@@ -33,6 +33,11 @@ export const localSettingsRoutes: Routes = [
                 canDeactivate : [ApplyGuard]
             },
             {
+                path          : 'advanced',
+                component     : NxSystemAdminComponent,
+                canDeactivate : [ApplyGuard]
+            },
+            {
                 path          : 'users',
                 component     : NxSystemUsersComponent,
                 canDeactivate : [ApplyGuard],

@@ -9,13 +9,7 @@ import { Subscription } from 'rxjs';
 import { NxLanguageProviderService } from '../../../../../../services/nx-language-provider';
 import { NxUtilsService }            from '../../../../../../services/utils.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../../language_i18n_static_types';
-
-enum STORAGE_STATUS {
-    IN_USE,
-    INACCESSIBLE,
-    RESERVED,
-    DISABLED
-}
+import { Storage, STORAGE_STATUS }   from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -23,8 +17,9 @@ enum STORAGE_STATUS {
     templateUrl : 'size.component.html',
     styleUrls   : ['size.component.scss']
 })
-export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
-    @Input() store: any;
+export class NxStorageSizeComponent implements OnDestroy, OnChanges {
+    @Input() store: Storage;
+    @Input() cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
     LANG: LanguageI18NStaticTypes;
 
@@ -43,6 +38,21 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     archivePercentage: number;
     STATUS: any;
 
+    get inaccessible() {
+        return [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.store.status);
+    }
+
+    get cachedSizesClean() {
+        return Object.entries(
+            this.cachedSizes
+        ).reduce((
+            cachedSizes, [key, store]
+        ) => store.total > 0
+            ? { ...cachedSizes, [key]: store }
+            : cachedSizes,
+        {});
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string
@@ -52,9 +62,6 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         this.STATUS = STORAGE_STATUS;
     }
 
-    ngOnInit() {
-    }
-
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.store.currentValue) {
             this.init();
@@ -62,7 +69,9 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     init() {
-        if (this.store.status === STORAGE_STATUS.INACCESSIBLE && !this.store.totalSpace) {
+        this.store.totalSpace = this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
+        this.store.vmsSpace = this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
+        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';
             this.reservedPercentage = 0;
@@ -78,14 +87,14 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         if (this.store.freeSpace === undefined) {
-            this.store.freeSpace = this.store.totalSpace - this.store.archiveSpace;
+            this.store.freeSpace = this.store.totalSpace - this.store.vmsSpace;
         };
 
         if (this.store.reservedSpace === undefined) {
             this.store.reservedSpace = 0;
         };
 
-        const usedSpace = parseInt(this.store.totalSpace) - parseInt(this.store.freeSpace) - parseInt(this.store.archiveSpace);
+        const usedSpace = this.store.totalSpace - this.store.freeSpace - this.store.vmsSpace;
         this.totalSpace = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
         this.reserved = this.toFriendlyBytes(this.store.reservedSpace);
         this.reservedPercentage = this.toPercentageOfTotal(this.store.reservedSpace);
@@ -97,9 +106,9 @@ export class NxStorageSizeComponent implements OnInit, OnDestroy, OnChanges {
         this.archive = '&mdash;';
         this.archivePercentage = 0;
 
-        if (this.store.archiveSpace) {
-            this.archive = this.toFriendlyBytes(this.store.archiveSpace);
-            this.archivePercentage = this.toPercentageOfTotal(this.store.archiveSpace);
+        if (this.store.vmsSpace) {
+            this.archive = this.toFriendlyBytes(this.store.vmsSpace);
+            this.archivePercentage = this.toPercentageOfTotal(this.store.vmsSpace);
         }
     }
 

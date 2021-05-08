@@ -37,20 +37,16 @@ export class NxOverlayModalComponent implements OnInit {
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
     oneCheckAtATime = false
+    available = true;
+    refreshMessage: string;
 
     timeoutUntilRefresh$ = new BehaviorSubject(5);
     checking$ = new BehaviorSubject(false);
     private refresh$ = new Subject();
 
     routeSubscription: Subscription;
-
-    get systemAvailable() {
-        return this.appState.systemAvailable$.value;
-    }
-
-    get refreshText() {
-        return this.LANG.servers[this.checking$.value ? 'refreshing' : 'refresh']();
-    }
+    systemAvailableSubscription: Subscription;
+    checkingSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -65,23 +61,35 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe((state) => {
+            // Don't show the overlay if main server is online
+            if (!state && this.system.serverManager.servers.length > 1) {
+                const mainServer = this.system.serverManager.servers.find(server => server.id === this.serverId);
+                this.available = mainServer.status === 'Online' ? true : state;
+            } else {
+                this.available = state;
+            }
+        });
+
+        this.checkingSubscription = this.checking$.subscribe((state) => {
+            this.refreshMessage = this.LANG.servers[state ? 'refreshing' : 'refresh']();
+        });
+
         this.accountService.get().then(account => {
             if (!account) {
                 return;
             }
             const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             system.update().then(() => {
-                system.getInfoAndPermissions().then(() => {
-                    this.system = system;
-                    this.getServers();
-                    this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
-                    this.routeSubscription = this.router.events.subscribe(route => {
-                        if (route instanceof NavigationEnd) {
-                            this.servers.forEach(server => {
-                                server.url = `${server.url}/#/${route.url}`;
-                            });
-                        }
-                    });
+                this.system = system;
+                this.getServers();
+                this.serverId = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : this.system.moduleInfo.id;
+                this.routeSubscription = this.router.events.subscribe(route => {
+                    if (route instanceof NavigationEnd) {
+                        this.servers.forEach(server => {
+                            server.url = `${server.url}/#/${route.url}`;
+                        });
+                    }
                 });
             });
         });

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 
 import TimelineService from './timeline.service'
-import { float, ms, px } from '../../../utils/type-aliases'
+import { float, ms, px, sign } from '../../../utils/type-aliases'
 
 
 export interface TimelineScrollbarServiceStatus {
@@ -12,7 +12,6 @@ export interface TimelineScrollbarServiceStatus {
   canScrollLeft: boolean,
   canScrollRight: boolean,
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -103,19 +102,41 @@ export class TimelineScrollbarService {
       const targetTime = this.timeline.fullRange.start + relativeX * this.timeline.fullRange.duration
       // const fix = this.barDragAnchor / (this.honestBarWidthPx || $bar.clientWidth)
       const fix = this.barDragAnchor / $bar.clientWidth
-      console.log('fix', fix, fix * this.timeline.visibleRange.duration)
+      // console.log('fix', fix, fix * this.timeline.visibleRange.duration)
       this.timeline.jumpScrollTo(Math.round(targetTime - this.timeline.visibleRange.duration * fix), true)
       this._emit()
     }
   }
 
-
   protected isBackgroundMouseDown: boolean = false
   private holdScrollTargetTime: ms = -1
+  protected _timestampMouseDown: ms
+  protected _scrollDirection: sign = 0
 
   public handleBackgroundMouseDown (e: MouseEvent) {
     this.isBackgroundMouseDown = true
+    this._timestampMouseDown = Date.now()
     this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e)
+    this._scrollDirection = e.offsetX < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1
+  }
+
+  public handleBackgroundMouseUp (e: MouseEvent) {
+    this.isBackgroundMouseDown = false
+    this.holdScrollTargetTime = -1
+    const sinceMouseDown: ms = Date.now() - this._timestampMouseDown
+    const edgeTimeSinceMouseDown: ms = 200
+    if (sinceMouseDown < edgeTimeSinceMouseDown) {
+      // console.log(sinceMouseDown, 'jump one screen', this._scrollDirection)
+      this.timeline.jumpScrollTo(
+        (
+          this.timeline.visibleRange.start +
+          this.timeline.visibleRange.duration * this._scrollDirection
+        ),
+        true
+      )
+    } else {
+      // console.log('normal mouse up')
+    }
   }
 
   public handleButtonLeftMouseDown () {
@@ -126,11 +147,6 @@ export class TimelineScrollbarService {
   public handleButtonRightMouseDown () {
     this.isBackgroundMouseDown = true
     this.holdScrollTargetTime = this.timeline.fullRange.end - this.timeline.visibleRange.duration
-  }
-
-  public handleBackgroundMouseUp (e: MouseEvent) {
-    this.isBackgroundMouseDown = false
-    this.holdScrollTargetTime = -1
   }
 
   public updateIfMouseIsDown () {

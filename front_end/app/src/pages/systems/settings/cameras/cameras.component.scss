@@ -1,4 +1,5 @@
 @use "../../../../styles/typography";
+@use "../../../../styles/mixins";
 @use '../../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
@@ -45,41 +46,9 @@
         margin-bottom: 24px;
 
         .camera-buttons {
-            flex: 0 0 auto;
-            &:hover {
-                color: $dark15 !important;
-                svg-icon {
-                    svg {
-                        g,
-                        path {
-                            fill: $dark15 !important;
-                        }
-                    }
-                }
-            }
-            @include typography.regular13;
-            // flex: 0 0 auto;
-            background-color: inherit;
-            color: $light16 !important;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            padding-left: 8px;
-            padding-right: 0px;
-            svg-icon {
-                svg {
-                    height: 20px;
-                    g,
-                    path {
-                        fill: $light16 !important;
-                    }
-                }
-            }
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
+            @include mixins.details-buttons;
         }
+
     }
 
     .header-table {
@@ -90,7 +59,7 @@
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                @include typography.regular13;
+                @include typography.regular13dark9;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -124,6 +93,7 @@
                 flex-direction: column;
                 button {
                     max-width: 100%;
+                    width: fit-content;
                 }
                 button:first-child {
                     margin-right: 0;
@@ -302,7 +272,7 @@
         }
         &-keys {
             p {
-                @include typography.regular13;
+                @include typography.regular13dark9;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -325,7 +295,7 @@
         }
         &-values {
             p {
-                @include typography.medium13;
+                @include typography.medium13dark9;
                 margin-right: 16px;
             }
         }
@@ -333,7 +303,10 @@
 }
 
 .recording-hint {
-    @include typography.regular13;
+    // do not use typography as we can't overwrite color with input-error
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: $dark9;
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

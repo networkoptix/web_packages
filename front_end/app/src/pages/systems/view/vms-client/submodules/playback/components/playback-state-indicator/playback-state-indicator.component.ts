@@ -20,11 +20,11 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
   }
 
   public get isPlaying () {
-    return this.state.mode === PLAYBACK_MODE.LIVE && (this.state as LivePlaybackState).started
+    return this.state.mode === PLAYBACK_MODE.LIVE && !this.playback.livePaused
   }
 
   public get isRecording () {
-    return this.vms.selectedCamera.isRecording
+    return this.vms.selectedCamera?.isRecording
   }
 
   constructor (

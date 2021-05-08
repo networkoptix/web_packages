@@ -1,6 +1,8 @@
+import hashlib
+import json
 import os
 import re
-import json
+import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
@@ -10,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.deletion import Collector
-from django.db.models.signals import post_delete, m2m_changed
+from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
 from django.db.utils import ProgrammingError
 from django.dispatch import receiver
 from django.utils.functional import cached_property
@@ -110,6 +112,13 @@ def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
                              f"Most likely a customization with the name \"{customization}\" doesn't exist.")
 
 
+def get_vms_asset(customization=settings.CUSTOMIZATION):
+    return Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.vms
+    ).first()
+
+
 def get_asset_by_revision(version_id):
     return Asset.objects.get(contentversion__in=[version_id])
 
@@ -138,13 +147,22 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
     if not data or force:
         customization = Customization.objects.get(name=customization_name)
-        custom_config = get_config(customization.name)
 
         integration_store_enabled = asset.read_global_value(
             "%INTEGRATION_STORE_ENABLED%")
 
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
+        cloud_name = asset.read_global_value("%CLOUD_NAME%")
+        vms_name = asset.read_global_value("%VMS_NAME%")
+        seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
+            .replace("%CLOUD_NAME%", cloud_name)\
+            .replace("%VMS_NAME%", vms_name)
+        landing_description = ''
+        landing_description_ds = DataStructure.objects.filter(context__name='Landing page', name='%SUBTITLE%').first()
+        if landing_description_ds:
+            landing_description = landing_description_ds.find_actual_value(asset)
 
         data = {
             'version_id': asset.version_id(),
@@ -172,11 +190,13 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
-                'integration_seo_page_description': asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%"),
+                'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
+                'landing_description': landing_description,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_all_betas': asset.read_global_value("%SHOW_ALL_BETAS%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
                 'sort_supported_devices_by_popularity': asset.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
@@ -187,8 +207,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
                 'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
-                'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
-                'vms_name': asset.read_global_value("%VMS_NAME%"),
+                'cloud_name': cloud_name,
+                'vms_name': vms_name,
                 'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%'),
                 'trial_license_key': asset.read_global_value('%TRIAL_LICENSE_KEY%')
@@ -237,7 +257,7 @@ def cached_doc_menu_map(customization_name, refresh=False):
     menu_map = MENU_CACHE[cache_key]
     if refresh or not menu_map:
         menu_map = {}
-        for menu in Menu.objects.filter(type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
+        for menu in Menu.objects.filter(enabled=True, type__in=[Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase]):
             if menu.base_url not in menu_map:
                 menu_map[menu.base_url] = {}
             if menu.url not in menu_map[menu.base_url]:
@@ -255,12 +275,12 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
         cached_doc_menu_map(customization_name, refresh=True)
     for menu_name, menu in menu_customization.items():
         check_user_menu_permissions(menu['nodes'], user)
+
+    if menu_type:
+        menu_customization = {name: menu for name, menu in menu_customization.items() if menu['type'] == menu_type}
     if name:
-        menu = menu_customization.get(name.lower(), None)
-        if menu and menu['type'] == menu_type:
-            return menu
-        else:
-            return None
+        return menu_customization.get(name.lower(), None)
+
     return menu_customization
 
 
@@ -272,8 +292,9 @@ def slugify(name, lowercase=False):
 
 
 def rename_file(instance, filename):
-    asset_name = slugify(instance.asset.name, True)
-    structure_name = slugify(instance.data_structure.name, True)
+    asset_ds_pair = instance.asset_ds_pair.first() if hasattr(instance, 'asset_ds_pair') else instance
+    asset_name = slugify(asset_ds_pair.asset.name, True)
+    structure_name = slugify(asset_ds_pair.data_structure.name, True)
     file_info = f"{structure_name}-{instance.id}"
     return os.path.join(asset_name, file_info, filename)
 
@@ -381,8 +402,8 @@ class Customization(models.Model):
         super(Customization, self).save(*args, **kwargs)
         if create_cloud_portal_asset:
             # Default cloud portal asset type
-            asset_type = AssetType.objects.get(name="", single_customization=True,
-                                               type=AssetType.ASSET_TYPES.cloud_portal)
+            asset_type, _ = AssetType.objects.get_or_create(name="", single_customization=True,
+                                                            type=AssetType.ASSET_TYPES.cloud_portal)
             cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
                                                 asset_type=asset_type)
             cloud_portal.customizations.set([self])
@@ -455,6 +476,7 @@ class Asset(models.Model):
     primary_group = models.OneToOneField(
         Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
     protected = models.BooleanField(default=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
@@ -516,6 +538,13 @@ class Asset(models.Model):
     def is_single_customization(self):
         return self.asset_type.single_customization
 
+    def urlify(self, name=None):
+        if name is None:
+            name = self.name
+        name = re.sub(r'[^a-zA-Z0-9- ]+', '', name)
+        name = name.lower().replace(' ', '-')
+        return f'{self.id}-{name}'
+
     @property
     def is_dirty(self):
         version_id = self.contentversion_set.last(
@@ -557,7 +586,7 @@ class Asset(models.Model):
         accepted_reviews = AssetCustomizationReview.objects.filter(
             customization__name=customization, state=AssetCustomizationReview.REVIEW_STATES.accepted,
             version__asset__in=assets
-        ).order_by('-pk').select_related('version').only('version')
+        ).order_by('-version_id').select_related('version').only('version')
 
         for review in accepted_reviews:
             if review.version.asset_id not in version_dict:
@@ -656,6 +685,13 @@ def update_asset_customization_reviews(sender, instance, action, pk_set, **kwarg
         for asset_customization_review in AssetCustomizationReview.objects.\
                 filter(version__asset=instance, customization_id__in=pk_set):
             asset_customization_review.update_children_reviews()
+
+    if action == 'post_add':
+        customizations = Customization.objects.filter(pk__in=pk_set)
+        for customization in customizations:
+            version = ContentVersion.objects.filter(asset=instance).order_by('-id').first()
+            if version:
+                ContentVersion.create_missing_reviews(instance, version, customization)
 
 
 class Context(models.Model):
@@ -1112,6 +1148,11 @@ class DataStructure(models.Model):
                              DataStructure.DATA_TYPES.external_image]
 
 
+class SpecialStructure(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    config = JSONField(default={}, blank=True)
+
+
 # CMS settings. Release engineer can change that
 class UserGroupsToAssetPermissions(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
@@ -1234,6 +1275,35 @@ class ContentVersion(models.Model):
     def __str__(self):
         return str(self.id)
 
+    @staticmethod
+    def create_missing_reviews(asset, version, customization, parent_in_review=None):
+        blocked = AssetCustomizationReview.REVIEW_STATES.blocked
+        pending = AssetCustomizationReview.REVIEW_STATES.pending
+
+        if parent_in_review is None and customization.parent:
+            parent_in_review = asset.customizations.filter(
+                id=customization.parent.id).exists()
+
+        for version in ContentVersion.objects.filter(
+                ~Q(assetcustomizationreview__customization=customization), id__lt=version.id,
+                id__gt=asset.version_id(customization.name),
+                asset=asset, assetcustomizationreview__isnull=False
+        ).distinct():
+            review = None
+            if parent_in_review:
+                parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
+                # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
+                # If parent review exists but is pending, this one should be blocked
+                if not parent_review or parent_review.state == pending:
+                    review = AssetCustomizationReview(customization=customization, version=version, state=blocked)
+                elif customization.trust_parent:
+                    review = AssetCustomizationReview(customization=customization, version=version,
+                                                      state=parent_review.state)
+            if not review:
+                review = AssetCustomizationReview(customization=customization, version=version, state=pending)
+            review.save()
+            review.update_children_reviews()
+
     def create_reviews(self):
         blocked = AssetCustomizationReview.REVIEW_STATES.blocked
         pending = AssetCustomizationReview.REVIEW_STATES.pending
@@ -1250,11 +1320,12 @@ class ContentVersion(models.Model):
                 parent_in_review = self.asset.customizations.filter(
                     id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(
-                    customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+
+            # Create missing reviews caused by adding/removing customizations to assets
+            self.create_missing_reviews(self.asset, self, customization, parent_in_review)
 
     @property
     def state(self):
@@ -1267,6 +1338,11 @@ class ContentVersion(models.Model):
             return 'old'
 
         return 'current'
+
+
+class AssetCustomizationReviewManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('version_id', '-pk')
 
 
 class AssetCustomizationReview(models.Model):
@@ -1291,6 +1367,9 @@ class AssetCustomizationReview(models.Model):
     reviewed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True,
         related_name='accepted_%(class)s', on_delete=models.SET_NULL)
+    default_preview = models.TextField(blank=True)
+
+    objects = AssetCustomizationReviewManager()
 
     def __str__(self):
         return self.version.asset.__str__()
@@ -1348,9 +1427,9 @@ class AssetCustomizationReview(models.Model):
         self.save()
         self.update_children_reviews()
 
-    def update_between_published_and_current(self, user, state):
+    def update_current_and_older(self, user, state):
         asset = self.version.asset
-        customization_reviews = AssetCustomizationReview.objects.\
+        customization_reviews = AssetCustomizationReview.objects. \
             filter(version__id__gt=asset.version_id(self.customization),
                    version__id__lte=self.version_id,
                    version__asset=asset,
@@ -1379,21 +1458,104 @@ class AssetCustomizationReview(models.Model):
 def unblock_child_reviews(sender, instance, **kwargs):
     instance.update_children_reviews()
 
+class ExternalFileManager(models.Manager):
+    def create(self, asset, data_structure, file):
+        '''
+        Adds to asset_ds_pair if file already exist else creates new file.
+        '''
+        raw_bytes = b''
+        md5 = hashlib.md5()
+        for count, chunk in enumerate(file.chunks()):
+            md5.update(chunk)
+            if count < 5:
+                raw_bytes += chunk
+        md5 = md5.hexdigest()
+        asset_ds_pair = None
+        try:
+            asset_ds_pair = AssetDsPair.objects.get(
+                asset=asset, data_structure=data_structure)
+        except ObjectDoesNotExist:
+            asset_ds_pair = AssetDsPair(
+                asset=asset, data_structure=data_structure)
+            asset_ds_pair.save()
+        external_file_obj = None
+        try:
+            external_file_obj = ExternalFile.objects.get(md5=md5)
+        except:
+            external_file_obj = ExternalFile(md5=md5, size=file.size)
+            external_file_obj.save()
+            external_file_obj.file=file
+        else:
+            if external_file_obj.file and MediaStorage().exists(external_file_obj.file.name):
+                external_raw_bytes = b''
+                for count, chunk in enumerate(external_file_obj.file.chunks()):
+                    if count < 5:
+                        external_raw_bytes += chunk
+                    else:
+                        break
+                if external_raw_bytes != raw_bytes:
+                    raise ValueError('md5 Hash Collision')
+            else:
+                external_file_obj.file=file
+        external_file_obj.asset_ds_pair.add(asset_ds_pair)
+        external_file_obj.save()
+        return external_file_obj
+
+
+class AssetDsPair(models.Model):
+    data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.asset.name} > {self.data_structure.name}"
+
 
 class ExternalFile(models.Model):
-    data_structure = models.ForeignKey(
-        DataStructure, default=None, null=True, on_delete=models.CASCADE)
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
     file = models.FileField(upload_to=rename_file,
                             storage=MediaStorage(), max_length=1000)
-    md5 = models.CharField(max_length=1024, default='')
-    asset = models.ForeignKey(
-        Asset, default=None, null=True, on_delete=models.CASCADE)
+    md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
+    asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
+
+    objects = ExternalFileManager()
+
+    def delete(self, *args, asset_ds_pair = None, **kwargs):
+        '''
+        Removes asset_ds_pair relation from file, deletes file if no other relations exist or if no asset_ds_pair passed.
+        '''
+        if not asset_ds_pair or not self.id or not list(self.asset_ds_pair.all()):
+            super().delete(*args, **kwargs)
+        else:
+            self.asset_ds_pair.remove(asset_ds_pair)
+            self.save()
+            if not self.asset_ds_pair.count():
+                self.delete()
 
     def __str__(self):
         return self.file.name
+
+def file_saved(sender, created, signal, instance, **kwargs):
+    if not created:
+        file = instance.file
+        md5 = hashlib.md5()
+        for chunk in file.file.chunks():
+            md5.update(chunk)
+        md5 = md5.hexdigest()
+        if instance.md5 != md5:
+            instance.md5 = md5
+            instance.size = file.size
+            instance.save()
+
+post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
+
+@receiver(pre_delete, sender=AssetDsPair)
+def delete_asset_ds_reverse(sender, instance, **kwargs):
+    external_files = instance.externalfile_set.all()
+    files_to_delete = [file for file in external_files if not file.asset_ds_pair.exclude(id=instance.id).count()]
+    for file in files_to_delete:
+        file.delete()
 
 
 class DataRecord(models.Model):
@@ -1452,16 +1614,16 @@ class DataRecord(models.Model):
 @receiver(post_delete, sender=DataRecord)
 def delete_file_reverse(sender, **kwargs):
     try:
-        if kwargs['instance'].external_file:
-            f = kwargs['instance'].external_file
+        file = kwargs['instance'].external_file
+        if file:
             collector = Collector(using='default')
-            collector.collect([f], keep_parents=True)
+            collector.collect([file], keep_parents=True)
             # Check if any other object is referencing the ExternalFile
             for model, instance in collector.instances_with_model():
                 if model != ExternalFile and (model != DataRecord or instance.id != kwargs['instance'].id):
                     break
             else:
-                f.delete()
+                file.delete()
     except ObjectDoesNotExist:
         # Prevent circular deletion caused by cascading
         pass
@@ -1493,7 +1655,7 @@ class ContributorAgreement(models.Model):
         return AssetCustomizationReview.objects.filter(
             version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-        ).order_by('-reviewed_date').first()
+        ).last()
 
     def is_valid(self):
         review = self.get_current()
@@ -1513,11 +1675,15 @@ class Menu(models.Model):
                            help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
+    title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
+    short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
-        "header": ["name","url","enabled","order","is_global","preview"],
+        "header": ["name","url","enabled","order","preview"],
         "details": ["asset","icon","authentication"],
-        "advanced": ["related_assets","next_item","condition","permissions", "new_window"]
+        "advanced": ["related_assets","next_item","subtitle","condition","permissions", "new_window", "is_global"]
     }""")
+
+    enabled = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
@@ -1525,29 +1691,75 @@ class Menu(models.Model):
         else:
             return super().__str__()
 
-    @property
-    def preview_url(self):
-        if self.type is self.MENU_TYPES.generic or not self.base_url and not self.url:
-            return ''
+    def validate_unique(self, exclude=None):
+        doc_menu = self.type is not self.MENU_TYPES.generic
+        if doc_menu and Menu.objects.filter(base_url=self.base_url, url=self.url).exclude(id=self.id).exists():
+            base_url = f'"{self.base_url}"' if self.base_url else "None"
+            url = f'"{self.url}"' if self.url else "None"
+            raise ValidationError(
+                f'Menu already exists with base_url={base_url} and url={url}. Please select a unique route.')
+        super(Menu, self).validate_unique(exclude=exclude)
 
-        return f'/docs/{self.base_url}{"/" if self.base_url and self.url else ""}{self.url}?state=draft'
+    def preview_url(self, state='draft'):
+        """Preview url for menu change form.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}',
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
+        }.get(self.type, '')
+
+    @property
+    def node_preview_url(self):
+        """Preview url for child menu nodes.
+        """
+        return {
+            self.MENU_TYPES.docs_struct: self.preview_url('draft'),
+            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}/asset_id?state=draft'
+        }.get(self.type, '')
 
     @classmethod
-    def generate_menus_for_customization(cls, menus, customization):
+    def generate_menus_for_customization(cls, menus, customization, include_not_accepted=False):
         from cms.controllers.filldata import global_contexts_to_dict
         cloud_portal_asset = get_cloud_portal_asset(customization.name)
         global_contexts = Context.objects.filter(
             asset_type=cloud_portal_asset.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(
             global_contexts, cloud_portal_asset)
-        structures = {}
-        for menu in menus:
-            structures[menu.name.lower()] = {
-                'nodes': MenuNode.generate_node_structure(menu.nodes_list, cloud_portal_asset, customization, global_contexts_dict, max_depth=menu.depth),
+        document_dss = {
+            'title': DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
+                                                  name='title').first(),
+            'url': DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation,
+                                                name='url').first()
+        }
+        structures = {
+            menu.name.lower(): {
+                'nodes': MenuNode.generate_node_structure(
+                    menu.nodes_list,
+                    cloud_portal_asset,
+                    customization,
+                    global_contexts_dict,
+                    max_depth=menu.depth,
+                    include_not_accepted=include_not_accepted,
+                    document_dss=document_dss
+                ),
                 'type': menu.type,
-                'base_url': menu.base_url
+                'base_url': menu.base_url,
+                'id': menu.id,
+                'title': menu.title,
+                'description': menu.short_description,
             }
+            for menu in menus
+        }
+
         return customization, structures
+
+    @classmethod
+    def generate_menu(cls, menu_name, customization_name=settings.CUSTOMIZATION):
+        menu_name = menu_name.lower()
+        customization = Customization.objects.filter(name=customization_name).first()
+        menus = cls.get_prefetched_menus(menu_name)
+        _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
+        return structures.get(menu_name)
 
     @classmethod
     def generate_menus(cls, customization_name=None):
@@ -1574,11 +1786,17 @@ class Menu(models.Model):
         return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
 
     @classmethod
-    def get_prefetched_menus(cls):
-        max_depth = cls.objects.all().aggregate(
+    def get_prefetched_menus(cls, menu_name=None, only_enabled=True):
+        menus = cls.objects.all()
+        if only_enabled:
+            menus = menus.filter(enabled=True)
+        menu_query = menus.filter(name=menu_name) if menu_name else menus
+        max_depth = menu_query.aggregate(
             models.Max('depth'))['depth__max']
+        if max_depth is None:
+            return []
         # Force qs evaluation to prevent threads from messing with prefetch cache
-        return list(cls.objects.all().prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
+        return list(menu_query.prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
 
     @classmethod
     def get_prefetch_objects(cls, max_depth, depth=1):
@@ -1588,7 +1806,10 @@ class Menu(models.Model):
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
         permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
         related_assets_lookup = f'{parent_node_lookup}__{nodes_to_attr}__related_assets' if depth > 1 else f'{nodes_to_attr}__related_assets'
-        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order').select_related('asset', 'asset__asset_type'),
+        prefetches = [models.Prefetch(nodes_lookup,
+                                      queryset=MenuNode.objects.order_by('order').select_related(
+                                          'asset', 'asset__asset_type'
+                                      ).prefetch_related(models.Prefetch('asset__customizations', to_attr='asset_customizations_list')),
                                       to_attr=nodes_to_attr),
                       models.Prefetch(enabled_lookup, to_attr='enabled_list'),
                       models.Prefetch(permission_lookup),
@@ -1606,20 +1827,23 @@ class Menu(models.Model):
             MENU_CACHE[customization] = structure
 
     def to_dict(self):
+        assets = set()
         def get_nodes(nodes_list):
             nodes = []
             for node in nodes_list:
                 node_dict = {
                     'name': node.name,
+                    'subtitle': node.subtitle,
                     'url': node.url,
                     'asset': node.asset.name if node.asset else None,
+                    'uuid': str(node.asset.uuid) if node.asset else None,
                     'asset_type': node.asset.asset_type.type if node.asset else None,
-                    'related_assets': [(asset.name, asset.asset_type.type) for asset in node.related_assets.all()],
+                    'related_assets': [(asset.name, asset.asset_type.type, str(asset.uuid)) for asset in node.related_assets.all()],
                     'next_item': node.next_item,
                     'new_window': node.new_window,
                     'icon': node.icon,
                     'available': [customization.name for customization in node.available.all()],
-                    'enabled': [customization.name for customization in node.enabled.all()],
+                    'enabled': [customization.name for customization in node.enabled_customizations],
                     'authentication': node.authentication,
                     'condition': node.condition,
                     'permissions': [permission.codename for permission in node.permissions.all()],
@@ -1628,42 +1852,56 @@ class Menu(models.Model):
                     'touched': node.touched,
                     'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
                 }
-
+                assets.add(node_dict['uuid'])
+                assets.update({str(related_asset[2]) for related_asset in node_dict['related_assets']})
                 nodes.append(node_dict)
             return nodes
 
-        menu = next(menu for menu in Menu.get_prefetched_menus()
+        menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
                     if menu.id == self.id)
-        menu_dict = {
+
+        return {
             'name': menu.name,
             'depth': menu.depth,
-            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else []
+            'nodes': get_nodes(menu.nodes_list) if menu.nodes_list else [],
+            'assets': list(filter(lambda id: id, assets))
         }
 
-        return menu_dict
+    def from_dict(self, menu_dict, user, update_progress_cb = None, accept_reviews=False):
+        from cms.controllers.structure import import_assets_from_json
+        node_asset_count = len(menu_dict['assets'])
+        progress = 0
 
-    def from_dict(self, menu_dict):
-        def find_or_create_asset(name, asset_type, customizations):
-            asset = Asset.objects.filter(
-                name=name, asset_type__type=asset_type).first()
-            if not asset:
-                asset_type = AssetType.objects.filter(
-                    type=asset_type, name='').order_by('pk').first()
-                asset = Asset.objects.create(name=name, asset_type=asset_type)
-                asset.customizations.set(list(customizations))
-            return asset
+        def increment_progress(error=None):
+            nonlocal progress
+            if not update_progress_cb:
+                return
+            progress += 1
+            update_progress_cb(progress, node_asset_count, error=error)
 
+        def get_node_count(node):
+            return 1 + sum(get_node_count(child) for child in node.get('nodes', []))
+
+        node_asset_count += get_node_count(menu_dict)
+        if update_progress_cb:
+            update_progress_cb(progress, node_asset_count)
+        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
-                if isinstance(parent, Menu):
-                    parent_type = 'parent_menu'
-                else:
-                    parent_type = 'parent_node'
-                node_obj = MenuNode.objects.filter(
-                    name=node['name'], **{parent_type: parent}).first()
+                parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
+                node_qs = MenuNode.objects.filter(**{parent_type: parent}, id__in=all_node_ids)
+                node_obj = None
+                node_name = node.get('name', '')
+                node_asset_uuid = node.get('uuid', '-1')
+                if node_name:
+                    node_obj = node_qs.filter(name=node_name).first()
+                elif node_asset_uuid and node_asset_uuid != '-1':
+                    node_obj = node_qs.filter(asset__uuid=node_asset_uuid).first()
                 if not node_obj:
                     node_obj = MenuNode()
-                node_obj.name = node['name']
+
+                node_obj.name = node_name
+                node_obj.subtitle = node.get('subtitle', '')
                 node_obj.url = node['url']
                 node_obj.next_item = node['next_item']
                 node_obj.new_window = node['new_window']
@@ -1674,7 +1912,8 @@ class Menu(models.Model):
                 node_obj.is_global = node['is_global']
                 node_obj.touched = node['touched']
                 node_obj.__setattr__(parent_type, parent)
-                node_obj.save()
+                if not node_obj.pk:
+                    node_obj.save()
 
                 node_obj.available.set(
                     list(Customization.objects.filter(name__in=node['available'])))
@@ -1683,35 +1922,79 @@ class Menu(models.Model):
                 node_obj.permissions.set(
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
-                if node_obj.is_global:
-                    asset_customizations = Customization.objects.all()
-                else:
-                    asset_customizations = node_obj.available.all()
                 if node['asset']:
-                    node_obj.asset = find_or_create_asset(
-                        node['asset'], node['asset_type'], asset_customizations)
-                    node_obj.save()
-                for asset, asset_type in node.get('related_assets', []):
-                    node_obj.related_assets.add(find_or_create_asset(
-                        asset, asset_type, asset_customizations))
+                    asset_obj = Asset.objects.filter(uuid=node_asset_uuid).first()
+                    if asset_obj:
+                        asset_obj.name = node['asset']
+                        asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
+                        asset_obj.save()
+                        node_obj.asset = asset_obj
+                    else:
+                        increment_progress(f'Failed to set customizations for <b>"{node["asset"]}"</b> to due imported asset type <b>"{AssetType.ASSET_TYPES[node["asset_type"]]}"</b> not match existing assets type.')
 
+                for asset, asset_type, asset_uuid in node.get('related_assets', []):
+                    node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())
+                node_obj.save()
+
+                increment_progress()
                 if node['nodes']:
                     set_nodes(node['nodes'], node_obj)
 
         self.depth = menu_dict['depth']
         self.save()
         if menu_dict['nodes']:
+            all_node_ids = self.all_node_ids
             set_nodes(menu_dict.get('nodes', []), self)
+
+    def extract_from_nodes(self, process_node_callback):
+        def append_nodes(nodes):
+            for node in nodes:
+                extracted = process_node_callback(node)
+                if extracted:
+                    all_nodes.append(extracted)
+                if hasattr(node, 'nodes_list'):
+                    append_nodes(node.nodes_list)
+
+        all_nodes = []
+        prefetched_menu = self.get_prefetched_menus(menu_name=self.name, only_enabled=False)[0]
+        if hasattr(prefetched_menu, 'nodes_list'):
+            append_nodes(prefetched_menu.nodes_list)
+        return all_nodes
+
+
+    @property
+    def all_node_ids(self):
+        return self.extract_from_nodes(lambda node: node.id)
+
+
+    @property
+    def all_asset_ids(self):
+        return self.extract_from_nodes(lambda node: node.asset and node.asset.id)
+
+
+class MenuNodeManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('asset')
+
+
+def node_asset_on_delete(collector, fields, sub_objs, using):
+    sub_objs_no_children = sub_objs.filter(nodes=None).distinct()
+    sub_objs_children = sub_objs.exclude(nodes=None).distinct()
+    if sub_objs_no_children:
+        models.CASCADE(collector, fields, sub_objs=sub_objs_no_children, using=using)
+    if sub_objs_children:
+        models.SET_NULL(collector, fields, sub_objs=sub_objs_children, using=using)
 
 
 class MenuNode(models.Model):
     AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),
                            (1, "logged_in", "Logged In"),
                            (2, "both", "Both"))
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
+    subtitle = models.CharField(max_length=255, blank=True)
     url = models.CharField(max_length=2048, blank=True)
     asset = models.ForeignKey(
-        Asset, null=True, blank=True, on_delete=models.CASCADE, related_name='nodes')
+        Asset, null=True, blank=True, on_delete=node_asset_on_delete, related_name='nodes')
     related_assets = models.ManyToManyField(
         Asset, default=None, blank=True, related_name='nodes_related')
     next_item = models.BooleanField(default=False, verbose_name='Link to next')
@@ -1733,24 +2016,44 @@ class MenuNode(models.Model):
         'self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
     touched = models.BooleanField(default=False)
 
+    objects = MenuNodeManager()
+
     def __str__(self):
-        return f'Item: {self.name}'
+        parent = self.get_parent()
+        return f'Item: {self.display_name()} (Menu: {parent.name if parent else "None"})'
+
+    def display_name(self):
+        if self.name:
+            return self.name
+        elif self.asset:
+            return f'(Asset: {self.asset.name})'
+        elif self.pk:
+            return str(self.pk)
+        return 'New'
 
     @staticmethod
-    def generate_node_structure(nodes, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
+    def generate_node_structure(nodes: ['MenuNode'], cloud_portal_asset, customization, global_contexts_dict, depth=1,
+                                max_depth=2, include_not_accepted=False, document_dss=None):
         nodes_structure = []
         for node in nodes:
-            enabled = next(
-                (cust for cust in node.enabled_list if cust.id == customization.id), False)
+            pending = None
+            enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
             asset_accepted = not node.asset or node.asset.version_id(
                 customization.name) != 0
-            if enabled and asset_accepted:
+            if enabled and (asset_accepted or include_not_accepted):
+                if node.asset:
+                    pending = AssetCustomizationReview.objects.filter(
+                        customization=customization, version__asset=node.asset, state=AssetCustomizationReview.REVIEW_STATES.pending
+                    ).select_related('version').last()
                 node_structure = {
-                    'name': cloud_portal_asset.replace_global_values(node.name, global_contexts_dict),
+                    'subtitle': node.subtitle,
                     'url': cloud_portal_asset.replace_global_values(node.url, global_contexts_dict),
                     'asset_id': node.asset.id if node.asset else None,
+                    'accepted': asset_accepted,
+                    'pending': pending is not None,
+                    'draft':  node.asset and node.asset.is_dirty,
                     'asset_type': AssetType.ASSET_TYPES[node.asset.asset_type.type] if node.asset else None,
                     'related_asset_ids': [asset.id for asset in node.related_assets.all()],
                     'next_item': node.next_item,
@@ -1762,12 +2065,46 @@ class MenuNode(models.Model):
                     'condition': node.condition,
                     'condition_met': condition_met
                 }
+
+                title_ds = document_dss['title']
+                url_ds = document_dss['url']
+                title = ''
+                url = ''
+                if node.name:
+                    title = node.name
+                if node.asset and node.asset.asset_type.type == AssetType.ASSET_TYPES.documentation:
+                    asset_title = None
+                    asset_url = None
+                    if asset_accepted:
+                        asset_title = title_ds.find_actual_value(node.asset, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, customization_name=customization.name)
+                    elif pending is not None:
+                        asset_title = title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
+                    elif node_structure['draft']:
+                        asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+
+                    if asset_title:
+                        asset_title = cloud_portal_asset.replace_global_values(asset_title, global_contexts_dict)
+                    if not title and asset_title:
+                        title = asset_title
+                        node_structure['name'] = title
+
+                    if asset_url:
+                        url = f'{node.asset.id}-{asset_url}'
+                    elif asset_title:
+                        url = node.asset.urlify(asset_title)
+                    node_structure['urlified'] = url or None
+
+                if 'name' not in node_structure:
+                    node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict) or 'Untitled'
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:
                     node_structure['nodes'] = node.generate_node_structure(
                         node.nodes_list, cloud_portal_asset, customization, global_contexts_dict, depth + 1,
-                        max_depth=max_depth
+                        max_depth=max_depth, include_not_accepted=include_not_accepted, document_dss=document_dss
                     )
                 nodes_structure.append(node_structure)
         return nodes_structure
@@ -1779,6 +2116,17 @@ class MenuNode(models.Model):
             for node in cls.objects.filter(is_global=True):
                 node.enabled.add(customization)
             Menu.cache_all_customizations()
+
+    @property
+    def enabled_customizations(self):
+        if self.asset:
+            return getattr(self.asset, 'asset_customizations_list', self.asset.customizations.all())
+        else:
+            return getattr(self, 'enabled_list', self.enabled.all())
+
+    def is_enabled(self, customization):
+        return next(
+            (cust for cust in self.enabled_customizations if cust.id == customization.id), False)
 
     def get_parent(self):
         if self.parent_node:

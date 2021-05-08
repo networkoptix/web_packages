@@ -3,7 +3,7 @@
 @use '../../styles/mixins';
 
 .menu-level-3 {
-    @include typography.medium13;
+    @include typography.medium13dark9;
     position         : relative;
     background-color : $light5;
     border-radius    : 0;
@@ -102,11 +102,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-left: -2px;
+        margin-left: -3px;
     }
 
     &.item-disabled {
-        color : $light13;
+        @include typography.medium13light13;
         svg .st0 {
             fill: $light13;
         }

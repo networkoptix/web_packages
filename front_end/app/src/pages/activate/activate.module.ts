@@ -7,6 +7,7 @@ import { TranslateModule }               from '@ngx-translate/core';
 import { ComponentsModule }              from '../../components/components.module';
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxActivateComponent }           from './activate.component';
+import { ManualAccessGuard }             from '@src/routeGuards/manualAccessGuard';
 
 @Injectable()
 export class ParamResolver implements Resolve<any> {
@@ -39,8 +40,8 @@ export class ActivatedResolver implements Resolve<any> {
 }
 
 const appRoutes: Routes = [
-    { path: 'activate', component: NxActivateComponent, resolve: { uriParam: ParamResolver } },
-    { path: 'activate/success', component: NxActivateComponent, resolve: { uriParam: ActivatedResolver } },
+    { path: 'activate', component: NxActivateComponent, canActivate: [ManualAccessGuard], resolve: { uriParam: ParamResolver } },
+    { path: 'activate/success', component: NxActivateComponent, canActivate: [ManualAccessGuard], resolve: { uriParam: ActivatedResolver } },
     { path: 'activate/:code', component: NxActivateComponent, resolve: { uriParam: ActivateResolver } }
 ];
 

@@ -40,6 +40,7 @@ export class StorageDataStructure {
     storageType: STORAGE_TYPES;
     totalSpace: number;
     url : string;
+    urlWithCredentials: string;
     usedForWriting : boolean;
     freeSpace : number;
     isExternal : boolean;
@@ -49,23 +50,26 @@ export class StorageDataStructure {
     vmsSpace : number;
     storageId: string;
     canUpdate: boolean;
-    constructor(inputs?: Partial<StorageDataStructure>) {
+    constructor(inputs?: Partial<StorageDataStructure & {status: string}>) {
+        // The status field was added to 4.3 systems but isn't really needed here
+        delete inputs.status;
         const defaults: StorageDataStructure = {
-            isBackup       : false,
-            reservedSpace  : 0,
-            serverId       : '',
-            storageType    : null,
-            totalSpace     : 0,
-            url            : '',
-            usedForWriting : false,
-            freeSpace      : null,
-            isExternal     : false,
-            isOnline       : false,
-            isWritable     : false,
-            storageStatus  : '',
-            vmsSpace       : 0,
-            storageId      : '',
-            canUpdate      : null
+            isBackup           : false,
+            reservedSpace      : 0,
+            serverId           : '',
+            storageType        : null,
+            totalSpace         : 0,
+            url                : '',
+            usedForWriting     : false,
+            freeSpace          : null,
+            isExternal         : false,
+            isOnline           : false,
+            isWritable         : false,
+            storageStatus      : '',
+            vmsSpace           : 0,
+            storageId          : '',
+            canUpdate          : null,
+            urlWithCredentials : ''
         };
         Object.assign(this, { ...defaults, ...inputs });
     }
@@ -85,11 +89,12 @@ export class Storage extends StorageDataStructure {
     currentStorageState: CurrentStorageState;
 
     get hasAction() {
-        return [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType);
+        return [STORAGE_TYPES.NETWORK, STORAGE_TYPES.CLOUD].includes(this.storageType) ||
+            [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.status);
     }
 
     get mode() {
-        if (!this.isWritable || !this.usedForWriting) {
+        if (!this.isWritable && !this.usedForWriting) {
             return MODE.NOT_IN_USE;
         }
         return this.isBackup ? MODE.BACKUP : MODE.MAIN;
@@ -100,16 +105,39 @@ export class Storage extends StorageDataStructure {
         this.isBackup = mode === MODE.BACKUP;
     }
 
-    get status() {
-        if (!this.isOnline || !this.totalSpace) {
+    get mainOnly() {
+        return this.usedForWriting &&
+            this.isWritable &&
+            !this.isBackup &&
+            this.currentStorageState.locations.filter(({
+                mode
+            }) => mode === MODE.MAIN).length <= 1;
+    }
+
+    get reindexing() {
+        return this.storageStatus.includes('beingRebuilt');
+    }
+
+    set status(value) {
+        // Kind of a hack for 4.3
+    }
+
+    /**
+     * Need to add checking for inaccessible
+     */
+    get status(): STORAGE_STATUS {
+        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !this.isWritable) {
+            return STORAGE_STATUS.INACCESSIBLE;
+        }
+        if (!this.isOnline && !this.totalSpace) {
             return STORAGE_STATUS.BEING_CHECKED;
         }
 
         if (
-            !this.isWritable ||
+            (!this.isWritable && !this.usedForWriting) ||
+            this.totalSpace < 0 ||
             this.storageStatus.includes('tooSmall') ||
-            this.storageStatus.includes('removable') ||
-            this.storageId.startsWith('/') ||
+            (this.storageId.startsWith('/') && !this.storageStatus.includes('removable')) ||
             this.storageStatus.includes('system') &&
             this.totalSpace < (this.currentStorageState.freeSpace / 6)
         ) {
@@ -156,7 +184,7 @@ export class Storage extends StorageDataStructure {
             spaceLimit     : this.reservedSpace.toString(),
             storageType    : this.storageType,
             typeId         : this.#typeId,
-            url            : this.url,
+            url            : this.urlWithCredentials,
             usedForWriting : this.usedForWriting
         } : null;
     }

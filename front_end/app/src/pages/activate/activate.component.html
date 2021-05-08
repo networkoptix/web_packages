@@ -7,7 +7,7 @@
 </nx-page-placeholder>
 
 <div *ngIf="!activationSuccess" class="container">
-    <div *ngIf="accountInfo.activateCode && !activate.processing">
+    <div *ngIf="accountInfo.activateCode && !activate.processing && !checkingActivation">
         <h1 class="process-success" translate>
             Account is already activated or confirmation code is incorrect
         </h1>

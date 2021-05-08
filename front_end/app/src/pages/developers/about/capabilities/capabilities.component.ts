@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
-import { UntilDestroy }     from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 import { WINDOW } from '@services/window-provider';
+import { fromEvent, merge } from 'rxjs';
 
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
@@ -17,14 +18,12 @@ export class NxCapabilitiesComponent {
 
     CONFIG: IConfig;
     errorManager: ErrorStateManager;
+    minHeaderHeight = 0;
 
-    getCapabilityBlockStyle(capability: AboutNode) {
-        const backgroundColor = capability.icon.split(' ')[2] || '#35464f';
-        const backgroundImage = `linear-gradient(to right, ${
-            capability.icon.split(' ')[3] || '#35464f'
-        } 25%, rgba(53, 70, 79, 0)), url('${
-            this.CONFIG.icons.backgrounds + capability.icon.split(' ')[1]}`;
-        return ({ backgroundColor, backgroundImage });
+    setMinHeight({ height }) {
+        setTimeout(() => {
+            this.minHeaderHeight = Math.max(this.minHeaderHeight, height + 32);
+        }, 10);
     }
 
     constructor(
@@ -36,10 +35,16 @@ export class NxCapabilitiesComponent {
     }
 
     ngOnInit() {
+        this.capabilitiesNode = {
+            ...this.capabilitiesNode,
+            nodes: this.capabilitiesNode.nodes.map(({
+                url, assetId, ...capability
+            }) => ({ ...capability, assetId, url: url || (assetId ? `/docs/content/${assetId}` : '') }))
+        };
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title', 'nodes'],
             this.errorManager.buildConfig(
-                ['title', 'displayName', 'icon'],
+                ['title', 'subtitle', 'displayName', 'icon'],
                 null,
                 this.errorManager.buildConfig(
                     ['title', 'shortDescription', 'blocks']
@@ -49,5 +54,12 @@ export class NxCapabilitiesComponent {
             this.capabilitiesNode,
             capabilitiesConfig
         );
+        const resize$ = fromEvent(window, 'resize');
+        const orientation$ = fromEvent(window, 'orientationchange');
+        merge(resize$, orientation$).pipe(
+            untilDestroyed(this)
+        ).subscribe(_ => {
+            this.minHeaderHeight = 0;
+        });
     }
 };

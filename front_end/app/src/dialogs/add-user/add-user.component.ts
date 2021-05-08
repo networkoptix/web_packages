@@ -20,6 +20,7 @@ export class AddUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    hideErrors: boolean = true;
     alreadyExists: string;
     addUser: Process;
     user;
@@ -71,6 +72,10 @@ export class AddUserModalContent {
         return (typeof description === 'function') ? description() : description;
     }
 
+    preSubmit = () => {
+        this.hideErrors = false;
+    }
+
     setPermission(role: any) {
         this.selectedPermission = role;
         this.accessDescription = this.getAccessDescription();
@@ -85,7 +90,7 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.name);
+        this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.systemName || this.system.info.name);
         this.user = {
             email     : '',
             isEnabled : true,
@@ -98,6 +103,7 @@ export class AddUserModalContent {
         this.accessDescription = this.getRoleDescription();
 
         this.addUser = this.processService.createProcess(() => {
+            this.hideErrors = false;
             const userExists: boolean = this.system.users.some(item => {
                 return item.email === this.user.email;
             });
@@ -110,6 +116,7 @@ export class AddUserModalContent {
         })
             .then((user) => {
                 if (user) {
+                    this.hideErrors = true;
                     this.activeModal.close(user.id);
                 }
             });

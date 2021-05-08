@@ -4,7 +4,8 @@ import {
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 
-import * as uv                      from './utilConstants';
+import * as uv     from './utilConstants';
+import { isArray } from 'rxjs/internal-compatibility';
 
 @Injectable({
     providedIn: 'root'
@@ -286,5 +287,15 @@ export class NxUtilsService {
 
     static cleanSmbUrl(url: string) {
         return url.split('@').reverse()[0].replace('smb:/', '');
+    }
+
+    static htmlWiper(target) {
+        // test HTML
+        // <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=" onload="$.getScript('evil.js');1<2>3">
+        return (isArray(target) ? target[0] : target)?.replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '');
+    }
+
+    static htmlToEntity(target) {
+        return (isArray(target) ? target[0] : target)?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 }

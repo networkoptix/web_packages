@@ -10,7 +10,7 @@ import { Subscription }                         from 'rxjs';
 
 import { NxDialogsService }                     from '@dialogs/dialogs.service';
 import { NxSettingsService }                    from '../settings.service';
-import { NxMenuService }                        from '../../../../menu';
+import { NxMenuService }                        from '@src/menu';
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxPageService }                        from '@services/page.service';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
@@ -20,8 +20,9 @@ import { NxProcessService, Process }            from '@services/process.service'
 import { NxUriService }                         from '@services/uri.service';
 import { NxApplyService, Watcher }              from '@services/apply.service';
 import { NxToastService }                       from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { WINDOW }                               from '@services/window-provider';
+import { environment }                          from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,6 +32,7 @@ import { WINDOW }                               from '@services/window-provider'
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
+    isLocal = environment.isLocal;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     location;
@@ -54,6 +56,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     editMode = false;
     emptyName = false;
+    username: string;
+    role: string;
 
     get localUserName() {
         return this.localUserNameWatcher.value;
@@ -115,9 +119,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.pageTitle = this.system.info.name;
+                if (!this.CONFIG.isLocal) {
+                    this.pageService.pageTitle = this.system.info.name;
+                }
                 // Route guard did not worked :( ... so doing it the old way
-                if (!this.system.permissions || !this.system.permissions.editUsers) {
+                if (!this.system.userManager.permissions || !this.system.userManager.permissions.editUsers) {
                     this.uriService
                         .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                         .catch(error => {
@@ -188,12 +194,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 };
                 this.toastService.show(
                     NxLanguageProviderService.translate(
-                        this.LANG.toastMessage.nameFail?.(),
+                        this.LANG.toastMessage.nameFail,
                         { type: this.LANG.common.login?.() }
                     ), options);
             }
             this.locked[user.email] = false;
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.setUser();
             this.applyService.reset();
         }, {
@@ -275,7 +281,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this.applyService.hardReset();
+            this.applyService.reset(true);
             this.selectedUser = { ...user };
             this.localUserName = this.selectedUser.name;
 
@@ -292,6 +298,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.fullName.value = this.selectedUser.fullName;
             this.email.value = this.selectedUser.email;
+            this.username = user.isCloud ? user.email : user.name;
+            this.role = !user.isCloud && user.name === 'admin' ? 'Owner' : user.role.name;
 
             this.applyService.reset();
 
@@ -312,6 +320,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             : this.LANG.accessRoles.customRole.description();
         this.selectedUser.role = role;
         this.userRole.value = role.name;
+        this.role = role.name;
     }
 
     updateEnabled(state) {

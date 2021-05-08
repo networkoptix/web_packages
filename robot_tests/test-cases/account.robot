@@ -194,16 +194,16 @@ First name is required
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
-    ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
-    Delete All Text    ${locator}
+    Delete All Text    ${ACCOUNT FIRST NAME}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
-    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+    Click Button    ${ACCOUNT SAVE}  
     Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
-    Click Button    ${ACCOUNT SAVE}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}  
+    # Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    # Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 
@@ -212,16 +212,15 @@ Last name is required
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
-    ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
-    Delete All Text    ${locator}
+    Delete All Text   ${ACCOUNT LAST NAME}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
-    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
+    Click Button    ${ACCOUNT SAVE}  
     Wait Until Element Is Visible    ${LAST NAME IS REQUIRED}
-    Click Button    ${ACCOUNT SAVE}
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    # Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    # Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 
@@ -333,7 +332,7 @@ Language is changeable on the account page
         ...    Wait Until Element is Visible    ${ACCOUNT SAVE}
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Click Button    ${ACCOUNT SAVE}
-        Sleep    1    #to allow the system to change languages
+        Sleep    2    #to allow the system to change languages
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"  
         ...    Wait Until Element is Visible    //header/span[text()='${info text}']
     END
@@ -420,10 +419,11 @@ Language change is new default
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Not Visible    ${ACCOUNT CANCEL}
     sleep    5
+    Reload Page
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
-    Log Out No Language
+    Log Out Japanese
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    validate=False    button=None

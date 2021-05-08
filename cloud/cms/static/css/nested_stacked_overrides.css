@@ -16,8 +16,7 @@
     display: flex;
     height: 100%;
     align-items: start;
-    justify-content: space-between;
-    flex-direction: column-reverse;
+    flex-direction: row-reverse;
     padding: 6px 0 !important;
 }
 
@@ -27,7 +26,10 @@
 
 .nested-stacked-flex .form-row > div:not(.checkbox-row) {
     display: flex;
-    flex-direction: column;
+}
+
+.form-row {
+    padding-bottom: 4px;
 }
 
 .nested-stacked-flex .field-preview,
@@ -47,8 +49,9 @@
 .nested-stacked-advanced.node-expanded, .nested-stacked-advanced.advanced-shown {
     border: 1px solid red !important;
 }
+.nested-stacked-flex .field-preview > label,
 .nested-stacked-advanced > div {
-    display: none;
+    display: none !important;
 }
 .nested-stacked-advanced.advanced-shown > div {
     display: block !important;
@@ -63,6 +66,16 @@
 .nested-stacked-advanced:not(.advanced-shown) > h2 {
     border-radius: 4px;
     border: 1px solid red !important;
+}
+
+#nodes-group .nested-stacked-advanced:not(.advanced-shown) {
+    top: -48px;
+    left: -87px;
+    position: absolute;
+}
+
+#nodes-group .nested-stacked-advanced:not(.advanced-shown) > h2 {
+    padding: 8px 4px !important;
 }
 
 .djn-drag-handler {
@@ -85,7 +98,7 @@
     position: absolute;
     top: 12px;
     left: 6px;
-    height: 40px;
+    height: 20px;
     width: 20px;
     cursor: pointer;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAyCAYAAABcfPsmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAE5JREFUeNrs0zEKACAMBEEDST6X9+Z92lpYHNgI7naBK9KMdfcch6rK9lvdeWYOJXXnESEN1d2HH9J9hhSkEFKQQkhBClKQghSkPNYSYADFZiuygfao+AAAAABJRU5ErkJggg==)
@@ -163,15 +176,19 @@
     margin-right: auto !important;
     border: 2px solid #35464f !important;
     border-radius: 4px !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
 }
 
 .djn-delete-handler {
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: space-between;
+    flex-direction: row-reverse;
     align-items: center;
-    padding: 20px 0;
+    padding-top: 8px;
+}
+
+.djn-delete-handler > input {
+    margin-bottom: 14px !important;
+    margin-left: 8px !important;
 }
 
 .djn-drag-handler > span > .inline-deletelink {
@@ -202,4 +219,39 @@
 
 .reset-buttons-wrapper > strong {
     width: 148px;
+}
+
+.help-tooltip {
+    align-self: center;
+    margin-left: 8px;
+}
+
+.custom-input-wrapper {
+    position: relative;
+}
+.custom-text-label {
+    position: absolute;
+    left: 8px;
+    top: 0;
+    pointer-events: none;
+    transition: all .05s ease-out;
+}
+
+.top-label {
+    font-size: 10px;
+    border-radius: 4px;
+    background: white;
+    padding: 0 2px !important;
+    margin: 0 !important;
+    transform: translate(4px, -50%);
+    transition: all .15s ease-out;
+    z-index: 10;
+}
+
+.top-label::after {
+    height: 0 !important;
+}
+
+.hide-top-label {
+    display: none !important;
 }

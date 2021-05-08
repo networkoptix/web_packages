@@ -8,8 +8,8 @@ front_end/config.json
 front_end/.tmp
 front_end/.idea
 front_end/.sass-cache
-front_end/bower_components
-front_end/app/bower_components
+front_end/app/customization/webadmin_logo.png
+front_end/app/customization/webadmin_config.json
 front_end/test/visual
 front_end/yarn.lock
 front_end/app/images/promo
@@ -37,6 +37,7 @@ subinclude:robot_tests/.hgignore
 *.sql
 
 env
+venv
 cloud/.idea
 cloud/static
 cloud/node_modules

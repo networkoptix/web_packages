@@ -1,4 +1,4 @@
-import { ms } from '../../../utils/type-aliases'
+import { ms, int } from '../../../utils/type-aliases'
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
 import BirdViewTree from './BirdViewTree'
 
@@ -6,6 +6,8 @@ import BirdViewTree from './BirdViewTree'
 export class TestCamera implements ICamera {
 
   protected _birdViewTree: BirdViewTree
+
+  public readonly rotation: int = 0
 
   public get archiveRange () {
     return this._archiveRange
@@ -24,24 +26,9 @@ export class TestCamera implements ICamera {
     public readonly thumbnailUrl: string | undefined = undefined,
     protected _archiveRange: ISimpleTimeRange | undefined = undefined,
     protected _archive: CameraArchive = [],
+    public readonly getPosterUrl: (t?: ms) => string = undefined,
   ) {
     this._initBirdView()
-  }
-
-  public getLiveVideoUrl () {
-    return this.liveVideoUrl
-  }
-
-  public get hasHlsStream () {
-    return true
-  }
-
-  public get hasLowQualityHlsStream () {
-    return true
-  }
-
-  public get hasHighQualityHlsStream () {
-    return true
   }
 
   public get isScheduleEnabled () {
@@ -68,12 +55,24 @@ export class TestCamera implements ICamera {
     return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start)
   }
 
-  public get liveVideoUrl () {
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
-  }
-
-  public getArchiveVideoUrl (t: ms) {
-    return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  public getVideoUrl (transport: string, quality: string, t: ms) {
+    if (!t) {
+      switch (transport) {
+        case 'hls':
+          return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+        case 'webm':
+        default:
+          return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+      }
+    } else {
+      switch (transport) {
+        case 'hls':
+          return 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+        case 'webm':
+        default:
+          return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      }
+    }
   }
 
   public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
@@ -89,6 +88,17 @@ export class TestCamera implements ICamera {
 
   protected _initBirdView () {
     this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive)
+  }
+
+  public get availableTransportsAndResolutions () {
+    return {
+      'hls': ['lo', 'hi', ''],
+      'webm': ['AxB'],
+    }
+  }
+
+  public get availableTransports () {
+    return ['hls', 'wemb']
   }
 }
 

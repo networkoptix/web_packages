@@ -2,25 +2,25 @@ import { Component, Input, OnInit }  from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { SessionStorageService }     from 'ngx-webstorage';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUriService }              from '@services/uri.service';
+import { NxUrlProtocolService }      from '@services/url-protocol.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
-    selector   : 'nx-activate-component',
-    templateUrl: 'activate.component.html',
-    styleUrls  : ['activate.component.scss']
+    selector    : 'nx-activate-component',
+    templateUrl : 'activate.component.html',
+    styleUrls   : ['activate.component.scss']
 })
 
 export class NxActivateComponent implements OnInit {
-
     @Input() uriParam;
     @Input() uriParamCode;
 
@@ -37,6 +37,7 @@ export class NxActivateComponent implements OnInit {
     loading: boolean;
     reactivating;
     activationSuccess;
+    checkingActivation = false;
 
     private setupDefaults() {
         this.context = {
@@ -75,6 +76,7 @@ export class NxActivateComponent implements OnInit {
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
             this.sessionStorage.store('activationSuccess', true);
+            this.appStateService.canManuallyAccess = true;
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -110,6 +112,7 @@ export class NxActivateComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private appStateService: NxAppStateService,
                 private languageService: NxLanguageProviderService,
                 private configService: NxConfigService,
                 private pageService: NxPageService
@@ -131,15 +134,6 @@ export class NxActivateComponent implements OnInit {
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
-            this.activationSuccess = false;
-            this.accountService.redirectToHome();
-
-            return;
-        } else {
-            this.sessionStorage.store('activationSuccess', '');
-        }
-
         this.loading = true;
 
         if (this.reactivating) {
@@ -149,19 +143,35 @@ export class NxActivateComponent implements OnInit {
         this.accountInfo.email = this.accountService.email;
 
         if (this.accountInfo.activateCode) {
-            this.accountService.logoutAuthorised();
-            this.checkActivate();
+            this.checkingActivation = true;
+            this.checkActivate().catch(e => {
+                console.error('activation error', e);
+                this.activationSuccess = false;
+            }).finally(() => {
+                this.checkingActivation = false;
+                this.accountService.logoutAuthorised(true).then((loggedOut) => {
+                    if (loggedOut) {
+                        if (this.uriParam !== 'activating' && !this.sessionStorage.retrieve(this.uriParam)) {
+                            this.activationSuccess = false;
+                            this.accountService.redirectToHome();
+                        } else {
+                            this.sessionStorage.store('activationSuccess', '');
+                        }
+                    }
+                });
+            });
         }
     }
 
     private checkActivate() {
         if (this.accountInfo.activateCode) {
             this.pageService.pageTitle = this.LANG.pageTitles.activateCode?.();
-            this.activate.run();
+            return new Promise((resolve, reject) => this.activate.run(resolve, reject));
         }
+        return Promise.reject();
     }
 
     login() {
-        this.dialogs.login(this.accountService, false, true);
+        this.dialogs.login(this.accountService, false, true, true);
     }
 }

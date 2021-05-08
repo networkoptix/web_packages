@@ -12,14 +12,17 @@
                 <img [src]="CONFIG.images.dirDevelopers + block.currentIcon">
             </div>
             <div class="step-text">
-                <h3>{{block.asset.title}}</h3>
-                <span>{{block.title}}</span>
+                <h3>{{block.title}}</h3>
+                <span>{{block.subtitle}}</span>
             </div>
         </div>
     </div>
 </ng-template>
 <ng-container *ngIf="!errorManager.hasErrors;else showError">
-    <h2 class="get-started-heading" [routerLink]="steps.url">{{steps.title}}</h2>
+    <ng-template #noLinkHeader>
+        <h2 class="get-started-heading">{{steps.title}}</h2>
+    </ng-template>
+    <h2 *ngIf="steps.url;else noLinkHeader" class="get-started-heading" [routerLink]="steps.url">{{steps.title}}</h2>
     <section class="get-started-section">
         <div class="get-started-blocks">
             <ng-container *ngFor="let block of steps.nodes;let index=index">

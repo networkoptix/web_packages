@@ -1,7 +1,9 @@
-<form #resetServerForm="ngForm" name="resetServerForm" novalidate>
+<form #resetServerForm="ngForm" name="resetServerForm" novalidate
+      [ngClass]="{'hide-errors': hideErrors}"
+      (submit)="hideErrors = false">
     <div class="modal-header">
-        <h1 class="modal-title" [translate]="'dialogs.titles.serversReset'"
-            [translateParams]="{ title: serverName }"></h1>
+        <h1 class="modal-title"
+            [innerHTML]="'dialogs.titles.serversReset' | translate:{ title: serverName }"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">

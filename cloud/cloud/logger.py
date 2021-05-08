@@ -45,8 +45,15 @@ def downgrade_requests(record):
                 if route in record.request.path:
                     logger.info(record.getMessage())
                     return False
+            else:
+                return True
+        # Catch when a ZapHook is missing in nx_http_action
+        elif record.status_code == 404 and 'zapier' in record.request.path:
+            logger.info(record.getMessage())
         # If the status code is 504 that means clouddb is unavailable or returned nothing.
         elif record.status_code == 504:
             logger.warning(record.getMessage())
-            return False
+        else:
+            return True
+        return False
     return True

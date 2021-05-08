@@ -3,8 +3,9 @@
 @use 'bootstrap_utils' as bootstrap;
 
 .heading-link {
+    @include typography.regular24dark9;
     cursor: pointer;
-    @include typography.regular24;
+
     &:hover {
         text-decoration: underline;
     }
@@ -14,10 +15,11 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 0 auto 84px auto;
+    margin: 84px auto;
     padding: 0 16px;
     max-width: 896px;
     color: $dark10;
+
     @include bootstrap.media-breakpoint-down(xs) {
         margin-bottom: 24px !important;
     }
@@ -28,6 +30,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
     @include bootstrap.media-breakpoint-down(xs) {
         margin: 8px -16px 0 0;
     }
@@ -36,7 +39,7 @@
 .capability-card {
     height: 280px;
     flex: 1 0 30%;
-    min-width: 275px;
+    min-width: 228px;
     margin: 0 16px 16px 0;
     cursor: pointer;
 
@@ -62,17 +65,15 @@
             }
         }
         & > .intro-line {
-            @include typography.medium14;
-            color: rgba($light1, 0.5) !important;
+            @include typography.medium14light1-50;
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start;
             flex-direction: column;
-            flex: 1 1 100%;
+            flex-grow: 0;
             margin-bottom: 3px;
         }
         & > h3 {
-            @include typography.medium24;
-            color: $light1 !important;
+            @include typography.medium24light1;
             margin: 0;
         }
     }

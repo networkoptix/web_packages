@@ -1,6 +1,7 @@
-import { ms } from "../../../utils/type-aliases"
+import { PlaybackQuality, PlaybackTransport } from "@pages/systems/view/view.types"
+import { ms, int } from "../../../utils/type-aliases"
 
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Offline' | 'Unauthorized'
+export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized'
 
 export interface ISimpleTimeRange {
   start: ms,
@@ -53,6 +54,10 @@ export class SimpleTimeRange {
 
 export type CameraArchive = Array<IRecord>
 
+export interface AvailableTransportsAndResolutions {
+  [s: string]: Array<PlaybackQuality>, // means: [s: PlaybackTransport]
+}
+
 export interface ICamera {
   id: string,
   name: string,
@@ -71,14 +76,15 @@ export interface ICamera {
 
   thumbnailUrl: string,
 
-  getLiveVideoUrl (quality: string),
-  getArchiveVideoUrl (t: ms, quality: string),
+  getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+  getPosterUrl (t?: ms),
   getRecords (startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
   setRecords (range: ISimpleTimeRange, records: CameraArchive)
 
-  hasHlsStream: boolean,
-  hasLowQualityHlsStream: boolean,
-  hasHighQualityHlsStream: boolean,
+  rotation: int
+
+  availableTransports: Array<PlaybackTransport>,
+  availableTransportsAndResolutions: AvailableTransportsAndResolutions
 }
 
 export default ICamera

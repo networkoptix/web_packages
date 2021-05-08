@@ -15,8 +15,10 @@
   justify-content: space-around;
   align-items: center;
 
-  z-index: 1;
-  box-shadow: 0 2px 5px rgba($dark5, 0.5);
+  &.enabled {
+    box-shadow: 2px 0 0 0 #0003;
+    z-index: 5;
+  }
 
   > .button {
     display: block;
@@ -33,14 +35,9 @@
 
     color: $light4;
 
-    transition: all .2s ease-in-out;
+    user-select: none;
 
-    &:hover {
-      background-color: $additional_light3;
-    }
-    &:active {
-      background-color: $light5 !important;
-    }
+    // transition: all .2s ease-in-out;
 
     &.enabled {
       cursor: pointer;
@@ -48,6 +45,13 @@
 
       &:hover {
         background-color: $light4;
+      }
+
+      &:hover {
+        background-color: $additional_light3;
+      }
+      &:active {
+        background-color: $light5 !important;
       }
     }
   }

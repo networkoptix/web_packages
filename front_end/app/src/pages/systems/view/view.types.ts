@@ -17,4 +17,7 @@ export interface INxViewCamera {
   status: CAMERA_STATUS
 }
 
-export type PlaybackQuality = 'auto' | 'low' | 'high'
+export type PlaybackQuality = 'auto' | 'low' | 'high' | string
+// any 640x480-like resolution definition works, too
+
+export type PlaybackTransport = 'hls' | 'webm' | 'mpegts' | 'mpjpeg' | 'mp4' | 'mkv'

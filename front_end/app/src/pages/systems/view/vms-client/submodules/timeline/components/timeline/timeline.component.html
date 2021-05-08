@@ -1,13 +1,19 @@
-<div class="timeline">
+<div
+  class="timeline"
+  [ngClass]="{
+    'dragging': isDragging
+  }"
+>
   <canvas
     #canvas
     (wheel)="canvasWheelHandler($event)"
     (mousemove)="canvasMouseMoveHandler($event)"
     (mouseenter)="canvasMouseEnterHandler($event)"
     (mouseleave)="canvasMouseLeaveHandler($event)"
-    (click)="canvasClickHandler($event)"
+    (mousedown)="canvasMouseDownHandler($event)"
+    (mouseup)="canvasMouseUpHandler($event)"
   ></canvas>
-  <time-under-mouse></time-under-mouse>
+  <time-under-mouse *ngIf="!isDragging && !hideTimeUnderMouse"></time-under-mouse>
   <timeline-scrollbar></timeline-scrollbar>
   <timeline-playback-indicator></timeline-playback-indicator>
   <!-- <timeline-selection></timeline-selection> -->

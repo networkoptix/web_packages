@@ -1,18 +1,84 @@
-import { Injectable }               from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable, Injector }     from '@angular/core';
+import {
+    HttpClient, HttpHeaders, HttpParams
+}                                   from '@angular/common/http';
+import { Router }                   from '@angular/router';
+import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
+import { EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
-import { catchError }               from 'rxjs/operators';
-import { Router }                   from '@angular/router';
-import { EMPTY, of }                from 'rxjs';
+import { MenuNode }                 from './menus.service';
+import { MenuStructure } from '@services/nx-config/base-config';
+import { NxSwCacheService }         from '@services/sw-cache.service';
+import { NxAccountService }         from '@services/account.service';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
     struct        : 'struct'
+};
+
+const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    descriptor.value = function(...args) {
+        return of('').pipe(
+            switchMap(_ => {
+                if (this.currentAccount !== undefined) {
+                    return of(this.currentAccount);
+                }
+                return this.accountService.get().then(account => {
+                    if (account) {
+                        this.currentAccount = account;
+                    } else {
+                        this.currentAccount = null;
+                    }
+                    return account;
+                });
+            }),
+            switchMap((account: Account) => {
+                if (account?.is_staff) {
+                    clearTimeout(this.swBypassTimeout);
+                    this.swBypass = true;
+                    this.swBypassTimeout = setTimeout(_ => {
+                        this.swBypass = false;
+                    }, 10000);
+                }
+                return originalMethod.apply(this, args);
+            })
+        );
+    };
+};
+
+const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    descriptor.value = function(...args) {
+        const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+            return originalMethod.apply(this, args);
+        });
+
+        if (toPromise) {
+            return returnPromise.then(response => {
+                // Clear a second time to handle small chance of race condition
+                return this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+                    return response;
+                });
+            });
+        } else {
+            return from(returnPromise)
+                .pipe(
+                    switchMap((result: any) => result),
+                    concatMap(response => {
+                        // Clear a second time to handle small chance of race condition
+                        return this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
+                            return response;
+                        });
+                    })
+                );
+        }
+    };
 };
 
 @Injectable({
@@ -20,14 +86,30 @@ export const DOC_TYPES = {
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
+    private accountService: any;
+    private currentAccount: Account;
+    public swBypass = false;
+    public swBypassTimeout: ReturnType<typeof setTimeout>;
 
     constructor(
         private configService: NxConfigService,
         private http: HttpClient,
         private cacheService: NxUriCacheService,
-        private router: Router
+        private router: Router,
+        private nxSwCacheService: NxSwCacheService,
+        private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
+        setTimeout(_ => {
+            this.accountService = injector.get(NxAccountService);
+            this.accountService.accountSubject.subscribe(account => {
+                if (account) {
+                    this.currentAccount = account;
+                } else {
+                    this.currentAccount = null;
+                }
+            });
+        });
     }
 
     getLanguage() {
@@ -42,6 +124,7 @@ export class NxCloudApiService {
         return false;
     }
 
+    @swClear('cloudSystemAPI', '/systems', false)
     disconnect(systemId: string, password: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
             system_id: systemId,
@@ -49,6 +132,7 @@ export class NxCloudApiService {
         });
     }
 
+    @swClear('cloudSystemAPI', '/systems', true)
     connect(systemName, email, password) {
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
             name     : systemName,
@@ -77,6 +161,7 @@ export class NxCloudApiService {
         return this.http.get<string[]>('/static/scripts/commonPasswordsList.json');
     }
 
+    @staffSWBypass
     getIntegrations() {
         return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
     }
@@ -85,6 +170,7 @@ export class NxCloudApiService {
         return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/integration_count');
     }
 
+    @staffSWBypass
     getIntegrationBy(id: number, status: string) {
         let uri = this.CONFIG.apiBase + '/integration/' + id;
         uri += (status) ? '?' + status : '';
@@ -96,10 +182,12 @@ export class NxCloudApiService {
         return this.http.get<t.IPVDCameras>(this.CONFIG.apiBase + '/ipvd');
     }
 
+    @swClear('cloudSystemAPI', '/systems', false)
     getSystemAuth(systemId: string) {
         return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
 
+    @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
             master_system_id : masterSystemId,
@@ -147,6 +235,7 @@ export class NxCloudApiService {
             { user_email: userEmail }).toPromise();
     }
 
+    @swClear('cloudSystemAPI', '/systems', true)
     renameSystem(systemId: string, systemName: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
@@ -179,11 +268,18 @@ export class NxCloudApiService {
         return this.http.get<t.CloudUsers>(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
     }
 
-    unshare(systemId: string, userEmail: string) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
+    unshare(systemId: string, userEmail: string, password?: string) {
+        let url = `${this.CONFIG.apiBase}/systems/${systemId}/users`;
+        const data: any = {
             user_email : userEmail,
             role       : this.CONFIG.accessRoles.unshare
-        });
+        };
+        if (this.CONFIG.isLocal) {
+            url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
+            data.email = userEmail;
+            data.password = password || '';
+        }
+        return this.http.post(url, data);
     }
 
     authKey() {
@@ -202,6 +298,7 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
+    @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
@@ -212,6 +309,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
@@ -228,7 +326,13 @@ export class NxCloudApiService {
         if (forceUpdate) {
             headers = headers.set('reset-cache', 'reset');
         }
-        return this.http.get<Account>(endpoint, { headers });
+        return this.http.get<Account>(endpoint, { headers })
+            .pipe(
+                map(account => {
+                    account.isCloud = true;
+                    return account;
+                })
+            );
     }
 
     getCustomAccountProperty(property: string, username?: string) {
@@ -247,6 +351,7 @@ export class NxCloudApiService {
         return this.http.get<t.ILanguages>(endpoint).toPromise();
     }
 
+    @swClear('apiFresh', '/utils/language', true)
     changeLanguage(language: string) {
         return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
             language
@@ -313,10 +418,13 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    acceptIntegration(reviewId: number) {
+    acceptReview(reviewId: number) {
         return this.http.post(this.CONFIG.apiBase + '/accept_review', {
             review_id: reviewId
-        }).toPromise();
+        }).toPromise().then(response => {
+            this.cacheService.cachedData.clear();
+            return response;
+        });
     }
 
     // Cloud Storage
@@ -364,8 +472,9 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @staffSWBypass
     getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
-        let endpoint = `/${type}/${name}`;
+        let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             const urlAppend = assetIdOrSearchObject ? `/${assetIdOrSearchObject}` : '';
@@ -379,17 +488,48 @@ export class NxCloudApiService {
             params = params.set('page', assetIdOrSearchObject.page ? assetIdOrSearchObject.page.toString() : '1');
         }
         if (state) {
-            params = params.set('state', state);
+            params = params.set('state', state.replace('pending', 'review'));
         }
         const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route).pipe(catchError(error => {
             if (error.status === 404) {
-                this.router.navigate([this.CONFIG.redirect.page404]);
+                this.#show404();
                 return EMPTY;
             } else {
                 return of(error);
             }
         }));
+    }
+
+    findArticleKB(assetId) {
+        return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
+            if (error.status === 404) {
+                if (error.error.errorText === 'Kb not found') {
+                    this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>
+                        this.router.navigate([`/docs/content/${assetId}`])
+                    );
+                } else {
+                    this.#show404();
+                }
+                return EMPTY;
+            } else {
+                return of(error);
+            }
+        }));
+    }
+
+    #show404 = () => {
+        this.router
+            .navigate([this.CONFIG.redirect.page404], {
+                replaceUrl: true
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    getMenu(menuName: string) {
+        return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 }

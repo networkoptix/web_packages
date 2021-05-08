@@ -118,13 +118,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         this.tabs.select(this.section);
                     }
                 });
-            }, () => {
-                this.router
-                    .navigate([this.CONFIG.redirect.page404])
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
+            }, this.pageService.show404
             )
             .finally(() => {
                 this.sub.unsubscribe();
@@ -173,16 +167,13 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.router
-                                .navigate([this.CONFIG.redirect.page404])
-                                .catch(error => {
-                                    console.error(error);
-                                });
+                            this.pageService.show404();
                         }
                     });
             } else {
                 this.canViewRelease = true;
-                this.getData();
+                (this.build === undefined ? Promise.resolve() : this.accountService.requireLogin())
+                    .then(() => this.getData());
             }
         });
     }

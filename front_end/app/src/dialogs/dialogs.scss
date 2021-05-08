@@ -117,8 +117,7 @@ nx-modal-wizard {
         border-radius    : 2px 2px 0 0 !important;
 
         .modal-title {
-            @include typography.medium14;
-            font-weight : $modal-title-font-weight !important;
+            @include typography.medium14dark9;
             line-height : $modal-title-line-height !important;
             margin      : 0 !important;
             padding     : 0 !important;

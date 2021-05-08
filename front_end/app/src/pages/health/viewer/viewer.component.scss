@@ -111,6 +111,7 @@ nx-health-viewer-component {
     div {
       height: 20px;
       display: block;
+      padding-left : 4px; // to align it with icons
     }
 
     a {
@@ -162,8 +163,7 @@ nx-health-viewer-component {
         pointer-events : none;
 
         span {
-          @include typography.medium24nocolor;
-          color : $light1;
+          @include typography.medium24light1;
         }
 
         svg-icon {
@@ -187,13 +187,13 @@ nx-health-viewer-component {
   }
 
   .contentZone {
-    @include typography.light14;
+    @include typography.light14light16;
     text-align : center;
   }
 
   .importInfo {
     p {
-      @include typography.light13;
+      @include typography.light13light16;
     }
   }
 }

@@ -27,7 +27,7 @@ export class NxDropMenu extends BaseDropdown {
     columns$ = new BehaviorSubject(4);
     systems$ = new BehaviorSubject([]);
     additionalSystems$ = new BehaviorSubject(0);
-    columnWidth = 240;
+    columnWidth = 236;
 
     systemCounter: number;
     active = {
@@ -50,7 +50,7 @@ export class NxDropMenu extends BaseDropdown {
         super(languageService, configService);
         this.menusService.currentSystemNode$.subscribe(_ => {
             this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                .subscribe(header => this.menuNodes$.next(header));
+                .subscribe(header => this.menuNodes$.next(this.menusService.cleanEmptyNodes(header.nodes)));
         });
     }
 
@@ -91,9 +91,9 @@ export class NxDropMenu extends BaseDropdown {
         this.additionalSystems$.next(additionalSystems);
     }
 
-    updateURI(sid = this.headerService.activeSystem.id, endpoint) {
+    updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false) {
         this.headerService.show$ = false;
-        this.uriService.updateURI(this.menusService.getUrl(sid, endpoint)).then(() => {
+        this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
             const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem);
         });

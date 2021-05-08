@@ -132,8 +132,9 @@ nx-process-button {
         }
     }
 
-    .text-only {
-        @include typography.light13;
+    .header-button-span {
+        @include mixins.details-buttons;
+        @include typography.regular13light;
         cursor: pointer;
     }
 }

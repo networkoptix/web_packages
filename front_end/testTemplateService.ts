@@ -1,11 +1,20 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { describe, expect, jest, beforeEach, it }  from '@jest/globals';
 
-import { NxNamedService }                  from './test';
-import { NxConfigService }                 from '@services/nx-config';
-import { nxConfig }                        from '@services/nx-config/config';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxProcessService }                from '@services/process.service';
+import { NxNamedService }            from './test';
+import { NxConfigService }           from '@services/nx-config';
+import { nxConfig }                  from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService }          from '@services/process.service';
+import { NgModule }                  from '@angular/core';
+import { TranslateModule }           from '@ngx-translate/core';
+
+@NgModule({
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
+})
+class TranslateTestingModule {
+}
 
 describe('Test Suite Name', () => {
     let namedService: NxNamedService;
@@ -20,15 +29,16 @@ describe('Test Suite Name', () => {
         methods: jest.fn(),
         methodWithParameters: jest.fn((param1, param2) => 'returnResultUsingParams'),
         classVariables: 'put value here'
-    }
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers    : [
+            imports   : [TranslateTestingModule],
+            providers : [
                 NxNamedService,
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 // if cloud variables needed, must be added in
-                // CONFIG.path = 'testValue' in the test itself or the .then after compileComponents below works 
+                // CONFIG.path = 'testValue' in the test itself or the .then after compileComponents below works
                 { provide: NxConfigService, useValue: configMock },
                 // must add everything in constructor here, try this:
                 // NxProcessService

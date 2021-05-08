@@ -4,9 +4,9 @@
 $stripes : repeating-linear-gradient(
                 -45deg,
                 $light3,
-                $light3 6px,
-                $light4 6px,
-                $light4 12px
+                $light3 4.25px,
+                $light4 4.25px,
+                $light4 9px
 );
 
 :host {
@@ -30,9 +30,8 @@ $stripes : repeating-linear-gradient(
     align-items      : center;
 
     .total-label {
-        @include typography.regular13;
+        @include typography.regular13dark9;
         position : absolute;
-        color    : $dark9;
         z-index  : 9;
         left     : 8px;
     }
@@ -134,11 +133,11 @@ $stripes : repeating-linear-gradient(
     }
 
     &-title {
-        @include typography.regular13;
+        @include typography.regular13dark9;
     }
 
     &-size {
-        @include typography.medium13;
+        @include typography.medium13dark9;
         display    : grid;
         text-align : right;
     }

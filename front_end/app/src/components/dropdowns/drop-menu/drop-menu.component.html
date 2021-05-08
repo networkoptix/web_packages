@@ -11,7 +11,7 @@
                 (click)="updateURI(system.id)"></nx-system-tile>
             <nx-additional-systems-tile 
                 [additionalSystems$]="additionalSystems$"
-                (click)="updateURI('')"
+                (click)="updateURI('', undefined, true)"
                 [width]="columnWidth"></nx-additional-systems-tile>
         </li>
         <li class="navigation-grid" [ngClass]="{'top-border': (systems$ | async).length > 1}">

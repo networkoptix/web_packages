@@ -24,6 +24,8 @@ export class NxIntegrationsComponent implements OnInit {
     currentWindowWidth: number;
     scrollIndex = 0;
     pluginCount = 0;
+    integrationsShortDescription = ''
+    integrations;
 
     @HostListener('window:resize') onResize() {
         this.currentWindowWidth = window.innerWidth;
@@ -33,21 +35,6 @@ export class NxIntegrationsComponent implements OnInit {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-
-    // getScrollPosition({ target: { scrollLeft, scrollWidth } }, positions) {
-    //     const tabWidth = scrollWidth / positions;
-    //     return Math.round(scrollLeft / tabWidth);
-    // }
-
-    // updateIndex(index) {
-    //     this.scrollIndex = index;
-    // }
-
-    // updateScroll(index, positions) {
-    //     const scrollWidth = this.integrationsScroll.nativeElement.scrollWidth;
-    //     const tabWidth = scrollWidth / positions;
-    //     this.integrationsScroll.nativeElement.scrollLeft = index * tabWidth;
-    // }
 
     integrationsDetails() {
         const allPlugins = this.integrationsNode.nodes[1].nodes;
@@ -98,13 +85,17 @@ export class NxIntegrationsComponent implements OnInit {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
         this.errorManager = new ErrorStateManager(this.window);
-        this.cloudApi.getIntegrationsCount().subscribe(data => {
-            this.pluginCount = data.count || 0;
-        });
     }
 
     ngOnInit() {
+        this.cloudApi.getIntegrationsCount().subscribe(data => {
+            this.pluginCount = data.count || 0;
+            this.integrations = this.integrationsDetails();
+        });
         this.currentWindowWidth = window.innerWidth;
+        this.integrationsShortDescription = (this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || '').split(
+            '\n'
+        ).reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
 
         const integrationsConfig = this.errorManager.buildConfig(
             ['title', 'url'],

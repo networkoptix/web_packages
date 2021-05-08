@@ -71,23 +71,19 @@ class NoptixLibrary(object):
         else:
             locator.send_keys(Keys.CONTROL + 'v')
 
-    def delete_all_text(self, locator):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        element = seleniumlib.find_element(locator)
-        text = seleniumlib.get_value(locator)
-        logger.debug(text)
-        element.send_keys(Keys.END)
-        for x in range(len(text)):
-            element.send_keys(Keys.BACKSPACE)
+#     def delete_all_text(self, locator):
+#         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+#         element = seleniumlib.find_element(locator)
+#         text = seleniumlib.get_text(locator)
+#         logger.debug(text)
+#         element.send_keys(Keys.END)
+#         for x in range(len(text)):
+#             element.send_keys(Keys.BACKSPACE)
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         element = seleniumlib.find_element(locator)
-        # locator = self.convert_locator_to_webelement(locator)
-        text = seleniumlib.get_text(locator)
-        element.send_keys(Keys.END)
-        for x in range(len(text)):
-            element.send_keys(Keys.BACKSPACE)
+        self.delete_all_text(element)
         element.send_keys(text)
 
     def get_random_email(self, email):
@@ -649,3 +645,9 @@ class NoptixLibrary(object):
                 raise NoSuchElementException
 
         return True
+
+    def dictionary_should_contain(self, dictionary, expected):
+        for item in dictionary:
+            if item==expected:
+                return
+            

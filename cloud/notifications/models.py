@@ -13,8 +13,11 @@ from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_K
 from push_notifications.models import GCMDevice, GCMDeviceQuerySet
 from rest_framework import serializers
 
+import botocore
+
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
+from .conf import get_sns_client
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
 FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns', 'subtitle'])
@@ -166,7 +169,7 @@ class Feedback(models.Model):
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
-            name='supportEmail', context__asset_type=self.target_asset.asset_type,
+            name__in=['supportEmail', '%SUPPORT_EMAIL%'], context__asset_type=self.target_asset.asset_type,
             context__name__in=['support', 'Settings']
         ).last()
         contact_email = data_structure.find_actual_value(
@@ -243,10 +246,18 @@ class PushDevice(GCMDevice):
                  (2, 'ios', 'iOS'))
     TYPES = Choices((0, 'notification', 'notification'),
                     (1, 'data', 'data'))
+    PROVIDERS = Choices((0, 'firebase_legacy', 'Firebase Legacy'),
+                        (1, 'firebase', 'Firebase'),
+                        (2, 'apn', 'APN'),
+                        (3, 'baidu', 'Baidu'),
+                        (4, 'apn_sandbox', 'APN Sandbox'))
     model = models.CharField(max_length=255)
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
+    provider = models.IntegerField(choices=PROVIDERS, default=PROVIDERS.firebase_legacy)
+    arn = models.CharField(max_length=255, blank=True)
+    baidu_user_id = models.CharField(max_length=255, blank=True)  # userId from baidu push service
 
     objects = PushDeviceManager()
 
@@ -309,11 +320,33 @@ class PushNotification(models.Model):
             url = url.replace(system_id, relay_host)
         return url
 
-    def send_notifications(self, device_tokens=None, devices=None):
-        if device_tokens:
-            devices = PushDevice.objects.filter(id__in=device_tokens)
-        # else:
-        #     devices = self.devices.all()
+    @staticmethod
+    def generate_provider_specific_messages(title, body, payload, options, data_payload):
+        apns_message = {
+            'aps': {'alert': {'title': title, 'body': body}, **options},
+            **payload
+        }
+        return {
+            PushDevice.PROVIDERS.apn: json.dumps({'APNS': json.dumps(apns_message)}),
+            PushDevice.PROVIDERS.apn_sandbox: json.dumps({'APNS_SANDBOX': json.dumps(apns_message)}),
+            PushDevice.PROVIDERS.firebase: json.dumps({'GCM': json.dumps({
+                'notification': {'title': None, 'body': None},
+                'data': {**data_payload, **options}
+            })}),
+            PushDevice.PROVIDERS.baidu: json.dumps({'BAIDU': json.dumps({
+                'msg': {'title': None, 'description': None},
+                'custom_content': {**data_payload},
+                **options
+            })})
+        }
+
+    def send_notifications(self, device_ids=None, devices=None):
+        from .engines.sns_push import send_sns_push
+        if device_ids:
+            devices = PushDevice.objects.filter(id__in=device_ids)
+
+        firebase_legacy_devices = devices.filter(provider=PushDevice.PROVIDERS.firebase_legacy)
+        sns_devices = devices.filter(~Q(provider=PushDevice.PROVIDERS.firebase_legacy))
 
         title = self.title or None
         body = self.body or None
@@ -325,14 +358,23 @@ class PushNotification(models.Model):
         payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
 
-        notification_devices = devices.filter(type=PushDevice.TYPES.notification)
-        data_devices = devices.filter(type=PushDevice.TYPES.data)
+        # Firebase Legacy
+        notification_devices = firebase_legacy_devices.filter(type=PushDevice.TYPES.notification)
+        data_devices = firebase_legacy_devices.filter(type=PushDevice.TYPES.data)
 
         notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
 
-        payload['caption'] = title or ''
-        payload['description'] = body or ''
+        data_payload = payload.copy()
+        data_payload['caption'] = title or ''
+        data_payload['description'] = body or ''
 
-        data_response = data_devices.send_message(None, title=None, extra=payload, **options)
+        data_response = data_devices.send_message(None, title=None, extra=data_payload, **options)
 
-        return notification_response, data_response
+        # SNS
+        sns_messages = self.generate_provider_specific_messages(title, body, payload, options, data_payload)
+        sns_client = get_sns_client()
+        retry_device_ids = []
+        for device in sns_devices:
+            send_sns_push(device, sns_client, sns_messages, retry_device_ids, self)
+
+        return (notification_response, data_response), retry_device_ids

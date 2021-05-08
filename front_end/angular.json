@@ -64,7 +64,7 @@
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": true,
               "extractLicenses": true,
@@ -81,7 +81,9 @@
                   "maximumWarning": "200kb",
                   "maximumError": "280kb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "webadmin": {
               "fileReplacements": [
@@ -109,7 +111,7 @@
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": true,
               "extractLicenses": true,
@@ -133,8 +135,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "host": "0.0.0.0",
             "port": 9000,
             "browserTarget": "front-end:build",
+            "sourceMap": true,
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -153,6 +157,28 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "front-end:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "app/test.ts",
+            "polyfills": "app/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "app/favicon.ico",
+              "app/assets"
+            ],
+            "styles": [
+              "app/styles/main.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/"
+              ]
+            },
+            "scripts": []
           }
         },
         "lint": {

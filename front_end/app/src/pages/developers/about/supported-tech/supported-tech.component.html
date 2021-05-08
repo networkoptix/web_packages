@@ -23,15 +23,27 @@
 </ng-template>
 
 <section *ngIf="!errorManager.hasErrors; else showError" class="supported-tech">
-    <h2 class="heading-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
-    <div *ngIf="supportedTechNode.nodes[0].nodes.length" class="tech-wrapper">
-        <ng-container *ngFor="let tech of supportedTechNode.nodes[0].nodes">
-            <ng-container *ngTemplateOutlet="techBlock;context{tech:tech}"></ng-container>
+    <ng-template #nonLinkHeader>
+        <h2 class="header-non-link">{{supportedTechNode.title}}</h2>
+    </ng-template>
+    <h2 *ngIf="supportedTechNode.url; else nonLinkHeader" class="header-link" [routerLink]="supportedTechNode.url">{{supportedTechNode.title}}</h2>
+    <ng-container *ngFor="let node of supportedTechNode.nodes">
+        <ng-container *ngIf="node?.nodes?.length">
+            <ng-template #tech>
+                <div *ngIf="node.icon.includes('tech')" class="tech-wrapper">
+                    <ng-container *ngFor="let tech of node.nodes">
+                        <ng-container *ngIf="tech.icon">
+                            <ng-container *ngTemplateOutlet="techBlock;context{tech:tech}"></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </ng-template>
+            <div *ngIf="node.icon.includes('language');else tech" class="language-wrapper">
+                <ng-container *ngFor="let language of node.nodes">
+                    <ng-container *ngTemplateOutlet="languageBlock;context{language:language}"></ng-container>
+                </ng-container>
+            </div>
         </ng-container>
-    </div>
-    <div *ngIf="supportedTechNode.nodes[1].nodes.length" class="language-wrapper">
-        <ng-container *ngFor="let language of supportedTechNode.nodes[1].nodes">
-            <ng-container *ngTemplateOutlet="languageBlock;context{language:language}"></ng-container>
-        </ng-container>
-    </div>
+    </ng-container>
+    
 </section>

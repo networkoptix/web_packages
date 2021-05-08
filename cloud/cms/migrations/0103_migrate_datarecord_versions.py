@@ -8,13 +8,13 @@ def migrate_records(apps, schema_editor):
     ContentVersion = apps.get_model('cms', 'ContentVersion')
     AssetCustomizationReview = apps.get_model('cms', 'AssetCustomizationReview')
 
-    for version in ContentVersion.objects.filter(assetcustomizationreview=None):
+    for version in ContentVersion.objects.filter(assetcustomizationreview=None).order_by('-id'):
         for record in version.datarecord_set.all():
             for customization in version.asset.customizations.all():
                 first_accepted = AssetCustomizationReview.objects.filter(
                     version__asset=version.asset, customization=customization,
                     state=ReviewModel.REVIEW_STATES.accepted
-                ).order_by('pk').first()
+                ).order_by('version', 'pk').first()
                 if first_accepted:
                     if not first_accepted.version.datarecord_set.filter(
                             data_structure=record.data_structure, language=record.language

@@ -2,7 +2,7 @@ import {
     BehaviorSubject, of, Subscription,
     Observable, from, Subject
 }                               from 'rxjs';
-import { flatMap, takeUntil, tap }   from 'rxjs/operators';
+import { flatMap, takeUntil }   from 'rxjs/operators';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -17,12 +17,14 @@ import { NxPollService }                            from '../../poll.service';
 import { NxAppStateService }                        from '../../nx-app-state.service';
 import { SystemConfigSettings }                     from '../../system-api.types';
 import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
-import { trimIDs as trimIds }                      from '../../../utils/api_response_cleaners';
+import { trimIDs as trimIds }                       from '../../../utils/api_response_cleaners';
 import { NxRibbonService }                          from '@components/ribbon';
+import { NxSystemRestAPI }                          from '@services/system-rest-api.service';
 import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
 }                                                   from './system-types';
+import { Router }                                   from '@angular/router';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -52,9 +54,12 @@ export class NxSystem extends System {
     activeSubscription: Subscription;
     show404 = false;
     currentUserEmail: string;
-    mediaserver: NxSystemAPI;
+    mediaserver: NxSystemAPI | NxSystemRestAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
+
+    /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
+    #apiVersion = 0;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -62,6 +67,15 @@ export class NxSystem extends System {
     licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
+
+    /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
+    setApiVersion(version: string | number) {
+        this.#apiVersion = typeof version === 'string' ? parseFloat(version) : version;
+    }
+
+    get useRest() {
+        return this.#apiVersion >= NxSystemRestAPI.supportedVersion;
+    }
 
     get subscriberCount() {
         return this._subscribersCount.getValue();
@@ -107,12 +121,12 @@ export class NxSystem extends System {
     constructor(
         CONFIG: IConfig,
         LANG: LanguageI18NStaticTypes,
-        private cancelPoll$: Subject<string>,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
+        private router: Router,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -157,30 +171,28 @@ export class NxSystem extends System {
              Other cases are not distinguishable
              */
             return this.updateSystemAuth(true);
-        });
+        },
+        this.useRest);
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
-        this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval).pipe(
-            takeUntil(this.cancelPoll$)
-        );
+        this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
             this.currentUserEmail,
             this.id,
-            this.cloudApi
+            this.cloudApi,
+            this
         );
 
         this.cameraManager = new CameraManager(
             this.serverManager
         );
 
-        this.storageManager = new StorageManager(
-            this.serverManager
-        );
+        this.storageManager = new StorageManager(this);
     }
 
     updateSystemAuth(force?: boolean) {
@@ -229,18 +241,24 @@ export class NxSystem extends System {
         if (this.CONFIG.isLocal) {
             return this.mediaserver.getSystemSettings()
                 .then(res => {
-                    let parsedSettings = {};
+                    let parsedSettings: any = {};
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
                     }
-                    Object.assign(parsedSettings, this.userManager.currentUser);
+                    const currentUser = { ...this.userManager.currentUser };
+                    if (currentUser?.name) {
+                        delete currentUser.name;
+                    }
+                    Object.assign(parsedSettings, currentUser);
                     if (this.info) {
                         Object.assign(this.info, parsedSettings); // Update
                     } else {
                         this.info = parsedSettings;
                     }
-                    this.id = this.CONFIG.localSystemId;
-                    this.info.systemName = this.CONFIG.localSystemName;
+                    if (this.CONFIG.isLocal && !this.info.name) {
+                        this.info.name = this.CONFIG.system.name;
+                    }
+                    this.id = parsedSettings?.id || this.CONFIG.localSystemId;
                     this.mergeInfo = this.info.mergeInfo;
                     this.isOnline = true;
                     this.cloudStorageCapable = false;
@@ -291,6 +309,8 @@ export class NxSystem extends System {
                     this.userManager.accessRole = this.info.accessRole;
                 }
                 return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
+            }).catch(_ => {
+                return Promise.reject();
             });
     }
 
@@ -325,9 +345,6 @@ export class NxSystem extends System {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else {
-            if (this.systemPoll instanceof Subscription) {
-                this.systemPoll.unsubscribe();
-            }
             if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }
@@ -340,7 +357,6 @@ export class NxSystem extends System {
     }
 
     update = (): Promise<any> => {
-        this.ribbonService.hide();
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
@@ -350,9 +366,17 @@ export class NxSystem extends System {
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
+                })
+                .finally(() => {
+                    // TODO: re-do ribbonService to handle multiple pages better
+                    // watch out: HM stopsPoll on navigate, but not on refresh
+                    const { url } = this.router;
+                    if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
+                        this.ribbonService.hide();
+                    }
                 });
         })).toPromise();
     };
@@ -361,10 +385,18 @@ export class NxSystem extends System {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     getStorageStatus(queryParams) {
         return this.mediaserver.getStorageStatus(queryParams);
     }
 
+    /**
+     * Method moved to storageManager.
+     * @deprecated
+     */
     saveStorage<T>(updateParams?: T) {
         const typeId = '{f8544a40-880e-9442-b78a-9da6db6862b4}';
         return this.mediaserver.saveStorage({ ...updateParams, typeId });
@@ -378,8 +410,8 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
-        return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
+    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+        return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
     }
 
     checkMergeStatus(forceReload = true) {
@@ -502,38 +534,18 @@ export class NxSystem extends System {
         });
     }
 
-    public checkCameraThumbnail(cameraId) {
+    public checkCameraThumbnail (cameraId) {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.checkCameraThumbnail(cameraId)
         );
     }
 
-    public getCameraThumbnailUrl(cameraId, width = 68, height = 38) {
-        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height);
+    public getCameraThumbnailUrl (cameraId, width = 128, height = 128, t?) {
+        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
     }
 
-    public getCameraLiveHlsUrl(cameraId) {
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getLiveHlsUrl(cameraId)
-        );
-    }
-
-    public getHlsUrl(cameraId, position?, resolution = 'hi') {
-        return this.ensureSystemAuth().then(
-            () => position === -1
-                ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
-                : this.mediaserver.getHlsUrl(cameraId, position, resolution)
-        );
-    }
-
-    public unsafeGetCameraLiveHlsUrl(cameraId, resolution = 'hi') {
-        return this.mediaserver.getLiveHlsUrl(cameraId, resolution);
-    }
-
-    public unsafeGetHlsUrl(cameraId, position?, resolution = 'hi') {
-        return position === -1
-            ? this.mediaserver.getLiveHlsUrl(cameraId, resolution)
-            : this.mediaserver.getHlsUrl(cameraId, position, resolution);
+    public getPlaybackUrl (cameraId, transport, resolution, position) {
+        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position)
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
@@ -551,6 +563,7 @@ export class NxSystem extends System {
                     const now = Date.now();
                     // @ts-ignore
                     return r.reply.map(i => ({
+                        vmsTime        : parseInt(i.vmsTime),
                         vmsTimeOffset  : now - parseInt(i.vmsTime),
                         osTimeOffset   : now - parseInt(i.osTime),
                         serverId       : i.serverId.slice(1, i.serverId.length - 1),
@@ -629,9 +642,9 @@ export class NxSystem extends System {
      * @deprecated Not really deprecated yet but should be soon.
      */
     filterCamerasFromUserPermissions() {
-        const accessRights: { [resourceId: string]: true; } = this.currentUser.accessRights;
-        if (accessRights && this.cameras) {
-            this.cameras = this.cameras.filter(camera => accessRights[camera.id]);
+        const accessRights: { [resourceId: string]: true; } = this.userManager.currentUser?.accessRights;
+        if (accessRights && this.cameraManager.cameras) {
+            this.cameraManager.cameras = this.cameraManager.cameras.filter(camera => accessRights[camera.id]);
         }
     }
 
@@ -679,14 +692,16 @@ export class NxSystem extends System {
         return this.userManager.deleteUser(removedUser);
     }
 
-    deleteFromCurrentAccount() {
+    deleteFromCurrentAccount(password?: string) {
         const currentUser = this.userManager.currentUser;
-        if (this.isAvailable && currentUser && !currentUser.isAdmin) {
+        const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
+        if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
-            this.userManager.deleteUser(currentUser);
+            const delPromise = this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        return this.cloudApi.unshare(this.id, currentUser.email);
+        const id = this.CONFIG.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        return this.cloudApi.unshare(id, email, password);
     }
 
     /**
@@ -729,13 +744,6 @@ export class NxSystem extends System {
      */
     get isMine() {
         return this.userManager.isMine;
-    }
-
-    /**
-     * @deprecated Method should be refrenced from userManager instead of directly from system.
-     */
-    get permissions() {
-        return this.userManager.permissions;
     }
 
     /**

@@ -9220,20 +9220,19 @@
 }
 
 .swagger-ui .opblock .opblock-section-header h4 {
-	@include typography.regular18;
+	@include typography.regular18dark9;
 	flex        : 1;
 	margin      : 0;
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-	@include typography.medium13nocolor;
+	@include typography.medium13light1;
 	min-width     : 80px;
 	padding       : 2px 8px;
 	text-align    : center;
 	border-radius : 2px;
 	background    : #000;
 	text-shadow   : 0 1px 0 rgba(0, 0, 0, .1);
-	color         : $light1;
 }
 
 .swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
@@ -9259,7 +9258,7 @@
 }
 
 .swagger-ui .opblock .opblock-summary-path a{
-	@include typography.medium13;
+	@include typography.medium13dark9;
 	line-height : 16px;
 }
 
@@ -9521,18 +9520,18 @@
 }
 
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
-	@include typography.regular13;
+	@include typography.regular13dark9;
 	margin      : 0;
 	padding     : 15px 20px;
 }
 
 .swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-external-docs-wrapper h4, .swagger-ui .opblock-title_normal h4 {
-	@include typography.regular13;
+	@include typography.regular13dark9;
 	margin      : 0 0 5px;
 }
 
 .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
-	@include typography.regular13;
+	@include typography.regular13dark9;
 	margin      : 0 !important;
 }
 
@@ -10634,7 +10633,7 @@
 }
 
 .swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	@include typography.medium13;
+	@include typography.medium13dark9;
 	padding       : 4px 16px;
 	text-align    : left;
 }
@@ -10667,7 +10666,7 @@
 }
 
 .swagger-ui table tbody tr td {
-	@include typography.regular14;
+	@include typography.regular14dark9;
 	padding        : 8px 16px;
 	vertical-align : top;
 	border         : 1px solid $light4;
@@ -10692,7 +10691,7 @@
 }
 
 .swagger-ui .parameter__name {
-	@include typography.bold13;
+	@include typography.bold13dark9;
 }
 
 .swagger-ui .parameter__name.required {
@@ -10713,8 +10712,7 @@
 }
 
 .swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameter__deprecated {
-	@include typography.regular13nocolor;
-	color       : $light8;
+	@include typography.regular13light8;
 }
 
 .swagger-ui .parameter__empty_value_toggle {

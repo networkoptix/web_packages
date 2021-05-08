@@ -4,13 +4,14 @@ import { NxConfigService, IConfig }        from '../nx-config';
 import { NxLanguageProviderService }       from '../nx-language-provider';
 import { NxCloudApiService }               from '../nx-cloud-api';
 import { NxSystemsService }                from '../systems.service';
-import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { NxSystemAPIService }              from '../system-api.service';
 import { NxPollService }                   from '../poll.service';
 import { NxAppStateService }               from '../nx-app-state.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { NxRibbonService }                 from '@components/ribbon';
 import { NxSystem }                        from './system/system';
-import { Subject }                         from 'rxjs';
+import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
+import { Router }                          from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,6 @@ export class NxSystemService {
     LANG: LanguageI18NStaticTypes;
     private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
-    private cancelPoll$ = new Subject<string>();
 
     constructor(
         configService: NxConfigService,
@@ -30,6 +30,7 @@ export class NxSystemService {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private appState: NxAppStateService,
+        private router: Router,
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
@@ -38,9 +39,6 @@ export class NxSystemService {
     }
 
     createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
-        if (!skipPoll) {
-            this.cancelPoll$.next('cancel system polling');
-        }
         let system: NxSystem;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
@@ -49,12 +47,12 @@ export class NxSystemService {
             system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
-                this.cancelPoll$,
                 this.cloudApi,
                 this.systemApiService,
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.router,
                 currentUserEmail,
                 systemId,
                 serverId
@@ -62,26 +60,28 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
+        system.serverManager.getModuleInfo().toPromise().then(({ reply: { version } }) => {
+            system.setApiVersion(version || NxSystemRestAPI.supportedVersion);
+        });
         if (!skipPoll) {
             system.startPoll();
         }
         return system;
     }
 
-    createLocalSystem(mediaServer: NxSystemAPI, userId: string, userEmail = '') {
+    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
         if (this.system !== undefined) {
             return this.system;
         }
-        this.cancelPoll$.next('cancel system polling');
         this.system = new NxSystem(
             this.CONFIG,
             this.LANG,
-            this.cancelPoll$,
             this.cloudApi,
             this.systemApiService,
             this.pollService,
             this.systemsService,
             this.ribbonService,
+            this.router,
             userEmail,
             '',
             '',
@@ -90,6 +90,7 @@ export class NxSystemService {
         );
         this.system.mediaserver = mediaServer;
         this.system.canMerge = true;
+        this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
         this.system.update();
         this.system.startPoll();
         if (!this.systemsService.systems) {

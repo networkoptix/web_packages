@@ -19,7 +19,7 @@ svg {
 
 .mainContainer {
     //flex: 1 1 auto;
-    overflow-y : scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
+    overflow-y : auto;
     height     : 100%;
 }
 
@@ -45,13 +45,12 @@ svg {
 }
 
 .error-label {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     color : $error !important;
 }
 
 .disabled-label {
-    @include typography.regular13;
-    color : $light10 !important;
+    @include typography.regular13light10;
 }
 
 .warning-label {
@@ -119,7 +118,7 @@ h1 .badge {
 }
 
 .disabled {
-    color  : $light10;
+    color  : $light10 !important;
     cursor : default !important;
 }
 

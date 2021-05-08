@@ -5,6 +5,8 @@ from push_notifications.conf.legacy import LegacyConfig
 
 from cms.models import Asset, AssetType
 
+import boto3
+
 
 CLOUD_NOTIFICATIONS_USERS_TEMPLATE = \
     "<div>" \
@@ -14,7 +16,7 @@ CLOUD_NOTIFICATIONS_USERS_TEMPLATE = \
     "            <h3 class=\"panel-title\">{{name}}</h3>" \
     "        </div>" \
     "        <div class=\"panel-body\" id=\"{{name}}_users\">" \
-    "            {{users}}" \
+    "            {{{users}}}" \
     "        </div>" \
     "    </div>" \
     "    {{/users_by_customization}}" \
@@ -53,3 +55,6 @@ class PushConfig(LegacyConfig):
 
         return cached_settings.get(application_id, {}).get(settings_key, None)
 
+
+def get_sns_client():
+    return boto3.client(**django_settings.SNS_CLIENT)

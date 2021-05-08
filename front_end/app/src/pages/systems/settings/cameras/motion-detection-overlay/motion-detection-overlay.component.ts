@@ -7,6 +7,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { MotionMaskState }          from './MotionMaskState';
 import { MotionMaskRenderer }       from './MotionMaskRenderer';
 import { NxConfigService, IConfig } from '../../../../../services/nx-config';
+import { NxUtilsService }           from '../../../../../services/utils.service';
 
 @Component({
     selector        : 'nx-motion-detection-overlay',
@@ -30,7 +31,10 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();
 
-    constructor(config: NxConfigService) {
+    constructor(
+        config: NxConfigService,
+        private utilsService: NxUtilsService
+    ) {
         this.config = config.getConfig();
     };
 
@@ -45,7 +49,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         const changed = initialMaskChanged || heightChanged || widthChanged;
         if (initialMaskChanged) {
             this.motionMask.reInitialize(this.initialMask);
-        };
+        }
 
         if (changed && this.motionMaskRenderer && this.motionMaskRenderer.canvas) {
             this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
@@ -74,7 +78,15 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
     private initRenderer() {
-        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.config.cameraSettings.sensitivityColors, this.unsub$, this.sensitivityButtons$);
+        this.motionMaskRenderer = new MotionMaskRenderer(
+            this.motionMask,
+            this.config.cameraSettings.sensitivityColors,
+            this.unsub$,
+            this.sensitivityButtons$,
+            this.utilsService.isMobile() || this.utilsService.isTablet()
+
+        );
+
         this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
     }
 }

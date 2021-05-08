@@ -1,10 +1,13 @@
+from cms.tasks import async_menu_export, async_menu_import
+from urllib.parse import unquote, quote
+
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
 from django.contrib.admin.actions import delete_selected
 from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
-from django.db.models import F, Q, Case, When, Value, BooleanField
+from django.db.models import F, Q, Case, When, Value, BooleanField, Max
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse, path
@@ -13,9 +16,10 @@ from django.utils.html import format_html
 import nested_admin
 
 from cms.forms import *
-from cms.controllers.modify_db import get_records_for_version, generate_preview_link
+from cms.controllers import generate_structure, structure
+from cms.controllers.modify_db import generate_preview_links, get_records_for_version, generate_preview_link
 from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
-from cms.views.asset import page_editor, review, response_attachment
+from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 
@@ -38,6 +42,7 @@ def clone_asset(request, asset_id):
     asset.name = clone_name
     asset.created_by = created_by
     asset.primary_group = None
+    asset.uuid = uuid.uuid4()
     asset.save()
 
     old_asset = Asset.objects.get(id=asset_id)
@@ -231,7 +236,7 @@ class ReviewVersionFilter(SimpleListFilter):
         if self.value() == self.LATEST_VERSION:
             asset_ids = set(queryset.values_list('version__asset', flat=True))
             review_ids = []
-            for review in AssetCustomizationReview.objects.all().order_by('-pk').select_related('version__asset'):
+            for review in AssetCustomizationReview.objects.all().select_related('version__asset'):
                 if review.version.asset.id in asset_ids:
                     review_ids.append(review.id)
                     asset_ids.remove(review.version.asset.id)
@@ -379,6 +384,14 @@ class AssetAdmin(CMSAdmin):
             Q(options__all_assets=True, usergroupstoassettype__asset_type=asset.asset_type)
         ).prefetch_related('permissions')
 
+        if request.user.is_superuser:
+            nodes = asset.nodes.all()
+            related_nodes_list = []
+            for node in nodes:
+                menu = node.get_parent()
+                related_nodes_list.append({'menu': menu, 'node': node})
+            extra_context['related_nodes'] = related_nodes_list
+
         if not asset.is_cloud_portal:
             extra_context['show_clone_asset'] = True
 
@@ -392,12 +405,27 @@ class AssetAdmin(CMSAdmin):
             fields.remove('protected')
         if obj:
             fields.remove('publish_all_customizations')
+            fields.remove('menu')
             if not request.user.is_superuser and not obj.asset_type.single_customization:
                 fields.remove('customizations')
         else:
             fields.remove('preview_status')
             fields.append(fields.pop(fields.index('customizations')))
+            if not request.user.is_superuser:
+                fields.remove('menu')
         return fields
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            new = True
+        else:
+            new = False
+        super().save_model(request, obj, form, change)
+        if new and obj.asset_type.type == AssetType.ASSET_TYPES.documentation:
+            menu = form.cleaned_data.get('menu', None)
+            if menu:
+                order = (menu.nodes.aggregate(Max('order'))['order__max'] or 0) + 1
+                MenuNode.objects.create(name=obj.name, parent_menu=menu, asset=obj, order=order)
 
     def get_readonly_fields(self, request, obj=None):
         if obj and not request.user.is_superuser:
@@ -441,7 +469,7 @@ class AssetAdmin(CMSAdmin):
                 name='change_page'),
             url(r'^(?P<asset_id>.+?)/pages/(?P<custom_preview>.+?)$', self.admin_site.admin_view(self.page_list_view), name='pages_custom_preview')
         ]
-    
+
         return my_urls + urls
 
     def response_change(self, request, obj):
@@ -454,7 +482,9 @@ class AssetAdmin(CMSAdmin):
         return super().response_change(request, obj)
 
     def response_add(self, request, obj, post_url_continue=None):
-        if '_save' in request.POST and not request.user.is_superuser:
+        if '_save' in request.POST and \
+                (not request.user.is_superuser or obj.asset_type.type == AssetType.ASSET_TYPES.documentation) and \
+                not request.GET.get('_popup', False):
             return redirect(reverse('admin:pages', args=[obj.id]))
         return super().response_add(request, obj, post_url_continue)
 
@@ -486,8 +516,7 @@ class AssetAdmin(CMSAdmin):
             exclude_hidden = qs.filter(hidden=False)
             if qs.count() == 1 or not request.user.is_superuser and exclude_hidden.count() == 1:
                 context_id = exclude_hidden.first().id
-                params = f'?customPreview={custom_preview}' if custom_preview else ''
-                
+                params = f'?customPreview={unquote(custom_preview).replace("asset_id", asset_id)}' if custom_preview else ''
                 return redirect(reverse('admin:change_page', args=[asset_id, context_id]) + params)
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = exclude_hidden
@@ -504,13 +533,15 @@ class AssetAdmin(CMSAdmin):
         if order not in order_options.keys():
             order = None
         context = {'errors': []}
+        target_context = Context.objects.get(id=context_id)
+        asset = Asset.objects.get(id=asset_id)
         if request.method == "POST" and 'asset_id' in request.POST:
             context['preview_link'], context['errors'] = page_editor(request)
             if 'SendReview' in request.POST and context['preview_link']:
-                return redirect(context['preview_link'].url)
-
-        target_context = Context.objects.get(id=context_id)
-        asset = Asset.objects.get(id=asset_id)
+                custom_preview = request.POST.get('customPreview', '') or generate_preview_link(target_context, asset, 'pending')
+                if custom_preview:
+                    custom_preview = "?customPreview=" + custom_preview.replace('draft', 'pending')
+                return redirect(f'{context["preview_link"].url}{custom_preview or ""}')
 
         context['title'] = f"Edit {target_context.get_nice_name()}"
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
@@ -531,6 +562,7 @@ class AssetAdmin(CMSAdmin):
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
         context['preview_url'] = generate_preview_link(context=target_context, asset=asset, state="draft")
+        context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(context=target_context, asset=asset, state="draft"))))
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
         context['order_options'] = order_options
 
@@ -588,6 +620,12 @@ admin.site.register(DataStructure, DataStructureAdmin)
 
 class LanguageAdmin(CMSAdmin):
     list_display = ('name', 'code')
+    form = LanguageForm
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        form.instance.customization_set.set(form.cleaned_data['customizations'])
+
 
 
 admin.site.register(Language, LanguageAdmin)
@@ -663,6 +701,15 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['contexts'], extra_context['context_preview_links'] = get_records_for_version(version.asset,
                                                             version,
                                                             customization_review.customization)
+        custom_preview_from_params = request.GET.get('customPreview') or request.POST.get('customPreview')
+        custom_preview = custom_preview_from_params or customization_review.default_preview
+        if custom_preview:
+            extra_context['context_preview_links']['Content'] = custom_preview
+            if custom_preview_from_params and not customization_review.default_preview:
+                customization_review.default_preview = custom_preview
+                customization_review.save()
+                reviews = version.assetcustomizationreview_set.all()
+                reviews.update(default_preview=custom_preview)
 
         extra_context['review_states'] = AssetCustomizationReview.REVIEW_STATES
         # Exclude customization reviews that are not in the asset's customizations
@@ -671,6 +718,11 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         if not request.user.is_superuser:
             extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
+
+        if extra_context['customization_reviews'].count() > 1:
+            extra_context['show_accept_all'] = True
+        else:
+            extra_context['show_accept_all'] = False
 
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
@@ -681,6 +733,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
                     is_integration or is_article or is_agreement)
         extra_context['whole_preview'] = is_integration or is_article or is_agreement
+        extra_context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(asset=version.asset, state="pending"))))
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
@@ -707,7 +760,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
     # TODO: filter visible reviews
     def get_queryset(self, request):
-        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request)
+        qs = super(AssetCustomizationReviewAdmin, self).get_queryset(request).order_by('-version_id')
         if not request.user.is_superuser:
             qs = qs.filter(Q(customization__name__in=request.user.customizations_with_permission('cms.publish_version')))
 
@@ -849,11 +902,16 @@ class UserGroupsToAssetTypeAdmin(admin.ModelAdmin):
 admin.site.register(UserGroupsToAssetType, UserGroupsToAssetTypeAdmin)
 
 
+@admin.register(ExternalFile)
 class ExternalFileAdmin(CMSAdmin):
-    list_display = ('id', 'file', 'size',)
+    list_display = ('id', 'file', 'asset_ds_pair_count', 'size', 'md5')
+    readonly_fields = ('asset_ds_pair_count', 'asset_ds_pair', 'size', 'md5')
 
+    def asset_ds_pair_count(self, obj):
+        return obj.asset_ds_pair.count()
 
-admin.site.register(ExternalFile, ExternalFileAdmin)
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(ContributorAgreement)
@@ -909,7 +967,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
             self.loaded_config = json.loads(self.admin_config)
         except JSONDecodeError:
             self.loaded_config = json.loads(default_config)
-        
+
         super().__init__(*args, **kwargs)
 
     def get_fieldsets(self, request, obj=None):
@@ -979,20 +1037,23 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
                 obj_url = obj.url
                 if not obj_url.startswith('http') and not obj_url.startswith('/'):
                     obj_url = '/' + obj_url
-                return format_html(f'<a href="{obj_url}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+                return format_html(f'<a href="{obj_url}" title="Preview"><span class="glyphicon glyphicon-picture"></span></a>')
             elif obj.asset:
-                return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>')
+                return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}" title="Preview"><span class="glyphicon glyphicon-picture"></span></a>')
         return ''
 
 
 @admin.register(Menu)
 class MenuAdmin(nested_admin.NestedModelAdmin):
-    list_display = ('name', 'depth')
+    list_display = ('name', 'depth', 'eval_url', 'enabled')
     form = MenuChangeForm
     change_form_template = 'cms/menu_change_form.html'
 
-    class Media:
-        js = ('js/menuChange.js',)
+    def eval_url(self, obj: Menu):
+        if obj.type in [Menu.MENU_TYPES.docs_struct, Menu.MENU_TYPES.docs_knowledgebase] and obj.base_url:
+            return f'/docs/{obj.base_url}/{obj.url}'
+        return ''
+    eval_url.short_description = 'URL'
 
     def get_fieldsets(self, request, obj=None):
         fields = [field for field in super().get_fields(request, obj)]
@@ -1009,16 +1070,26 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
         return (main, advanced) if request.user.is_superuser else (main,)
 
-
     def change_view(self, request, object_id, form_url='', extra_context=None):
-        menu = Menu.objects.get(id=object_id)
         extra_context = extra_context or {}
-        extra_context['preview_url'] = menu.preview_url
+        filters_dict = caches['filters'].get(request.user.id) or {}
+        cached_path = filters_dict.get(request.path_info, None)
+        query_params = request.META['QUERY_STRING']
+        if not query_params and cached_path:
+            return redirect(f'{request.path_info}?{cached_path}')
+        menu = Menu.objects.get(id=object_id)
+        extra_context['preview_url_draft'] = menu.preview_url('draft')
+        extra_context['preview_url_review'] = menu.preview_url('pending')
+        extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(
                 name=self.chosen_customization, name__in=request.user.customizations
             ).first() or 'all'
+        valid_query = query_params != 'e=1' and str(self.chosen_customization) == request.GET.get(
+            'customization') and str(self.chosen_customization) != 'all'
+        filters_dict[request.path_info] = query_params if valid_query else ''
+        caches['filters'].set(request.user.id, filters_dict)
         return super().change_view(request, object_id, form_url, extra_context)
 
     def get_inline_instances(self, request, obj=None):
@@ -1032,7 +1103,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     self.model, self.admin_site, depth=1, total_depth=obj_orig.depth,
                     customization=self.chosen_customization, user_customizations=request.user.customizations,
                     admin_config=getattr(obj_orig, 'admin_config'),
-                    custom_preview=self.model.preview_url
+                    custom_preview=self.model.node_preview_url
                 )]
         return []
 
@@ -1041,6 +1112,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         objs = [obj for obj, fields in formset.changed_objects]
         objs.extend(formset.new_objects)
         for obj in objs:
+            obj.refresh_from_db()
             if obj.asset:
                 obj.asset.customizations.set(obj.enabled.all())
 
@@ -1111,27 +1183,77 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             raise PermissionDenied()
         form_export = None
         form_import = None
-        if request.method == "POST":
+        conflicts = []
+        menu_name = ''
+        if request.method == 'POST':
             if 'export' in request.POST:
                 form_export = MenuPortForm(request.POST, request.FILES, port_type='export')
                 if form_export.is_valid():
-                    data = form_export.cleaned_data
-                    menu_obj = data['menu']
-                    content = json.dumps(menu_obj.to_dict(), ensure_ascii=False, indent=4, separators=(',', ': '))
-                    return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+                    menu_name = form_export.cleaned_data['menu'].name
+                    task = async_menu_export.apply_async(args=[menu_name])
+                    file_name = f'menu-{menu_name}.json'
+                    return render(request, 'cms/menu_porting.html',
+                                  {'formExport': form_export,
+                                   'formImport': MenuPortForm(request.POST, request.FILES, port_type='import'),
+                                   'user': request.user,
+                                   'has_permission': admin.site.has_permission(request),
+                                   'site_url': admin.site.site_url,
+                                   'site_header': admin.site.site_header,
+                                   'site_title': admin.site.site_title,
+                                   'title': 'Export/Import Menus',
+                                   'processing_menu': menu_name,
+                                   'queue_message': 'Menu export waiting in queue...',
+                                   'progress_message': 'Processing export asset/node CURRENT out of TOTAL',
+                                   'complete_message': f'Menu "{menu_name}" has been successfully exported. Click the download link below if download didn\'t start automatically.',
+                                   'download_message': f'Download "{file_name}"',
+                                   'modal_title': 'Processing Menu Export',
+                                   'task': str(task)
+                                   })
             elif 'import' in request.POST:
+                PACKAGE_CACHE = PackagesCache()
                 form_import = MenuPortForm(request.POST, request.FILES, port_type='import')
                 if form_import.is_valid():
+                    task = ''
                     data = form_import.cleaned_data
                     menu = data['menu']
-                    menu.from_dict(json.load(request.FILES['file']))
-                    messages.success(request, 'Successfully imported menu')
+                    force = data['force']
+                    accept_reviews = data['accept_reviews']
+                    cache_key = f'{request.session.session_key}-{menu}'
+                    file = request.FILES.get('file') or PACKAGE_CACHE[cache_key]
+                    file = file if isinstance(file, (list, dict)) else json.load(file)
+                    menu_name = file.get('name')
+                    PACKAGE_CACHE[cache_key] = file
+                    conflicts = structure.check_asset_conflicts(file.get('assets', []))
+                    if not conflicts or force:
+                        conflicts = []
+                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews])
+                    else:
+                        messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
+                    return render(request, 'cms/menu_porting.html',
+                                  {'formExport': MenuPortForm(request.POST, request.FILES, port_type='export'),
+                                   'formImport': form_import,
+                                   'user': request.user,
+                                   'has_permission': admin.site.has_permission(request),
+                                   'site_url': admin.site.site_url,
+                                   'site_header': admin.site.site_header,
+                                   'site_title': admin.site.site_title,
+                                   'title': 'Export/Import Menus',
+                                   'processing_menu': menu.name,
+                                   'queue_message': 'Menu import waiting in queue...',
+                                   'progress_message': 'Processing asset/node CURRENT out of TOTAL',
+                                   'complete_message': f'Menu "{menu.name}" has been successfully imported.',
+                                   'download_message': '',
+                                   'file_name': '',
+                                   'conflicts': conflicts,
+                                   'modal_title': 'Processing Menu Import',
+                                   'task': str(task)
+                                  })
 
         if not form_export:
             form_export = MenuPortForm(port_type='export')
         if not form_import:
             form_import = MenuPortForm(port_type='import')
-
+        messages.info(request, 'Checking asset names...')
         return render(request, 'cms/menu_porting.html',
                       {'formExport': form_export,
                        'formImport': form_import,
@@ -1140,26 +1262,89 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'site_url': admin.site.site_url,
                        'site_header': admin.site.site_header,
                        'site_title': admin.site.site_title,
+                       'conflicts': conflicts,
+                       'menu': menu_name,
                        'title': 'Export/Import Menus'})
+
+    @staticmethod
+    def generate_export(menu, complete_cb=None, update_progress_cb=None):
+        menu_obj = menu if not isinstance(menu, str) else Menu.objects.get(name=menu)
+        menu_dict = menu_obj.to_dict()
+        filtered_assets = Asset.objects.filter(uuid__in=menu_dict['assets'])
+        progress = 0
+        total_assets = filtered_assets.count()
+        assets = []
+
+        def increment_progress():
+            nonlocal progress
+            if not update_progress_cb:
+                return
+            progress += 1
+            update_progress_cb(progress, total_assets)
+
+        for asset in filtered_assets:
+            asset_dict = generate_structure.from_database(asset, True)[0]
+            asset_dict['name'] = asset.name
+            asset_dict['uuid'] = str(asset.uuid)
+            asset_dict['customizations'] = [customization.name for customization in asset.customizations.all()]
+            prepare_asset_exports(asset, asset_dict)
+            assets.append(asset_dict)
+            increment_progress()
+
+        menu_dict['assets'] = assets
+        content = json.dumps(menu_dict, ensure_ascii=False, indent=4, separators=(',', ': '))
+        if complete_cb:
+            complete_cb(f'menu-{menu_obj.name}.json', content)
+        else:
+            return response_attachment(content, f'menu-{menu_obj.name}.json', 'application/json')
+
+
+class MenuFilter(SimpleListFilter):
+    title = 'Menu'
+    parameter_name = 'menu'
+
+    def lookups(self, request, model_admin):
+        return ((menu.name, menu.name) for menu in Menu.objects.all())
+
+    def queryset(self, request, queryset):
+        if self.value():
+            menu = Menu.objects.filter(name__iexact=self.value()).first()
+            if menu:
+                node_ids = menu.all_node_ids
+                return queryset.filter(id__in=node_ids)
+        return queryset
 
 
 @admin.register(MenuNode)
 class MenuNodeAdmin(CMSAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'menu', 'url', 'condition', 'authentication', 'touched', 'parent_node', 'parent_menu')
+    search_fields = ('name', 'asset__name')
+    list_filter = (MenuFilter, 'enabled', 'authentication')
     form = MenuNodeChangeForm
     fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available',
-              'enabled', 'touched')
+              'enabled', 'touched', 'parent_node', 'menu')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }
+
+    def menu(self, obj):
+        menu = obj.get_parent()
+        return format_html(f'<a href="{reverse("admin:cms_menu_change", args=(menu.id,))}">{menu.name}</a>')
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         transaction.on_commit(MENU_CACHE.clear_cache)
 
-    def response_change(self, request, obj):
-        parent_menu = obj.get_parent()
-        return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))
+    def save_model(self, request, obj, form, change):
+        if obj.pk:
+            old_obj = MenuNode.objects.get(pk=obj.pk)
+            parent = old_obj.get_parent()
+            if form.cleaned_data['parent_node']:
+                obj.parent_menu = None
+            else:
+                obj.parent_menu = parent
+        return super().save_model(request, obj, form, change)
+
 
 class LicenseTypeAdmin(CMSAdmin):
     list_display = ('name', 'title', 'deactivations_allowed')
@@ -1174,3 +1359,8 @@ admin.site.register(ZendeskCategory, CMSAdmin)
 admin.site.register(ZendeskSection, CMSAdmin)
 admin.site.register(ZendeskArticle, CMSAdmin)
 admin.site.register(ZendeskArticleLabel, CMSAdmin)
+
+
+@admin.register(SpecialStructure)
+class SpecialStructAdmin(CMSAdmin):
+    list_display = ('name',)

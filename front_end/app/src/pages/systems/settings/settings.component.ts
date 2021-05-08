@@ -1,14 +1,14 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                 from '@angular/core';
+}                                    from '@angular/core';
 import {
-    ActivatedRoute, Router, NavigationEnd
-}                                 from '@angular/router';
-import { UntilDestroy }           from '@ngneat/until-destroy';
-import { Subscription }           from 'rxjs';
-import { filter, tap }            from 'rxjs/operators';
-
+    ActivatedRoute, Router,
+    NavigationEnd
+}                                    from '@angular/router';
+import { UntilDestroy }              from '@ngneat/until-destroy';
+import { Subject, Subscription }     from 'rxjs';
+import { filter, takeUntil, tap }    from 'rxjs/operators';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -16,7 +16,8 @@ import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '@src/menu';
 import {
-    ICamera, NxSystem, NxSystemService
+    ICamera, NxSystem,
+    NxSystemService
 }                                    from '@services/system.service';
 import { NxSystemsService }          from '@services/systems.service';
 import { Account, NxAccountService } from '@services/account.service';
@@ -27,7 +28,7 @@ import { NxApplyService }            from '@services/apply.service';
 import { NxPageService }             from '@services/page.service';
 import { NxRibbonService }           from '@components/ribbon';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxAppStateService }         from '@services/nx-app-state.service';
+import { NxAppStateService }             from '@services/nx-app-state.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,7 +45,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: any = {};
+    content: any = [];
 
     account: Account;
     system: NxSystem|any;
@@ -53,7 +54,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     deletingSystem;
 
     _menuSearchMode: boolean;
-    searchableResults: boolean;
     menuVisible: boolean;
     systemId;
     systemNoAccess: boolean;
@@ -68,6 +68,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     headerHeight: number;
     secondaryMerge = false;
 
+    private cancelPrevious$ = new Subject();
+
     private connectionSubscription: Subscription;
     private menuSectionSubscription: Subscription;
     private menuSubSectionSubscription: Subscription;
@@ -75,7 +77,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
+    private systemInfoSubscription: Subscription;
     private checkMergeSubscription: Subscription;
+
+    private origSelectedSection: string;
+    private origSelectedSubSection: string;
+    private origSelectedDetailSection: string;
 
     private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
@@ -86,8 +93,26 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private systemReady() {
-        this.settingsService.system = this.system;
         this.menuVisible = true;
+    }
+
+    private canNavMenu(origTargetValue, contentTarget, selection) {
+        if (this.applyService.locked) {
+            origTargetValue = selection;
+
+            this.cancelPrevious$.next('cancel');
+            this.applyService.applyOnNavSubject.pipe(
+                takeUntil(this.cancelPrevious$)
+            ).subscribe(status => {
+                if (!['', 'canceled'].includes(status)) {
+                    this.content[contentTarget] = origTargetValue;
+                    this.content = { ...this.content }; // trigger onChange
+                }
+            });
+        } else {
+            this.content[contentTarget] = selection;
+            this.content = { ...this.content }; // trigger onChange
+        }
     }
 
     constructor(
@@ -116,7 +141,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.setDesktopLayout();
         this.pageService.pageTitle = this.LANG.pageTitles.system?.();
         this.init();
     }
@@ -152,6 +176,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.content = {
+            searchableResults  : false,
             selectedSection    : '', // updated by selectedSectionSubject
             selectedSubSection : '', // updated by selectedSubSectionSubject
             system             : {}, // updated by getSystemInfo
@@ -170,22 +195,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuSectionSubscription = this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
-                this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                if (this.content.selectedSection === selection) return;
+
+                this.canNavMenu(this.origSelectedSection, 'selectedSection', selection);
             });
 
         this.menuSubSectionSubscription = this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
-                this.content.selectedSubSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.canNavMenu(this.origSelectedSubSection, 'selectedSubSection', selection);
             });
 
         this.menuSelectedDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
-                this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.canNavMenu(this.origSelectedDetailSection, 'selectedDetailsSection', selection);
             });
 
         // TODO: add processes back
@@ -216,7 +240,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix()
         }).then(() => {
-            if (this.system.permissions.editUsers) {
+            if (this.system.userManager.permissions.editUsers) {
                 this.gettingSystemUsers.run();
             } else {
                 this.systemReady();
@@ -240,8 +264,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.system) {
             this.system.stopPoll();
+            this.system.ribbonService.hide();
         }
-        this.system.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }
 
@@ -250,78 +274,98 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then((account) => {
-                if (account && !this.CONFIG.isLocal) {
-                    // Starts the systems poll if starting on a system.
-                    if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
-                        this.systemsService.getSystems(account.email);
-                    }
-                    this.account = account;
-                    this.system = this.systemService.createSystem(this.account.email, this.systemId);
-                    this.system.show404 = false;
-                    this.gettingSystem.run().catch(() => {
-                        this.systemNoAccess = true;
-                    });
+                if (account) {
+                    if (!this.CONFIG.isLocal) {
+                        this.account = account;
+                        // Starts the systems poll if starting on a system.
+                        if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
+                            this.systemsService.getSystems(account.email);
+                        }
 
-                    if (this.systemSubscription) {
-                        this.systemSubscription.unsubscribe();
-                    }
-                    this.systemSubscription = this.system.infoSubject
-                        .pipe(
-                            filter((system: any) => system !== undefined),
-                            tap(({ isOnline }) => {
-                                this.applyService.isOnline$.next(!!isOnline);
-                                if (isOnline) {
-                                    this.system.ribbonService.hide();
-                                } else {
-                                    this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                        if (this.systemSubscription) {
+                            this.systemSubscription.unsubscribe();
+                        }
+                        this.systemSubscription = this.systemsService
+                            .systemsSubject
+                            .subscribe((systems) => {
+                                if (!systems.filter(s => s.id === this.systemId).length) {
+                                    this.systemNoAccess = true;
+                                    return;
                                 }
-                            })
-                        )
-                        .subscribe(() => {
-                            // if system is removed while on page, redirects to systems page
-                            if (
-                                this.system && this.systemsService.systems &&
-                                !this.systemsService.systems.some(system => system.id === this.system.id) &&
-                                !this.CONFIG.isLocal) {
-                                this.uriService.updateURI('/systems');
-                            }
-                            if (this.system.isAvailable) {
-                                this.updateAlert();
-                            }
-                            if (this.system.users) {
-                                this.updateMenu();
-                            }
-                            if (this.system.canViewInfo()) {
-                                // Makes request to get health, this is used to cache request.
-                                this.system.mediaserver.getAggregateHealthReport().subscribe();
-                            }
+                                if (this.systemId === this.system?.id) {
+                                    return;
+                                }
+                                this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                                this.system.show404 = false;
+                                this.gettingSystem.run().catch(() => {
+                                    this.systemNoAccess = true;
+                                });
+
+                                if (this.systemInfoSubscription) {
+                                    this.systemInfoSubscription.unsubscribe();
+                                }
+                                this.systemInfoSubscription = this.system.infoSubject
+                                    .pipe(
+                                        filter((system: any) => system !== undefined),
+                                        tap(({ isOnline }) => {
+                                            this.applyService.isOnline$.next(!!isOnline);
+                                            if (isOnline) {
+                                                this.system.ribbonService.hide();
+                                            } else {
+                                                this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                            }
+                                        })
+                                    )
+                                    .subscribe(() => {
+                                        // if system is removed while on page, redirects to systems page
+                                        if (
+                                            this.system && this.systemsService.systems &&
+                                            !this.systemsService.systems.some(system => system.id === this.system.id) &&
+                                            !this.CONFIG.isLocal) {
+                                            this.uriService.updateURI('/systems');
+                                        }
+                                        if (this.system.isAvailable) {
+                                            this.updateAlert();
+                                        }
+                                        if (this.system.canViewInfo()) {
+                                            // Makes request to get health, this is used to cache request.
+                                            this.system.mediaserver.getAggregateHealthReport().subscribe();
+                                        }
+
+                                        this.updateMenu();
+                                    });
+
+                                if (this.connectionSubscription) {
+                                    this.connectionSubscription.unsubscribe();
+                                }
+                                this.connectionSubscription = this.system.connectionSubject
+                                    .pipe(filter((connectionLost: boolean) => connectionLost))
+                                    .subscribe(_ => {
+                                        this.connectionLost();
+                                    });
+                            });
+                    } else {
+                        if (!this.settingsService.system) {
+                            this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                        }
+                        this.system = this.settingsService.system;
+                        this.system.update();
+                        this.systems = [this.system];
+                        this.system.isAvailable = true;
+                        this.system.isOnline = true;
+                        setTimeout(() => {
+                            this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
                         });
 
-                    if (this.connectionSubscription) {
-                        this.connectionSubscription.unsubscribe();
-                    }
-                    this.connectionSubscription = this.system.connectionSubject
-                        .pipe(filter((connectionLost: boolean) => connectionLost))
-                        .subscribe(_ => {
-                            this.connectionLost();
+                        if (this.systemInfoSubscription) {
+                            this.systemInfoSubscription.unsubscribe();
+                        }
+                        this.systemInfoSubscription = this.system.infoSubject.subscribe(() => {
+                            this.systemReady();
+                            this.updateAlert();
+                            this.updateMenu();
                         });
-                } else if (this.CONFIG.isLocal && account) {
-                    // this.systemsService.stopPoll();
-                    if (!this.settingsService.system) {
-                        this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                     }
-                    this.system = this.settingsService.system;
-                    this.system.update();
-                    this.system.getInfoAndPermissions();
-                    this.systems = [this.system];
-                    this.system.isAvailable = true;
-                    this.system.isOnline = true;
-                    this.settingsService.system = this.system;
-                    this.systemSubscription = this.system.infoSubject.subscribe(() => {
-                        this.systemReady();
-                        this.updateAlert();
-                        this.updateMenu();
-                    });
                 }
             });
     }
@@ -381,7 +425,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
 
         this.content.system = this.system;
-        if (this.system.permissions.editCameras) {
+        if (this.system.userManager.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -414,7 +458,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
         }
 
-        if (this.system.permissions.editUsers) {
+        if (this.system.userManager.permissions.editUsers) {
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
 
             if (!usersNode) {
@@ -441,7 +485,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             // Retain buttons
+            // @ts-ignore
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
+                // @ts-ignore
                 usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
@@ -486,7 +532,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
         }
 
-        if (this.system.permissions.isAdmin) {
+        if (this.system.userManager.permissions.isAdmin) {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {
@@ -499,6 +545,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
+                const byParam = NxUtilsService.byParam((server: any) => {
+                    return server.name.toLowerCase();
+                }, NxUtilsService.sortASC);
+                this.system.servers.sort(byParam);
+
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
@@ -506,10 +557,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                     serversNode.level3.push({
                         id              : server.id,
-                        icon            : '',
+                        svgIcon         : this.getServerStatusIcon(server),
                         label           : server.name,
                         path            : `servers/${id}`,
-                        additionalLabel : server.ip
+                        additionalLabel : server.ip,
+                        indent          : true,
+                        disabled        : server.status.toLowerCase() === 'offline'
                     });
                 });
             }
@@ -546,13 +599,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
-        this.searchableResults = (this.system.permissions.editCameras && this.system.permissions.isAdmin && this.system.permissions.editUsers);
-
+        this.content.searchableResults = (this.system.userManager.permissions.editCameras && this.system.userManager.permissions.isAdmin && this.system.userManager.permissions.editUsers);
         this.content = { ...this.content };
     }
 
     getCameraStatusIcon({ status }) {
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+    }
+
+    getServerStatusIcon({ status }) {
+        return this.CONFIG.menus.systemSettings.servers.statusIcons[status.toLowerCase()];
     }
 
     cleanUrl() {

@@ -1,18 +1,20 @@
 import { filter, map, retry, startWith, switchMap } from 'rxjs/operators';
-import { combineLatest, Subject }                   from 'rxjs';
+import { combineLatest, Observable, Subject }       from 'rxjs';
 
 import { ServerManager }                                    from '../server-manager/server-manager';
 import { StateManager }                                     from '@src/utils';
 import { BaseManager }                                      from '../base/base-manager';
 import { CurrentStorageState, currentStorageStateFactory }  from './current-storage-state';
-import { NxLogger }                                         from '@services/utils.service';
+import { NxLogger, fallback }                               from '@services/utils.service';
 
-enum UpdateTriggers {
+export enum UpdateTriggers {
     INFO='info',
     METRICS='metrics',
     STATS='stats',
     ANALYTICS='analytics'
 }
+
+export type TriggerUpdateCallback = () => void
 
 /**
  * StorageState class should only handle managing the storage state data stream.
@@ -25,7 +27,18 @@ export class StorageState extends BaseManager {
     /**
      * Trigger updates, leave blank to update all or add UpdateTrigger to update specific data.
      */
-    update = (dataToRefresh?: UpdateTriggers) => !dataToRefresh ? Object.values(UpdateTriggers).forEach(this.update) : this.#updater$.next(dataToRefresh)
+    update = (dataToRefresh?: UpdateTriggers) => {
+        if (!dataToRefresh) {
+            Object.values(UpdateTriggers).forEach(this.update);
+        } else {
+            this.#updater$.next(dataToRefresh);
+        }
+        return this.storageState$;
+    }
+
+    poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
+        return [this.storageState$, () => this.update(dataToPoll)];
+    }
 
     /**
      * Triggers update events, similar to redux action/reducer pattern.
@@ -67,12 +80,13 @@ export class StorageState extends BaseManager {
      */
     storageState$ = combineLatest(
         [
-            this.#storageInfoStateManager.state$,
-            this.#storageMetricsStateManager.state$,
-            this.#storageStatsStateManager.state$,
-            this.#storageAnalyticsStateManager.state$
+            this.#storageInfoStateManager.state$.pipe(fallback([])),
+            this.#storageMetricsStateManager.state$.pipe(fallback({})),
+            this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
+            this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
+        filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map((cur) => {
             if (
@@ -88,11 +102,14 @@ export class StorageState extends BaseManager {
         })
     );
 
+    statsUpdated$ = new Subject<any>()
+
     constructor(public serverManager: ServerManager) {
         super();
         this.storageState$.subscribe(NxLogger.logCustom({
             logIdentifier : 'Storage State',
             prettyPrint   : false
         }));
+        this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
     }
 }

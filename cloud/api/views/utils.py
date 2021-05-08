@@ -18,7 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType 
+    cached_doc_menu_map, LicenseType
 
 logger = logging.getLogger(__name__)
 
@@ -57,10 +57,12 @@ def get_settings_from_cache():
         'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
         'integrationSeoPageDescription': customization_cache.get('integration_seo_page_description', ''),
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
+        'landingDescription': customization_cache.get('landing_description', ''),
         'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache.get('public_downloads', False),
         'publicReleases': customization_cache.get('public_releases', False),
+        'showAllBetas': customization_cache.get('show_all_betas', False),
         'showAnalyticsEvents': customization_cache.get('show_analytics_events', False),
         'sortSupportedDevicesByPopularity': customization_cache.get('sort_supported_devices_by_popularity', False),
         'testedOperatingSystems': customization_cache.get('tested_operating_systems', {}),
@@ -74,6 +76,28 @@ def get_settings_from_cache():
         'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
         'trialLicenseKey': customization_cache.get('trial_license_key', ''),
     }
+
+
+def filter_releases(releases):
+    """Finds a mobile and vms release"""
+    filtered_releases = []
+    has_mobile = False
+    has_vms = False
+    mobile_types = ["android", "ios"]
+
+    for release in releases:
+        is_mobile = any(map(lambda platform: platform.get("name") in mobile_types, release.get("platforms", [])))
+        if is_mobile and not has_mobile:
+            has_mobile = True
+            filtered_releases.append(release)
+        elif not is_mobile and not has_vms:
+            has_vms = True
+            filtered_releases.append(release)
+
+        if has_mobile and has_vms:
+            break
+
+    return filtered_releases
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
@@ -183,6 +207,10 @@ def downloads_history(request):
 
     downloads_json.raise_for_status()
     downloads_json = downloads_json.json()
+
+    if not get_settings_from_cache()["showAllBetas"]:
+        filter_type = "betas"
+        downloads_json[filter_type] = filter_releases(downloads_json.get(filter_type, []))
 
     return Response(downloads_json)
 
@@ -338,14 +366,16 @@ def get_settings(request):
     settings_object = get_settings_from_cache()
     if 'version_id' in settings_object:
         del settings_object['version_id']
-    menus = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
-    settings_object['menus'] = {k: v['nodes'] for k, v in menus.items()}
+    settings_object['menus'] = get_cached_menu(settings.CUSTOMIZATION, user=request.user)
     settings_object['docMenuMap'] = cached_doc_menu_map(customization_name=settings.CUSTOMIZATION)
     settings_object['licenseTypes'] = LicenseType.get_license_types()
 
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
         del settings_object['cloudMerge']
+
+    if 'showAllBetas' in settings_object:
+        del settings_object['showAllBetas']
 
     if not settings_object.get('integrationStoreEnabled') and \
             UserGroupsToAssetPermissions.user_has_beta_access(request.user):

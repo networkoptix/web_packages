@@ -1,53 +1,90 @@
 *** Keywords ***
-Log in to Autotests 2 System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${MERGE BUTTON SYSTEM DISABLED}
-    Run Keyword If    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
 
+# Setups and teardowns
 System Admin Suite Setup
-    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
-    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
-    Set Suite Variable    ${email noperm}
-    ${local auth}=   Create List    admin    ${base password}
-    ${cloud auth}=   Create List    ${owner}    ${base password}
-    Set Suite Variable    ${cloud auth}
-    Set Suite Variable    ${local auth}
-    ${system}=   Setup Docker System    cloud email=${owner}
-    Set Suite Variable    ${system}
-
-    ${users}=   Create Dictionary
-    FOR    ${role}    IN    @{permissions.keys()}
-        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
-        Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
-        Set To Dictionary    ${users}    ${role}=${email}
-    END
-    Set Suite Variable    ${users}
-    Sleep    60
+    Create Base Cloud System    image=${IMAGE 4.3}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
+    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${local auth}    ${CAMERA NAME}
+    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
+        ...    ${local auth}
+        ...    https://${QABURBANK IP}:${local system}[port]
+        ...    local_viewer
+        ...    ${permissions}[viewer]
+        ...    noptixautoqa+local_viewer@gmail.com
+        ...    local_viewer
+        ...    ${base password}
+        ...    is cloud=${False}
+    Set Suite Variable    ${local system}
+    Sleep    30
     Open browser and go to URL    ${ENV}
 
-System Admin Suite Tear Down
-    Run keyword and ignore error    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
-    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
-        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
-    END
-    Delete Docker Server    ${system}[cont]
+System Admin Suite Teardown
+    Delete Base Cloud System
+    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[cont]
     Close All Browsers
+    Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
+
+System Admin Test Setup
+    Skip If Irrelevant
 
 System Admin Test Restart
-    Common Restart Logout    ${ENV}
-    ${auth}=   Create List    admin    ${base password}
-    Run keyword and return status    Rename System    ${auth}    ${system}[id]    ${system}[name]
+    Skip If Irrelevant
+    Go To    https://${QABURBANK IP}:${system}[port]
+    Wait until element is visible    Wait until element is visible    ${SYSTEM NAME}
+    Run keyword and ignore error    Log Out
+    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
+    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
+    Delete All Cookies
 
-#Open Rename System Dialog
-#    Click Button    ${RENAME SYSTEM}
-#    Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
+# Waits
+Wait until settings are visible
+    [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX}${visible}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX}${visible}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}${visible}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX}${visible}
+    ...    timeout=${timeout}
 
+    Run Keyword If    not ${old system}    Wait Until Elements Are Visible
+        ...    ${ALLOW ONLY SECURE CHECKBOX}${visible}
+        ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+        ...    ${LIMIT SESSION DURATION CHECKBOX}${visible}
+        ...    timeout=${timeout}
+        ...    ELSE    Wait Until Elements Are Not Visible
+            ...    ${ALLOW ONLY SECURE CHECKBOX}${visible}
+            ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+            ...    ${LIMIT SESSION DURATION CHECKBOX}${visible}
+            ...    timeout=${timeout}
+
+Wait Until Advanced Settings Are Visible
+    [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    @{ADVANCED SETTINGS ALERT BAR}
+        ...    @{ADVANCED SETTING ELEMENT BLOCK ${block number}}
+        ...    timeout=${timeout}
+
+# UI - validations
+Validate Disconnect Form
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    ${DISCONNECT FORM HEADER}
+        ...    ${DISCONNECT FORM CLOSE BUTTON}
+        ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
+        ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
+        ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
+        ...    ${DISCONNECT PASSWORD INPUT}
+        ...    ${DISCONNECT FORM CANCEL BUTTON}
+        ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+
+Validate Success Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+        ...    ${SUCCESS DIALOG HEADER}
+        ...    ${SUCCESS DIALOG X BUTTON}
+        ...    ${SUCCESS DIALOG TEXT}
+        ...    ${SUCCESS DIALOG CLOSE BUTTON}
+
+# UI - actions
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
     Click Element    ${SYSTEM NAME}
@@ -60,144 +97,74 @@ Change System Name
         ...    Wait until element is visible    ${NO UNSAVED CHANGES}    AND
         ...    Sleep    1
 
-Settings on page should match settings on server
-    [Arguments]    ${server url}=https://${QABURBANK IP}:${system}[port]
-    Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled    ${server url}
-    Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed    ${server url}
-    Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization    ${server url}
-    Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled    ${server url}
-    Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced    ${server url}
-    Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced    ${server url}
-    Log    Limit session duration to
-    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
-
-Setting on page matches server
-    [Arguments]    ${setting locator}    ${setting key}    ${server url}=https://${QABURBANK IP}:${system}[port]
-    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting locator}//span    class    tick checked
-    ${string}=   Convert To String    ${status}
-    ${selected}=   Convert To Lowercase    ${string}
-    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${setting key}    ${selected}
-
-Input on page matches server
-    [Arguments]    ${input}    ${id}    ${system}=${ADVANCED SYS IP}
-    ${data} =    Get Element Attribute    ${input}    value
-    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${data}    ${system}
-
 Change Input for Advanced Setting
-    [Arguments]    ${input}    ${value}
-    Input Text    ${input}    ${value}
-    Click Element    ${ADVANCED SETTINGS SAVE BUTTON}    
-    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    
-    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
+    [Arguments]    ${locator}    ${value}
+    Input Text    ${locator}    ${value}
+    Wait until element is visible    ${SAVE BUTTON}
+    Click Button    ${SAVE BUTTON}
+    Validate Success Dialog
+    Click Element    ${SUCCESS DIALOG CLOSE BUTTON}
     Run Keyword Unless    '${value}' == '${EMPTY}'
-    ...    Wait Until Textfield Contains    ${input}    ${value}    
-
-Data on page matches server
-    [Arguments]    ${element}    ${id}    ${system}=${ADVANCED SYS IP}
-    ${data} =    Get Text    ${element}  
-    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${id}    ${data}    ${system}
-    
-Evaluate Session Limit
-    [Arguments]    ${server url}=https://${QABURBANK IP}:${system}[port]
-    ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Sleep    5
-    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
-    ...    "${interval}"=="${MINUTES TEXT}"    1
-    ${number}=   Evaluate      ${multiplier}*${value}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
-
-Changing setting changes it on server
-    [Arguments]    ${setting locator}    ${setting key}    ${server url}=${AUTO SYS IP}
-    ${advanced}=   Run Keyword and Return Status    Location Should Contain    ${ADVANCED SETTINGS}
-    Wait until element is enabled    ${setting locator}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting locator}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
-    Set Checkbox Value    ${setting locator}    ${selected}
-    Sleep    1
-    Run Keyword If    ${advanced}    Run Keywords
-    ...    Click Element   ${ADVANCED SETTINGS SAVE BUTTON}    AND
-    ...    Wait Until Element Is Visible    ${ADVANCED SETTINGS CLOSE BUTTON}    AND
-    ...    Click Button    ${ADVANCED SETTINGS CLOSE BUTTON}
-    ...    ELSE    Run Keywords
-        ...    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}    AND
-        ...    Click Button    ${SYSTEM SAVE}    AND
-        ...    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Evaluate System Settings via API    ${local auth}    ${server url}     ${setting key}    ${selected}
-
-#Change Setting and Save
-#    [Arguments]    ${setting}
-#    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-#    ${selected}=   Set Variable If    ${status}==True    false
-#    ...    ${status}==False    true
-#    Set Checkbox Value    ${setting}    ${selected}
-#    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-#    Click Button    ${SYSTEM SAVE}
-#    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-#
-#Change Setting Without Saving
-#    [Arguments]    ${setting}
-#    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-#    ${selected} =    Set Variable If    ${status}==True    false
-#    ...    ${status}==False    true
-#    Set Checkbox Value    ${setting}    ${selected}
+    ...    Wait Until Textfield Contains    ${locator}    ${value}
 
 Change Setting
-    [Arguments]    ${setting locator}    ${save}=${True}    ${buttons}=${True}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting locator}
+    [Arguments]    ${locator}    ${buttons}=${True}
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
     ${selected}=   Set Variable If    ${status}==True    false
     ...    ${status}==False    true
-    Set Checkbox Value    ${setting locator}    ${selected}
-    Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Run Keyword If    ${save}    Run Keywords
-        ...    Sleep    0.1    AND
-        ...    Click Button    ${SYSTEM SAVE}    AND
-        ...    Sleep    0.1    AND
-        ...    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Set Checkbox Value    ${locator}    ${selected}
+    Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    [Return]    ${selected}
+
+Change Setting And Save
+    [Arguments]    ${locator}    ${advanced}=${False}
+    ${selected}=   Change Setting    ${locator}
+    Click Button    ${SAVE BUTTON}
+    Run Keyword If    ${advanced}    Run Keywords
+        ...    Validate Success Dialog    AND
+        ...    Click Button    ${SUCCESS DIALOG CLOSE BUTTON}
+        ...    ELSE    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    [Return]    ${selected}
+
+Changing setting changes it on server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}    ${advanced}=${False}
+    Setting on page matches server    ${locator}    ${key}    ${server url}
+    Wait until element is enabled    ${locator}
+    ${selected}=   Change Setting And Save   ${locator}    ${advanced}
+    Evaluate System Settings via API    ${local auth}    ${server url}     ${key}    ${selected}
+
+Changing input setting changes it on server
+    [Arguments]    ${locator}    ${key}    ${new value}    ${server url}=${server url}
+    Input on page matches server    ${locator}    ${key}    ${server url}
+    Change Input for Advanced Setting    ${locator}    ${new value}
+    Evaluate System Settings via API    ${local auth}    ${server url}     ${key}    ${new value}
 
 Change Setting Encrypt video traffic
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
-    ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
+    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX}
+    ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
     ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
     ...    ${status}==True and ${status2}==True     false
 
-    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
-    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
+    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
     ...    ELSE    Run Keywords
-       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true
-       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
+       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
 
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     [Return]    ${selected}
 
 Changing Several Settings at Random
-    [Arguments]     ${action}   ${server url}=https://${QABURBANK IP}:${system}[port]
-#    ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
-#    # Might give same setting several times
-#    FOR    ${idx}    IN RANGE   ${random}
-#        ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
-#        Log    ${checkbox}
-#        Change Setting    ${checkbox}    save=False
-#    END
-
+    [Arguments]     ${action}   ${server url}=${server url}
     ${num settings}=   Evaluate    random.randint(2, 6)    modules=random    # random number of settings
-    ${settings to change}=   Evaluate    random.sample(${checkboxes}, ${num_settings})    modules=random    # random set of stttings
+    ${settings to change}=   Evaluate    random.sample(${checkboxes}, ${num settings})    modules=random    # random set of stttings
     FOR    ${s}    IN    @{settings to change}
-        Change Setting    ${s}    save=False
+        Change Setting   ${s}
     END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Sleep    2
@@ -205,11 +172,11 @@ Changing Several Settings at Random
 
 Changing All Settings
     [Arguments]    ${action}
+    Settings on page should match settings on server
     FOR    ${checkbox}    IN   @{checkboxes}
-        Log    ${checkbox}
-        Change Setting    ${checkbox}    save=False
+        Change Setting    ${checkbox}
     END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Sleep    2
@@ -237,55 +204,140 @@ Change Duration Time Interval
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Click Link    ${TIME DURATION NEW SELECTION}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
 
-Validate Disconnect Form
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FORM HEADER}
-    ...    ${DISCONNECT FORM CLOSE BUTTON}
-    ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
-    ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
-    ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
-    ...    ${DISCONNECT PASSWORD INPUT}
-    ...    ${DISCONNECT FORM CANCEL BUTTON}
-    ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+Elements Text Should Be
+    [Arguments]    ${args}
+    FOR    ${key}    ${val}    IN ZIP    ${args.keys()}    ${args.values()}
+        Element Text Should Be    ${key}    ${val}
+    END
 
-Wait Until System Settings Are Visible
-    Wait Until Elements Are Visible
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+# VMS verifications
+Settings on page should match settings on server
+    [Arguments]    ${server url}=${server url}
+    FOR    ${setting}    IN    @{default settings.keys()}
+        Run Keyword Unless    '''${setting}''' == '''sessionLimitMinutes'''    Setting on page matches server    //*[@id="${setting}"]    ${setting}
+    END
+    Log    Limit session duration to
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit
 
-Wait Until Security Settings Are Visible
-    Wait Until Elements Are Visible
-    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
-    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+Setting on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${locator}    ${True}
+    ${string}=   Convert To String    ${status}
+    ${selected}=   Convert To Lowercase    ${string}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${selected}
 
-Wait until settings are visible
-    [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
-    Wait Until Elements Are Visible
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
-    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-    ...    timeout=${timeout}
+Input on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${data}=   Get Element Attribute    ${locator}    value
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${data}
 
-    Run Keyword Unless    ${old system}    Wait Until Elements Are Visible
-    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
-    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
-    ...    timeout=${timeout}
+Data on page matches server
+    [Arguments]    ${locator}    ${key}    ${server url}=${server url}
+    ${data}=   Get Text    ${locator}
+    Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${data}
 
-Log in to Advanced Settings System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${ADVANCED SETTINGS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    ...    ELSE IF    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-   
-    
+Evaluate Session Limit
+    [Arguments]    ${server url}=${server url}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Sleep    5
+    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
+    ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
+    ...    "${interval}"=="${MINUTES TEXT}"    1
+    ${number}=   Evaluate    ${multiplier}*${value}
+    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
+
+# Search
+Validate Search Input
+    [Arguments]    ${view page}=${False}
+    Run Keyword If    ${view page}==${True}    Wait until elements are visible
+        ...    ${VIEW SEARCH INPUT}
+        ...    ${VIEW SEARCH DETAILS TOGGLER}
+        ...    ELSE    Wait until elements are visible
+            ...    ${SEARCH INPUT}
+            ...    ${SEARCH ICON}
+
+Search For
+    [Arguments]    ${text}
+    Validate Search Input
+    Input Text    ${SEARCH INPUT}    ${text}
+
+# Webadmin - specific
+Validate Cloud Block
+    [Documentation]    check UI of the header extension for local admin
+    [Arguments]    ${connected}=${False}
+    Wait until elements are visible
+       ...    ${CLOUD NAME}
+       ...    ${CLOUD LINK}
+    Run Keyword If    ${connected}    Wait until elements are visible
+        ...    ${CONNECTION STATUS}\[contains(text(), "CONNECTED")]
+        ...    ${DISCONNECT FROM NX}
+            ...    ELSE    Wait until elements are visible
+                ...    ${CONNECTION STATUS}\[contains(text(), "NOT CONNECTED")]
+                ...    ${CONNECT TO CLOUD BUTTON}
+#                ...    ${OWNER YOU}
+
+Validate Connect To Cloud Form
+    Wait until elements are visible
+        ...    ${CONNECT TO CLOUD MESSAGE}
+        ...    ${CONNECT TO CLOUD HEADER}
+        ...    ${CONNECT TO CLOUD X BUTTON}
+        ...    ${CONNECT TO CLOUD EMAIL INPUT}
+        ...    ${CONNECT TO CLOUD PASSWORD INPUT}
+        ...    ${CONNECT TO CLOUD FORGOT PASSWORD LINK}
+        ...    ${CONNECT TO CLOUD CREATE ACCOUNT LINK}
+        ...    ${CONNECT TO CLOUD OK BUTTON}
+        ...    ${CONNECT TO CLOUD CANCEL BUTTON}
+
+Fill in login and password
+    [Arguments]    ${login}    ${password}
+    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${email}    timeout= 0.1
+    Slow    Input Text    ${CONNECT TO CLOUD PASSWORD INPUT}    ${password}    timeout= 0.1
+
+Close Connect to Cloud modal
+    Wait until element is visible    ${CONNECT TO CLOUD X BUTTON}
+    Click Button    ${CONNECT TO CLOUD X BUTTON}
+    Wait untile element is not visible    ${CONNECT TO CLOUD MODAL}
+
+Validate Email Input Error
+    [Arguments]    ${error text}
+    #TODO ADD CHECKING RED COLOR
+    Wait until element is visible    ${CONNECT TO CLOUD EMAIL ERROR}\[contains(text(), "${error text}")]
+
+Validate Password Input Error
+    [Arguments]    ${error text}
+    #TODO ADD CHECKING RED COLOR
+    Wait until element is visible    ${CONNECT TO CLOUD PASSWORD ERROR}\[contains(text(), "${error text}")]
+
+Connect To Cloud
+    [Arguments]    ${email}    ${password}    ${success}=${True}
+    Validate Connect To Cloud Form
+    Fill in login and password    ${email}    ${password}
+    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Run Keyword If    ${success}    Run Keywords
+       ...    Check For Alert    System connected to Nx Cloud    AND
+       ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
+       ...    Wait until element is visible   ${DISCONNECT FROM NX CLOUD}
+
+# API - based
+Evaluate System Settings via API
+    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    ${settings}=   Get System Settings From Server    ${auth}    ${server url}
+    Dictionary should contain item    ${settings}    ${key}    ${expected value}
+
+Evaluate Log Level via API
+    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    ${logLevel}=   Get Log Level    ${auth}    ${server url}
+    Dictionary should contain item    ${logLevel}    ${key}    ${expected value}
+
+
+# Misc
+Checkbox Is Selected
+    [Arguments]    ${locator}    ${state}
+    ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
+    Should Be True    $selected == $stat

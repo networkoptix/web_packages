@@ -14,6 +14,8 @@ import { NxProcessService }          from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { WINDOW }                    from '@services/window-provider';
+import { CookieService }             from 'ngx-cookie-service';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -33,6 +35,7 @@ export class LoginWebadminModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
+    hideErrors: boolean = true;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -53,9 +56,11 @@ export class LoginWebadminModalContent implements OnInit {
         locationService: Location,
         private processService: NxProcessService,
         private storageService: NxStorageService,
+        private appStateService: NxAppStateService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
+        private cookieService: CookieService,
         public activeModal: NgbActiveModal,
         @Inject(DOCUMENT) private document: any,
         @Inject(WINDOW) protected window: Window
@@ -100,12 +105,20 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit() {
+        // remove leftover cookie
+        this.cookieService.delete('x-runtime-guid');
         // Check the url queryParams for next. if it exists set next equal to it.
         const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
         this.password = '';
+        const showWrongLoginError = () => {
+            this.wrongPassword = true;
+            this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
+            this.password = '';
+            this.renderer.selectRootElement('#login_password').focus();
+        };
 
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
@@ -117,13 +130,9 @@ export class LoginWebadminModalContent implements OnInit {
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                notAuthorized: () => {
-                    this.wrongPassword = true;
-                    this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
-                    this.password = '';
-                    this.renderer.selectRootElement('#login_password').focus();
-                },
-                accountBlocked: () => {
+                'This user does not exist.' : showWrongLoginError,
+                notAuthorized               : showWrongLoginError,
+                accountBlocked              : () => {
                     this.loginForm.controls.login_password.markAsPristine();
                     this.loginForm.controls.login_password.markAsUntouched();
 
@@ -132,15 +141,11 @@ export class LoginWebadminModalContent implements OnInit {
                 }
             }
         }, (result) => {
-            if (this.CONFIG.isLocal) {
-                return this.account.loginAllServers(this.auth.email, this.password, this.remember)
-                    .then(() => {
-                        this.window.location.reload();
-                        return this.activeModal.close(result);
-                    });
-            }
-            this.activeModal.close();
+            this.activeModal.close(result);
             const isRootPath = ['/', ''].includes(this.locationService.path());
+
+            // prevent manual input of url for activate routes
+            this.appStateService.canManuallyAccess = this.next.includes('activate');
 
             if (this.keepPage) {
                 if (isRootPath) {

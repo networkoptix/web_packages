@@ -1,9 +1,10 @@
 import { IConfig } from './config-types';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 
 export const nxConfig: IConfig = {
-    alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
-    animations   : {
+    alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
+    pollingTimeout : 30 * 1000,
+    animations     : {
         carouselImage: {
             enter : '0.25s ease-in',
             leave : '0.25s ease-out'
@@ -21,7 +22,7 @@ export const nxConfig: IConfig = {
         debug : false
     },
     credentialsValidation: {
-        emailRegex           : environment.isLocal ? '.*' : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+        emailRegex           : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
         passwordRequirements : {
             maxLength          : 255,
             minClassesCount    : 2,
@@ -31,6 +32,11 @@ export const nxConfig: IConfig = {
         }
     },
     defaultLanguage : 'en_US',
+    developers      : {
+        landing: {
+            adminLink: '/admin/cms/menu/%ID%/change/'
+        }
+    },
     dialogs: {
         message: {
             subjects: {
@@ -169,6 +175,7 @@ export const nxConfig: IConfig = {
         devTools              : '/static/images/icons/dev_tools/',
         backgrounds           : '/static/images/icons/backgrounds/',
         dir                   : '/static/images/icons/standard/',
+        dirDevtools           : '/static/images/icons/dev_tools/',
         dirButtons            : '/static/images/icons/buttons/',
         dirNonStandard        : '/static/images/icons/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
@@ -207,8 +214,8 @@ export const nxConfig: IConfig = {
     },
     interceptor: {
         cloudUnavailable: {
-            error : 'cloudInvalidResponse',
-            timeout  : 5 * 1000
+            error   : 'cloudInvalidResponse',
+            timeout : 5 * 1000
         }
     },
     ipvd: {
@@ -231,6 +238,9 @@ export const nxConfig: IConfig = {
         tableLarge: {
             rows: 20
         }
+    },
+    landing: {
+        description: ''
     },
     maintenanceTimeout : 60 * 1000,
     maxServers         : 100, // The maximum amount of server that can be in a system
@@ -273,9 +283,13 @@ export const nxConfig: IConfig = {
                 path : 'users'
             },
             servers: {
-                id   : 'servers',
-                icon : 'servers',
-                path : 'servers'
+                id          : 'servers',
+                icon        : 'servers',
+                path        : 'servers',
+                statusIcons : {
+                    offline : 'device_offline',
+                    online  : ''
+                }
             },
             cameras: {
                 id          : 'cameras',
@@ -283,7 +297,7 @@ export const nxConfig: IConfig = {
                 path        : 'cameras',
                 statusIcons : {
                     archive      : 'camera_archive',
-                    offline      : 'camera_offline',
+                    offline      : 'device_offline',
                     recording    : 'camera_recording',
                     scheduled    : 'camera_scheduled',
                     unauthorized : 'camera_unauthorized',
@@ -303,8 +317,8 @@ export const nxConfig: IConfig = {
             }
         }
     },
-    newSystem: false,
-    permissions: {
+    newSystem   : false,
+    permissions : {
         canViewRelease: 'can_view_release'
     },
     redirect: {
@@ -314,8 +328,8 @@ export const nxConfig: IConfig = {
         paths        : ['/', '/register', '/restore_password', '/activate', '/404']
     },
     showHeaderAndFooter : true,
-    headerHeight : 48,
-    ribbonHeight : 33,
+    headerHeight        : 48,
+    ribbonHeight        : 33,
     search              : {
         debounceTime : 500, // ms
         maxLength    : 200,
@@ -338,11 +352,12 @@ export const nxConfig: IConfig = {
         }
     },
     supportedLanguages : [],
-    system: {
+    system             : {
         flags: {
             newSystem: 'SF_NewSystem'
         },
-        status: {
+        name   : '',
+        status : {
             online  : 'online',
             default : {
                 style: 'default'
@@ -367,23 +382,22 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
-        developersEnabled         : '',
-        feedbackEnabled           : '',
+        developersEnabled         : false,
+        feedbackEnabled           : false,
         healthMonitor             : '',
-        integrationStore          : '',
-        publicDownloads           : '',
-        publicReleases            : '',
-        cloudStorageEnabled       : '',
+        integrationStore          : false,
+        publicDownloads           : false,
+        publicReleases            : false,
+        cloudStorageEnabled       : false,
         cloudStorageSize          : 0,
         healthMonitorCacheTimeout : 60
     },
-    cloudName : '',
-    cloudHost : '',
+    cloudName     : '',
+    cloudHost     : '',
     cloudSystemId : '',
     localSystemId : '',
-    localSystemName : '',
     localServerId : '',
-    company   : {
+    company       : {
         copyrightYear : '',
         links         : {
             privacy : '',
@@ -406,15 +420,16 @@ export const nxConfig: IConfig = {
 
     // Legacy webadmin config
     accessRoles: {
-        adminAccess               : ['cloudadmin', 'owner', 'administrator'],
-        unshare                   : 'none',
-        default                   : 'Viewer',
-        custom                    : 'custom',
-        editUserPermissionFlag    : 'GlobalAdminPermission',
-        editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
-        globalAdminPermissionFlag : 'GlobalAdminPermission',
-        allMediaPermissionFlag    : 'GlobalAccessAllMediaPermission',
-        customPermission          : {
+        adminAccess                : ['cloudadmin', 'owner', 'administrator'],
+        unshare                    : 'none',
+        default                    : 'Viewer',
+        custom                     : 'custom',
+        editUserPermissionFlag     : 'GlobalAdminPermission',
+        editCameraPermissionFlag   : 'GlobalEditCamerasPermission',
+        globalAdminPermissionFlag  : 'GlobalAdminPermission',
+        allMediaPermissionFlag     : 'GlobalAccessAllMediaPermission',
+        viewArchivesPermissionFlag : 'GlobalViewArchivePermission',
+        customPermission           : {
             name        : 'Custom',
             permissions : 'NoPermission'
         },
@@ -498,11 +513,12 @@ export const nxConfig: IConfig = {
         useSystemTime               : true
     },
     settingsConfig: {
-        auditTrailEnabled          : { type: 'checkbox' },
-        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
-        defaultMotionMask          : '5,0,0,44,32',
-        disabledVendors            : { type: 'text' },
-        ec2AliveUpdateIntervalSec  : {
+        auditTrailEnabled                  : { type: 'checkbox', hiddenInAdvanced: true },
+        cameraSettingsOptimization         : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+        cloudConnectUdpHolePunchingEnabled : { type: 'checkbox' },
+        defaultMotionMask                  : '5,0,0,44,32',
+        disabledVendors                    : { type: 'text' },
+        ec2AliveUpdateIntervalSec          : {
             type  : 'number',
             alert : 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"'
         },
@@ -516,7 +532,7 @@ export const nxConfig: IConfig = {
         ldapSearchBase                   : { type: 'text' },
         ldapSearchFilter                 : { type: 'text' },
         ldapUri                          : { type: 'text' },
-        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true },
+        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         smtpConnectionType               : { type: 'text' },
         smtpHost                         : { type: 'text' },
         smtpPort                         : { type: 'number' },
@@ -527,7 +543,7 @@ export const nxConfig: IConfig = {
         updateNotificationsEnabled       : { type: 'checkbox' },
         arecontRtspEnabled               : { type: 'checkbox' },
         backupNewCamerasByDefault        : { type: 'checkbox' },
-        statisticsAllowed                : { type: 'checkbox', setupWizard: true },
+        statisticsAllowed                : { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
         backupQualities                  : { type: 'text' },
         serverDiscoveryPingTimeoutSec    : { type: 'number' },
 
@@ -538,6 +554,7 @@ export const nxConfig: IConfig = {
 
         systemName: { type: 'text' },
 
+        licenseServer             : { type: 'text' },
         newSystem                 : { type: 'static' },
         proxyConnectTimeoutSec    : { type: 'number' },
         crossdomainEnabled        : { type: 'checkbox' },
@@ -554,8 +571,8 @@ export const nxConfig: IConfig = {
         takeCameraOwnershipWithoutLock : { type: 'checkbox' },
         upnpPortMappingEnabled         : { type: 'checkbox' },
 
-        trafficEncryptionForced      : { type: 'checkbox' },
-        videoTrafficEncryptionForced : { type: 'checkbox' },
+        trafficEncryptionForced      : { type: 'checkbox', hiddenInAdvanced: true },
+        videoTrafficEncryptionForced : { type: 'checkbox', hiddenInAdvanced: true },
         updateStatus                 : { type: 'static' },
         watermarkSettings            : { type: 'static' },
 
@@ -565,8 +582,8 @@ export const nxConfig: IConfig = {
         syncTimeExchangePeriod     : { type: 'number' },
         syncTimeEpsilon            : { type: 'number' },
 
-        maxWearableArchiveSynchronizationThreads : { type: 'number' },
-        maxEventLogRecords                       : { type: 'number' },
+        maxVirtualCameraArchiveSynchronizationThreads : { type: 'number' },
+        maxEventLogRecords                            : { type: 'number' },
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
     }

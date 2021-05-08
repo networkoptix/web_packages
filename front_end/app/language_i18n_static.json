@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "System merge failed",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Merge current system with",
             "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
@@ -419,6 +420,8 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -434,6 +437,7 @@
         "cantAddYourOwnEmail": "Adding your own email is not allowed",
         "cantChangeAccountPrefix": "Cannot save changes",
         "cantChangePasswordPrefix": "Cannot save password",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantDisconnectSystemPrefix": "Cannot delete System",
         "cantEditAdmin": "This user has administrator permissions",
         "cantEditYourself": "Changing own permissions is not allowed",
@@ -448,6 +452,7 @@
         "cantUnshareWithMeSystemPrefix": "Cannot delete System",
         "emailNotFound": "Account does not exist.",
         "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "You do not have permissions to perform this action",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -469,7 +474,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Access Control",
@@ -542,12 +549,14 @@
         "activate": "Activate account",
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% for ",
         "failedToAccessSystem": "Failed to access system",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Page not found",
@@ -619,7 +628,8 @@
             "accept": "Accept",
             "reject": "Reject",
             "backToEditText": "Back to the editing interfaces",
-            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."
+            "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -738,6 +748,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted" :{
                 "success": "System {systemName} is successfully deleted from your account"
@@ -756,8 +767,7 @@
             "rename": {
                 "success": "System name saved"
             }
-        },
-        "viewingReport" : "You are viewing an imported report"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"
@@ -765,7 +775,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Time",
-            "Trial": "Trial",
+            "Trial": "Time",
             "Professional": "Professional",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -796,7 +806,7 @@
             "required": "{number} more required",
             "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -881,7 +891,7 @@
         "osTimeChangeCheckPeriodMs": "OS time change check period",
         "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "Update notifications enabled",
         "upnpPortMappingEnabled": "UPNP port mapping enabled",
         "useTextEmailFormat": "Send plain-text emails",
@@ -890,7 +900,7 @@
         "videoTrafficEncryptionForced": "Force video traffic encryption",
         "updateStatus": "Update status",
         "watermarkSettings": "Watermark settings",
-        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
         "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
     },

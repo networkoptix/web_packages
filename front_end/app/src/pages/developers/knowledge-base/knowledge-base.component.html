@@ -1,20 +1,20 @@
 <ng-template #preloader>
-    <div class="wide-section">
+    <div class="preloader-wrapper">
         <nx-pre-loader></nx-pre-loader>
     </div>
 </ng-template>
 
 <!-- Card Templates - Add additional card variants here, should be compatible with node structure -->
 
-<ng-template #normalCard let-node="node">
-    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
-        <div [innerHTML]="node.content | safe:'html'" class="article-content"></div>
+<ng-template #normalCard let-node="node" let-index="index">
+    <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
-<ng-template #contentCard let-node="node">
-    <div [ngClass]="{'narrow-section': node.cardClass === 'normal'}">
-        <div [innerHTML]="node.content | safe:'html'" class="article-content"></div>
+<ng-template #contentCard let-node="node" let-index="index">
+    <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
 </ng-template>
 
@@ -28,11 +28,11 @@
 <!--    </nx-block>-->
 <!--</ng-template>-->
 
-<ng-template #sideCard let-node="node">
+<ng-template #sideCard let-node="node" let-index="index">
     <nx-block type="mt-3" header-style="side">
         <header>
             <div *ngIf="node.cardIcon" class="heading-icon">
-                <svg-icon nx-add-svg-src 
+                <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + node.cardIcon"
                     [svgStyle]="{'width.px': 20, 'height.px': 20}"
                 ></svg-icon>
@@ -41,14 +41,13 @@
             <h3>{{node.title}}</h3>
         </header>
         <nx-section>
-            <div [innerHTML]="node.content | safe:'html'"></div>
+            <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
         </nx-section>
     </nx-block>
 </ng-template>
 
-<ng-template #articleBlock>
-    <h1>{{pageNode.title}}</h1>
-    <div [innerHTML]="pageNode.content | safe:'html'"></div>
+<ng-template #articleBlock  let-index="index">
+    <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
 </ng-template>
 
 <!-- End of Card Templates -->
@@ -62,7 +61,7 @@
 
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
-        <h3 (click)="navigateSearch(doc)" [innerHTML]="doc.title" class="doc-link"></h3>
+        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title" class="doc-link"></a>
         <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
@@ -81,19 +80,19 @@
 </ng-template>
 <!-- End of Search Results Templates -->
 
-<div class="page-wrapper">
-    <nx-left-menu *ngIf="menuName" [menuName]="menuName"
-        [baseRoute]="'/docs/' + basePath + '/' + this.kbName + '/'"
+<div *ngIf="kbService.basePath" [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'">
+    <nx-left-menu *ngIf="kbService.menuName"
+        [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
         (onClick)="clearSearch()"
-        [ignoreQuery]="true"
         (relatedLinks)="relatedLinks$.next($event)"
         (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
-    <div class="knowledge-base">
-        <nx-search [ngModel]="search"
-            (ngModelChange)="updateSearchQuery($event)"
-            [placeholder]="'Knowledge Base Search' | translate"
-            layout="compact"></nx-search>
+    <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
+            <nx-search *ngIf="!kbService.contentAssetId"
+                [ngModel]="search"
+                (ngModelChange)="updateSearchQuery($event)"
+                [placeholder]="'Knowledge Base Search' | translate"
+                layout="compact"></nx-search>
             <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">
@@ -101,19 +100,30 @@
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
-                    <ng-container *ngFor="let node of pageNode.nodes">
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node}"></ng-container>
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node}"></ng-container>
-                        <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node}"></ng-container>
-                    </ng-container>
+                    <ng-template #innerContent>
+                        <ng-container *ngFor="let node of pageNode.nodes; let i = index">
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node, index:i}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node, index:i}"></ng-container>
+                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node, index:i}"></ng-container>
+                        </ng-container>
+                    </ng-template>
+                    <div *ngIf="kbService.basePath === 'content';else innerContent" class="card">
+                        <ng-container *ngTemplateOutlet="innerContent"></ng-container>
+                    </div>
                     <div #scriptDiv></div>
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
-                        <h4>{{ (relatedLinks$ | async).type === 'next' ? 'NEXT ARTICLE:' : 'RELATED TOPICS' }}</h4>
-                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url">
+                        <h4>
+                            <ng-template #related>
+                                <ng-container translate>RELATED TOPICS</ng-container>
+                            </ng-template>
+                            <ng-container *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</ng-container>
+                        </h4>
+                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url" [queryParams]="{'state': link.state}">
                             {{link.display_name || link.name}}
                         </a>
                     </div>
                 </ng-template>
             </ng-container>
         </ng-container>
+    </div>
 </div>

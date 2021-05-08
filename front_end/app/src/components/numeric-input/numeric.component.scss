@@ -1,0 +1,9 @@
+@use '../../../styles/theme_variables' as *;
+
+:host {
+	&.ng-invalid:not(.ng-untouched) {
+		input {
+			border-color : $error !important;
+		}
+	}
+}

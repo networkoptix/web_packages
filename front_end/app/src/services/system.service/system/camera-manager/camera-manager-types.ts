@@ -15,6 +15,7 @@ export interface ICamera {
     audioEnabled: boolean;
     backupType: string;
     controlEnabled: boolean;
+    defaultRatio: number;
     dewarpingParams: string;
     disableDualStreaming: boolean;
     failoverPriority: string;
@@ -22,7 +23,7 @@ export interface ICamera {
     groupName: string;
     id: string;
     licenseUsed: boolean;
-    motionLowresEnabled: boolean;
+    motionLowResEnabled: boolean;
     logicalId: string;
     mac: string;
     manuallyAdded: boolean;
@@ -55,10 +56,15 @@ export interface ICamera {
 }
 
 export enum MotionType {
-    hardwareGrid = '1',
-    softwareGrid = '2',
-    motionWindow = '4',
-    noMotion = '8'
+    hardwareGrid = 'hardware',
+    softwareGrid = 'software',
+    noMotion = 'none',
+    // String enums above are returned from 4.3 systems getCamerasEx, enums below used for saving on all systems
+    default = '2',
+    hardware = '1',
+    software = '2',
+    motionWIndow = '4',
+    none = '8',
 }
 
 export interface IMediaCapabilities {
@@ -91,7 +97,7 @@ export interface IRecordingModes {
     enabled: boolean;
 }
 
-export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_MotionAndLowQuality' | 'RT_Never';
+export type RecordingType = 'RT_Always' | 'RT_MetadataOnly' | 'RT_MetadataAndLowQuality' | 'RT_Never';
 
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';
 

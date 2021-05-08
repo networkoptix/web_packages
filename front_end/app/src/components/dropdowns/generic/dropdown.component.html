@@ -1,5 +1,5 @@
 <div class="dropdown {{dropdownType}}"
-    [ngClass]="{'dropdown-show': show}"
+    [ngClass]="{'dropdown-show': show }"
     (nxClickElsewhere)="show = false">
 
     <button class="btn btn-dropdown-toggle dropdown-toggle"
@@ -17,6 +17,9 @@
 
     <div class="dropdown-menu" [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
+        [style.width]="forcePosition?.width ? forcePosition.width + 'px' : '100%'"
+        [style.left.px]="forcePosition?.left || 0"
+        [style.top.px]="forcePosition?.top || (nativeElementTop - (forcePosition?.offsetTop || 0))"
         [attr.aria-labelledby]="id">
 
         <ul class="dropdown-menu--list">

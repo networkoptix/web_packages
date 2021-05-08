@@ -9,7 +9,7 @@ $brand_core: #2FA2DB;
     position: relative;
     background-color: $additional_light2;
 
-    transition: background-color .2s ease-in-out;
+    // transition: background-color .2s ease-in-out;
 
     &:hover {
       background-color: $light2;
@@ -17,6 +17,17 @@ $brand_core: #2FA2DB;
 
     &:focus-within {
       background-color: $light1;
+    }
+
+    > .search-reset-icon {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 40px;
+      top: 12px;
+      stroke: #0009;
+      pointer-events: all;
+      cursor: pointer;
     }
 
     > .search-icon {
@@ -54,6 +65,10 @@ $brand_core: #2FA2DB;
       padding: 0 44px;
       font-size: 13px;
 
+      // see https://networkoptix.atlassian.net/browse/CLOUD-6846
+      // !important is the last resort against the global styling here
+      box-shadow: none !important;
+
       &::placeholder {
         color: $light16;
       }
@@ -77,7 +92,7 @@ $brand_core: #2FA2DB;
 
       > svg {
         > * {
-          transition: fill .2s ease-in-out;
+          // transition: fill .2s ease-in-out;
         }
         > .outer-circle {
           stroke: $light16;

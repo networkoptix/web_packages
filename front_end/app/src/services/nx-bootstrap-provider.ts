@@ -5,7 +5,7 @@ import { IConfig, NxConfigService }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSystemRole }              from './system.service';
 import { NxPageService }             from './page.service';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
@@ -42,23 +42,15 @@ export class NxBootstrapProvider {
             : Promise.resolve({});
     }
 
-    private getWebadminConfig() {
-        return this.http.get('/static/customization/webadmin_config.json');
-    }
-
     load(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            return this.getCustomization().then(() => {
-                this.CONFIG = this.configService.getConfig();
-                this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
-                return Promise.resolve();
-            }).then(() => {
-                return Promise.all([
-                    this.configService.getSettings(),
-                    this.languageService.loadLanguage(),
-                    this.checkLocalIfNew()
-                ]);
-            }).then((result: any) => {
+            this.CONFIG = this.configService.getConfig();
+            this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
+            return Promise.all([
+                this.configService.getSettings(),
+                this.languageService.loadLanguage(),
+                this.checkLocalIfNew()
+            ]).then((result: any) => {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
                 this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
@@ -81,38 +73,13 @@ export class NxBootstrapProvider {
         });
     }
 
-    getCustomization() {
-        if (this.CONFIG.isLocal) {
-            return this.getWebadminConfig().toPromise()
-                .then((data: any) => {
-                    const { companyLink, companyName, copyrightYear } = data;
-                    delete data.companyLink;
-                    delete data.companyName;
-                    delete data.copyrightYear;
-                    delete data.footerLinks;
-                    const company = {
-                        copyrightYear,
-                        links: {
-                            website: companyLink
-                        },
-                        name: companyName
-                    };
-                    this.configService.updateConfig({ ...data, company });
-                    return Promise.resolve();
-                }).catch(() => {
-                    return Promise.resolve();
-                });
-        }
-        return Promise.resolve();
-    }
-
     setLocalInfo(data) {
         const hostProtocol = data.cloudHost.split('://')[0];
         this.CONFIG.cloudHost = (hostProtocol === data.cloudHost) ? `https://${data.cloudHost}` : data.cloudHost;
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;
-        this.CONFIG.localSystemName = data.systemName;
         this.CONFIG.localServerId = data.id;
+        this.CONFIG.system.name = data.name;
     }
 
     setLanguage(data) {
@@ -126,7 +93,29 @@ export class NxBootstrapProvider {
     }
 
     setSettings(data) {
-        if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
+        if (this.CONFIG.isLocal) {
+            // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
+            this.CONFIG.dynamicMenus = data.dynamicMenus?.reduce((menu, { name, nodes }) => {
+                menu[name] = {
+                    title       : name,
+                    description : '',
+                    nodes       : nodes
+                };
+                return menu;
+            }, {});
+
+            this.CONFIG.company = {
+                copyrightYear : data.copyrightYear,
+                links         : {
+                    website: data.companyLink
+                },
+                name: data.companyName
+            };
+            this.CONFIG.defaultLanguage = data.defaultLanguage;
+            this.CONFIG.licenseTypes = data.licenseTypes;
+            this.CONFIG.trialLicenseKey = data.trialLicenseKey;
+            this.CONFIG.supportedLanguages = data.supportedLanguages;
+        } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
             this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
@@ -190,10 +179,8 @@ export class NxBootstrapProvider {
             this.CONFIG.trialLicenseKey = data.trialLicenseKey;
             this.CONFIG.vmsName = data.vmsName;
 
-            this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription
-                .replace('%VMS_NAME%', this.CONFIG.vmsName)
-                .replace('%CLOUD_NAME%', this.CONFIG.cloudName);
-
+            this.CONFIG.integration.seoPageDesc = data.integrationSeoPageDescription;
+            this.CONFIG.landing.description = data.landingDescription;
 
             // detect preview mode
             if (window.location.href.indexOf('preview') >= 0) {
@@ -202,7 +189,7 @@ export class NxBootstrapProvider {
             }
             this.CONFIG.docMenuMap = data?.docMenuMap;
             this.CONFIG.licenseTypes = data?.licenseTypes;
+            this.CONFIG.dynamicMenus = data?.menus;
         }
-        this.CONFIG.dynamicMenus = data?.menus;
     }
 }

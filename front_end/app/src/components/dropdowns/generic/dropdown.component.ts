@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, EventEmitter,
-    Output, SimpleChanges, ViewChild
+    Output, SimpleChanges, ViewChild, ElementRef
 }                            from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -47,16 +47,19 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
+    @Input() forcePosition: {left?: number, top?: number, width?: number, offsetTop?: number}
 
     @Output() onSelected = new EventEmitter<string>();
 
     dropdownType: string;
+    nativeElementTop = 0
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
     constructor(
         languageService: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        public ref: ElementRef
     ) {
         super(languageService, configService);
     }
@@ -71,6 +74,12 @@ export class NxGenericDropdown extends BaseDropdown {
         });
 
         this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
+    }
+
+    ngAfterViewInit() {
+        Promise.resolve().then(() => {
+            this.nativeElementTop = this.forcePosition ? this.ref.nativeElement.parentElement.parentElement.offsetTop : this.ref.nativeElement.offsetHeight;
+        });
     }
 
     change(item) {

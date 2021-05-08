@@ -2,7 +2,7 @@ import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { DirectivesModule }             from '../../directives/directives.module';
+import { DirectivesModule }             from '@directives/directives.module';
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 const appRoutes: Routes = [

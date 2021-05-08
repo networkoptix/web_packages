@@ -25,7 +25,7 @@
             "type": "text",
             "optional": true,
             "advanced": true,
-            "unique": true,
+            "unique": false,
             "translatable": false,
             "meta": {
               "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
@@ -38,7 +38,21 @@
             "description": "Short description that is used on page previews and landing pages",
             "type": "long_text",
             "optional": true,
-            "advanced": true
+            "advanced": false
+          },
+          {
+            "name": "externalLink",
+            "label": "External Link",
+            "value": "",
+            "description": "Link to google docs or other external reference",
+            "type": "text",
+            "optional": true,
+            "advanced": true,
+            "unique": false,
+            "translatable": false,
+            "meta": {
+              "regex": "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+            }
           },
           {
             "name": "body",
@@ -51,7 +65,6 @@
               "brand_vars": true,
               "tiny_paste_word_valid_elements": "span,b,strong,i,u,em,br,ol,ul,li,p,h1,h2,h3,h4,h5,h6",
               "tiny_paste_retain_style_properties": "font-weight,text-decoration",
-              "tiny_forced_root_block": false,
               "upload_data_images": true
             }
           },
@@ -72,6 +85,71 @@
             "type": "long_text",
             "advanced": true,
             "optional": true
+          },
+          {
+            "old_name": "additional-file-1",
+            "name": "%additional-file-1%",
+            "label": "Additional file 1",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "old_name": "additional-file-2",
+            "name": "%additional-file-2%",
+            "label": "Additional file 2",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "old_name": "additional-file-3",
+            "name": "%additional-file-3%",
+            "label": "Additional file 3",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "old_name": "additional-file-4",
+            "name": "%additional-file-4%",
+            "label": "Additional file 4",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
+          },
+          {
+            "old_name": "additional-file-5",
+            "name": "%additional-file-5%",
+            "label": "Additional file 5",
+            "value": "",
+            "description": "Upload any other necessary files.",
+            "type": "external_file",
+            "optional": true,
+            "public": true,
+            "meta": {
+              "size": 1073741824
+            }
           }
         ]
       }

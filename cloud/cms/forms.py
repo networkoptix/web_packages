@@ -61,24 +61,42 @@ def get_branding_shortcuts():
                                      asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
     brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
-    vals = DataStructure.find_actual_values(brand_structures, asset=cloud_portal)
+    hidden_branding_structures = [ds for ds in DataStructure.objects.filter(
+        context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
+        context__hidden=False, context__is_global=True, name__startswith='%', context__name__in=['settings', 'branding'],
+        type__in=[DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.html, DataStructure.DATA_TYPES.select]
+    ) if 'shortcut' not in ds.meta_settings]
+    vals = DataStructure.find_actual_values(brand_structures + hidden_branding_structures, asset=cloud_portal)
+    special_structures = SpecialStructures()
+
     brands = [
         ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
         for ds in brand_structures
     ]
+    brands.extend([(
+        {'name': name, 'label': structure['label'], 'description': structure['description']},
+        structure['function'](cloud_portal))
+        for name, structure in special_structures.function_dict.items() if structure['shortcut']
+    ])
 
-    brands.append((
-        {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
-        SpecialStructures.calc_cloud_link(cloud_portal)
-    ))
-    return brands
+    hidden_brands = [
+        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+        for ds in hidden_branding_structures
+    ]
+    hidden_brands.extend([(
+        {'name': name, 'label': structure['label'], 'description': structure['description']},
+        structure['function'](cloud_portal))
+        for name, structure in special_structures.function_dict.items() if not structure['shortcut'] and not structure['hidden']
+    ])
+    return brands, hidden_brands
 
 
-def generate_branding_variables(datastructure, branding_shortcuts=None):
-    if not branding_shortcuts:
-        branding_shortcuts = get_branding_shortcuts()
+def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None):
+    if not (branding_shortcuts and hidden_branding_shortcuts):
+        branding_shortcuts, hidden_branding_shortcuts = get_branding_shortcuts()
     return render_to_string(
-        'cms/widgets/branding_variables.html', context={'brands': branding_shortcuts, 'datastructure': datastructure}
+        'cms/widgets/branding_variables.html',
+        context={'brands': branding_shortcuts, 'hidden_brands': hidden_branding_shortcuts, 'datastructure': datastructure}
     )
 
 
@@ -91,7 +109,7 @@ class CustomContextForm(forms.Form):
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
         self.fieldsets = {}
-        self.branding_shortcuts = get_branding_shortcuts()
+        self.branding_shortcuts, self.hidden_branding_shortcuts = get_branding_shortcuts()
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -123,7 +141,7 @@ class CustomContextForm(forms.Form):
             if data_structure.meta_settings:
                 ds_description += convert_meta_to_description(data_structure.meta_settings)
                 if 'brand_vars' in data_structure.meta_settings and data_structure.meta_settings['brand_vars']:
-                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts)
+                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts, self.hidden_branding_shortcuts)
 
             if data_structure.type == DataStructure.DATA_TYPES.guid:
                 ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
@@ -274,7 +292,7 @@ class AssetSettingsForm(forms.Form):
     file = forms.FileField(
         label="File",
         help_text="Archive with static files and images for content or structure.json file.",
-        required=True
+        required=False
     )
 
     action = forms.ChoiceField(
@@ -292,6 +310,12 @@ class AssetSettingsForm(forms.Form):
         )
     )
 
+    force = forms.BooleanField(
+        label="Force Update",
+        help_text="Updates existing records with values from JSON when conflicts exist.",
+        required=False
+    )
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
@@ -301,6 +325,7 @@ class AssetSettingsForm(forms.Form):
 
 class AssetForm(forms.ModelForm):
     publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), label='Parent Menu', required=False)
 
     class Meta:
         model = Asset
@@ -395,6 +420,22 @@ class CustomizationForm(forms.ModelForm):
         return data
 
 
+class LanguageForm(forms.ModelForm):
+    customizations = forms.ModelMultipleChoiceField(
+        queryset=Customization.objects.all(),
+        widget=FilteredSelectMultiple('customizations', False)
+    )
+
+    class Meta:
+        model = Language
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['customizations'].initial = self.instance.customization_set.all()
+
+
 class ContributorAgreementForm(forms.ModelForm):
     class Meta:
         model = ContributorAgreement
@@ -423,7 +464,7 @@ class MenuChangeForm(forms.ModelForm):
                 customization_choices = (('all', 'All'),) + customization_choices
             self.fields['customization_view'].choices = customization_choices
             self.initial['customization_view'] = self.current_customization.name if self.current_customization != 'all' else 'all'
-    
+
     def clean_admin_config(self):
         config = self.cleaned_data['admin_config']
         updated_config = {'header': [], 'details': [], 'advanced': []}
@@ -457,9 +498,28 @@ class MenuChangeForm(forms.ModelForm):
 
 
 class MenuNodeChangeForm(forms.ModelForm):
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput)
+
+    class Meta:
+        widgets = {
+            'parent_node': autocomplete.ModelSelect2(
+                url='menu_node_autocomplete', attrs={
+                    'data-placeholder': 'Choose node or leave blank for root',
+                    'data-minimum-input-length': 2
+                },
+                forward=['menu']
+            ),
+        }
 
     class Media:
         js = ('js/menuNode.js',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        parent = self.instance.get_parent()
+        self.fields['menu'].initial = parent
+        node_ids = parent.all_node_ids
+        self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
 
     def clean_enabled(self):
         enabled = self.cleaned_data['enabled']
@@ -507,7 +567,8 @@ class MenuNodeInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        custom_preview_url = self.instance.parent_menu and quote(self.instance.parent_menu.preview_url)
+        parent_menu = self.instance.get_parent()
+        custom_preview_url = parent_menu and quote(parent_menu.node_preview_url)
         self.fields['asset'].widget.can_add_related = True
         self.fields['asset'].widget.get_related_url = lambda *_: (
             reverse('admin:pages_custom_preview', kwargs={'asset_id': '__fk__', 'custom_preview': custom_preview_url}) if custom_preview_url
@@ -535,26 +596,28 @@ class MenuNodeInlineForm(forms.ModelForm):
         if 'related_assets' in self.fields:
             self.fields['related_assets'].help_text = 'Use to add related articles for knowledgebase pages'
 
-    def clean_enabled(self):
-        if self.cleaned_data.get('asset', None):
-            old_enabled = set(self.cleaned_data['asset'].customizations.all().values_list('name', flat=True))
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('asset', None):
+            old_enabled = set(cleaned_data['asset'].customizations.all().values_list('name', flat=True))
         elif self.instance.pk:
             old_enabled = set(self.instance.enabled.all().values_list('name', flat=True))
         else:
             old_enabled = set()
 
         if self.current_customization == 'all':
-            val = set(self.cleaned_data['enabled'].values_list('name', flat=True))
+            val = set(cleaned_data['enabled'].values_list('name', flat=True))
             possible_customizations = set(self.user_customizations)
         else:
-            val = {self.current_customization.name} if self.cleaned_data['enabled'] else set()
+            val = {self.current_customization.name} if cleaned_data['enabled'] else set()
             possible_customizations = {self.current_customization.name}
 
         new_enabled = old_enabled.difference(possible_customizations)
 
         new_enabled = new_enabled.union(set(val))
         new_enabled = Customization.objects.filter(name__in=new_enabled)
-        return new_enabled
+        cleaned_data['enabled'] = new_enabled
+        return cleaned_data
 
 
 class MenuPortForm(forms.Form):
@@ -568,7 +631,17 @@ class MenuPortForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['menu'].label_from_instance = lambda obj: obj.name
         if port_type == 'import':
-            self.fields['file'] = forms.FileField()
+            self.fields['file'] = forms.FileField(required=False)
+            self.fields['force'] = forms.BooleanField(
+                label="Force Update",
+                help_text="Updates existing records with values from JSON when conflicts exist.",
+                required=False
+            )
+            self.fields['accept_reviews'] = forms.BooleanField(
+                label="Auto Accept",
+                help_text="Auto accept reviews for all customizations",
+                required=False
+            )
 
 
 class ZendeskImportForm(forms.Form):

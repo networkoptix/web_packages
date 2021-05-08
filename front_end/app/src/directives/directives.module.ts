@@ -12,6 +12,8 @@ import { NxEditableDirective }        from './nx-editable.directive';
 import { NxResizeObserver }           from './nx-resize.directive';
 import { NxAddSvgSrc }                from './add-data.directive';
 import { NxIntersectionObserver }     from './nx-intersection.directive';
+import { NxProjectedLinkHandler }     from './nx-projected-link-handler.directive';
+import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive';
 
 @NgModule({
     imports: [
@@ -28,9 +30,11 @@ import { NxIntersectionObserver }     from './nx-intersection.directive';
         NxEditableDirective,
         NxResizeObserver,
         NxAddSvgSrc,
-        NxIntersectionObserver
+        NxIntersectionObserver,
+        NxProjectedLinkHandler,
+        NxProjectedCodeBlock
     ],
-    exports         : [
+    exports: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
@@ -41,7 +45,9 @@ import { NxIntersectionObserver }     from './nx-intersection.directive';
         NxEditableDirective,
         NxResizeObserver,
         NxAddSvgSrc,
-        NxIntersectionObserver
+        NxIntersectionObserver,
+        NxProjectedLinkHandler,
+        NxProjectedCodeBlock
     ]
 })
 export class DirectivesModule {

@@ -5,15 +5,14 @@ import { Location }                              from '@angular/common';
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { NgForm }                                from '@angular/forms';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { Process }                               from '../../services/process.service';
-import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }             from '@services/nx-language-provider';
+import { Process }                               from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 @Component({
-    selector : 'nx-modal-apply-content',
+    selector    : 'nx-modal-apply-content',
     templateUrl : 'apply.component.html',
-    styleUrls : []
+    styleUrls   : []
 })
 export class ApplyModalContent<Apply extends Process, Discard extends Function> {
     @Input() applyFunc: Apply;

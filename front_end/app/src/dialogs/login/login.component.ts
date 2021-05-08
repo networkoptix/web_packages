@@ -14,6 +14,7 @@ import { NxProcessService }          from '../../services/process.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxStorageService }          from '../../services/storage.service';
 import { WINDOW }                    from '@services/window-provider';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
     selector    : 'ngbd-modal-content',
@@ -26,6 +27,7 @@ export class LoginModalContent implements OnInit {
     @Input() cancellable;
     @Input() closable;
     @Input() keepPage;
+    @Input() redirectHome;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -57,6 +59,7 @@ export class LoginModalContent implements OnInit {
         locationService: Location,
         private processService: NxProcessService,
         private storageService: NxStorageService,
+        private appStateService: NxAppStateService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
@@ -131,7 +134,7 @@ export class LoginModalContent implements OnInit {
                 return Promise.reject();
             }
 
-            return this.account.login(this.auth.email, this.password, this.remember);
+            return this.account.login(this.auth.email, this.password, this.remember, this.redirectHome);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
@@ -176,6 +179,9 @@ export class LoginModalContent implements OnInit {
             this.languageService.currentLang = result.data.account.language;
             this.activeModal.close();
             const isRootPath = ['/', ''].includes(this.locationService.path());
+
+            // prevent manual input of url for activate routes
+            this.appStateService.canManuallyAccess = this.next.includes('activate');
 
             if (this.keepPage) {
                 if (isRootPath) {

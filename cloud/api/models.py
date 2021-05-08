@@ -292,13 +292,16 @@ post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
 post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
 
 class AccountCustomProperty(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    endpoint = models.SlugField()
-    json_data = JSONField()
     class Meta:
         verbose_name = 'Account Custom Property'
         verbose_name_plural = 'Account Custom Properties'
+        constraints = [
+            models.UniqueConstraint(fields=['account', 'endpoint'], name='User Unique Endpoints')
+        ]
+
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    endpoint = models.SlugField()
+    json_data = JSONField()
 
     def __str__(self):
         return f'{self.account} - {self.endpoint}'
-    

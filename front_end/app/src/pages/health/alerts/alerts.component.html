@@ -7,7 +7,7 @@
     </nx-page-placeholder>
 
     <div *ngSwitchDefault>
-        <div class="gridAlertsCards" *ngIf="!healthLayoutService.mobileDetailMode && !reportView" #tiles>
+        <div class="gridAlertsCards" *ngIf="!healthLayoutService.mobileDetailMode" #tiles>
             <div class="d-flex flex-wrap p-0">
                 <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-3 mr-3 card-container">
                     <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>

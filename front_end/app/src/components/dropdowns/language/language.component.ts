@@ -25,7 +25,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     show: boolean;
     direction: string;
     langCode: string;
-    activeLanguage = {
+    activeLanguage: ILanguage = {
         language : '',
         name     : ''
     };
@@ -93,19 +93,11 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
-        let languagePromise;
-        if (this.CONFIG.isLocal) {
-            const languages = this.CONFIG.supportedLanguages.map((langCode) => {
-                const lang = { name: langCode, language: langCode };
-                return <ILanguage>lang;
-            });
-            languagePromise = Promise.resolve(languages);
-        } else {
-            languagePromise = this.cloudApi.getLanguages();
-        }
-        languagePromise.then((data) => {
-            this.languages = data;
-            this.languages.sort(NxUtilsService.byParam((lang) => {
+        this.cloudApi.getLanguages().then((data) => {
+            this.languages = this.CONFIG.supportedLanguages.length === 0
+                ? data
+                : data.filter((language) => this.CONFIG.supportedLanguages.includes(language.language));
+            this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
                 return lang.language;
             }, NxUtilsService.sortASC));
 
@@ -136,7 +128,7 @@ class BaseLanguageDropdown extends BaseDropdown {
 @Component({
     selector      : 'nx-language-select',
     templateUrl   : 'language.component.html',
-    styleUrls     : ['language.component.scss'],
+    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
     encapsulation : ViewEncapsulation.None,
     providers     : [
         {

@@ -224,7 +224,7 @@
             "error": "0",
             "errorString": "",
             "reply": [
-            {   
+            {
                 "id": "systems",
                 "name": "System",
                 "resource": "",
@@ -370,7 +370,7 @@
                         "description": "RAM used by VMS Server",
                         "display": "panel",
                         "format": "GB",
-                        "id": "serverRamUsage",
+                        "id": "serverRamUsageB",
                         "name": "RAM (VMS Server)"
                     },
                     {
@@ -1772,7 +1772,7 @@
                             "ramUsageP": 0.3976868420228916,
                             "secondaryStreams": 0,
                             "serverCpuUsageP": 0.17714570858283432,
-                            "serverRamUsage": 221356032,
+                            "serverRamUsageB": 221356032,
                             "serverRamUsageP": 0.28192982273092454,
                             "threads": 48
                         }
@@ -1831,7 +1831,7 @@
                             "ramUsageP": 0.5285524593729372,
                             "secondaryStreams": 0,
                             "serverCpuUsageP": 0.0156563126252505,
-                            "serverRamUsage": 248811520,
+                            "serverRamUsageB": 248811520,
                             "serverRamUsageP": 0.11589062839830738,
                             "threads": 70
                         }
@@ -1890,7 +1890,7 @@
                             "ramUsageP": 0.488062614037436,
                             "secondaryStreams": 0,
                             "serverCpuUsageP": 0.06982543640897755,
-                            "serverRamUsage": 165040128,
+                            "serverRamUsageB": 165040128,
                             "serverRamUsageP": 0.2838554692178177,
                             "threads": 39
                         }

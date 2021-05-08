@@ -17,11 +17,12 @@ export class Account {
     is_staff: boolean;
     // eslint-disable-next-line camelcase
     is_superuser: boolean;
+    isCloud: boolean;
     permissions: string[];
     // eslint-disable-next-line camelcase
     can_publish_integration: boolean;
 
-    constructor({ email, fullName, id, permissions, name, isAdmin }: User) {
+    constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
         this.email = email;
         const [first, ...rest] = (fullName || name || '').split(' ');
         this.id = id;
@@ -29,5 +30,6 @@ export class Account {
         this.last_name = (rest || ['']).reverse()[0];
         this.permissions = (permissions || '').split('|');
         this.is_superuser = isAdmin || permissions.includes('GlobalAdminPermission');
+        this.isCloud = isCloud;
     }
 }

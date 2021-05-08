@@ -77,7 +77,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             return;
                         }
-                        const matchError = errorString => response.errorString.indexOf(errorString) !== -1;
+
+                        const error = response.errorString.toLowerCase();
+                        const matchError = errorString => error.indexOf(errorString) !== -1;
 
                         switch (response.error) {
                             case '1':
@@ -96,20 +98,21 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                         .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
                                     break;
                                 }
-                                if (matchError('License is expired')) {
+                                if (matchError('license is expired')) {
                                     // Can't activate license: License is expired.
                                     this.licenseForm.controls.licenseKey.setErrors({ expired: true });
-                                } else if (matchError('Only one NVR license')) {
+                                } else if (matchError('only one nvr license')) {
                                     // Only one NVR license is allowed per System.↵You already have one active NVR license.
                                     this.licenseForm.controls.licenseKey.setErrors({ nvrError: true });
-                                } else if (matchError('Only one starter license is allowed')) {
+                                } else if (matchError('only one starter license is allowed')) {
+                                    // Can't activate license: Only one Starter license is allowed per System.↵You already have one active Starter license.
                                     // Can't activate license: Only one starter license is allowed per System.
                                     this.licenseForm.controls.licenseKey.setErrors({ starter: true });
-                                } else if (matchError('License Key you have entered is invalid')) {
-                                    // Can't activate license:  License Key you have entered is invalid.
+                                } else if (matchError('license key you have entered is invalid')) {
+                                    // Can't activate license:  license key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 } else if ([
-                                    'requires higher software version', 'You are trying to activate a license incompatible with your software.'
+                                    'requires higher software version', 'you are trying to activate a license incompatible with your software.'
                                 ].some(matchError)
                                 ) {
                                     // Can't activate license: This license type requires higher software version
@@ -161,7 +164,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+    }
 
+    ngOnInit() {
         this.setupDefaults();
     }
 
@@ -223,8 +228,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     }
 
     private formatLicenseKey = (key: string) => {
-        const chunks = key.match(/.{1,4}/g);
-        return chunks.join('-').toUpperCase(); // returns AAAA-BBBB-CCCC-DDDD
+        if (key) {
+            const chunks = key.match(/.{1,4}/g);
+            return chunks.join('-').toUpperCase(); // returns AAAA-BBBB-CCCC-DDDD
+        }
     };
 
     private isActivated(license): boolean {

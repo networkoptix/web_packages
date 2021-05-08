@@ -1,10 +1,7 @@
 @use '../styles/typography';
-// @import '../../styles/custom/custom_palette';
-// @import '../../styles/theme_palette';
-// @import '../../styles/theme_variables';
 
 label {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     line-height   : 16px;
     margin-bottom : 8px;
 

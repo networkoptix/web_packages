@@ -4,16 +4,15 @@ import {
 }                                    from '@angular/core';
 import { DatePipe }                  from '@angular/common';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { IConfig, NxConfigService }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     InfoBlockLine, InfoBlockSection, InfoBlockStyle,
     InfoDetailClass, InfoLineStyle
-} from '../../../../../components/info-block/info-block.component';
-import { getDynamicLicense } from '../licenses.component';
+}                                    from '@components/info-block/info-block.component';
+import { getDynamicLicense }         from '../licenses.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -86,7 +85,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const dynamicLicense = getDynamicLicense(this);
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
-        const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
+        const warning = info.expiration ? info.expiration < next30days.getTime() : false;
         const deactivationsRemaining = dynamicLicense[info.class].deactivationsAllowed - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(
             [

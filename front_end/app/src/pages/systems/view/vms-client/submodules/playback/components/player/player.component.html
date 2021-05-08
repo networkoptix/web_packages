@@ -1,11 +1,35 @@
-<!-- Player ({{ mode }}) {{ isBuffering && 'buffering' }} -->
-<video #video [muted]="true"
-  (play)="videoPlayHandler($event)"
-  (click)="videoClickHandler($event)"
-  (dblclick)="videoDblClickHandler($event)"
->
-  <source #videoSource src="" type="video/mp4">
-</video>
-<div class="overlay" [ngClass]="{ 'buffering': isBuffering }">
-  <nx-pre-loader></nx-pre-loader>
+<div *ngIf="!showOverlay && (errorEncryption || errorPlayback); else player">
+    <nx-player-placeholder
+            *ngIf="errorEncryption"
+            svgFileName="camera_archive_encrypted"
+            [heading]="LANG.errorCodes.archiveEncrypted()"
+            [description]="LANG.errorCodes.archiveEncryptedMessage()">
+    </nx-player-placeholder>
+
+    <nx-player-placeholder
+            *ngIf="errorPlayback"
+            svgFileName="alert"
+            [heading]="LANG.common.cameraStates.error()"
+            [description]="errorPlaybackDescription">
+    </nx-player-placeholder>
 </div>
+
+<ng-template #player>
+    <div
+        class="overlay"
+        [ngClass]="{ 'active': showOverlay }"
+        (click)="onClick($event)"
+        (dblclick)="onDblClick($event)">
+        <nx-pre-loader></nx-pre-loader>
+    </div>
+
+    <player-native
+        *ngIf="useNativePlayer"
+        (bufferingChange)="onBufferingChange($event)">
+    </player-native>
+
+    <player-hls
+        *ngIf="useHlsPlayer"
+        (bufferingChange)="onBufferingChange($event)">
+    </player-hls>
+</ng-template>

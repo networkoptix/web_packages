@@ -1,0 +1,8 @@
+<video
+  #video
+  [muted]="true"
+  (canplay)="onVideoCanPlay($event)"
+  (ended)="onVideoEnded($event)"
+>
+  <source #videoSource src="" type="video/mp4">
+</video>

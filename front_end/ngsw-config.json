@@ -1,0 +1,97 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/favicon.ico",
+          "/**/*.css",
+          "/**/*.js"
+        ],
+        "urls": [
+          "/static/**/*.(css|js)"
+        ]
+      }
+    }, {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "urls": [
+        "/api/ipvd",
+        "/api/utils/downloads",
+        "/api/integrations",
+        "/api/integration/**",
+        "/api/documentation/**"
+      ],
+      "cacheConfig": {
+        "maxAge": "2h",
+        "maxSize": 100,
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "apiFresh",
+      "urls": [
+        "/api/account",
+        "/api/utils/language"
+      ],
+      "cacheConfig": {
+        "maxAge": "2h",
+        "maxSize": 100,
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "cloudSystemAPI",
+      "urls": [
+        "/api/systems**"
+      ],
+      "cacheConfig": {
+        "maxAge": "2h",
+        "maxSize": 100,
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "dynamicAssets",
+      "urls": [
+        "**/language_compiled.json",
+        "**/languages.json"
+      ],
+      "cacheConfig": {
+        "maxAge": "2h",
+        "maxSize": 100,
+        "timeout": "0u",
+        "strategy": "freshness"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/api/**",
+    "!/admin/**",
+    "!/cdb/**"
+  ]
+}

@@ -35,7 +35,7 @@
             "name": "description",
             "label": "Description",
             "value": "",
-            "description": "Short description of the article",
+            "description": "Short description of the article, used in meta tags for SEO",
             "type": "text",
             "optional": true,
             "advanced": true,

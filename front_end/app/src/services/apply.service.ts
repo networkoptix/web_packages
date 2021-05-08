@@ -1,18 +1,20 @@
 import {
     ComponentFactoryResolver, Injectable,
-    ViewContainerRef, ComponentRef, ViewChild
-} from '@angular/core';
-import { NgForm }                               from '@angular/forms';
-import { BehaviorSubject, merge, Subscription, Observable, from } from 'rxjs';
+    ViewContainerRef, ComponentRef
+}                                    from '@angular/core';
+import { NgForm }                    from '@angular/forms';
 import {
-    distinctUntilChanged, filter, skip, map, combineLatest, tap
-}                                               from 'rxjs/operators';
-
-import { NxApplyComponent }          from '../components/apply/apply.component';
+    BehaviorSubject, Subject, combineLatest as combineLatestFrom
+}                                    from 'rxjs';
+import {
+    distinctUntilChanged, combineLatest, map, startWith, takeUntil
+}                                    from 'rxjs/operators';
+import { NxApplyComponent }          from '@components/apply/apply.component';
 import { Process, NxProcessService } from './process.service';
 import { NxUtilsService }            from './utils.service';
-import { ApplyModalContent }         from '../dialogs/apply/apply.component';
+import { ApplyModalContent }         from '@dialogs/apply/apply.component';
 import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+import { isObject }                  from 'rxjs/internal-compatibility';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -31,12 +33,14 @@ interface IParams<Value = any> {
  * someVar.value = {data: 'test'};
  * @class
  */
-export class Watcher<T extends any> {
+export class Watcher<T extends any, Owner = any> {
     originalValue: T;
     valueSubject = new BehaviorSubject<T>(undefined);
+    identity: Symbol
 
-    constructor(value?: T) {
+    constructor(value?: T, public owner: Owner = null, identifier = 'Watcher') {
         this.value = value;
+        this.identity = Symbol(identifier);
     }
 
     get value() {
@@ -76,12 +80,15 @@ export class Watcher<T extends any> {
 export class SectionWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(undefined);
-    constructor(public watchers: Watcher<any>[]) {
+    identity: Symbol
+
+    constructor(public watchers: Watcher<any>[], public owner: any = null, identifier = 'Section Watcher') {
         this.watchers.forEach(watcher => {
             watcher.valueSubject.subscribe(_ => {
                 this.updateHash();
             });
         });
+        this.identity = Symbol(identifier);
     }
 
     get value() {
@@ -117,20 +124,24 @@ export class FormWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(false);
     changed: boolean;
+    identity: Symbol
 
     get value() {
         return this.valueSubject.value;
     }
 
-    constructor(private form: NgForm) {
+    constructor(private form: NgForm, public owner: any = null, identifier = 'Form Watcher') {
         form.valueChanges.subscribe((change) => {
             if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
                 this.originalValue = change;
+                this.changed = false;
+                this.valueSubject.next(change);
             } else {
                 this.changed = !NxUtilsService.isEqual(this.originalValue, change);
                 this.valueSubject.next(change);
             }
         });
+        this.identity = Symbol(identifier);
     }
 
     hardReset = () => {
@@ -140,6 +151,7 @@ export class FormWatcher {
     }
 
     reset = () => {
+        this.valueSubject.next(this.originalValue);
         this.form.reset(this.originalValue);
     }
 
@@ -177,61 +189,56 @@ export class FormWatcher {
  */
 export class NxApplyService {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyComponentInstance: NxApplyComponent
     private applyFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
     private submitFunctions = [];
     private discardFunctions = [];
     private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
-    private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
     private form: NgForm;
-    private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
 
-    private watchersSubscription: Subscription;
-
+    private updatedWatchers$ = new Subject<string>()
+    applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
     constructor(
         private factoryResolver: ComponentFactoryResolver,
         private processService: NxProcessService,
-        private modalService: NgbModal,
+        private modalService: NgbModal
     ) {}
 
     get locked() {
-        return this.lockedSubject.getValue();
+        return !!this.applyComponentInstance?.show;
     }
 
     set locked(value) {
-        this.lockedSubject.next(value);
+        if (this.applyComponentInstance) {
+            this.applyComponentInstance.show = value;
+        }
     }
 
     /**
-     * Resets all watchers to undefined. This should be used when the component stays the
+     * If hardReset is false all watchers are set to their first undefined value.
+     * If hardReset is true all watchers are set to undefined. This should be used when the component stays the
      * same but the data changes. For an example of how to use this function look at
      * NxSystemUsersComponent.
      */
-    hardReset() {
+    reset(hardReset = false) {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
-                watcher.value = undefined;
+                hardReset ? watcher.value = undefined : watcher.reset();
             });
         }
         this.locked = false;
         this.setWarn('');
-    }
-
-    // Resets all watchers to their first value that wasn't undefined.
-    reset(nonSystem = false) {
-        if (this.watchers) {
-            this.watchers.forEach((watcher) => {
-                watcher.reset();
-            });
+        if (this.applyComponentInstance) {
+            this.applyComponentInstance.invalidFields = [];
+            this.applyComponentInstance._disabled = false;
         }
-        this.locked = false;
-        this.setWarn('');
     }
 
     private touched() {
@@ -280,7 +287,6 @@ export class NxApplyService {
         onlyShowSectionWatchers = false
     ) {
         this.nonSystem$.next(nonSystem);
-        this.clearSubscriptions();
         this.component = component;
 
         this.createComponent(onlyShowSectionWatchers);
@@ -293,11 +299,6 @@ export class NxApplyService {
             (res) => {
                 this.reset();
                 return res;
-            },
-            (res) => {
-                // need to figure out how to reset
-                this.reset();
-                return res;
             }
         );
         if (discardFunction) {
@@ -306,10 +307,9 @@ export class NxApplyService {
         if (form) {
             this.setForm(form);
         }
+        this.watchers = [];
         this.addWatchers(watchers);
-        this.lockedSubscription = this.lockedSubject.subscribe((value) => {
-            (<NxApplyComponent> this.applyComponentRef.instance).show = !!value;
-        });
+        this.applyComponentInstance = (<NxApplyComponent> this.applyComponentRef.instance);
         setTimeout(() => {
             (<NxApplyComponent> this.applyComponentRef.instance).ready = true;
         }, 0);
@@ -328,7 +328,8 @@ export class NxApplyService {
     createFormWatcher(
         component: ViewContainerRef | null,
         form: NgForm,
-        saveFunction: Process
+        saveFunction: Process,
+        owner?: any
     ) {
         component?.clear();
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
@@ -361,7 +362,7 @@ export class NxApplyService {
             }
         });
 
-        return new FormWatcher(form);
+        return new FormWatcher(form, owner);
     }
 
     // ... Breadcrumbs (END) ... TT
@@ -430,8 +431,8 @@ export class NxApplyService {
         }
 
         const options: any = {
-            windowClass: 'modal-holder',
-            backdrop   : 'static'
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
         };
 
         return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
@@ -444,16 +445,22 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
+        this.applyOnNavSubject.next('');
+
         return this.applyDialog(this.applyFunction, this.discardFunction, this.form)
             .then(
-                status => {
+                (status: string) => {
+                    this.applyOnNavSubject.next(status);
                     if (status !== 'applied' && status !== 'discarded') {
                         return false;
                     }
                     this.reset();
                     return true;
                 },
-                () => false
+                (status: string) => {
+                    this.applyOnNavSubject.next(status);
+                    return false;
+                }
             )
             .finally(() => { this.popupActive = false; });
     }
@@ -470,13 +477,9 @@ export class NxApplyService {
         });
     }
 
-    private clearSubscriptions() {
-        if (this.lockedSubscription) {
-            this.lockedSubscription.unsubscribe();
-        }
-        if (this.watchersSubscription) {
-            this.watchersSubscription.unsubscribe();
-        }
+    removeWatchers<Owner>(owner?: Owner) {
+        this.watchers = owner ? this.watchers.filter(watcher => watcher.owner !== owner) : [];
+        this.updatedWatchers$.next('update');
     }
 
     private createComponent(onlyShowSectionWatchers = false) {
@@ -513,6 +516,18 @@ export class NxApplyService {
         }
     }
 
+    public setInvalidField(name) {
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).setInvalidField(name);
+        }
+    }
+
+    public unsetInvalidField(name) {
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).unsetInvalidField(name);
+        }
+    }
+
     /**
      * Whats happening here
      * 1) For each watcher create a new observable that only fires when the observable
@@ -523,21 +538,38 @@ export class NxApplyService {
      *     until the user saves or discards the changes.
      * @param watchers
      */
-    private addWatchers(watchers: (Watcher<any> | SectionWatcher)[]) {
-        this.watchers = watchers;
-        this.watchersSubscription?.unsubscribe?.();
-        this.watchersSubscription = merge(...watchers.map(watcher => {
-            return watcher.valueSubject.pipe(
-                distinctUntilChanged(),
-                filter((watcher) => watcher !== undefined),
-                skip(1)
-            );
-        })).subscribe(changedWatcher => {
-            if (changedWatcher.changed) {
-                this.touched();
-            } else {
-                this.locked = watchers.some((watcher) => watcher.changed);
+    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
+        this.updatedWatchers$.next('update');
+        const watchersFilterOutCurrentOwner = (owner ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner) : this.watchers) || [];
+        const symbols = new Set<Symbol>();
+        const existingUniqueWatchers = [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
+            if (symbols.has(identity)) {
+                return false;
             }
+            symbols.add(identity);
+            return true;
+        });
+        this.watchers = existingUniqueWatchers;
+        const changedWatchers$ = Object.values(
+            this.watchers
+        ).map((watcher) => watcher.valueSubject.pipe(
+            map(current => {
+                if (isObject(current)) {
+                    // Form watcher
+                    return !NxUtilsService.isEqual(current, watcher.originalValue);
+                }
+
+                return watcher.originalValue !== undefined && current !== watcher.originalValue;
+            }),
+            startWith(false)
+        ));
+        combineLatestFrom(
+            changedWatchers$
+        ).pipe(
+            map(changedArray => changedArray.some(changed => changed)),
+            takeUntil(this.updatedWatchers$)
+        ).subscribe(changed => {
+            this.locked = changed;
         });
     }
 
@@ -545,9 +577,10 @@ export class NxApplyService {
         watchers: Watcher<any>[],
         applyFunction: Process,
         discardFunction,
-        submitFunction?
+        submitFunction?,
+        owner?
     ) {
-        this.addWatchers([...this.watchers, ...watchers]);
+        this.addWatchers([...this.watchers, ...watchers], owner);
         this.extendApplyFunction(applyFunction);
         this.extendDiscardFunction(discardFunction);
         if (submitFunction) {
@@ -556,6 +589,12 @@ export class NxApplyService {
     }
 
     private extendApplyFunction(applyFunction: Process) {
+        const { name } = applyFunction.settings;
+        if (name) {
+            this.applyFunctions = this.applyFunctions.filter((aF: Process) => {
+                return aF.settings.name ? aF.settings.name !== name : true;
+            });
+        }
         this.applyFunctions.push(applyFunction);
     }
 

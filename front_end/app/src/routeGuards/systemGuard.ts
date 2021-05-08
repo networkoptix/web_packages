@@ -42,7 +42,7 @@ export class SystemGuard implements CanActivate {
 
         const checkPermissions = (system = this.system) => {
             const canViewChecks = {
-                users           : system.permissions.editUsers,
+                users           : system.userManager.permissions.editUsers,
                 'cloud-storage' : system.canUserViewCloudStorage(),
                 health          : system.canViewInfo(),
                 licenses        : system.isAdmin || system.isOwner

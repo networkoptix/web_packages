@@ -7,10 +7,8 @@
             <div class="form-group col-12 row p-0 m-0 mb-3"
                  *ngFor="let setting of systemSettings | keyvalue">
 
-                <div class="form-group col-12 row p-0 m-0"
-                     *ngIf="(CONFIG.settingsConfig[setting.key] | keyvalue)?.length > 0">
-
-                    <div class="col-12 row p-0" *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox'">
+                <div class="form-group col-12 row p-0 m-0">
+                    <div class="col-12 row p-0" *ngIf="CONFIG.settingsConfig[setting.key]?.type === 'checkbox'; else otherInput">
                         <div class="col-12 col-md-4 m-0 pr-1 pl-3  d-flex align-items-start justify-keys flex-row">
                             <div class="text-muted break-long">{{setting.key}}</div>
                         </div>
@@ -22,32 +20,34 @@
                                     name="{{setting.key}}"
                                     [ngModel]="systemSettings[setting.key]">
                             </nx-checkbox>
-                            <div>{{getDescription(setting.key)}}</div>
+                            <div [innerHTML]="getDescription(setting.key)"></div>
                         </div>
                     </div>
 
-                    <div class="col-12 row p-0 d-flex align-items-start" *ngIf="CONFIG.settingsConfig[setting.key].type !== 'checkbox'">
-                        <div class="col-12 col-md-4 pr-1 pl-3 m-0 d-flex flex-column  key-align text-right item">
-                            <div class="" [innerHTML]="getDescription(setting.key)"></div>
-                            <div class=" text-muted break-long" *ngIf="LANG.settingsConfig[setting.key]">{{setting.key}}</div>
-                        </div>
+                    <ng-template #otherInput>
+                        <div class="col-12 row p-0 d-flex align-items-start">
+                            <div class="col-12 col-md-4 pr-1 pl-3 m-0 d-flex flex-column  key-align text-right item">
+                                <div class="" [innerHTML]="getDescription(setting.key)"></div>
+                                <div class=" text-muted break-long" *ngIf="LANG.settingsConfig[setting.key]">{{setting.key}}</div>
+                            </div>
 
-                        <div class="col-12 col-md-8 d-flex align-items-start justify-content-start flex-column item">
-                            <input *ngIf="canSee(setting.key)" type="{{CONFIG.settingsConfig[setting.key].type}}"
-                                   id="{{setting.key}}"
-                                   name="{{setting.key}}"
-                                   [ngModel]="systemSettings[setting.key]"
-                                   class="form-control input-sm"/>
+                            <div class="col-12 col-md-8 d-flex align-items-start justify-content-start flex-column item">
+                                <input *ngIf="canSee(setting.key)" [type]="CONFIG.settingsConfig[setting.key]?.type"
+                                       [id]="setting.key"
+                                       [name]="setting.key"
+                                       [ngModel]="systemSettings[setting.key]"
+                                       class="form-control input-sm"/>
 
-                            <p *ngIf="CONFIG.settingsConfig[setting.key].type === 'static'"
-                               class="form-control-static input-sm m-0">{{systemSettings[setting.key] || 'empty'}}</p>
+                                <p *ngIf="['static', 'undefined'].includes(CONFIG.settingsConfig[setting.key]?.type || 'undefined')"
+                                   class="form-control-static input-sm m-0">{{systemSettings[setting.key] || 'empty'}}</p>
 
-                            <div class="help-block text-left"
-                                 *ngIf="CONFIG.settingsConfig[setting.key].alert"
-                                 [innerHTML]="CONFIG.settingsConfig[setting.key].alert">
+                                <div class="help-block text-left"
+                                     *ngIf="CONFIG.settingsConfig[setting.key]?.alert"
+                                     [innerHTML]="CONFIG.settingsConfig[setting.key]?.alert">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ng-template>
                 </div>
             </div>
         </nx-section>

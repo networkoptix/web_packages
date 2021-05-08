@@ -41,7 +41,7 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
     if cloud_portal:
         S3_STRUCTURE_TYPES = [DataStructure.DATA_TYPES.external_image, DataStructure.DATA_TYPES.external_file]
         S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-        REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/integrations"
+        REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
         state = 'release'
         if show_pending:
             state = 'review'
@@ -144,6 +144,9 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
             del integration_dict_copy['version']
             # Check if the integration belongs in the user's assets.
             integration_dict_copy['mine'] = integration.id in user_assets
+            integration_dict_copy['canEdit'] = integration_dict_copy['mine'] or (user and user.is_superuser)
+            name = integration_dict_copy.get('information', {}).get('name', integration.name)
+            integration_dict_copy['urlified'] = integration.urlify(name)
             integrations_json.append(integration_dict_copy)
 
     return integrations_json
@@ -257,28 +260,30 @@ def get_integrations(request):
         check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
 
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
-    own_integrations = []
+    draft_integrations = []
 
     if not request.user.is_anonymous:
-        own_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
-        # If portal manager/superuser
-        if is_portal_manager:
+        draft_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
+        if request.user.is_superuser:
+            draft_integrations = integrations
+            review_integrations = integrations
+        elif is_portal_manager:
             review_integrations = integrations.filter(
                 contentversion__assetcustomizationreview__state=PENDING,
                 contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION,
             ).distinct()
         else:
-            review_integrations = own_integrations
+            review_integrations = draft_integrations
 
-        if own_integrations:
-            integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user, show_drafts=True))
+        if draft_integrations:
+            integration_list.extend(make_integrations_json(draft_integrations, language=language, user=request.user, show_drafts=True))
         if review_integrations:
             integration_list.extend(make_integrations_json(review_integrations, language=language, user=request.user, show_pending=True))
 
     if is_enabled or is_portal_manager or has_beta_access:
         integration_list.extend(make_integrations_json(integrations, language=language, user=request.user))
     else:
-        integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user))
+        integration_list.extend(make_integrations_json(draft_integrations, language=language, user=request.user))
 
     # Sort integrations by name. Ignore case.
     # Name might not exist if integration was just created.

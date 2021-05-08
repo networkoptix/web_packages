@@ -8,12 +8,12 @@ import { UntilDestroy }                        from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
 
 import { NxToastService }                      from './toast.service';
-import { NxLanguageProviderService }           from '../services/nx-language-provider';
-import { NxConfigService, IConfig }            from '../services/nx-config';
-import { NxSystem, ICamera, NxSystemUser }     from '../services/system.service';
-import { Process }                             from '../services/process.service';
-import { NxCloudApiService }                   from '../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }             from '../../language_i18n_static_types';
+import { NxLanguageProviderService }           from '@services/nx-language-provider';
+import { NxConfigService, IConfig }            from '@services/nx-config';
+import { NxSystem, ICamera, NxSystemUser }     from '@services/system.service';
+import { Process }                             from '@services/process.service';
+import { NxCloudApiService }                   from '@services/nx-cloud-api';
+import { LanguageI18NStaticTypes }             from '@app/language_i18n_static_types';
 
 import { LoginModalContent }                   from './login/login.component';
 import { GenericModalContent }                 from './generic/generic.component';
@@ -23,6 +23,7 @@ import { MessageModalContent }                 from './message/message.component
 import { EmbedModalContent }                   from './embed/embed.component';
 import { MergeModalContent }                   from './merge/merge.component';
 import { ApplyModalContent }                   from './apply/apply.component';
+import { RemoveSystemModalContent }            from './remove-system/remove-system.component';
 import { RemoveUserModalContent }              from './remove-user/remove-user.component';
 import { RestartServerModalContent }           from './restart-server/restart-server.component';
 import { DetachServerModalContent }            from './detach-server/detach-server.component';
@@ -38,10 +39,11 @@ import { CloudConnectModalContent }       from './cloud-connect/cloud-connect.co
 import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { AddStorageModalContent }         from './add-storage/add-storage.component';
 import { ChangeStorageModalContent }      from './change-storage/change-storage.component';
-import { NxAccountService }               from '../services/account.service';
-import { BaseAccount }                    from '../services/account.service/base';
-import { CloudAccount }                   from '../services/account.service/cloud';
-import { NxBootstrapProvider }            from '../services/nx-bootstrap-provider';
+import { NxAccountService }               from '@services/account.service';
+import { BaseAccount }                    from '@services/account.service/base';
+import { CloudAccount }                   from '@services/account.service/cloud';
+import { NxBootstrapProvider }            from '@services/nx-bootstrap-provider';
+import { StorageManager }                 from '@services/system.service/system/storage-manager/storage-manager';
 
 import './../dialogs/dialogs.scss';
 
@@ -166,7 +168,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean) {
+    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -180,7 +182,8 @@ export class NxDialogsService {
             closable      : true,
             location      : this.location,
             keepPage      : (keepPage !== undefined) ? keepPage : true,
-            redirectClose : redirectClose || false
+            redirectClose : redirectClose || false,
+            redirectHome
         };
 
         if (this.CONFIG.isLocal) {
@@ -225,17 +228,16 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(system: NxSystem, serverId: string, storage: any[], updateStorage) {
+    addStorage(serverId: string, storageManager: StorageManager, cancelPolls: () => any) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            system,
             serverId,
-            storage,
-            updateStorage,
+            storageManager,
+            cancelPolls,
             closable: true
         };
 
@@ -331,6 +333,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(RemoveUserModalContent, options, params);
+    }
+
+    removeSystem(system: NxSystem) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(RemoveSystemModalContent, options, params);
     }
 
     restartServer(system: NxSystem, serverId: string, serverName: string) {

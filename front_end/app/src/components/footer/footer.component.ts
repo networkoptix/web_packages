@@ -46,7 +46,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
         this.menusService.getMenu('footer').subscribe(footer => {
-            this.footerItems = footer;
+            this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
             if (this.CONFIG.isLocal) {
                 this.footerItems.forEach(footerItem => {
                     footerItem.new_window = true;

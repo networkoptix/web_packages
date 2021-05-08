@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs'
 @Component({
   selector: 'system-page',
   templateUrl: './system-page.component.html',
-  styleUrls: ['./system-page.component.styl']
+  styleUrls: ['./system-page.component.scss']
 })
 export class SystemPageComponent implements OnInit {
 
@@ -28,7 +28,8 @@ export class SystemPageComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.vms.setTestMediaServers()
+    // Create test cameras and archive
+    // this.vms.setTestMediaServers()
     this._subscription = this.vms.subject.subscribe(this.onVmsSubjectChange)
   }
 

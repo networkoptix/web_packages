@@ -201,6 +201,12 @@ export class NxHealthLayoutService {
     }
 
     setTableDimensions() {
+        if (this.mobileDetailMode && this.activeEntity) {
+            // In mobile view and when an entity is active we need to break up self invoking setTableDimensions
+            this.healthService.tableReady = true;
+            return;
+        }
+
         const tableHeader = this.tableHeaderElement && this.tableHeaderElement.nativeElement;
         const table = this.tableElement && this.tableElement.nativeElement;
 

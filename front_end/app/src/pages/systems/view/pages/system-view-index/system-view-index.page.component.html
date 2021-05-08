@@ -4,15 +4,22 @@
 
     <nx-page-placeholder
             *ngIf="initializedWithError; else primary"
-            type="OFFLINE"
+            type="NO_SETTINGS"
             class="page-placeholder">
     </nx-page-placeholder>
 
     <ng-template #primary>
-        <div class="nx-view-sidebar">
+        <div class="nx-view-sidebar" *ngIf="hasCameras; else noCameras">
             <media-server-list></media-server-list>
-            <div class="sidebar-toggling-ear" (click)="handleSidebarTogglingEarClick()"></div>
+            <div class="sidebar-toggling-ear--wrapper"
+                 [ngClass]="{ 'shown': isSidebarShown }"
+                 (click)="handleSidebarTogglingEarClick()">
+                <div class="sidebar-toggling-ear"></div>
+            </div>
         </div>
-        <router-outlet></router-outlet>
+        <router-outlet *ngIf="hasCameras"></router-outlet>
+        <ng-template #noCameras>
+            <div class="no-cameras-placeholder">No Cameras</div>
+        </ng-template>
     </ng-template>
 </ng-template>

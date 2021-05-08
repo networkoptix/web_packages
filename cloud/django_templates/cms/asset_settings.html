@@ -17,14 +17,14 @@
 <div>
     <h3>Download package for asset</h3>
     <p><a href="{% url 'download_package' asset.id %}"
-          {% if asset.is_cloud_portal %}onclick="return pollPackage(false)"{% else %}download{% endif %}
+          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}
     >Download package (zip)</a></p>
     <p><a href="{% url 'download_package' asset.id %}?draft"
-          {% if asset.is_cloud_portal %}onclick="return pollPackage(true)"{% else %}download{% endif %}
+          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}
     >Download package draft (zip)</a></p>
-    <p><a href="{% url 'download_structure_from_db' asset.id %}" download>Download structure (json)</a></p>
-    <p><a href="{% url 'download_structure_from_db' asset.id %}?format=html" download>Download structure (html)</a></p>
-    <p><a href="{% url 'download_all_asset_structures' asset.asset_type.type %}" download>Download all {{ asset.asset_type }} assets (json)</a></p>
+    <p><a href="{% url 'download_structure_from_db' asset.id %}" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}'})" download>Download structure (json)</a></p>
+    <p><a href="{% url 'download_structure_from_db' asset.id %}?output_format=html" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}', outputFormat: 'html'})" download>Download structure (html)</a></p>
+    <p><a href="{% url 'download_all_asset_structures' asset.asset_type.type %}" onclick="event.preventDefault(); pollStructure({assetType:'{{ asset.asset_type.type }}'})" download>Download all {{ asset.asset_type }} assets (json)</a></p>
 </div>
 <h3>Update Asset</h3>
 <div>
@@ -56,79 +56,74 @@ Example for vms
             {{ field.label_tag }}
             <div id="{{field.label}}" style="display:inline-block;">
                 {{ field }}
-                
+
                 {% if field.help_text %}
                 <p class="help">{{ field.help_text|safe }}</p>
                 {% endif %}
             </div>
         </div>
     {% endfor %}
+    <div id="conflicts"></div>
 
     <div class="submit-row">
         <a href="{% url 'admin:pages' asset.id %}" class="btn btn-sm btn-default">Edit Content</a>
-        <button class="btn btn-sm btn-primary" type="submit" name="Upload" onclick="cookieInterval()">Upload</button>
+        <button class="btn btn-sm btn-primary" type="submit" name="Upload" id="upload" onclick="cookieInterval()">Upload</button>
     </div>
     <script>
-        /*
-            The checkCookie function starts on a 100ms interval once the user uploads a file.
-            Once the user submits the file we wait for the structure.json file to be returned.
-            When the file is sent to the user it also sets a cookie.
-            The check cookie function keeps checking the cookies until it a changed.
-            Afterwards it reloads the page so that the user can see any error messages with the file upload
-         */
-        var cookieCheckInterval = undefined;
-        var isDraft = undefined;
-        var packageInterval = undefined;
-        var packageUrl = undefined;
-        var checkCookie = function () {
-            var lastCookie = document.cookie;
-            return function () {
-                var currentCookie = document.cookie;
-                if (currentCookie !== lastCookie) {
-                    clearInterval(cookieCheckInterval);
-                    window.location.reload();
-                }
-            };
-        }();
-
-        var checkPackage = function() {
-            var pollRequest = new XMLHttpRequest();
-            pollRequest.onload = function() {
-                if (pollRequest.readyState !== 4) return;
-
-                var text = JSON.parse(pollRequest.responseText);
-                if (text.msg === 'Package is ready') {
-                    var downloadUrl = "{% url 'download_package_async' asset.id %}" + (isDraft ? '?draft=True' : '');
-                    window.open(downloadUrl)
-                    setTimeout(function() {
-                        clearInterval(packageInterval);
-                    }, 2 * 1000);
-                }
+        const packageUrl = "{% url 'download_package' asset.id %}"
+        const downloadUrl = "{% url 'download_package_async' asset.id %}"
+    </script>
+    <script>
+        function pollStructure(config, taskId = null) {
+            const {assetId = null, assetType = null, outputFormat = null} = config
+            const assetIdJSON = "{% url 'download_structure_from_db' asset.id %}"
+            const assetIdHTML = "{% url 'download_structure_from_db' asset.id %}?output_format=html"
+            const assetTypeJSON = "{% url 'download_all_asset_structures' asset.asset_type.type %}"
+            const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
+            const generateDownloadUrl = (taskId) => celeryDownloadUrl.replace('task_id', taskId)
+            const structureUrl = assetType ? assetTypeJSON : outputFormat === 'html' ? assetIdHTML : assetIdJSON
+            const progressModalTitle = document.getElementById('progress-modal-title')
+            const contextStatus = document.getElementById('context-status')
+            progressModalTitle.innerText = "Preparing Structure(s)"
+            contextStatus.innerText = "Processing asset(s)..."
+            if(taskId) {
+                const downloadUrl = generateDownloadUrl(taskId)
+                return fetch(generateStatusUrl(taskId)).then(
+                    res => res.json()
+                ).then(status => {
+                    if(status.current && status.current < status.total) {
+                        contextStatus.innerText = `Processing asset ${status.current} out of ${status.total}`
+                        progressBar.style = `width: ${Math.round(status.current / status.total * 100)}%;`
+                        setTimeout(() => pollStructure(config, taskId), pollingInterval)
+                    } else if(status === 'SUCCESS'){
+                        togglePending(false)
+                        const downloadButton = document.getElementById('download-button')
+                        const successMessage = document.getElementById('success-message')
+                        downloadButton.href = downloadUrl
+                        downloadButton.innerText = "Download Structure(s)"
+                        successMessage.innerText = `The structure(s) is ready and should have automatically downloaded. If the structure(s) didn't download automatically use the "Download Structure(s)" link below.`
+                        window.open(downloadUrl)
+                    } else {
+                        alert('Some unknown error occurred')
+                    }
+                })
             }
-            pollRequest.open("GET", packageUrl)
-            pollRequest.send(null)
-        };
-
-        function cookieInterval() {
-            cookieCheckInterval = setInterval(checkCookie, 100);
-        }
-
-
-        function pollPackage(draft) {
-            isDraft = draft;
-            if (packageInterval) {
-                clearInterval(packageInterval);
-            }
-            alert('Starting poll for package. Please dont reload.');
-            packageUrl = "{% url 'download_package' asset.id %}" + (isDraft ? '?draft=True' : '');
-            checkPackage();
-            var startPackage = new XMLHttpRequest();
-            startPackage.open("GET", packageUrl)
-            startPackage.send(null)
-            packageInterval = setInterval(checkPackage, 30 * 1000);
-            return false;
+            fetch(structureUrl).then(
+                res => res.json()
+            ).then(({is_ready: isReady, task_id: taskId}) => {
+                if (isReady) {
+                    window.open(generateDownloadUrl(taskId))
+                } else {
+                    if(!modal.classList.contains('show')) {
+                        modal.classList.add('show')
+                        togglePending(true)
+                    }
+                    setTimeout(() => pollStructure(config, taskId), pollingInterval)
+                }
+            })
         }
     </script>
-
+    {% include "cms/async_partial.html" %}
+    <script src="{% static 'js/assetImportConflicts.js' %}"></script>
 </form>
 {% endblock%}

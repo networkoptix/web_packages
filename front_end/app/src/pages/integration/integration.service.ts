@@ -1,11 +1,12 @@
-import { Injectable, OnDestroy }    from '@angular/core';
+import { Injectable, OnDestroy }     from '@angular/core';
 import {
     BehaviorSubject, Observable, Subscription
-}                                   from 'rxjs';
+}                                    from 'rxjs';
 
-import { NxCloudApiService }        from '../../services/nx-cloud-api';
-import { NxUtilsService }           from '../../services/utils.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService, Account } from '../../services/account.service';
 
 interface Platform {
     file: string;
@@ -20,44 +21,50 @@ interface Platform {
 })
 export class IntegrationService implements OnDestroy {
     CONFIG: IConfig;
+    account: Account
 
     pluginsSubject = new BehaviorSubject(undefined);
-    plugin: any = {};
+    pluginSubject = new BehaviorSubject({});
     haveCustomBuild: boolean;
     private integrationSubject: Subscription;
 
     constructor(
         configService: NxConfigService,
-        private api: NxCloudApiService
+        private api: NxCloudApiService,
+        private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.integrationSubject = this.getIntegrations()
-            .subscribe(result => {
-                const plugins = result?.data || [];
+        this.accountService.get().then(account => {
+            this.account = account;
+        }).then(_ => {
+            this.integrationSubject = this.getIntegrations(this.account && this.account.is_staff)
+                .subscribe(result => {
+                    const plugins = result?.data || [];
 
-                plugins.forEach(plugin => {
-                    if (plugin.mine) {
-                        plugin.information.type.push({ id: 'mine', label: 'mine' }); // label is not important - filter by ID
-                    }
+                    plugins.forEach(plugin => {
+                        if (plugin.mine) {
+                            plugin.information.type.push({ id: 'mine', label: 'mine' }); // label is not important - filter by ID
+                        }
 
-                    plugin.versionDetails = {
-                        version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
-                    };
-                    this.formatRequirementsAndCompatibility(plugin);
+                        plugin.versionDetails = {
+                            version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
+                        };
+                        this.formatRequirementsAndCompatibility(plugin);
 
-                    plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
+                        plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
 
-                    plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
+                        plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
-                    plugin.link = '/integrations/' + plugin.id;
-                    plugin.link += (plugin.state) ? '?state=' + plugin.state : '';
+                        plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
+                        plugin.queryParams = plugin.state ? { state : plugin.state } : {};
+                    });
+                    this.pluginsSubject.next(plugins);
                 });
-                this.pluginsSubject.next(plugins);
-            });
+        });
     }
 
-    private getIntegrations(): Observable<any> {
+    private getIntegrations(ignoreSW): Observable<any> {
         return this.api.getIntegrations();
     }
 
@@ -258,11 +265,11 @@ export class IntegrationService implements OnDestroy {
     }
 
     setIntegrationPlugin(plugin: any = {}) {
-        this.plugin = plugin;
+        this.pluginSubject.next(plugin);
     }
 
     getIntegrationPlugin() {
-        return this.plugin;
+        return this.pluginSubject.value;
     }
 
     ngOnDestroy() {

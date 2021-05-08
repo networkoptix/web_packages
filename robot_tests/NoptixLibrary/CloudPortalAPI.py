@@ -67,39 +67,11 @@ class CloudPortalAPI(object):
     def get_account_systems(self, env, email, password):
         with self.log_in(env, email, password) as s:
             data = s.get(f'{env}/api/systems/')
-            systems = []
-            for system in data.json():
-                systems.append(system['id'])
-            return systems
-
-    def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
-        assert r.status_code == 200, 'Failed to get system settings'
-        return r.json()
-
-    def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudSystemID':
-                return obj['value']
-        else:
-            return 'Cannot find cloudSystemID key'
-
-    def get_local_system_name(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'systemName':
-                return obj['value']
-        else:
-            return 'Cannot find systemName key'
-
-    def get_local_system_owner(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudAccountName':
-                return obj['value']
-        else:
-            return 'Cannot find cloudAccountName key'
+            # systems = []
+            # for system in data.json():
+            #     systems.append(system['id'])
+            # return systems
+        return data.json()
 
     def set_account_language(self, env, email, password, new_language='en_US'):
         with self.log_in(env, email, password) as s:
@@ -139,6 +111,39 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
+
+    @staticmethod
+    def get_system_settings(server_url, local_auth):
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
+        assert r.status_code == 200, 'Failed to get system settings'
+        return r.json()
+
+    @staticmethod
+    def get_cloud_system_id(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudSystemID':
+                return obj['value']
+        else:
+            return 'Cannot find cloudSystemID key'
+
+    @staticmethod
+    def get_local_system_name(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'systemName':
+                return obj['value']
+        else:
+            return 'Cannot find systemName key'
+
+    @staticmethod
+    def get_local_system_owner(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudAccountName':
+                return obj['value']
+        else:
+            return 'Cannot find cloudAccountName key'
 
     def subscribe_push_notification(self, env, email, password, token, name):
         authAscii = email+":"+password
@@ -216,7 +221,8 @@ class CloudPortalAPI(object):
 #       print("Sleeping for 300 secs")
 #        time.sleep(300)
 
-    def create_systems_json(self, env, email, password):
+    @staticmethod
+    def create_systems_json(env, email, password):
         r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
 
         systemsDict = r.json()
@@ -267,11 +273,6 @@ class CloudPortalAPI(object):
         f.write(json.dumps(systemsJson))
         f.close()
 
-    # @staticmethod
-    # def check_http_connection(protocol, ip, url):
-    #     r = requests.get(protocol+ip+url)
-    #     return r.status_code
-
     @staticmethod
     def check_connection(url, verify=True):
         try:
@@ -279,3 +280,37 @@ class CloudPortalAPI(object):
         except requests.exceptions.SSLError:
             return 'SSL Error'
         return r.status_code
+
+    @staticmethod
+    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer):
+        body = {
+            "user": camuser,
+            "password": campassword,
+            "cameras":
+                [
+                    {
+                    "uniqueId": uniqueId,
+                    "url": url,
+                    "manufacturer": manufacturer
+                    }
+                ]
+            } 
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        return r.text
+    
+    @staticmethod
+    def turn_on_analytics(serverUrl):
+#         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
+#         cameraDict = r.json()
+#         cameraID = cameraDict["id"]      
+        body = [
+                    {
+                    "name": "userEnabledAnalyticsEngines",
+                    "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]", 
+                    "resourceId": "{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"
+                    }
+                ]
+            
+        p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        return p.text
+        

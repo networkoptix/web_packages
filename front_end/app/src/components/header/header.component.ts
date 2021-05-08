@@ -5,11 +5,11 @@ import {
 import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
-}                                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+}                                       from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
-} from 'rxjs';
+}                                       from 'rxjs';
 import { map, startWith }            from 'rxjs/operators';
 
 import { NxDialogsService }          from '@dialogs/dialogs.service';
@@ -131,7 +131,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
-            this.headerService.nodes = header;
+            this.headerService.nodes = this.menusService.cleanEmptyNodes(header.nodes);
         });
         // Updates windowWidth$ behavior subject on window resize
         this.resizeSubscription = fromEvent(this.window, 'resize').pipe(
@@ -246,7 +246,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemIdUpdate(id) {
         this.systemId = id;
         this.storageService.systemId = this.systemId;
-
         if (this.systemId && !this.systems) {
             this.systemsService
                 .forceUpdateSystems()
@@ -392,16 +391,18 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (!account || this.bootstrapProvider.newSystem) {
                     return;
                 }
-                const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
-                system.update().then(() => {
-                    system.getInfoAndPermissions().then(() => {
-                        this.systems = [system];
-                        this.singleSystem = (this.systems.length === 1);
-                        this.systemCounter = this.systems.length;
-                        this.updateActiveSystem();
-                        this.updateActive();
-                        this.headerService.activeSystem = system.moduleInfo;
-                    });
+                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
+                this.system.update().then(() => {
+                    this.singleSystem = true;
+                    this.systemCounter = 1;
+                    this.system.infoSubject
+                        .pipe(untilDestroyed(this))
+                        .subscribe((system) => {
+                            this.systems = [system];
+                            this.updateActiveSystem();
+                            this.updateActive();
+                            this.headerService.activeSystem = system?.moduleInfo;
+                        });
                 });
             });
         } else {
@@ -494,15 +495,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                                 this.stopActiveSubscription();
                                 this.system = this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
 
-                                this.system.getInfoAndPermissions(false).catch(_ => {
-                                }).then(system => {
-                                    this.systems.find(sys => {
-                                        if (sys.id === this.headerService?.activeSystem?.id) {
-                                            sys.moduleInfo = system.moduleInfo;
-                                        }
-                                    });
-                                    this.canSeeInfo = system && this.system.canViewInfo();
-                                });
+                                this.system.getInfoAndPermissions(false)
+                                    .then(system => {
+                                        this.canSeeInfo = system?.canViewInfo() || false;
+                                    })
+                                    .catch(_ => {});
                             }
                         } else {
                             this.stopActiveSubscription();
@@ -519,7 +516,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             !this.active.ipvd;
     }
 
-    filterBreadcrumbs(nodes) {
+    filterBreadcrumbs([_, ...nodes] = []) {
         return (nodes || []).filter(({ url }) => url);
     }
 
@@ -529,7 +526,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     get mainUrl() {
         if (!this.user.email) {
-            return '/';
+            return this.CONFIG.isLocal ? '/settings' : '/';
         } else if (this.singleSystem) {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         } else {

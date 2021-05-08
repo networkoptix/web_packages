@@ -34,34 +34,6 @@ export class NxDevToolsComponent implements OnInit {
     ) {
         this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);
-        if (!this.devToolsNode) {
-            const mapToDevToolsNode = ({
-                name,
-                display_name: displayName,
-                asset_id: assetId,
-                new_window: newWindow,
-                asset,
-                url,
-                icon,
-                nodes
-            }): AboutNode => ({
-                title       : displayName || name || asset?.title,
-                displayName : displayName || name,
-                nodes       : nodes && nodes.map(mapToDevToolsNode),
-                url         : url || `/developers/knowledge-base/${assetId}`,
-                assetId,
-                asset,
-                icon,
-                newWindow
-            });
-            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct)
-                .pipe(takeWhile(_ => !this.devToolsNode))
-                .subscribe(devTools => {
-                    this.devToolsNode = {
-                        nodes: devTools.map(mapToDevToolsNode)
-                    };
-                });
-        }
     }
 
     ngOnInit() {
@@ -71,15 +43,55 @@ export class NxDevToolsComponent implements OnInit {
         }
         this.menuName = this.CONFIG.docMenuMap[snapshot.paramMap.get('name')]['dev-tools'];
 
+        if (!this.devToolsNode) {
+            const mapToDevToolsNode = ({
+                name,
+                subtitle,
+                display_name: displayName,
+                asset_id: assetId,
+                new_window: newWindow,
+                asset,
+                url,
+                icon,
+                nodes
+            }): AboutNode => ({
+                title       : displayName || name || asset?.title,
+                subtitle,
+                displayName : displayName || name,
+                nodes       : nodes && nodes.map(mapToDevToolsNode),
+                url         : url || `/docs/content/${assetId}`,
+                assetId,
+                asset,
+                icon,
+                newWindow
+            });
+            this.cloudApi.getDocumentation(this.menuName, DOC_TYPES.struct)
+                .pipe(takeWhile(_ => !this.devToolsNode))
+                .subscribe(({ nodes: devTools }) => {
+                    this.devToolsNode = {
+                        nodes: devTools.map(mapToDevToolsNode)
+                    };
+                });
+        } else {
+            this.devToolsNode = {
+                ...this.devToolsNode,
+                nodes: this.devToolsNode.nodes.map(({
+                    url, ...node
+                }) => ({ ...node, url: url || `/docs/content/${node.assetId}` }))
+            };
+        }
+
         const devToolsConfig = this.errorManager.buildConfig(
-            ['title', 'nodes'],
+            ['nodes'],
             this.errorManager.buildConfig(
-                ['title', 'url', 'icon']
+                ['title', 'url']
             )
         );
-        this.errorManager.checkAboutNode(
-            this.devToolsNode as AboutNode,
-            devToolsConfig
-        );
+        if (this.devToolsNode) {
+            this.errorManager.checkAboutNode(
+                this.devToolsNode as AboutNode,
+                devToolsConfig
+            );
+        }
     }
 }

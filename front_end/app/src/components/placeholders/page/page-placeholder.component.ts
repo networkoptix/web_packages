@@ -121,6 +121,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = this.LANG.errorCodes.failedToAccessSystem();
                     this.iconName = 'NoAccess';
                     break;
+                case 'FAILED_TO_ACCESS_CAMERA':
+                    this.placeholderTitle = this.LANG.pageTitles.failedToAccessCamera();
+                    this.message = this.LANG.errorCodes.failedToAccessCamera();
+                    this.iconName = 'NoAccess';
+                    break;
                 case '404' :
                     this.placeholderTitle = this.LANG.pageTitles.pageNotFound();
                     this.message = '';

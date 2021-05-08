@@ -1,18 +1,19 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute }                          from '@angular/router';
-import { DebugElement }                            from '@angular/core';
-import { describe, expect, jest, beforeEach, it }  from '@jest/globals';
-
-import { NxSystemStandardServerComponent } from './server-standard.component';
+import {
+    waitForAsync, ComponentFixture,
+    TestBed
+}                                          from '@angular/core/testing';
+import { ActivatedRoute }                  from '@angular/router';
+import { DebugElement }                    from '@angular/core';
 import { NxConfigService }                 from '@services/nx-config';
 import { nxConfig }                        from '@services/nx-config/config';
 import { NxLanguageProviderService }       from '@services/nx-language-provider';
 import { NxProcessService }                from '@services/process.service';
 import { NxApplyService }                  from '@services/apply.service';
-import { NxDialogsService }                from '../../../../../dialogs/dialogs.service';
-import { NxMenuService }                   from '../../../../../menu';
+import { NxDialogsService }                from '@dialogs/dialogs.service';
+import { NxMenuService }                   from '@src/menu';
 import { NxUriService }                    from '@services/uri.service';
-import { NxToastService }                  from '../../../../../dialogs/toast.service';
+import { NxToastService }                  from '@dialogs/toast.service';
+import { NxSystemStandardServerComponent } from './server-standard.component';
 
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;

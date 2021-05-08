@@ -2,8 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { isArray }               from 'rxjs/internal-compatibility';
 import { BehaviorSubject }       from 'rxjs';
 
-import { NxUtilsService }        from '../services/utils.service';
-import { NxSearchService }       from '../services/search.service';
+import { NxUtilsService }  from '@services/utils.service';
+import { NxSearchService } from '@services/search.service';
 
 @Injectable({
     providedIn: 'root'
@@ -98,6 +98,36 @@ export class NxMenuService implements OnDestroy {
         }
     }
 
+    isEqual(currentContent, newContent, nodeGroup) {
+        return NxUtilsService.isEqual(
+            currentContent.filter(node => node.id === nodeGroup),
+            newContent.filter(node => node.id === nodeGroup)
+        );
+    }
+
+    hasUpdatedContent(content) {
+        const cleanedContent = this.cleanUpAdditionalTextIfNeeded(content);
+        return !NxUtilsService.isEqual(cleanedContent, content) ||
+            !this.isEqual(cleanedContent, content, 'cameras') ||
+            !this.isEqual(cleanedContent, content, 'users') ||
+            !this.isEqual(cleanedContent, content, 'servers');
+    }
+
+    // level-3-item adds additionalText if it doesn't exist
+    // cleaning that up if it was added for hasUpdatedContent comparison
+    cleanUpAdditionalTextIfNeeded(newContent) {
+        return this.content.map(c => {
+            const node = newContent.find(nC => nC.id === c.id)?.level3;
+            if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
+                c.level3 = c.level3.map(menuItem => {
+                    const { additionalText, ...item } = menuItem;
+                    return item;
+                });
+            }
+            return c;
+        });
+    }
+
     fillerItemsBy(model) {
         let filteredContent = [];
         if (model.query) {
@@ -130,6 +160,10 @@ export class NxMenuService implements OnDestroy {
                         }
                     });
                     if (haveNode?.level3?.length) {
+                        // remove separator if last in search result
+                        if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
+                            haveNode.level3.pop();
+                        }
                         filteredContent.push(haveNode);
                     }
                 }
@@ -141,6 +175,27 @@ export class NxMenuService implements OnDestroy {
         return filteredContent;
     }
 
+    sanitizeContent(content) {
+        const clean = NxUtilsService.deepCopy(content);
+        return clean.map((node) => {
+            if (node.level3?.length) {
+                node.level3.forEach(item => {
+                    if (item.label) {
+                        item.label = NxUtilsService.htmlToEntity(item.label);
+                        // item.label = item.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    }
+                    if (item.additionalLabel) {
+                        item.additionalLabel = NxUtilsService.htmlToEntity(item.additionalLabel);
+                    }
+                    if (item.additionalText) {
+                        item.additionalText = NxUtilsService.htmlToEntity(item.additionalText);
+                    }
+                });
+            }
+            return node;
+        });
+    }
+
     cleanMenuContent(content) {
         const clean = NxUtilsService.deepCopy(content);
         return clean.map((node) => {
@@ -150,13 +205,14 @@ export class NxMenuService implements OnDestroy {
     }
 
     private setHighlightPattern(model) {
-        let pattern = (model.queryExactMatch ||
+        const pattern = (model.queryExactMatch ||
             model.queryEndsWith ||
             model.queryStartsWith ||
             model.queryOrMatch ||
             model.queryAndMatch).join('|');
 
-        pattern = NxUtilsService.escapeRegExp(pattern);
+        // query will be broken in tokens so attempted html/js injection will fail
+        // pattern = NxUtilsService.escapeRegExp(pattern);
 
         this.regex = new RegExp(pattern, 'gi');
     }

@@ -22,6 +22,7 @@ export interface BaseConfig {
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;
     dialogs: Dialogs;
+    developers: Developers;
     downloads: Downloads;
     healthMonitoring: HealthMonitoring;
     icons: Icons;
@@ -33,6 +34,7 @@ export interface BaseConfig {
     ipvd: Ipvd;
     isInIframe: boolean;
     isLocal: boolean;
+    landing: Landing;
     layout: Layout;
     maintenanceTimeout: number;
     maxServers: number;
@@ -40,6 +42,7 @@ export interface BaseConfig {
     menus: Menus;
     newSystem: boolean;
     permissions: Permissions;
+    pollingTimeout: number;
     redirect: Redirect;
     showHeaderAndFooter: boolean;
     search: Search;
@@ -51,17 +54,16 @@ export interface BaseConfig {
     cloudHost: string;
     cloudSystemId: string;
     localSystemId: string;
-    localSystemName: string;
     localServerId: string;
     company: Company;
-    dynamicMenus: MenuStructure;
+    dynamicMenus: MenusStructure;
     docMenuMap: DocMenuMap;
     licenseTypes: LicenseTypes;
     googleTagManagerId: string;
     trialLicenseKey: string;
     licenseDeactivations: number,
-    pushConfig: string;
-    testedOperatingSystems: string;
+    pushConfig: {};
+    testedOperatingSystems: {};
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;
@@ -84,6 +86,16 @@ export interface BaseConfig {
     // loggersConfig: LoggersConfig;
 }
 
+export interface Developers {
+    landing: {
+        adminLink: string;
+    }
+}
+
+export interface Landing {
+    description: string;
+}
+
 export interface FooterItem {
     name: string;
     url: string;
@@ -92,7 +104,13 @@ export interface FooterItem {
 }
 
 export interface MenuStructure {
-    [key: string]: MenuNode[]
+    title: string,
+    description: string,
+    nodes: MenuNode[]
+}
+
+export interface MenusStructure {
+    [menuName: string]: MenuStructure
 }
 
 export interface DocMenuMap {
@@ -130,6 +148,7 @@ export interface AccessRoles {
     editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     allMediaPermissionFlag: string;
+    viewArchivesPermissionFlag: string,
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
@@ -165,16 +184,16 @@ export interface ClientMode {
 }
 
 export interface CloudCapabilities {
-    developersEnabled: string,
-    feedbackEnabled: string;
+    developersEnabled: boolean,
+    feedbackEnabled: boolean;
     healthMonitor?: string;
     healthMonitorCacheTimeout?: number;
     // TODO Need to find out which are valid
     healthMonitoring?: string;
-    integrationStore: string;
-    publicDownloads: string;
-    publicReleases: string;
-    cloudStorageEnabled: string;
+    integrationStore: boolean;
+    publicDownloads: boolean;
+    publicReleases: boolean;
+    cloudStorageEnabled: boolean;
     cloudStorageSize: number;
 }
 
@@ -186,8 +205,8 @@ export interface Company {
 }
 
 export interface Links {
-    privacy: string;
-    support: string;
+    privacy?: string;
+    support?: string;
     website: string;
 }
 
@@ -350,6 +369,7 @@ export interface Icons {
     devTools: string;
     backgrounds: string;
     dir: string;
+    dirDevtools: string;
     dirButtons: string;
     dirNonStandard: string;
     dirPagePlaceholder: string;
@@ -447,7 +467,7 @@ export interface SystemSettings {
     admin: Admin;
     cloudStorage: Admin;
     users: Admin;
-    servers: Admin;
+    servers: Server;
     general: Admin;
     licenses: Admin;
     buttons: Buttons;
@@ -458,6 +478,13 @@ export interface Admin {
     id: string;
     icon?: string;
     path: string;
+}
+
+export interface Server extends Admin {
+    statusIcons: {
+        offline: string;
+        online: string;
+    }
 }
 
 export interface Cameras extends Admin {
@@ -525,6 +552,7 @@ export interface ServersStatus {
 export interface System {
     auditTime: number;
     flags: Flags;
+    name: string;
     status: SystemStatus;
 }
 
@@ -577,12 +605,14 @@ export interface Setting {
     type: string;
     alert?: string;
     setupWizard?: boolean;
+    hiddenInAdvanced?: boolean;
     label?: string;
 }
 
 export interface SettingsConfig {
     auditTrailEnabled: Setting,
     cameraSettingsOptimization: Setting,
+    cloudConnectUdpHolePunchingEnabled: Setting,
     defaultMotionMask: string,
     disabledVendors: Setting,
     ec2AliveUpdateIntervalSec: Setting,
@@ -615,6 +645,7 @@ export interface SettingsConfig {
     cloudAuthKey: Setting,
     cloudSystemID: Setting,
     systemName: Setting,
+    licenseServer: Setting,
     newSystem: Setting,
     proxyConnectTimeoutSec:Setting,
     crossdomainEnabled: Setting,
@@ -638,7 +669,7 @@ export interface SettingsConfig {
     osTimeChangeCheckPeriodMs:Setting,
     syncTimeExchangePeriod:Setting,
     syncTimeEpsilon:Setting,
-    maxWearableArchiveSynchronizationThreads:Setting,
+    maxVirtualCameraArchiveSynchronizationThreads:Setting,
     maxEventLogRecords:Setting,
     forceLiveCacheForPrimaryStream: Setting
 }
@@ -1247,7 +1278,7 @@ export interface SettingsConfig {
 //         { json: 'osTimeChangeCheckPeriodMs', js: 'osTimeChangeCheckPeriodMs', typ: r('Setting') },
 //         { json: 'syncTimeExchangePeriod', js: 'syncTimeExchangePeriod', typ: r('Setting') },
 //         { json: 'syncTimeEpsilon', js: 'syncTimeEpsilon', typ: r('Setting') },
-//         { json: 'maxWearableArchiveSynchronizationThreads', js: 'maxWearableArchiveSynchronizationThreads', typ: r('Setting') },
+//         { json: 'maxVirtualCameraArchiveSynchronizationThreads', js: 'maxVirtualCameraArchiveSynchronizationThreads', typ: r('Setting') },
 //         { json: 'maxEventLogRecords', js: 'maxEventLogRecords', typ: r('Setting') },
 //         { json: 'forceLiveCacheForPrimaryStream', js: 'forceLiveCacheForPrimaryStream', typ: r('Setting') }
 //     ], false)

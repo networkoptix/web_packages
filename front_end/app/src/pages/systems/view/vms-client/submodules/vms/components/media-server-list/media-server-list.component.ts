@@ -4,9 +4,11 @@ import { Subscription } from 'rxjs'
 import { CookieService } from 'ngx-cookie-service'
 
 import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service'
-import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
-import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
-import ICamera from '../../datatypes/ICamera'
+import VmsState, { VMS_MODE }       from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
+import MediaServer                  from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
+import ICamera                      from '../../datatypes/ICamera'
+import { IConfig, NxConfigService } from '@services/nx-config'
+import { NxUtilsService }           from '../../../../../../../../services/utils.service';
 
 
 @Component({
@@ -15,13 +17,24 @@ import ICamera from '../../datatypes/ICamera'
     styleUrls: ['media-server-list.component.scss']
 })
 export class MediaServerListComponent implements OnInit, OnDestroy {
-
+  CONFIG: IConfig
   protected _vmsStateSubscription: Subscription
   protected _mediaservers: Array<MediaServer>
   public showIP: boolean = false
   public token: string = ''
 
   public mediaservers: Array<MediaServer>
+
+
+  public previewLoaded = {}
+
+  public handlePreviewLoaded (cid) {
+    this.previewLoaded[cid] = true
+  }
+
+  public handlePreviewError (cid) {
+    this.previewLoaded[cid] = -1
+  }
 
   public isServerExpanded: {
     [serverId: string]: boolean
@@ -32,8 +45,10 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
   constructor (
     private vms: VideoManagementSystemService,
     protected cookieService: CookieService,
+    configService: NxConfigService
   ) {
     this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
+    this.CONFIG = configService.config
 
   }
 
@@ -52,8 +67,16 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         break
       case VMS_MODE.CAMERA_NOT_SELECTED:
       case VMS_MODE.CAMERA_SELECTED:
-        this._mediaservers = s.mediaServers
-        this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera.id : undefined
+        this._mediaservers = s.mediaServers;
+        this._mediaservers.map(server => {
+          server.name = NxUtilsService.htmlToEntity(server.name);
+          server.cameras.map(camera => {
+            camera.name = NxUtilsService.htmlToEntity(camera.name);
+          });
+        });
+        setTimeout(() => {
+          this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera?.id : undefined
+        }, 0)
         const cameraComparator = (c1: ICamera, c2: ICamera) => {
           const n1 = c1.name.toLocaleLowerCase()
           const n2 = c2.name.toLocaleLowerCase()

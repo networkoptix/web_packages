@@ -3,7 +3,10 @@
         <div class="message">{{message}}</div>
         <div class="action">
             <ng-container *ngFor="let action of actions">
-                <a *ngIf="action.type === 'link'" [routerLink]="action.value" target="_blank">{{action.text}}</a>
+                <ng-container *ngIf="action.type === 'link'">
+                    <a *ngIf="!action.external" [routerLink]="action.value" target="_blank">{{action.text}}</a>
+                    <a *ngIf="action.external" [href]="action.value" target="_blank">{{action.text}}</a>
+                </ng-container>
                 <nx-process-button *ngIf="action.type === 'process-button'"
                                    [buttonText]="action.text"
                                    [actionType]="'default'"

@@ -25,7 +25,7 @@ ${HM WARNING ICON}                       //*[@d="m12 16c0 0.55228-0.44772 1-1 1h
 
 ${HM TABLE}                              //div[@id="nx-table"]
 ${HM SINGLE ENTITY}                      //nx-single-entity
-${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//h4/header
+${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//header
 
 ${HM DETAILS PANEL}                      //nx-block//nx-section/div[@class="card--body section clearfix"]
 
@@ -54,3 +54,5 @@ ${HM FIRST TABLE PAGE ELEMENT}           //ngb-pagination//a[@aria-label="Previo
 ${HM LAST TABLE PAGE ELEMENT}            //ngb-pagination//a[@aria-label="Next" and @tabindex="-1"]
 ${HM ALERTS LINK ERRORS}                 ${HM ALERTS PAGE LINK}/div[2]/div[1]/nx-alert-counter/div/span
 ${HM ALERTS LINK WARNINGS}               ${HM ALERTS PAGE LINK}/div[2]/div[2]/nx-alert-counter/div/span
+
+${HM STORAGE TABLE}                      //table//td[contains(@title, "HD Witness Media")]

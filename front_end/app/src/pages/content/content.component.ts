@@ -2,7 +2,7 @@ import {
     Component, OnInit, Inject
 } from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { HttpClient, HttpParams }    from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
 import { SessionStorageService }     from 'ngx-webstorage';
 
@@ -130,11 +130,16 @@ export class NxContentComponent implements OnInit {
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
-        this.http.get(uri, { params }).subscribe(
+        let headers = new HttpHeaders().set('ngsw-bypass', 'true');
+        if (this.account && this.account.is_staff) {
+            headers = headers.set('ngsw-bypass', 'true');
+        }
+        this.http.get(uri, { headers, params }).subscribe(
             (data: any) => {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.pageTitle = this.title;
+                this.pageService.pageDescription = data.shortDescription;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;
@@ -150,8 +155,7 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.router.navigate([this.CONFIG.redirect.page404])
-                        .catch((ex) => console.error(ex));
+                    this.pageService.show404();
                 }
             });
     }
@@ -169,6 +173,11 @@ export class NxContentComponent implements OnInit {
                     add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;
                 this.sessionStorage.store('staticContent', JSON.stringify(this.staticContent));
-            }).catch((ex) => { console.error(ex); });
+            }).catch((e) => {
+                if (e.status === 404) {
+                    this.pageService.show404();
+                }
+                console.error(e);
+            });
     }
 }

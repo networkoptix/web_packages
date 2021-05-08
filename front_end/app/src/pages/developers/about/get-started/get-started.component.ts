@@ -31,7 +31,7 @@ export class NxGetStartedComponent implements OnChanges {
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
-                ['icon', 'url', 'title'],
+                ['icon', 'title', 'subtitle'],
                 null,
                 this.errorManager.buildConfig(
                     ['title']
@@ -50,15 +50,8 @@ export class NxGetStartedComponent implements OnChanges {
             step.icon = images[0];
             step.aniIcon = images[1];
             step.currentIcon = step.icon;
+            step.url = step.url || (step.assetId ? `/docs/content/${step.assetId}` : '');
         });
         this.steps = getStartedNode;
     }
-
-    // slideUp(wrapperId) {
-    //     this.document.getElementById(wrapperId).classList.add('slide-up');
-    // }
-    //
-    // slideBack(wrapperId) {
-    //     this.document.getElementById(wrapperId).classList.remove('slide-up');
-    // }
 }

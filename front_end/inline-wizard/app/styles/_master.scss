@@ -1,3 +1,6 @@
+label {
+  font-weight: 500 !important;
+}
 
 .master-modal {
   overflow-y: auto;
@@ -12,6 +15,10 @@
 .master {
   width: 520px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
 
   .horizontal-line-text{

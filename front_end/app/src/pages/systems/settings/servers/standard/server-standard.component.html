@@ -33,7 +33,10 @@
         </nx-alert-block>
     </div>
     <ng-template #preloader>
-        <div *ngIf="!isOffline" class="col-12 placeholder-section">
+        <ng-template #offlinePlaceholder>
+            <nx-page-placeholder *ngIf="system.isAvailable" class="placeholder-section" type="SERVER_OFFLINE"></nx-page-placeholder>
+        </ng-template>
+        <div *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder" class="col-12 placeholder-section">
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>
@@ -44,9 +47,9 @@
                     <nx-editable-settings-heading
                         [nameWatcher]="serverNameWatcher"
                         (editModeState)="editMode = $event"
-                        [editEnabled]="system.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
+                        [editEnabled]="system.userManager.permissions.isAdmin && !renameDisabled"></nx-editable-settings-heading>
                     <!-- <div class="section-server-buttons d-flex flex-column flex-lg-row align-items-start align-items-lg-center"> -->
-                    <div class="d-flex pb-2">
+                    <div *ngIf="!editMode" class="d-flex pb-2">
                         <button *ngIf="system.canViewInfo()" class="server-buttons"
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
@@ -54,11 +57,11 @@
                                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                         [applyCss]="true"></svg-icon>
                                 </span>
-                                <span class="ml-1" translate>Detailed Info</span>
+                                <span class="ml-1 header-button-span" translate>Detailed Info</span>
                         </button>
                     </div>
                 </div>
-                <div class="col-6 col-lg-4">
+                <div class="col-12 col-md-8 col-lg-8">
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>
@@ -101,17 +104,25 @@
             <nx-section class="pl-3">
                 <div class="server-settings">
                     <span class="ellipsis text-column" translate>Port</span>
-                    <input
-                        class="port-input pl-2"
-                        type="number"
-                        [min]="CONFIG.servers.port.min"
-                        [max]="CONFIG.servers.port.max"
-                        [(ngModel)]="ipPortWatcher.value"
-                        (keydown)="storePreviousValue($event)"
-                        (keyup)="validationCheckForInput()"
-                        [disabled]="portChangeDisabled || serverUnavailable"
-                        (change)="onPortChange()"
-                    >
+                    <div class="server-settings-port">
+                        <div style="width: 85px;">
+                            <nx-numeric
+                                    [class]="'pl-2'"
+                                    [min]="CONFIG.servers.port.min"
+                                    [max]="CONFIG.servers.port.max"
+                                    [disabled]="portChangeDisabled || serverUnavailable"
+                                    [(ngModel)]="ipPortWatcher.value"
+                                    (onChange)="onPortChange($event)"
+                                    #serverPort="ngModel"
+                                    required></nx-numeric>
+                        </div>
+                        <div class="ml-2">
+                            <span class="input-error" *ngIf="portBusy"
+                                  translate>Port is busy</span>
+                            <span class="input-error" *ngIf="serverPort.invalid && serverPort.touched"
+                                  translate>Server port is required</span>
+                        </div>
+                    </div>
                     <ng-container *ngIf="showAnalytics && dropdownStorages.length && !storagesLoading || storagesLoading">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
                         <nx-select

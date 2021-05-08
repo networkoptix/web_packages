@@ -1,11 +1,16 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Router, NavigationEnd }                          from '@angular/router';
-import { Location }                                       from '@angular/common';
-import { filter, map, startWith, takeUntil }              from 'rxjs/operators';
-import { timer, Subject }                                 from 'rxjs';
-import { UntilDestroy }                                   from '@ngneat/until-destroy';
-import { NxMenusService, MenuNode }                       from '../../services/menus.service';
-import { IConfig, NxConfigService }                       from '../../services/nx-config';
+import { Component, Input, Output, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Router, NavigationEnd }                    from '@angular/router';
+import { DOCUMENT, Location } from '@angular/common';
+import {
+    filter, map, startWith, switchMap, takeUntil
+}                                                   from 'rxjs/operators';
+import { timer, Subject }                           from 'rxjs';
+import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
+import { NxMenusService, MenuNode }                 from '../../services/menus.service';
+import { IConfig, NxConfigService }                 from '../../services/nx-config';
+import { NxAccountService }                         from '@services/account.service';
+import { MenuStructure } from '@services/nx-config/base-config';
+import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
 
 export interface RelatedLinks {
     type: string,
@@ -14,17 +19,13 @@ export interface RelatedLinks {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-left-menu[menuName]',
+    selector    : 'nx-left-menu',
     templateUrl : 'left-menu.component.html',
     styleUrls   : ['left-menu.component.scss']
 })
 export class NxLeftMenuComponent implements OnInit {
-    @Input() menuName: string;
-    @Input() baseRoute: string;
-    @Input() ignoreQuery = false;
-    @Input() showDefault = true;
     @Output() onClick = new EventEmitter();
-    @Output() handlePrefetch = new EventEmitter<number>();
+    @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
 
     CONFIG: IConfig;
@@ -33,88 +34,123 @@ export class NxLeftMenuComponent implements OnInit {
     openNodes: string[] = [];
     mouseLeave$ = new Subject();
     prefetchedDocuments = [];
-    firstUrl = ''
-
-    routeSubscription;
+    firstUrl = '';
+    highlightedTopNode: string;
+    ignoreQuery = true;
 
     constructor(
         configService: NxConfigService,
         private router: Router,
         private menusService: NxMenusService,
-        public location: Location
+        public location: Location,
+        private accountService: NxAccountService,
+        public kbService: NxKnowledgebaseService,
+        @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.config;
     }
 
-    updateActive = (url: string) => {
+    updateActive = (activeAssetId, activeAssetState) => {
         this.activeRouteNodes = [];
-        const updateActiveRoutes = (node: MenuNodeWithParent) => {
-            const name = node.display_name || node.name;
-            const openNodeIndex = this.openNodes.indexOf(name);
-            if (openNodeIndex !== 1) {
-                this.openNodes.splice(openNodeIndex);
+        const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
+            if (updateUrl) {
+                const currentQueryParams = this.document.location.search;
+                const currentPath = this.location.path();
+                // Change URL in address bar to have the current one if a different one was used
+                if (node.url !== currentPath) {
+                    let newUrl = node.url;
+                    if (currentQueryParams) {
+                        newUrl += currentQueryParams;
+                    } else if (node.state) {
+                        newUrl += `?state=${node.state}`;
+                    }
+                    this.location.replaceState(newUrl);
+                }
+
+                this.kbService.activeNode = node;
+                // If activeNode is set we don't want firstUrl to be highlighted anymore
+                this.firstUrl = '';
             }
+            const name = node.display_name || node.name;
             this.activeRouteNodes.push(name);
+            this.openNodes.push(name);
             if (node.parentNode) {
                 updateActiveRoutes(node.parentNode);
             }
         };
         const relatedNodes = [];
-        const findActiveNode = (nodes: MenuNodeWithParent[], targetUrl = url, action:string = 'update') => {
+        const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetState, action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.url === targetUrl) {
+                if (node.asset_id === targetAssetId && (!node.state && !this.kbService.activeAssetState || node.state === this.kbService.activeAssetState)) {
                     if (action === 'update') {
-                        updateActiveRoutes(node);
+                        updateActiveRoutes(node, true);
                         if (node.next_item) {
-                            this.relatedLinks.emit({ type: 'next', nodes: node.parentNode?.nodes || [] });
+                            this.relatedLinks.emit({ type: 'next', nodes: nodes.filter(node => !node.indented) });
                         } else {
                             node.related_asset_ids.forEach(id => {
-                                findActiveNode(this.menuNodes, this.baseRoute + id, 'findRelated');
+                                findActiveNode(this.menuNodes, id, targetState, 'findRelated');
                             });
-                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes });
+                            this.relatedLinks.emit({ type: 'related', nodes: relatedNodes.filter(node => !node.indented) });
                         }
-                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url)) {
+                    } else if (action === 'findRelated' && !relatedNodes.some(relNode => relNode.url === node.url || relNode.asset_id === targetAssetId)) {
                         relatedNodes.push(node);
                     }
                 } else if (node.nodes?.length) {
-                    findActiveNode(node.nodes, targetUrl, action);
+                    findActiveNode(node.nodes, targetAssetId, targetState, action);
                 }
             };
             nodes.forEach(checkNode);
         };
-        findActiveNode(this.menuNodes);
-        if (this.showDefault && !this.activeRouteNodes.length) {
-            const getFirstUrl = (nodes: MenuNodeWithParent[]): string => nodes[0].url || getFirstUrl(nodes[0].nodes);
-            this.firstUrl = getFirstUrl(this.menuNodes);
-            this.updateActive(this.firstUrl);
-        }
+
+        findActiveNode(this.menuNodes, activeAssetId, activeAssetState);
+        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
     }
 
     toggleOpen(node: MenuNode) {
+        const getRootNode = (name, nodesToCheck = this.menuNodes, rootNode: MenuNodeWithParent[] = []) => {
+            const checkNode = (currentNode: MenuNodeWithParent) => {
+                const currentNodeName = currentNode.display_name || currentNode.name;
+                if (currentNodeName === name) {
+                    rootNode.push(currentNode);
+                } else {
+                    return getRootNode(name, currentNode.nodes, rootNode);
+                }
+            };
+            if (rootNode.length || !nodesToCheck) {
+                return;
+            }
+
+            nodesToCheck.forEach(checkNode);
+            return rootNode;
+        };
+        const getChildNodes = (nodeNames: string[], current: MenuNodeWithParent) => {
+            const pushCurrent = (current: MenuNodeWithParent) => {
+                const currentNodeName = current.display_name || current.name;
+                nodeNames.push(currentNodeName);
+                current.nodes.forEach(pushCurrent);
+            };
+            pushCurrent(current);
+            return nodeNames;
+        };
+        const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
+        const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.display_name || node.name;
         const nodeIndex = this.openNodes.indexOf(name);
         if (nodeIndex === -1) {
             this.openNodes.push(name);
         } else {
-            this.openNodes.splice(nodeIndex);
+            this.openNodes = this.openNodes.filter(filterTree(name));
         }
+        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
     }
 
-    prefetchAsset(assetId) {
+    prefetchAsset(assetId, state) {
         if (assetId) {
-            timer(250).pipe(takeUntil(this.mouseLeave$)).subscribe(() => {
-                this.prefetchedDocuments.push(assetId);
-                this.handlePrefetch.emit(assetId);
+            timer(250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
+                this.prefetchedDocuments.push(state ? `${assetId}?state=${state}` : assetId);
+                this.handlePrefetch.emit({ assetId, state });
             });
         }
-    }
-
-    mapParentNodeAndUrl(currentNode, parentNode?) {
-        currentNode.parentNode = parentNode;
-        if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
-            currentNode.url = this.baseRoute + currentNode.asset_id;
-        }
-        currentNode.nodes.forEach(childNode => this.mapParentNodeAndUrl(childNode, currentNode));
     }
 
     handleClick(event) {
@@ -122,17 +158,23 @@ export class NxLeftMenuComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.menusService.getMenu(this.menuName).subscribe(menu => {
-            this.menuNodes = menu;
-            this.menuNodes.forEach(node => this.mapParentNodeAndUrl(node));
+        this.kbService.menuSubject.pipe(
+            untilDestroyed(this)
+        ).subscribe((menu) => {
+            if (menu?.nodes) {
+                this.menuNodes = menu.nodes;
+                // eslint-disable-next-line camelcase
+                if (this.kbService.account?.is_superuser) {
+                    this.ignoreQuery = false;
+                }
+            } else {
+                this.menuNodes = [];
+            }
         });
-        this.routeSubscription = this.router.events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                map((event: NavigationEnd) => event.url),
-                startWith(this.location.path())
-            )
-            .subscribe(url => this.updateActive(this.location.path().split(this.ignoreQuery ? '?' : null)[0]));
+
+        this.kbService.activeAssetIdSubject.subscribe(id => {
+            this.updateActive(id, this.kbService.activeAssetState);
+        });
     }
 };
 

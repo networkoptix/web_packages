@@ -31,12 +31,18 @@ export class CameraManager {
 
     async getCameras(serverTimes?, cameras?) {
         if (!serverTimes || !cameras) {
-            [serverTimes, cameras] = await this.serverManager.mediaserver.getCamerasWithSeverTime().toPromise();
-            if (!cameras) {
-                return Promise.reject(new Error(`Request to server has failed ${cameras}`));
-            }
+            await this.serverManager.mediaserver
+                .getCamerasWithSeverTime().toPromise()
+                .then((response) => {
+                    if (!response) {
+                        cameras = [];
+                        return;
+                    }
+                    [serverTimes, cameras] = response;
+                });
         }
-        const mappedCameras = await <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, ...camera }: ICamera) => {
+        const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
+            const backupType = deprecatedBackupType || (<any>camera).backupQuality;
             const server = serverTimes.find(({ serverId }) => serverId === parentId);
             let dayOfWeek;
             let secondsToday;
@@ -68,7 +74,8 @@ export class CameraManager {
                 params[name] = value;
                 return params;
             }, {});
-            const parentName = this.servers.find(server => server.id === parentId)?.name;
+
+            const parentName = this.servers?.find(server => server.id === parentId)?.name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
@@ -79,10 +86,16 @@ export class CameraManager {
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
-            const motionEnabled = camera.motionType !== MotionType.noMotion;
-            const { hasDualStreaming, bitrateInfos } = parsedAddParams;
-            const multiStream = bitrateInfos && JSON.parse(bitrateInfos).streams.length >= 2;
-            const motionLowresEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
+            const motionEnabled = ![MotionType.noMotion, MotionType.none].includes(camera.motionType);
+            let { hasDualStreaming, bitrateInfos } = parsedAddParams;
+            let defaultRatio = 0;
+            if (bitrateInfos) {
+                bitrateInfos = JSON.parse(bitrateInfos);
+                const [x, y] = bitrateInfos.streams[0].resolution.split('x');
+                defaultRatio = x / y;
+            }
+            const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
+            const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
@@ -90,16 +103,16 @@ export class CameraManager {
                 motionEnabled,
                 modes     : [
                     { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                    { name: 'motion', id: 'RT_MetadataOnly', value: this.parseRecordingMode(camera, 'RT_MetadataOnly'), enabled: motionEnabled },
                     {
                         name    : 'motionLowRes',
-                        id      : 'RT_MotionAndLowQuality',
-                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
-                        enabled : motionLowresEnabled && motionEnabled
+                        id      : 'RT_MetadataAndLowQuality',
+                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MetadataAndLowQuality'),
+                        enabled : motionLowResEnabled && motionEnabled
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowresEnabled };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
         });
         this.cameras = mappedCameras;
         return mappedCameras;

@@ -26,7 +26,7 @@ export class DevelopersGuard implements CanActivate {
         if (this.CONFIG.cloudCapabilities.developersEnabled) {
             return true;
         } else {
-            this.router.navigate(['/']);
+            this.router.navigate([this.CONFIG.redirect.page404]);
             return false;
         }
     }

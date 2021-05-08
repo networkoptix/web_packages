@@ -3,6 +3,7 @@ from bs4.element import Tag
 from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
+import sass
 
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
@@ -18,9 +19,9 @@ BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 def inline_styles(body, css):
     if css and body:
+        css = '.article-content { ' + css + ' }'
+        css = sass.compile(string=css)
         html = f'<style>{css}</style>{body}'
-        html = inline_css(html)
-        html = BODY_REGEX.search(html)[1]
         return html
     return body
 
@@ -58,11 +59,20 @@ def split_blocks(html):
     return blocks
 
 
+def sub_files(value, datastructures, record_values):
+    for ds in datastructures:
+        if ds.name in record_values:
+            value = value.replace(ds.name, record_values[ds.name])
+    return value
+
+
 def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
-    ds_needed = ('title', 'shortDescription', 'body', 'script', 'styling')
+    S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
+    REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
-        context__asset_type__type=AssetType.ASSET_TYPES.documentation, name__in=ds_needed
+        context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )
+    doc_file_structures = doc_structures.filter(type=DataStructure.DATA_TYPES.external_file)
     if review:
         state = 'review'
     elif draft:
@@ -90,15 +100,13 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             else:
                 continue
 
+        pending_review = None
         if review:
             pending_review = AssetCustomizationReview.objects.filter(
                 version__id__gt=version, version__asset=doc, customization__name=settings.CUSTOMIZATION,
                 state=AssetCustomizationReview.REVIEW_STATES.pending).last()
             if pending_review:
                 version = pending_review.version.id
-            else:
-                # Requested state is review, but no review version exists
-                continue
         elif draft:
             version = None
         elif version == 0:
@@ -114,13 +122,15 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
-                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review
+                doc_structures, asset=doc, language=language, version_id=version, draft=draft or review, customization_name=settings.CUSTOMIZATION
             )
             values = {ds.name: val for ds, val in values.items()}
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
             doc_dict['blocks'] = values['body']
+            doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
+            doc_dict['blocks'] = doc_dict['blocks'].replace(S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
             css = values['styling']
 
@@ -132,6 +142,9 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
 
             doc_dict['id'] = doc.id
+
+            if review and pending_review:
+                doc_dict['reviewId'] = pending_review.id
 
             if not draft:
                 DOC_CACHE[cache_key] = doc_dict

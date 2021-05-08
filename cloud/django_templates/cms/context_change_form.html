@@ -36,6 +36,7 @@
             <input type="hidden" name="context_id" value="{{ original.id }}">
             <input type="hidden" name="asset_id" value="{{ asset.id }}">
             <input type="hidden" name="currentLanguage" value="{{ language_code }}">
+            <input type="hidden" name="customPreview" value="" id="customPreviewInput">
             <input type="hidden" id="languageChanged">
             {% for fieldset, fields in custom_form.fieldsets.items %}
                 <fieldset class="module">
@@ -60,7 +61,7 @@
                                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
                                 {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
                             </label>
-                            <div id="{{ field.name }}" class="ml-160">
+                            <div id="{{ field.name }}" class="ml-160 position-relative">
                                 {% if data_structure.has_image_field and field.value %}
                                     <div>
                                         {% if data_structure.optional and record_exists %}
@@ -79,7 +80,7 @@
                                              src="data:image/png;base64,{{ field.value }}">
                                     </div>
                                     <div>
-                                        <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}" download>
+                                        <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}&show_image={{True}}" target="_blank">
                                             Download Original
                                         </a>
                                     </div>
@@ -254,7 +255,7 @@
             brandVar = this.getAttribute('data-name');
             navigator.clipboard.writeText(brandVar);
             if (inputElement.hasClass('tinymce')) {
-                tinymce.get(inputId).execCommand('mceInsertContent', false, brandVar);
+                tinymce.get(inputElement.attr('id')).execCommand('mceInsertContent', false, brandVar);
             } else {
                 carretPos = inputElement.prop('selectionEnd');
                 inputElement.val(
@@ -336,18 +337,45 @@
 
 
     function paste_handle_images(pasteEvent, editor) {
-        const clipContent = pasteEvent.clipboardData.getData('text/html');
-        if (pasteEvent.clipboardData.types.includes('text/html')) {
-            retrieveImageFromClipboardAsBase64(pasteEvent, function (b64Image) {
-                if (b64Image) {
-                    const imageData = b64Image;
-                    const imageSrc = /src="(.*?)"/igm.exec(clipContent)[1];
-                    $(editor.getBody()).find(`img[src="${imageSrc}"]`).each(function () {
-                        $(this).attr('src', imageData);
-                        this.dataset.mceSrc = imageData;
+        clipContent = pasteEvent.clipboardData.getData('text/html');
+        const file = [...pasteEvent.clipboardData.items].find(({ type }) => type === 'image/png')
+
+        const addBase64Image = (b64Image) => {
+            if (b64Image) {
+                const srcAttr = /src="(.*?)"/igm.exec(clipContent)
+                const imageSrc = srcAttr ? srcAttr[1] : '';
+                const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
+                // This isn't efficient and can be slow
+                // TODO: CLOUD-6917: Upload images in the background
+                if (pastedImg.length) {
+                    $(pastedImg).each(function() {
+                        $(this).attr('src', b64Image);
+                        this.dataset.mceSrc = b64Image;
                     });
+                } else {
+                    // CSP or something else blocked it, so we reinsert the image without the URL this time
+                    const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + b64Image + '$3');
+                    editor.insertContent(newContent);
                 }
-            })
+            }
+        }
+        if (pasteEvent.clipboardData.types.includes('text/html')) {
+            retrieveImageFromClipboardAsBase64(pasteEvent, addBase64Image)
+        } else if (file) {
+            const blob = file.getAsFile()
+            const tempCanvas = document.createElement("canvas");
+            const ctx = tempCanvas.getContext('2d');
+            const img = new Image();
+            const url = window.URL || window.webkitURL;
+            img.onload = function(){
+                tempCanvas.width = this.width;
+                tempCanvas.height = this.height;
+                ctx.drawImage(img, 0, 0);
+                clipContent = `<meta charset="utf-8"><img src="" alt="${blob.name} (${this.width}×${this.height})"/>`
+                addBase64Image(tempCanvas.toDataURL("image/png"))
+            };
+            img.src = url.createObjectURL(blob);
+
         }
     }
 
@@ -358,13 +386,48 @@
         {% if data_structure_type == 'HTML' %}
 
         tinymce.init({
-            selector: '#{{ field.id_for_label }}',
+            selector: '[id="{{ field.id_for_label }}"]',
+            paste_preprocess : function(plugin, args) {
+                const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
+                    'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+                function replaceElements(matched, tagName) {
+                    if (validPasteElements.indexOf(tagName) === -1) {
+                        return '';
+                    }
+                    return matched;
+                }
+
+                args.content = args.content.replace(/<\/?([^\s>]*).*?>/g, replaceElements);
+                args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, "");
+            },
             paste_postprocess: function(plugin, args) {
                 $(args.node).find('img').each(function () {
                     $(this).on('error', function() {
                         tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('img[src="' + this.currentSrc +'"]'));
                     });
                 });
+            },
+            urlconverter_callback: function(url, node, on_save, name) {
+                if (url.startsWith('%')) {
+                    return url;
+                }
+
+                const settings = this.settings;
+                // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+                if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.indexOf('file:') === 0) {
+                    return url;
+                }
+
+                // Convert to relative
+                if (settings.relative_urls) {
+                    return this.documentBaseURI.toRelative(url);
+                }
+
+                // Convert to absolute
+                url = this.documentBaseURI.toAbsolute(url, settings.remove_script_host);
+
+                return url;
             },
             branding: false,
             {% if 'tiny_paste_word_valid_elements' in data_structure.meta_settings %}paste_word_valid_elements: "{{ data_structure.meta_settings.tiny_paste_word_valid_elements }}",{% endif %}
@@ -384,12 +447,25 @@
             valid_children: "+a[*]",
             closed : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
             protect: [/<svg.*\/svg>/],
+            relative_urls: false,
             toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
             menubar: false,
             resize: 'both',
             theme: 'silver',
             plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists',
             theme_advanced_resizing: true,
+            init_instance_callback : function(editor) {
+                $(editor.getElement())
+                    .css({
+                        'position' : 'absolute',
+                        'top'      : '50%',
+                        'height'   : 0,
+                        'width'    : 0,
+                        'opacity'  : 0,
+                        'readonly' : true
+                    })
+                    .show();
+            },
             setup: function (editor) {
                 editor.on('change', function () {
                     tinymce.triggerSave();
@@ -398,7 +474,7 @@
                 editor.on('paste', function(event) {
                     paste_handle_images(event, editor);
                 });
-                
+
                 editor.on('postProcess', function (e) {
                     const mapObj = {
                         lineargradient: "linearGradient",
@@ -463,8 +539,13 @@
     }, {})
     const previewFrame = document.getElementsByClassName('previewFrame')[0]
     if (customPreview) {
-        previewFrame.src = customPreview
+        const customPreviewInput = document.getElementById('customPreviewInput')
+        customPreviewInput.value = previewFrame.src = customPreview
+        
     }
+</script>
+<script type="text/javascript">
+    const previewUrlList = JSON.parse('{{preview_url_list|safe}}')
 </script>
     <script src="{% static 'js/previewFrame.js' %}"></script>
 {% endblock %}

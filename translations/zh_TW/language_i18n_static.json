@@ -1,11 +1,11 @@
 {
+    "language": "en_US",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "隱私政策",
     "Support": "支援",
-    "Supported Devices": "支持設備",
     "Terms": "條款",
     "accessRoles": {
         "Administrator": {
@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "帳號已新增",
-                "message": "已將附上啟用連結的確認信件發送至{{email}}"
+                "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
                 "title": "帳號已成功啟用"
@@ -129,6 +129,7 @@
             "unauthorized": "需要身份驗證"
         },
         "chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
+        "login": "login",
         "recordingSettingsWarning": "請更新遺失的錄影設定。",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -145,7 +146,10 @@
             "low": "低 (L)"
         },
         "general": "一般",
+        "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "搜尋",
+        "system": "system",
         "systemHasNoCameras": "無攝影機",
         "systemHasNoCamerasMessage": "系統中沒有可連接的攝影機。<br><br>請連接攝影機至伺服器的本地網絡以利搜尋，或要求系統管理員變更您的存取權限。",
         "systemNewVersion": "更新您的系統",
@@ -157,7 +161,6 @@
         "systemServerError": "內部伺服器錯誤",
         "systemServerErrorMessage": "發生錯誤，請稍後重試。如果問題仍然發生，請聯繫您的支援團隊。",
         "systemUnreachable": "系統無法連接",
-        "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",
         "unknown": "未知",
         "vendor": "供應商",
         "model": "型號",
@@ -201,8 +204,8 @@
             "title": "雲端儲存",
             "enableStorage": "啟用雲端儲存",
             "otherSystem": "其它系統...",
-            "initial": "為了幫助您入門, 我們為每個系統提供 {{compCapacity}} 個免費的雲端儲存。",
-            "available": "此系統中的所有伺服器皆可使用雲端儲存位置。您可用桌面 {{vmsName}} 客戶端對其進行管理。",
+            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "攝影機",
             "cameras": "攝影機",
             "usageLabels": {
@@ -227,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "移動雲端儲存",
-                "success": "儲存空間移動成功",
+                "success": "Storage successfully moved",
                 "errorPrefix": "移動雲端儲存時發生錯誤",
                 "notFound": "找不到儲存空間。可能已被其他使用者移動或刪除",
                 "status": {
@@ -242,45 +245,54 @@
                 "message": "雲端儲存僅能在您為該系統所有者的系統間移動。<br/><br/>請使用您的雲端帳號系統連接到 %CLOUD_NAME%，以便將雲端儲存移至該系統。"
             }
         },
+        "changeStorage": {
+            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+        },
         "merge": {
-            "adminPasswordTitle": "請輸入密碼於所有者帳號 <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "本機管理員使用者的密碼錯誤",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Password for admin user is wrong",
             "checking": "檢查中...",
-            "commonText": "無法合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
-            "connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本機合併。",
+            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "所選系統和當前系統都連接到 %CLOUD_NAME% 但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "duplicateServers": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
-            "enterSystemAddressTitle": "請輸入伺服器地址於欲合併該伺服器的系統中。",
-            "mergeConfirmation": "<p class=\"mb-0\">您即將合併系統<strong>{{primarySystem}}</strong>和<strong>{{secondarySystem}}</strong></p><p>。設定和名稱將取自 <strong>{{primarySystem}}</strong></p>。",
-            "mergeSystemsTitle": "合併當前系統",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "latestBuild": "latest build",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "系統合併失敗",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "合併當前系統",
             "noServerFound": "找不到伺服器",
             "newSystemDisplayName": "新系統",
             "otherSystem": "其它系統...",
             "ownerCanMergeText": "當您的權限為所有者時, 即可合併系統",
             "passwordRequired": "密碼是必填的",
             "passwordWrong": "密碼不正確",
-            "primaryCannotMerge": "系統 {{targetSystem}} 的軟體版本較新，與當前系統不相容。請更新目前系統<a href=\"/download\" target=\"_blank\" translate>為最新版本</a>，再與 {{targetSystem}} 合併。",
-            "primarySystemOffline": "系統 {{primarySystem}} 處於離線 狀態, 無法合併系{{targetSystem}}",
-            "primarySystemUnavailable": "系統 {{primarySystem}} 目前無法 連上。請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
+            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
+            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
+            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "建議您諮詢",
                 "b_support": "支援",
                 "c_proceeding": "在繼續執行之前。"
             },
-            "secondaryCannotMerge": "系統 {{targetSystem}} 的軟體版本較舊，與當前系統不相容。請將 {{targetSystem}} 更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 與其當前版本合併。",
-            "secondarySystemUnavailable": "系統 {{targetSystem}} 目前無法 連上。請稍後再試一次, 或聯繫<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
-            "serverAtUrl": "伺服器位於{{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">無法連接系統 {{targetSystem}}。</p><p>請確認選定伺服器在線並重試。</p>",
+            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
+            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
-            "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
-            "systemOfflineUrl": "無法連接{{targetSystem}}",
-            "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統都更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
-            "systemVersionsNotMatch": "系統的軟體版本不相容。請將兩個系統更新至 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
+            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
+            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
-            "warning": "合併系統中將有超過 <strong>{{maxServers}}</strong> 台的伺服器。"
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
             "storageSettingsSaved": "儲存設定已保存。",
@@ -295,22 +307,22 @@
             },
             "sent": "訊息已發送",
             "subject": {
-                "integration_feedback": "整合 {{asset}} 的回饋意見",
-                "ipvd_feedback_device": "{{asset}} 的回饋意見",
+                "integration_feedback": "Feedback for integration {asset}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "攝影機頁面的回饋意見",
-                "sales_inquiry": "{{asset}} 的銷售諮詢",
-                "technical_inquiry": "{{asset}} 的技術諮詢"
+                "sales_inquiry": "Sales inquiry for {asset}",
+                "technical_inquiry": "Technical inquiry for {asset}"
             },
             "title": {
-                "integration": "與 {{companyName}} 聯繫",
-                "ipvd_feedback_device": "{{asset}} 的回饋意見",
+                "integration": "Get in touch with {companyName}",
+                "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "攝影機頁面的回饋意見"
             }
         },
         "removeSystem": {
             "action": "斷線",
-            "message": "您將無法再登入此系統。",
-            "title": "您將被登出系統?"
+            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+            "title": "Disconnect System?"
         },
         "titles": {
             "error": "錯誤",
@@ -320,9 +332,9 @@
             "loggedFromOtherAccount": "您將使用其他帳號登入",
             "noClientDetected": "安裝 %VMS_NAME% 來查看您的系統",
             "removeUser": "是否要移除使用者？",
-            "serversDetach": "從系統中卸載伺服器\"{{ title }}\"?",
-            "serversReset": "將伺服器“{{ title }}”還原預設值？",
-            "serversRestart": "重啟伺服器“{{ title }}”？"
+            "serversDetach": "Detach server \"{ title }\" from current system?",
+            "serversReset": "Reset server \"{ title }\" to defaults?",
+            "serversRestart": "Restart server \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"
@@ -404,24 +416,28 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
         "DUPLICATE_MEDIASERVER_FOUND": "某些伺服器列表並存於選定的和當前的兩個系統中 。<br>請從各系統中刪除並斷線不相容的伺服器，然後重連一次。",
         "EmailAlreadyExists": "此電子郵件已被註冊",
-        "FAIL": "系統 <strong>{{failedSystem}}</strong> 處於離線狀態。",
-        "Connection timed out": "系統 <strong>{{failedSystem}}</strong> 處於離線狀態。",
-        "Bad Gateway": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "系統的軟體版本不相容。請更新為 <a href=\"/download\">最新版本</a>。",
+        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "This user does not exist.": "This user does not exist.",
+        "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
         "cloud_systems_have_different_owners": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
-        "fail": "無法連接{{failedSystem}}",
+        "fail": "{failedSystem} is inaccessible.",
         "incompatible": "該伺服器軟體版本不相容。請將兩個系統更新為同一版本再行合併。",
         "unknown_error": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
         "accountAlreadyActivated": "此帳號已啟用",
         "accountBlocked": "此帳號已被封鎖。請在幾分鐘後再試一次。",
         "accountNotActivated": "此帳號尚未啟用. <a href=\"/activate\"> 再發送一次啟用連結</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "此帳號已存在",
         "brokenAccount": "帳號出現意外問題. <a href=\"/restore_password\">還原帳號</a>",
         "cantActivatePrefix": "無法啟用您的帳號",
         "cantAddYourOwnEmail": "不允許添加自己的電子郵件",
         "cantChangeAccountPrefix": "無法儲存變更",
         "cantChangePasswordPrefix": "無法儲存密碼",
+        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
         "cantDisconnectSystemPrefix": "無法刪除系統",
         "cantEditAdmin": "此使用者具有管理員權限",
         "cantEditYourself": "不允許變更自己的權限",
@@ -436,16 +452,18 @@
         "cantUnshareWithMeSystemPrefix": "無法刪除系統",
         "emailNotFound": "帳號不存在.",
         "failedToAccessSystem": "此連結無法連接至任何系統。可能當系統中斷 %CLOUD_NAME%時，取消了對該系統的登入權限, 或您登入了錯誤的帳號。",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您沒有權限執行此操作",
-        "lostConnection": "與 {{systemName}} 的連線已中斷",
-        "mergedSystemIsOffline": "系統 <strong>{{failedSystem}}</strong> 處於離線狀態。",
+        "lostConnection": "Connection to {systemName} lost",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "密碼不正確",
+        "badUsername": "Account not found",
         "notFound": "找不到",
         "ok": "ok",
         "oldPasswordMistmatch": "目前密碼不正確.",
         "oldSafariNotSupported": "不支持10歲以上的Safari版本",
         "passwordMismatch": "密碼不正確",
-        "systemUnavailable": "{{failedSystem}} 目前無法連上。請稍後再試一次, 或聯繫<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
+        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "系統",
         "unknownError": "發生未知錯誤",
         "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -456,7 +474,9 @@
         "licenseFail": "無法啟用授權。請重試或聯繫支援人員。",
         "licenseTimeout": "連接超時，啟用授權失敗。請確認伺服器在線並重試。",
         "licenseServerError": "無法啟用授權。授權伺服器未回應。請重試或聯繫支援人員。",
-        "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "門禁管理",
@@ -466,10 +486,9 @@
         "Health Monitor": "資源檢視器",
         "Storage": "儲存裝置",
         "myIntegrationsLabel": "我的",
-        "phoneNumberWithLabel": "電話： {{number}}",
-        "requirements": "{{name}} 要求",
-        "testedVersionLabel": "測試 {{vmsName}} 版本：",
-        "testedVersionsLabel": "測試 {{vmsName}} 版本："
+        "requirements": "{name} Requirements",
+        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
+        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "進階PTZ攝影機",
@@ -482,14 +501,8 @@
         "PTZ cameras": "PTZ攝影機",
         "camera": "攝影機",
         "count": "總計",
-        "disclaimer": "此列表僅限於在 {{vmsName}} 上找到的設備，使用者已同意將設備規格自動回報給 {{companyName}}。不會收集任何個人信息，每個使用者都將完全匿名。",
         "dvr": "DVR",
         "encoder": "編碼器",
-        "feedback": {
-            "a_Please": "請",
-            "b_Link": "提交申請",
-            "c_Info": "有關支援設備的其他問題/疑慮。"
-        },
         "hardwareType": "型態",
         "isAnalyticsSupported": "分析",
         "isAptzSupported": "進階PTZ",
@@ -511,9 +524,16 @@
         "primaryCodec": "編碼器",
         "resolutionArea": "區域",
         "sndResolution": "次串流",
-        "topXByVolume": "以量排名 {{value}}：",
-        "vendor": "製造商"
+        "vendor": "製造商",
+        "sortKey": ""
     },
+    "ipvdFeedback": {
+        "a_Please": "請",
+        "b_Link": "提交申請",
+        "c_Info": "有關支援設備的其他問題/疑慮。"
+    },
+    "ipvdTopXByVolume": "Top {value} by volume:",
+    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
             "cameras": "攝影機",
@@ -529,13 +549,15 @@
         "activate": "啟用帳號",
         "activateCode": "啟用帳號",
         "activateSuccess": "帳號已啟用",
+        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
         "changePassword": "變更密碼",
         "debug": "除錯",
         "default": "%CLOUD_NAME%",
         "download": "下載 %VMS_NAME%",
         "downloadPlatform": "下載 %VMS_NAME% ",
         "failedToAccessSystem": "連接系統失敗",
-        "integrations": "整合",
+        "failedToAccessCamera": "Failed to access camera",
+        "integrations": "%VMS_NAME% Integrations",
         "login": "登入",
         "pageNotFound": "找不到頁面",
         "register": "新增帳號",
@@ -544,11 +566,16 @@
         "restorePasswordSuccess": "密碼已儲存",
         "supportedDevices": "支援設備",
         "system": "系統",
-        "systemName": "{{systemName}}",
         "systemShare": "共用系統",
         "systems": "系統",
-        "template": "{{title}}-%CLOUD_NAME%",
-        "view": "查看攝影機"
+        "template": "{title} - %CLOUD_NAME%",
+        "view": "查看攝影機",
+        "apiTool": "API testing tool"
+    },
+    "pageDescriptions": {
+        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "太常見",
@@ -571,11 +598,11 @@
             "message": "請確保您的伺服器在線，並重試。"
         },
         "merge": {
-            "title": "該系統正合併為 {{systemName}}。",
+            "title": "This system is being merged to {systemName}.",
             "message": {
                 "dependingOnSize": "根據錄影資料的大小, 可能會花費數小時",
                 "untilFinished": "在合併完成前, 您可登入此系統並觀看影片, 但不能更改任何設定。",
-                "whenFinished": "合併完成後, 此系統中的所有使用者和攝影機都將可用於{{systemName}}, 同時將刪除此系統。"
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
             }
         },
         "server": {
@@ -585,7 +612,7 @@
     },
     "pleaseSelect": "請選擇...",
     "privacyPolicy": {
-        "integration": "{{INTEGRATION_COMPANY}} 隱私政策可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">此處</a>找到。 您可以在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">此處</a>瀏覽%COMPANY_NAME%隱私政策, 包含有關撤回同意的說明。",
+        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "提交表單即同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意的說明。"
     },
     "registration": {
@@ -598,8 +625,11 @@
         },
         "finishingMerge": "正完成系統合併",
         "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
             "backToEditText": "返回編輯頁面",
-            "previewRibbon": "此頁面可預覽最新版本的更新，與公開版本不相符。"
+            "previewRibbon": "此頁面可預覽最新版本的更新，與公開版本不相符。",
+            "publishedRibbon": "This page is the live version that is publicly available."
         },
         "systemOffline": "系統離線。某些設定可能無法使用。",
         "systemsMerging": "此系統正在合併中。"
@@ -611,23 +641,28 @@
         "analyticsSelected": "分析事件",
         "filter applied": "已使用的篩選條件",
         "filters applied": "已使用的篩選條件",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "型態",
         "hardwareTypes": "類型",
         "minResolution": "最低解析度",
         "search_ipvd": "按型號或製造商搜尋",
-        "selected": "已選取",
+        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "製造商",
         "vendors": "製造商"
     },
     "servers": {
+        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
+        "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "伺服器卸載中",
-        "beginReset": "伺服器正重置中。",
+        "beginReset": "Server is now resetting.",
         "detachSystemFailed": "無法從系統中卸載伺服器。請確認輸入密碼是否正確以及伺服器是否在線，並重試。",
         "detachSystemSuccess": "伺服器已成功從系統卸載。",
-        "portWarning": "若使用小於1024的埠號, 伺服器可能無法連接。",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
         "removeMediaserverFailed": "無法從系統中刪除伺服器。",
         "resetFailed": "重置伺服器失敗。請確認輸入密碼是否正確以及伺服器是否在線，並重試。",
-        "resetSuccessful": "伺服器 {{ serverName }} 已還原預設值。",
+        "resetSuccessful": "Server {serverName} has been reset to defaults.",
         "restartFailed": "重啟伺服器時發生錯誤。",
         "restartSuccessful": "伺服器重啟成功。",
         "serverOffline": "伺服器已離線.",
@@ -635,19 +670,21 @@
         "status": {
             "checking": "檢查中...",
             "offline": "離線",
-            "reseting": "重置中...",
+            "resetting": "resetting...",
             "restarting": "重啟中..."
         },
         "successRename": "伺服器名稱已儲存."
     },
     "system": {
-        "MERGE_FINISHES": "合併完成後, 此系統中的所有使用者和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
+        "connected": "Connected",
+        "not_connected": "Not connected",
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "未知的系統名稱（由雲合併引起）",
         "mySystemSearch": "我的",
         "settings": {
+            "notAbleToLoadStorageInfo": "無法載入儲存資訊",
             "notAbleToLoadSecurity": "無法載入安全性設定",
             "notAbleToLoadSystem": "無法載入系統設定.",
-            "notAbleToLoadStorageInfo": "無法載入儲存資訊",
             "sessionLimitDuration": {
                 "hours": "小時",
                 "minutes": "分"
@@ -690,6 +727,13 @@
                 "text": "詳細",
                 "help": "（記錄所有可用資訊）"
             }
+        },
+        "storageToolTips": {
+            "local": "Local",
+            "usb": "USB",
+            "network": "Network, added through OS",
+            "smb": "Network (smb), added through VMS",
+            "cloud": "Cloud"
         }
     },
     "systemStatuses": {
@@ -702,23 +746,47 @@
         "unavailable": "不可用的"
     },
     "toastMessage": {
+        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "nameFail": "Failed to change {type} name",
+        "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "從您的帳號成功刪除系統 {{systemName}}"
+                "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
                 "success": "系統已成功從 %CLOUD_NAME%斷線"
             },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
+            },
             "merge": {
                 "failed": "系統合併失敗",
-                "success": "系統 {{primaryName}} 和 {{secondaryName}} 完成合併"
+                "success": "System merge completed"
             },
             "rename": {
                 "success": "系統名稱已儲存"
             }
         }
     },
+    "headerLabels": {
+        "healthReportForSystem": "系統資源報告瀏覽器{systemName}"
+    },
     "license": {
+        "licenseTypeTitles": {
+            "Time": "時效性",
+            "Trial": "時效性",
+            "Professional": "專業版",
+            "Analog": "類比",
+            "Edge": "Edge",
+            "VMAX": "VMAX",
+            "Video Wall": "電視牆",
+            "Analog Encoder": "類比",
+            "Starter": "Starter",
+            "IO Module": "I/O 模組",
+            "Bridge": "橋接",
+            "NVR": "NVR"
+        },
         "info": {
             "type": "型態",
             "channels": "授權數",
@@ -726,29 +794,19 @@
             "hwid": "硬體 ID",
             "status": "狀態",
             "expires": "到期日",
-            "time": "時效性",
             "deactivations": "剩餘重置次數",
-            "trial": "測試版",
             "online": "在線",
             "error": "錯誤",
             "expired": "已過期",
             "ok": "確定",
-            "digital": "專業版",
-            "analog": "類比",
-            "edge": "Edge",
-            "vmax": "VMAX",
-            "videowall": "電視牆",
-            "analogencoder": "類比",
-            "starter": "Starter",
-            "iomodule": "I/O 模組",
-            "bridge": "橋接",
+            "nvrError": "NVR Error",
             "serverNotFound": "Server not found"
         },
         "messages": {
-            "required": "還需要{{number}} 個",
+            "required": "{number} more required",
             "activated": "授權已啟用",
-            "inuse": "已啟用授權，並綁定到另一個系統中的伺服器, 硬體ID為 {{hwid}}",
-            "trialActivated": "測試授權已啟用。即日起可享有4台攝影機錄影30天的試用。"
+            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -833,7 +891,7 @@
         "osTimeChangeCheckPeriodMs": "作業系統時間會變更檢查時段",
         "syncTimeExchangePeriod": "發送網路校時請求的時間間隔",
         "syncTimeEpsilon": "容許誤差。如果時間最小誤差容許值小於目前誤差, 則不更新時間",
-        "maxWearableArchiveSynchronizationThreads": "穿戴式攝影機錄影資料同時最大單次上傳量",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
         "updateNotificationsEnabled": "已啟用更新通知",
         "upnpPortMappingEnabled": "已啟用 UPNP 埠映射",
         "useTextEmailFormat": "發送純文字電子郵件",
@@ -842,8 +900,40 @@
         "videoTrafficEncryptionForced": "強制影片傳輸加密",
         "updateStatus": "更新狀態",
         "watermarkSettings": "浮水印設定",
-        "maxWebMTranscoders": "伺服器最大的WEBM連線數。Chrome會立刻開啟2個連接，然後關閉第一個連接。因此建議將參數值設定為> = 2。",
+        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "要保留最多筆在資料庫中的事件日誌記錄。實際未刪除記錄的數量可能比預定高出20％。",
         "forceLiveCacheForPrimaryStream": "是否為主串流緩存一些幀數。數值：“是” - 一直啟用(可能占用大量RAM)，“否” - 一直停用，除非回放需要(例如HLS)，“自動” - 類似於“否”，但會在開啟時改進使用者體驗(例如當某些分析插件在攝影機上作用時)。"
+    },
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "storage": {
+        "reindexingDone": {
+            "mainSuccess": "Main storage reindexing completed",
+            "backupSuccess": "Backup storage reindexing completed",
+            "mainFailed": "Main storage reindexing failed",
+            "backupFailed": "Backup storage reindexing failed"
+        },
+        "modes": {
+            "main": "主要設定",
+            "backup": "Backup",
+            "notInUse": "Not in use",
+            "reserved": "Reserved",
+            "inaccessible": "Inaccessible",
+            "changing": "Changing mode...",
+            "disabled": "Disabled"
+        },
+        "alreadyUsed": "Storage path {url} is already used by another server.",
+        "deleteExternalStorage": "Delete External Storage?",
+        "failed": "Failed to add external storage",
+        "invalidPath": "Invalid storage path.",
+        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+        "storageDeleted": "Storage {url} deleted",
+        "failedRemove": "Failed to delete external storage {url}",
+        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
+        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "success": "External storage added",
+        "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

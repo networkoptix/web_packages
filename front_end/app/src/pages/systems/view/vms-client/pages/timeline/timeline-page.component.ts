@@ -6,7 +6,7 @@ import TimelineExtendToNowService from '../../submodules/timeline/services/timel
 @Component({
   selector: 'page-timeline',
   templateUrl: './timeline-page.component.html',
-  styleUrls: ['./timeline-page.component.styl']
+  styleUrls: ['./timeline-page.component.scss']
 })
 export class TimelinePageComponent implements OnInit, OnDestroy {
 

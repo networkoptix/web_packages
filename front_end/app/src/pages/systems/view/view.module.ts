@@ -8,8 +8,10 @@ import NxSystemViewIndexPageComponent from './pages/system-view-index/system-vie
 import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component'
 import { CookieService } from 'ngx-cookie-service'
 
+import CameraQualityStorageService from './services/cameraQualityStorage.service'
+import CameraTransportStorageService from './services/cameraTransportStorage.service'
+
 import routes from './routes'
-import components from './components'
 
 import VmsClientModule from './vms-client/vms-client.module'
 import VmsClientPlaybackModule from './vms-client/submodules/playback/playback.module'
@@ -33,11 +35,12 @@ import VmsClientVmsModule from './vms-client/submodules/vms/vms.module'
     ],
     providers: [
         CookieService,
+        CameraQualityStorageService,
+        CameraTransportStorageService,
     ],
     declarations: [
         NxSystemViewIndexPageComponent,
         NxSystemViewCameraPageComponent,
-        components,
     ],
     bootstrap       : [],
     exports: [

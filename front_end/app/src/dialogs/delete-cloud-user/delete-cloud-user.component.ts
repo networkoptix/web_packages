@@ -37,7 +37,8 @@ export class DeleteCloudUserModalContent {
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
-                        wrongParameters: () => {
+                        forbidden       : this.LANG.errorCodes.cantDeleteAccountOwningSystems(),
+                        wrongParameters : () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
                             this.passwordError = this.LANG.passwordRequirements.missingMessage();
                         },
@@ -46,7 +47,7 @@ export class DeleteCloudUserModalContent {
                             this.passwordError = this.LANG.errorCodes.notAuthorized();
                         }
                     },
-                    ignoreError: true
+                    ignoreError: false
                 })
             .then(res => {
                 if (res.resultCode === 'ok') {

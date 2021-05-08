@@ -35,8 +35,7 @@
         }
 
         .search-input {
-            @include typography.regular15nocolor;
-            color         : $light16;
+            @include typography.regular15light;
             height        : 40px !important;
             padding-left  : 48px !important;
             padding-right : 40px;
@@ -83,7 +82,7 @@
             }
 
             .search-input {
-                @include typography.regular14;
+                @include typography.regular14dark9;
                 height : 32px !important;
                 padding-left: 40px !important;
             }

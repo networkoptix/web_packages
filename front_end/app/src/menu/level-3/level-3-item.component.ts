@@ -28,9 +28,9 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
 
     itemPath: string;
-    itemSearch: string;
     isEnabled: boolean;
     menuNavItemId: string;
+    queryParams: any = {};
 
     navItemSubscription: SubscriptionLike;
 
@@ -45,11 +45,6 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
-        this.itemSearch = this.item.query?.search;
-        this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
-
         this.navItemSubscription = this.menuService.navItemSubject.subscribe(() => {
             this.menuNavItemId = this.menuService.navItemId;
         });
@@ -58,12 +53,16 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.base?.currentValue) {
+            this.itemPath = this.base;
+        }
         if (changes.item?.currentValue) {
+            this.itemPath = this.base;
+            this.itemPath += (changes.item.currentValue.path !== '') ? '/' + changes.item.currentValue.path : '';
+            this.queryParams = changes.item.currentValue.query;
             this.isEnabled = (changes.item.currentValue.isEnabled === undefined) ? true : changes.item.currentValue.isEnabled;
 
-            if (changes.item.currentValue.additionalText) {
-                this.item.additionalText = changes.item.currentValue.additionalText;
-            } else {
+            if (!changes.item.currentValue.additionalText) {
                 this.item.additionalText = this.menuService.getAdditionalText(changes.item.currentValue.additionalLabel);
             }
         }

@@ -41,6 +41,8 @@
 
     "ANALYTICS STORAGE"                    :    "Analytics DB Storage",
     "ANALYTICS WARNING TEXT"               :    "Analytics data can take up large amounts of space.",
+    "ANALYTICS DATA MOVE TEXT"			   :	"Current analytics data will not be automatically moved to another location and will become inaccessible. You can keep it and manually move later, or delete permanently.",
+    "ANALYTICS DATA MOVE CONTACT TEXT"     :	"If you intended to move analytics data to another storage location, please contact",
     "ADD EXTERNAL STORAGE"                 :    "Add External Storage",
     "CLOUD STORAGE TITLE"                  :    "Enhance your date storage experience",
     "REINDEX MAIN STORAGE TEXT"            :    "Reindex Main Storage",
@@ -55,6 +57,7 @@
     "LOGIN OR PASSWORD INCORRECT TEXT"     :    "Login or password is incorrect",
     "FAILED TO ADD STORAGE TEXT"           :    "Failed to add external storage",
     "STATE TEXT"                           :    "State",
+    "NOT ABLE TO LOAD STORAGE TEXT"		   :	"Not able to load storage information.",
 
     "RESERVED"                             :    "Reserved",
     "INACCESSIBLE"                         :    "Inaccessible",
@@ -118,7 +121,6 @@
     "PRIVACY"                              :    "Privacy",
     "COPYRIGHT"                            :    "Copyright",
     "SUPPORTED DEVICES"                    :    "Supported Devices",
-
     "VIEW"                                 :    "View",
     "SETTINGS TEXT"                        :    "Settings",
     "INFORMATION TEXT"                     :    "Information",
@@ -130,7 +132,11 @@
     "DEVELOPER SUPPORT TEXT"               :    "Developers Support",
     "API DOCUMENTATION TEXT"               :    "API Documentation",
     "SERVICES TEXT"                        :    "Services",
+    "EXTERNAL LINKS TEXT"                  :    "External Links",
     "DOWNLOADS TEXT"                       :    "Downloads",
+
+    "DEVELOP WITH NX META TEXT"            :    "Develop with Nx Meta",
+
     "HEALTH VIEWER TEXT"                   :    "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT"  :    "Activate your account",
     "RESET PASSWORD EMAIL SUBJECT"         :    "Reset your password",
@@ -249,6 +255,7 @@
     "PRIVACY POLICY LINK TEXT"             :    "here",
 
     "NOTHING FOUND"                        :    "Nothing Found",
+    "NOTHING FOUND TEXT"                   :    "Nothing found",
 
     "OK TEXT"                              :    "OK",
     "GENERAL TEXT"                         :    "General",
@@ -299,6 +306,7 @@
     "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost",
     "SYSTEM IS INACCESSIBLE TEXT"          :    "%SYSTEM% is inaccessible",
     "SYSTEM IS OFFLINE TEXT"               :    "System is offline. Some settings may not be available",
+    "THIS SYSTEM IS OFFLINE TEXT"          :    "This system is offline and cannot be accessed right now.",
     "SERVER APPEARS TO BE LISTING ITSELF TEXT": "A server appears to be listing itself under both the selected and the current system.",
     "REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT": "Remove offline and incompatible servers from each system and try again.",
     "MERGE FAILED UNKNOWN ERROR TEXT"      :    "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact support.",
@@ -333,6 +341,10 @@
     "NO PERMISSION TO SHARE TEXT"		   :	"You do not have permission to share this system",
     "WELCOME TEXT"						   :	"Welcome to",
     "YOU ARE ALREADY LOGGED IN TEXT"	   :	"You are already logged in as",
+    "CONNECT TO CLOUD TEXT"                :    "Connect to %PRODUCT_NAME%",
+    "CONNECT SYSTEM TO CLOUD TEXT"         :    "Connect system to %PRODUCT_NAME%",
+    "ENTER CLOUD ACCOUNT NAME TEXT"        :    "Enter %PRODUCT_NAME% account you want this system to be connected to.",
+    "THIS ACCOUNT WILL GET PERMISSIONS TEXT":    "This account will get full permissions within this system.",
     "DISCONNECT FROM MY ACCOUNT TEXT"	   :	"Disconnect from My Account",
     "YOU TEXT"							   :	"you",
     "UNRESTRICTED ACCESS CONNECT TEXT"	   :	"Unrestricted access including the ability to share and connect/disconnect System from cloud",
@@ -401,6 +413,8 @@
     "MISSING SETTINGS TEXT"                :    "Please update missing recording settings.",
     "CURRENT TEXT"                         :    "current",
     "AUTO TEXT"                            :    "Auto",
+
+    "SETTINGS SAVED TEXT"                  :    "Settings saved.",
     "HIDE ADVANCED SETTINGS TEXT"		   :	"Hide Advanced Settings",
     "ADVANCED SETTINGS ALERT TEXT"		   :	"Settings displayed below are advanced.",
     "ADVANCED SETTINGS WARNING TEXT"	   :	"Changing them may cause server to work incorrectly.",
@@ -492,10 +506,27 @@
     "LOG SETTINGS TEXT"					   :	"Log settings",
     "NOT ABLE TO LOAD TEXT"				   :	"Not able to load system settings.",
     "CLOSE TEXT"						   :	"Close",
+    "SUCCESS TEXT"                         :    "Success",
     "NONE TEXT"							   :	"None",
     "ERROR TEXT"						   :	"Error",
     "WARNING TEXT"						   :	"Warning",
     "INFO TEXT"							   :	"Info",
     "DEBUG TEXT"						   :	"Debug",
-    "VERBOSE TEXT"					       :	"Verbose"    
+    "VERBOSE TEXT"					       :	"Verbose",
+    "ARCHIVE BACKUP STREAMS MSG TEXT"	   :	"Secondary streams from all cameras on this server are being backed up in real time.",
+    "ARCHIVE BACKUP CLIENT MSG TEXT"	   :	"You can change the backup mode or select specific cameras in the desktop client.", 
+    "ARCHIVE BACKUP SET CLIENT MSG TEXT"   :	"Archive mode and cameras to backup were set up with the desktop client.",
+    "ARCHIVE BACKUP RESET MSG TEXT"		   :    "You can reset backup settings to default to backup secondary streams from all cameras in real time.",  
+    "RESET BACKUP BUTTON TEXT"			   :	"Reset Backup Settings",
+    "RECORDING STOP WARNING TEXT"		   :	"Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
+    "STORAGE DELETION ALERT TOOLTIP TEXT"  :	"Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
+    "STORAGE PATH ALREADY ADDED TEXT"	   :	"Storage path is already added to this server",
+    "EXTERNAL STORAGE ADDED TEXT"		   :	"External storage added",
+    "SMB TOOLTIP TEXT"					   :	"Network (smb), added through VMS",
+    "NO STORAGE FOUND TEXT"				   :	"No storage found",
+    "STORAGE PATH ALREADY USED TEXT"	   :	"Storage path //10.1.5.238/networkDisk is already used by another server.",
+    "NOT RECOMMENDED DIFFERENT SERVERS TEXT" : 	"It's not recommended to use one recording location for different servers.",
+    "ADD THIS STORAGE ANYWAY TEXT"		   :	"Add this storage anyway?",
+    "BACK TEXT"							   :	"Back",
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT"	:	"Storage /invalid/HD Witness Media deleted"
 }

@@ -1,12 +1,31 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { NxRibbonService, RibbonActionInput }              from './ribbon.service';
+import { BehaviorSubject }                                 from 'rxjs';
+import { NgModule }                          from '@angular/core';
+import { TranslateModule }                                 from '@ngx-translate/core';
+import { NxAppStateService }                               from '@services/nx-app-state.service';
+import { NxHeaderService }                                 from '@services/nx-header.service';
+import { NxDialogsService }                                from '@dialogs/dialogs.service';
 
-import { NxRibbonService, RibbonActionInput } from './ribbon.service';
-import { BehaviorSubject } from 'rxjs';
+@NgModule({
+    imports : [TranslateModule.forRoot()],
+    exports : [TranslateModule]
+})
+class TranslateTestingModule {
+}
 
 describe('NxRibbonService', () => {
     beforeEach(() => {
+        const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
+        const spyAppState = jasmine.createSpyObj('NxDialogsService', ['ribbonVisibility']);
+
         TestBed.configureTestingModule({
-            providers: [NxRibbonService]
+            imports   : [],
+            providers : [
+                NxRibbonService,
+                { provide: NxHeaderService, useValue: spyHeader },
+                { provide: NxAppStateService, useValue: spyAppState }
+            ]
         });
     });
 
@@ -22,43 +41,45 @@ describe('NxRibbonService', () => {
     }));
 
     it('show() should emit data to contextSubject',
-            inject([NxRibbonService], (service: NxRibbonService) => {
-                const actions: RibbonActionInput[] = [{
-                    type  : 'link',
-                    text  : 'Go back',
-                    value : '/admin/cms/asset',
-                }];
-                const context = {
-                    visibility: true,
-                    message: 'Alcohol! Because no great story started with someone eating a salad.',
-                    actions,
-                    type: '',
-                    updateFunction: ''
-                };
-                service.contextSubject = new BehaviorSubject(context);
+        inject([NxRibbonService], (service: NxRibbonService) => {
+            const actions: RibbonActionInput[] = [{
+                type  : 'link',
+                text  : 'Go back',
+                value : '/admin/cms/asset'
+            }];
+            const context = {
+                visibility     : true,
+                message        : 'Alcohol! Because no great story started with someone eating a salad.',
+                actions,
+                type           : '',
+                updateFunction : ''
+            };
+            service.contextSubject = new BehaviorSubject(context);
 
-                service.show(context.message, context.actions);
+            service.show(context.message, context.actions, context.type, context.updateFunction);
 
-                service.contextSubject.subscribe((message) => {
-                    expect(message).toBe(context);
-                });
-            }));
+            service.contextSubject.subscribe((serviceContext) => {
+                expect(serviceContext).toEqual(context);
+            });
+        })
+    );
 
     it('hide() should emit data to contextSubject',
-            inject([NxRibbonService], (service: NxRibbonService) => {
-                const context = {
-                    visibility: false,
-                    message   : '',
-                    actions   : [],
-                    type      : '',
-                    updateFunction: ''
-                };
-                service.contextSubject = new BehaviorSubject(context);
+        inject([NxRibbonService], (service: NxRibbonService) => {
+            const context = {
+                visibility     : false,
+                message        : '',
+                actions        : [],
+                type           : '',
+                updateFunction : ''
+            };
+            service.contextSubject = new BehaviorSubject(context);
 
-                service.hide();
+            service.hide();
 
-                service.contextSubject.subscribe((message) => {
-                    expect(message).toBe(context);
-                });
-            }));
+            service.contextSubject.subscribe((message) => {
+                expect(message).toEqual(context);
+            });
+        })
+    );
 });

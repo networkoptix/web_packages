@@ -53,7 +53,7 @@ System Settings Menu Suite Setup
     @{server auth}=   Create List    admin    qweasd 123
     
     FOR    ${n}    IN RANGE    3
-        ${port} =    Create Docker Server    system-menu${n}-${random}    4.3
+        ${port} =    Create Docker Server    system-menu${n}-${random}    4.3    VMS=${EMPTY}
         Set Suite Variable    ${port${n}}    ${port[0]}
         Sleep     10
         Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
@@ -84,7 +84,7 @@ System Settings Menu Suite Setup
         Go To    ${ENV}/systems/${system}
         Wait Until Element is Visible    ${SERVERS LINK}
         Click Link    ${SERVERS LINK}
-        Verify on Servers Page    timeout=95
+        Verify on Servers Page    timeout=120
     END
     
     

@@ -1,4 +1,4 @@
-<input [style.display]="lockEmail ? 'none' : 'inline'"
+<input *ngIf="!lockEmail"
        [ngModel]="value"
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
@@ -8,7 +8,9 @@
        class="form-control"
        required
        autocomplete="off"
-       maxlength="255">
+       maxlength="255"
+       nxFocusMe
+       [setFocus]="setFocus">
 
 <input *ngIf="lockEmail"
        type="text"

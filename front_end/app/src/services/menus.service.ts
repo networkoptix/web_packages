@@ -2,16 +2,18 @@
 import { Inject, Injectable, OnDestroy }  from '@angular/core';
 import { TranslateService }               from '@ngx-translate/core';
 import {
-    BehaviorSubject, Subject, from, combineLatest
+    BehaviorSubject, Subject, from, combineLatest, Observable
 }                                         from 'rxjs';
-import { takeUntil, map }                 from 'rxjs/operators';
+import {
+    takeUntil, map, switchMap, startWith
+}                                         from 'rxjs/operators';
 
-import { WINDOW }                    from './window-provider';
 import { IConfig, NxConfigService }  from './nx-config';
-import { MenuStructure }             from './nx-config/base-config';
+import { MenuStructure, MenusStructure }             from './nx-config/base-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService }          from './session.service';
+import { NxCloudApiService }         from './nx-cloud-api';
 
 export enum Auth {
     BOTH='Both',
@@ -22,6 +24,11 @@ export enum Auth {
 export class MenuNode {
     public icon?: string;
     public currentRoute?: boolean;
+    public accepted?: boolean
+    public draft?: boolean;
+    public pending?: boolean;
+    public indented?: boolean;
+    public state?: 'pending' | 'draft'
     public breadcrumbs: MenuNode[];
 
     constructor(
@@ -35,7 +42,9 @@ export class MenuNode {
         currentRoute = false,
         public asset_id = null,
         public related_asset_ids = [],
-        public next_item = false
+        public next_item = false,
+        public urlified = '',
+        public subtitle = '',
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;
@@ -46,7 +55,7 @@ export class MenuNode {
     providedIn: 'root'
 })
 export class NxMenusService implements OnDestroy {
-    private menusStructure: MenuStructure;
+    private menusStructure: MenusStructure;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     private languageChanged$ = new BehaviorSubject('')
@@ -60,7 +69,7 @@ export class NxMenusService implements OnDestroy {
         private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window
+        private cloudApi: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -75,25 +84,53 @@ export class NxMenusService implements OnDestroy {
     updateMenu = (lang) => {
         this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
-            (newMenu, [name, nodes]) => {
-                newMenu[name] = nodes.map(this.translateNode(lang));
+            (newMenu, [name, { title, description, nodes }]) => {
+                newMenu[name] = {
+                    title       : title,
+                    description : description,
+                    nodes       : nodes.map(this.translateNode(lang))
+                };
                 return newMenu;
             }, {});
     }
 
-    getMenu = (name: string, withCurrentSystem = false) => {
-        let menu = this.menusStructure?.[name.toLowerCase()] ?? [];
-        if (withCurrentSystem && this.currentSystemNode$.value) {
-            menu = [this.currentSystemNode$.value, ...menu];
-        }
+    getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
+        let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
+
         if (this.CONFIG.isLocal) {
-            return from([menu]);
+            if (menu?.title === undefined) {
+                menu = {
+                    description : undefined,
+                    nodes       : [],
+                    title       : name
+                };
+            }
+            if (menu?.title !== 'header') {
+                return from([menu]);
+            }
         }
+
+        if (withCurrentSystem && this.currentSystemNode$.value) {
+            menu.nodes = (menu?.nodes?.length) ? [this.currentSystemNode$.value, ...menu.nodes] : [this.currentSystemNode$.value];
+        }
+
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
-            .pipe(map(([login]) => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT).map(this.translateNode())));
+            .pipe(
+                switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
+                    ? this.cloudApi.getMenu(name).pipe(
+                        map((menu): [string, MenuStructure] => [login, menu])
+                    )
+                    : Promise.resolve([login, menu])
+                ),
+                map(([login, menu]) => {
+                    const filteredMenu = this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT);
+                    filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
+                    return filteredMenu;
+                })
+            ) as Observable<MenuStructure>;
     }
 
-    filterMenu = (menu: MenuNode[], auth: Auth) => {
+    filterMenu = (menu: MenuStructure, auth: Auth) => {
         const checkNodes = (nodes: MenuNode[], node: MenuNode) => {
             if (node.authentication === Auth.BOTH || node.authentication === auth) {
                 if (node.nodes) {
@@ -103,8 +140,35 @@ export class NxMenusService implements OnDestroy {
             }
             return nodes;
         };
-        return menu.reduce(checkNodes, []);
+        menu.nodes = (menu.nodes || []).reduce(checkNodes, []);
+        return menu;
     }
+
+    cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu || []).reduce((menu, node: MenuNode) => {
+        const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
+        return nodes.length || (checkAsset && node.asset_id) || node.url ? [...menu, { ...node, nodes }] : menu;
+    }, []);
+
+    addDraftAndPending = <T extends MenuNode>(menu: T[]) => menu.reduce((nodes: T[], node: T) => {
+        let indented = false;
+        if (node.nodes?.length) {
+            node.nodes = this.addDraftAndPending(node.nodes);
+        }
+        if (node.accepted) {
+            nodes.push({ ...node, indented });
+            indented = true;
+        }
+        if (node.pending) {
+            const state = 'pending';
+            nodes.push({ ...node, nodes: [], display_name: indented ? '⮑' : node.display_name, state, indented });
+            indented = true;
+        }
+        if (node.draft) {
+            const state = 'draft';
+            nodes.push({ ...node, nodes: [], display_name: indented ? '⮑' : node.display_name, state, indented });
+        }
+        return nodes;
+    }, [])
 
     private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {
@@ -116,8 +180,12 @@ export class NxMenusService implements OnDestroy {
         return { ...node, display_name, name, nodes, breadcrumbs };
     }
 
-    getUrl(systemId: string, endpoint = this.endpoint) {
+    getUrl(systemId: string, endpoint = this.endpoint, home = false) {
         let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        if (home) {
+            return url;
+        }
+
         if (!this.CONFIG.isLocal && systemId) {
             if (endpoint.view) {
                 url += '/view';
@@ -144,7 +212,7 @@ export class NxMenusService implements OnDestroy {
         }
         const { endpoint: { view = false, settings = false, information = false } } = this;
         // TODO: unify system's name location once we remove promises
-        let name = activeSystem.info?.systemName || activeSystem.name;
+        let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.name;
         if (!name) {
             name = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
         }
@@ -176,7 +244,7 @@ export class NxMenusService implements OnDestroy {
 
         const activeSystemMenu = new MenuNode(
             name,
-            '',
+            this.getUrl(activeSystem.id, { settings: true }),
             icon,
             nodes,
             Auth.LOGGED_IN,

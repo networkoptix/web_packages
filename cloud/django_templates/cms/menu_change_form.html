@@ -13,167 +13,23 @@
         <li>
             <a href="{% url 'admin:zendesk_import' %}">Import from Zendesk</a>
         </li>
+        <li>
+            <a href="{{ preview_url_draft }}">Draft</a>
+        </li>
+        <li>
+            <a href="{{ preview_url_review }}">Review</a>
+        </li>
     {% endif %}
     {{ block.super }}
 {% endblock %}
 {% block content %}
     {{block.super}}
-    {% if preview_url %}
+    {% if preview_url_draft %}
         <div id="menuPreviewErrors"></div>
-        <iframe class="previewFrame" src="{{ preview_url }}" style="width: 100%; height: 80vh"></iframe>
+        <iframe class="previewFrame" src="{{ preview_url_draft }}" style="width: 100%; height: 80vh"></iframe>
     {% endif %}
-    <script>
-        const errorContainer = document.getElementById('menuPreviewErrors');
-        const addError = ({ data }) => {
-            if (typeof data === 'string') {
-                const errorBlock = document.createElement('div');
-                errorBlock.className = 'errorBlock';
-                errorBlock.appendChild(document.createTextNode(data));
-                errorContainer.appendChild(errorBlock);
-                window.errorWatcher.value = true;
-            }
-        }
-
-        const handleAdvancedToggle = ({ target }) => {
-            const advancedShown = 'advanced-shown'
-            const { classList } = target.parentNode
-            const isAdvancedNode = classList.contains('nested-stacked-advanced')
-            if (isAdvancedNode) {
-                const isShown = classList.contains(advancedShown)
-                classList[isShown ? 'remove' : 'add'](advancedShown)
-            }
-        };
-        const handleNodeToggle = ({ target }) => {
-            const nodeExpanded = 'node-expanded'
-            const isHandle = target.classList.contains('djn-drag-handler')
-            const { classList } = target.parentNode
-            const isNode = classList.contains('djn-item')
-            if (isNode && isHandle) {
-                const isShown = classList.contains(nodeExpanded)
-                classList[isShown ? 'remove' : 'add'](nodeExpanded)
-            }
-        };
-
-        window.addEventListener('message', addError);
-
-        const addNodeCounts = () => {
-            const parentNodes = document.getElementsByClassName('djn-item')
-            for (const node of parentNodes) {
-                const nodeHandle = node.getElementsByClassName('djn-drag-handler')[0]
-                if (nodeHandle) {
-                    const { lastElementChild } = node
-                    const parent = lastElementChild.getElementsByClassName('items')[0]
-                    const items = parent && parent.children
-                    let count = 0
-                    if (items) {
-                        for (const { classList } of items) {
-                            if (
-                                !classList.contains('djn-add-item') &&
-                                !classList.contains('djn-no-drag') &&
-                                !classList.contains('djn-empty-form')
-                            ) {
-                                count++
-                            }
-                        }
-                    }
-                    const prevTags = nodeHandle.getElementsByClassName('node-count-tag')
-                    for (const tag of prevTags) {
-                        tag.parentNode.removeChild(tag)
-                    }
-                    const inlineDelete = nodeHandle.getElementsByClassName('inline-deletelink').length
-                    if (!inlineDelete) {
-                        const countTag = document.createElement('span')
-                        countTag.classList.add('node-count-tag')
-                        countTag.innerText = count
-                        nodeHandle.appendChild(countTag)
-                    }
-
-                    const deleteNode = nodeHandle.getElementsByClassName('djn-delete-handler')[0]
-                    const target = node.getElementsByClassName('nested-stacked-heading')[0]
-                    if (deleteNode) {
-                        const removedDeleteNode = nodeHandle.removeChild(deleteNode)
-                        target.append(removedDeleteNode)
-                    }
-                }
-            }
-        }
-        const hideNoPreviews = () => {
-            const nestedStackedSets = document.getElementsByClassName('nested-stacked-flex')
-            for (const set of nestedStackedSets) {
-                const previewWrapper = set.getElementsByClassName('form-row field-preview')[0]
-                const noPreview = previewWrapper && previewWrapper.lastElementChild && !previewWrapper.lastElementChild.lastElementChild.lastElementChild
-                if (noPreview) {
-                    previewWrapper.style.opacity = 0 
-                }
-            }
-        }
-        const expandErrors = () => {
-            const errorlist = document.getElementsByClassName('errorlist')
-                for (const error of errorlist) {
-                    let parent = error.parentNode
-                    while (parent && parent.classList) {
-                        parent.classList.add('node-expanded')
-                        parent = parent.parentNode
-                    }
-                }
-        }
-        addNodeCounts()
-        hideNoPreviews()
-        expandErrors()
-
-        window.addEventListener('click', (event) => [
-            handleNodeToggle, handleAdvancedToggle
-        ].forEach(callback => callback(event)))
-        window.addEventListener('mousemove', () => requestAnimationFrame(addNodeCounts))
-
-        const adminConfig = document.getElementsByClassName('field-admin_config')[0]
-        const buttonsAdded = adminConfig.classList.contains('reset-buttons-added')
-        const configs = {
-            "Generic": {
-                header: [
-                  "name",
-                  "url",
-                  "enabled",
-                  "order",
-                  "is_global",
-                  "preview"
-                ],
-                details: [
-                  "asset",
-                  "icon",
-                  "authentication"
-                ],
-                advanced: [
-                  "related_assets",
-                  "next_item",
-                  "condition",
-                  "permissions",
-                  "new_window"
-                ]
-              }
-        }
-        if (adminConfig && !buttonsAdded) {
-            adminConfig.classList.add('reset-buttons-added')
-            const buttonWrapper = document.createElement('div')
-            const buttonHeading = document.createElement('strong')
-            buttonHeading.innerText = 'Reset Config: '
-            buttonWrapper.classList.add('reset-buttons-wrapper')
-            buttonWrapper.appendChild(buttonHeading)
-            adminConfig.children[0].appendChild(buttonWrapper)
-            const addButton = ([name, config]) => {
-                const button = document.createElement('button')
-                button.innerText = name
-                button.id = name.replace(' ', '-')
-                button.classList.add('btn')
-                buttonWrapper.appendChild(button)
-                const textInput = document.getElementById('id_admin_config')
-                button.addEventListener('click', (event) => {
-                    event.preventDefault()
-                    textInput.value = JSON.stringify(configs[name], null, 4)
-                })
-            }
-            Object.entries(configs).forEach(addButton)
-        }
+    <script type="text/javascript">
+        const assetInfo = JSON.parse('{{asset_info|safe}}')
     </script>
-
+    <script src="{% static 'js/menuChange.js' %}"></script>
 {% endblock %}

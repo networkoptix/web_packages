@@ -7,8 +7,9 @@
 @import '~bootstrap/scss/mixins';
 
 @mixin button {
-    @include typography.medium14;
-    font-size       : 0.875rem !important;
+    font-family     : $font-family-medium;
+    color           : $font-color-medium;
+    font-size       : $h6-font-size !important;
     height          : 2rem !important;
     border-radius   : $border-radius-base !important;
     font-weight     : inherit !important;
@@ -213,8 +214,7 @@ button, .btn {
 }
 
 .btn-tag {
-    @include typography.regular13;
-    color            : $light16 !important;
+    @include typography.regular13light;
     font-weight      : 400;
     white-space      : nowrap;
     background-color : $light4;
@@ -232,7 +232,7 @@ button, .btn {
 }
 
 .btn-tag-selected {
-    @include typography.regular13;
+    @include typography.regular13dark9;
     @include mixins.badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;
@@ -310,8 +310,7 @@ button, .btn {
     }
 
     span {
-        @include typography.regular13;
-        color : $light16 !important;
+        @include typography.regular13light;
 
         &.close {
             left   : 0;

@@ -524,14 +524,18 @@ def zip_context(zip_file, asset, context, language_code,
                 return True
 
 
-def get_zip_package(asset, preview=True, version_id=None, add_root=True):
+def get_zip_package(asset, preview=True, version_id=None, add_root=True, update_progress_cb=None):
     zip_data = BytesIO()
     zip_file = zipfile.ZipFile(zip_data, "a", zipfile.ZIP_DEFLATED, False)
 
     global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
     languages = asset.languages_list
+    contexts = list(asset.asset_type.context_set.all())
 
-    for context in asset.asset_type.context_set.all():
+    for index, context in enumerate(contexts):
+        if update_progress_cb:
+            update_progress_cb(index, len(contexts))
+            
         errors = False
         if context.translatable:
             for language_code in languages:

@@ -5,29 +5,37 @@ import { BehaviorSubject }           from 'rxjs';
     providedIn: 'root'
 })
 export class NxAppStateService {
-
-    private readySubject = new BehaviorSubject(false);
-    private ribbonSubject = new BehaviorSubject(false);
-
+    readySubject = new BehaviorSubject(false);
+    ribbonSubject = new BehaviorSubject(false);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
+    manualAccessSubject$ = new BehaviorSubject(false);
 
     // Header height is hardcoded everywhere to 48px :(
     // Ribbon height is 33px ... for one row
     // Do we have multiple row ribbon? -- TT
     heightWithRibbon = 'calc(100% - 81px)';
     heightWithoutRibbon = 'calc(100% - 48px)';
+    altBackground = false;
 
     constructor() {}
 
-    setFooterVisibility(visible: boolean) {
+    set footerVisibility(visible: boolean) {
         this.footerVisibleSubject.next(visible);
     }
 
-    setHeaderVisibility(visible: boolean) {
+    get footerVisibility() {
+        return this.footerVisibleSubject.getValue();
+    }
+
+    set headerVisibility(visible: boolean) {
         this.headerVisibleSubject.next(visible);
+    }
+
+    get headerVisibility() {
+        return this.headerVisibleSubject.getValue();
     }
 
     set ribbonVisibility(visible: boolean) {
@@ -44,5 +52,13 @@ export class NxAppStateService {
 
     get ready() {
         return this.readySubject.getValue();
+    }
+
+    get canManuallyAccess() {
+        return this.manualAccessSubject$.getValue();
+    }
+
+    set canManuallyAccess(canAccess: boolean) {
+        this.manualAccessSubject$.next(canAccess);
     }
 }

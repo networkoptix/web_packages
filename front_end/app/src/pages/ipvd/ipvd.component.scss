@@ -27,8 +27,7 @@
     }
 
     .text-placeholder {
-        @include typography.regular20;
-        color       : $light16;
+        @include typography.regular20light;
         height      : 2rem;
     }
 
@@ -51,7 +50,7 @@
                 //white-space: normal;
 
                 .caption {
-                    @include typography.medium13;
+                    @include typography.medium13dark9;
                     line-height : 1rem;
                     align-items : flex-end;
                 }

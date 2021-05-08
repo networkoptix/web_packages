@@ -36,7 +36,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
         const node = nodes.find(({ url }) => {
             return url === this.path;
         });
-        this.name = node?.name || this.dropdownNode.display_name;
+        this.name = node?.name || this.dropdownNode?.display_name || ''; // set name to '' until nodes update
         return nodes;
     }
 

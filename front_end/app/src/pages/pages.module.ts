@@ -1,7 +1,7 @@
 import { NgModule }                  from '@angular/core';
 import { Angular2CsvModule }         from 'angular2-csv';
 
-import { DirectivesModule }          from '../directives/directives.module';
+import { DirectivesModule }          from '@directives/directives.module';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
@@ -120,11 +120,11 @@ const lazyRoutes: Routes = [
         Nx500Module,
         Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
-            initialNavigation : true,
+            initialNavigation         : true,
             scrollPositionRestoration : 'enabled',
-            anchorScrolling : 'enabled',
-            enableTracing : false,
-            preloadingStrategy : QuicklinkStrategy
+            anchorScrolling           : 'enabled',
+            enableTracing             : false,
+            preloadingStrategy        : QuicklinkStrategy
         })
     ],
     declarations: [

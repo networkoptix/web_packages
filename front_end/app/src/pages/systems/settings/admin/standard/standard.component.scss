@@ -6,6 +6,7 @@ label {
 
     &.control-label {
         color : $dark9;
+        text-align: left;
 
         &:hover {
             color : $dark1;
@@ -14,8 +15,7 @@ label {
 }
 
 .helper-block {
-    @include typography.regular12;
-    color       : $light16;
+    @include typography.regular12light;
     margin      : 2px 0 8px 22px;
     line-height : 16px;
 }

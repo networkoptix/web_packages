@@ -3,7 +3,7 @@
    tabindex="{{ selected ? '-1': undefined }}"
    [id]="item.id"
    [routerLink]="[itemPath]"
-   [queryParams]="{search: itemSearch}"
+   [queryParams]="queryParams"
     (mouseover)="setNavIdx(item)">
     <div *ngIf="first" class="top-shadow-cover"></div>
     <div class="menu-level-3-content ellipsis">
@@ -15,9 +15,15 @@
                 class="menu-level-3-svg-icon"></svg-icon>
         <span class="menu-level-3-label user"
               [innerHTML]="item.label"
-              [ngClass]="{'indent': item.indent && !item.icon && !item.svgIcon}"></span>
+              [ngClass]="{
+                'indent': item.indent && !item.icon && !item.svgIcon,
+                'disabled': item.disabled
+              }"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalText"
-              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"></span>
+              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"
+              [ngClass]="{
+                'disabled': item.disabled
+              }"></span>
     </div>
 </a>

@@ -1,75 +1,13 @@
 *** Settings ***
-Resource             ../resource.robot
-Suite Setup          Open Browser and go to URL    ${url}
-Test Setup           Restart
-Test Teardown        Run Keyword If Test Failed    Open New Browser
-Suite Teardown       Close All Browsers
-
-*** Variables ***
-${email}                   ${EMAIL OWNER}
-${email invalid}           aodehurgjaegir
-${password}                ${BASE PASSWORD}
-${url}                     ${ENV}
-@{auth}                    ${email}    ${password}
-@{TMP USERS}
-
-# Misc
-${view tab}          ${HEADER TAB WRAPPER}/nx-header-tabs[1]
-${first system}      (${SYSTEMS LIST BUTTONS})[1]
-
-*** Keywords ***
-Open New Browser
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Restart
-    Common Restart Logout    ${url}
-
-Login and Wait Until Systems Loaded
-    Log In    ${email}    ${password}
-    Wait Until Elements are Visible    ${SYSTEMS LIST}    ${SYSTEMS DROPDOWN}
-
-Check Drop Menu Systems Grid System
-    [Arguments]    ${system list count}
-    Wait Until Element is Visible    ${SYSTEMS DROPDOWN}
-    Sleep    1
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait Until Element is Visible    ${SYSTEMS GRID}
-
-    FOR    ${width}    ${columns}    ${max systems}    IN ZIP    ${WIDTHS}    ${COLUMNS SHOWN}    ${MAX SYSTEMS SHOWN}
-        Set Window Size    ${width}    1080
-        ${tiles}=   Get Element Count    ${SYSTEMS GRID TILES}
-        ${tiles to show}=   Get Tiles to Show    ${system list count}    ${max systems}
-        Should be Equal As Integers    ${tiles}    ${tiles to show}
-        ${more systems text}=   Get Text    ${SYSTEMS GRID TILES}/div
-        ${show additional button}=   Show Additional    ${tiles}    ${tiles to show}
-        ${additional}=   Set Variable If    ${show additional button}    ${tiles} - ${tiles to show}
-        ${system grid size}=   Get Element Size    ${SYSTEMS GRID}
-        ${system tile size}=   Get Element Size    (${SYSTEMS GRID TILES})[1]
-        ${is correct grid}=   Check Grid Size    ${system grid size}[0]    ${system tile size}[0]    ${columns}
-        ${systems}=   Set Variable    ${SYSTEMS TITLE TEXT}
-        Should be True    ${is correct grid}
-        Run Keyword If    ${show additional button}    Should be Equal As Strings    ${more systems text}    + ${additional} ${systems}
-    END
-
-    Open New Browser
-
-Check Header Items
-    [Arguments]    ${logged in}
-    ${hidden elements list}=   Set Variable If    ${logged in}    ${HIDE LOGGED IN}    ${HIDE ANONYMOUS}
-    ${hidden elements common}=   Set Variable If    ${logged in}    ${LOGGED IN COMMON}    ${ANONYMOUS COMMON}
-
-    FOR    ${breakpoint}    ${hidden elements}    IN ZIP    ${BREAKPOINTS}    ${hidden elements list}
-        ${width}=   Set Variable    ${breakpoint-24}
-        Set Window Size    ${width}    1080
-        Wait Until Elements Are Not Visible    @{hidden elements}    @{hidden elements common}
-    END
-
-    Open New Browser
+Resource          ../resource.robot
+Suite Setup       Header Suite Setup
+Test Setup        Header Test Setup
+Suite Teardown    Header Suite Teardown
 
 *** Test Cases ***
-Header shows correct items while anonymous, header main button text is correct
-    [Tags]    Threadable
+# Anonymous user
+Anonymous: Header shows correct items
+    [Tags]    threadable    anon
     Wait Until Elements Are Visible
     ...    ${LOG IN NAV BAR}
     ...    ${CREATE ACCOUNT HEADER}
@@ -77,159 +15,357 @@ Header shows correct items while anonymous, header main button text is correct
     ...    ${SYSTEMS DROPDOWN}
     ...    ${HEADER ICON LINK}
     ${logo link url}=   Get Element Attribute    ${HEADER ICON LINK}    href
-    Should Be Equal as Strings    ${logo link url}    ${url}/
+    Should Be Equal as Strings    ${logo link url}    ${ENV}/
     ${logo src}=   Get Element Attribute    ${LOGO ICON}    src
     Should Be Equal as Strings    ${logo src}    ${LOGO ICON SOURCE}
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
 
-Header shows correct items when logged in
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-    Wait Until Elements Are Not Visible    ${LOG IN NAV BAR}    ${CREATE ACCOUNT HEADER}    ${HEADER LANGUAGE DROPDOWN}
-    Wait Until Elements Are Visible    ${HEADER ICON LINK}    ${ACCOUNT DROPDOWN}
-    ${logo link url}=   Get Element Attribute    ${HEADER ICON LINK}    href
-    Should Be Equal as Strings    ${logo link url}    ${url}/systems
-    ${logged in email}=   Get Text    ${ACCOUNT DROPDOWN}
-    Should be Equal as Strings    ${logged in email}    ${email}
-
-As anonymous logo goes to landing page
-    [Tags]    Threadable
-    Go to    ${url}/register
+Anonymous: Logo goes to landing page
+    [Tags]    threadable    anon
+    Go to    ${ENV}/register
     Wait Until Element is Visible    ${HEADER ICON LINK}
     Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${url}/
+    Wait Until Location is    ${ENV}/
 
-As logged in with one system user goes to view for that system
-    ${random email}=  Register and activate account with random email    firstname    lastname    ${password}
-    Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
-    Log In    ${random email}    ${password}
+Anonymous: Header button text is correct
+    [Tags]    threadable    anon
+    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
+
+Anonymous: Clicking on the main header button closes the dropdown
+    [Tags]    threadable    anon
     Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Validate Header Button Text    ${AUTO TESTS}    systems=False
-    Slow    Go to    ${url}/account    timeout=3
-    Wait Until Element is Visible    ${HEADER ICON LINK}
-    Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${VIEW PAGE}
+    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
+    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
+    Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
-As logged in with more than 1 system, logo goes to systems page
-    [Tags]    Threadable
-    Log In    ${email}    ${password}
-    Go to    ${url}/account
-    Wait Until Element is Visible    ${HEADER ICON LINK}
-    Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${url}/systems
+    Log    Clicking on the main header button closes the dropdown
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
-On systems page, header should show number of systems
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-    ${systems}=   Set Variable    ${SYSTEMS TITLE TEXT}
-    ${system count}=   Get Element Count    ${SYSTEMS LIST BUTTONS}
-    ${header count}=   Get Text    ${SYSTEMS DROPDOWN}/span
-    Should be Equal As Strings    ${system count} ${systems}    ${header count}
-    Check Drop Menu Systems Grid System    ${system count}
+    Log    Clicking ENETR closes the dropdown
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
+    Press Keys    //body    ENTER
+    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
-    #TODO: merge tests for number of systems from header-func
+    Log    Clicking outside the dropdown closes it
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
+    Click Element    ${LARGE CREATE ACCOUNT BUTTON}
+    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
-On system page, header should show current system name
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-    ${system list count}=   Get Element Count    ${SYSTEMS LIST BUTTONS}
-    ${systems to check}=   Systems to Check    ${system list count}
-
-    FOR    ${i}    IN RANGE    1    ${systems to check}
-        ${next system tile}=   Set Variable    (${SYSTEMS GRID TILES})[${i}]
-        Wait Until Element is Visible    ${SYSTEMS DROPDOWN}
-        Click Element    ${SYSTEMS DROPDOWN}
-        Wait Until Element is Visible    ${next system tile}
-        Click Element    ${next system tile}
-        Wait Until Element is Visible    ${SYSTEM NAME HEADING}
-
-        ${system name text}=   Get Text    ${SYSTEM NAME HEADING}
-        Validate Header Button Text    ${system name text}    systems=False
-        Validate Active Tab Text    ${SETTINGS TEXT}
-    END
-
-    Check Drop Menu Systems Grid System    ${system list count}
-
-On another page in the navigation grid, header should show tile's name, active pages are higlighted in header
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-
-    FOR    ${page}    IN    @{for developers int pages}
-        Go To    ${page}[url]
-        Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
-        Validate Active Tab Text    ${page}[title]
-        Click Element    ${SYSTEMS DROPDOWN}
-        Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
-    END
-
-    FOR    ${page}    IN    @{services pages}
-        Go To    ${page}[url]
-        Validate Header Button Text    ${SERVICES TEXT}    systems=False
-        Validate Active Tab Text    ${page}[title]
-        Click Element    ${SYSTEMS DROPDOWN}
-        Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
-    END
-
-Links in navigation grid lead to proper pages, active pages are highlighted in menu
-    Login and Wait Until Systems Loaded
-
-    Set Test Variable   ${sys id}    ${AUTO TESTS SYSTEM ID}
-    Go To    ${url}/systems/${sys id}
-
-    Wait Until Element is Visible    ${SYSTEMS DROPDOWN}
-    Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.5
-    Validate Navigation Grid Tile    ${AUTO TESTS}    ${system pages}
-    Validate Active Navigation Item    ${SETTINGS TEXT}
-
-    # System tile
-    FOR   ${page}    IN    @{system pages}
-        Click Element    ${NAVIGATION LINK}//span[contains(text(), "${page}[title]")]
-        Wait Until Location Contains    ${page}[url]
-        Validate Header Button Text    ${AUTO TESTS}    systems=False
-        Wait Until Element is Visible    ${SYSTEMS DROPDOWN}
-        Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.5
-        Validate Active Navigation Item    ${page}[title]
-    END
-
-    # For developers tile
-    FOR   ${page}    IN    @{for developers int pages}
-        Click Element    ${NAVIGATION LINK}//span[contains(text(), "${page}[title]")]
-        Wait Until Location Contains    ${page}[url]
-        Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
-        Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.25
-        Validate Active Navigation Item    ${page}[title]
-    END
-    #TODO: add external For Developers links
-
-    # Services tile
-    FOR   ${page}    IN    @{services pages}
-        Click Element    ${NAVIGATION LINK}//span[contains(text(), "${page}[title]")]
-        Wait Until Location Contains    ${page}[url]
-        Validate Header Button Text    ${SERVICES TEXT}    systems=False
-        Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.25
-        Validate Active Navigation Item    ${page}[title]
-    END
-
-    #TODO: add External Links
-
-Different page widths and header interaction while anonymous
-    [Tags]    Threadable
+Anonymous: Different page widths
+    [Tags]    threadable    anon    ui
     Go To    ${knowledge base}[url]
+
     Check Header Items    False
 
-Different page widths and header interaction while logged in
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-    Go To   ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${view tab}
-    Click Element    ${view tab}
+# User has no systems connected to cloud
+No systems: Header button text is correct
+    [Tags]    threadable    no_sys
+    Log In    ${zero systems owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    0    systems=True
+
+No systems: Logo goes to landing page
+    [Tags]    threadable    no_sys
+    Log In    ${zero systems owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    0    systems=True
+    Click Element    ${HEADER ICON LINK}
+    Wait Until Location is    ${ENV}/systems
+
+No systems: Check Dropdown Content
+    [Tags]    threadable    no_sys
+    Log In    ${zero systems owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    0    systems=True
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
+    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
+    Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
+
+No systems: Different page widths
+    [Tags]    threadable    no_sys    ui
+    Log In    ${zero systems owner}    ${BASE PASSWORD}
+    Validate Header Button Text    0    systems=True
+
     Check Header Items    True
 
-Different page width with main button opened
-    [Tags]    Threadable
-    Login and Wait Until Systems Loaded
-    ${system list count}=   Get Element Count    ${SYSTEMS LIST BUTTONS}
-    # The go to account can be removed once the systems/settings page gets updated, currently it has a forced viewport width
-    Go To    ${url}/account
+# User has one system connected to cloud
+One system: Logo goes to view for that system
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait Until Element is Visible    ${HEADER ICON LINK}
+    Click Element    ${HEADER ICON LINK}
+    Wait Until Location is    ${ENV}/systems/${main system}[id]/view
+
+One system: Header button displays the system name
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${main system}[name]    systems=False
+
+One system: Check Dropdown content
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${main system}[name]    systems=False
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
+    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Validate System Navigation Tile    ${main system}[name]    active link=${SETTINGS TEXT}
+    Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
+    Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
+
+One system: Check header links - System
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${main system}[name]    systems=False
+    # Settings page is loaded after logging in
+    Validate Active Header Link    ${SETTINGS TEXT}
+    Click Element    ${SYSTEMS DROPDOWN}
+    Validate System Navigation Tile    ${main system}[name]    active link=${SETTINGS TEXT}
+
+    ${tabs names}=   Create List    ${VIEW}    ${SETTINGS TEXT}    ${INFORMATION TEXT}
+    ${tabs links}=   Create List    ${VIEW TAB}    ${SETTINGS TAB}    ${INFORMATION TAB}
+    FOR    ${name}    ${link}    IN ZIP    ${tabs names}     ${tabs links}
+        Click Link    ${link}
+        Validate Header Button Text    ${main system}[name]    systems=False
+        Validate Active Header Link    ${name}
+        Click Element    ${SYSTEMS DROPDOWN}
+        Validate System Navigation Tile    ${main system}[name]    active link=${name}
+    END
+
+One system: Check header links - For Developers
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Go To    ${ENV}/docs/developers
+    Wait Until Element Is Visible    //h1[contains(text(), "${DEVELOP WITH NX META TEXT}")]
+    Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
+    Validate Active Header Link    ${PLATFORM OVERVIEW TEXT}
+
+    FOR    ${page}    IN    @{for developers int pages}
+        Click Link    ${HEADER TAB LINK}\[contains(text(), "${page}[title]")]
+        Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
+        Validate Active Header Link    ${page}[title]
+        Click Element    ${SYSTEMS DROPDOWN}
+        Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}    active link=${page}[title]
+    END
+
+One system: Check header links - Services
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Go To    ${ENV}/download
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${SERVICES TEXT}    systems=False
+    Validate Active Header Link    ${DOWNLOADS TEXT}
+
+    FOR    ${page}    IN    @{services pages}
+        Click Link    ${HEADER TAB LINK}\[contains(text(), "${page}[title]")]
+        Sleep   1
+        Validate Header Button Text    ${SERVICES TEXT}    systems=False
+        Validate Active Header Link    ${page}[title]
+        Click Element    ${SYSTEMS DROPDOWN}
+    END
+
+One system: Check navigation links - System
+    [Tags]    threadable    one_sys   CLOUD-7200
+    Log In    ${one system owner}    ${BASE PASSWORD}    validate=False
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Sleep    1
+    Validate Header Button Text    ${main system}[name]    systems=False
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+
+    FOR    ${page text}    IN    ${VIEW}    ${SETTINGS TEXT}    ${INFORMATION TEXT}
+        Click Link    //h5[contains(text(), "${main system}[name]")]/../following-sibling::ul//a[contains(text(), "${page text}")]
+        Validate Header Button Text    ${main system}[name]    systems=False
+        Validate Active Header Link    ${page text}
+        Click Element    ${SYSTEMS DROPDOWN}
+        Validate System Navigation Tile    ${main system}[name]    active link=${page text}
+    END
+
+One system: Check navigation links - For Developers
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${main system}[name]    systems=False
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+
+    FOR    ${page}    IN    @{for developers int pages}
+        Click Element    //h5[contains(text(), "${FOR DEVELOPERS TEXT}")]/../following-sibling::ul//a[contains(text(), "${page}[title]")]
+        Wait Until Location Contains    ${page}[url]
+        Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
+        Validate Active Header Link    ${page}[title]
+        Click Element    ${SYSTEMS DROPDOWN}
+        Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}    active link=${page}[title]
+    END
+
+One system: Check navigation links - Services
+    [Tags]    threadable    one_sys
+    Log In    ${one system owner}    ${BASE PASSWORD}
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Validate Header Button Text    ${main system}[name]    systems=False
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+
+    FOR    ${page}    IN    @{services pages}
+        Click Element    //h5[contains(text(), "${SERVICES TEXT}")]/../following-sibling::ul//a[contains(text(), "${page}[title]")]
+        Wait Until Location Contains    ${page}[url]
+        Validate Header Button Text    ${SERVICES TEXT}    systems=False
+        Validate Active Header Link    ${page}[title]
+        Click Element    ${SYSTEMS DROPDOWN}
+        Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}    active link=${page}[title]
+    END
+
+One System: Different page widths
+    [Tags]    threadable    one_sys    ui
+    Log in to user and system    ${one system owner}    ${main system}[id]
+    Verify In System    ${main system}[name]
+    Wait Until Element is Visible    ${VIEW TAB}
+    Click Element    ${VIEW TAB}
+    Check Header Items    True
+
+
+# User has many systems connected to cloud
+Many systems: Logo goes to Systems page
+    [Tags]    threadable    many_sys
+    Log In    ${many systems owner}    ${BASE PASSWORD}
+    Validate on Systems Page    search=True
+    Click Element    ${HEADER ICON LINK}
+    Wait Until Location is    ${ENV}/systems
+
+Many systems: Header button displays number of systems
+    [Tags]    threadable    many_sys
+    Log In    ${many systems owner}    ${BASE PASSWORD}
+    Validate on Systems Page    search=True
+    Validate Header Button Text    16    systems=True
+
+Many systems: Check dropdown content if 16 or less systems
+    [Tags]    threadable    many_sys
+    Log In    ${many systems owner}    ${BASE PASSWORD}
+    Validate on Systems Page    search=True
+    Validate Header Button Text    16    systems=True
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
+    Wait Until Elements Are Not Visible    ${EXTRA SYSTEM TILE}
+    FOR    ${sys}    IN    @{offline systems}
+        Validate System Info Tile    ${sys}[name]    Many Systems
+    END
+
+Many systems: Check dropdown content if 17 or more systems
+    [Tags]    threadable    many_sys   CLOUD-6778
+    Share    ${auth}    ${main system}[id]    ${access roles}[admin]    ${many systems owner}
+    Log In    ${many systems owner}    ${BASE PASSWORD}
+    Validate on Systems Page    search=True
+    Run keyword and continue on failure    Validate Header Button Text    17    systems=True
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
+
+    Log    Check all tiles in Systems grid
+    ${grid systems}=   Get systems names from Systems grid
+    FOR    ${sys}    IN    @{grid systems}
+        Run Keyword If    '''${sys}''' == '''${main system}[name]'''    Validate System Info Tile    ${sys}    One System
+           ...    ELSE    Validate System Info Tile    ${sys}    Many Systems
+    END
+
+    Log    Online system is displayed first in Systems Grid and shown in Navigation grid
+    Should be Equal As Strings    ${grid systems}[0]    ${main system}[name]
+    Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}//h5[contains(text(), "${main system}[name]")]
+
+    Log    Extra Systems tile is displayed, shows correct number and leads to Systems page
+    Run keyword and continue on failure    Verify extra systems number is correct    2
+    Click Element    ${EXTRA SYSTEM TILE}
+    Validate on Systems Page    search=True
+
+Many systems: Links in Systems grid lead to proper pages
+    [Tags]    threadable    many_sys
+    Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
+
+    Log In    ${many systems owner}    ${BASE PASSWORD}
+    Validate on Systems Page    search=True
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
+
+    ${grid systems}=   Get systems names from Systems grid
+    FOR    ${sys}    IN    @{grid systems}
+        Click Element    //div[contains(@class, "system-info")]/span[contains(text(), "${sys}")]
+        Wait Until Element Is Visible    //h2[contains(text(), "${sys}")]
+        Validate Header Button Text    ${sys}    systems=False
+        Click Element    ${SYSTEMS DROPDOWN}
+        Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
+        Validate System Navigation Tile    ${sys}    active link=${SETTINGS TEXT}
+    END
+
+Many systems: Different page widths
+    [Tags]    threadable    diff_width    ui
+    Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
+    Log in to user and system    ${many systems owner}    ${main system}[id]
+    Wait until element is visible    //h2[text()="${main system}[name]"]
+
+    Wait Until Element is Visible    ${VIEW TAB}
+    Click Element    ${VIEW TAB}
+    Run keyword and continue on failure    Check Header Items    True
+
+    ${systems}=   Get Account Systems    ${ENV}    ${many systems owner}    ${base password}
+    ${system list count}=    Get Length     ${systems}
+    Go To    ${ENV}/account
     Check Drop Menu Systems Grid System    ${system list count}
+
+# Other cases
+Check header and dropdown content for not admins
+    [Tags]    threadable    other    CLOUD-6794    CLOUD-7200
+    FOR    ${user}    IN    @{main system users}
+        Log in to user and system    ${user}    ${main system}[id]
+        Wait until element is visible    ${SYSTEM NAME}\[contains(text(), "${main system}[name]")]
+        # Commented out due to CLOUD-7200
+        # Verify In System    ${main system}[name]    editable=False
+        Validate Header Button Text    ${main system}[name]    systems=False
+        Wait Until Element Is Not Visible    ${INFORMATION TAB}
+        Click Element    ${SYSTEMS DROPDOWN}
+
+        Wait until elements are visible
+            ...    ${DROPDOWN NAVIGATION GRID}
+            ...    //h5[contains(text(), "${main system}[name]")]/../following-sibling::ul//a[contains(text(), "${SETTINGS TEXT}")]
+            ...    //h5[contains(text(), "${main system}[name]")]/../following-sibling::ul//a[contains(text(), "${VIEW}")]
+        Wait until elements are not visible
+            ...    ${DROPDOWN SYSTEMS GRID}
+            ...    ${INFORMATION TAB}
+            ...    //h5[contains(text(), "${main system}[name]")]/../following-sibling::ul//a[contains(text(), "${INFORMATION TEXT}")]
+
+        Log Out
+    END
+
+Check external links - For Developers
+    [Tags]    threadable    other
+    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
+    Wait Until Element Is Not Visible    ${DROPDOWN SYSTEMS GRID}
+    ${links names}=   Get External Links Names   ${FOR DEVELOPERS TEXT}
+    FOR    ${name}    IN    @{links names}
+        ${actual url}=   Get Element Attribute    ${FOR DEVELOPERS LINK}\[contains(text(), "${name}")]    href
+        Set Local variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
+        Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
+    END
+
+Check External links
+    [Tags]    threadable    other
+    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
+    Wait Until Element Is Not Visible    ${DROPDOWN SYSTEMS GRID}
+    ${links names}=   Get External Links Names   ${EXTERNAL LINKS TEXT}
+    FOR    ${name}    IN    @{links names}
+        ${actual url}=   Get Element Attribute    ${EXTERNAL LINK}\[contains(text(), "${name}")]    href
+        Set Local Variable    ${expected url}    ${EXTERNAL LINKS["${name}"]}
+        Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
+    END
