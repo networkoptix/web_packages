@@ -1,15 +1,15 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       System Admin Suite Setup
-Test Setup        Common Restart Logout    ${ENV}
-Test Teardown     Run Keyword If Test Failed    System Admin Test Restart
+Test Setup        System Admin Test Setup
+Test Teardown     System Admin Test Restart
 Suite Teardown    System Admin Suite Teardown
 Force Tags        system
 
 *** Test Cases ***
 Should show system settings and security settings and they should match settings on server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
@@ -28,8 +28,8 @@ Should show system settings and security settings and they should match settings
     Settings on page should match settings on server
 
 Changing the Setting * changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 
     FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization    auditTrailEnabled    trafficEncryptionForced
@@ -37,15 +37,15 @@ Changing the Setting * changes it on the server
     END
 
 Changing the Setting 'Encrypt video traffic' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     ${selected}=   Change Setting Encrypt video traffic
     Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting 'Limit session duration to' changes it on the server
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
@@ -53,8 +53,8 @@ Changing the Setting 'Limit session duration to' changes it on the server
     ...    ELSE     Evaluate Session Limit
 
 Change Time Interval And Verify on Server
-    [Tags]    system settings    C65722    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    C65722    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
@@ -67,20 +67,20 @@ Change Time Interval And Verify on Server
     Evaluate Session Limit
 
 Changing Several Random Checkboxes Works
-    [Tags]    system settings    threaded
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    [Tags]    system settings    cloud    webadmin    threaded
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Changing Several Settings at Random    ${SAVE BUTTON}
     Changing Several Settings at Random    ${CANCEL BUTTON}
     
 Systems Settings Block is Available for Administrator or Owner
-    [Tags]    C69736    system settings    threaded
+    [Tags]    C69736    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
     FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
-        Log in to user and system    ${user}    ${system}[id]
+        Log in to system    ${system}    ${user}
         Wait Until Settings Are Visible
         Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
         Checkbox should be selected     ${ENABLE AUTO DISCOVERY CHECKBOX}
@@ -90,9 +90,9 @@ Systems Settings Block is Available for Administrator or Owner
     END
 
 System and Security Settings block is not available for other users
-    [Tags]    C69737    C65698    system settings     threaded
+    [Tags]    C69737    C65698    cloud    webadmin    system settings     threaded
     FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]     ${users}[custom]
-        Log in to user and system    ${user}    ${system}[id]
+        Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
         ...    //h2[contains(text(), "${system}[name]")]
         ...    ${DISCONNECT FROM MY ACCOUNT}
@@ -103,11 +103,11 @@ System and Security Settings block is not available for other users
     END
     
 Cancel changes in System Settings block
-    [Tags]    C69738    system settings    threaded
+    [Tags]    C69738    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
@@ -121,13 +121,13 @@ Cancel changes in System Settings block
     END
 
 Moving to a different page after making changes in System Settings without saving them first
-    [Tags]    C69739    system settings    threaded
+    [Tags]    C69739    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
 
     Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     FOR    ${setting}    IN    @{tested settings}
@@ -199,27 +199,27 @@ Moving to a different page after making changes in System Settings without savin
     END
 
 Changing All Checkboxes Works
-    [Tags]    system settings    C65722    threaded
+    [Tags]    system settings    cloud    webadmin    C65722    threaded
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
     Log    Steps 1 - 8
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible    timeout=60
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Changing All Settings    ${SAVE BUTTON}
     Changing All Settings    ${CANCEL BUTTON}
 
 Changes made in the thick client are displayed in System Settings block in Cloud Portal
-    [Tags]    C69741    system settings    threaded
+    [Tags]    C69741    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
     Log    Step 1
     Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
@@ -271,11 +271,11 @@ Changes made in the thick client are displayed in System Settings block in Cloud
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
 Checking the dependency of system settings checkboxes
-    [Tags]    C69742    system settings    threaded
+    [Tags]    C69742    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
@@ -309,13 +309,13 @@ Checking the dependency of system settings checkboxes
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
     
 Changes made in the thick client are displayed in the security block in Cloud Portal
-    [Tags]    C65723    system settings    threaded
+    [Tags]    C65723    cloud    webadmin   system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
     Log    Step 1
     Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
@@ -364,7 +364,7 @@ Changes made in the thick client are displayed in the security block in Cloud Po
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
 
 Security block is available for administrator or owner
-    [Tags]    C65697    system settings    threaded
+    [Tags]    C65697    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}     ${default settings}
 
@@ -382,9 +382,9 @@ Security block is available for administrator or owner
     END
 
 System Settings block is not available when the system is offline
-    [Tags]    C69744    system settings    threaded
+    [Tags]    C69744    cloud    system settings    threaded
     Stop Docker Server    ${system}[cont]
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${MERGE BUTTON SYSTEM}
@@ -394,7 +394,7 @@ System Settings block is not available when the system is offline
     Start Docker Server    ${system}[cont]
 
 System settings block view for different System versions
-    [Tags]    C69743    C65829    system settings    threaded
+    [Tags]    C69743    C65829    cloud    system settings    threaded
     ${4.0 system}=   Setup Docker System    image=${image 4.0}    cloud email=${EMAIL OWNER}
     Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
     ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
@@ -422,12 +422,12 @@ System settings block view for different System versions
     Delete Docker Server    ${4.0 cont}
 
 Cancel changes in Security block
-    [Tags]    C65724    system settings    threaded
+    [Tags]    C65724    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}     ${default settings}
 
     Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX}
@@ -458,12 +458,12 @@ Cancel changes in Security block
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
     
 Checking the dependency of security settings checkboxes
-    [Tags]    C65700    system settings    threaded
+    [Tags]    C65700    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
     
     Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible    timeout=60
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
@@ -495,12 +495,12 @@ Checking the dependency of security settings checkboxes
     Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 Check Limit session duration
-    [Tags]    C65703    system settings    threaded
+    [Tags]    C65703    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}     ${default settings}
 
     Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
@@ -631,12 +631,12 @@ Check Limit session duration
     Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    5
 
 Check HTTPS traffic encryption
-    [Tags]    C65701    system settings    threaded
+    [Tags]    C65701    cloud    webadmin    system settings    threaded
     Log    Preconditions
     Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
     
     Log    Step 1
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Change Setting And Save   ${ALLOW ONLY SECURE CHECKBOX}
@@ -677,7 +677,7 @@ Check HTTPS traffic encryption
     Go To    ${ENV}
 
 Security block view for 3 dot 2 System
-    [Tags]    C65829    system settings    threaded
+    [Tags]    C65829    cloud    system settings    threaded
     Log    Preconditions
     Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
     ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
@@ -687,10 +687,10 @@ Security block view for 3 dot 2 System
     Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
 Changes in System Settings block are displayed in thick client
-    [Tags]    C69740    threaded    system settings
+    [Tags]    C69740    cloud    webadmin    threaded    system settings
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}     ${default settings}
-    Log in to user and system    ${system}[owner]    ${system}[id]
+    Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 
     Log    Steps 1-6

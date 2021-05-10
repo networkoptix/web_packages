@@ -33,7 +33,7 @@ System Admin Test Restart
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+#    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
     Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
 
 # Waits
@@ -340,10 +340,14 @@ Evaluate Log Level via API
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
-    Should Be True    $selected == $stat
+    Should Be True    $selected == $state
 
 Close Modal If There
     ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
     Run Keyword If     ${modal is visible}    Run Keywords
         ...    Click Element    ${COMMON CLOSE BUTTON}   AND
         ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}
+
+Show Advanced Settings
+    ${location}=   Get Location
+    Go To    ${location}${ADVANCED SETTINGS}

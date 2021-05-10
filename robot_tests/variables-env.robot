@@ -2,6 +2,7 @@
 ${IMAGE}                              ${IMAGE 4.3}
 ${IMAGE 4.3}                          4.3.0.32689
 ${IMAGE 4.1}                          4.1_test
+${image 4.0}                          4.0_test
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx

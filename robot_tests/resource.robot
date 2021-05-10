@@ -962,7 +962,7 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old    ${network}=bridge
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -984,23 +984,31 @@ Create Docker Server
     [Return]    ${server}
 
 
-#Setup Custom Docker Server
-#    [Arguments]    ${network}=host    ${image}=${IMAGE}
-#    ${mac}=   Get Random MAC
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#    # Get random available port
-#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
-#                  ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
-#
-#    ${id}=   Evaluate    $full_id[:12]
-#    Set to Dictionary    ${server}    id=${id}
-#    Set to Dictionary    ${server}    port=${port}
-#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-#    Set to Dictionary    ${server}    name=${name}
-#    Close Connection
-#    Release Lock   create_server_lock
-#    [Return]    ${server}
+Setup Custom Docker Server
+    [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
+    ${server}=   Create Dictionary
+    ${mac}=   Get Random MAC
+    Acquire Lock   setup_server_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+
+    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
+    ...    ELSE   Set Local Variable    ${vms}    new
+
+    # Get random available port
+    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
+
+    ${id}=   Evaluate    $full_id[:12]
+    Set to Dictionary    ${server}    id=${id}
+    Set to Dictionary    ${server}    port=${port}
+    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+    Set to Dictionary    ${server}    name=${name}
+    Close Connection
+    Release Lock   setup_server_lock
+    [Return]    ${server}
 
 #Setup Docker Server
 #    [Arguments]    ${image}=${IMAGE}
