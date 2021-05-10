@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Out
 import PlaybackService                                                        from '../../../services/playback.service'
 import { PlaybackState, PLAYBACK_MODE, PLAYBACK_ERROR }                       from '../../../datatypes/PlaybackState'
 import { Subscription }                                                       from 'rxjs'
+import Hls                                                                    from 'hls.js'
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                            from '@pages/systems/view/vms-client/utils'
 import { WebClientUxService }                                                                       from '@pages/systems/view/services/webclient-ux.service';
 import { HttpClient }                                                                               from '@angular/common/http';
@@ -124,6 +125,11 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     const sourceUrlExtension = sourceUrlParts[sourceUrlParts.length - 1]
 
     switch (sourceUrlExtension) {
+      case 'm3u8':
+        if (!Hls.isSupported()) {
+          this._warn('Hls is not supported on this device')
+          break
+        }
       case 'mp4':
       case 'webm':
       // case 'mpegts':

@@ -1,8 +1,10 @@
 <video
   #video
+  playsinline
+  [autoplay]="true"
   [muted]="true"
   (canplay)="onVideoCanPlay($event)"
   (ended)="onVideoEnded($event)"
 >
-  <source #videoSourceHLS src="" type="video/mp4">
+  <source #videoSource src="">
 </video>

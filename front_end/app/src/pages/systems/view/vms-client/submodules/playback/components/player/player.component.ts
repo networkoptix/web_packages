@@ -6,7 +6,7 @@ import { PlaybackTransport }                                                    
 import { LoggerDecorator }                                                              from '@pages/systems/view/vms-client/utils'
 import { NxLanguageProviderService }                                                    from '../../../../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }                                                      from '../../../../../../../../../language_i18n_static_types';
-
+import { NxUtilsService }                                                               from '@services/utils.service';
 
 @Component({
   selector: 'player',
@@ -31,7 +31,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   public errorPlaybackDescription: string
 
   public get useNativePlayer () {
-    return (
+    const isMobile = this.utilsService.isMobile() || this.utilsService.isTablet()
+    return isMobile || (
       this.transport === 'webm'
       // || this.transport === 'mpegts'
       // || this.transport === 'mpjpeg'
@@ -41,12 +42,14 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public get useHlsPlayer () {
-    return this.transport === 'hls'
+    const isNotMobile = !(this.utilsService.isMobile() || this.utilsService.isTablet())
+    return isNotMobile && this.transport === 'hls'
   }
 
   constructor (
       translateService: NxLanguageProviderService,
-      public playback: PlaybackService
+      public playback: PlaybackService,
+      private utilsService: NxUtilsService
   ) {
     this.LANG = translateService.translations;
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
