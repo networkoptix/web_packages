@@ -180,6 +180,14 @@ Disconnect Server via API
     Should Be Equal As Strings    ${resp.status_code}    200
 
 # Keywords which use System/Server API
+Cookie Logout
+    [Arguments]    ${auth}    ${server url}
+    ${cookies}=    Create Dictionary    x-runtime-guid=_DELETED_COOKIE_VALUE_
+    ${data}=    Create Dictionary
+    Create Digest Session    cookieLogout   ${server url}    auth=${auth}    cookies=${cookies}
+    ${resp}=   Post Request    cookieLogout    /api/cookieLogout    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Setup Local System
     [Arguments]    ${server url}    ${new password}    ${system name}
     @{auth}=   Create List    admin    admin

@@ -29,13 +29,12 @@ System Admin Test Setup
 
 System Admin Test Restart
     Skip If Irrelevant
-    Go To    https://${QABURBANK IP}:${system}[port]
-    Wait until element is visible    Wait until element is visible    ${SYSTEM NAME}
-    Run keyword and ignore error    Log Out
+    Close Modal If There
+    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
     Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
     Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
-    Delete All Cookies
 
 # Waits
 Wait until settings are visible
@@ -280,7 +279,6 @@ Validate Cloud Block
             ...    ELSE    Wait until elements are visible
                 ...    ${CONNECTION STATUS}\[contains(text(), "NOT CONNECTED")]
                 ...    ${CONNECT TO CLOUD BUTTON}
-#                ...    ${OWNER YOU}
 
 Validate Connect To Cloud Form
     Wait until elements are visible
@@ -296,33 +294,35 @@ Validate Connect To Cloud Form
 
 Fill in login and password
     [Arguments]    ${login}    ${password}
-    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${email}    timeout= 0.1
+    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${login}    timeout= 0.1
     Slow    Input Text    ${CONNECT TO CLOUD PASSWORD INPUT}    ${password}    timeout= 0.1
 
 Close Connect to Cloud modal
     Wait until element is visible    ${CONNECT TO CLOUD X BUTTON}
     Click Button    ${CONNECT TO CLOUD X BUTTON}
-    Wait untile element is not visible    ${CONNECT TO CLOUD MODAL}
+    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}
 
 Validate Email Input Error
     [Arguments]    ${error text}
     #TODO ADD CHECKING RED COLOR
-    Wait until element is visible    ${CONNECT TO CLOUD EMAIL ERROR}\[contains(text(), "${error text}")]
+    ${error path}=   Replace String   ${CONNECT TO CLOUD EMAIL ERROR}    %ERROR TEXT%    ${error text}
+    Wait until element is visible    ${error path}
 
 Validate Password Input Error
     [Arguments]    ${error text}
     #TODO ADD CHECKING RED COLOR
-    Wait until element is visible    ${CONNECT TO CLOUD PASSWORD ERROR}\[contains(text(), "${error text}")]
+    ${error path}=   Replace String   ${CONNECT TO CLOUD PASSWORD ERROR}    %ERROR TEXT%    ${error text}
+    Wait until element is visible    ${error path}
 
 Connect To Cloud
     [Arguments]    ${email}    ${password}    ${success}=${True}
     Validate Connect To Cloud Form
     Fill in login and password    ${email}    ${password}
-    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Slow    Click Button    ${CONNECT TO CLOUD OK BUTTON}    timeout=0.1
     Run Keyword If    ${success}    Run Keywords
        ...    Check For Alert    System connected to Nx Cloud    AND
        ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
-       ...    Wait until element is visible   ${DISCONNECT FROM NX CLOUD}
+       ...    Wait until element is visible   ${DISCONNECT FROM NX}
 
 # API - based
 Evaluate System Settings via API
@@ -341,3 +341,9 @@ Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
     Should Be True    $selected == $stat
+
+Close Modal If There
+    ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
+    Run Keyword If     ${modal is visible}    Run Keywords
+        ...    Click Element    ${COMMON CLOSE BUTTON}   AND
+        ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}

@@ -211,10 +211,10 @@ Validate Log Out
 
 Validate Log Out Web Admin
     Sleep    5
-    Element Should Be Visible    //input[@id="login_email"]        
-    Element Should Be Visible    //input[@id="login_password"]
-    Element Should Be Visible    //button[@type="submit"]
-    Wait Until Element Is Not Visible    locator
+#    Element Should Be Visible    //input[@id="login_email"]
+#    Element Should Be Visible    //input[@id="login_password"]
+#    Element Should Be Visible    //button[@type="submit"]
+    Wait Until Element Is Not Visible    ${ACCOUNT DROPDOWN}
 
 Log Out No Language
     Wait Until Page Does Not Contain Element    ${BACKDROP}

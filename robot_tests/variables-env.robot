@@ -1,6 +1,6 @@
 *** Variables ***
 ${IMAGE}                              ${IMAGE 4.3}
-${IMAGE 4.3}                          32834
+${IMAGE 4.3}                          4.3.0.32689
 ${IMAGE 4.1}                          4.1_test
 
 ${LOCAL}                              https://localhost:9000/
