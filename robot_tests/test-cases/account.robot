@@ -70,8 +70,8 @@ Account Suite Setup
     @{server auth}=   Create List    admin    qweasd 123
 
     FOR    ${n}    IN RANGE    5
-        ${port} =    Create Docker Server    account${n}-${random}
-        Set Suite Variable    ${port${n}}    ${port[0]}
+        ${server} =    Create Docker Server    account${n}-${random}
+        Set Suite Variable    ${port${n}}    ${server['port']}
         Sleep     10
         Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
         ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${system owners[${n}]}    ${BASE PASSWORD}

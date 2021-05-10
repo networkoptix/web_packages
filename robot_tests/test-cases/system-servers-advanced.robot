@@ -1,18 +1,43 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Server Settings Test Setup    ${EMAIL OWNER}    ${ADVANCED SETTINGS SYSTEM ID}
+Suite Setup       Server Advanced Settings Suite Setup
+Test Setup        Server Settings Test Setup    ${system['owner']}    ${system['id']}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
 Force Tags        advanced server
 
 *** Variables ***
-${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
 
 *** Keywords ***
+Server Advanced Settings Suite Setup
+    #system(name,port,cont,owner,id) 
+    #local auth, cloud auth, server url, 
+    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
+    #Create Base Cloud System
+
+
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    # we setup one server manually here because we need 2 ports
+    ${id}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 -v test:/test ${IMAGE 4.3}
+    ${cont id 1}=    Evaluate    $id[:12]
+    ${results}    Execute Command    docker container port ${id} 7001
+    ${port info}=   Split String    ${results}    :
+    ${port 1}=   Set Variable    ${port info[1]}
+
+    Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    2servertest1
+    ${server id 1}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
+    &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server id 1}
+
+    Set Suite Variable    &{system}    &{server 1}
+
+
+
+    Open Browser and go to URL    ${url}
+
 Server Settings Test Setup
     [Arguments]    ${email}    ${system id}
     Log in to user and system    ${email}    ${system id}/servers
@@ -23,55 +48,40 @@ Advanced server settings availability
     Log    Step 1
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 2
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 3
     Log Out
-    Log in to user and system    ${EMAIL ADMIN}   ${ADVANCED SETTINGS SYSTEM ID}
+    Log in to user and system    ${users['cloudAdmin']}    ${system['id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     ${location} =    Get Location    
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 4
     Log Out
-    Log in to user and system    ${EMAIL ADV VIEWER}   ${ADVANCED SETTINGS SYSTEM ID}
+    Log in to user and system    ${users['advancedViewer']}    ${system['id']}
     Elements Should Not Be Visible    ${SERVERS LINK}
     Go To    ${location}${ADVANCED SETTINGS}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
 
-Advanced server settings for offline system
-    [Tags]    C76559    threaded
-    Log    Preconditions
-    Log Out
-    Log in to user and system    ${email}    ${AUTOTESTS 2 SERVER OFFLINE SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    ${location} =    Get Location
-    Log    Step 1
-    Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Element is Visible    ${PLACEHOLDER NO SETTINGS}
-    Elements Should Not Be Visible
-    ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
-    ...    @{LOG SETTINGS BLOCK}
 
 "Hide Advanced Settings" button is available and functional
     [Tags]    C76571    threaded
@@ -79,17 +89,17 @@ Advanced server settings for offline system
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
     Wait Until Elements Are Not Visible 
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
 
 Toggle switch functionality
@@ -98,7 +108,7 @@ Toggle switch functionality
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 1
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false
@@ -130,7 +140,7 @@ Reserved space dropdown menu functionality
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     
     Log    Step 1
@@ -199,7 +209,7 @@ Log settings functionality
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible     
     ...    @{ADVANCED SETTINGS ALERT BAR}
-    ...    @{STORAGE LOCATIONS BLOCK}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    The following will test every log level option for each one of the (5) dropdowns    
     FOR    ${dropdown}    IN    @{LOGLEVEL IDS}
@@ -212,4 +222,19 @@ Log settings functionality
        Reload Page
     END     
 
+Advanced server settings for offline system
+    [Tags]    C76559    threaded
+    Log    Preconditions
+    Log Out
+    Log in to user and system    ${email}    ${AUTOTESTS 2 SERVER OFFLINE SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    ${location} =    Get Location
+    Log    Step 1
+    Go To    ${location}${ADVANCED SETTINGS}
+    Wait Until Element is Visible    ${PLACEHOLDER NO SETTINGS}
+    Elements Should Not Be Visible
+    ...    @{ADVANCED SETTINGS ALERT BAR}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
+    ...    @{LOG SETTINGS BLOCK}
     

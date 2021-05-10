@@ -962,47 +962,18 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE 4.1}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old
-    ${mac}=   Get Random MAC
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 ${VMS} --privileged --mac-address=${mac} ${storage string} ${image}
-    ${results}    Execute Command    docker container port ${name}
-    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    [Return]    ${port1}
-
-Setup Docker Server
-    [Arguments]    ${image}=${IMAGE}
-    ${server}=   Create Dictionary
-    Acquire Lock   create_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
-    ${id}=   Evaluate    $full_id[:12]
-    Set to Dictionary    ${server}    id=${id}
-    ${port info}=   Execute Command    docker container port ${id}
-    ${port info}=   Split String    ${port info}    :
-    Set to Dictionary    ${server}    port=${port info}[1]
-    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-    Set to Dictionary    ${server}    name=${name}
-    Close Connection
-    Release Lock   create_server_lock
-    [Return]    ${server}
-
-Setup Custom Docker Server
-    [Arguments]    ${network}=host    ${image}=${IMAGE}
-    ${server}=   Create Dictionary
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old    ${network}=bridge
+    &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
     ...    ELSE   Set Local Variable    ${vms}    new
-    # Get random available port
     ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
-                  ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
 
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
@@ -1011,6 +982,43 @@ Setup Custom Docker Server
     Close Connection
     Release Lock   create_server_lock
     [Return]    ${server}
+
+
+#Setup Custom Docker Server
+#    [Arguments]    ${network}=host    ${image}=${IMAGE}
+#    ${mac}=   Get Random MAC
+#    Open Connection    ${QA BURBANK IP}
+#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+#    # Get random available port
+#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+#                  ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
+#
+#    ${id}=   Evaluate    $full_id[:12]
+#    Set to Dictionary    ${server}    id=${id}
+#    Set to Dictionary    ${server}    port=${port}
+#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+#    Set to Dictionary    ${server}    name=${name}
+#    Close Connection
+#    Release Lock   create_server_lock
+#    [Return]    ${server}
+
+#Setup Docker Server
+#    [Arguments]    ${image}=${IMAGE}
+#    ${server}=   Create Dictionary
+#    Acquire Lock   create_server_lock
+#    Open Connection    ${QA BURBANK IP}
+#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+#    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
+#    ${id}=   Evaluate    $full_id[:12]
+#    Set to Dictionary    ${server}    id=${id}
+#    ${port info}=   Execute Command    docker container port ${id}
+#    ${port info}=   Split String    ${port info}    :
+#    Set to Dictionary    ${server}    port=${port info}[1]
+#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+#    Set to Dictionary    ${server}    name=${name}
+#    Close Connection
+#    Release Lock   create_server_lock
+#    [Return]    ${server}
 
 Setup Docker System
     [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
