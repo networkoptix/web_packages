@@ -28,5 +28,8 @@
     window.celeryStatusUrl = "{% url 'celery_check_status' 'task_id' %}"
     window.celeryDownloadUrl = "{% url 'celery_download_result' 'task_id' %}"
     window.taskId = "{{task_id}}"
+    window.fileName = '{{file}}'
+    window.menuName = ''
+    window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
 </script>
 <script src="{% static 'js/packagePoll.js' %}"></script>

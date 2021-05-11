@@ -131,7 +131,7 @@ function closeModal() {
     modal.classList.remove('show')
 }
 
-const fileName = '{{file}}'
+
 if (fileName) {
     const fileInput = document.getElementById('id_file')
     const uploadButton = document.getElementById('upload')
@@ -145,6 +145,3 @@ if (fileName) {
         uploadButton.disabled = !event.target.value && !forceInput.checked
     })
 }
-
-window.menuName = ''
-window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
