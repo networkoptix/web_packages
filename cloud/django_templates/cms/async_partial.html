@@ -27,5 +27,6 @@
     window.conflicts = {{conflicts|safe}}
     window.celeryStatusUrl = "{% url 'celery_check_status' 'task_id' %}"
     window.celeryDownloadUrl = "{% url 'celery_download_result' 'task_id' %}"
+    window.taskId = "{{task_id}}"
 </script>
 <script src="{% static 'js/packagePoll.js' %}"></script>

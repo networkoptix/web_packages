@@ -9,7 +9,6 @@ const pollingInterval = 1000
 const modal = document.getElementById('preparing-package')
 const progressBar = modal.getElementsByClassName('progress-bar')[0]
 const contextStatus = document.getElementById('context-status')
-const taskId = "{{task_id}}"
 var cookieCheckInterval = undefined;
 var checkCookie = function () {
     var lastCookie = document.cookie;
@@ -104,7 +103,7 @@ function pollPackage (isDraft, taskId = null) {
         messageList.appendChild(asyncStatusInfo)
     }
 
-    const generateStatusUrl = (taskId) => celeryDownloadUrl.replace('task_id', taskId)
+    const generateStatusUrl = (taskId) => celeryStatusUrl.replace('task_id', taskId)
     return fetch(generateStatusUrl(taskId)).then(
         res => res.json()
     ).then(status => {
