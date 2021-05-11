@@ -367,6 +367,7 @@ class AssetAdmin(CMSAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []
+        extra_context['object_id'] = object_id
         approved = AssetCustomizationReview.REVIEW_STATES.accepted
         asset = Asset.objects.get(id=object_id)
         asset_customizations = AssetCustomizationReview.objects.filter(version__asset=asset)
