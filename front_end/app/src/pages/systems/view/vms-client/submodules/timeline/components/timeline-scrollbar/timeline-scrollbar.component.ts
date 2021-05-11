@@ -4,11 +4,13 @@ import PlaybackService from '../../../playback/services/playback.service'
 import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState'
 
 import {
-  TimelineScrollbarService,
-  TimelineScrollbarServiceStatus
-} from '../../services/timeline.scrollbar.service'
+  TimelineScrollbarAbsoluteService,
+  TimelineScrollbarAbsoluteServiceStatus
+} from '../../services/timeline.scrollbarAbsolute.service'
+import TimelineScrollbarRelativeService from '../../services/timeline.scrollbarRelative.service'
 import TimelineService from '../../services/timeline.service';
-import { float, percentage } from '../../../../utils/type-aliases';
+import { float, px } from '../../../../utils/type-aliases';
+import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 
 
 const MIN_BAR_WIDTH_PX = 50
@@ -19,10 +21,14 @@ const MIN_BAR_WIDTH_PX = 50
   templateUrl: './timeline-scrollbar.component.html',
   styleUrls: ['./timeline-scrollbar.component.scss'],
 })
-export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDestroy {
+@LoggerDecorator('TIMELINE SCROLLBAR ::', true)
+export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
+  _log: Function
+  _warn: Function
 
   @ViewChild("background") backgroundView: ElementRef;
   @ViewChild("bar") barView: ElementRef;
+  @ViewChild("honestBar") honestBarView: ElementRef;
   @ViewChild("currentPlayback") currentPlaybackView: ElementRef;
 
   protected scrollbarSubscription: Subscription
@@ -33,10 +39,13 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
 
   public isBarGrabbed: boolean = false
 
+  public showHonestBar: boolean = false
+
   constructor (
     private self: ElementRef,
     protected timeline: TimelineService,
-    protected timelineScrollbar: TimelineScrollbarService,
+    protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
+    protected scrollbarRelative: TimelineScrollbarRelativeService,
     protected playback: PlaybackService,
   ) {
     this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this)
@@ -44,8 +53,10 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public ngAfterViewInit (): void {
-    this.scrollbarSubscription = this.timelineScrollbar.subject.subscribe(this.onScrollBarSubjectChange)
+    this.scrollbarSubscription = this.scrollbarAbsolute.subject.subscribe(this.onScrollBarSubjectChange)
     this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange)
+    this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this))
+    setTimeout(() => this.onResize(), 0)
   }
 
   public ngOnDestroy (): void {
@@ -56,37 +67,61 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
 
   protected _magnification: float
 
-  public onScrollBarSubjectChange (s: TimelineScrollbarServiceStatus) {
-    const honestBarWidthPx = (this.self.nativeElement as HTMLElement).getBoundingClientRect().width / s.magnification
+  public barLeftPx: px = 0
+  public barWidthPx: px = 0
+  public honestBarLeftPx: px = 0
+  public honestBarWidthPx: px = 0
 
-    const backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width
-    const barWidth = Math.max(honestBarWidthPx, MIN_BAR_WIDTH_PX)
-    this.barView.nativeElement.style.width = `${barWidth}px`
+  public onScrollBarSubjectChange (s: TimelineScrollbarAbsoluteServiceStatus) {
+    this.barLeftPx = s.left
+    this.barWidthPx = s.width
 
-    const left = Math.min(Math.max(0, backgroundWidth * s.offset), backgroundWidth - barWidth)
-    this.barView.nativeElement.style.left = `${left}px`
+    this.honestBarLeftPx = s.honestLeft
+    this.honestBarWidthPx = s.honestWidth
 
-    // const barWidthFixPx = Math.max(0, MIN_BAR_WIDTH_PX - honestBarWidthPx)
-    // const minBarWidthCompensationPx = barWidthFixPx * s.offset
-    // this.barView.nativeElement.style.left = `calc(${100 * s.offset}% - ${minBarWidthCompensationPx}px)`
-    // this.barView.nativeElement.style.width = `${100 / s.magnification}%`
+    this.showHonestBar = s.isIllusionary
 
     this.isBarGrabbed = s.isBarGrabbed
     this.canScrollLeft = s.canScrollLeft
     this.canScrollRight = s.canScrollRight
 
     this._magnification = s.magnification
+
   }
 
   public isPlaying: boolean = false
-  public playbackLeftPercent: percentage = 0
+  public playbackLeftPixel: px = -1
 
   public onPlaybackSubjectChange (s: PlaybackState) {
     if (s.mode === PLAYBACK_MODE.STOPPED) {
       this.isPlaying = false
     } else {
       setTimeout(() => {
-        this.playbackLeftPercent = 100 * (s.currentTime - this.timeline.fullRange.start) / this.timeline.fullRange.duration
+        const ct = s.currentTime
+        const vr = this.timeline.visibleRange
+        const fr = this.timeline.fullRange
+        if (ct >= vr.start && ct <= vr.end) {
+          // render on the scroll bar
+          const x0 = this.barLeftPx
+          const width = this.barWidthPx
+          const duration = vr.duration
+          const t = ct - vr.start
+          this.playbackLeftPixel = x0 + width * t / duration
+        } else if (ct > vr.end) {
+          // after the bar
+          const duration = this.timeline.fullRange.end - vr.end
+          const width = this.backgroundView.nativeElement.getBoundingClientRect().width - (this.barLeftPx + this.barWidthPx)
+          const x0 = this.barLeftPx + this.barWidthPx
+          const t = ct - vr.end
+          this.playbackLeftPixel = x0 + width * t / duration
+        } else {
+          // before the bar
+          const duration = vr.start - this.timeline.fullRange.start
+          const width = this.barLeftPx
+          const x0 = 0
+          const t = ct - fr.start
+          this.playbackLeftPixel = x0 + width * t / duration
+        }
         this.isPlaying = true
       }, 0)
     }
@@ -94,68 +129,62 @@ export class TimelineScrollbarComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public barDoubleClickHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBarDoubleClick(e)
+    this.scrollbarRelative.handleBarDoubleClick(e)
   }
 
   public barMouseDownHandler (e: MouseEvent) {
-    // const honestBarWidthPx = (this.self.nativeElement as HTMLElement).getBoundingClientRect().width / this._magnification
-    // const visibleWidth = this.barView.nativeElement.clientWidth
-    // if (honestBarWidthPx < visibleWidth) {
-    //   console.log('weird case', e.offsetX, honestBarWidthPx, visibleWidth)
-    // }
-    this.timelineScrollbar.handleBarMouseDown(e) // , honestBarWidthPx, visibleWidth)
+    this.scrollbarAbsolute.handleBarMouseDown(e)
   }
 
   @HostListener('document:mouseup', ['$event'])
   public mouseUpHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBackgroundMouseUp(e)
-    this.timelineScrollbar.handleBarMouseUp(e)
+    this.scrollbarRelative.handleBackgroundMouseUp(e)
+    this.scrollbarAbsolute.handleBarMouseUp(e)
   }
 
   @HostListener('document:mousemove', ['$event'])
   public barDragMouseMoveHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBarDragMouseMove(e, this.barView.nativeElement)
+    this.scrollbarAbsolute.handleBarDragMouseMove(e)
   }
 
   public backgroundMouseDownHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBackgroundMouseDown(e)
+    this.scrollbarRelative.handleBackgroundMouseDown(e)
   }
 
   public backgroundDblClickHandler (e: MouseEvent) {
-    this.timelineScrollbar.handleBackgroundDblClick(e)
+    this.scrollbarRelative.handleBackgroundDblClick(e)
   }
 
 
   public buttonLeftMouseDownHandler () {
-    this.timelineScrollbar.handleButtonLeftMouseDown()
+    this.scrollbarRelative.handleButtonLeftMouseDown()
   }
 
   public buttonRightMouseDownHandler () {
-    this.timelineScrollbar.handleButtonRightMouseDown()
+    this.scrollbarRelative.handleButtonRightMouseDown()
   }
 
   public buttonLeftDblClickHandler () {
-    this.timelineScrollbar.handleButtonLeftDblClick()
+    this.scrollbarRelative.handleButtonLeftDblClick()
   }
 
   public buttonRightDblClickHandler () {
-    this.timelineScrollbar.handleButtonRightDblClick()
+    this.scrollbarRelative.handleButtonRightDblClick()
   }
 
 
   protected _animationFrameRequestHandler: number
 
-  public ngOnInit(): void {
-    this._animationFrameRequestHandler =
-      requestAnimationFrame(this.onAnimationFrame.bind(this))
-  }
-
   public onAnimationFrame (): void {
-    this.timelineScrollbar.updateIfMouseIsDown()
+    this.scrollbarRelative.updateIfMouseIsDown()
     this._animationFrameRequestHandler =
       requestAnimationFrame(this.onAnimationFrame.bind(this))
   }
 
+  @HostListener('window:resize', ['$event'])
+  public onResize (): void {
+    this.scrollbarAbsolute.backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width
+  }
 
 }
 

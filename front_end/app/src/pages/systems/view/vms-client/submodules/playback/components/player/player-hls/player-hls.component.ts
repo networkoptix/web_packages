@@ -120,7 +120,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL)
 
     if (!sourceUrl) {
-      console.warn("ordered start playback request with empty sourceUrl")
+      this._warn("ordered start playback request with empty sourceUrl")
       return
     }
 
@@ -142,17 +142,17 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
           this.hls.attachMedia(this.$video)
           this.bufferingChange.emit(true)
           this.hls.on(Hls.Events.ERROR, (event, data) => {
-            console.warn('HLS PLAYER HLS.js ERROR', event, data)
+            this._warn('HLS PLAYER HLS.js ERROR', event, data)
             if (data.fatal) {
               // TODO: try to switch to WEBM or another alternative stream here
               switch (data.type) {
                 case Hls.ErrorTypes.NETWORK_ERROR:
                   // try to recover network error
-                  console.warn('fatal network error encountered, try to recover')
+                  this._warn('fatal network error encountered, try to recover')
                   this.hls.startLoad()
                   break
                 case Hls.ErrorTypes.MEDIA_ERROR:
-                  console.warn('fatal media error encountered, try to recover')
+                  this._warn('fatal media error encountered, try to recover')
                   this.hls.recoverMediaError()
                   break
                 default:

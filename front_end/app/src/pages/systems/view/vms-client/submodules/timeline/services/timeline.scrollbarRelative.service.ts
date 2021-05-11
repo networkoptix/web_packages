@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core'
+import { Injectable, isDevMode } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 
 import TimelineService from './timeline.service'
 import { float, ms, px, sign } from '../../../utils/type-aliases'
 
 
-export interface TimelineScrollbarServiceStatus {
+export interface TimelineScrollbarRelativeServiceStatus {
   magnification: float,
   offset: float,
-  isBarGrabbed: boolean,
   canScrollLeft: boolean,
   canScrollRight: boolean,
 }
@@ -16,7 +15,22 @@ export interface TimelineScrollbarServiceStatus {
 @Injectable({
   providedIn: 'root',
  })
-export class TimelineScrollbarService {
+export class TimelineScrollbarRelativeService {
+
+  protected _logPrefix: string = 'SCROLLBAR_RELATIVE_SERVICE ::'
+  protected _logDisable: boolean = true
+
+  protected _log (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+        console.log.apply(console, [this._logPrefix, ...arguments])
+    }
+  }
+
+  protected _warn (...args: any[]) {
+    if (isDevMode() && !this._logDisable) {
+          console.warn.apply(console, [this._logPrefix, ...arguments])
+      }
+  }
 
   constructor (
     protected timeline: TimelineService
@@ -24,11 +38,10 @@ export class TimelineScrollbarService {
     this.timeline.subject.subscribe(this._emit.bind(this))
   }
 
-  protected _subject = new BehaviorSubject<TimelineScrollbarServiceStatus>(
+  protected _subject = new BehaviorSubject<TimelineScrollbarRelativeServiceStatus>(
     {
       magnification: 1.0,
       offset: 0.0,
-      isBarGrabbed: false,
       canScrollLeft: false,
       canScrollRight: false,
     }
@@ -38,13 +51,12 @@ export class TimelineScrollbarService {
     this._subject.next({
       magnification: this.magnification,
       offset: this.offset,
-      isBarGrabbed: this.isBarGrabbed,
       canScrollLeft: this.canScrollLeft,
       canScrollRight: this.canScrollRight,
     })
   }
 
-  public get subject (): BehaviorSubject<TimelineScrollbarServiceStatus> {
+  public get subject (): BehaviorSubject<TimelineScrollbarRelativeServiceStatus> {
     return this._subject
   }
 
@@ -54,10 +66,6 @@ export class TimelineScrollbarService {
 
   public get magnification (): float {
     return this.timeline.fullRange.duration / this.timeline.visibleRange.duration
-  }
-
-  public get isBarGrabbed (): boolean {
-    return this._isBarGrabbed
   }
 
   public get canScrollLeft (): boolean {
@@ -72,40 +80,6 @@ export class TimelineScrollbarService {
     e.preventDefault()
     this.timeline.fullZoomOut()
     this._emit()
-  }
-
-
-  protected _isBarGrabbed: boolean = false
-  protected barDragAnchor: px = -1
-  // protected honestBarWidthPx: px = null
-
-  public handleBarMouseDown (e: MouseEvent) { // , honestBarWidthPx?: px, visibleWidth?: px) {
-    this._isBarGrabbed = true
-    this.barDragAnchor = e.offsetX
-    // this.honestBarWidthPx = honestBarWidthPx
-    // console.log('got honest bar width', honestBarWidthPx)
-    e.stopPropagation()
-    e.preventDefault()
-    this._emit()
-  }
-
-  public handleBarMouseUp (e: MouseEvent) {
-    this._isBarGrabbed = false
-    this.barDragAnchor = -1
-    this._emit()
-  }
-
-  public handleBarDragMouseMove (e: MouseEvent, $bar: HTMLDivElement) {
-    if (this._isBarGrabbed) {
-      const boundingRect = $bar.parentElement.getBoundingClientRect()
-      const relativeX = Math.max(Math.min((e.clientX - boundingRect.left) / boundingRect.width, 1.0), 0.0)
-      const targetTime = this.timeline.fullRange.start + relativeX * this.timeline.fullRange.duration
-      // const fix = this.barDragAnchor / (this.honestBarWidthPx || $bar.clientWidth)
-      const fix = this.barDragAnchor / $bar.clientWidth
-      // console.log('fix', fix, fix * this.timeline.visibleRange.duration)
-      this.timeline.jumpScrollTo(Math.round(targetTime - this.timeline.visibleRange.duration * fix), true)
-      this._emit()
-    }
   }
 
   protected isBackgroundMouseDown: boolean = false
@@ -184,4 +158,4 @@ export class TimelineScrollbarService {
   }
 }
 
-export default TimelineScrollbarService
+export default TimelineScrollbarRelativeService
