@@ -2,8 +2,8 @@
     "language": "en_US",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "開發人員使用",
+    "Integrations (β)": "整合（β）",
     "Privacy": "隱私政策",
     "Support": "支援",
     "Terms": "條款",
@@ -131,7 +131,7 @@
         "chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
         "login": "login",
         "recordingSettingsWarning": "請更新遺失的錄影設定。",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "錄影模式將變更為“全時錄影”",
         "recordingModes": {
             "always": "全時錄影",
             "motion": "位移錄影",
@@ -186,7 +186,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "該電子郵件已在 %systemName% 系統中註冊"
         },
         "buttons": {
             "cancel": "取消",
@@ -557,7 +557,7 @@
         "downloadPlatform": "下載 %VMS_NAME% ",
         "failedToAccessSystem": "連接系統失敗",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% 整合",
         "login": "登入",
         "pageNotFound": "找不到頁面",
         "register": "新增帳號",
