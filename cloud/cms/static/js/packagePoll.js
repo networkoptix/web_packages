@@ -46,12 +46,22 @@ function togglePending (showPending) {
 
 togglePending(true)
 
+function showError(message = 'Some unknown error occurred') {
+    const contextStatus = document.getElementById('context-status')
+    const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+    contextStatus.innerText = message
+    progressWrapper.style = "display: none;"
+
+}
+
 function pollPackage (isDraft, taskId = null) {
     const package = packageUrl + (isDraft ? '?draft=True' : '')
     let download = downloadUrl + (isDraft ? '?draft=True' : '')
     const generateStatusUrl = (taskId) => celeryStatusUrl.replace('task_id', taskId)
     const progressModalTitle = document.getElementById('progress-modal-title')
     const contextStatus = document.getElementById('context-status')
+    const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+    progressWrapper.style = "display: block;"
     progressModalTitle.innerText = "Preparing Package"
     contextStatus.innerText = "Processing contexts..."
     if(taskId) {
@@ -71,8 +81,10 @@ function pollPackage (isDraft, taskId = null) {
                 downloadButton.innerText = "Download Package"
                 successMessage.innerText = `The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.`
             } else {
-                alert('Some unknown error occurred')
+                showError()
             }
+        }).catch(_ => {
+            showError()
         })
     }
     fetch(package).then(
