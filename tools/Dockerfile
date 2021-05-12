@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # This is the deb file used to install mediaserver
 ARG mediaserver_deb
+ARG copy
 
 RUN mkdir /debs
 
@@ -22,7 +23,6 @@ RUN apt-get update \
 COPY docker/* /
 
 # Let the entrypoint know if it needs to copy external.dat
-ARG copy
 ENV COPY=${copy}
 
 # Runs the media server on container start
