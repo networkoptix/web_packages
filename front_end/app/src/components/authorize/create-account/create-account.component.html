@@ -33,6 +33,7 @@
                     [readonly]="createAccountProcess?.processing"
                     [form]="createAccountForm"
                     [web]="viewType === 'web'"
+                    [setFocus]="true"
                     #createAccountEmail="ngModel"
                 ></nx-email-input>
                 <ng-container *ngIf="createAccountEmail.invalid && ((createAccountEmail.dirty && !createAccountEmail.errors?.pattern) || createAccountEmail.touched)">
@@ -55,7 +56,8 @@
                     #firstName="ngModel"
                     autocomplete="off"
                     required
-                    nxFocusMe>
+                    nxFocusMe
+                    [setFocus]="!!existingEmail">
                 <p *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
             </div>
             <div class="last-name" [ngClass]="{ 'hasError': lastName.invalid && (lastName.dirty || lastName.touched) }">
@@ -69,8 +71,7 @@
                     [(ngModel)]="createLastName"
                     #lastName="ngModel"
                     autocomplete="off"
-                    required
-                    nxFocusMe>
+                    required>
                 <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
             </div>
         </div>

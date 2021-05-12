@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
+import { DirectivesModule }     from '@directives/directives.module';
 import { ComponentsModule }     from '@components/components.module';
 import {
     ReactiveFormsModule, FormsModule
@@ -35,6 +36,7 @@ export const authorizedRoutes: Routes = [
         TranslateModule,
         ReactiveFormsModule,
         FormsModule,
+        DirectivesModule,
         ComponentsModule,
         RouterModule.forRoot(authorizedRoutes),
         AngularSvgIconModule.forRoot()

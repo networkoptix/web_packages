@@ -1,7 +1,8 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
 import {
-    Component, Inject, OnDestroy, OnInit, ViewEncapsulation
+    Component, ElementRef, HostListener, Inject,
+    OnDestroy, OnInit, ViewEncapsulation
 }                                     from '@angular/core';
 import { ActivatedRoute, Router }     from '@angular/router';
 import { UntilDestroy }               from '@ngneat/until-destroy';
@@ -119,6 +120,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     errorDialog$ = new BehaviorSubject<boolean>(false);
     errorDialogProcess: Process;
 
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (event.code === 'Enter') {
+            this.elem.nativeElement.querySelector('button.process-button').click();
+        }
+    }
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -127,6 +135,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private accountService: NxAccountService,
         private router: Router,
+        private elem: ElementRef,
         @Inject(WINDOW) private window: Window
         // private pageService: NxPageService,
         // private uriService: NxUriService,
@@ -183,7 +192,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleCloudConnectionError(err: any, process: Process) {
-        if ([500, 503].includes(err?.status)) {
+        if ([500, 503].includes(err?.status) || err.message.includes('timeout')) {
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }

@@ -76,7 +76,7 @@
         ></nx-authorize-reset-password-component>
     </div>
     <div class="auth-overlay" *ngIf="errorDialog$.value">
-        <div class="auth-window">
+        <div class="auth-window" [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }">
             <nx-authorize-connect-error-component
                 [clientType]="clientType"
                 [viewType]="viewType"

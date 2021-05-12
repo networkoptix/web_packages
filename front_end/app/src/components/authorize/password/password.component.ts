@@ -61,7 +61,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.errorCode) {
+        if (changes.errorCode?.currentValue) {
             this.passwordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         }
 
