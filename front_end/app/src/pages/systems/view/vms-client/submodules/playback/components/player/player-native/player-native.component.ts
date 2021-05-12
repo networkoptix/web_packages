@@ -6,6 +6,7 @@ import Hls                                                                    fr
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                            from '@pages/systems/view/vms-client/utils'
 import { WebClientUxService }                                                                       from '@pages/systems/view/services/webclient-ux.service';
 import { HttpClient }                                                                               from '@angular/common/http';
+import { NxUtilsService }                                                                           from '@services/utils.service';
 
 
 @Component({
@@ -29,12 +30,15 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected playbackSubscription: Subscription
   protected state: PlaybackState
+  protected readonly isMobile: boolean;
 
   constructor (
     public playback: PlaybackService,
     public ux: WebClientUxService,
-    private http: HttpClient
+    private http: HttpClient,
+    utilsService: NxUtilsService
   ) {
+    this.isMobile = utilsService.isMobile() || utilsService.isTablet()
     this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this)
   }
 
@@ -126,7 +130,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     switch (sourceUrlExtension) {
       case 'm3u8':
-        if (!Hls.isSupported()) {
+        if (!Hls.isSupported() && !this.isMobile) {
           this._warn('Hls is not supported on this device')
           break
         }
