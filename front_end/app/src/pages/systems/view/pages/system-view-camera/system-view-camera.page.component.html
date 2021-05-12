@@ -102,7 +102,7 @@
         <ng-template #noArchiveYet>
           <nx-pre-loader class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive"></nx-pre-loader>
           <ng-template #noArchive>
-            <div class="no-archive-message">No Archive</div>
+            <div class="no-archive-message"><span *ngIf="canViewArchives" translate>No Archive</span></div>
           </ng-template>
         </ng-template>
         <playback-state-indicator></playback-state-indicator>
