@@ -1,5 +1,5 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<main [ngClass]="{ 'main-w header-w': viewType === 'web', 'main-d header-d': viewType === 'desktop', 'main-m header-m': viewType === 'mobile' }">
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
     <form #resetForm="ngForm" name="connectErrorForm">
         <svg-icon nx-add-svg-src
             [src]="CONFIG.icons.dirSectionPlaceholder + 'error_placeholder.svg'" 
