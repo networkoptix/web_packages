@@ -276,10 +276,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .get()
             .then((account) => {
                 if (account) {
+                    this.account = account;
                     if (!this.CONFIG.isLocal) {
-                        this.account = account;
                         // Starts the systems poll if starting on a system.
-                        if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
+                        if (!this.systemsService.isPolling) {
                             this.systemsService.getSystems(account.email);
                         }
 
