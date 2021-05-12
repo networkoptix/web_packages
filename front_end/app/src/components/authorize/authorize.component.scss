@@ -54,6 +54,15 @@
     }
 }
 
+// safari specific
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) {
+    // moves over icon when auto-fill icon pops up for password inputs
+    input:focus + .input-addon, input:focus + .addons {
+        margin-right: 26px;
+    }
+}}
+
 .authorize-main {
     .main-w .stroke-color-main, .header-w .stroke-color-main {
         stroke: $dark9;
