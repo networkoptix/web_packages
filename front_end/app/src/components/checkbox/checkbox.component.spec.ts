@@ -1,16 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {
+    ComponentFixture, TestBed,
+    waitForAsync
+}                              from '@angular/core/testing';
 import { NxCheckboxComponent } from './checkbox.component';
+import { SimpleChange }        from '@angular/core';
 
 describe('NxCheckboxComponent', () => {
     let component: NxCheckboxComponent;
     let fixture: ComponentFixture<NxCheckboxComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
                 declarations : [NxCheckboxComponent],
-                providers: []
+                providers    : []
             })
             .compileComponents();
     }));
@@ -23,5 +26,59 @@ describe('NxCheckboxComponent', () => {
 
     it('should create NxCheckboxComponent', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should handle @Input(required)', () => {
+        expect(component.required).toBeFalse();
+    });
+
+    it('should handle @Input(description)', () => {
+        expect(component.description).toBeUndefined();
+    });
+
+    it('should have defined states', () => {
+        expect(component['cbxStates']).toEqual({
+            false     : 'unchecked',
+            true      : 'checked',
+            disabled  : 'disabled',
+            undefined : 'tristate'
+        });
+    });
+
+    describe('should set state on @Input(change) change', () => {
+        it('to false', () => {
+            component.ngOnChanges({
+                checked: new SimpleChange(undefined, false, true)
+            });
+            fixture.detectChanges();
+            component.value = false;
+            expect(component.state).toBe('unchecked');
+        });
+
+        it('to true', () => {
+            component.ngOnChanges({
+                checked: new SimpleChange(undefined, true, false)
+            });
+            fixture.detectChanges();
+            expect(component.value).toBeTrue();
+            expect(component.state).toBe('checked');
+        });
+
+        it('on toggle', () => {
+            let emitValue: boolean;
+
+            component.value = true;
+            component.onClick.subscribe(value => {
+                emitValue = value;
+            });
+
+            component.changeState(null);
+            fixture.detectChanges();
+            expect(emitValue).toBeFalse();
+            expect(component.value).toBeFalse();
+            expect(component.state).toBe('unchecked');
+
+            //
+        });
     });
 });
