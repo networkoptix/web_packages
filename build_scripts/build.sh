@@ -57,7 +57,7 @@ pushd front_end
     npm install
 
     echo "Auditing npm packages"
-    AUDIT=$(npm audit | grep -E "(High|Medium)" || true)
+    AUDIT=$(npm audit | grep -E "(High)" || true)
     if [[ "$AUDIT" != "" ]]
     then
         echo "Some npm packages are out of date. Please notify the webteam."
