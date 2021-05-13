@@ -1,0 +1,121 @@
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement, NgModule } from '@angular/core';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+
+import { NxAboutComponent } from './about.component';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NxRibbonService } from '../../../components/ribbon';
+import { NxAccountService } from '../../../services/account.service';
+import { NxMenusService } from '../../../services/menus.service';
+import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { NxHeaderService } from '../../../services/nx-header.service';
+import { NxPageService } from '../../../services/page.service';
+import {
+    landingRoute,
+    docMenuMap,
+    menuStructure,
+    documentation,
+    introNode
+} from '../../../_mocks/knowledge_base_landing.mock';
+
+@NgModule({
+    imports : [TranslateModule.forRoot()],
+    exports : [TranslateModule]
+})
+class TranslateTestingModule {}
+
+class MockProvider<Provider, Value> {
+    constructor(public provide: Provider, public useValue: Value) {}
+
+    static mapServices = <T>(provider: T) =>
+        provider instanceof MockProvider
+            ? provider
+            : new MockProvider<T, {}>(provider, {});
+}
+
+describe('For Developers Landing', () => {
+    let component: NxAboutComponent;
+    let fixture: ComponentFixture<NxAboutComponent>;
+    let el: DebugElement;
+    const translateMock = {
+        translations: {
+            pageTitles: {
+                systems: () => 'Systems'
+            }
+        }
+    };
+    const configMock = { config: { ...nxConfig, docMenuMap } };
+    const routeMock = {
+        events : EMPTY,
+        url    : '/docs/developers'
+    };
+    const account = { is_superuser: false };
+    const accountMock = {
+        get            : () => Promise.resolve(account),
+        accountSubject : new BehaviorSubject(account)
+    };
+    const ribbonMock: any = {
+        hide() {
+            this.isShown = false;
+        },
+        isShown: true
+    };
+    const aboutParentStructure = {
+        ...menuStructure,
+        nodes: [introNode]
+    };
+    const mockMenu = {
+        getMenu: () => new BehaviorSubject(aboutParentStructure)
+    };
+
+    const cloudApiMock = {
+        getDocumentation: () => new BehaviorSubject(documentation)
+    };
+
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations : [NxAboutComponent],
+                imports      : [FormsModule, TranslateTestingModule],
+                providers    : [
+                    new MockProvider(NxCloudApiService, cloudApiMock),
+                    NxHeaderService,
+                    new MockProvider(ActivatedRoute, landingRoute),
+                    new MockProvider(Router, routeMock),
+                    new MockProvider(NxRibbonService, ribbonMock),
+                    new MockProvider(NxLanguageProviderService, translateMock),
+                    new MockProvider(NxMenusService, mockMenu),
+                    NxPageService,
+                    new MockProvider(NxAccountService, accountMock),
+                    new MockProvider(NxConfigService, configMock)
+                ].map(MockProvider.mapServices)
+            });
+
+            fixture = TestBed.createComponent(NxAboutComponent);
+            fixture.componentInstance.aboutStructure$.next([]);
+            component = fixture.componentInstance;
+            el = fixture.debugElement;
+            fixture.detectChanges();
+        })
+    );
+
+    it('should create the component', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should set the correct page title and description', () => {
+        const { pageTitle, pageDescription } = (component as any).pageService;
+        const { title, description } = aboutParentStructure;
+        expect(pageTitle).toEqual(title);
+        expect(pageDescription).toEqual(description);
+    });
+
+    it('should hide ribbon for non superuser', () => {
+        expect((component as any).ribbonService.isShown).not.toBeTruthy();
+    });
+});
