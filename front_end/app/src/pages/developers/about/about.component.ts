@@ -4,7 +4,7 @@ import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
 import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
 import { NxHeaderService }      from '../../../services/nx-header.service';
-import { ActivatedRoute, ActivationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../services/nx-config';
 import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
@@ -85,7 +85,7 @@ export class NxAboutComponent {
         this.LANG = languageService.translations;
         this.loadMenu(this.route.snapshot.paramMap.get('name'));
         this.router.events.pipe(
-            filter((event) => event instanceof ActivationStart),
+            filter(event => event instanceof NavigationEnd),
             untilDestroyed(this)
         ).subscribe((event: any) => {
             this.loadMenu(event?.snapshot?.params?.name);
