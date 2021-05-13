@@ -11,10 +11,9 @@ import {
 }                                   from '@angular/forms';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 import { Subscription }             from 'rxjs';
-
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxCloudApiService }        from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxCloudApiService }        from '@services/nx-cloud-api';
+import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -41,6 +40,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() component: NgModel;
     @Input() hideErrors = false;
     @Input() hasError = false;
+    @Input() showTag = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

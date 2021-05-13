@@ -221,6 +221,14 @@ export class UserManager {
         return this.users;
     }
 
+    authCurrentUser(username, password) {
+        return this.mediaserver
+            .authCurrentUser(username, password).toPromise()
+            .then(result => {
+                return result;
+            });
+    }
+
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         user.email = user.email.toLowerCase();
         let userCreated = false;

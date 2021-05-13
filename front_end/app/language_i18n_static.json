@@ -334,7 +334,8 @@
             "removeUser": "Remove user?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor" : "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
