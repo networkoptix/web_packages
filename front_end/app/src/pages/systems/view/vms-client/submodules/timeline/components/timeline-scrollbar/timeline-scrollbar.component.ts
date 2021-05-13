@@ -58,7 +58,11 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit (): void {
-        this.scrollbarSubscription = this.scrollbarAbsolute.subject.subscribe(this.onScrollBarSubjectChange);
+        this.scrollbarSubscription = this.scrollbarAbsolute.subject.subscribe((s:TimelineScrollbarAbsoluteServiceStatus) => {
+            setTimeout(() => {
+                this.onScrollBarSubjectChange(s);
+            });
+        });
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
         this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this));
         setTimeout(() => this.onResize(), 0);

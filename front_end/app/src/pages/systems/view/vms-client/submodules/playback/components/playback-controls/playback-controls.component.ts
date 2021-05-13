@@ -130,6 +130,7 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
                     return false;
                 }
                 break;
+            case PLAYBACK_MODE.STOPPED:
             case PLAYBACK_MODE.LIVE:
                 if (this.playback.canPlayLive || this.playback.livePaused) {
                     this._log('unpause -> play Live');
