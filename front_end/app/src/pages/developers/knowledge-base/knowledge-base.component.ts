@@ -231,13 +231,14 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                     snapshot = snapshot.parent;
                 }
                 this.kbService.basePath = snapshot.paramMap.get('name');
-                this.appStateService.altBackground = this.kbService.basePath !== 'content';
+                const isContentType = this.kbService.basePath === 'content';
+                this.appStateService.altBackground = !isContentType;
                 const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
                 if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
                     this.kbService.menuName = menuName;
                 }
                 if (!this.kbService.menuName) {
-                    const assetParam = snapshot.paramMap.get('level1') || snapshot.paramMap.get('kb-name');
+                    const assetParam = !isContentType ? snapshot.paramMap.get('level1') : snapshot.paramMap.get('kb-name');
                     if (assetParam) {
                         const assetId = parseInt(assetParam.split('-')[0]);
                         if (Number.isInteger(assetId)) {
