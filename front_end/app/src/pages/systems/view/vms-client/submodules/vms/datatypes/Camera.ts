@@ -1,166 +1,169 @@
-import { ms, int } from '../../../utils/type-aliases'
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera'
-import BirdViewTree from './BirdViewTree'
-import { PlaybackTransport } from '@pages/systems/view/view.types'
-
+import { ms, int } from '../../../utils/type-aliases';
+import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
+import BirdViewTree from './BirdViewTree';
+import { PlaybackTransport } from '@pages/systems/view/view.types';
 
 interface NameValue {
-  name: string,
-  value: string,
+    name: string,
+    value: string,
 }
 
 type MediaStreamInfo = any // TODO!
 
 export class Camera implements ICamera {
+    protected _birdViewTree: BirdViewTree
 
-  protected _birdViewTree: BirdViewTree
-
-  public get archiveRange () {
-    return this._archiveRange
-  }
-
-  public get archive () {
-    return this._archive
-  }
-
-  protected _mediaStreams: Array<MediaStreamInfo> = []
-
-  protected _rotation: int = 0
-
-  constructor (
-    public readonly id: string,
-    public readonly preferredServerId: string,
-    public readonly name: string,
-    public readonly url: string,
-    public readonly status: CAMERA_STATUS,
-    public readonly isScheduleEnabled: boolean,
-    protected _archiveRange: ISimpleTimeRange,
-    protected _archive: CameraArchive = [],
-    public readonly thumbnailUrl: string | undefined = undefined,
-    public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
-    public readonly getPosterUrl: (t?: ms) => string,
-  ) {
-    this._initBirdView()
-  }
-
-  public parseAdditionalParams (ps: Array<NameValue>) {
-    const ms = ps.find(p => p.name === 'mediaStreams')
-    if (ms) {
-      try {
-        this._mediaStreams = JSON.parse(ms.value).streams
-        // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
-      } catch (e) {
-        this._mediaStreams = []
-        console.error('error parsing media streams', this.id, e)
-      }
-    }
-    const rotation = ps.find(p => p.name === 'rotation')
-    if (rotation) {
-      this._rotation = parseInt(rotation.value) || 0
-      // console.log('got camera rotation', this._rotation)
-    }
-  }
-
-  public get rotation () {
-    return this._rotation
-  }
-
-  public get availableTransportsAndResolutions () {
-    return this.availableTransports.reduce((acc, t) => {
-      acc[t] = this._getAvailableResolutions(t)
-      return acc
-     }, {})
-  }
-
-  public get availableTransports () {
-    function isTransportSupported (t) {
-      switch (t) {
-        case 'hls':
-        case 'webm':
-        case 'mp4':
-          return true
-        default:
-          return false
-      }
+    public get archiveRange () {
+        return this._archiveRange;
     }
 
-    const result = new Set()
-    this._mediaStreams
-      // .filter(s => s.resolution !== '*')
-      .map(s => s.transports.map(t => result.add(t)))
-    return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>
-  }
+    public get archive () {
+        return this._archive;
+    }
 
-  protected _getAvailableResolutions (transport) {
-    const result = []
-    this._mediaStreams
-      .filter(s => s.resolution !== '*')
-      .map(s => s.transports.filter(t => t === transport) && result.push(s.resolution))
-    if (transport === 'hls') {
-      if (result.length === 1) {
-        return ['', 'hi']
-      } else {
-        const hlsResult = ['']
-        if (result.filter(r => this._resolutionIsLow(r)).length) {
-          hlsResult.push('lo')
+    protected _mediaStreams: Array<MediaStreamInfo> = []
+
+    protected _rotation: int = 0
+
+    constructor(
+        public readonly id: string,
+        public readonly preferredServerId: string,
+        public readonly name: string,
+        public readonly url: string,
+        public readonly status: CAMERA_STATUS,
+        public readonly isScheduleEnabled: boolean,
+        protected _archiveRange: ISimpleTimeRange,
+        protected _archive: CameraArchive = [],
+        public readonly thumbnailUrl: string | undefined = undefined,
+        public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+        public readonly getPosterUrl: (t?: ms) => string
+    ) {
+        this._initBirdView();
+    }
+
+    public parseAdditionalParams (ps: Array<NameValue>) {
+        const ms = ps.find(p => p.name === 'mediaStreams');
+        if (ms) {
+            try {
+                this._mediaStreams = JSON.parse(ms.value).streams;
+                // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
+            } catch (e) {
+                this._mediaStreams = [];
+                console.error('error parsing media streams', this.id, e);
+            }
         }
-        if (result.filter(r => !this._resolutionIsLow(r)).length) {
-          hlsResult.push('hi')
+        const rotation = ps.find(p => p.name === 'rotation');
+        if (rotation) {
+            this._rotation = parseInt(rotation.value) || 0;
+            // console.log('got camera rotation', this._rotation)
         }
-        return hlsResult
-      }
-    } else {
-      result.unshift(''); // add "Auto"
-      return result
     }
-  }
 
-  protected _resolutionIsLow(s: string): boolean {
-    return s.split('x').map(r => parseInt(r)).reduce((acc, v) => acc > v ? acc = v : acc, Infinity) < 1000
-  }
+    public get rotation () {
+        return this._rotation;
+    }
 
-  public get isLive () {
-    return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording'
-  }
+    public get availableTransportsAndResolutions () {
+        return this.availableTransports.reduce((acc, t) => {
+            acc[t] = this._getAvailableResolutions(t);
+            return acc;
+        }, {});
+    }
 
-  public get isOnline () {
-    return this.status !== 'Offline'
-  }
+    public get availableTransports () {
+        function isTransportSupported (t) {
+            switch (t) {
+                case 'hls':
+                case 'webm':
+                case 'mp4':
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
-  public get isOffline () {
-    return this.status === 'Offline'
-  }
+        const result = new Set();
+        this._mediaStreams
+            // .filter(s => s.resolution !== '*')
+            .map(s => s.transports.map(t => result.add(t)));
+        return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
+    }
 
-  public get isRecording () {
-    return this.status === 'Recording'
-  }
+    protected _getAvailableResolutions (transport) {
+        const result = [];
+        this._mediaStreams
+            .filter(s => s.resolution !== '*')
+            .map(s => s.transports.filter(t => t === transport) && result.push(s.resolution));
+        if (transport === 'hls') {
+            if (result.length === 1) {
+                return ['', 'hi'];
+            } else {
+                const hlsResult = [''];
+                if (result.filter(r => this._resolutionIsLow(r)).length) {
+                    hlsResult.push('lo');
+                }
+                if (result.filter(r => !this._resolutionIsLow(r)).length) {
+                    hlsResult.push('hi');
+                }
+                return hlsResult;
+            }
+        } else {
+            result.unshift(''); // add "Auto"
+            return result;
+        }
+    }
 
-  public get isAuthorized () {
-    return this.status !== 'Unauthorized'
-  }
+    protected _resolutionIsLow (s: string): boolean {
+        return s.split('x').map(r => parseInt(r)).reduce((acc, v) => {
+            if (acc > v) {
+                acc = v;
+            }
+            return acc;
+        }, Infinity) < 1000;
+    }
 
-  public get isUnauthorized () {
-    return this.status === 'Unauthorized'
-  }
+    public get isLive () {
+        return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording';
+    }
 
-  public get hasArchive () {
-    return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start)
-  }
+    public get isOnline () {
+        return this.status !== 'Offline';
+    }
 
-  public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
-    // console.log('========', new Date(startMs), new Date(endMs))
-    return this._birdViewTree.getRecords(startMs, endMs, minGapMs)
-  }
+    public get isOffline () {
+        return this.status === 'Offline';
+    }
 
-  public setRecords (range: ISimpleTimeRange, archive: CameraArchive) {
-    this._archiveRange = range
-    this._archive = archive
-    this._initBirdView()
-  }
+    public get isRecording () {
+        return this.status === 'Recording';
+    }
 
-  protected _initBirdView () {
-    this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive)
-  }
+    public get isAuthorized () {
+        return this.status !== 'Unauthorized';
+    }
+
+    public get isUnauthorized () {
+        return this.status === 'Unauthorized';
+    }
+
+    public get hasArchive () {
+        return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
+    }
+
+    public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
+        // console.log('========', new Date(startMs), new Date(endMs))
+        return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
+    }
+
+    public setRecords (range: ISimpleTimeRange, archive: CameraArchive) {
+        this._archiveRange = range;
+        this._archive = archive;
+        this._initBirdView();
+    }
+
+    protected _initBirdView () {
+        this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
+    }
 }
 
-export default Camera
+export default Camera;

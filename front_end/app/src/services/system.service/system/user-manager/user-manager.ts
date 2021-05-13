@@ -42,7 +42,6 @@ export class UserManager {
         this.checkPermissions();
     }
 
-    // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
         this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;

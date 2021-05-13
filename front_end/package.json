@@ -25,7 +25,7 @@
     "test:components": "ng test --include=app/src/components",
     "test:components:watch": "ng test --include=app/src/components --karma-config karma.conf.watch.js",
     "e2e": "ng e2e",
-    "lint": "eslint app/src/**/*.ts --fix",
+    "lint": "eslint app --ext .ts --ignore-pattern *types.ts --ignore-pattern nx-config --fix",
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
     "setSkin": "node setSkin.js --skin",
     "compile-lang": "python compile-lang.py",

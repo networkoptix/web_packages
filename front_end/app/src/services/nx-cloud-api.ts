@@ -39,6 +39,7 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
                 });
             }),
             switchMap((account: Account) => {
+                // eslint-disable-next-line camelcase
                 if (account?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;

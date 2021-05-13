@@ -49,7 +49,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
-    // eslint-disable-next-line accessor-pairs
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
             this.selectElement = el;

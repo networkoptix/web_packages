@@ -1,25 +1,22 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 
-import TimelineService from './timeline.service'
-import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service'
-
+import TimelineService from './timeline.service';
+import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service';
 
 @Injectable({
-  providedIn: 'root',
- })
+    providedIn: 'root'
+})
 export class TimelineExtendToNowService {
+    constructor(
+        protected timeline: TimelineService,
+        protected timeUnderMouse: TimelineTimeUnderMouseService
+    ) {
+    }
 
-  constructor (
-    protected timeline: TimelineService,
-    protected timeUnderMouse: TimelineTimeUnderMouseService,
-  ) {
-  }
-
-  public extendToNow (): void {
-    this.timeline.extendToNow()
-    this.timeUnderMouse.updateTime()
-  }
-
+    public extendToNow (): void {
+        this.timeline.extendToNow();
+        this.timeUnderMouse.updateTime();
+    }
 }
 
-export default TimelineExtendToNowService
+export default TimelineExtendToNowService;

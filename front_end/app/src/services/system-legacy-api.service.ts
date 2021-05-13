@@ -1263,35 +1263,33 @@ export class NxSystemAPI {
         }&time=${t || 'now'}`;
     }
 
-    public getPlaybackUrl (cameraId, transport='webm', resolution='low', position=undefined) {
-        let url
-        function hlsResolutionOrEmpty (res) {
-            if (res === 'hi' || res === 'lo')
-                return res
-            return ''
+    public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
+        let url;
+        function hlsResolutionOrEmpty(res) {
+            if (res === 'hi' || res === 'lo') { return res; }
+            return '';
         }
         switch (transport) {
             case 'hls':
-                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`
+                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
             default:
-                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`
+                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
         }
     }
-
 
     /** Merge Systems */
     getPeerSystems(showAddresses = true) {
