@@ -74,10 +74,22 @@ export class TimelineScrollbarRelativeService {
         return this.timeline.visibleRange.end < this.timeline.fullRange.end;
     }
 
-    public handleBarDoubleClick (e: MouseEvent) {
+    public handleBarDoubleClick (e: MouseEvent|TouchEvent) {
         e.preventDefault();
         this.timeline.fullZoomOut();
         this._emit();
+    }
+
+    private calcOffsetX(e: MouseEvent|TouchEvent) {
+        let offsetX;
+        if (e instanceof MouseEvent) {
+            offsetX = e.offsetX;
+        } else {
+            // @ts-ignore
+            const rect = (e.target)?.getBoundingClientRect();
+            offsetX = e?.targetTouches[0].pageX - rect.left;
+        }
+        return offsetX;
     }
 
     protected isBackgroundMouseDown: boolean = false;
@@ -92,7 +104,7 @@ export class TimelineScrollbarRelativeService {
         this._scrollDirection = e.offsetX < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1;
     }
 
-    public handleBackgroundMouseUp (e: MouseEvent) {
+    public handleBackgroundMouseUp (e: MouseEvent|TouchEvent) {
         this.isBackgroundMouseDown = false;
         this.holdScrollTargetTime = -1;
         const sinceMouseDown: ms = Date.now() - this._timestampMouseDown;
@@ -145,11 +157,11 @@ export class TimelineScrollbarRelativeService {
         this._emit();
     }
 
-    protected _targetTimeFromMouseEvent (e: MouseEvent): ms {
+    protected _targetTimeFromMouseEvent (e: MouseEvent|TouchEvent): ms {
         return Math.round(
             this.timeline.fullRange.start +
         this.timeline.fullRange.duration * (
-            e.offsetX / (e.target as HTMLElement).clientWidth
+            this.calcOffsetX(e) / (e.target as HTMLElement).clientWidth
         ) -
         this.timeline.visibleRange.duration * 0.5
         );

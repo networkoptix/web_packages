@@ -113,23 +113,35 @@ export class TimelineScrollbarAbsoluteService {
             : this.honestLeft;
     }
 
+    private calcClientX(e: MouseEvent|TouchEvent) {
+        let clientX;
+        if (e instanceof MouseEvent) {
+            clientX = e.clientX;
+        } else {
+            clientX = e?.targetTouches[0].clientX;
+        }
+        return clientX;
+    }
+
     protected _dragAnchorAbsolute: px = -1;
     protected _isBarGrabbed: boolean = false;
 
-    public handleBarMouseDown (e: MouseEvent) {
-        this._dragAnchorAbsolute = e.screenX;
+    public handleBarMouseDown (e: MouseEvent|TouchEvent) {
+        this._dragAnchorAbsolute = this.calcClientX(e);
         this._isBarGrabbed = true;
-        e.stopPropagation();
-        e.preventDefault();
+        if (e instanceof MouseEvent) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
     }
 
-    public handleBarMouseUp (e: MouseEvent) {
+    public handleBarMouseUp (e: MouseEvent|TouchEvent) {
         this._isBarGrabbed = false;
     }
 
     public handleBarDragMouseMove (e: MouseEvent) {
         if (this._isBarGrabbed) {
-            const dx = e.screenX - this._dragAnchorAbsolute;
+            const dx = this.calcClientX(e) - this._dragAnchorAbsolute;
             const leftEdgeMeansMs = this.timeline.visibleRange.start;
 
             // there's a dilemma:
@@ -140,7 +152,7 @@ export class TimelineScrollbarAbsoluteService {
 
             const newLeftEdgeMs = leftEdgeMeansMs + msPerBarPixel * dx;
             this.timeline.jumpScrollTo(newLeftEdgeMs); // don't animate the jump!
-            this._dragAnchorAbsolute = e.screenX; // unless you found a way to get rid of this update
+            this._dragAnchorAbsolute = this.calcClientX(e); // unless you found a way to get rid of this update
             // yet if you managed it, animation could make UX less bumpy
             this._emit();
         }

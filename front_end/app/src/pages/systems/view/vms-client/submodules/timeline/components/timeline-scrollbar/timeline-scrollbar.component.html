@@ -1,6 +1,8 @@
 <div class="button left"
+  #left
   [ngClass]="{ enabled: canScrollLeft }"
   (mousedown)="buttonLeftMouseDownHandler()"
+  (touchstart)="buttonLeftMouseDownHandler()"
   (dblclick)="buttonLeftDblClickHandler()"
 ></div>
 <div class="background"
@@ -17,6 +19,7 @@
   <div
     class="bar"
     #bar
+    (touchstart)="barMouseDownHandler($event)"
     (dblclick)="barDoubleClickHandler($event)"
     (mousedown)="barMouseDownHandler($event)"
     [ngClass]="{ 'grabbed': isBarGrabbed }"
@@ -34,7 +37,9 @@
   ></div>
 </div>
 <div class="button right"
+  #right
   [ngClass]="{ enabled: canScrollRight }"
   (mousedown)="buttonRightMouseDownHandler()"
+  (touchstart)="buttonRightMouseDownHandler()"
   (dblclick)="buttonRightDblClickHandler()"
 ></div>

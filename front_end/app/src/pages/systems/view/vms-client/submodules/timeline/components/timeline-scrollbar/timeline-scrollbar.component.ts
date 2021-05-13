@@ -11,6 +11,7 @@ import TimelineScrollbarRelativeService from '../../services/timeline.scrollbarR
 import TimelineService from '../../services/timeline.service';
 import { float, px } from '../../../../utils/type-aliases';
 import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
+import { NxUtilsService } from '@services/utils.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -28,6 +29,8 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     @ViewChild('bar') barView: ElementRef;
     @ViewChild('honestBar') honestBarView: ElementRef;
     @ViewChild('currentPlayback') currentPlaybackView: ElementRef;
+    @ViewChild('left') leftView: ElementRef;
+    @ViewChild('right') rightView: ElementRef;
 
     protected scrollbarSubscription: Subscription;
     protected playbackSubscription: Subscription;
@@ -35,7 +38,9 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public canScrollLeft: boolean = false;
     public canScrollRight: boolean = false;
 
-    public isBarGrabbed: boolean = false;
+    public isBarGrabbed: boolean = false
+    private useTouch: boolean = false;
+    private lastTouched: TouchEvent;
 
     public showHonestBar: boolean = false;
 
@@ -44,10 +49,12 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         protected timeline: TimelineService,
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
         protected scrollbarRelative: TimelineScrollbarRelativeService,
-        protected playback: PlaybackService
+        protected playback: PlaybackService,
+        nxUtilsService: NxUtilsService
     ) {
         this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this);
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
+        this.useTouch = nxUtilsService.isTablet() || nxUtilsService.isMobile();
     }
 
     public ngAfterViewInit (): void {
@@ -123,22 +130,75 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public barDoubleClickHandler (e: MouseEvent) {
+    public barDoubleClickHandler (e: MouseEvent|TouchEvent) {
         this.scrollbarRelative.handleBarDoubleClick(e);
     }
 
-    public barMouseDownHandler (e: MouseEvent) {
+    public barMouseDownHandler (e: MouseEvent|TouchEvent) {
         this.scrollbarAbsolute.handleBarMouseDown(e);
+    }
+
+    @HostListener('document:touchstart', ['$event'])
+    public touchStartHandler (e: any) {
+        if (!this.useTouch) {
+            return;
+        }
+        const lastTouched = this.lastTouched;
+        // Detect and handle double touches
+        if (lastTouched?.target === e.target && lastTouched?.timeStamp + 500 > e.timeStamp) {
+            switch (e.target.classList.value) {
+                case this.leftView.nativeElement:
+                    this.buttonLeftDblClickHandler();
+                    break;
+                case this.rightView.nativeElement:
+                    this.buttonRightDblClickHandler();
+                    break;
+                case this.backgroundView.nativeElement:
+                    this.backgroundDblClickHandler(e);
+                    break;
+                case this.barView.nativeElement:
+                    this.barDoubleClickHandler(e);
+                    break;
+                default:
+                    break;
+            }
+        }
+        this.lastTouched = e;
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    public touchEndHandler (e: TouchEvent) {
+        if (!this.useTouch) {
+            return;
+        }
+        setTimeout(() => {
+            this.scrollbarRelative.handleBackgroundMouseUp(e);
+            this.scrollbarAbsolute.handleBarMouseUp(e);
+        }, 100);
+    }
+
+    @HostListener('document:touchmove', ['$event'])
+    public barTouchMoveHandler (e: MouseEvent) {
+        if (!this.useTouch) {
+            return;
+        }
+        this.scrollbarAbsolute.handleBarDragMouseMove(e);
     }
 
     @HostListener('document:mouseup', ['$event'])
     public mouseUpHandler (e: MouseEvent) {
+        if (this.useTouch) {
+            return;
+        }
         this.scrollbarRelative.handleBackgroundMouseUp(e);
         this.scrollbarAbsolute.handleBarMouseUp(e);
     }
 
     @HostListener('document:mousemove', ['$event'])
     public barDragMouseMoveHandler (e: MouseEvent) {
+        if (this.useTouch) {
+            return;
+        }
         this.scrollbarAbsolute.handleBarDragMouseMove(e);
     }
 
