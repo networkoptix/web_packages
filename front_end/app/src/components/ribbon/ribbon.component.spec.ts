@@ -1,18 +1,30 @@
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement }                                    from '@angular/core';
-import { NxRibbonComponent, RibbonAction }                 from './ribbon.component';
-import { NxRibbonService, RibbonActionInput }              from './ribbon.service';
-import { nxConfig }                                        from '@services/nx-config/config';
-import { NxConfigService }                                 from '@services/nx-config';
-import { NxHeaderService }                                 from '@services/nx-header.service';
-import { RouterLinkDirectiveStub }                         from '@src/_testing';
+import { DebugElement, NgModule }             from '@angular/core';
+import { NxRibbonComponent, RibbonAction }    from './ribbon.component';
+import { NxRibbonService, RibbonActionInput } from './ribbon.service';
+import { nxConfig }                           from '@services/nx-config/config';
+import { NxConfigService }                    from '@services/nx-config';
+import { NxHeaderService }                    from '@services/nx-header.service';
+import { RouterLinkDirectiveStub }            from '@src/_testing';
+import { TranslateModule }                    from '@ngx-translate/core';
+import { NxLanguageProviderService }          from '@services/nx-language-provider';
+import { setupConfig }                        from '@src/_mocks/config.test';
 
+@NgModule({
+    imports : [TranslateModule.forRoot()],
+    exports : [TranslateModule]
+})
+class TranslateTestingModule {
+}
 
 describe('NxRibbonComponent', () => {
     let component: NxRibbonComponent;
     let fixture: ComponentFixture<NxRibbonComponent>;
     let el: DebugElement;
 
+    const translateMock = {
+        translations: {}
+    };
     const configMock = { getConfig: () => nxConfig };
 
     beforeEach(waitForAsync(() => {
@@ -20,8 +32,10 @@ describe('NxRibbonComponent', () => {
 
         TestBed.configureTestingModule({
             declarations : [NxRibbonComponent, RouterLinkDirectiveStub],
+            imports      : [TranslateTestingModule],
             providers    : [
                 NxRibbonService,
+                { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxHeaderService, useValue: spyHeader },
                 { provide: NxConfigService, useValue: configMock }
             ]
@@ -54,6 +68,24 @@ describe('NxRibbonComponent', () => {
     it('should use NxRibbonService to get data', inject(
         [NxRibbonService],
         (service: NxRibbonService) => {
+            service.CONFIG = setupConfig();
+            service.LANG.ribbon = {
+                beingMerged: {
+                    mayTake : () => 'Depending on the size of the database, it may take up to several hours.',
+                    to      : () => 'is being merged to this system'
+                },
+                finishingMerge : () => 'Finishing systems merge',
+                integration    : {
+                    accept          : () => 'Accept',
+                    backToEditText  : () => 'Back to the editing interfaces',
+                    previewRibbon   : () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
+                    publishedRibbon : () => 'This page is the live version that is publicly available.',
+                    reject          : () => 'Reject'
+                },
+                systemOffline  : () => 'System is offline. Some settings may not be available.',
+                systemsMerging : () => 'This system is currently involved in a merge operation.'
+            };
+
             const actions: RibbonAction[] = [{
                 type  : 'link',
                 text  : 'Go back',
