@@ -6,7 +6,7 @@
         display               : grid;
         border-collapse       : collapse;
         min-width             : 100%;
-        grid-template-columns : 32% 13% 12% 18% auto 10%;
+        grid-template-columns : 30% 13% 12% fit-content(100%) auto 10%;
     }
 
     .table-row-spacer {
@@ -40,7 +40,7 @@
     }
 
     td {
-        padding          : 5px 15px;
+        padding          : 5px 0 5px 15px;
         background-color : $light1;
         color            : $dark9;
         display          : flex;

@@ -32,6 +32,7 @@
                             <td>{{friendlyBytes( storage.remainingSpace.bits )}}</td>
                             <td class="reserved-cell">
                                 <nx-numeric
+                                        style="width: 60px;"
                                         [componentId]="'reservedSpace' + i"
                                         [class]="'w-50 p-0 text-right'"
                                         [min]="0"
