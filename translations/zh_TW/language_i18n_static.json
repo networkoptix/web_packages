@@ -334,7 +334,8 @@
             "removeUser": "是否要移除使用者？",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"

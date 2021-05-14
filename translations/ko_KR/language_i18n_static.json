@@ -334,7 +334,8 @@
             "removeUser": "사용자를 삭제 하시겠습니까?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."

@@ -334,7 +334,8 @@
             "removeUser": "Supprimer Utilisateur?",
             "serversDetach": "Détacher le serveur \"{ title }\" du système actuel ?",
             "serversReset": "Réinitialiser le serveur \"{ title }\" aux valeurs par défaut ?",
-            "serversRestart": "Redémarrer le serveur \"{ title } \" ?"
+            "serversRestart": "Redémarrer le serveur \"{ title } \" ?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."

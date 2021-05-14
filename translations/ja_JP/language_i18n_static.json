@@ -334,7 +334,8 @@
             "removeUser": "ユーザーを削除しますか?",
             "serversDetach": "現在のシステムからサーバー \"{ title }\" を切断しますか？",
             "serversReset": "サーバー \"{ title }\" をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー \"{ title }\" を再起動しますか？"
+            "serversRestart": "サーバー \"{ title }\" を再起動しますか？",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"

@@ -334,7 +334,8 @@
             "removeUser": "האם להסיר משתמש?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "נתק את כל המערכות שאתה הבעלים שלהן %CLOUD_NAME% כדי למחוק את חשבונך."

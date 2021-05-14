@@ -334,7 +334,8 @@
             "removeUser": "Voleu suprimir l'usuari?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."

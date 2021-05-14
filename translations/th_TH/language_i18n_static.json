@@ -334,7 +334,8 @@
             "removeUser": "นำผู้ใช้ออกหรือไม่",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "ยกเลิกการเชื่อมต่อระบบทั้งหมดที่คุณเป็นเจ้าของจากพอร์ทัล %CLOUD_NAME% เพื่อลบบัญชีของคุณ"

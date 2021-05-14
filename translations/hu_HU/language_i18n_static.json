@@ -334,7 +334,8 @@
             "removeUser": "Eltávolítja a felhasználót?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."
