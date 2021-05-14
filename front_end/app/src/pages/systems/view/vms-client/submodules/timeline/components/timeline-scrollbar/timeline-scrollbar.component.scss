@@ -99,21 +99,29 @@ $current-playback-indicator-color: black;
 
     &.enabled {
       opacity: .8;
-      display: block;
+      display         : flex;
+      align-items     : center;
+      justify-content : center;
 
       &:hover {
         opacity: 1.0;
+      }
+
+      svg-icon {
+        width: 100%;
       }
     }
 
     &.left {
       left: 0;
-      background-image: url('../../svg/timeline_scroll_left.svg');
     }
 
     &.right {
       right: 0;
-      background-image: url('../../svg/timeline_scroll_right.svg');
+
+      svg-icon {
+        transform : scale(-1);
+      }
     }
   }
 }

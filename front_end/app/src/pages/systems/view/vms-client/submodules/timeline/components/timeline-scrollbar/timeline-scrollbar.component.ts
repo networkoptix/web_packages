@@ -12,6 +12,7 @@ import TimelineService from '../../services/timeline.service';
 import { float, px } from '../../../../utils/type-aliases';
 import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 import { NxUtilsService } from '@services/utils.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -24,6 +25,8 @@ const MIN_BAR_WIDTH_PX = 50;
 export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     _log: Function
     _warn: Function
+
+    CONFIG: IConfig;
 
     @ViewChild('background') backgroundView: ElementRef;
     @ViewChild('bar') barView: ElementRef;
