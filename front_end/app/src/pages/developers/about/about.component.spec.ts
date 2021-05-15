@@ -1,12 +1,11 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement, NgModule } from '@angular/core';
-import { BehaviorSubject, EMPTY } from 'rxjs';
+import { DebugElement } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { NxAboutComponent } from './about.component';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NxRibbonService } from '../../../components/ribbon';
@@ -20,23 +19,10 @@ import {
     docMenuMap,
     menuStructure,
     documentation,
-    introNode
+    introNode,
+    routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
-
-@NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
-})
-class TranslateTestingModule {}
-
-class MockProvider<Provider, Value> {
-    constructor(public provide: Provider, public useValue: Value) {}
-
-    static mapServices = <T>(provider: T) =>
-        provider instanceof MockProvider
-            ? provider
-            : new MockProvider<T, {}>(provider, {});
-}
+import { MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
 
 describe('For Developers Landing', () => {
     let component: NxAboutComponent;
@@ -50,10 +36,7 @@ describe('For Developers Landing', () => {
         }
     };
     const configMock = { config: { ...nxConfig, docMenuMap } };
-    const routeMock = {
-        events : EMPTY,
-        url    : '/docs/developers'
-    };
+
     const account = { is_superuser: false };
     const accountMock = {
         get            : () => Promise.resolve(account),
@@ -86,7 +69,7 @@ describe('For Developers Landing', () => {
                     new MockProvider(NxCloudApiService, cloudApiMock),
                     NxHeaderService,
                     new MockProvider(ActivatedRoute, landingRoute),
-                    new MockProvider(Router, routeMock),
+                    new MockProvider(Router, routeLandingMock),
                     new MockProvider(NxRibbonService, ribbonMock),
                     new MockProvider(NxLanguageProviderService, translateMock),
                     new MockProvider(NxMenusService, mockMenu),

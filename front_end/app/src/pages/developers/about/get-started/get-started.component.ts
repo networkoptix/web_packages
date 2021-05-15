@@ -28,7 +28,7 @@ export class NxGetStartedComponent implements OnChanges {
     }
 
     ngOnInit() {
-        const capabilitiesConfig = this.errorManager.buildConfig(
+        const getStartedConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
                 ['icon', 'title', 'subtitle'],
@@ -39,7 +39,7 @@ export class NxGetStartedComponent implements OnChanges {
             ));
         this.errorManager.checkAboutNode(
             this.getStartedNode,
-            capabilitiesConfig
+            getStartedConfig
         );
     }
 
