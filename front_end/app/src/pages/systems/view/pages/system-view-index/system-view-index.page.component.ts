@@ -328,7 +328,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 const server = cachedMediaServers[serverId];
                 for (const camera of server.cameras) {
                     const updatedCamera = cameras[camera.id];
-                    if (updatedCamera && camera.status !== updatedCamera.status && camera.name !== updatedCamera.name) {
+                    if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
                         this._log('camera updated', updatedCamera);
                         camera.status = updatedCamera.status;
                         camera.name = updatedCamera.name;
