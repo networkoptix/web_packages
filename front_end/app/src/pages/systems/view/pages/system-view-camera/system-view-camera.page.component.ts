@@ -367,8 +367,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                             archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
                             this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
                         }
-                            this._log('non-empty archive', this.id, range, archive);
-                            this.vms.setCameraRecords(this.id, range, archive);
+                        this._log('non-empty archive', this.id, range, archive);
+                        this.vms.setCameraRecords(this.id, range, archive);
                     } catch (e) {
                         this._warn(e, 'caught while requesting camera archive ranges');
                     }
