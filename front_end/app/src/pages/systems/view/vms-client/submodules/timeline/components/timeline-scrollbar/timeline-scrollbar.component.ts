@@ -53,8 +53,10 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
         protected scrollbarRelative: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
+        configService: NxConfigService,
         nxUtilsService: NxUtilsService
     ) {
+        this.CONFIG = configService.getConfig();
         this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this);
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.useTouch = nxUtilsService.isTablet() || nxUtilsService.isMobile();
