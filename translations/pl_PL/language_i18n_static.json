@@ -335,7 +335,7 @@
             "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
             "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
             "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."

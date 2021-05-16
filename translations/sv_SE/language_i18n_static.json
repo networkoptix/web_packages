@@ -335,7 +335,7 @@
             "serversDetach": "Koppla från servern \"{ title }\" från nuvarande system?",
             "serversReset": "Återställ servern \"{ title }\" till standard?",
             "serversRestart": "Starta om servern \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "changePasswordFor": "Ändra lösenord för användare \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
