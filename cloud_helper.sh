@@ -179,12 +179,13 @@ function remove_mediaserver() {
 function run_mediaserver() {
     VERSION=$1
     PORTS="$2"
-    EMAIL=$3
-    PASSWORD=$4
+    CLOUD_HOST="$3"
+    EMAIL=$4
+    PASSWORD=$5
     for PORT in $PORTS
     do
         echo "Starting mediaserver $PORT"
-        docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+        docker run -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST=$CLOUD_HOST --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
         if [[ -e $EMAIL ]]; then
             pushd cloud
                 python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
@@ -376,9 +377,10 @@ do
         run_mediaserver)
             VERSION=$2
             PORTS="$3"
-            EMAIL=$4
-            PASSWORD=$5
-            run_mediaserver $VERSION "$PORTS" $EMAIL $PASSWORD
+            CLOUD_HOST="$4"
+            EMAIL=$5
+            PASSWORD=$6
+            run_mediaserver $VERSION "$PORTS" "$CLOUD_HOST" $EMAIL $PASSWORD
             break
             ;;
          stop_mediaserver)
