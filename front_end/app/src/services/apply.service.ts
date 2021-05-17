@@ -1,23 +1,22 @@
-import {
-    ComponentFactoryResolver, Injectable,
-    ViewContainerRef, ComponentRef
-}                                    from '@angular/core';
-import { NgForm }                    from '@angular/forms';
-import {
-    BehaviorSubject, Subject, combineLatest as combineLatestFrom
-}                                    from 'rxjs';
-import {
-    distinctUntilChanged, combineLatest, map, startWith, takeUntil
-}                                    from 'rxjs/operators';
-import { NxApplyComponent }          from '@components/apply/apply.component';
-import { Process, NxProcessService } from './process.service';
-import { NxUtilsService }            from './utils.service';
-import { ApplyModalContent }         from '@dialogs/apply/apply.component';
-import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
-import { isObject }                  from 'rxjs/internal-compatibility';
+import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { FormGroupDirective, NgForm }                                           from '@angular/forms';
+import { BehaviorSubject, combineLatest as combineLatestFrom, Subject }         from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, startWith, takeUntil }       from 'rxjs/operators';
+import { NxApplyComponent }                                                     from '@components/apply/apply.component';
+import { NxProcessService, Process }                                            from './process.service';
+import { NxUtilsService }                                                       from './utils.service';
+import { ApplyModalContent }                                                    from '@dialogs/apply/apply.component';
+import { NgbModal }          from '@ng-bootstrap/ng-bootstrap';
+import { isArray, isObject } from 'rxjs/internal-compatibility';
 
 interface IParams<Value = any> {
     [key: string]: Value;
+}
+
+export type extNgForm = {
+    form: NgForm,
+    originalForm: {},
+    save: Process
 }
 
 /**
@@ -191,6 +190,7 @@ export class NxApplyService {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
     private applyComponentInstance: NxApplyComponent
     private applyFunctions: Process[] = [];
+    private applyFormFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
     private submitFunctions = [];
@@ -264,7 +264,7 @@ export class NxApplyService {
                     process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
                 }).catch(res => Promise.reject(res));
             }).catch(res => Promise.reject(res));
-        }, Promise.resolve()
+        }, Promise.resolve({ result: 'ok' })
     );
 
     /**
@@ -275,6 +275,9 @@ export class NxApplyService {
      * @param watchers An array of watchers which will trigger the NxApplyComponent to show
      *     if a value on the page has been changed.
      * @param {NgForm=} form Optional form to pass to the process-button
+     * @param submitFn
+     * @param nonSystem
+     * @param onlyShowSectionWatchers
      */
     initPageWatcher(
         component: ViewContainerRef,
@@ -321,46 +324,111 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).save = this.applyFunction;
     }
 
-    // ... Breadcrumbs ... TT
-    formInit = true;
-    originalForm: any;
+    /* ... Breadcrumbs ... TT */
+    forms = {};
+
+    runFormProcesses = () => this.applyFormFunctions.reduce(
+        async(prevPromise, process, index) => {
+            return prevPromise.then(prevRes => {
+                return new Promise((resolve, reject) => {
+                    process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                }).catch(res => Promise.reject(res));
+            }).catch(res => Promise.reject(res));
+        }, Promise.resolve({ result: 'ok' })
+    );
+
+    removeFormWatcher(id: string) {
+        (<NxApplyComponent> this.applyComponentRef.instance).forms[id].form.valueChanges.unsubscribe();
+        delete this.forms[id];
+    }
 
     createFormWatcher(
-        component: ViewContainerRef | null,
+        componentId: string,
         form: NgForm,
         saveFunction: Process,
         owner?: any
     ) {
-        component?.clear();
-        const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
-        const applyComponentRef = component?.createComponent(compFactory);
-        if (form && applyComponentRef) {
-            applyComponentRef.instance.form = form;
-        }
-        if (applyComponentRef) {
-            applyComponentRef.instance.applyVisible = true;
-            applyComponentRef.instance.save = saveFunction;
-            applyComponentRef.instance.discard = () => {
-                Object.keys(this.originalForm).forEach((key) => {
-                    form.controls[key].setValue(this.originalForm[key]);
+        const updateOriginalForm = () => {
+            const forms = (<NxApplyComponent> this.applyComponentRef.instance).forms;
+            Object.keys(forms)
+                .forEach((key) => {
+                    const item = forms[key];
+                    const form = item.form.form;
+                    Object.keys(form.controls).forEach((key) => {
+                        item.originalForm[key] = form.controls[key].value;
+                        form.controls[key].markAsPristine();
+                        form.controls[key].markAsUntouched();
+                    });
+                    form.markAsPristine();
+                    form.markAsUntouched();
                 });
+
+            (<NxApplyComponent> this.applyComponentRef.instance).show = false;
+        };
+
+        const revertOriginalValues = () => {
+            const forms = (<NxApplyComponent> this.applyComponentRef.instance).forms;
+            Object.keys(forms)
+                .forEach((key) => {
+                    const item = forms[key];
+                    Object.keys(item.originalForm).forEach((key) => {
+                        item.form.form.controls[key].setValue(item.originalForm[key]);
+                    });
+                });
+        };
+
+        if (this.applyComponentRef) {
+            const extNgForm: extNgForm = { form: form, originalForm: {}, save: saveFunction };
+
+            extNgForm.form.valueChanges.subscribe((change) => {
+                // Init phase ... valueChanges triggers on every control init
+                if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
+                    // if form contain multiselect (array) spread is not enough
+                    extNgForm.originalForm = NxUtilsService.deepCopy(change);
+                    return;
+                } else {
+                    // cover a case with dynamic fields in form represented as array
+                    Object.keys(change).forEach(key => {
+                        if (isArray(change[key])) {
+                            if (change[key].length !== extNgForm.originalForm[key].length) {
+                                extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+                            }
+                        }
+                    });
+                }
+
+                const hasChange = !NxUtilsService.isEqual(extNgForm.originalForm, change);
+                if (this.applyComponentRef) {
+                    (<NxApplyComponent> this.applyComponentRef.instance).show = hasChange;
+                }
+            });
+
+            this.forms[componentId] = extNgForm;
+
+            (<NxApplyComponent> this.applyComponentRef.instance).forms = this.forms;
+            (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = true;
+
+            (<NxApplyComponent> this.applyComponentRef.instance).save = this.processService.createProcess(() => {
+                this.applyFormFunctions = [];
+                Object.keys((<NxApplyComponent> this.applyComponentRef.instance).forms)
+                    .forEach((key) => {
+                        // force form validation here ...
+                        // if form is invalid - clear applyFormFunctions and exit - TT
+                        this.applyFormFunctions.push((<NxApplyComponent> this.applyComponentRef.instance).forms[key].save);
+                    });
+
+                return this.runFormProcesses();
+            }, {}, result => {
+                if (result) {
+                    updateOriginalForm();
+                }
+            }, err => {
+            });
+
+            (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
+                revertOriginalValues();
             };
         }
-
-        form.valueChanges.subscribe((change) => {
-            // Init phase ... it's called during form controls init
-            const hasChange = !NxUtilsService.isEqual(this.originalForm, change);
-            if (this.formInit) {
-                if (!this.originalForm || hasChange) {
-                    this.originalForm = { ...change };
-                    this.formInit = !Object.values(this.originalForm).every(x => x !== undefined);
-                }
-                return;
-            }
-            if (applyComponentRef) {
-                applyComponentRef.instance.show = hasChange;
-            }
-        });
 
         return new FormWatcher(form, owner);
     }
@@ -537,6 +605,7 @@ export class NxApplyService {
      * 4) If any of the watchers are changed show the NxApplyComponent and block navigation
      *     until the user saves or discards the changes.
      * @param watchers
+     * @param owner
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
         this.updatedWatchers$.next('update');

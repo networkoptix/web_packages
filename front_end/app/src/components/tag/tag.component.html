@@ -1,4 +1,5 @@
 <a class="{{element}} {{size}} {{ badgeType }}"
+   [ngClass]="{ 'static' : static }"
    [attr.href]="tagHref"
    (click)="clickable && selectTag()">
 

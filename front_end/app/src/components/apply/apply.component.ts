@@ -4,6 +4,8 @@ import {
 }                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { NxProcessButtonComponent }  from '../process-button/process-button.component';
+import { extNgForm }                 from '@services/apply.service';
+import { Process }                   from '@services/process.service';
 
 @Component({
     selector    : 'nx-apply',
@@ -23,6 +25,7 @@ export class NxApplyComponent {
     @Input() discard;
     @Input() warn: string;
     @Input() form: NgForm;
+    @Input() forms: {};
     @Input() submitFn: () => any = () => null;
     @Input() showSectionWarning = false;
     @Input() showDiscard = false;

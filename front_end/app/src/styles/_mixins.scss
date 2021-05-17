@@ -49,7 +49,7 @@
 @mixin selected-tag {
     color         : theme_variables.$light1 !important;
     padding-left  : 12px;
-    padding-right : 0;
+    padding-right : 32px !important;
 }
 
 @mixin badge-selected($default, $hover, $active) {

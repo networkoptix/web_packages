@@ -3,7 +3,9 @@
 @mixin font-source($font-family, $size, $color: false, $weight: false,  $lh: false) {
     font-family : $font-family;
     font-size : $size !important;
-    color : $color !important;
+    @if $color {
+        color : $color !important;
+    }
     @if $weight {
         font-weight : $weight !important;
     }
