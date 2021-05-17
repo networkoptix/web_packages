@@ -346,10 +346,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     });
                             });
                     } else {
-                        if (!this.settingsService.system) {
-                            this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-                        }
-                        this.system = this.settingsService.system;
+                        this.system = this.settingsService.system
+                            ? this.settingsService.system
+                            : this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+
                         this.system.update();
                         this.systems = [this.system];
                         this.system.isAvailable = true;

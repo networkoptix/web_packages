@@ -83,6 +83,7 @@ export interface BaseConfig {
     supportedLanguages: string[];
     headerHeight: number;
     ribbonHeight: number;
+    browserNotSupported: boolean;
     // loggersConfig: LoggersConfig;
 }
 

@@ -31,6 +31,7 @@ export const nxConfig: IConfig = {
             strongClassesCount : 3
         }
     },
+    browserNotSupported: false,
     defaultLanguage : 'en_US',
     developers      : {
         landing: {
