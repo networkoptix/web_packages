@@ -3,9 +3,9 @@
   [ngClass]="{ enabled: canScrollLeft }"
   (mousedown)="buttonLeftMouseDownHandler()"
   (touchstart)="buttonLeftMouseDownHandler()"
-  (dblclick)="buttonLeftDblClickHandler()"
-></div>
+  (dblclick)="buttonLeftDblClickHandler()" >
   <svg-icon nx-add-svg-src [src]="CONFIG.images.dir + 'timeline_scroll.svg'"></svg-icon>
+</div>
 <div class="background"
   #background
   (mousedown)="backgroundMouseDownHandler($event)"
@@ -42,6 +42,6 @@
   [ngClass]="{ enabled: canScrollRight }"
   (mousedown)="buttonRightMouseDownHandler()"
   (touchstart)="buttonRightMouseDownHandler()"
-  (dblclick)="buttonRightDblClickHandler()"
-></div>
+  (dblclick)="buttonRightDblClickHandler()" >
   <svg-icon nx-add-svg-src [src]="CONFIG.images.dir + 'timeline_scroll.svg'"></svg-icon>
+</div>
