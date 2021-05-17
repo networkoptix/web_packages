@@ -61,10 +61,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.videoView.nativeElement.addEventListener('error', (event: any) => {
-            // media errors should be debugged while serving webadmin locally
-            // as local proxy cannot be set to relay address and when returned result is JSON (error)
-            // will trigger CORB -- TT
-            if (event.target.error?.message.startsWith(PLAYBACK_ERROR.DEMUXER_ERROR_COULD_NOT_OPEN)) {
+            if (event.type === 'error') {
                 this.http.get(event.target.src)
                     .subscribe((response: any) => {
                         switch (response.error) {
@@ -78,6 +75,8 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                             default:
                                 break;
                         }
+                    }, (error) => {
+                        this.playback.setError(error.message);
                     });
             }
         });

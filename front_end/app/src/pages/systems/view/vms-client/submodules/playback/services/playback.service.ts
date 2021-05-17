@@ -152,7 +152,7 @@ export class PlaybackService implements OnDestroy {
     }
 
     public setError(error) {
-        (<ArchivePlaybackState> this._state).error = error;
+        this._state.error = error;
         this._emit();
     }
 

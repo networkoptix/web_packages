@@ -1,5 +1,5 @@
 import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
-import { ms } from '../../../utils/type-aliases';
+import { ms }                                 from '../../../utils/type-aliases';
 
 export enum PLAYBACK_MODE {
     STOPPED = 0,
@@ -19,6 +19,7 @@ export interface StoppedPlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.STOPPED,
     quality: PlaybackQuality,
     transport: PlaybackTransport,
+    error: string
 }
 
 export interface ArchivePlaybackState extends AbstractPlaybackState {
@@ -58,7 +59,8 @@ export function createInitialStoppedState (
         mode          : PLAYBACK_MODE.STOPPED,
         initializedAt : Date.now(),
         quality,
-        transport
+        transport,
+        error         : ''
     };
 }
 

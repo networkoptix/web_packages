@@ -19,15 +19,16 @@
         }
 
         .heading {
-            @include typography.light40light16;
-            text-align  : center;
-            line-height : 48px;
-            margin-top  : 24px;
+            @include typography.light40light10;
+            text-align     : center;
+            line-height    : 48px;
+            margin-top     : 24px;
+            text-transform : uppercase;
             @extend #opacity;
         }
 
         .description {
-            @include typography.light18light16;
+            @include typography.light18light10;
             text-align  : center;
             line-height : 24px;
             margin-top  : 16px;

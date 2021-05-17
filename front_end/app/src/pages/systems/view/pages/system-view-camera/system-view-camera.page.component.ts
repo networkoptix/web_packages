@@ -15,16 +15,18 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
 import FpsMeterService from '@services/fps-meter.service';
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import { NxConfigService, IConfig } from '../../../../../services/nx-config';
-import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
+import { NxConfigService, IConfig }      from '../../../../../services/nx-config';
+import { CameraQualityStorageService }   from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
-import sidebarLayout from '../sidebarLayout.cfg';
-import { NxUtilsService } from '@services/utils.service';
-import fullscreen from './fullscreen';
-import { LoggerDecorator } from '../../vms-client/utils';
-import { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil } from 'rxjs/operators';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import sidebarLayout                     from '../sidebarLayout.cfg';
+import { NxUtilsService }                from '@services/utils.service';
+import fullscreen                        from './fullscreen';
+import { LoggerDecorator }               from '../../vms-client/utils';
+import { PLAYBACK_MODE }                 from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }             from 'rxjs/operators';
+import { UntilDestroy }                  from '@ngneat/until-destroy';
+import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -43,6 +45,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public previewUrl = ''
 
     protected CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
@@ -61,9 +64,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public controlsShown: boolean = false
     public canViewArchives = false;
     public showPlayerSection = false;
+    public cameraError: string;
     private unsub$ = new Subject();
 
     constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         protected self: ElementRef,
         protected route: ActivatedRoute,
         protected vms: VideoManagementSystemService,
@@ -74,11 +80,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected ux: WebClientUxService,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
-        configService: NxConfigService,
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     public handleControlsTogglingEarClick () {
@@ -412,8 +418,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state) => {
-            this.showPlayerSection = this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
-                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE;
+            this.cameraError = state.error;
+            this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
+                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
         });
 
         if (this.camera?.hasArchive) {

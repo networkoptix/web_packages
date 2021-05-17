@@ -89,8 +89,16 @@ p {
     @include font-source($font-family-light, $h3-font-size, $light16);
 }
 
+@mixin light18light10 {
+    @include font-source($font-family-light, $h3-font-size, $light10);
+}
+
 @mixin light40light16 {
     @include font-source($font-family-light, $font-size-xxxlg, $light16);
+}
+
+@mixin light40light10 {
+    @include font-source($font-family-light, $font-size-xxxlg, $light10);
 }
 // LIGHT
 
