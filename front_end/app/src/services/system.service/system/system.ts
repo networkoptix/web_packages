@@ -891,7 +891,7 @@ export class NxSystem extends System {
                 const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled && status !== 'Offline').length;
             const available = total - used;
             return { total, used, available };
         });
