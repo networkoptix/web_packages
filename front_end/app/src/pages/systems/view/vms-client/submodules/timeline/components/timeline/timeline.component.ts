@@ -102,7 +102,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isDragging = true;
         }
         if (this.isDragging) {
-            const dt = this.timeline.domWidthToDuration(e.screenX - this._mouseDownScreenX);
+            const dt = -1 * this.timeline.domWidthToDuration(e.screenX - this._mouseDownScreenX);
             // console.log('dragging in progress', dt)
             this.timeline.shiftVisibleRange(dt);
             this._mouseDownScreenX = e.screenX;
