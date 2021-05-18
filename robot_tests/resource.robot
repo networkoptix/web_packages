@@ -965,7 +965,7 @@ Register and Activate Generic Users
     [Return]    &{generic users}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge    ${cloud email}=${None}
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -984,8 +984,14 @@ Create Docker Server
     Set to Dictionary    ${server}    name=${name}
     Close Connection
     Release Lock   create_server_lock
-    [Return]    ${server}
+    Return From Keyword If    not $cloud_email    ${server}
+    Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${base password}    ${server}[name]    timeout=1
 
+    #   Connect system to cloud if email is provided
+    Set To Dictionary    ${server}    owner=${cloud email}
+    ${id}=   Connect System to Cloud    ${local auth}   https://${QA BURBANK IP}:${server}[port]    ${server}[name]    ${server}[owner]    ${base password}
+    Set To Dictionary    ${server}    id=${id}
+    [Return]    ${server}
 
 Setup Custom Docker Server
     [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
@@ -1098,7 +1104,7 @@ Setup Docker System
 #    Set Suite Variable    ${local users}
 
 Create Base Cloud System
-    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
     [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
     ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
     ...               where "Create Base Cloud System" is called
@@ -1106,9 +1112,10 @@ Create Base Cloud System
     ${owner}=   Register and activate account with random email    System    Owner    ${base password}
     ${local auth}=   Create List    admin    ${base password}
     ${cloud auth}=   Create List    ${owner}    ${base password}
+    ${random}=    Generate Random String
     Set Suite Variable    ${cloud auth}
     Set Suite Variable    ${local auth}
-    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
+    ${system}=   Create Docker Server    ${container name}    ${image}    cloud email=${owner}
     Set Suite Variable    ${system}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Return From Keyword If    not $add_users
@@ -1264,3 +1271,8 @@ Delete All Text
 Skip If Irrelevant
     ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
     Skip If    not ${relevant}    Test skipped - not relevant
+
+Input Content Editable Text
+    [Arguments]    ${element}    ${text}
+    Delete All Text    ${element}
+    Press Keys    ${element}    ${text}

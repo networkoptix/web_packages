@@ -101,7 +101,6 @@ class ServerAPI:
                 "password": password
             }
         }
-
         with requests.session() as s:
             r = s.post(
                 f'{server_url}/rest/v1/system/setup',

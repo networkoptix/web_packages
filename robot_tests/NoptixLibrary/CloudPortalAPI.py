@@ -1,11 +1,11 @@
 import requests
-from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 import base64
 import uuid
 import json
 import string
 import os
-
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth
+from robot.api import logger
 
 class CloudPortalAPI(object):
 
@@ -282,7 +282,18 @@ class CloudPortalAPI(object):
         return r.status_code
 
     @staticmethod
-    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer):
+    def camera_search(serverUrl):
+        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':'10.1.5.238:12312'}, verify=False)
+        return r.json()['reply']['processUuid']
+
+    @staticmethod
+    def camera_status(serverUrl, uuid):
+        r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'uuid':uuid}, verify=False)
+        logger.console(r.json())
+        return r.json()
+
+    @staticmethod
+    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
         body = {
             "user": camuser,
             "password": campassword,
@@ -295,6 +306,7 @@ class CloudPortalAPI(object):
                     }
                 ]
             } 
+        logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text
     

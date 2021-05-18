@@ -20,14 +20,15 @@ Server Settings Suite Setup
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     # we setup one server manually here because we need 2 ports
-    ${id}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 ${IMAGE 4.3}
+    ${random}=    Generate Random String
+    ${id}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 --name servers${random} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
     ${results}    Execute Command    docker container port ${id} 7001
     ${port info}=   Split String    ${results}    :
     ${port 1}=   Set Variable    ${port info[1]}
-
     FOR   ${i}    IN RANGE    2    4
-        ${server}=   Setup Docker Server    image=${IMAGE 4.3}
+        ${random}=    Generate Random String
+        ${server}=   Create Docker Server    servers${random}
         Set Suite Variable    ${cont ${i}}    ${server}[name]
         Set Suite Variable    ${cont id ${i}}    ${server}[id]
         Set Suite Variable    ${port ${i}}    ${server}[port]
@@ -37,9 +38,7 @@ Server Settings Suite Setup
 
     Sleep    5 
     Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    2servertest1
-
     Setup Local System    https://${QA BURBANK IP}:${port 2}    ${password}    2servertest2
-
     Setup Local System    https://${QA BURBANK IP}:${port 3}    ${password}    2servertest3
     ${server id 1}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
     ${server id 2}=   Get Server Id    https://${QA BURBANK IP}:${port 2}    ${server auth}    Server ${cont id 2}
