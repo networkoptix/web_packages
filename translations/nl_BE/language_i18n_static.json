@@ -335,7 +335,7 @@
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
             "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "changePasswordFor": "Wachtwoord wijzigen voor gebruiker \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
