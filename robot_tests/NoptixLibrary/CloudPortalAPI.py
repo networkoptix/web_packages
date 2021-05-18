@@ -19,7 +19,7 @@ class CloudPortalAPI(object):
 
     def log_out(self, env, session_id, csrftoken):
         with requests.session() as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
             r = s.post(f'{env}/api/account/logout')
             assert 200 == r.status_code, 'Log out failed.'

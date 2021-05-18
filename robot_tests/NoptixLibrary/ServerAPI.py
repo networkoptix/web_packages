@@ -110,4 +110,4 @@ class ServerAPI:
                 verify=False
             )
             if r.status_code != 200:
-                raise APIError(f'Cannot get system settings: {r.status_code}')
+                raise APIError(f'Cannot setup local system: {r.status_code}')

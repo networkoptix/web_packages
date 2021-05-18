@@ -21,7 +21,7 @@ Merge Systems
 Merge Systems Local
     [Documentation]    Merge two systems via server commands
     [Arguments]    ${primary auth}    ${secondary auth}    ${primary url}    ${secondary url}    ${currentPassword}=${BASE PASSWORD}
-    ${data}=   Create Dictionary    currentPassword=${current password}    url=https://${secondary auth}@${secondary url}
+    ${data}=   Create Dictionary    currentPassword=${current password}    dryRun=${False}    url=https://${secondary auth}@${secondary url}
     Create Digest Session    local merge session    ${primary url}    auth=${primary auth}    disable_warnings=1
     ${resp}=   Post Request    local merge session    /api/mergeSystems    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200

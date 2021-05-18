@@ -167,7 +167,8 @@ Log in to system
     ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
-    
+    Reload Page
+
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -1034,7 +1035,7 @@ Setup Docker System
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
     Set To Dictionary    ${system}    cont=${system}[cont]
     ${auth}=   Create List    admin    ${base password}
-    Slow    REST Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
     Return From Keyword If    not $cloud_email    ${system}
 
 #   Connect system to cloud if email is provided
