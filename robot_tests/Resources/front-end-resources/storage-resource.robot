@@ -53,36 +53,36 @@ Storage Suite Setup
     ${storage string 2} =    Get Substring    ${storage string 2}    1
 
     ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string 1}
-    Set Suite Variable    ${port0}    ${port[0]}
+    Set Suite Variable    ${port0}    ${port['port']}
     Sleep     10
     Log    docker storage0-${random} created ..... | PASS |    DEBUG      console=${console}
     Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
     ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId0}    ${sysId}
     Sleep    10
-    Close Connection
+    # Close Connection
     Log    ${system names[0]} system created ..... | PASS |    DEBUG      console=${console}
 
     ${port} =    Create Docker Server    storage1-${random}    4.1_test    ${storage string 2}
-    Set Suite Variable    ${port1}    ${port[0]}
+    Set Suite Variable    ${port1}    ${port['port']}
     Sleep     10
     Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}
     Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
     ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId1}    ${sysId}
     Sleep    10
-    Close Connection
+    # Close Connection
     Log   ${system names[1]} system created ..... | PASS |    DEBUG      console=${console}
 
     ${port} =    Create Docker Server    storage2-${random}    4.1_test
-    Set Suite Variable    ${port2}    ${port[0]}
+    Set Suite Variable    ${port2}    ${port['port']}
     Sleep     10
     Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}
     Setup Local System    https://${QA BURBANK IP}:${port2}    ${BASE PASSWORD}    ${system names[2]}
     ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2}    ${system names[2]}    ${owner}    ${BASE PASSWORD}
     Set Suite Variable    ${sysId2}    ${sysId}
     Sleep    10
-    Close Connection
+    # Close Connection
     Log   ${system names[2]} system created ..... | PASS |    DEBUG      console=${console}
 
     ${SUITE AUTO TESTS USERS} =    Create Dictionary
@@ -125,9 +125,9 @@ Storage Suite Setup
     Sleep    90
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
     ${results}    Execute Command    docker container port storage0-${random}
-    @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    Close Connection
-    Set Suite Variable    ${port0}    ${portnew[0]}
+    # @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    # Close Connection
+    # Set Suite Variable    ${port0}    ${portnew[0]}
 
     # Sleep    30
 

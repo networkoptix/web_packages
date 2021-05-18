@@ -9,7 +9,7 @@ Force Tags        Threaded    activate
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
+${symbol password}    pass!@#$%^&*()_-+=;'"`~,./\|?[]{}
 @{auth}        ${BASE EMAIL}    ${BASE PASSWORD}
 
 *** Keywords ***
