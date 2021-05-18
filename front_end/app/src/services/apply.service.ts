@@ -388,13 +388,19 @@ export class NxApplyService {
                     return;
                 } else {
                     // cover a case with dynamic fields in form represented as array
-                    Object.keys(change).forEach(key => {
-                        if (isArray(change[key])) {
-                            if (change[key].length !== extNgForm.originalForm[key].length) {
-                                extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+                    // filter out ddMultiSelect as selected items are represented as
+                    // an array (same as dynamic form fields)
+                    // I don't want to over complicate the logic -> so if we ever have a need
+                    // to use ddMultiSelect in dynamic form we'll need to refactor this -- TT
+                    Object.keys(change)
+                        .filter(key => key !== 'ddMultiSelect')
+                        .forEach(key => {
+                            if (isArray(change[key])) {
+                                if (change[key].length !== extNgForm.originalForm[key].length) {
+                                    extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+                                }
                             }
-                        }
-                    });
+                        });
                 }
 
                 const hasChange = !NxUtilsService.isEqual(extNgForm.originalForm, change);
