@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 
 import { ms, px } from '../../../utils/type-aliases';
 import TimelineService from './timeline.service';
+import { NxUtilsService } from '@services/utils.service';
 
 export interface TimelineTimeUnderMouseServiceStatus {
     isMouseInside: boolean,
@@ -49,9 +50,9 @@ export class TimelineTimeUnderMouseService {
     ) {
     }
 
-    public handleMouseMove (e: MouseEvent) {
-        this._offsetX = e.offsetX;
-        this._timeUnderMouse = this.timeline.domOffsetXtoTime(e.offsetX);
+    public handleMouseMove (e: MouseEvent|TouchEvent) {
+        this._offsetX = NxUtilsService.calcOffsetX(e);
+        this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
         this._emit();
     }
 
