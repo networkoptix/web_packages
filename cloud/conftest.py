@@ -1,8 +1,10 @@
 import pytest
 
-from api.tests.utils import NxTestClient
+from api.tests.utils import NxTestClient, NxAPIClient
 from cms.controllers.structure import read_structure_json
 from cms.models import *
+
+from rest_framework.test import APIRequestFactory
 
 
 @pytest.fixture(scope='session')
@@ -19,6 +21,16 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
 @pytest.fixture(autouse=True)
 def set_settings(settings):
     settings.TESTING = True
+
+
+@pytest.fixture()
+def arf():
+    return APIRequestFactory()
+
+
+@pytest.fixture()
+def api_client():
+    return NxAPIClient()
 
 
 @pytest.fixture

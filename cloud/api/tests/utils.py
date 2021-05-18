@@ -2,11 +2,12 @@ from django.conf import settings
 from django.http import HttpRequest, SimpleCookie
 from django.test import Client
 
+from rest_framework.test import APIClient
 
 from importlib import import_module
 
 
-class NxTestClient(Client):
+class NxOverride:
     def _login(self, user, backend=None, ip='127.0.0.1'):
         from django.contrib.auth import login
         engine = import_module(settings.SESSION_ENGINE)
@@ -51,3 +52,17 @@ class NxTestClient(Client):
         self.cookies = SimpleCookie()
 
 
+class NxTestClient(NxOverride, Client):
+    pass
+
+
+class NxAPIClient(NxOverride, APIClient):
+    def logout(self):
+        self._credentials = {}
+
+        # Also clear any `force_authenticate`
+        self.handler._force_user = None
+        self.handler._force_token = None
+
+        if self.session:
+            super().logout()

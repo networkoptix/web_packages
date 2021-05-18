@@ -227,7 +227,7 @@ def disconnect(request):
 def connect(request):
     require_params(request, ('name',))
     if request.user.is_authenticated:
-        data = cloud_api.System.bind(request.session['login'], request.session['password'], request.data['system_id'])
+        data = cloud_api.System.bind(request.session['login'], request.session['password'], request.data['name'])
         return api_success(data)
 
     require_params(request, ('email', 'password'))
