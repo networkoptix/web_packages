@@ -155,7 +155,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         const lastTouched = this.lastTouched;
         // Detect and handle double touches
         if (lastTouched?.target === e.target && lastTouched?.timeStamp + 500 > e.timeStamp) {
-            switch (e.target.classList.value) {
+            switch (e.target) {
                 case this.leftView.nativeElement:
                     this.buttonLeftDblClickHandler();
                     break;
