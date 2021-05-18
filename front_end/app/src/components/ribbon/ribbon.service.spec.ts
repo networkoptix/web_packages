@@ -35,7 +35,7 @@ describe('NxRibbonService', () => {
                 { provide: NxAppStateService, useValue: spyAppState }
             ]
         });
-    });
+    }));
 
     it('should be created', inject([NxRibbonService], (service: NxRibbonService) => {
         expect(service).toBeTruthy();

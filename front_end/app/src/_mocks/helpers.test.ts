@@ -15,3 +15,8 @@ export class MockProvider<Provider, Value> {
             ? provider
             : new MockProvider<T, {}>(provider, {});
 }
+
+export const sanitizerMock = {
+    sanitize                : (_, val) => val,
+    bypassSecurityTrustHtml : (val) => val
+};

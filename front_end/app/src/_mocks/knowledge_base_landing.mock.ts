@@ -54,6 +54,135 @@ export const introNode = {
     ]
 };
 
+export const supportNode = {
+    title       : 'Developer Support',
+    subtitle    : '',
+    displayName : 'Developer Support',
+    nodes       : undefined,
+    url         : '/docs/developers/knowledgebase/211',
+    assetId     : 211,
+    asset       : {
+        title            : 'Developer Support',
+        shortDescription : 'Support Content Here',
+        blocks           : [
+            {
+                type        : 'text',
+                contentHTML : "<h4>Visit our <a href=\"https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum\">Developer Forum</a> to be part of a community that will support you in the development process!</h4><p>You may find the forum helpful if you need:</p><ul><li>general feedback on your ideas from our engineering team or other developers,</li><li>help with issues that you encounter, or</li><li>answers for questions regarding the development process</li></ul><p>You may also leave feedback for us, including requests for any features you'd like to see on the platform. </p><p>Our dedicated engineering support team checks the forum for new posts on a daily basis. </p>",
+                content     : "Visit our Developer Forum to be part of a community that will support you in the development process!  You may find the forum helpful if you need:  general feedback on your ideas from our engineering team or other developers,help with issues that you encounter, oranswers for questions regarding the development process  You may also leave feedback for us, including requests for any features you'd like to see on the platform.   Our dedicated engineering support team checks the forum for new posts on a daily basis. "
+            }
+        ],
+        script : '',
+        id     : 211
+    },
+    icon      : 'support about-left.svg about-right.svg',
+    newWindow : true
+};
+
+export const devToolsNode = {
+    title       : 'Developer Tools',
+    subtitle    : '',
+    displayName : 'Developer Tools',
+    nodes       : [
+        {
+            title       : 'Server HTTP Rest API',
+            subtitle    : '',
+            displayName : 'Server HTTP Rest API',
+            nodes       : undefined,
+            url         : '/docs/developers/knowledgebase/418',
+            assetId     : 418,
+            asset       : {
+                title            : 'HTTP REST API',
+                shortDescription : "Using the Server API, developers have the ability to access nearly every feature available in brand Witness, the system's thick client.",
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : "<h3>What is brand Witness Server API?</h3><p>The Server API provides a standard set of HTTP calls for 3rd party systems. Using the Server API, developers have the ability to access nearly every feature available in the system's thick client, including but not limited to:</p><ul><li>query/manage system resources (servers, cameras, users) </li><li>manage users and permissions </li><li>pull live or recorded video out of the system </li><li>generate events</li><li>create rules </li><li>control PTZ cameras, and more</li></ul><h3>How to use brand Witness Server API</h3><p>brand Witness provides documentation to help developers work with the brand Witness Server. All parameters and expected returns are listed. </p><p>The APIs are all under the RESTFUL standard, so developers are able to simply interact with brand Witness Server via HTTP by POST or GET request. No matter which programming language you use, you can always retrieve the data and integrate your system with brand Witness.</p><h3>How to access API Documentation</h3><p>Find the API documentation when you install brand Witness server:<br/>Visit <a href=\"http://localhost:7001/static/index.html#/developers/api\">http://localhost:7001/static/index.html#/developers/api</a> if you have brand Witness Server installed on your computer, otherwise replace the localhost with an IP address if the server is installed in the local network.</p><ol><li>Open your web browser and access the Web Admin interface using the following format:\r<pre>http://&lt;server_ip&gt;:&lt;server_port&gt;</pre></li><li>Visit the API trial page:\r<pre>http://&lt;server_ip&gt;:&lt;server_port&gt;<strong>/static/index.html#/developers</strong></pre><pre>Example: <strong><a href=\"http://127.0.0.1:7001/static/index.html#/developers\" target=\"_self\">http://127.0.0.1:7001/static/index.html#/developers</a></strong></pre><!--EndFragment--><!--EndFragment--></li></ol><h4>Testing the API</h4><p>To help our users get started with brand Witness, we provide a simple tool for you to test the API and view readable return data. </p><ol><li>Open the Web Admin interface and visit the API trial page:\r<pre>http://&lt;server_ip&gt;:&lt;server_port&gt;/static/index.html#/developers</pre></li><li>On the page, you will be able to find the “<strong>API Testing Tool(new)</strong>” under the <strong>Server API</strong> section.<br/><details><summary><span style=\"text-decoration: underline;\">Visual Example</span></summary><br/><img alt=\"image.png (2039×1522)\" src=\"https://cloud-test.hdw.mx/static/media/server-http-rest-api/body-505/body-baeb050d-6ec5-4de4-abab-740664a89382.png\"/></details></li><li>Click the link of “<strong>API Testing Tool(new)</strong>”. You will then see the list of all server APIs, and you could click any of them to test and try the API.<br/><details><summary><span style=\"text-decoration: underline;\">Visual Example</span></summary><br/><img alt=\"image.png (2388×1404)\" src=\"https://cloud-test.hdw.mx/static/media/http-rest-api/body-460/body-32bd034f-f6c5-4dae-b306-c1345785a5d2.png\"/></details></li></ol>",
+                        content     : "What is brand Witness Server API?  The Server API provides a standard set of HTTP calls for 3rd party systems. Using the Server API, developers have the ability to access nearly every feature available in the system's thick client, including but not limited to:  query/manage system resources (servers, cameras, users) manage users and permissions pull live or recorded video out of the system generate eventscreate rules control PTZ cameras, and more  How to use brand Witness Server API  brand Witness provides documentation to help developers work with the brand Witness Server. All parameters and expected returns are listed.   The APIs are all under the RESTFUL standard, so developers are able to simply interact with brand Witness Server via HTTP by POST or GET request. No matter which programming language you use, you can always retrieve the data and integrate your system with brand Witness.  How to access API Documentation  Find the API documentation when you install brand Witness server:Visit http://localhost:7001/static/index.html#/developers/api if you have brand Witness Server installed on your computer, otherwise replace the localhost with an IP address if the server is installed in the local network.  Open your web browser and access the Web Admin interface using the following format:\rhttp://<server_ip>:<server_port>Visit the API trial page:\rhttp://<server_ip>:<server_port>/static/index.html#/developersExample: http://127.0.0.1:7001/static/index.html#/developers  Testing the API  To help our users get started with brand Witness, we provide a simple tool for you to test the API and view readable return data.   Open the Web Admin interface and visit the API trial page:\rhttp://<server_ip>:<server_port>/static/index.html#/developersOn the page, you will be able to find the “API Testing Tool(new)” under the Server API section.Visual ExampleClick the link of “API Testing Tool(new)”. You will then see the list of all server APIs, and you could click any of them to test and try the API.Visual Example"
+                    }
+                ],
+                script : '',
+                id     : 418
+            },
+            icon      : 'server.svg',
+            newWindow : false
+        },
+        {
+            title       : 'Server Plugin SDK (C++)',
+            subtitle    : '',
+            displayName : 'Server Plugin SDK (C++)',
+            nodes       : undefined,
+            url         : '/docs/developers/knowledgebase/357',
+            assetId     : 357,
+            asset       : {
+                title            : 'brand Witness Server Plugin SDK (C++)',
+                shortDescription : 'Get access to the brand Witness SDKs such as the Metadata SDK, Video Source SDK, and the Storage SDK. ',
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : "<h3>Where can I find the brand Witness SDK?</h3><p>The Developer Tools for brand Witness can be accessed directly from brand Witness Server in Web Admin. Below are the SDK's and what they do. </p><p><a href=\"../../../../../../../download/sdk\" rel=\"noopener\" target=\"_blank\">Download the brand Witness SDKs</a></p><h3>Metadata SDK</h3><p>The Metadata SDK enables the integration of 3rd party video analytics systems and devices such as people and object recognition by supporting the exchange of metadata and events. Metadata SDK enables developers to create applications/plugins that take advantage of custom rules and events to fulfill a video analytics function. For a step-to-step guide on integrating a video analytics plugin, please refer to the link below. </p><p>Read more: <a href=\"../../../../../../../docs/developers/knowledgebase/368\" rel=\"noopener\" target=\"_blank\">Integrating Video Analytics</a></p><h3>Video Source SDK</h3><p>The Video Source Integration SDK enables easy integration of any video source (live or archived) into the system. With the SDK, it's possible to create a method for discovering, displaying, analyzing, and recording video from virtually any live or recorded video source - IP Cameras, encoders, NVR's, DVR's, and more. It also allows for the integration of device I/O's (inputs &amp; outputs) and motion detection metadata.</p><h3>Storage SDK</h3><p>The Storage SDK enables easy integration of any potential storage. Using the Storage SDK developers can read from or write to any storage location - locally available, remote storage, and even cloud servers. Creating a storage plugin requires implementing standard functions such as I/O stream, if files exist, delete files, list of files in the folder, etc. The Storage SDK also contains an example of using an FTP server as a storage location.</p><p class=\"wysiwyg-text-align-center\"> </p>",
+                        content     : "Where can I find the brand Witness SDK?  The Developer Tools for brand Witness can be accessed directly from brand Witness Server in Web Admin. Below are the SDK's and what they do.   Download the brand Witness SDKs  Metadata SDK  The Metadata SDK enables the integration of 3rd party video analytics systems and devices such as people and object recognition by supporting the exchange of metadata and events. Metadata SDK enables developers to create applications/plugins that take advantage of custom rules and events to fulfill a video analytics function. For a step-to-step guide on integrating a video analytics plugin, please refer to the link below.   Read more: Integrating Video Analytics  Video Source SDK  The Video Source Integration SDK enables easy integration of any video source (live or archived) into the system. With the SDK, it's possible to create a method for discovering, displaying, analyzing, and recording video from virtually any live or recorded video source - IP Cameras, encoders, NVR's, DVR's, and more. It also allows for the integration of device I/O's (inputs & outputs) and motion detection metadata.  Storage SDK  The Storage SDK enables easy integration of any potential storage. Using the Storage SDK developers can read from or write to any storage location - locally available, remote storage, and even cloud servers. Creating a storage plugin requires implementing standard functions such as I/O stream, if files exist, delete files, list of files in the folder, etc. The Storage SDK also contains an example of using an FTP server as a storage location.   "
+                    }
+                ],
+                script : '',
+                id     : 357
+            },
+            icon      : 'server.svg',
+            newWindow : false
+        },
+        {
+            title       : 'Cloud API',
+            subtitle    : '',
+            displayName : 'Cloud API',
+            nodes       : undefined,
+            url         : '/docs/developers/knowledgebase/358',
+            assetId     : 358,
+            asset       : {
+                title            : 'Cloud API: Route API Calls via brand Cloud',
+                shortDescription : 'Learn how to send API Calls to a system via brand Cloud.\r\n',
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : "<h3>Sending API Calls to a System via brand Cloud</h3><p>Sending Generic Events/API Calls to an brand Witness System via brand Cloud is both possible and pretty straightforward. </p><p>Every API call (like an <a href=\"/docs/developers/knowledgebase/445\" rel=\"noopener\" target=\"_blank\">HTTP Generic Event</a>) has a standard structure that begins with <a href=\"http://addressport\">https://address:port/api/</a> - which includes:</p><ul><li>the protocol (http, https)</li><li>domain (IP address + port or domain name)</li><li>and path to api (/api).</li></ul><p>When sending an API call on a local or virtual network most often the domain is the IP address (either public or private) of the computer running the brand Witness Server application followed by port 7001 (the default port when installing brand Witness).</p><p>When sending an API call via brand Cloud the request will be transferred through the brand Cloud proxy service (e.g. 3rd Party --&gt; brand Cloud --&gt; brand Witness Server) and, as a result, you'll need to:</p><ul><li>modify the URL structure</li><li>include the <strong>cloudSystemId</strong></li></ul><p>Below we outline how to do that in a bit more detail.</p><p>A few things to consider before you begin:</p><ul><li>Only<em> HTTPS</em> calls will work using this method.</li><li>Browser based requests will not work (<a href=\"https://en.wikipedia.org/wiki/Cross-origin_resource_sharing\">CORS protection</a>)</li><li>Supports HLS streams but doesn’t support RTSP streams</li></ul><h3>Step 1: Find your cloudSystemId</h3><p>There are three different methods to find the cloudSystemId:</p><h4>Method 1: Find cloudSystemId in a Browser</h4><p>This is the simplest method.</p><ol><li>Log in to brand Cloud (<a href=\"https://cloud-test.hdw.mx/systems\">https://cloud-test.hdw.mx/systems</a>) </li><li>Select the target System (the System you'd like send API calls to)</li><li>In the browser check the URL - the cloudSystemId is the long string after https://cloud-test.hdw.mx/systems/<br/><br/>Example:<br/>https://cloud-test.hdw.mx/systems/397f56fb-4c5c-485e-a923-9bea345fa7ba<br/><strong>397f56fb-4c5c-485e-a923-9bea345fa7ba</strong> is the ID you need</li></ol><h4>Method 2: Find cloudSystemId via a direct API call</h4><p>Make sure you're logged into the brand Witness Server Web Admin interface or include</p><ol><li>Send a direct API call to a Server in your System to request moduleInformation\r<ul><li>API format: <a href=\"https://serverIPaddress/api/moduleInformation\">https://serverIPaddress/api/moduleInformation</a></li></ul></li><li>Search through the Json response for <strong>cloudSystemId</strong> and you should be good to go.</li></ol><h4>Method 3: Find cloudSystemId via an brand Cloud API call</h4><ol><li>Make a cloud request <a href=\"https://cloud-test.hdw.mx/cdb/system/get\">https://cloud-test.hdw.mx/cdb/system/get</a> using digest<br/>authentication and your brand Cloud credentials (username, password).</li><li>The response will contain a list of all cloud-connected Systems available for the credentials you use.</li></ol><h3>Step 2: Update your API call URL to include the brand Cloud relay.</h3><ol><li>Replace the local IP and port of your original request with<br/><pre>https://{systemId}.relay.vmsproxy.com</pre>\rExample<br/>Before: <a href=\"http://127.0.0.1:7001/api/createEvent?source=Cloud&amp;caption=Test\" style=\"background-color: #ffffff;\">http://127.0.0.1:7001/api/createEvent?source=Cloud&amp;caption=Test <br/></a>After: <a href=\"https://397f56fb-4c5c-485e-a923-9bea345fa7ba.relay.vmsproxy.com\" style=\"background-color: #ffffff;\">https://397f56fb-4c5c-485e-a923-9bea345fa7ba.relay.vmsproxy.com</a><a href=\"http://127.0.0.1:7001/api/createEvent?source=Cloud&amp;caption=Test\" style=\"background-color: #ffffff;\">/api/createEvent?source=Cloud&amp;caption=Test</a></li></ol>",
+                        content     : "Sending API Calls to a System via brand Cloud  Sending Generic Events/API Calls to an brand Witness System via brand Cloud is both possible and pretty straightforward.   Every API call (like an HTTP Generic Event) has a standard structure that begins with https://address:port/api/ - which includes:  the protocol (http, https)domain (IP address + port or domain name)and path to api (/api).  When sending an API call on a local or virtual network most often the domain is the IP address (either public or private) of the computer running the brand Witness Server application followed by port 7001 (the default port when installing brand Witness).  When sending an API call via brand Cloud the request will be transferred through the brand Cloud proxy service (e.g. 3rd Party --> brand Cloud --> brand Witness Server) and, as a result, you'll need to:  modify the URL structureinclude the cloudSystemId  Below we outline how to do that in a bit more detail.  A few things to consider before you begin:  Only HTTPS calls will work using this method.Browser based requests will not work (CORS protection)Supports HLS streams but doesn’t support RTSP streams  Step 1: Find your cloudSystemId  There are three different methods to find the cloudSystemId:  Method 1: Find cloudSystemId in a Browser  This is the simplest method.  Log in to brand Cloud (https://cloud-test.hdw.mx/systems) Select the target System (the System you'd like send API calls to)In the browser check the URL - the cloudSystemId is the long string after https://cloud-test.hdw.mx/systems/Example:https://cloud-test.hdw.mx/systems/397f56fb-4c5c-485e-a923-9bea345fa7ba397f56fb-4c5c-485e-a923-9bea345fa7ba is the ID you need  Method 2: Find cloudSystemId via a direct API call  Make sure you're logged into the brand Witness Server Web Admin interface or include  Send a direct API call to a Server in your System to request moduleInformation\rAPI format: https://serverIPaddress/api/moduleInformationSearch through the Json response for cloudSystemId and you should be good to go.  Method 3: Find cloudSystemId via an brand Cloud API call  Make a cloud request https://cloud-test.hdw.mx/cdb/system/get using digestauthentication and your brand Cloud credentials (username, password).The response will contain a list of all cloud-connected Systems available for the credentials you use.  Step 2: Update your API call URL to include the brand Cloud relay.  Replace the local IP and port of your original request withhttps://{systemId}.relay.vmsproxy.com\rExampleBefore: http://127.0.0.1:7001/api/createEvent?source=Cloud&caption=Test After: https://397f56fb-4c5c-485e-a923-9bea345fa7ba.relay.vmsproxy.com/api/createEvent?source=Cloud&caption=Test"
+                    }
+                ],
+                script : '',
+                id     : 358
+            },
+            icon      : 'cloud.svg',
+            newWindow : false
+        },
+        {
+            title       : 'Other Tools',
+            subtitle    : '',
+            displayName : 'Other Tools',
+            nodes       : undefined,
+            url         : '/docs/developers/knowledgebase/359',
+            assetId     : 359,
+            asset       : {
+                title            : 'TestCamera: IP Camera Emulator',
+                shortDescription : 'Use TestCamera to stream a looped video file to brand Witness as an emulated camera.',
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : '<h3>What is TestCamera?</h3><p>TestCamera is an experimental application that allows users to stream a looped video file to brand Witness as an emulated camera. TestCamera is launched using a command-line interface (i.e., Terminal, CMD, etc.). </p><p>It solves several problems:</p><ul><li style="font-weight: 400;"><strong>Development</strong>: Developers are able to work on integrations without hardware devices (cameras, network gear, etc).</li><li style="font-weight: 400;"><strong>Debugging</strong>: Create a predictable and replicable video stream for testing and debugging video analytics solutions</li><li style="font-weight: 400;"><strong>Performance testing</strong>: Create hundreds of “cameras” to test hardware and software performance and reliability</li><li style="font-weight: 400;"><strong>Demonstrations</strong>: Create a mobile software-only “camera” set to use in demos</li></ul><h3>Installing and Using TestCamera</h3><p><code>\r  &lt;filePath&gt;/testcamera &lt;option&gt; &lt;cameraSet&gt;;&lt;cameraSet2&gt;</code></p><ul><li style="font-weight: 400;"><strong>&lt;option&gt;</strong> – the below options\r<ul><li style="font-weight: 400;"><strong>-I</strong> – limit discoverability of testcameras to a specified network interface (for example, to limit the testcameras to your machine: -I=127.0.0.1). See <em>Known Testcamera Limitations</em> below for more information.</li><li style="font-weight: 400;"><strong>-S</strong> – create a separate TestCamera per primary video file</li></ul></li><li style="font-weight: 400;"><strong>&lt;cameraSet&gt;</strong> – at least one set of semi-colon separated parameters, such as below\r<ul style="font-weight: 400;"><li style="font-weight: 400;"><strong>files="" </strong>– a comma-separated list of video-files for hi-quality/primary streams</li><li style="font-weight: 400;"><strong>secondary-files=""</strong> – a comma-separated list of video-files for low-quality/secondary streams (optional)</li><li style="font-weight: 400;"><strong>count</strong> – number of TestCameras to create, if more than one is needed (for example, count=5)</li></ul></li></ul><h4>Example - Create one TestCamera that can only be discovered by your machine:</h4><pre>C:/testcamera -I=127.0.0.1 files="C:/hq.mkv";secondary-files"lq.mkv";</pre><p><strong>NOTE: </strong>Run the testcamera command with no parameters to access the help function and see the full list of commands.</p><h3>Windows</h3><p>TestCamera is available to download as a separate application on the <a href="/integrations/34">Integrations Marketplace</a>. </p><ol><li>Create a folder in the directory of your choice and name it <em>test_camera</em> (for example, C:\\test_camera)</li><li>Download the Testcamera package and extract it to <em>C:\\test_camera</em></li><li>Place any video files you plan on using into <em>C:\\test_camera</em></li><li>Open CMD and navigate to the TestCamera folder:<br/><pre>cd C:/test_camera</pre></li><li>Run the <strong>testcamera</strong> command with your desired parameters and values.</li></ol><h4>Example 1</h4><p>Create 100 identical cameras for performance testing and prevent the TestCameras from being discovered by other computers on the network</p><pre>testcamera -I=127.0.0.1 files="hq1.mkv";secondary-files="lq1.mkv";count=100</pre><h4>Example 2</h4><p>Create three TestCameras from three different source files</p><pre><strong>testcamera -S files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"</strong></pre><h4>Example 3</h4><p>Create three TestCameras from three different source files and prevent the TestCameras from being discovered by other computers on the network</p><pre><strong>testcamera -S -I=127.0.0.1 files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"</strong></pre><h3>Ubuntu</h3><p>TestCamera is included in the server package for all Ubuntu installations.</p><ol><li>Using admin permissions, place any video files you plan on using into <em>/opt/networkoptix/bin/<br/><br/></em><strong>Note</strong>: If you do not have admin permissions to place video files in the same folder as the TestCamera program, you will have to use the full file path of the videos in the cameraSet.<br/><br/></li><li>Open Terminal and navigate to the TestCamera folder:<br/><pre>cd /opt/networkoptix/bin/testcamera</pre></li><li>Run the <strong>./testcamera</strong> command with your desired parameters and values.</li></ol><h4>Example 1</h4><p>Create 100 identical cameras for performance testing and prevent the TestCameras from being discovered by other computers on the network</p><pre>./testcamera -I=127.0.0.1 files="hq1.mkv";secondary-files="lq1.mkv";count=100</pre><h4>Example 2</h4><p>Create three TestCameras from three different source files</p><pre>./testcamera -S files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"</pre><h4>Example 3</h4><p>Create three TestCameras from three different source files and prevent the TestCameras from being discovered by other computers on the network</p><pre>./testcamera -S -I=127.0.0.1 files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"</pre><h3>Best Practices</h3><h4>Use Relevant Files</h4><p>Create and utilize video files that are similar to the conditions you would like to replicate. The easiest way to get such a sample is to set the real camera to record in brand Witness, then export a part of the archive.</p><h4>Adjusting the Frame Rate (FPS)</h4><p>If you want to change camera frame-per-second (fps) rate, you can modify the frame rate using camera settings in brand Witness Desktop:</p><p>Just select all TestCameras you want to modify (drag across cameras in brand Witness Desktop to select multiple), open the Camera Settings Dialog, and adjust the recording schedule to the desired FPS and save to apply the changes.</p><h4>Quick start</h4><p>We highly recommended creating an executable script (.bat for Windows, .sh for Linux) for starting TestCamera quickly.</p><h3>Known TestCamera Limitations</h3><ul><li style="font-weight: 400;">TestCamera loads every file to memory, so using it with a lot of different files requires additional memory.</li><li style="font-weight: 400;">TestCamera uses only the first 100 MB of a file</li><li style="font-weight: 400;">TestCamera is only compatible with the same version server</li><li style="font-weight: 400;">Please, be careful when using TestCamera in a network with several brand Witness Servers running on the same LAN subnet will discover the TestCamera “cameras” and add them to their databases. Use <strong>-I</strong>  key to limit availability by network.</li></ul><h3>A Few Sample Files</h3><p>Some files to get you started quickly:</p><ul><li style="font-weight: 400;"><a href="https://cloud-test.hdw.mx/static/media/testcamera--ip-camera-emulator/additional-file-1-481/Timer_High_Stream.mkv" rel="noopener" target="_blank">Timer High stream</a> </li><li style="font-weight: 400;"><a href="https://cloud-test.hdw.mx/static/media/testcamera--ip-camera-emulator/additional-file-2-482/Timer_Low_Stream.mkv" rel="noopener" target="_blank">Timer Low stream</a></li><li style="font-weight: 400;"><a href="https://cloud-test.hdw.mx/static/media/testcamera--ip-camera-emulator/additional-file-3-483/Traffic_High_Stream.mkv" rel="noopener" target="_blank">Traffic High stream</a></li><li style="font-weight: 400;"><a href="https://cloud-test.hdw.mx/static/media/testcamera--ip-camera-emulator/additional-file-4-484/Traffic_Low_Stream.mkv" rel="noopener" target="_blank">Traffic Low stream</a></li></ul>',
+                        content     : 'What is TestCamera?  TestCamera is an experimental application that allows users to stream a looped video file to brand Witness as an emulated camera. TestCamera is launched using a command-line interface (i.e., Terminal, CMD, etc.).   It solves several problems:  Development: Developers are able to work on integrations without hardware devices (cameras, network gear, etc).Debugging: Create a predictable and replicable video stream for testing and debugging video analytics solutionsPerformance testing: Create hundreds of “cameras” to test hardware and software performance and reliabilityDemonstrations: Create a mobile software-only “camera” set to use in demos  Installing and Using TestCamera  \r  <filePath>/testcamera <option> <cameraSet>;<cameraSet2>  <option> – the below options\r-I – limit discoverability of testcameras to a specified network interface (for example, to limit the testcameras to your machine: -I=127.0.0.1). See Known Testcamera Limitations below for more information.-S – create a separate TestCamera per primary video file<cameraSet> – at least one set of semi-colon separated parameters, such as below\rfiles="" – a comma-separated list of video-files for hi-quality/primary streamssecondary-files="" – a comma-separated list of video-files for low-quality/secondary streams (optional)count – number of TestCameras to create, if more than one is needed (for example, count=5)  Example - Create one TestCamera that can only be discovered by your machine:  C:/testcamera -I=127.0.0.1 files="C:/hq.mkv";secondary-files"lq.mkv";  NOTE: Run the testcamera command with no parameters to access the help function and see the full list of commands.  Windows  TestCamera is available to download as a separate application on the Integrations Marketplace.   Create a folder in the directory of your choice and name it test_camera (for example, C:\\test_camera)Download the Testcamera package and extract it to C:\\test_cameraPlace any video files you plan on using into C:\\test_cameraOpen CMD and navigate to the TestCamera folder:cd C:/test_cameraRun the testcamera command with your desired parameters and values.  Example 1  Create 100 identical cameras for performance testing and prevent the TestCameras from being discovered by other computers on the network  testcamera -I=127.0.0.1 files="hq1.mkv";secondary-files="lq1.mkv";count=100  Example 2  Create three TestCameras from three different source files  testcamera -S files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"  Example 3  Create three TestCameras from three different source files and prevent the TestCameras from being discovered by other computers on the network  testcamera -S -I=127.0.0.1 files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"  Ubuntu  TestCamera is included in the server package for all Ubuntu installations.  Using admin permissions, place any video files you plan on using into /opt/networkoptix/bin/Note: If you do not have admin permissions to place video files in the same folder as the TestCamera program, you will have to use the full file path of the videos in the cameraSet.Open Terminal and navigate to the TestCamera folder:cd /opt/networkoptix/bin/testcameraRun the ./testcamera command with your desired parameters and values.  Example 1  Create 100 identical cameras for performance testing and prevent the TestCameras from being discovered by other computers on the network  ./testcamera -I=127.0.0.1 files="hq1.mkv";secondary-files="lq1.mkv";count=100  Example 2  Create three TestCameras from three different source files  ./testcamera -S files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"  Example 3  Create three TestCameras from three different source files and prevent the TestCameras from being discovered by other computers on the network  ./testcamera -S -I=127.0.0.1 files="hq1.mkv,hq2.mkv,hq3.mkv";secondary-files="lq1.mkv,lq2.mkv,lq3.mkv"  Best Practices  Use Relevant Files  Create and utilize video files that are similar to the conditions you would like to replicate. The easiest way to get such a sample is to set the real camera to record in brand Witness, then export a part of the archive.  Adjusting the Frame Rate (FPS)  If you want to change camera frame-per-second (fps) rate, you can modify the frame rate using camera settings in brand Witness Desktop:  Just select all TestCameras you want to modify (drag across cameras in brand Witness Desktop to select multiple), open the Camera Settings Dialog, and adjust the recording schedule to the desired FPS and save to apply the changes.  Quick start  We highly recommended creating an executable script (.bat for Windows, .sh for Linux) for starting TestCamera quickly.  Known TestCamera Limitations  TestCamera loads every file to memory, so using it with a lot of different files requires additional memory.TestCamera uses only the first 100 MB of a fileTestCamera is only compatible with the same version serverPlease, be careful when using TestCamera in a network with several brand Witness Servers running on the same LAN subnet will discover the TestCamera “cameras” and add them to their databases. Use -I  key to limit availability by network.  A Few Sample Files  Some files to get you started quickly:  Timer High stream Timer Low streamTraffic High streamTraffic Low stream'
+                    }
+                ],
+                script : '',
+                id     : 359
+            },
+            icon      : 'other.svg',
+            newWindow : false
+        }
+    ],
+    url       : '',
+    assetId   : null,
+    asset     : undefined,
+    icon      : 'devTools',
+    newWindow : false
+};
+
 export const capabilitiesNode = {
     title       : 'What is Possible',
     subtitle    : '',
@@ -220,6 +349,366 @@ export const getStartedNode = {
     assetId   : null,
     asset     : undefined,
     icon      : 'getStarted',
+    newWindow : false
+};
+
+export const integrationsNode = {
+    title       : 'Integrations Marketplace',
+    subtitle    : '',
+    displayName : 'Integrations Marketplace',
+    nodes       : [
+        {
+            title       : 'About Marketplace',
+            subtitle    : 'Integrations Marketplace',
+            displayName : 'About Marketplace',
+            nodes       : undefined,
+            url         : '/integrations',
+            assetId     : 244,
+            asset       : {
+                title            : 'Integrations Marketplace',
+                shortDescription : 'Integrations Marketplace helps you promote your integrations to customers and system integrators.',
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : '<p>Integrations Marketplace helps you promote your integrations to customers and system integrators.</p>',
+                        content     : 'Integrations Marketplace helps you promote your integrations to customers and system integrators.'
+                    }
+                ],
+                script : '',
+                id     : 244
+            },
+            icon      : '',
+            newWindow : false
+        },
+        {
+            title       : 'Examples of Plugins',
+            subtitle    : 'More Integrations',
+            displayName : 'Examples of Plugins',
+            nodes       : [
+                {
+                    title       : 'VisionLabs',
+                    subtitle    : '',
+                    displayName : 'VisionLabs',
+                    nodes       : undefined,
+                    url         : '',
+                    assetId     : 29,
+                    asset       : {
+                        information: {
+                            name             : 'VisionLabs (short)',
+                            logo             : 'https://cloud-test.hdw.mx/static/media/visionlabs--test-by-evgeny-/logo-4-596fda3dee64841dbd5b6ea2-VisionLab-WEB-png/596fda3dee_ewRUV1u.png',
+                            shortDescription : 'A two-side integration of brandWitness and VisionLabs delivers an ability to recognize faces, adjust your data base with know/authorized personnel, track events when people appear in front of a camera, make bookmarks with detailed information, automate ',
+                            type             : [
+                                {
+                                    id    : 'access',
+                                    label : 'Access Control'
+                                },
+                                {
+                                    id    : 'eventDetection',
+                                    label : 'Event Detection'
+                                },
+                                {
+                                    id    : 'faceRecognition',
+                                    label : 'Face Recognition'
+                                },
+                                {
+                                    id    : 'objectDetection',
+                                    label : 'Object Detection'
+                                },
+                                {
+                                    id    : 'videoAnalytics',
+                                    label : 'Video Analytics'
+                                }
+                            ],
+                            companyName              : 'VisionLabs',
+                            companyWeb               : 'http://www.acme.com',
+                            companyPrivacyPolicyLink : 'https://acme.com/privacy',
+                            termsOfUseLink           : 'https://acme.com/terms'
+                        },
+                        overview: {
+                            overviewVideo       : 'https://www.youtube.com/watch?v=BOLzw7_YBqQ',
+                            description         : '<p>A two-side integration of brandWitness and VisionLabs delivers an ability to recognize faces, adjust your data base with know/authorized personnel, track events when people appear in front of a camera, make bookmarks with detailed information, automate door access controls and much more.</p>',
+                            overviewScreenshot1 : 'https://cloud-test.hdw.mx/static/media/visionlabs--test-by-evgeny-/overviewscreenshot1-1-p1-PNG/p1.PNG',
+                            overviewScreenshot2 : 'https://cloud-test.hdw.mx/static/media/visionlabs--test-by-evgeny-/overviewscreenshot2-2-p2-PNG/p2.PNG',
+                            overviewScreenshot3 : 'https://cloud-test.hdw.mx/static/media/visionlabs--test-by-evgeny-/overviewscreenshot3-3-p3-PNG/p3.PNG'
+                        },
+                        instructions: {
+                            instructionVideo         : 'https://www.youtube.com/watch?v=QaB6XTlZ9tg',
+                            installationInstructions : "<h3>Installation Instructions</h3>\r\n<p class=\"ng-binding\">Step 1. Import of the Virtual Machine (LUNA)</p>\r\n<p class=\"ng-binding\">Step 2. License Number 1 Installation</p>\r\n<p class=\"ng-binding\">Step 3. License Number 2 Installation.</p>\r\n<p class=\"ng-binding\">Step 4. Launch FaceStream</p>\r\n<p class=\"ng-binding\">Step 5. Configuring and launching Python scripts</p>\r\n<p class=\"ng-binding\">Step 6. Check if the System works</p>\r\n<p class=\"ng-binding\">*** Full and detailed instructions can be found in the installation package available for download.</p>\r\n<h3>How to Use</h3>\r\n<p class=\"ng-binding\">LUNA's Web Interface can be found at &lt;your virtual machine IP address:9000&gt;. Once you navigate to it, you'll be promted with a login page. Once logged in, click on Persons button to navigate to the Persons List web representation page. In order to add a new person to a list, click on a plus sign. Assign photos, previously captured by the system to a new person. Replace the description text by a new person's name and check the V to validate. *** Full and detailed instructions can be found in the installation package available for download.</p>"
+                        },
+                        support: {
+                            supportEmail: 'noptixautoqa+VisionLabsShort@gmail.com'
+                        },
+                        downloadFiles: {
+                            'linux-x64-file': 'https://cloud-test.hdw.mx/static/media/visionlabs--short-/linux-x64-file-260/IMG-1955.JPG'
+                        },
+                        downloadFilesOrder: {
+                            'windows-x64-file'       : 58,
+                            'linux-x64-file'         : 59,
+                            'arm-64-file'            : 60,
+                            'arm-32-file'            : 61,
+                            'macos-file'             : 62,
+                            'additional-file-1-name' : 63,
+                            'additional-file-1'      : 64,
+                            'additional-file-2-name' : 65,
+                            'additional-file-2'      : 66,
+                            'additional-file-3-name' : 67,
+                            'additional-file-3'      : 68,
+                            'external-link-name'     : 69,
+                            'external-link'          : 70,
+                            downloadableInstructions : 71
+                        },
+                        requirementsAndCompatibility: {
+                            testedVersions: [
+                            ],
+                            platforms: [
+                                'Windows - x64',
+                                'Linux - x64',
+                                'ARM 64bit / Nvidia Jetson',
+                                'ARM 32bit / Raspberry PI',
+                                'MacOS'
+                            ]
+                        },
+                        versionDetails: {
+                            version: '0.0.1'
+                        },
+                        lastModified : '03/05/2021',
+                        review_id    : null,
+                        id           : 29,
+                        mine         : false,
+                        canEdit      : null,
+                        urlified     : '29-visionlabs-short'
+                    },
+                    icon      : 'users.svg',
+                    newWindow : false
+                },
+                {
+                    title       : 'Face Recognition',
+                    subtitle    : '',
+                    displayName : 'Face Recognition',
+                    nodes       : undefined,
+                    url         : '',
+                    assetId     : 39,
+                    asset       : {
+                        information: {
+                            name             : 'vis - QA - face_recognition',
+                            logo             : 'https://cloud-test.hdw.mx/static/media/face-recognition/logo-12-face-recognition-png/face_recognition.png',
+                            shortDescription : 'Network Optix face_recognition test integration for brand Witness on brand Cloud.',
+                            type             : [
+                                {
+                                    id    : 'automation',
+                                    label : 'Automation'
+                                },
+                                {
+                                    id    : 'objectDetection',
+                                    label : 'Object Detection'
+                                },
+                                {
+                                    id    : 'faceRecognition',
+                                    label : 'Face Recognition'
+                                },
+                                {
+                                    id    : 'health',
+                                    label : 'Health Monitoring'
+                                }
+                            ],
+                            tags                     : 'QA,test,face,recognition,AI',
+                            companyName              : 'QA - Test Integration Company',
+                            companyWeb               : 'https://example.com/TestIntegrationCompany',
+                            companyPrivacyPolicyLink : 'https://example.com/TestIntegrationCompany/PrivacyPolicy',
+                            termsOfUseLink           : 'https://brandvms.com'
+                        },
+                        overview: {
+                            overviewVideo               : 'https://www.youtube.com/watch?v=hgTBLLMtpUA',
+                            description                 : '<p><span data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Network Optix face_recognition test integration for brand Witness on brand Cloud.&quot;}" data-sheets-formula="=&quot;Network Optix &quot;&amp;R[-8]C[0]&amp;&quot; test integration for brand Witness on brand Cloud.&quot;">Network Optix face_recognition test integration for brand Witness on brand Cloud.</span></p>',
+                            overviewScreenshot1         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot1-110-round-red-1-png/round-red-1.png',
+                            overviewScreenshot1caption  : '1st caption',
+                            overviewScreenshot2         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot2-111-round-red-2-png/round-red-2.png',
+                            overviewScreenshot2caption  : 'What is this telling us exactly?',
+                            overviewScreenshot3         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot3-112-round-red-3-png/round-red-3.png',
+                            overviewScreenshot3caption  : '1024x0768-4to3_Monitor.png',
+                            overviewScreenshot4         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot4-113-round-red-4-png/round-red-4.png',
+                            overviewScreenshot4caption  : '1152x0768-3to2_TV.png',
+                            overviewScreenshot5         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot5-114-round-red-5-png/round-red-5.png',
+                            overviewScreenshot5caption  : '1280x0720-16to9_HD.png',
+                            overviewScreenshot6         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot6-115-round-red-6-png/round-red-6.png',
+                            overviewScreenshot6caption  : '1280x0960-4to3_Monitor.png',
+                            overviewScreenshot7         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot7-116-round-red-7-png/round-red-7.png',
+                            overviewScreenshot7caption  : '1281x0854-3to2_TV.png',
+                            overviewScreenshot8         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot8-117-round-red-8-png/round-red-8.png',
+                            overviewScreenshot8caption  : '1400x1050-4to3_Monitor.png',
+                            overviewScreenshot9         : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot9-118-round-red-9-png/round-red-9.png',
+                            overviewScreenshot9caption  : '1440x0960-3to2_TV.png',
+                            overviewScreenshot10        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot10-119-round-red-0-png/round-red-0.png',
+                            overviewScreenshot10caption : '1680x1050-16to10_Wide.png',
+                            overviewScreenshot11        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot11-120-round-yellow-1-png/round-yellow-1.png',
+                            overviewScreenshot11caption : '1920x1080-16to9_HD.png',
+                            overviewScreenshot12        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot12-121-round-yellow-2-png/round-yellow-2.png',
+                            overviewScreenshot12caption : 'iPad_Pro-12.9-Landscape.png',
+                            overviewScreenshot13        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot13-122-round-yellow-3-png/round-yellow-3.png',
+                            overviewScreenshot13caption : 'iPad_Pro-12.9-Portrait.png',
+                            overviewScreenshot14        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot14-123-round-yellow-4-png/round-yellow-4.png',
+                            overviewScreenshot14caption : 'iPhone_X-Landscape.png',
+                            overviewScreenshot15        : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/overviewscreenshot15-124-round-yellow-5-png/round-yellow-5.png',
+                            overviewScreenshot15caption : 'iPhone_X-Portrait.png'
+                        },
+                        instructions: {
+                            instructionVideo         : 'https://vimeo.com/318079065',
+                            instructionScreenshot6   : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/instructionscreenshot6-130-square-purple-6-png/square-purple-6.png',
+                            instructionScreenshot7   : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/instructionscreenshot7-131-square-purple-7-png/square-purple-7.png',
+                            instructionScreenshot8   : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/instructionscreenshot8-132-square-purple-8-png/square-purple-8.png',
+                            instructionScreenshot9   : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/instructionscreenshot9-133-square-purple-9-png/square-purple-9.png',
+                            instructionScreenshot10  : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/instructionscreenshot10-134-square-purple-0-png/square-purple-0.png',
+                            installationInstructions : "<p><span data-sheets-value=\"{&quot;1&quot;:2,&quot;2&quot;:&quot;We don't need no stinking instructions.&quot;}\" data-sheets-userformat=\"{&quot;2&quot;:513,&quot;3&quot;:{&quot;1&quot;:0},&quot;12&quot;:0}\">We don't need no stinking instructiosns.</span></p>"
+                        },
+                        support: {
+                            supportEmail : 'noptixautoqa+face_recognition-Support@networkoptix.com',
+                            supportPhone : '(573) 884-1878',
+                            supportWeb   : 'https://example.com/TestIntegrationCompany/Support'
+                        },
+                        downloadFiles: {
+                            'additional-file-1-name' : 'Number 1',
+                            'additional-file-1'      : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/additional-file-1-233/oracle_vbox.asc',
+                            'additional-file-2-name' : 'Number 2',
+                            'additional-file-2'      : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/additional-file-2-234/oracle_vbox_2016.asc',
+                            'additional-file-3-name' : 'Number 3',
+                            'additional-file-3'      : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/additional-file-3-235/package-signing-key.pub',
+                            'external-link-name'     : 'Example External link',
+                            'external-link'          : 'http://google.com',
+                            downloadableInstructions : 'https://cloud-test.hdw.mx/static/media/qa---face-recognition/downloadableinstructions-236/Lorem_ipsum.pdf'
+                        },
+                        downloadFilesOrder: {
+                            'windows-x64-file'       : 58,
+                            'linux-x64-file'         : 59,
+                            'arm-64-file'            : 60,
+                            'arm-32-file'            : 61,
+                            'macos-file'             : 62,
+                            'additional-file-1-name' : 63,
+                            'additional-file-1'      : 64,
+                            'additional-file-2-name' : 65,
+                            'additional-file-2'      : 66,
+                            'additional-file-3-name' : 67,
+                            'additional-file-3'      : 68,
+                            'external-link-name'     : 69,
+                            'external-link'          : 70,
+                            downloadableInstructions : 71
+                        },
+                        requirementsAndCompatibility: {
+                            testedVersions: [
+                                '4.0',
+                                '3.2',
+                                '3.1',
+                                '3.0'
+                            ],
+                            testedBuild : '4.1.0.12345',
+                            platforms   : [
+                                'Windows - x64',
+                                'Linux - x64',
+                                'ARM 64bit / Nvidia Jetson',
+                                'ARM 32bit / Raspberry PI',
+                                'MacOS'
+                            ],
+                            additionalRequirements: '<p>Sed faucibus turpis in eu mi bibendum. Magna eget est lorem ipsum dolor sit amet. Iaculis nunc sed augue lacus viverra. Hac habitasse platea dictumst quisque sagittis purus sit. Consequat semper viverra nam libero justo laoreet sit. Nunc scelerisque viverra mauris in aliquam sem fringilla ut. Eget aliquet nibh praesent tristique magna sit amet purus. Integer enim neque volutpat ac. In hac habitasse platea dictumst quisque sagittis. Convallis aenean et tortor at risus. Ullamcorper sit amet risus nullam. Condimentum vitae sapien pellentesque habitant morbi tristique senectus. Urna neque viverra justo nec ultrices dui sapien. At tempor commodo ullamcorper a lacus. Dis parturient montes nascetur ridiculus mus. Iaculis eu non diam phasellus vestibulum. Pretium quam vulputate dignissim suspendisse in est ante in nibh.</p>\r\n<p>Proin nibh nisl condimentum id venenatis a condimentum vitae. Vitae ultricies leo integer malesuada nunc. Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>'
+                        },
+                        versionDetails: {
+                            version  : '0.1.17',
+                            whatsNew : '<p>Bugs fixed; bugs added.</p>'
+                        },
+                        lastModified : '05/05/2020',
+                        review_id    : null,
+                        id           : 39,
+                        mine         : false,
+                        canEdit      : null,
+                        urlified     : '39-vis---qa---facerecognition'
+                    },
+                    icon      : 'storages.svg',
+                    newWindow : false
+                },
+                {
+                    title       : 'Test',
+                    subtitle    : '',
+                    displayName : 'Test',
+                    nodes       : undefined,
+                    url         : '',
+                    assetId     : 68,
+                    asset       : {
+                        information: {
+                            name             : 'Test Integration 20190701ab',
+                            logo             : 'https://cloud-test.hdw.mx/static/media/test-integration-20190701a/logo-239/115783931601b5c.png',
+                            shortDescription : 'Test Integration 20190701a\r\n\r\nblah blah',
+                            type             : [
+                                {
+                                    id    : 'access',
+                                    label : 'Access Control'
+                                },
+                                {
+                                    id    : 'automation',
+                                    label : 'Automation'
+                                },
+                                {
+                                    id    : 'videoAnalytics',
+                                    label : 'Video Analytics'
+                                },
+                                {
+                                    id    : 'objectDetection',
+                                    label : 'Object Detection'
+                                }
+                            ],
+                            companyName              : 'QA Test Company',
+                            companyWeb               : 'https://example.com/',
+                            companyPrivacyPolicyLink : 'https://example.com/privacy',
+                            termsOfUseLink           : 'https://example.com/terms'
+                        },
+                        instructions: {
+                            installationInstructions: '<p><img src="../../../../../../../static/images/logo.png" alt="" /></p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>dfhdsh</p>\r\n<p>drhs</p>\r\n<p>dh</p>\r\n<p>dzshd</p>\r\n<p>sh</p>\r\n<p>sdth</p>\r\n<p>dzh</p>\r\n<p>dzh</p>\r\n<p>rdz</p>\r\n<p>hzdrh</p>\r\n<p>&nbsp;</p>\r\n<table dir="ltr" border="1" cellspacing="0" cellpadding="0"><colgroup><col width="100" /><col width="100" /><col width="100" /><col width="100" /><col width="100" /><col width="100" /></colgroup>\r\n<tbody>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;fdjhnftx&quot;}">fdjhnftx</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;jxfjnftx&quot;}">jxfjnftx</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;jbrandfn f&quot;}">jbrandfn f</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n<td>&nbsp;</td>\r\n</tr>\r\n</tbody>\r\n</table>'
+                        },
+                        support: {
+                            supportEmail: 'pauledwards+TestIntegration20190701a@networkoptix.com'
+                        },
+                        requirementsAndCompatibility: {
+                            testedVersions: [
+                                '4.0'
+                            ],
+                            platforms: [
+                                'Windows - x64'
+                            ]
+                        },
+                        versionDetails: {
+                            version: '0.0.3'
+                        },
+                        lastModified : '02/11/2021',
+                        review_id    : null,
+                        id           : 68,
+                        mine         : false,
+                        canEdit      : null,
+                        urlified     : '68-test-integration-20190701ab'
+                    },
+                    icon      : 'systems.svg',
+                    newWindow : false
+                }
+            ],
+            url     : '/integrations',
+            assetId : 521,
+            asset   : {
+                title            : 'Examples of Plugins Info',
+                shortDescription : 'Examples of plugins',
+                blocks           : [
+                    {
+                        type        : 'text',
+                        contentHTML : '<p> .</p>',
+                        content     : ' .'
+                    }
+                ],
+                script : '',
+                id     : 521
+            },
+            icon      : '',
+            newWindow : false
+        }
+    ],
+    url       : '/integrations',
+    assetId   : null,
+    asset     : undefined,
+    icon      : 'integrations',
     newWindow : false
 };
 
