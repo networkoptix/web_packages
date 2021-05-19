@@ -59,6 +59,7 @@
 }
 
 .arrow-flip svg-icon {
+    pointer-events: none;
     position: absolute;
     bottom: 10px;
     right: 8px;
