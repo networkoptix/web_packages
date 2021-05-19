@@ -122,7 +122,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     private loadCommonPasswords() {
         if (!this.CONFIG.commonPasswordsList) {
             this.passwordSubscription = this.api.getCommonPasswords()
-                .subscribe(data => {
+                .subscribe((data: { [key: string]: number; }) => {
                     this.CONFIG.commonPasswordsList = data;
                 });
         }

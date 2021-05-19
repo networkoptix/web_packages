@@ -10,7 +10,7 @@
 import { MenuNode } from '../menus.service';
 
 export interface BaseConfig {
-    commonPasswordsList?: string[];
+    commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
     previewPath?: string;

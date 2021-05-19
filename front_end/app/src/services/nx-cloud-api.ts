@@ -159,7 +159,7 @@ export class NxCloudApiService {
     }
 
     getCommonPasswords() {
-        return this.http.get<string[]>('/static/scripts/commonPasswordsList.json');
+        return this.http.get('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
