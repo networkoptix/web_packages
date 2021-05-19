@@ -18,9 +18,10 @@ Camera Suite Setup
     #local auth, cloud auth, server url, 
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${random}=   Generate Random String
-    Create Base Cloud System    cameras${random}
-
-    Add Software Cameras    1    ${system['port']}
+    #Create Base Cloud System    cameras${random}
+    ${system}    Create Base System    cameras${random}
+    Set Suite Variable    ${system}    ${system}
+    #Add Software Cameras    1    ${system['port']}
     Open Browser and go to URL    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup

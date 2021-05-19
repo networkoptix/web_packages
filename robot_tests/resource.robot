@@ -961,8 +961,14 @@ Register and Activate Generic Users
     ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
     ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
     ${custom}=         Register and activate account with random email    mark    hamil    ${password}
-    &{generic users}=    Create Dictionary     admin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advViewer=${adv viewer}    custom=${custom}
+    &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
     [Return]    &{generic users}
+
+Add Cloud Users
+    [Arguments]    ${auth}    ${users}    ${system id}
+    FOR  ${permission}  ${user}  IN  &{users}
+        Add user to cloud system if not there    ${system id}    ${permission}    ${user}    auth=${auth}
+    END
 
 Create Docker Server
     [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge    ${cloud email}=${None}
@@ -985,13 +991,6 @@ Create Docker Server
     Close Connection
     Release Lock   create_server_lock
     Return From Keyword If    not $cloud_email    ${server}
-    Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${base password}    ${server}[name]    timeout=1
-
-    #   Connect system to cloud if email is provided
-    Set To Dictionary    ${server}    owner=${cloud email}
-    ${id}=   Connect System to Cloud    ${local auth}   https://${QA BURBANK IP}:${server}[port]    ${server}[name]    ${server}[owner]    ${base password}
-    Set To Dictionary    ${server}    id=${id}
-    [Return]    ${server}
 
 Setup Custom Docker Server
     [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
@@ -1102,6 +1101,35 @@ Setup Docker System
 #    END
 #    Set Suite Variable    ${users}
 #    Set Suite Variable    ${local users}
+
+Create Base System
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${cloud}=${True}    ${add users}=${True}    ${storage string}=${EMPTY}
+    ${local auth}=   Create List    admin    ${base password}
+    ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
+    Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
+
+    # If cloud is true connect to cloud and get the cloud ID
+    ${owner}=   Run Keyword If    ${cloud}    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
+    ${cloud auth}=   Run Keyword If    ${cloud}    Create List    ${owner}    ${base password}
+    ${system id}=   Run Keyword if    ${cloud}    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server['port']}    ${container name}    ${owner}    ${BASE PASSWORD}
+    
+    # If add users is true add local users.  Add cloud users if both are true.
+    ${local users}=   Run Keyword If    ${add users}    Reset Local Users    ${local auth}    https://10.1.5.238:${server['port']}
+    &{cloud users}=   Run Keyword If    ${add users}==${True} and ${cloud}==${True}   Register and Activate Generic Users
+    Run Keyword If    ${add users}==${True} and ${cloud}==${True}    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
+    
+    # Add local auth to dict
+    Set To Dictionary    ${server}    local auth=${local auth}
+
+    # Add cloud info to dict if cloud is true
+    Run Keyword If    ${cloud}==${True}    Set To Dictionary    ${server}    owner=${owner}    cloud auth=${cloud auth}    cloud id=${system id}
+
+    # Add local users if add users is true
+    Run Keyword If    ${add users}==${True}    Set To Dictionary    ${server}    local users=${local users}
+
+    # Add cloud users if both are true
+    Run Keyword If    ${add users}==${True} and ${cloud}==${True}    Set To Dictionary    ${server}    cloud users=${cloud users}
+    [Return]    ${server}
 
 Create Base Cloud System
     [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
