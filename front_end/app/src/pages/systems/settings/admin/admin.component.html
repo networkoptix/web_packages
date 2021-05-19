@@ -10,7 +10,7 @@
                             (editModeState)="editMode = $event"
                             [nameWatcher]="systemNameWatcher"
                             [editEnabled]="system.isOnline && system.userManager.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
-                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [textOnly]="true"></nx-client-button>
+                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
                 </div>
 
                 <span class="system-owner" *ngIf="!CONFIG.isLocal">
