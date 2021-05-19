@@ -319,7 +319,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(
             takeUntil(this.cancelPoll$)
         ).subscribe(async() => {
-            const cameras = await this.system.cameraManager.getCameras().then(cameras => cameras.reduce((parsed, camera) => ({
+            const cameras = await this.system.cameraManager?.getCameras().then(cameras => cameras.reduce((parsed, camera) => ({
                 ...parsed,
                 [NxUtilsService.cleanId(camera.id)]: camera
             }), {}));

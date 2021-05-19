@@ -65,6 +65,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public canViewArchives = false;
     public showPlayerSection = false;
     public cameraError: string;
+    public transportError: boolean;
     private unsub$ = new Subject();
 
     constructor(
@@ -129,10 +130,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             });
 
         this.transports$.subscribe((transports) => {
-            if (!transports.includes(this.selectedTransport)) {
+            if (!transports.length) {
+                this.selectedTransport = undefined;
+                this.qualities = undefined;
+            } else if (!transports.includes(this.selectedTransport)) {
                 this.selectedTransport = transports.slice().shift();
+                this.qualities = this.availableTransportsAndResolutions[this.selectedTransport];
             }
-            this.qualities = this.availableTransportsAndResolutions[this.selectedTransport];
+
+            this.transportError = (this.selectedTransport === undefined);
         });
 
         this.qualities$.subscribe((qualities) => {
@@ -173,11 +179,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.transports$.next(transports || []);
     }
 
-    private get selectedTransport (): PlaybackTransport {
+    get selectedTransport (): PlaybackTransport {
         return this.selectedTransport$.getValue();
     }
 
-    private set selectedTransport (transport: PlaybackTransport) {
+    set selectedTransport (transport: PlaybackTransport) {
         this._log('setTransport', transport);
         if (this.selectedTransport !== transport) {
             this.qualities = this.availableTransportsAndResolutions[transport];
@@ -192,11 +198,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.qualities$.next(qualities?.map((quality) => this.quality2Verbose(quality)) || []);
     }
 
-    private get selectedQuality (): PlaybackQuality {
+    get selectedQuality (): PlaybackQuality {
         return this.selectedQuality$.getValue();
     }
 
-    private set selectedQuality (quality: PlaybackQuality) {
+    set selectedQuality (quality: PlaybackQuality) {
         quality = (quality || 'auto').toLowerCase();
         this._log('setQuality', quality);
         if (this.selectedQuality !== quality) {
