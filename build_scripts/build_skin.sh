@@ -30,7 +30,7 @@ dir=../skins/$SKIN
         rm -rf dist/customization
         # Save the repository info.
         echo "Create version.txt"
-        if [ -d "$2/.git" ] || [ -e "$2/.git" ]; then
+        if [ -e "$2/.git" ]; then
             git -C "$2" log -n 1 > dist/version.txt
             git -C "$2" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
         else
