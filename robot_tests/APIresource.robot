@@ -378,7 +378,7 @@ Get Log Level
     Create Digest Session    Get Log Level session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Get Request    Get Log Level session   /api/logLevel
     Should Be Equal As Strings    ${resp.status_code}    200
-    Should Be Equal As Strings    ${resp.json}[error]    0
+    Should Be Equal As Strings    ${resp.json()}[error]    0
     Return From Keyword    ${resp.json()}[reply]
 
 Get Users

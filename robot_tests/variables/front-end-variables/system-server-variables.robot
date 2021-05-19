@@ -156,7 +156,7 @@ ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${C
 
 # ADVANCED
 # Storage Locations Block
-${STORAGE LOCATIONS TITLE}          //h4[text()="${STORAGE LOCATIONS TEXT}"]
+${STORAGE LOCATIONS TITLE}          //div[@class="card mt-3"]//h4[text()="${STORAGE LOCATIONS TEXT}"]
 ${RESERVED SPACE INPUT}             //input[@id="reservedSpace0"]   
 ${RESERVED SPACE DROPDOWN}          //select[@id="reservedSpaceUnit0"]
 ${RESERVED DROPDOWN SELECTED}       ${RESERVED SPACE DROPDOWN}//option[@selected]
@@ -205,3 +205,4 @@ ${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@cl
 ${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']
 ${LOG SAVE BUTTON}                 ${LOG SETTINGS TITLE}//ancestor::div[@class='card']//button[text()='${SAVE BUTTON TEXT}']
 
+${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[text()="${CLOSE TEXT}"]

@@ -964,14 +964,8 @@ Register and Activate Generic Users
     &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
     [Return]    &{generic users}
 
-Add Cloud Users
-    [Arguments]    ${auth}    ${users}    ${system id}
-    FOR  ${permission}  ${user}  IN  &{users}
-        Add user to cloud system if not there    ${system id}    ${permission}    ${user}    auth=${auth}
-    END
-
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge    ${cloud email}=${None}
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old    ${network}=bridge
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -990,7 +984,8 @@ Create Docker Server
     Set to Dictionary    ${server}    name=${name}
     Close Connection
     Release Lock   create_server_lock
-    Return From Keyword If    not $cloud_email    ${server}
+    [Return]    ${server}
+
 
 Setup Custom Docker Server
     [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
@@ -1009,6 +1004,8 @@ Setup Custom Docker Server
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
                   ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
 
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}

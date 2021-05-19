@@ -1,3 +1,5 @@
+*** Settings ***
+Library    String
 *** Keywords ***
 
 # Setups and teardowns
@@ -331,9 +333,10 @@ Evaluate System Settings via API
     Dictionary should contain item    ${settings}    ${key}    ${expected value}
 
 Evaluate Log Level via API
-    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    [Arguments]    ${auth}    ${server url}    ${key}    ${value}
     ${logLevel}=   Get Log Level    ${auth}    ${server url}
-    Dictionary should contain item    ${logLevel}    ${key}    ${expected value}
+    ${value}=    Convert To Lower Case    ${value}
+    Dictionary should contain item    ${logLevel}    ${key}    ${value}
 
 
 # Misc
