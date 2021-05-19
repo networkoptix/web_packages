@@ -964,6 +964,12 @@ Register and Activate Generic Users
     &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
     [Return]    &{generic users}
 
+Add Cloud Users
+    [Arguments]    ${auth}    ${users}    ${system id}
+    FOR  ${permission}  ${user}  IN  &{users}
+        Add user to cloud system if not there    ${system id}    ${permission}    ${user}    auth=${auth}
+    END
+
 Create Docker Server
     [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old    ${network}=bridge
     &{server}=   Create Dictionary
