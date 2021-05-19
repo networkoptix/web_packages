@@ -94,7 +94,7 @@ export class Storage extends StorageDataStructure {
     }
 
     get mode() {
-        if (!this.isWritable && !this.usedForWriting) {
+        if (!this.usedForWriting) {
             return MODE.NOT_IN_USE;
         }
         return this.isBackup ? MODE.BACKUP : MODE.MAIN;
@@ -107,11 +107,8 @@ export class Storage extends StorageDataStructure {
 
     get mainOnly() {
         return this.usedForWriting &&
-            this.isWritable &&
             !this.isBackup &&
-            this.currentStorageState.locations.filter(({
-                mode
-            }) => mode === MODE.MAIN).length <= 1;
+            this.currentStorageState.onlineMains <= 1;
     }
 
     get reindexing() {
