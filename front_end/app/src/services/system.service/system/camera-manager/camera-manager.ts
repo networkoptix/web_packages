@@ -108,12 +108,12 @@ export class CameraManager {
                 fps       : this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
                 modes     : [
-                    { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, RecordingType.ALWAYS), enabled: true },
-                    { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, motionOnly), enabled: motionEnabled },
+                    { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, [RecordingType.ALWAYS]), enabled: true },
+                    { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
                     {
                         name    : 'motionLowRes',
                         id      : motionLowRes,
-                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, motionLowRes),
+                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
                         enabled : motionLowResEnabled && motionEnabled
                     }
                 ]
@@ -168,15 +168,15 @@ export class CameraManager {
         return quality;
     }
 
-    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, id: RecordingType) {
+    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, types: RecordingType[]) {
         const partialSchedule = scheduleTasks.some(({ recordingType, startTime, endTime, fps }) => (
-            recordingType === id &&
+            types.includes(recordingType) &&
         fps > 0 &&
         startTime < endTime
         ));
 
         const fullSchedule = scheduleTasks.length && scheduleTasks.every(({ recordingType, startTime, endTime, fps }) => (
-            recordingType === id &&
+            types.includes(recordingType) &&
         fps > 0 &&
         startTime < endTime
         ));
