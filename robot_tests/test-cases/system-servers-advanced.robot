@@ -17,8 +17,8 @@ Server Advanced Settings Suite Setup
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     Set Suite Variable    ${owner}    ${owner}
     Set Suite Variable    @{cloud auth}    ${owner}    ${password}
-    #system(name,port,cont,owner,id) 
-    #local auth, cloud auth, server url, 
+    #system(name,port,cont,owner,id)
+    #local auth, cloud auth, server url,
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${system}=   Create Docker Server    servers_advanced${random}    storage string=-v recordings:/recordings
     Set Suite Variable    ${system}    ${system}
@@ -28,9 +28,9 @@ Server Advanced Settings Suite Setup
     Set Suite Variable    ${cloud id}    ${cloud id}
     &{users}=    Register and Activate Generic Users    password=${password}
     Set Suite Variable    ${users}    ${users}
-    Add user to cloud system if not there    ${cloud id}    cloudAdmin        ${users['admin']}          auth=${cloud auth}
+    Add user to cloud system if not there    ${cloud id}    cloudAdmin        ${users['cloudAdmin']}          auth=${cloud auth}
     Add user to cloud system if not there    ${cloud id}    viewer            ${users['viewer']}         auth=${cloud auth}
-    Add user to cloud system if not there    ${cloud id}    advancedViewer    ${users['advViewer']}     auth=${cloud auth}
+    Add user to cloud system if not there    ${cloud id}    advancedViewer    ${users['advancedViewer']}     auth=${cloud auth}
     Add user to cloud system if not there    ${cloud id}    custom            ${users['custom']}         auth=${cloud auth}
     Add user to cloud system if not there    ${cloud id}    liveViewer        ${users['liveViewer']}    auth=${cloud auth}
     Open Browser and go to URL    ${url}
@@ -55,7 +55,7 @@ Advanced server settings availability
     Log    Step 2
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
@@ -68,9 +68,9 @@ Advanced server settings availability
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
-    ${location} =    Get Location    
+    ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
@@ -89,38 +89,38 @@ Advanced server settings availability
     [Tags]    C76571    threaded
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
-    Wait Until Elements Are Not Visible 
+    Wait Until Elements Are Not Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
 
 Toggle switch functionality
-    [Tags]    C76572    threaded   
+    [Tags]    C76572    threaded
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 1
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
-    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR} 
+    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     Click Button     ${STORAGE CANCEL BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
     Log    Step 2
-    Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false   
+    Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Click Element    ${STORAGE SAVE BUTTON}
     Wait Until Element Is Visible    ${ADVANCED SAVE MODAL CLOSE BUTTON}
@@ -129,29 +129,29 @@ Toggle switch functionality
     Wait Until Element Has Style    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     #Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     Log    Step 3
-    Set Checkbox Value   ${STORAGE ENABLE SWITCH}    true   
+    Set Checkbox Value   ${STORAGE ENABLE SWITCH}    true
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Click Element   ${STORAGE SAVE BUTTON}
     #Wait Until Element is Visible    ${HIDE ADVANCED SETTINGS BUTTON}
     #Click Button    ${HIDE ADVANCED SETTINGS BUTTON}/..
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
-    
+
 Reserved space dropdown menu functionality
-    [Tags]    C76576    threaded 
+    [Tags]    C76576    threaded
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
-    
+
     Log    Step 1
-    Element Attribute Value Should Be    ${RESERVED SPACE INPUT}    type    number        
-    
+    Element Attribute Value Should Be    ${RESERVED SPACE INPUT}    type    number
+
     Log    Step 2 (this will verify that max and min are respected, but can't click on arrows)
     ${min} =    Get Element Attribute   ${RESERVED SPACE INPUT}    min
-    Clear Element Text     ${RESERVED SPACE INPUT} 
+    Clear Element Text     ${RESERVED SPACE INPUT}
     Input Text    ${RESERVED SPACE INPUT}    0
     Click Element     ${STORAGE FREE SPACE VALUE}    #to shift focus
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
@@ -164,10 +164,10 @@ Reserved space dropdown menu functionality
     ${max} =    Get Element Attribute   ${RESERVED SPACE INPUT}    max
     ${free space} =    Get Text    ${STORAGE FREE SPACE VALUE}
     ${bytes} =    Get Text    ${RESERVED DROPDOWN SELECTED}
-    Should Be Equal    '${free space}'     '${max} ${bytes}'     
-    
+    Should Be Equal    '${free space}'     '${max} ${bytes}'
+
     Log    Step 3 and 4
-    Clear Element Text     ${RESERVED SPACE INPUT} 
+    Clear Element Text     ${RESERVED SPACE INPUT}
     Input Text    ${RESERVED SPACE INPUT}    ${max}
     Click Element     ${STORAGE FREE SPACE VALUE}    #to shift focus
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
@@ -181,12 +181,12 @@ Reserved space dropdown menu functionality
     ${bytes} =    Get Text    ${RESERVED DROPDOWN SELECTED}
     Should Be Equal    '${free space}'     '${min}'
     ${max plus} =    Evaluate    ${max} + 1
-    Clear Element Text     ${RESERVED SPACE INPUT} 
+    Clear Element Text     ${RESERVED SPACE INPUT}
     sleep    1
     Input Text    ${RESERVED SPACE INPUT}    ${max plus}
     Click Element     ${STORAGE FREE SPACE VALUE}    #to shift focus
     Sleep    1
-    Element Attribute Value Should Be    ${RESERVED SPACE INPUT}    value    ${max}  
+    Element Attribute Value Should Be    ${RESERVED SPACE INPUT}    value    ${max}
 
     Log    Step 5 & 6
     Click Element    ${RESERVED SPACE DROPDOWN}
@@ -206,40 +206,52 @@ Reserved space dropdown menu functionality
     ${value} =    Get Element Attribute   ${RESERVED SPACE INPUT}    value
     Run Keyword If    '${bytes 2}' == 'TB'   Should Be Equal    ${value}    ${times 1000}
     ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1000}
-    
+
 Log settings functionality
-    [Tags]    C76573    threaded    
+    [Tags]    C76573    threaded
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible     
+    Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
-    Log    The following will test every log level option for each one of the (5) dropdowns    
+    Log    The following will test every log level option for each one of the (5) dropdowns
     FOR    ${dropdown}    IN    @{LOGLEVEL IDS}
        Wait Until Elements Are Visible    @{LOG SETTINGS BLOCK}
        ${id} =    Get Element Attribute    ${dropdown}    id
        ${original} =    Get Text    ${dropdown}/span
-       ${original} =    Fetch From Left    ${original}    ( 
+       ${original} =    Fetch From Left    ${original}    (
        Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${system['port']}
        Set Log Level Option    ${dropdown}    ${id}    ${original}
        Reload Page
-    END     
+    END
 
 Advanced server settings for offline system
     [Tags]    C76559    threaded
-    Stop Docker Server    ${system['id']}
     Log    Preconditions
     Log Out
     Log in to user and system    ${owner}    ${cloud id}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Stop Docker Server    ${system['id']}
     ${location} =    Get Location
+
     Log    Step 1
     Go To    ${location}${ADVANCED SETTINGS}
-    Wait Until Element is Visible    ${PLACEHOLDER NO SETTINGS}
+    Wait Until Elements Are Visible    ${PLACEHOLDER NO SETTINGS}    ${THIS PAGE CANNOT BE LOADED}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
-    
+
+    Log    Step 2: make sure settings are back after the server is back online
+    Start Docker Server    ${system['id']}
+    Reload Page
+    Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=90
+    Verify on Servers Page
+    Go To    ${location}${ADVANCED SETTINGS}
+    Wait Until Elements Are Visible
+    ...    @{ADVANCED SETTINGS ALERT BAR}
+    ...    @{STORAGE LOCATIONS BLOCK ITEMS}
+    ...    @{LOG SETTINGS BLOCK}
