@@ -28,6 +28,7 @@ import { UntilDestroy }                  from '@ngneat/until-destroy';
 import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
 
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-view-camera-page',
@@ -45,7 +46,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public previewUrl = ''
 
     protected CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    public LANG: LanguageI18NStaticTypes;
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
@@ -178,18 +179,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private set selectedTransport (transport: PlaybackTransport) {
-        this._log('setTransport', transport);
+        this._log('set selectedTransport request', transport);
         if (this.selectedTransport !== transport) {
             this.qualities = this.availableTransportsAndResolutions[transport];
             this.cameraTransportStorage.set(this.id, transport);
-            this._log('transport change', transport);
+            this._log('actual selectedTransport change', transport);
             this.playback.changeTransport(transport);
         }
         this.selectedTransport$.next(transport);
     }
 
     private set qualities (qualities) {
-        this.qualities$.next(qualities?.map((quality) => this.quality2Verbose(quality)) || []);
+        this.qualities$.next(qualities?.map((quality) => this.qualityToVerbose(quality)) || []);
     }
 
     private get selectedQuality (): PlaybackQuality {
@@ -202,12 +203,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.selectedQuality !== quality) {
             this.cameraQualityStorage.set(this.id, quality);
             this._log('quality change', quality);
-            this.playback.changeQuality(this.revertQuality(quality));
+            this.playback.changeQuality(this.qualityFromVerbose(quality));
         }
         this.selectedQuality$.next(quality);
     }
 
-    public quality2Verbose (q: PlaybackQuality) {
+    public qualityToVerbose (q: PlaybackQuality) {
         switch (q) {
             case 'hi':
                 return 'High';
@@ -220,7 +221,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public revertQuality (q: PlaybackQuality) {
+    public qualityFromVerbose (q: PlaybackQuality) {
         switch (q) {
             case 'high':
                 return 'hi';
@@ -233,10 +234,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public getRecordsInProgress: string
+    public getRecordsInProgress: string // cameraId
 
     protected _updateAvailableTransportsAndResolutions () {
-        this.availableTransportsAndResolutions = this.camera ? this.camera.availableTransportsAndResolutions : {};
+        this.availableTransportsAndResolutions =
+            this.camera ? this.camera.availableTransportsAndResolutions : {};
     }
 
     protected _getRecords () {
@@ -248,13 +250,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             return;
         }
         this.getRecordsInProgress = this.id;
-        // <<<<<<< HEAD // left for review
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
         if (!this.system.userManager.permissions.viewArchives) {
             this.getRecordsInProgress = undefined;
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
-                const [{ vmsTimeOffset, serverId }] = await this.system.getServerTimes();
+                const [{
+                    // osTimeOffset,
+                    serverId,
+                    // timeZoneOffset,
+                    // vmsTime,
+                    vmsTimeOffset,
+                }] = await this.system.getServerTimes();
                 const offsetsByServer = this.system.mediaservers.reduce((
                     reduced, { id, addParams, timeInfo = {} }: any
                 ) => ({
@@ -315,6 +322,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         // this.fpsMeter.install()
         // @ts-ignore
         document.fpsMeter = this.fpsMeter;
+        // allows calling document.fpsMeter.install() from the developer console, if needed
 
         this.ux.isFullScreen = !!fullscreen.getElement();
     }
