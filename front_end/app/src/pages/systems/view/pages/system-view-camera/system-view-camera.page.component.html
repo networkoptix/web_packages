@@ -68,7 +68,7 @@
   </div>
 
   <div class="player-and-controls-wrapper">
-    <div class="player-wrapper"><div style="position:absolute; background-color: black; color: white; z-index: 99999;">{{camera}} | {{showPlayerSection}} | {{!transportError}}</div>
+    <div class="player-wrapper">
       <player *ngIf="camera && showPlayerSection && !transportError; else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
