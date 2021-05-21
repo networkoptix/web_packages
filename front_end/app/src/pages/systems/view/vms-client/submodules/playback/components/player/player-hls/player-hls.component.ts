@@ -97,7 +97,6 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.$video.pause();
-                this.$video.src = '';
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
@@ -150,6 +149,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.hls.loadSource(sourceUrl);
                     this.hls.attachMedia(this.$video);
                     this.bufferingChange.emit(true);
+
                     this.hls.on(Hls.Events.ERROR, (event, data) => {
                         this._warn('HLS PLAYER HLS.js ERROR', event, data);
                         if (data.fatal) {

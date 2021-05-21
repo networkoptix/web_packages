@@ -63,6 +63,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         // });
 
         this.videoView.nativeElement.addEventListener('error', (event: any) => {
+            // TODO: see if "this.videoView.nativeElement.error" object can be used (same?)
             if (event.target.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
                 // if 'webm' switch to 'hlc'
                 this.playback.changeTransport('hls');
@@ -118,7 +119,6 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.player.pause();
-                this.player.src('');
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;

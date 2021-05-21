@@ -21,13 +21,12 @@ import { CameraTransportStorageService } from '../../services/cameraTransportSto
 import sidebarLayout                     from '../sidebarLayout.cfg';
 import { NxUtilsService }                from '@services/utils.service';
 import fullscreen                        from './fullscreen';
-import { LoggerDecorator }               from '../../vms-client/utils';
-import { PLAYBACK_MODE }                 from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }             from 'rxjs/operators';
+import { LoggerDecorator }              from '../../vms-client/utils';
+import PlaybackState, { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }            from 'rxjs/operators';
 import { UntilDestroy }                  from '@ngneat/until-destroy';
 import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
-
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -66,6 +65,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public canViewArchives = false;
     public showPlayerSection = false;
     public cameraError: string;
+
+    private status = false;
+    private cameraCurrentState: PlaybackState;
     private unsub$ = new Subject();
 
     constructor(
@@ -174,11 +176,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.transports$.next(transports || []);
     }
 
-    private get selectedTransport (): PlaybackTransport {
+    get selectedTransport (): PlaybackTransport {
         return this.selectedTransport$.getValue();
     }
 
-    private set selectedTransport (transport: PlaybackTransport) {
+    set selectedTransport (transport: PlaybackTransport) {
         this._log('set selectedTransport request', transport);
         if (this.selectedTransport !== transport) {
             this.qualities = this.availableTransportsAndResolutions[transport];
@@ -193,11 +195,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.qualities$.next(qualities?.map((quality) => this.qualityToVerbose(quality)) || []);
     }
 
-    private get selectedQuality (): PlaybackQuality {
+    get selectedQuality (): PlaybackQuality {
         return this.selectedQuality$.getValue();
     }
 
-    private set selectedQuality (quality: PlaybackQuality) {
+    set selectedQuality (quality: PlaybackQuality) {
         quality = (quality || 'auto').toLowerCase();
         this._log('setQuality', quality);
         if (this.selectedQuality !== quality) {
@@ -260,7 +262,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     serverId,
                     // timeZoneOffset,
                     // vmsTime,
-                    vmsTimeOffset,
+                    vmsTimeOffset
                 }] = await this.system.getServerTimes();
                 const offsetsByServer = this.system.mediaservers.reduce((
                     reduced, { id, addParams, timeInfo = {} }: any
@@ -310,7 +312,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             });
         }
         this.getRecordsInProgress = undefined;
-        setTimeout(() => this._initSelectedCamera());
+        this._initSelectedCamera();
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
         });
@@ -418,6 +420,25 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && this.camera.hasArchive && this.canViewArchives;
     }
 
+    showPlayer() {
+        const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
+            this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
+
+        if (!this.status && currentStatus) {
+            if (this.camera?.hasArchive) {
+                this._log('timeline reset time', this.camera);
+                this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
+            }
+
+            if (this.camera?.isLive) {
+                setTimeout(() => this.playback.playLive());
+            }
+        }
+
+        this.status = currentStatus;
+        return this.status;
+    }
+
     protected _initSelectedCamera () {
         this._log('_initSelectedCamera');
         this.playback.stop();
@@ -425,20 +446,22 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.resetQuality();
 
         this.unsub$.next('done');
-        this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state) => {
+        this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
+            this.cameraCurrentState = state;
             this.cameraError = state.error;
-            this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
-                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
+            // Moved into a function to detect camera's state change Offline<->Online ..etc.
+            // this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
+            //     this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
         });
 
-        if (this.camera?.hasArchive) {
-            this._log('timeline reset time', this.camera);
-            this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
-        }
-
-        if (this.camera?.isLive) {
-            setTimeout(() => this.playback.playLive());
-        }
+        // if (this.camera?.hasArchive) {
+        //     this._log('timeline reset time', this.camera);
+        //     this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
+        // }
+        //
+        // if (this.camera?.isLive) {
+        //     setTimeout(() => this.playback.playLive());
+        // }
     }
 
     public toggleFullScreen ($event?) {

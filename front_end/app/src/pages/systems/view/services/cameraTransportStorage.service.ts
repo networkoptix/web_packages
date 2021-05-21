@@ -21,7 +21,9 @@ export class CameraTransportStorageService {
     }
 
     public set (cameraId: string, transport: PlaybackTransport) {
-        this.localStorageService.store(`${this.user}_transport_${cameraId}`, transport);
+        if (transport) {
+            this.localStorageService.store(`${this.user}_transport_${cameraId}`, transport);
+        }
     }
 }
 

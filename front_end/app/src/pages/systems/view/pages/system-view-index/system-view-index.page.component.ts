@@ -285,8 +285,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                               (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
                               c.scheduleEnabled,
                               archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                              archives[c.id] || [],
-                              c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
+                              archives[c.id] || [], this.system.getCameraThumbnailUrl(c.id),
                               (transport: string, quality: string, t?: ms) => this.system.getPlaybackUrl(c.id, transport, quality, t),
                               (t?: ms) => this.system.getCameraThumbnailUrl(c.id, 128, 128, t)
                             );

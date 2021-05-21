@@ -91,7 +91,6 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.$video.pause();
-                this.$video.src = '';
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
