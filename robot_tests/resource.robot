@@ -111,11 +111,12 @@ Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
     ...    ELSE    Log In Web Admin    ${user}    ${password}
+    Check Language Logged In    ${user}    ${password}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
-    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}
+    # Check Language Logged In    ${email}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
@@ -1105,15 +1106,17 @@ Setup Docker System
 #    Set Suite Variable    ${local users}
 
 Create Base System
-    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${cloud}=${True}    ${add users}=${True}    ${storage string}=${EMPTY}
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${cloud}=${True}    ${add users}=${True}    ${storage string}=${EMPTY}    ${owner}=${None}    ${password}=${None}
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
 
     # If cloud is true connect to cloud and get the cloud ID
-    ${owner}=   Run Keyword If    ${cloud}    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
-    ${cloud auth}=   Run Keyword If    ${cloud}    Create List    ${owner}    ${base password}
-    ${system id}=   Run Keyword if    ${cloud}    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server['port']}    ${container name}    ${owner}    ${BASE PASSWORD}
+    ${sys owner}=   Run Keyword If    ${cloud} and '${owner}'=='${None}'    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
+    ${owner}=    Set Variable If    '${sys owner}'=='${None}'    ${owner}    ${sys owner}
+    ${password}=    Set Variable If   '${password}'=='${None}'    ${BASE PASSWORD}    ${password}
+    ${cloud auth}=   Run Keyword If    ${cloud}     Create List    ${owner}    ${password}
+    ${system id}=   Run Keyword if    ${cloud}    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server['port']}    ${container name}    ${owner}    ${password}
     
     # If add users is true add local users.  Add cloud users if both are true.
     ${local users}=   Run Keyword If    ${add users}    Reset Local Users    ${local auth}    https://10.1.5.238:${server['port']}

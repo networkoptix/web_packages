@@ -16,39 +16,49 @@ ${mode}    cloud
 Server Settings Suite Setup
     Run Keyword if    '''${mode}'''=='''cloud'''    Set Suite Variable    ${extra port}    7654
     ...    ELSE    Set Suite Variable    ${extra port}    8765
+    
+    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
+    Set Suite Variable    ${user in charge}          ${owner}
+    @{auth}=    Create List    ${user in charge}    ${password}
 
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     # we setup one server manually here because we need 2 ports
     ${random}=    Generate Random String
-    ${id}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 --name servers${random} ${IMAGE}
+    ${id}    Execute Command    docker run -d --restart always -p 7001 -p ${extra port}:7002 --name servers1-${random} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
     ${results}    Execute Command    docker container port ${id} 7001
     ${port info}=   Split String    ${results}    :
     ${port 1}=   Set Variable    ${port info[1]}
-    FOR   ${i}    IN RANGE    2    4
-        ${random}=    Generate Random String
-        ${server}=   Create Docker Server    servers${random}
-        Set Suite Variable    ${cont ${i}}    ${server}[name]
-        Set Suite Variable    ${cont id ${i}}    ${server}[id]
-        Set Suite Variable    ${port ${i}}    ${server}[port]
-        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
-        Set Suite Variable    ${server name ${i}}    ${server name}
-    END
+    # FOR   ${i}    IN RANGE    2    4
+        # ${random}=    Generate Random String
+        # ${server}=   Create Docker Server    servers${random}
+        # Set Suite Variable    ${cont ${i}}    ${server}[name]
+        # Set Suite Variable    ${cont id ${i}}    ${server}[id]
+        # Set Suite Variable    ${port ${i}}    ${server}[port]
+        # ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
+        # Set Suite Variable    ${server name ${i}}    ${server name}
+    # END
 
     Sleep    5 
-    Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    2servertest1
-    Setup Local System    https://${QA BURBANK IP}:${port 2}    ${password}    2servertest2
-    Setup Local System    https://${QA BURBANK IP}:${port 3}    ${password}    2servertest3
+    Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    servers1-${random}
     ${server id 1}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
-    ${server id 2}=   Get Server Id    https://${QA BURBANK IP}:${port 2}    ${server auth}    Server ${cont id 2}
-    ${server id 3}=   Get Server Id    https://${QA BURBANK IP}:${port 3}    ${server auth}    Server ${cont id 3}
-    Change server name via API    ${server auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port 1}
-    Change server name via API    ${server auth}    server 2    ${server id 2}    https://${QA BURBANK IP}:${port 2}
-
     &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server id 1}
-    &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${port 2}    serverId=${server id 2}
-    &{server 3}=   Create Dictionary    contId=${cont id 3}    port=${port 3}    serverId=${server id 3}
+        
+    ${server 2} =    Create Base System    servers2-${random}    owner=${user in charge}    password=${password}
+    ${server 3} =    Create Base System    servers3-${random}    owner=${user in charge}    password=${password}
+    
+    # Setup Local System    https://${QA BURBANK IP}:${port 2}    ${password}    2servertest2
+    # Setup Local System    https://${QA BURBANK IP}:${port 3}    ${password}    2servertest3
+    
+    # ${server id 2}=   ${server 2}[id]
+    # ${server id 3}=   ${server 3}[id]
+    Change server name via API    ${server auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port 1}
+    Change server name via API    ${server 2}[local auth]    server 2    ${server 2}[id]    https://${QA BURBANK IP}:${server 2}[port]
+
+
+    # &{server 2}=   Create Dictionary    contId=${cont id 2}    port=${server 2}[port]    serverId=${server 2}[id]
+    # &{server 3}=   Create Dictionary    contId=${cont id 3}    port=${server 3}[port]    serverId=${server 3}[id]
     Set Suite Variable    &{server 1}    &{server 1}
     Set Suite Variable    &{server 2}    &{server 2}
     Set Suite Variable    &{server 3}    &{server 3}
@@ -83,23 +93,17 @@ Web Admin Suite Setup
     Set Suite Variable    ${custom}         Local+${local users[2]}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['contId']}
+    ${results}    Execute Command    docker container stop ${server2['id']}
     Close Connection
 
 Cloud Suite Setup
-    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    Set Suite Variable    ${user in charge}          ${owner}
-    @{auth}=    Create List    ${user in charge}    ${password}
+
     Open Browser and go to URL    ${ENV}
        
     ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    2serverstest1    ${user in charge}    ${password}
     Set To Dictionary    ${server 1}    sysId=${sysId1}
-
-    ${sysId2}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 2['port']}    2serverstest2    ${user in charge}    ${password}
-    Set To Dictionary    ${server 2}    sysId=${sysId2}
-
-    ${sysId3}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 3['port']}    2serverstest3    ${user in charge}    ${password}
-    Set To Dictionary    ${server 3}    sysId=${sysId3}
+    Set To Dictionary    ${server 2}    sysId=${server 2}[cloud id] 
+    Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id] 
 
     Log in to user and system    ${user in charge}    ${server 1['sysId']}    password=qweasd1234
     Sleep    5
@@ -148,7 +152,7 @@ Cloud Suite Setup
     Open Browser and go to URL    ${ENV}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['contId']}
+    ${results}    Execute Command    docker container stop ${server2['id']}
     Close Connection
 
 
@@ -158,8 +162,8 @@ Server Settings Suite Tear Down
     Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server 3['sysId']}    ${password}    ${user in charge}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server 1['contId']} ${server 2['contId']} ${server 3['contId']}
-    ${results}    Execute Command    docker container rm ${server 1['contId']} ${server 2['contId']} ${server 3['contId']}
+    ${results}    Execute Command    docker container stop ${server 1}[contId] ${server 2}[id] ${server 3}[id]
+    ${results}    Execute Command    docker container rm ${server 1}[contId] ${server 2}[id] ${server 3}[id]
     Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${admin}          ${password}  
     Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${viewer}         ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${live viewer}    ${password}
