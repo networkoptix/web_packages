@@ -28,7 +28,7 @@ require('./scripts/vendor/protocolcheck');
     selector : 'nx-app',
     template : `
         <div class="headerContainer">
-            <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
+            <nx-header *ngIf="!appStateService.authorizing && (appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"

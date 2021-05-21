@@ -3,8 +3,8 @@ import {
     HttpClient, HttpHeaders, HttpParams
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
-import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
-import { BehaviorSubject, EMPTY, of, from }          from 'rxjs';
+import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
+import { EMPTY, of, from }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -86,7 +86,6 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
-    _accessToken: BehaviorSubject<string> = new BehaviorSubject(undefined);
     private accountService: any;
     private currentAccount: Account;
     public swBypass = false;
@@ -159,7 +158,7 @@ export class NxCloudApiService {
     }
 
     getCommonPasswords() {
-        return this.http.get('/static/scripts/commonPasswordsList.json');
+        return this.http.get<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
@@ -316,9 +315,11 @@ export class NxCloudApiService {
     }
 
     @swClear('apiFresh', '/account', true)
-    login(code: string, remember: boolean) {
+    login(email: string, password: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
+            email,
+            password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
