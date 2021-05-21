@@ -319,8 +319,6 @@ export class NxCloudApiService {
     login(code: string, remember: boolean) {
         // clearCache();
         return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
-            email,
-            password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
