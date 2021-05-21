@@ -1,8 +1,8 @@
 <nx-pre-loader type="page" *ngIf="account && !system"></nx-pre-loader>
 
-<div *ngIf="system && (systemNoAccess || secondaryMerge || system.show404); else cameras">
+<div *ngIf="systemNoAccess || system && (secondaryMerge || system.show404); else cameras">
     <nx-page-placeholder
-            *ngIf="system.show404" type="404"
+            *ngIf="system?.show404" type="404"
             withFooter showMainButton="true">
     </nx-page-placeholder>
 
