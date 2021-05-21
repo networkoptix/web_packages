@@ -28,10 +28,19 @@
             @include media-breakpoint-down(sm) {
                 justify-content : flex-start;
             }
+            @include media-breakpoint-down(xs) {
+                margin-bottom: 0 !important;
+                .error-span {
+                    padding-left: 0;
+                }
+            }
         }
         &-with-warning {
             @extend .grid-container;
             grid-template-columns : max-content 240px max-content;
+            @include media-breakpoint-down(xs) {
+                grid-template-columns : 1fr;
+            }
             .grid-item {
                 white-space: nowrap;
                 justify-content: flex-start;
@@ -42,13 +51,35 @@
     .header-top-bar {
         width: 100%;
         display: flex;
+        justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
 
-        .camera-buttons {
-            @include mixins.details-buttons;
+        @include media-breakpoint-down(xs) {
+            display: block !important;
+            .camera-title {
+                display: flex;
+                margin-bottom: 8px;
+                .spacer {
+                    flex-grow: 1;
+                }
+            }
+            button#view-camera {
+                padding-left: 0 !important;
+            }
         }
-
+        .camera-button-div {
+            display: flex;
+            .camera-buttons {
+                @include mixins.details-buttons;
+            }
+        }
+    }
+    @include media-breakpoint-down(xs) {
+        div.camera-feed-img {
+            width: 100% !important;
+            height: 100% !important;
+        }
     }
 
     .header-table {
