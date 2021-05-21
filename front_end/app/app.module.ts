@@ -50,7 +50,6 @@ import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-sys
 import { CloudUnavailableInterceptor }         from '@src/interceptors/cloud-unavailable-interceptor';
 import { NxSwCacheInterceptor }                from '@src/interceptors/sw-cache-interceptor.interceptor';
 import { ServiceWorkerModule }                 from '@angular/service-worker';
-import { oauth2Interceptor }                   from '@interceptors/oauth2.interceptor';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -121,11 +120,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         {
             provide  : HTTP_INTERCEPTORS,
             useClass : LocalSystemStatusInterceptor,
-            multi    : true
-        },
-        {
-            provide  : HTTP_INTERCEPTORS,
-            useClass : oauth2Interceptor,
             multi    : true
         },
         NxConfigService,

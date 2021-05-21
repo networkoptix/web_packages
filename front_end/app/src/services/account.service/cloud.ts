@@ -120,28 +120,28 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
                 }
 
-                    return Promise.resolve({
-                        data: {
-                            account    : result,
-                            resultCode : this.CONFIG.responseOk
-                        }
-                    });
-                }
+                return Promise.resolve({
+                    data: {
+                        account    : result,
+                        resultCode : this.CONFIG.responseOk
+                    }
+                });
+            }
+            // eslint-disable-next-line prefer-promise-reject-errors
+            return Promise.reject({ error: { resultCode: result.resultCode } });
+        }).then(result => {
+            // Add the reload back until we solve the issues with configservice
+            // TODO: CLOUD-7267: Handle account changes without reload
+            if (result.data?.resultCode === this.CONFIG.responseOk) {
+                (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload());
+            }
+            return result;
+        }).catch((result: any) => {
+            if (this.cloudApi.checkResponseHasError(result.error)) {
                 // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ error : { resultCode : result.resultCode } });
-            }).then(result => {
-                // Add the reload back until we solve the issues with configservice
-                // TODO: CLOUD-7267: Handle account changes without reload
-                if (result.data?.resultCode === this.CONFIG.responseOk) {
-                    (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() => this.window.location.reload());
-                }
-                return result;
-            }).catch((result: any) => {
-                if (this.cloudApi.checkResponseHasError(result.error)) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    return Promise.reject({ resultCode : result.error.resultCode });
-                }
-            });
+                return Promise.reject({ resultCode: result.error.resultCode });
+            }
+        });
     }
 
     logout(doNotRedirect = false, skipReload = false) {

@@ -550,8 +550,6 @@ class Auth(object):
     CLIENT_ID = "cloud_portal"
     GRANT_TYPE = Grant
     RESPONSE_TYPE = ResponseType
-    # Using this for local development
-    auth = HTTPBasicAuth(os.getenv('LOCAL_EMAIL'), os.getenv('LOCAL_PASSWORD'))
 
     @staticmethod
     def get_token_helper():
@@ -653,121 +651,6 @@ class Auth(object):
     def delete_users_tokens_by_client(request, client_id, headers=None):
         request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
         return delete_wrapper(request, headers=headers)
-
-    @staticmethod
-    @validate_response
-    @auto_refresh_token
-    def register_client(request, description, name, redirect_uri, headers=None):
-        params = {
-            "description": description,
-            "name": name,
-            "redirect_uri": redirect_uri
-        }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
-
-
-class Auth(object):
-    CLIENT_ID = "cloud_portal"
-    GRANT_TYPE = Grant
-    RESPONSE_TYPE = ResponseType
-
-    @staticmethod
-    def get_token_helper():
-        pass
-
-    @staticmethod
-    @validate_response
-    @lower_case_email
-    def get_code(email="", password="", client_id=CLIENT_ID, grant_type=GRANT_TYPE.password, ip=None, refresh_token=None):
-        headers = {
-            "X-Forwarded-For": ip
-        }
-        params = {
-            "client_id": client_id,
-            "grant_type": grant_type,
-            "response_type": Auth.RESPONSE_TYPE.code,
-            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-        }
-
-        if grant_type == Auth.GRANT_TYPE.password:
-            params.update({
-                "username": email,
-                "password": password
-            })
-        elif grant_type == Auth.GRANT_TYPE.refresh_token:
-            params["refresh_token"] = refresh_token
-
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    @lower_case_email
-    def get_token(email, password, client_id=CLIENT_ID, ip=None):
-        headers = {
-            "X-Forwarded-For": ip
-        }
-        params = {
-            "client_id": client_id,
-            "grant_type": Auth.GRANT_TYPE.password,
-            "response_type": Auth.RESPONSE_TYPE.token,
-            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "username": email,
-            "password": password
-        }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    def get_access_token(code, ip=None):
-        headers = {
-            "X-Forwarded-For": ip
-        }
-        params = {
-            "grant_type": Auth.GRANT_TYPE.authorization_code,
-            "response_type": Auth.RESPONSE_TYPE.token,
-            "code": code
-        }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    def get_refresh_token(refresh_token, ip=None):
-        headers = {
-            "X-Forwarded-For": ip
-        }
-        params = {
-            "grant_type": Auth.GRANT_TYPE.refresh_token,
-            "response_type": Auth.RESPONSE_TYPE.token,
-            "refresh_token": refresh_token
-        }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    def validate_token(access_token):
-        return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    @auto_refresh_token
-    def delete_token(request, token):
-        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    @auto_refresh_token
-    def delete_users_tokens(request, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self"
-        return delete_wrapper(request, headers=headers, auth=Auth.auth)
-
-    @staticmethod
-    @validate_response
-    @auto_refresh_token
-    def delete_users_tokens_by_client(request, client_id, headers=None):
-        request = f"{CLOUD_DB_URL}/oauth2/user/self/client/{client_id}"
-        return delete_wrapper(request, headers=headers, auth=Auth.auth)
 
     @staticmethod
     @validate_response
