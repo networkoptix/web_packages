@@ -13,7 +13,7 @@ function brew_install() {
     brew install node n pyenv openssl docker docker-compose mysql mysql-client
 
     echo 'Installing node v11.15.0'
-    n 11.15.0
+    n 12.18.4
     echo 'Installing python 3.7.6'
     pyenv install 3.7.6
     pip install virtualenv
