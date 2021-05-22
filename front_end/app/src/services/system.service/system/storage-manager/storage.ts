@@ -123,12 +123,12 @@ export class Storage extends StorageDataStructure {
      * Need to add checking for inaccessible
      */
     get status(): STORAGE_STATUS {
-        // `| !this.isWritable` added here may prevent some weird states from showing, but was also making the reserved state show as inaccessible
-        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE)) {
-            return STORAGE_STATUS.INACCESSIBLE;
-        }
         if (!this.isOnline && !this.totalSpace) {
             return STORAGE_STATUS.BEING_CHECKED;
+        }
+        // `| !this.isWritable` added here may prevent some weird states from showing, but was also making the reserved state show as inaccessible
+        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !this.isOnline) {
+            return STORAGE_STATUS.INACCESSIBLE;
         }
 
         if (
