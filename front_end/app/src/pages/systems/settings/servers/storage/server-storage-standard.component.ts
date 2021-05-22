@@ -125,7 +125,13 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.serverId.currentValue !== changes.serverId.previousValue) {
+        const previousServerId = changes.serverId.previousValue;
+        if (changes.serverId.currentValue !== previousServerId) {
+            const previousServer = this.system.serverManager.servers.find(server => server.id === previousServerId);
+            if (previousServer?.status === 'Offline') {
+                this.system.storageManager.reinitializeForOfflineToOnlineServer();
+                this.init();
+            }
             this.loading = true;
             this.currentStorageState = null;
             this.waitingForStorages = true;

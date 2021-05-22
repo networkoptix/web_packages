@@ -153,7 +153,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             if (!NxUtilsService.isEqual(currentValue, previousValue)) {
                 this.storagesLoading = true;
                 if (!this.applyService.locked) {
-                    setTimeout(() => this.setServer());
+                    setTimeout(() => this.setServer(currentValue?.id !== previousValue?.id));
                 }
             } else {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
@@ -163,7 +163,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     ngOnDestroy() {}
 
-    setServer(): void {
+    setServer(isDifferentServer = false): void {
         this.initForApplyService();
 
         this.applyService.setVisible(false);
@@ -193,7 +193,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.serverLoaded = true;
         });
 
-        this.getCurrentStorages();
+        this.getCurrentStorages(isDifferentServer);
 
         this.applyService.addWatchers([this.saveStorageWatcher]);
         this.applyService.addWatchersAndFunctionsFromChild(
@@ -446,8 +446,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checkingForDataAnalytics = false;
     }
 
-    getCurrentStorages() {
-        if (this.storageSubscription) {
+    getCurrentStorages(isDifferentServer = false) {
+        if (isDifferentServer && this.storageSubscription) {
+            this.storageSubscription.unsubscribe();
+        } else if (this.storageSubscription) {
             return;
         }
         this.storageSubscription = this.system.storageManager.storageState$.pipe(
