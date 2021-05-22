@@ -1,8 +1,10 @@
 import { environment } from '@environments/environment';
+import { Injector } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location }             from '@angular/common';
 import { CookieService }        from 'ngx-cookie-service';
-import { retryWhen, tap, timeout } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 
 import { NxHealthService }      from '../pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
@@ -11,6 +13,8 @@ import { NxSystemAPI }          from './system-legacy-api.service';
 import { IParams }              from './system.service';
 import { NxUriCacheService }    from './uri-cache.service';
 import * as t                   from './system-api.types';
+import { NxAccountService }     from '@services/account.service';
+import { NxDialogsService }       from '@dialogs/dialogs.service';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -27,6 +31,7 @@ import * as t                   from './system-api.types';
 export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
     private readonly token = 'X-Runtime-Guid';
+    private injector: Injector;
 
     constructor(
         http: HttpClient,
@@ -39,7 +44,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
-        appState: NxAppStateService
+        appState: NxAppStateService,
+        injector: Injector
     ) {
         super(
             http,
@@ -54,6 +60,23 @@ export class NxSystemRestAPI extends NxSystemAPI {
             healthService,
             appState
         );
+        this.injector = injector;
+    }
+
+    private loginAsCurrentUser(password?: string) {
+        const remember = !!this.cookieService.get(this.token);
+        if (!password) {
+            const accountService: NxAccountService = this.injector.get(NxAccountService);
+            return from(
+                this.injector.get(NxDialogsService)
+                    .login(accountService, false, false, false, true)
+            );
+        }
+        return from(this.getCurrentUser())
+            .pipe(switchMap((res) => {
+                const username = res?.username || res?.name;
+                return this.loginToken(username, password, remember);
+            }));
     }
 
     private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
@@ -72,8 +95,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
-    private resetServer() {
-        return this.post('/rest/v1/system/reset');
+    private resetServer(password?: string) {
+        return this.loginAsCurrentUser(password)
+            .pipe(switchMap(() => this.post('/rest/v1/system/reset')));
     }
 
     protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
@@ -154,7 +178,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     loginToken(username: string, password: string, remember: boolean) {
         return this.post('/rest/v1/login/sessions', { username, password, setCookie: remember })
             .pipe(tap((res) => {
-                this.cookieService.set(this.token, res.token);
+                if (remember) {
+                    this.cookieService.set(this.token, res.token);
+                }
             }));
     }
 
@@ -172,31 +198,53 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     detachFromSystem(currentPassword?: string) {
-        return this.resetServer();
+        return this.resetServer(currentPassword);
     }
 
     disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
-        return this.post('/rest/v1/system/cloudUnbind', { password: currentPassword }).toPromise();
+        return this.loginAsCurrentUser(currentPassword)
+            .pipe(switchMap(() => this.post('/rest/v1/system/cloudUnbind', { password: currentPassword })))
+            .toPromise();
     }
 
-    // mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
-    //     const data = {
-    //         mergeId         : '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    //         mergeInProgress : true
-    //     };
-    //     return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
-    // }
+    mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = false) {
+        let login = of({ token: '' });
+        if (password) {
+            login = this.loginToken('admin', password, false);
+        }
+        return login.pipe(
+            switchMap((res: any) => {
+                remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
+                const data = {
+                    remoteServerId,
+                    takeRemoteSettings,
+                    dryRun,
+                    remoteEndpoint,
+                    remoteSessionToken            : res.token,
+                    // remoteCertificatePem          : '', // Currently optional.
+                    mergeOneServer                : false,
+                    ignoreIncompatible            : false,
+                    ignoreOfflineServerDuplicates : true
+                };
+                return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
+            })
+        );
+    }
 
-    restoreFactorySettings(currentPassword?: string) {
-        return this.resetServer();
+    restoreFactorySettings(password?: string) {
+        return this.resetServer(password);
     }
 
     saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {
-        return this.post('/rest/v1/system/cloudBind', {
-            systemId : cloudSystemID,
-            authKey  : cloudAuthKey,
-            owner    : cloudAccountName
-        }).toPromise();
+        return this.loginAsCurrentUser().pipe(
+            switchMap(() => this.post('/rest/v1/system/cloudBind',
+                {
+                    systemId : cloudSystemID,
+                    authKey  : cloudAuthKey,
+                    owner    : cloudAccountName
+                })
+            )
+        ).toPromise();
     }
 
     setupCloudSystem(systemName: string, cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string, systemSettings: t.SystemConfigSettings) {

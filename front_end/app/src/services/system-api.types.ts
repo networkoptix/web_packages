@@ -229,6 +229,7 @@ export interface User {
     // TODO: Remove the trash below after #VMS-2968
     name: string;
     fullName: string;
+    username?: string;
 }
 
 interface Users {

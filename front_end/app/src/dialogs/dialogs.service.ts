@@ -168,7 +168,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false) {
+    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false, blockNavigation = false) {
         if (this.CONFIG.browserNotSupported) {
             return;
         }
@@ -187,7 +187,8 @@ export class NxDialogsService {
             location      : this.location,
             keepPage      : (keepPage !== undefined) ? keepPage : true,
             redirectClose : redirectClose || false,
-            redirectHome
+            redirectHome,
+            blockNavigation
         };
 
         if (this.CONFIG.isLocal) {
