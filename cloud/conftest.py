@@ -21,6 +21,8 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
 @pytest.fixture(autouse=True)
 def set_settings(settings):
     settings.TESTING = True
+    for key, cache in settings.CACHES.items():
+        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
 
 
 @pytest.fixture()
@@ -76,3 +78,8 @@ def cloud_portal_type(db):
 @pytest.fixture
 def default_portal(default_customization, cloud_portal_type, db):
     return Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)[0]
+
+
+@pytest.fixture
+def active_user(db, django_user_model):
+    return django_user_model.objects.create(email='active_user@fixture.com', is_active=True)
