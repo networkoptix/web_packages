@@ -67,7 +67,7 @@
     </div>
   </div>
 
-  <div class="player-and-controls-wrapper">
+  <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">
     <div class="player-wrapper">
       <player *ngIf="camera && showPlayerSection && !transportError; else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
@@ -110,7 +110,7 @@
       </div>
       <div class="controls">
         <playback-controls [enabled]="camera && showPlayerSection"></playback-controls>
-        <zoom-controls></zoom-controls>
+        <zoom-controls *ngIf="canViewArchives"></zoom-controls>
         <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
         <ng-template #noArchiveYet>
           <nx-pre-loader class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive"></nx-pre-loader>

@@ -49,6 +49,14 @@ $border-color: $light6;
   &.controls-shown {
     .player-and-controls-wrapper {
       grid-template-rows: calc(100% - 100px) 100px;
+
+      &.slim {
+        grid-template-rows : calc(100% - 50px) 50px;
+
+        .controls{
+          height: 50px !important;
+        }
+      }
     }
 
     // &.is-full-screen {
@@ -383,8 +391,7 @@ $border-color: $light6;
         -khtml-user-select: none;    /* Konqueror HTML */
         -moz-user-select: none;      /* Old versions of Firefox */
         -ms-user-select: none;       /* Internet Explorer/Edge */
-        user-select: none;           /* Non-prefixed version, currently
-                                      supported by Chrome, Edge, Opera and Firefox */
+        user-select: none;           /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 
         playback-controls {
           flex-grow   : 0;

@@ -191,7 +191,16 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         if (!this.useTouch) {
             return;
         }
-        this.scrollbarAbsolute.handleBarDragMouseMove(e);
+        switch (e.target) {
+            case this.barView.nativeElement:
+                this.scrollbarAbsolute.handleBarDragMouseMove(e);
+                break;
+            case this.backgroundView.nativeElement:
+                this.scrollbarRelative.handleBackgroundMouseDown(e);
+                break;
+            default:
+                break;
+        }
     }
 
     @HostListener('document:mouseup', ['$event'])

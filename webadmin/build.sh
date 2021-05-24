@@ -92,7 +92,7 @@ find . -name "language_compiled.json" | xargs python $SOURCE_DIR/replace_static.
 
 # Save the repository info.
 echo "Create version.txt" >&2
-REP_ROOT_DIR="$SOURCE_DIR/../.."
+REP_ROOT_DIR="$SOURCE_DIR/.."
 if [ -e "$REP_ROOT_DIR/.git" ]; then
     format="changeset: %H%nrefs: %D%nparents: %P%nauthor: %aN <%aE>%ndate: %ad%nsummary: %s"
     git -C "$REP_ROOT_DIR" show -s --format="$format" > static/version.txt

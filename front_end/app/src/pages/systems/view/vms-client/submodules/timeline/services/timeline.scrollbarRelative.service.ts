@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import TimelineService from './timeline.service';
 import { float, ms, px, sign } from '../../../utils/type-aliases';
+import { NxUtilsService } from '@services/utils.service';
 
 export interface TimelineScrollbarRelativeServiceStatus {
     magnification: float,
@@ -80,18 +81,6 @@ export class TimelineScrollbarRelativeService {
         this._emit();
     }
 
-    private calcOffsetX(e: MouseEvent|TouchEvent) {
-        let offsetX;
-        if (e instanceof MouseEvent) {
-            offsetX = e.offsetX;
-        } else {
-            // @ts-ignore
-            const rect = (e.target)?.getBoundingClientRect();
-            offsetX = e?.targetTouches[0].pageX - rect.left;
-        }
-        return offsetX;
-    }
-
     protected isBackgroundMouseDown: boolean = false;
     private holdScrollTargetTime: ms = -1;
     protected _timestampMouseDown: ms;
@@ -101,7 +90,7 @@ export class TimelineScrollbarRelativeService {
         this.isBackgroundMouseDown = true;
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
-        this._scrollDirection = e.offsetX < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1;
+        this._scrollDirection = NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1;
     }
 
     public handleBackgroundMouseUp (e: MouseEvent|TouchEvent) {
@@ -161,7 +150,7 @@ export class TimelineScrollbarRelativeService {
         return Math.round(
             this.timeline.fullRange.start +
         this.timeline.fullRange.duration * (
-            this.calcOffsetX(e) / (e.target as HTMLElement).clientWidth
+            NxUtilsService.calcOffsetX(e) / (e.target as HTMLElement).clientWidth
         ) -
         this.timeline.visibleRange.duration * 0.5
         );

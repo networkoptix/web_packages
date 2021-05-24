@@ -8,7 +8,11 @@ import { TranslateModule } from "@ngx-translate/core";
 export class TranslateTestingModule {}
 
 export class MockProvider<Provider, Value> {
-    constructor(public provide: Provider, public useValue: Value) {}
+    constructor(public provide: Provider, public useValue?: Value) {
+        if (!useValue) {
+            this.useValue = <Value>{};
+        }
+    }
 
     static mapServices = <T>(provider: T) =>
         provider instanceof MockProvider

@@ -122,7 +122,7 @@
     "DEVELOPER TOOLS TEXT": "Developer Tools",
     "DEVELOPER SUPPORT TEXT": "Developers Support",
     "API DOCUMENTATION TEXT": "API Documentation",
-    "SERVICES TEXT": "Services",
+    "SERVICES TEXT": "الخدمات",
     "EXTERNAL LINKS TEXT": "External Links",
     "DOWNLOADS TEXT": "Downloads",
     "DEVELOP WITH NX META TEXT": "Develop with Nx Meta",
@@ -285,7 +285,7 @@
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost",
     "SYSTEM IS INACCESSIBLE TEXT": "%SYSTEM% is inaccessible",
     "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available",
-    "THIS SYSTEM IS OFFLINE TEXT": "This system is offline and cannot be accessed right now.",
+    "THIS SYSTEM IS OFFLINE TEXT": "هذا النظام غير متصل ولا يمكن الوصول إليه الآن.",
     "SERVER APPEARS TO BE LISTING ITSELF TEXT": "A server appears to be listing itself under both the selected and the current system.",
     "REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT": "Remove offline and incompatible servers from each system and try again.",
     "MERGE FAILED UNKNOWN ERROR TEXT": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact support.",
@@ -499,6 +499,6 @@
     "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.238/networkDisk is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Add this storage anyway?",
-    "BACK TEXT": "Back",
+    "BACK TEXT": "رجوع",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
 }

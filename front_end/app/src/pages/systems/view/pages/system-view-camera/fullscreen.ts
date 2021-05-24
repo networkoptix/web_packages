@@ -14,45 +14,6 @@ function _warn (...args: any[]) {
     }
 }
 
-// export function requestFullscreen (el) {
-//     if (!el) {
-//         return
-//     }
-//     const docEl = window.document.documentElement;
-//     const requestFullScreen =
-//         docEl.requestFullscreen ||
-//         docEl['mozRequestFullScreen'] ||
-//         docEl['webkitRequestFullScreen'] ||
-//         docEl['msRequestFullscreen']
-
-//     if (requestFullScreen) {
-//         _log('entering full screen', requestFullScreen)
-//         requestFullScreen.call(el)
-//     } else {
-//         _log('can not enter full screen', docEl)
-//     }
-// }
-
-// export function exitFullscreen () {
-//     const doc = window.document
-//     const cancelFullScreen =
-//         doc.exitFullscreen ||
-//         doc['mozCancelFullScreen'] ||
-//         doc['webkitExitFullscreen'] ||
-//         doc['webkitCancelFullScreen'] ||
-//         doc['msExitFullscreen'];
-//     if (cancelFullScreen) {
-//         _log('leaving full screen', cancelFullScreen)
-//         cancelFullScreen.call(doc)
-//     } else {
-//         _log('can not leave fullscreen', doc)
-//     }
-// }
-
-// export function getFullscreenElement () {
-//     return document.fullscreenElement || document['webkitFullscreenElement']
-// }
-
 function requestFullscreen (el) {
     if (!el) {
         return false;

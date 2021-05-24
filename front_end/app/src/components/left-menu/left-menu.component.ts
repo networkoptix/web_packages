@@ -1,16 +1,13 @@
-import { Component, Input, Output, EventEmitter, Inject, OnInit } from '@angular/core';
-import { Router, NavigationEnd }                    from '@angular/router';
-import { DOCUMENT, Location } from '@angular/common';
-import {
-    filter, map, startWith, switchMap, takeUntil
-}                                                   from 'rxjs/operators';
-import { timer, Subject }                           from 'rxjs';
-import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
-import { NxMenusService, MenuNode }                 from '../../services/menus.service';
+import { Component, Output, EventEmitter, Inject, OnInit }  from '@angular/core';
+import { Location }                                         from '@angular/common';
+import { takeUntil }                                        from 'rxjs/operators';
+import { timer, Subject }                                   from 'rxjs';
+import { UntilDestroy, untilDestroyed }                     from '@ngneat/until-destroy';
+
+import { WINDOW }                                   from '@services/window-provider';
+import { MenuNode }                                 from '../../services/menus.service';
 import { IConfig, NxConfigService }                 from '../../services/nx-config';
-import { NxAccountService }                         from '@services/account.service';
-import { MenuStructure } from '@services/nx-config/base-config';
-import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
+import { NxKnowledgebaseService }                   from '@pages/developers/knowledge-base/knowledge-base.service';
 
 export interface RelatedLinks {
     type: string,
@@ -40,12 +37,9 @@ export class NxLeftMenuComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        private router: Router,
-        private menusService: NxMenusService,
         public location: Location,
-        private accountService: NxAccountService,
         public kbService: NxKnowledgebaseService,
-        @Inject(DOCUMENT) private document: any
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
     }
@@ -54,7 +48,7 @@ export class NxLeftMenuComponent implements OnInit {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
-                const currentQueryParams = this.document.location.search;
+                const currentQueryParams = this.window.location.search;
                 const currentPath = this.location.path();
                 // Change URL in address bar to have the current one if a different one was used
                 if (node.url !== currentPath) {

@@ -286,6 +286,21 @@
     display: flex;
     align-items: center;
     padding: 0 16px 0 10px !important;
+    @include media-breakpoint-down(xs) {
+        height: 100% !important;
+    }
+}
+
+@include media-breakpoint-down(xs) {
+    .alert-block {
+        &-text {
+            margin: 8px 0;
+            padding-right: 16px;
+        }
+        &-button button {
+            padding-left: 0 !important;
+        }
+    }
 }
 
 .warning-margin {
