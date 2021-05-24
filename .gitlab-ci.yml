@@ -1,0 +1,32 @@
+variables:
+  JENKINS_URL: http://jenkins.lan.hdw.mx
+  JENKINS_JOB_LOG: "true"
+  JUNKSHOP_ENABLED: "false"
+
+workflow:
+  rules:
+  # Enable for merge requests.
+  - if: $CI_MERGE_REQUEST_ID
+  # Enable for protected branch.
+  - if: $CI_COMMIT_REF_PROTECTED
+  - when: never
+
+stages:
+- build
+
+build-webadmin:
+  stage: build
+  image: nx/ci
+  tags:
+  - service
+  script:
+  - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+      "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+  rules:
+  - when: manual
