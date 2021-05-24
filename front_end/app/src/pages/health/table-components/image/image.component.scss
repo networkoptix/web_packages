@@ -87,6 +87,14 @@ img {
     }
 }
 
+#preloader-wrapper {
+    width: 100% !important;
+    & > nx-pre-loader {
+        z-index: 100;
+        width: 100% !important;
+    }
+}
+
 .image-unavailable-border {
     border: 1px solid $light4;
     background: $light2;
