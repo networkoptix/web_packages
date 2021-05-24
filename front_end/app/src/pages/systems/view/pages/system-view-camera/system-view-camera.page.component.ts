@@ -45,8 +45,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public system: NxSystem
     public previewUrl = ''
 
-    protected CONFIG: IConfig;
-    public LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+    fullscreenMode: boolean;
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
@@ -111,6 +112,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const onFSC = e => {
             const fse = fullscreen.getElement();
             this._log('fullscreenchange', e, fse);
+            this.fullscreenMode = !!fse;
             if (this.ux.state.isFullScreen !== !!fse) {
                 this.ux.isFullScreen = !!fse;
                 this.self.nativeElement.classList.remove('is-full-screen');
