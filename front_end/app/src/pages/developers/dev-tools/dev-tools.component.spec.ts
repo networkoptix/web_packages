@@ -14,6 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { NxAccountService } from '../../../services/account.service';
+import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Dev Tools', () => {
     let component: NxDevToolsComponent;
@@ -32,8 +34,8 @@ describe('For Developers Landing - Dev Tools', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxDevToolsComponent],
-                imports      : [],
+                declarations : [NxDevToolsComponent, RouterLinkDirectiveStub],
+                imports      : [CommonModule],
                 providers    : [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxCloudApiService, {}),

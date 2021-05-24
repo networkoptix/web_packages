@@ -91,7 +91,7 @@
             <nx-search *ngIf="!kbService.contentAssetId"
                 [ngModel]="search"
                 (ngModelChange)="updateSearchQuery($event)"
-                [placeholder]="'Knowledge Base Search' | translate"
+                [placeholder]="'Knowledgebase Search' | translate"
                 layout="compact"></nx-search>
             <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
                 <ng-container *ngIf="searchMode; else displayContent">

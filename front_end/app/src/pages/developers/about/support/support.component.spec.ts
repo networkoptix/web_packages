@@ -5,11 +5,13 @@ import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSupportComponent } from './support.component';
 import { WINDOW } from '../../../../services/window-provider';
-import { MockProvider, sanitizerMock } from '../../../../_mocks/helpers.test';
+import { getMockTranslations, MockProvider, sanitizerMock } from '../../../../_mocks/helpers.test';
 import { supportNode } from '../../../../_mocks/knowledge_base_landing.mock';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { DirectivesModule } from '../../../../directives/directives.module';
+import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Support Node', () => {
     let component: NxSupportComponent;
@@ -18,15 +20,14 @@ describe('For Developers Landing - Support Node', () => {
 
     const [_, expectedLeftBackground, expectedRightBackground] = supportNode.icon.split(' ');
     const configMock = { config: nxConfig };
-    const langMock = {
-        translations: {}
-    };
+    const langMock = getMockTranslations();
 
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxSupportComponent],
+                declarations: [NxSupportComponent, RouterLinkDirectiveStub],
                 imports: [
+                    CommonModule,
                     DirectivesModule
                 ],
                 providers: [

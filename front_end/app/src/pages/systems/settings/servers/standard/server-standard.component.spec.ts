@@ -14,6 +14,8 @@ import { NxMenuService }                   from '@src/menu';
 import { NxUriService }                    from '@services/uri.service';
 import { NxToastService }                  from '@dialogs/toast.service';
 import { NxSystemStandardServerComponent } from './server-standard.component';
+import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;
@@ -25,8 +27,8 @@ describe('NxSystemStandardServerComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxSystemStandardServerComponent],
-            imports      : [],
+            declarations : [NxSystemStandardServerComponent, RouterLinkDirectiveStub],
+            imports      : [CommonModule],
             providers    : [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },

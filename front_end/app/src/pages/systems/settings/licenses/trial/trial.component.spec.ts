@@ -15,6 +15,7 @@ import { FormsModule }                    from '@angular/forms';
 import { NxProcessButtonComponent }       from '@components/process-button/process-button.component';
 import { TranslateModule }                from '@ngx-translate/core';
 import { NxSystem }                       from '@services/system.service';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -50,8 +51,12 @@ describe('Licenses (Trial)', () => {
                 NxLicenseTrialComponent, NxContentBlockComponent,
                 NxContentBlockSectionComponent, NxProcessButtonComponent
             ],
-            imports   : [FormsModule, TranslateTestingModule],
-            providers : [
+            imports: [
+                CommonModule,
+                FormsModule,
+                TranslateTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxSystem, useValue: spySystem },
