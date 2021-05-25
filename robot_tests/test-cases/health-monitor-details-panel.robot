@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start
-Suite Teardown    Close All Browsers
+Suite Teardown    Health Monitor Details Tear Down
 Force Tags        email    form    Threaded    hm
 
 *** Variables ***
@@ -55,9 +55,35 @@ Two Warnings On Interface B        warning    Interface     test network 2 warni
 
 
 *** Keywords ***
+Health Monitor Details Setup
+    ${random}=    Generate Random String
+    ${server} =    Create Base System      hmdetails-${random}
+    Set Suite Variable    &{server}    &{server}
+    Open Browser and Go To URL    ${url}
+    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
+    Sleep    10
+    Wait Until Element is Visible    ${SERVERS LINK}    300
+    Sleep    5
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=120
+    Log Out
+    
+Health Monitor Details Tear Down
+    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop ${server}[id]
+    ${results}    Execute Command    docker container rm ${server}[id]
+    FOR    ${user}    IN    ${server['cloud users']}
+         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
+    END
+    Close All Connections
+    Close All Browsers
+  
 Start
-    Open Browser and Go To URL   ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Health Monitor Details Setup
+    Go To   ${url}/systems/${server['cloud id']}
+    Log In     ${server['owner']}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
