@@ -20,7 +20,8 @@ Server Settings Suite Setup
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     Set Suite Variable    ${user in charge}          ${owner}
     @{auth}=    Create List    ${user in charge}    ${password}
-
+    Set Suite Variable    @{auth}    @{auth} 
+    
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     # we setup one server manually here because we need 2 ports
@@ -123,10 +124,10 @@ Cloud Suite Setup
     Sleep    30
     
     &{users}=    Register and Activate Generic Users    password=${password}
-    Set Suite Variable    ${admin}          ${users}[admin]
+    Set Suite Variable    ${admin}          ${users}[cloudAdmin]
     Set Suite Variable    ${viewer}         ${users}[viewer]
     Set Suite Variable    ${live viewer}    ${users}[liveViewer]
-    Set Suite Variable    ${adv viewer}     ${users}[advViewer]
+    Set Suite Variable    ${adv viewer}     ${users}[advancedViewer]
     Set Suite Variable    ${custom}         ${users}[custom]
     Add user to cloud system if not there    ${server 1['sysId']}    cloudAdmin        ${admin}          auth=${auth}
     Add user to cloud system if not there    ${server 1['sysId']}    viewer            ${viewer}         auth=${auth}
@@ -436,7 +437,7 @@ Detailed info 2 servers
     [Tags]    C70923    threaded
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container start ${server2['contId']}
+    ${results}    Execute Command    docker container start ${server2['id']}
     Close Connection
     Verify on Servers Page
     Select Server By Name    server 1
@@ -450,7 +451,7 @@ Detailed info 2 servers
     Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['contId']}
+    ${results}    Execute Command    docker container stop ${server2['id']}
     Close Connection
 
 Offline system 1 server settings
@@ -458,7 +459,7 @@ Offline system 1 server settings
     [Setup]    Server Settings Test Setup    server=${server 3}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server 3['contId']}
+    ${results}    Execute Command    docker container stop ${server 3['id']}
     Close Connection
     Reload Page
     Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
