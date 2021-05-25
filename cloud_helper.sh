@@ -202,7 +202,7 @@ function stop_mediaserver() {
 function update_webadmin() {
     TARGET=$1
     TARGET_DIR=/opt/networkoptix/mediaserver/bin
-    BUILD_FILE=~/Desktop/build/server-external/bin/external.dat
+    BUILD_FILE=~/Desktop/build/external.dat
 
     echo "Copying..."
     echo $(scp $BUILD_FILE $TARGET:$TARGET_DIR)
