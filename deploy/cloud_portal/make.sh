@@ -39,7 +39,7 @@ function stage_cmake()
 function publish_deps()
 {
     local dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    local img=009544449203.dkr.ecr.us-west-1.amazonaws.com/devtools/wheel_uploader:3.7-alpine3.7
+    local img=009544449203.dkr.ecr.us-west-1.amazonaws.com/devtools/wheel_uploader:3.8-alpine3.12
 
     [ -f ~/.pypirc ] || { echo "Error: you need section [local] in the ~/.pypirc file with artifactory credentials"; exit 1; } 
 
