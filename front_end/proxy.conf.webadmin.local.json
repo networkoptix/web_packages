@@ -34,6 +34,12 @@
     "logLevel": "debug",
     "changeOrigin": false
   },
+  "/proxy/*": {
+    "target": "https://localhost:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
   "/rest/*": {
     "target": "https://localhost:7001",
     "secure": false,
