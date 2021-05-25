@@ -60,7 +60,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     username: string;
     role: string;
 
-    @ViewChild('userSettingsSection') userSettingsSection: NxContentBlockSectionComponent;
+    @ViewChild('userSettingsForm') userSettingsForm: HTMLFormElement;
 
     get localUserName() {
         return this.localUserNameWatcher.value;
@@ -177,7 +177,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     initProcesses() {
         this.editUser = this.processService.createProcess(async() => {
-            if (this.userSettingsSection.form.invalid) {
+            if (this.userSettingsForm.invalid) {
                 return Promise.reject();
             }
             const user = this.selectedUser;

@@ -24,7 +24,6 @@ import {
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
     @Input() nonPadded;
-    @Input() form;
 
     haveSubheader: boolean;
 
