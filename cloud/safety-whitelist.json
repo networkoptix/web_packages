@@ -18,7 +18,16 @@
     "name": "lxml",
     "note": "The HTML cleaner in lxml 4.6.3 no longer includes the HTML5 'formaction' attribute to avoid it from allowing JavaScript to pass through."
   },
+  "40158": {
+    "name": "django",
+    "note": "Django 2.2.20 fixes a security issue with severity \"low\" in 2.2.19."
+  },
+  "40163": {
+    "name": "django",
+    "note": "In Django 2.2 before 2.2.20, 3.0 before 3.0.14, and 3.1 before 3.1.8, MultiPartParser allowed directory traversal via uploaded files with suitably crafted file names. Built-in upload handlers were not affected by this vulnerability. See CVE-2021-28658."
+  },
   "40291": {
-    "name": "pip"
+    "name": "pip",
+    "note": "Pip 21.1 stops splitting on unicode separators in git references, which could be maliciously used to install a different revision on the repository."
   }
 }
