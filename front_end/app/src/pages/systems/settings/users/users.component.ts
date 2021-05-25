@@ -177,7 +177,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     initProcesses() {
         this.editUser = this.processService.createProcess(async() => {
-            if (this.userSettingsForm.invalid) {
+            if (this.userSettingsForm?.invalid) {
                 return Promise.reject();
             }
             const user = this.selectedUser;
