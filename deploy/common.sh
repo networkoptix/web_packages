@@ -31,7 +31,7 @@ function is_dir_by_var()
 function check_vms_dirs()
 {
     is_dir_by_var environment || { echo Exiting..; exit 1; }
-    is_dir_by_var NX_VMS_DIR || { echo Exiting..; exit 1; }
+    is_dir_by_var NX_PORTAL_DIR || { echo Exiting..; exit 1; }
 }
 
 function copy_deps()
@@ -48,23 +48,6 @@ function copy_deps()
     done
 
     true
-}
-
-function stage_cpp()
-{
-    rm -rf stage
-    check_vms_dirs
-
-    local libdir=stage/$MODULE/lib
-    local bindir=stage/$MODULE/bin
-
-    mkdir -p $bindir $libdir
-
-	cp -rl $environment/packages/linux_x64/qt-$QT_VERSION/lib/* $libdir
-	cp -rl $environment/packages/linux_x64/qt-$QT_VERSION/plugins/sqldrivers $bindir
-
-	cp -rl $NX_VMS_DIR/build_environment/target/bin/$BUILD_CONFIGURATION/$MODULE $bindir
-	cp -rl $NX_VMS_DIR/build_environment/target/lib/$BUILD_CONFIGURATION/* $libdir
 }
 
 function stage_cmake_extra()
