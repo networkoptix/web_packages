@@ -48,6 +48,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
+    showElementsInFSM: boolean;
+    onMoveShowElements: any;
 
     protected _routeSubscription: Subscription
     protected _vmsStateSubscription: Subscription
@@ -88,6 +90,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        this.fullscreenMode = false;
+        this.showElementsInFSM = true;
     }
 
     public handleControlsTogglingEarClick () {
@@ -113,6 +118,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             const fse = fullscreen.getElement();
             this._log('fullscreenchange', e, fse);
             this.fullscreenMode = !!fse;
+            if (this.fullscreenMode) {
+                setTimeout(() => {
+                    this.showElementsInFSM = false;
+                }, 3000);
+            } else {
+                clearTimeout(this.onMoveShowElements);
+                this.showElementsInFSM = true;
+            }
+
             if (this.ux.state.isFullScreen !== !!fse) {
                 this.ux.isFullScreen = !!fse;
                 this.self.nativeElement.classList.remove('is-full-screen');
@@ -496,6 +510,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     @HostListener('document:click', ['$event'])
     public clickOutside ($event) {
         this.hideSettings();
+    }
+
+    @HostListener('mousemove', ['$event'])
+    @HostListener('touch', ['$event'])
+    @HostListener('touchmove', ['$event'])
+    onEvent(event: Event) {
+        if (this.fullscreenMode && !this.showElementsInFSM) {
+            this.showElementsInFSM = true;
+            clearTimeout(this.onMoveShowElements);
+            this.onMoveShowElements = setTimeout(() => {
+                this.showElementsInFSM = false;
+            }, 3000);
+        }
     }
 }
 
