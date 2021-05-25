@@ -3,13 +3,13 @@ Resource          ../resource.robot
 Suite Setup       Open Share Dialog
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Close Browser
+Suite Teardown    Share Form Tear Down
 Force Tags        email    form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-${email}    ${EMAIL OWNER}
+#${email}    ${server['owner']}
 
 *** Test Cases ***      EMAIL
 Empty Email                               ${EMPTY}
@@ -51,15 +51,41 @@ Valid Email                               myemail@gmail.com
     [tags]    C47296
 
 *** Keywords ***
+Share Form Setup
+    ${random}=    Generate Random String
+    ${server} =    Create Base System      shareform-${random}
+    Set Suite Variable    &{server}    &{server}
+    Open Browser and Go To URL    ${url}
+    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
+    Sleep    10
+    Wait Until Element is Visible    ${SERVERS LINK}    300
+    Sleep    5
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=120
+    Log Out
+    
+Share Form Tear Down
+    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop ${server}[id]
+    ${results}    Execute Command    docker container rm ${server}[id]
+    FOR    ${user}    IN    @{server['cloud users'].values()}
+         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
+    END
+    Close All Connections
+    Close All Browsers
+    
 Restart
     Close Browser
     Open Share Dialog
 
 Open Share Dialog
-    Open Browser and go to URL    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
+    Share Form Setup
+    Go To    ${url}/systems/${server['cloud id']}
+    Log In    ${server['owner']}    ${password}    button=None
+    # Run Keyword If    '${email}' == '${server['owner']}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     # Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     # Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${USERS LIST LINK}

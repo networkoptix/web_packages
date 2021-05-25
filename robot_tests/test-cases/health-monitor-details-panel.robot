@@ -74,7 +74,7 @@ Health Monitor Details Tear Down
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     ${results}    Execute Command    docker container stop ${server}[id]
     ${results}    Execute Command    docker container rm ${server}[id]
-    FOR    ${user.values()}    IN    ${server['cloud users']}
+    FOR    ${user}    IN    @{server['cloud users'].values()}
          Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
     END
     Close All Connections
