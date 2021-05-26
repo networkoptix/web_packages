@@ -299,7 +299,7 @@ button, .btn {
     }
 
     &.has-icon {
-        padding-left : 25px;
+        padding-left : 25px !important;
         position     : relative;
 
         svg {
@@ -313,7 +313,7 @@ button, .btn {
         @include typography.regular13light;
 
         &.close {
-            left   : 0;
+            left   : 4px;
             width  : 16px;
             height : 16px;
 
