@@ -494,6 +494,9 @@ export class NxSystemStorageComponent implements OnInit {
             const store = this.currentStorageState.locations.find(({ storageId }) => this.normalizeId(storageId) === this.normalizeId(id));
             if (selected.value !== 'modeNotUsed') {
                 store.isBackup = updateParams.isBackup;
+                if (store.isBackup && !store.currentStorageState.onlineBackups) {
+                    this.backupState ||= store.isBackup;
+                }
             }
             store.usedForWriting = updateParams.usedForWriting;
         }
