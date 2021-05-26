@@ -60,4 +60,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             quality          : 'CameraBackupBoth'
         }).toPromise();
     }
+
+    renameSystem(_, systemName: string) {
+        return this.post('/api/systemSettings', { systemName }).toPromise().catch();
+    }
 }

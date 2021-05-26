@@ -393,18 +393,16 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 }
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
                 this.system.update().then(() => {
-                    this.system.getInfoAndPermissions().then(() => {
-                        this.singleSystem = true;
-                        this.systemCounter = 1;
-                        this.system.infoSubject
-                            .pipe(untilDestroyed(this))
-                            .subscribe((system) => {
-                                this.systems = [system];
-                                this.updateActiveSystem();
-                                this.updateActive();
-                                this.headerService.activeSystem = system?.moduleInfo;
-                            });
-                    });
+                    this.singleSystem = true;
+                    this.systemCounter = 1;
+                    this.system.infoSubject
+                        .pipe(untilDestroyed(this))
+                        .subscribe((system) => {
+                            this.systems = [system];
+                            this.updateActiveSystem();
+                            this.updateActive();
+                            this.headerService.activeSystem = system?.moduleInfo;
+                        });
                 });
             });
         } else {
@@ -499,14 +497,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                                 this.system.getInfoAndPermissions(false)
                                     .then(system => {
-                                        if (system) {
-                                            this.systems.find(sys => {
-                                                if (sys.id === this.headerService?.activeSystem?.id) {
-                                                    sys.moduleInfo = system.moduleInfo;
-                                                }
-                                            });
-                                            this.canSeeInfo = system.canViewInfo();
-                                        }
+                                        this.canSeeInfo = system?.canViewInfo() || false;
                                     })
                                     .catch(_ => {});
                             }

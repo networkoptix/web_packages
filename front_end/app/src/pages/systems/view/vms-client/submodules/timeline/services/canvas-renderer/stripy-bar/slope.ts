@@ -1,20 +1,20 @@
-import { deg, rad, px } from './types'
+import { deg, rad, px } from './types';
 
 function degToRad (x: deg): rad {
-    return Math.PI / 180 * x
+    return Math.PI / 180 * x;
 }
 
-const cache = {}
+const cache = {};
 
 export function getSlopeWidth (angle: deg, h: px) {
-    const cacheKey = `(${angle}, ${h})`
+    const cacheKey = `(${angle}, ${h})`;
     if (cacheKey in cache) {
-        return cache[cacheKey]
+        return cache[cacheKey];
     }
-    const slope = degToRad(angle)
-    const result = Math.round(h / Math.tan(slope))
-    cache[cacheKey] = result
-    return result
+    const slope = degToRad(angle);
+    const result = Math.round(h / Math.tan(slope));
+    cache[cacheKey] = result;
+    return result;
 }
 
-export default getSlopeWidth
+export default getSlopeWidth;

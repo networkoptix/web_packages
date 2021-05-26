@@ -64,8 +64,22 @@ $current-playback-indicator-color: black;
         background: #a8b6bf;
       }
 
-      &.grabbed {
-        // cursor: grabbing;
+      // &.grabbed {
+      //   cursor: grabbing; // Alex Pats banned it =)
+      // }
+    }
+
+    > .honest-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: red;
+      pointer-events: none;
+      opacity: 0.0;
+
+      &.visible {
+        opacity: 0.0; // set positive for debug, could be done from browser console, too
+        // opacity: 0.5;
       }
     }
   }
@@ -85,21 +99,29 @@ $current-playback-indicator-color: black;
 
     &.enabled {
       opacity: .8;
-      display: block;
+      display         : flex;
+      align-items     : center;
+      justify-content : center;
 
       &:hover {
         opacity: 1.0;
+      }
+
+      svg-icon {
+        width: 100%;
       }
     }
 
     &.left {
       left: 0;
-      background-image: url('../../svg/timeline_scroll_left.svg');
     }
 
     &.right {
       right: 0;
-      background-image: url('../../svg/timeline_scroll_right.svg');
+
+      svg-icon {
+        transform : scale(-1);
+      }
     }
   }
 }

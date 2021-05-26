@@ -11,6 +11,7 @@ export class NxAppStateService {
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
+    manualAccessSubject$ = new BehaviorSubject(false);
 
     // Header height is hardcoded everywhere to 48px :(
     // Ribbon height is 33px ... for one row
@@ -51,5 +52,13 @@ export class NxAppStateService {
 
     get ready() {
         return this.readySubject.getValue();
+    }
+
+    get canManuallyAccess() {
+        return this.manualAccessSubject$.getValue();
+    }
+
+    set canManuallyAccess(canAccess: boolean) {
+        this.manualAccessSubject$.next(canAccess);
     }
 }

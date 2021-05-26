@@ -1,143 +1,140 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
-import { Subscription } from 'rxjs'
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import { CookieService } from 'ngx-cookie-service'
+import { CookieService } from 'ngx-cookie-service';
 
-import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service'
-import VmsState, { VMS_MODE }       from '../../../../../vms-client/submodules/vms/datatypes/VmsState'
-import MediaServer                  from '../../../../../vms-client/submodules/vms/datatypes/MediaServer'
-import ICamera                      from '../../datatypes/ICamera'
-import { IConfig, NxConfigService } from '@services/nx-config'
-import { NxUtilsService }           from '../../../../../../../../services/utils.service';
-
+import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service';
+import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState';
+import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer';
+import ICamera from '../../datatypes/ICamera';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxUtilsService } from '../../../../../../../../services/utils.service';
 
 @Component({
-    selector: 'media-server-list',
-    templateUrl: 'media-server-list.component.html',
-    styleUrls: ['media-server-list.component.scss']
+    selector    : 'media-server-list',
+    templateUrl : 'media-server-list.component.html',
+    styleUrls   : ['media-server-list.component.scss']
 })
 export class MediaServerListComponent implements OnInit, OnDestroy {
-  CONFIG: IConfig
-  protected _vmsStateSubscription: Subscription
-  protected _mediaservers: Array<MediaServer>
-  public showIP: boolean = false
-  public token: string = ''
+    CONFIG: IConfig
+    protected _vmsStateSubscription: Subscription
+    protected _mediaservers: Array<MediaServer>
+    public showIP: boolean = false
+    public token: string = ''
 
-  public mediaservers: Array<MediaServer>
+    public mediaservers: Array<MediaServer>
 
+    public previewLoaded = {}
 
-  public previewLoaded = {}
+    public handlePreviewLoaded (cid) {
+        this.previewLoaded[cid] = true;
+    }
 
-  public handlePreviewLoaded (cid) {
-    this.previewLoaded[cid] = true
-  }
+    public handlePreviewError (cid) {
+        this.previewLoaded[cid] = -1;
+    }
 
-  public handlePreviewError (cid) {
-    this.previewLoaded[cid] = -1
-  }
+    public isServerExpanded: {
+        [serverId: string]: boolean
+    } = {}
 
-  public isServerExpanded: {
-    [serverId: string]: boolean
-  } = {}
+    public activeCameraId: string
 
-  public activeCameraId: string
+    constructor(
+        private vms: VideoManagementSystemService,
+        protected cookieService: CookieService,
+        configService: NxConfigService
+    ) {
+        this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
+        this.CONFIG = configService.config;
+    }
 
-  constructor (
-    private vms: VideoManagementSystemService,
-    protected cookieService: CookieService,
-    configService: NxConfigService
-  ) {
-    this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this)
-    this.CONFIG = configService.config
+    public ngOnInit (): void {
+        this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange);
+    }
 
-  }
+    public ngOnDestroy (): void {
+        this._vmsStateSubscription.unsubscribe();
+    }
 
-  public ngOnInit(): void {
-    this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange)
-  }
-
-  public ngOnDestroy (): void {
-    this._vmsStateSubscription.unsubscribe()
-  }
-
-  protected _onVmsSubjectChange (s: VmsState) {
-    switch (s.mode) {
-      case VMS_MODE.NOT_INITIALIZED:
-        this._mediaservers = []
-        break
-      case VMS_MODE.CAMERA_NOT_SELECTED:
-      case VMS_MODE.CAMERA_SELECTED:
-        this._mediaservers = s.mediaServers;
-        this._mediaservers.map(server => {
-          server.name = NxUtilsService.htmlToEntity(server.name);
-          server.cameras.map(camera => {
-            camera.name = NxUtilsService.htmlToEntity(camera.name);
-          });
-        });
-        setTimeout(() => {
-          this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera.id : undefined
-        }, 0)
-        const cameraComparator = (c1: ICamera, c2: ICamera) => {
-          const n1 = c1.name.toLocaleLowerCase()
-          const n2 = c2.name.toLocaleLowerCase()
-          return n1 > n2 ? +1 : n1 < n2 ? -1 : 0
+    protected _onVmsSubjectChange (s: VmsState) {
+        switch (s.mode) {
+            case VMS_MODE.NOT_INITIALIZED:
+                this._mediaservers = [];
+                break;
+            case VMS_MODE.CAMERA_NOT_SELECTED:
+            case VMS_MODE.CAMERA_SELECTED:
+                this._mediaservers = s.mediaServers;
+                this._mediaservers.map(server => {
+                    server.name = NxUtilsService.htmlToEntity(server.name);
+                    server.cameras.map(camera => {
+                        camera.name = NxUtilsService.htmlToEntity(camera.name);
+                    });
+                });
+                setTimeout(() => {
+                    this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera?.id : undefined;
+                }, 0);
+                const cameraComparator = (c1: ICamera, c2: ICamera) => {
+                    const n1 = c1.name.toLocaleLowerCase();
+                    const n2 = c2.name.toLocaleLowerCase();
+                    return n1 > n2 ? +1 : n1 < n2 ? -1 : 0;
+                };
+                this._mediaservers.sort((ms1, ms2) => {
+                    const n1 = ms1.name.toLocaleLowerCase();
+                    const n2 = ms2.name.toLocaleLowerCase();
+                    return n1 > n2 ? +1 : n1 < n2 ? -1 : 0;
+                });
+                this._mediaservers.map(ms => {
+                    ms.cameras.sort(cameraComparator);
+                    ms.cameras.sort(cameraComparator);
+                });
         }
-        this._mediaservers.sort((ms1, ms2) => {
-          const n1 = ms1.name.toLocaleLowerCase()
-          const n2 = ms2.name.toLocaleLowerCase()
-          return n1 > n2 ? +1 : n1 < n2 ? -1 : 0
-        })
-        this._mediaservers.map(ms => {
-          ms.cameras.sort(cameraComparator)
-          ms.cameras.sort(cameraComparator)
-        })
+        this._resetServersVisibility();
+        this.updateFilteredList(this.token);
     }
-    this._resetServersVisibility()
-    this.updateFilteredList(this.token)
-  }
 
-  protected _resetServersVisibility () {
-    if (this._mediaservers) {
-      this.isServerExpanded = this._mediaservers.reduce(
-        (acc, ms) => {
-          const systemId = this.vms['systemId']
-          const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`
-          acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true
-          return acc
-        },
-        {}
-      )
-    } else {
-      this.isServerExpanded = {}
+    protected _resetServersVisibility () {
+        if (this._mediaservers) {
+            this.isServerExpanded = this._mediaservers.reduce(
+                (acc, ms) => {
+                    const systemId = this.vms.systemId;
+                    const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
+                    acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true;
+                    return acc;
+                },
+                {}
+            );
+        } else {
+            this.isServerExpanded = {};
+        }
     }
-  }
 
-  public changeServerVisibility (serverId: string) {
-    this.isServerExpanded[serverId] = !this.isServerExpanded[serverId]
-    const systemId = this.vms['systemId']
-    const cookieName = `nx_system_${systemId}_server_${serverId}_expansion_status`
-    this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]))
-  }
-
-  public updateShowIP (newValue: boolean) {
-    this.showIP = newValue
-  }
-
-  public updateFilteredList (token: string) {
-    this.token = token
-    if (!token) {
-      this.mediaservers = this._mediaservers
-      return
+    public changeServerVisibility (serverId: string) {
+        this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
+        const systemId = this.vms.systemId;
+        const cookieName = `nx_system_${systemId}_server_${serverId}_expansion_status`;
+        this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]));
     }
-    token = token.toLocaleLowerCase()
-    this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
-      const cameras = ms.cameras.filter(c => c.name.toLocaleLowerCase().includes(token) || c.url.toLocaleLowerCase().includes(token))
-      if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.url.toLocaleLowerCase().includes(token)) {
-        acc.push({ ...ms, cameras })
-      }
-      return acc
-    }, [])
-  }
+
+    public updateShowIP (newValue: boolean) {
+        this.showIP = newValue;
+    }
+
+    public updateFilteredList (token: string) {
+        this.token = token;
+        if (!token) {
+            this.mediaservers = this._mediaservers;
+            return;
+        }
+        token = token.toLocaleLowerCase();
+        this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
+            const cameras = ms.cameras.filter(c => c.name.toLocaleLowerCase().includes(token) || c.url.toLocaleLowerCase().includes(token));
+            if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.url.toLocaleLowerCase().includes(token)) {
+                acc.push({ ...ms, cameras });
+            }
+            return acc;
+        }, []);
+    }
 }
 
-export default MediaServerListComponent
+export default MediaServerListComponent;

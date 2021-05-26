@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
             "latestBuild": "najnowsza kompilacja",
             "mergeConfirmation": "<p class=\"mb-0\">Zamierzasz złączyć systemy <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.</p><p>Ustawienia i nazwa zostaną pobrane z <strong>{primarySystem}</strong></p>",
-            "mergeSystemsTitle": "Złącz bieżący system z",
             "mergeFailedTitle": "Łączenie systemów nie powiodło się",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Złącz bieżący system z",
             "noServerFound": "Nie znaleziono serwera",
             "newSystemDisplayName": "Nowy system",
             "otherSystem": "Inny system...",
@@ -295,7 +296,7 @@
         },
         "message": {
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
-            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
+            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
             "settingsSaved": "Ustawienia zostały zapisane.",
             "settingsNotSaved": "Nie można zapisać ustawień.",
             "logLevelsSaved": "Zapisano poziom(y) logowania.",
@@ -333,7 +334,8 @@
             "removeUser": "Usunąć użytkownika?",
             "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
             "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
-            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?"
+            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?",
+            "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Nie można usunąć systemu",
         "emailNotFound": "Konto nie istnieje.",
         "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
+        "failedToAccessCamera": "Nie można uzyskać dostępu do kamer poprzez ten link.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
         "lostConnection": "Utracono połączenie z {systemName}",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> jest offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
-        "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe."
+        "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
+        "archiveEncrypted": "ARCHIWUM<br>ZASZYFROWANE",
+        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła do szyfrowania,<br> aby odszyfrować to archiwum."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -552,6 +557,7 @@
         "download": "Pobierz %VMS_NAME%",
         "downloadPlatform": "Pobierz %VMS_NAME% dla",
         "failedToAccessSystem": "Nie udało się uzyskać dostępu do systemu",
+        "failedToAccessCamera": "Nie można uzyskać dostępu do kamery",
         "integrations": "%VMS_NAME% Integracje",
         "login": "Zaloguj",
         "pageNotFound": "Nie znaleziono strony",
@@ -704,7 +710,7 @@
             },
             "error": {
                 "text": "Błąd",
-                "help": "(rejestruj tylko błędy)"
+                "help": "(rejestruj tylko błędy)"
             },
             "warning": {
                 "text": "Ostrzeżenie",

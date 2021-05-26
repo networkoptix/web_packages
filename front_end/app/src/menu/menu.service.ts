@@ -99,17 +99,33 @@ export class NxMenuService implements OnDestroy {
     }
 
     isEqual(currentContent, newContent, nodeGroup) {
-        return !NxUtilsService.isEqual(
+        return NxUtilsService.isEqual(
             currentContent.filter(node => node.id === nodeGroup),
             newContent.filter(node => node.id === nodeGroup)
         );
     }
 
     hasUpdatedContent(content) {
-        return !NxUtilsService.isEqual(this.content, content) ||
-            !this.isEqual(this.content, content, 'cameras') ||
-            !this.isEqual(this.content, content, 'users') ||
-            !this.isEqual(this.content, content, 'servers');
+        const cleanedContent = this.cleanUpAdditionalTextIfNeeded(content);
+        return !NxUtilsService.isEqual(cleanedContent, content) ||
+            !this.isEqual(cleanedContent, content, 'cameras') ||
+            !this.isEqual(cleanedContent, content, 'users') ||
+            !this.isEqual(cleanedContent, content, 'servers');
+    }
+
+    // level-3-item adds additionalText if it doesn't exist
+    // cleaning that up if it was added for hasUpdatedContent comparison
+    cleanUpAdditionalTextIfNeeded(newContent) {
+        return this.content.map(c => {
+            const node = newContent.find(nC => nC.id === c.id)?.level3;
+            if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
+                c.level3 = c.level3.map(menuItem => {
+                    const { additionalText, ...item } = menuItem;
+                    return item;
+                });
+            }
+            return c;
+        });
     }
 
     fillerItemsBy(model) {

@@ -2,7 +2,7 @@ const cleanSrc = (url) => {
     const srcPath = (url.split('//')[1] || url).split('/')
     srcPath[0] = ''
     const src = srcPath.join('/')
-    return src
+    return src.split('?')[0];
 }
 
 $(document).ready(function() {
@@ -16,7 +16,7 @@ $(document).ready(function() {
                 }
             });
         }
-        
+
         if (previewUrlList) {
             const previewFrame = document.getElementsByClassName('previewFrame')[0] || document.getElementById('content-preview')
             const customPreviewFromQueryParam = new URLSearchParams(window.location.search).get('customPreview')
@@ -34,7 +34,7 @@ $(document).ready(function() {
                 const option = document.createElement('option')
                 option.value = url
                 option.innerText = name
-                if (url.startsWith(src)) {
+                if (cleanSrc(url) === src) {
                     option.selected = true
                 }
                 previewSelect.appendChild(option)
@@ -53,7 +53,7 @@ $(document).ready(function() {
                 searchParams.set('customPreview', cleanSrc(nextPreview))
                 const updatedUrl = window.location.pathname + '?' + decodeURIComponent(searchParams.toString())
                 history.pushState(null, '', updatedUrl)
-                
+
             })
         }
     });

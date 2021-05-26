@@ -15,7 +15,7 @@ const logError = (...args) => console.error(args);
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private settings: ProcessSettings = {
+    public settings: ProcessSettings = {
         errorCodes         : {},
         errorMessage       : '',
         errorPrefix        : '',
@@ -23,7 +23,8 @@ export class Process {
         ignoreUnauthorized : false,
         logoutForbidden    : false,
         successMessage     : '',
-        ignoreError        : false
+        ignoreError        : false,
+        name               : ''
     };
 
     // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
@@ -50,7 +51,7 @@ export class Process {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
+        this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
@@ -165,8 +166,7 @@ export class Process {
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
             // @ts-ignore
-            let message = (typeof this.settings.errorMessage === 'function') ? this.settings.errorMessage() : this.settings.errorMessage;
-            message = (this.settings.errorPrefix !== '') ? `${this.settings.errorPrefix} ${message}` : message;
+            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage}`;
 
             const options = {
                 autohide  : !this.settings.holdAlerts,
@@ -241,6 +241,7 @@ export interface ProcessSettings {
     logoutForbidden: boolean;
     successMessage: string;
     ignoreError?: boolean;
+    name?: string;
 }
 
 export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {

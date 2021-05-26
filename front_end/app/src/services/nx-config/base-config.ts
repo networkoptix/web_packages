@@ -10,7 +10,7 @@
 import { MenuNode } from '../menus.service';
 
 export interface BaseConfig {
-    commonPasswordsList?: string[];
+    commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
     previewPath?: string;
@@ -83,6 +83,7 @@ export interface BaseConfig {
     supportedLanguages: string[];
     headerHeight: number;
     ribbonHeight: number;
+    browserNotSupported: boolean;
     // loggersConfig: LoggersConfig;
 }
 
@@ -372,6 +373,7 @@ export interface Icons {
     dirDevtools: string;
     dirButtons: string;
     dirNonStandard: string;
+    dirNonStandardView: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
 }

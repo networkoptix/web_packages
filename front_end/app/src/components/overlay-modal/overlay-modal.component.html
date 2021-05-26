@@ -1,4 +1,4 @@
-<div class="modal-container d-flex flex-column align-items-center" *ngIf="!systemAvailable">
+<div class="modal-container d-flex flex-column align-items-center" *ngIf="!available">
     <div class="d-flex flex-column align-items-center overlay-modal-header">
         <div class="placeholder-icon">
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -127,7 +127,7 @@
                     </g>
                 </svg>
             </span>
-            <span class="ml-1">{{refreshText}}</span>
+            <span class="ml-1">{{refreshMessage}}</span>
         </button>
         <p
             class="btn-helper mt-2 mb-0"

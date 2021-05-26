@@ -106,6 +106,13 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             this.loading = false;
             this.failedToLoad = false;
             this.showStorage = !!currentState.locations.length;
+
+            if (this.showStorage &&
+                this.currentStorageState?.locations?.length === currentState.locations?.length &&
+                this.watchersChanged) {
+                return; // if things seem same do not interrupt user
+            }
+
             this.currentStorageState = currentState;
             if (!this.showStorage) {
                 this.storages = [];

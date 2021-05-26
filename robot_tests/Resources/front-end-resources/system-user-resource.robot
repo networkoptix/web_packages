@@ -3,10 +3,58 @@ Reset DB and Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
 
+Users Suite Setup
+    #system(name,port,cont,owner,id) 
+    #local auth, cloud auth, server url, 
+    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
+    Create Base Cloud System    image=${IMAGE}
+    Save User Role    ${local auth}    https://${QA BURBANK IP}:${system ['port']}    Client Custom    NoGlobalPermissions
+    ${client custom}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Set Suite Variable    ${client custom}     ${client custom}
+        
+    ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
+    Set Suite Variable    ${system 2}    &{system 2}
+
+    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
+    ...    ELSE    Web Admin Suite Setup
+
+Web Admin Suite Setup
+    Open Browser and go to URL    https://${QA BURBANK IP}:${system['port']}
+
+Cloud Suite Setup
+    Open Browser and go to URL    ${url}
+    Log in to user and system    ${system['owner']}    ${system['id']}
+    Wait Until Element is Visible    ${SERVERS LINK}     65
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page    timeout=95
+    Log Out
+
+#Users Test Setup
+#    [Arguments]    ${server}=&{system}    ${user}=${user in charge}    ${verify}=${True}
+#    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
+#    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
+
+Users Test Tear Down
+    Run Keyword If Test Failed    Reset
+    ${status}=    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword And Return Status    validate log out
+    ...     ELSE    Run Keyword And Return Status    validate log out web admin
+    Run keyword unless    ${status}    Log Out
+
+Users Teardown
+    Disconnect Server via API    ${cloud auth}    ${system['id']}      ${password}    ${system['owner']}
+    Disconnect Server via API    ${cloud auth}    ${system 2['id']}    ${password}    ${system['owner']}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
+    ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
+    #Remove Temporary Users
+    Close All Browsers
+
 Remove Temporary Users
+    [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
     FOR    ${user}    IN     @{TMP USERS}
-        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
+        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${sysIP}    ${user id}
     END
     # Open Browser and go to URL    ${url}
     # Log in to Auto Tests System    ${email}

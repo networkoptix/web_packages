@@ -27,7 +27,7 @@ export class NxFocusMeDirective implements OnInit, AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.setFocus.currentValue) {
+        if (changes.setFocus?.currentValue) {
             setTimeout(() => {
                 this._elementRef.nativeElement.focus();
             }, this.timeout);

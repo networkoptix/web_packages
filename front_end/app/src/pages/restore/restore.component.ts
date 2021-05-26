@@ -12,6 +12,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { NxSessionService }          from '@services/session.service';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
     selector    : 'nx-restore-component',
@@ -55,6 +56,7 @@ export class NxRestoreComponent implements OnInit {
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private uriService: NxUriService,
+        private appStateService: NxAppStateService,
         private dialogs: NxDialogsService,
         private route: ActivatedRoute,
         private router: Router,
@@ -122,6 +124,7 @@ export class NxRestoreComponent implements OnInit {
                     }
                 }, () => {
                     // Wrong activation code or some error - send to activation page
+                    this.appStateService.canManuallyAccess = true;
                     this.router
                         .navigate(['/activate/' + code])
                         .catch(error => {

@@ -93,7 +93,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             // eslint-disable-next-line no-fallthrough
                             case '3':
                                 // Network error has occurred during license activation. Error code: -1
-                                if (matchError('Network error has occurred')) {
+                                if (matchError('http error has occurred during license activation')) {
                                     this.dialogsService
                                         .notify(this.LANG.errorCodes.licenseServerError?.(), 'danger');
                                     break;
@@ -120,7 +120,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                     this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
                                 } else {
                                     // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
-                                    // eslint-disable-next-line no-case-declarations
                                     let matchStart = response.errorString.indexOf('activated to Hardware Id');
                                     if (matchStart !== -1) {
                                         // get HWID

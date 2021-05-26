@@ -1,6 +1,9 @@
-import { Component, ViewChild, ViewContainerRef }          from '@angular/core';
-import { NxApplyService, Watcher, SectionWatcher } from '../../../services/apply.service';
-import { NxProcessService, Process } from '../../../services/process.service';
+import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
+import { NxApplyService }        from '../../../services/apply.service';
+import { NxProcessService, Process }                      from '../../../services/process.service';
+import { NxToastService }                                 from '../../../dialogs/toast.service';
+import { IConfig, NxConfigService } from '../../../services/nx-config';
+import { FormArray, FormGroup }     from '@angular/forms';
 
 @Component({
     selector : 'form-apply-example',
@@ -8,51 +11,9 @@ import { NxProcessService, Process } from '../../../services/process.service';
     styleUrls : ['form-apply-example.component.scss']
 })
 export class FormApplyExampleComponent {
+    CONFIG: IConfig;
     // Refs to use for rendering apply component instances
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
-
-    // section 1
-    section1InputWatcher = new Watcher<string>();
-    section1Watcher: SectionWatcher
-    saveSection1: Process;
-
-    get section1Input() {
-        return this.section1InputWatcher.value;
-    }
-
-    set section1Input(value) {
-        this.section1InputWatcher.value = value;
-    }
-
-    // section 2 - Watcher with additional properties
-    section2InputWatcher = Watcher.extendedWatcherFactory(null, {
-        additionalProperty1 : 'additionalProperty1',
-        additionalProperty2 : 2
-    });
-
-    section2Watcher: SectionWatcher
-    saveSection2: Process;
-
-    get section2Input() {
-        return this.section2InputWatcher.value;
-    }
-
-    set section2Input(value) {
-        this.section2InputWatcher.value = value;
-    }
-
-    // section 3
-    section3InputWatcher = new Watcher<string>();
-    section3Watcher: SectionWatcher
-    saveSection3: Process;
-
-    get section3Input() {
-        return this.section3InputWatcher.value;
-    }
-
-    set section3Input(value) {
-        this.section3InputWatcher.value = value;
-    }
 
     // page process
     saveAll: Process;
@@ -62,80 +23,132 @@ export class FormApplyExampleComponent {
     form1Field1Input: string;
     form1Field2Input: string;
     saveForm1 : Process;
-    @ViewChild('sectionForm1Apply', { read: ViewContainerRef, static: true }) sectionForm1Apply;
 
     @ViewChild('form2') form2;
+    formWatcher2: any;
     form2Field1Input: string;
     saveForm2 : Process;
-    @ViewChild('sectionForm2Apply', { read: ViewContainerRef, static: true }) sectionForm2Apply;
+
+    options: {};
+
+    show1: boolean;
+    show2: boolean;
+    blah: string;
+
+    items: any[];
+    itemsSelected: any;
+
+    itemsDDSingle: any[];
+    selectedDDItem: any;
+
+    tags: any[];
+    form2Group: FormGroup;
 
     constructor(
+        configService: NxConfigService,
         private applyService: NxApplyService,
-        private processService: NxProcessService
-    ) {}
+        private processService: NxProcessService,
+        private toastService: NxToastService,
+        @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
+    ) {
+        this.CONFIG = configService.config;
 
-    ngAfterViewInit() {
-        this.form1Field1Input = 'Tsanko';
-        this.form1Field2Input = 'Tsolov';
-        this.saveForm1 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section1InputWatcher.reset());
+        this.options = {
+            classname : this.CONFIG.toast.success,
+            autohide  : true,
+            delay     : this.CONFIG.alertTimeout
+        };
 
-        this.applyService.createFormWatcher(
-            this.sectionForm1Apply,
-            this.form1,
-            this.saveForm1);
+        this.show1 = false;
+        this.show2 = false;
+        this.blah = 'blah1';
+
+        this.items = [
+            { label: 'Administrator', id: 'qwerty1' },
+            { label: 'Advanced Viewer', id: 'qwerty2' },
+            { label: 'Viewer', id: 'qwerty3' },
+            { label: 'Live Viewer', id: 'qwerty4' }
+        ];
+
+        this.itemsSelected = ['qwerty2', 'qwerty3'];
+
+        this.itemsDDSingle = [
+            { value: '0', name: 'All' },
+            { value: '84480', name: '1CIF' },
+            { value: '168960', name: '2CIF' },
+            { value: '337920', name: 'D1' },
+            { value: '307200', name: 'VGA' },
+            { value: '786432', name: 'SVGA' },
+            { value: '921600', name: '720p' },
+            { value: '1310720', name: '1mp' },
+            { value: '2073600', name: '1080p' },
+            { value: '1920000', name: '2mp' },
+            { value: '3145728', name: '3mp' },
+            { value: '4915200', name: '5mp' },
+            { value: '8000000', name: '8mp' },
+            { value: '10039296', name: '10mp' },
+            { value: '15824256', name: '16mp' }
+        ];
+
+        this.selectedDDItem = { value: '0', name: 'All' };
+
+        this.tags = [
+            { name: 'brand', selected: false, type: 'brand' },
+            { name: 'really long name break', selected: false, type: 'brand' },
+            { name: 'success', selected: true, type: 'success' },
+            { name: 'danger', selected: true, type: 'danger' },
+            { name: 'warning', selected: false, type: 'warning' },
+            { name: 'info', selected: false, type: 'info' },
+            { name: 'default', selected: true }
+        ];
     }
 
     ngOnInit() {
+        this.applyService.initPageWatcher(this.pageApply);
 
-        // // setup section 1
-        // this.section1Input = 'section1';
-        // this.saveSection1 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section1InputWatcher.reset());
-        // this.section1Watcher = this.applyService.createSectionWatcher(
-        //     null,
-        //     this.saveSection1,
-        //     () => this.section1InputWatcher.reset(),
-        //     [this.section1InputWatcher]
-        // );
-        //
-        // // setup section 2
-        // this.section2Input = 'section2';
-        // this.saveSection2 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section2InputWatcher.reset());
-        // this.section2Watcher = this.applyService.createSectionWatcher(
-        //     null,
-        //     this.saveSection2,
-        //     () => this.section2InputWatcher.reset(),
-        //     [this.section2InputWatcher]
-        // );
-        //
-        // const availableSectionWatchers = [this.section1Watcher, this.section2Watcher];
-        // this.saveAll = this.processService.createProcess(() => Promise.resolve()).then(() => {
-        //     availableSectionWatchers.forEach((watcher: Watcher<any> | SectionWatcher) => {
-        //         watcher.reset();
-        //     });
-        // });
-        // // Init page watcher with sectionWatchers
-        // this.applyService.initPageWatcher(
-        //     this.pageApply,
-        //     this.saveAll,
-        //     () => availableSectionWatchers.forEach(watcher => watcher.reset()),
-        //     availableSectionWatchers
-        // );
-        //
-        // // setup section 3 - Added using addWatchersAndFunctionsFromChild after page watcher already initialized
-        // this.section3Input = 'section3';
-        // this.saveSection3 = this.processService.createProcess(() => Promise.resolve()).then(() => this.section3InputWatcher.reset());
-        // this.section3Watcher = this.applyService.createSectionWatcher(
-        //     null,
-        //     this.saveSection3,
-        //     () => this.section3InputWatcher.reset(),
-        //     [this.section3InputWatcher]
-        // );
-        //
-        // // This is how you would add watchers when the page watcher has already been instantiated earlier.
-        // this.applyService.addWatchersAndFunctionsFromChild(
-        //     [this.section3Watcher], this.saveSection3, () => this.section3InputWatcher.reset()
-        // );
-        //
-        // this.applyService.setVisible();
+        this.form1Field1Input = 'Tsanko';
+        this.form1Field2Input = 'Tsolov';
+        this.saveForm1 = this.processService.createProcess(() => {
+            return Promise.resolve();
+        }, {}, result => {
+            this.toastService.show('form1 saved', this.options);
+        }, err => {
+        });
+
+        // ngModel should be ALWAYS initialized -> when comparing form values JSON stingify will omit undefined fields!!!
+        this.form2Field1Input = '';
+        this.saveForm2 = this.processService.createProcess(() => {
+            return Promise.resolve();
+        }, {}, result => {
+            this.toastService.show('form2 saved', this.options);
+        }, err => {
+        });
+    }
+
+    ngAfterViewInit() {
+        this.formWatcher = this.applyService.createFormWatcher(
+            'form1',
+            this.form1,
+            this.saveForm1);
+
+        this.formWatcher2 = this.applyService.createFormWatcher(
+            'form2',
+            this.form2,
+            this.saveForm2);
+
+        // setTimeout(() => {
+        //     this.applyService.removeFormWatcher('form2');
+        //     this.toastService.show('form2 removed', this.options);
+        // }, 5000);
+    }
+
+    ddModelChanged(result: []) {
+        // ensure 'change' will be triggered
+        this.itemsSelected = [...result];
+    }
+
+    ddSingleModelChanged(result: {}) {
+        // ensure 'change' will be triggered
+        this.selectedDDItem = { ...result };
     }
 }

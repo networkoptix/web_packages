@@ -2,48 +2,19 @@
 set -e
 
 #DIR is the location of the cloud_portal build script in the repository
-#Can be called like this from with cloud_portal/build_scripts "./build.sh"
+#Can be called like this from with build_scripts "./build.sh"
 # or from cloud_portal "./build_scripts/build.sh"
-#or like this from outside the repository "../nx_vms/cloud_portal/build_scripts/build.sh"
+#or like this from outside the repository "../build_scripts/build.sh"
 
-VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
-[[ "$VMS_REPOSITORY" =~ (.*)\/cloud_portal.* ]]; REPO=${BASH_REMATCH[1]}
+VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+[[ "$VMS_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
     echo "Updating Cloud Portal sources"
-    if [ -e "cloud_portal" ]; then
-        pushd cloud_portal
-            for entry in $(ls -A $VMS_REPOSITORY/cloud_portal/)
-            do
-                if [ "$entry" == "robot_tests" ]; then
-                    continue
-                fi
-
-                if [ "$entry" == "front_end" ] ; then
-                    pushd $entry
-                    for element in $(ls -A $VMS_REPOSITORY/cloud_portal/$entry/)
-                    do
-                        echo "copy $entry/$element"
-                        [ -e "$element" ] && rm -rf "$element"
-                        cp -pr "$VMS_REPOSITORY/cloud_portal/$entry/$element" "$element"
-                    done
-                    popd
-                else
-                    echo "copy $entry"
-                    [ -e "$entry" ] && rm -rf "$entry"
-                    cp -pr "$VMS_REPOSITORY/cloud_portal/$entry" "$entry"
-                fi
-            done
-        popd
-    else
-        echo "Blindly Copying cloud_portal"
-        rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
-    fi
-    pushd cloud_portal
+    rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $VMS_REPOSITORY .
 else
     echo "In repository skip copying sources"
-    pushd $VMS_REPOSITORY/cloud_portal
 fi
 
 echo "pip install requirements"
@@ -57,7 +28,7 @@ pushd front_end
     npm install
 
     echo "Auditing npm packages"
-    AUDIT=$(npm audit | grep -E "(High|Medium)" || true)
+    AUDIT=$(npm audit | grep -E "(High)" || true)
     if [[ "$AUDIT" != "" ]]
     then
         echo "Some npm packages are out of date. Please notify the webteam."

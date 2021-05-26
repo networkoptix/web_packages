@@ -195,19 +195,22 @@ $custom-xl: 1440px;
         font-weight: normal;
         letter-spacing: normal;
         font-family: robotomonoregular, monospace !important;
-        border: solid 1px $dark11;
-        background-color: $dark13;
-        color: $additional_light1;
     }
 
     code {
         @extend .code-block-common;
-        padding: 2px 4px;
+        padding: 2px;
         display: inline-block;
+        color: $dark18;
         line-height: 1;
+        border: solid 1px $additional_light8;
+        background: $additional_light7;
     }
     pre {
         @extend .code-block-common;
+        border: solid 1px $dark11;
+        background-color: $dark13;
+        color: $additional_light1;
         margin: 16px 0 24px 0;
         padding: 12px 8px;
         counter-reset: line;

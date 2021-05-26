@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "noServerFound": "לא נמצא שרת",
             "newSystemDisplayName": "מערכת חדשה",
             "otherSystem": "מערכת אחרת...",
@@ -333,7 +334,8 @@
             "removeUser": "האם להסיר משתמש?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "נתק את כל המערכות שאתה הבעלים שלהן %CLOUD_NAME% כדי למחוק את חשבונך."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "לא ניתן למחוק את המערכת",
         "emailNotFound": "החשבון לא קיים.",
         "failedToAccessSystem": "לא ניתן לגשת לשום מערכת. זה יכול לקרות כאשר מערכת מנותקת מ- %CLOUD_NAME%, הגישה למערכת זו בוטלה או אם אתה מחובר לחשבון השגוי.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "אין לך הרשאות לביצוע פעולה זו",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם התמיכה.",
         "licenseTimeout": "הפעלת הרישיון נכשלה עקב חוסר תגובה לחיבור. אנא וודא שהשרת מקוון ונסה שוב.",
         "licenseServerError": "הפעלת הרישיון נכשלה. שרת הרישיונות לא הגיב. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "בקרת כניסה",
@@ -552,6 +557,7 @@
         "download": "הורד %VMS_NAME%",
         "downloadPlatform": "הורד %VMS_NAME% עבור ",
         "failedToAccessSystem": "כניסה למערכת נכשלה",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "התחבר",
         "pageNotFound": "דף לא נמצא",

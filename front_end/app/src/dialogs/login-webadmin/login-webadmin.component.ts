@@ -15,6 +15,7 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { WINDOW }                    from '@services/window-provider';
 import { CookieService }             from 'ngx-cookie-service';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -55,6 +56,7 @@ export class LoginWebadminModalContent implements OnInit {
         locationService: Location,
         private processService: NxProcessService,
         private storageService: NxStorageService,
+        private appStateService: NxAppStateService,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
@@ -141,6 +143,9 @@ export class LoginWebadminModalContent implements OnInit {
         }, (result) => {
             this.activeModal.close(result);
             const isRootPath = ['/', ''].includes(this.locationService.path());
+
+            // prevent manual input of url for activate routes
+            this.appStateService.canManuallyAccess = this.next.includes('activate');
 
             if (this.keepPage) {
                 if (isRootPath) {

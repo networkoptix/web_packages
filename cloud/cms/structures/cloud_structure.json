@@ -581,6 +581,38 @@
             "type": "text",
             "optional": true,
             "advanced": true
+          },
+          {
+            "label": "Push ARN Firebase",
+            "name": "%PUSH_ARN_FIREBASE%",
+            "description": "ARN for Firebase platform application from AWS SNS",
+            "type": "text",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "label": "Push ARN APN",
+            "name": "%PUSH_ARN_APN%",
+            "description": "ARN for APNs platform application from AWS SNS",
+            "type": "text",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "label": "Push ARN APN Sandbox",
+            "name": "%PUSH_ARN_APN_SANDBOX%",
+            "description": "ARN for APNs platform application from AWS SNS",
+            "type": "text",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "label": "Push ARN Baidu",
+            "name": "%PUSH_ARN_BAIDU%",
+            "description": "ARN for Baidu platform application from AWS SNS",
+            "type": "text",
+            "optional": true,
+            "advanced": true
           }
         ]
       },

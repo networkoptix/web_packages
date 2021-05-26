@@ -1,9 +1,9 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Start up    ${url}
-Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+Suite Setup       Camera Suite Setup
+Test Setup        Log in to user and system    ${system['owner']}    ${system['id']}
 Test Teardown     reset cameras and log out
-Suite Teardown    Close All Browsers
+Suite Teardown    Camera Suite Teardown
 Force Tags        system    cameras
 
 *** Variables ***
@@ -12,9 +12,31 @@ ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
 
+*** Keywords ***
+Camera Suite Setup
+    #system(name,port,cont,owner,id) 
+    #local auth, cloud auth, server url, 
+    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
+    ${random}=   Generate Random String
+    #Create Base Cloud System    cameras${random}
+    ${system}    Create Base System    cameras${random}
+    Set Suite Variable    ${system}    ${system}
+    #Add Software Cameras    1    ${system['port']}
+    Open Browser and go to URL    ${url}
+    #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
+    #...    ELSE    Web Admin Suite Setup
+
+Camera Suite Teardown
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker container stop ${system['id']}
+    Execute Command    docker container rm ${system['id']}
+    Close Connection
+    Close All Browsers
+
 *** Test Cases ***
 Camera settings is available to owner admin and custom with permission
-    [Tags]    C76252    threaded
+    [Tags]    C76252     threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page

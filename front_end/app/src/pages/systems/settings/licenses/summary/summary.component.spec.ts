@@ -11,6 +11,7 @@ import { NxContentBlockComponent }          from '@components/content-block/cont
 import { NxContentBlockSectionComponent }   from '@components/content-block/section/section.component';
 import { FormsModule }                      from '@angular/forms';
 import { TranslateModule }                  from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -47,8 +48,12 @@ describe('Licenses (Summary)', () => {
                 NxLicenseSummaryComponent, NxContentBlockComponent,
                 NxContentBlockSectionComponent
             ],
-            imports   : [FormsModule, TranslateTestingModule],
-            providers : [
+            imports: [
+                CommonModule,
+                FormsModule,
+                TranslateTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock }
             ]

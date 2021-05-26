@@ -9,7 +9,7 @@ Force Tags        Threaded    activate
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
+${symbol password}    pass!@#$%^&*()_-+=;'"`~,./\|?[]{}
 @{auth}        ${BASE EMAIL}    ${BASE PASSWORD}
 
 *** Keywords ***
@@ -120,7 +120,7 @@ Link works and suggests to log out user, if he was logged in, buttons operate co
     Go To    ${url}/activate/${code1}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
+    # Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Validate Login    ${EMAIL OWNER}
     Log Out
 

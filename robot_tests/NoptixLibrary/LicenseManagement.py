@@ -225,7 +225,8 @@ class LicenseManagement(object):
             'vmax': 'VMAX',
             'videowall': 'Video Wall',
             'starter': 'Starter',
-            'bridge': 'Bridge'
+            'bridge': 'Bridge',
+            'nvr': 'NVR'
         }
 
         key_info = {}

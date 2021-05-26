@@ -69,132 +69,24 @@ Example for vms
         <a href="{% url 'admin:pages' asset.id %}" class="btn btn-sm btn-default">Edit Content</a>
         <button class="btn btn-sm btn-primary" type="submit" name="Upload" id="upload" onclick="cookieInterval()">Upload</button>
     </div>
-    <div class="modal" id="preparing-package">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="progress-modal-title">Preparing Package</h5>
-            </div>
-            <div class="modal-body">
-                <div id="pending">
-                    <p id="context-status">Processing contexts...</p>
-                    <div class="progress progress-popup">
-                        <div class="progress-bar custom-download-transition"></div>
-                    </div>
-                    <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
-                </div>
-                <div id="done">
-                    <p id="success-message">The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.</p>
-                    <a class="btn btn-success" id="download-button" href="" download="">Download Package</a>
-                    <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
-                </div>
-            </div>
-          </div>
-        </div>
-       </div>
     <script>
-        /*
-            The checkCookie function starts on a 100ms interval once the user uploads a file.
-            Once the user submits the file we wait for the structure.json file to be returned.
-            When the file is sent to the user it also sets a cookie.
-            The check cookie function keeps checking the cookies until it a changed.
-            Afterwards it reloads the page so that the user can see any error messages with the file upload
-         */
-        const pollingInterval = 1000
-        const modal = document.getElementById('preparing-package')
-        const progressBar = modal.getElementsByClassName('progress-bar')[0]
-        const contextStatus = document.getElementById('context-status')
-        const taskId = "{{task_id}}"
-        var cookieCheckInterval = undefined;
-        var checkCookie = function () {
-            var lastCookie = document.cookie;
-            return function () {
-                var currentCookie = document.cookie;
-                if (currentCookie !== lastCookie) {
-                    clearInterval(cookieCheckInterval);
-                    window.location.reload();
-                }
-            };
-        }();
-
-        function cookieInterval() {
-            const messageList = document.getElementsByClassName('messagelist')[0]
-            const infoMessages = [...messageList.getElementsByClassName('info')]
-            infoMessages.forEach(message => {
-                if (message.classList.contains('hide')) {
-                    message.classList.remove('hide')
-                }
-            })
-            cookieCheckInterval = setInterval(checkCookie, 100);
-        }
-
-        function togglePending (showPending) {
-            const pending = document.getElementById('pending')
-            const done = document.getElementById('done')
-            if (showPending) {
-                pending.style = "display:block;"
-                done.style = "display:none;"
-            } else {
-                pending.style = "display:none;"
-                done.style = "display:block;"
-            }
-        }
-
-        togglePending(true)
-
-        function pollPackage (isDraft, taskId = null) {
-            const packageUrl = "{% url 'download_package' asset.id %}" + (isDraft ? '?draft=True' : '');
-            const downloadUrl = "{% url 'download_package_async' asset.id %}" + (isDraft ? '?draft=True' : '')
-            const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
-            const progressModalTitle = document.getElementById('progress-modal-title')
-            const contextStatus = document.getElementById('context-status')
-            progressModalTitle.innerText = "Preparing Package"
-            contextStatus.innerText = "Processing contexts..."
-            if(taskId) {
-                return fetch(generateStatusUrl(taskId)).then(
-                    res => res.json()
-                ).then(status => {
-                    if(status.current && status.current < status.total) {
-                        contextStatus.innerText = `Processing context ${status.current} out of ${status.total}`
-                        progressBar.style = `width: ${Math.round(status.current / status.total * 100)}%;`
-                        setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
-                    } else if(status === 'SUCCESS'){
-                        togglePending(false)
-                        const downloadButton = document.getElementById('download-button')
-                        const successMessage = document.getElementById('success-message')
-                        downloadButton.href = downloadUrl
-                        downloadButton.innerText = "Download Package"
-                        successMessage.innerText = `The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.`
-                    } else {
-                        alert('Some unknown error occurred')
-                    }
-                })
-            }
-            fetch(packageUrl).then(
-                res => res.json()
-            ).then(({is_ready: isReady, task_id: taskId}) => {
-                if (isReady) {
-                    window.open(downloadUrl)
-                } else {
-                    if(!modal.classList.contains('show')) {
-                        modal.classList.add('show')
-                        togglePending(true)
-                    }
-                    setTimeout(() => pollPackage(isDraft, taskId), pollingInterval)
-                }
-            })
-        }
-
+        const packageUrl = "{% url 'download_package' asset.id %}"
+        const downloadUrl = "{% url 'download_package_async' asset.id %}"
+    </script>
+    {% include "cms/async_partial.html" %}
+    <script>
         function pollStructure(config, taskId = null) {
             const {assetId = null, assetType = null, outputFormat = null} = config
             const assetIdJSON = "{% url 'download_structure_from_db' asset.id %}"
             const assetIdHTML = "{% url 'download_structure_from_db' asset.id %}?output_format=html"
             const assetTypeJSON = "{% url 'download_all_asset_structures' asset.asset_type.type %}"
             const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
-            const generateDownloadUrl = (taskId) => "{% url 'celery_download_result' 'task_id' %}".replace('task_id', taskId)
+            const generateDownloadUrl = (taskId) => celeryDownloadUrl.replace('task_id', taskId)
             const structureUrl = assetType ? assetTypeJSON : outputFormat === 'html' ? assetIdHTML : assetIdJSON
             const progressModalTitle = document.getElementById('progress-modal-title')
             const contextStatus = document.getElementById('context-status')
+            const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+            progressWrapper.style = "display: block;"
             progressModalTitle.innerText = "Preparing Structure(s)"
             contextStatus.innerText = "Processing asset(s)..."
             if(taskId) {
@@ -215,9 +107,9 @@ Example for vms
                         successMessage.innerText = `The structure(s) is ready and should have automatically downloaded. If the structure(s) didn't download automatically use the "Download Structure(s)" link below.`
                         window.open(downloadUrl)
                     } else {
-                        alert('Some unknown error occurred')
+                        showError()
                     }
-                })
+                }).catch(err => showError(err))
             }
             fetch(structureUrl).then(
                 res => res.json()
@@ -233,65 +125,6 @@ Example for vms
                 }
             })
         }
-
-        (function checkTaskStatus(taskId) {
-            if(!taskId) return;
-            const messageList = document.getElementsByClassName('messagelist')[0]
-            const spinner = '<span class="glyphicon glyphicon-repeat status-loader" id="status-glpyh"></span>'
-            let asyncStatusInfo = document.getElementById('async-status-info')
-            if (!asyncStatusInfo) {
-                asyncStatusInfo = document.createElement('li')
-                asyncStatusInfo.classList.add('info')
-                asyncStatusInfo.id = 'async-status-info'
-                asyncStatusInfo.innerHTML = spinner + '<span id="status-span">Processing assets...</span>'
-                messageList.appendChild(asyncStatusInfo)
-            }
-
-            const generateStatusUrl = (taskId) => "{% url 'celery_check_status' 'task_id' %}".replace('task_id', taskId)
-            return fetch(generateStatusUrl(taskId)).then(
-                res => res.json()
-            ).then(status => {
-                let state = 'Processing assets...'
-                if(status.current && status.current < status.total) {
-                    state = `Processing asset ${status.current} out of ${status.total}`
-                    setTimeout(() => checkTaskStatus(taskId), pollingInterval * 3)
-                } else if(status === 'SUCCESS'){
-                    const glyphSpan = document.getElementById('status-glpyh')
-                    glyphSpan.classList.remove('glyphicon-repeat', 'status-loader')
-                    glyphSpan.classList.add('glyphicon-ok-sign')
-                    state = 'Done processing assets'
-                } else if(status === 'PENDING') {
-                    state = 'Processing assets...'
-                    setTimeout(() => checkTaskStatus(taskId), pollingInterval * 5)
-                } else {
-                    alert('Some unknown error occurred')
-                }
-                const statusSpan = document.getElementById('status-span')
-                statusSpan.innerText = state
-            })
-        })(taskId)
-
-        function closeModal() {
-            modal.classList.remove('show')
-        }
-
-        const fileName = '{{file}}'
-        if (fileName) {
-            const fileInput = document.getElementById('id_file')
-            const uploadButton = document.getElementById('upload')
-            const forceInput = document.getElementById('id_force')
-            fileInput.required = false
-            uploadButton.disabled = true
-            forceInput.addEventListener('input', event => {
-                uploadButton.disabled = !event.target.checked && !fileInput.value
-            })
-            fileInput.addEventListener('input', event => {
-                uploadButton.disabled = !event.target.value && !forceInput.checked
-            })
-        }
-        window.conflicts = {{conflicts|safe}}
-        window.menuName = ''
-        window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
     </script>
     <script src="{% static 'js/assetImportConflicts.js' %}"></script>
 </form>

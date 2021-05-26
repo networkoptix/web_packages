@@ -31,6 +31,7 @@ export const nxConfig: IConfig = {
             strongClassesCount : 3
         }
     },
+    browserNotSupported: false,
     defaultLanguage : 'en_US',
     developers      : {
         landing: {
@@ -178,6 +179,7 @@ export const nxConfig: IConfig = {
         dirDevtools           : '/static/images/icons/dev_tools/',
         dirButtons            : '/static/images/icons/buttons/',
         dirNonStandard        : '/static/images/icons/',
+        dirNonStandardView    : '/static/images/icons/view/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
         dirSectionPlaceholder : '/static/images/placeholders/section/'
     },

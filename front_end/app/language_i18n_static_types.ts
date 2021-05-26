@@ -286,8 +286,9 @@ export interface DialogsMerge {
     enterSystemAddressTitle:    any;
     latestBuild:                any;
     mergeConfirmation:          any;
-    mergeSystemsTitle:          any;
     mergeFailedTitle:           any;
+    mergeSuccess:               any;
+    mergeSystemsTitle:          any;
     noServerFound:              any;
     newSystemDisplayName:       any;
     otherSystem:                any;
@@ -372,6 +373,7 @@ export interface DialogsTitles {
     serversDetach:          any;
     serversReset:           any;
     serversRestart:         any;
+    changePasswordFor:      any;
 }
 
 export interface Tooltips {
@@ -585,6 +587,7 @@ export interface PageTitles {
     download:               any;
     downloadPlatform:       any;
     failedToAccessSystem:   any;
+    failedToAccessCamera:   any;
     integrations:           any;
     login:                  any;
     pageNotFound:           any;
@@ -853,8 +856,11 @@ export class Convert {
     }
 }
 
-function invalidValue(typ: any, val: any): never {
-    throw Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`);
+function invalidValue(typ: any, val: any, key: any = ''): never {
+    if (key) {
+        throw Error(`Invalid value for key "${key}". Expected type ${JSON.stringify(typ)} but got ${JSON.stringify(val)}`);
+    }
+    throw Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`, );
 }
 
 function jsonToJSProps(typ: any): any {
@@ -875,10 +881,10 @@ function jsToJSONProps(typ: any): any {
     return typ.jsToJSON;
 }
 
-function transform(val: any, typ: any, getProps: any): any {
+function transform(val: any, typ: any, getProps: any, key: any = ''): any {
     function transformPrimitive(typ: string, val: any): any {
         if (typeof typ === typeof val) return val;
-        return invalidValue(typ, val);
+        return invalidValue(typ, val, key);
     }
 
     function transformUnion(typs: any[], val: any): any {
@@ -923,11 +929,11 @@ function transform(val: any, typ: any, getProps: any): any {
         Object.getOwnPropertyNames(props).forEach(key => {
             const prop = props[key];
             const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
-            result[prop.key] = transform(v, prop.typ, getProps);
+            result[prop.key] = transform(v, prop.typ, getProps, prop.key);
         });
         Object.getOwnPropertyNames(val).forEach(key => {
             if (!Object.prototype.hasOwnProperty.call(props, key)) {
-                result[key] = transform(val[key], additional, getProps);
+                result[key] = transform(val[key], additional, getProps, key);
             }
         });
         return result;
@@ -1238,8 +1244,9 @@ const typeMap: any = {
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
         { json: "latestBuild", js: "latestBuild", typ: "any" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "any" },
-        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "any" },
+        { json: "mergeSuccess", js: "mergeSuccess", typ: "any" },
+        { json: "mergeSystemsTitle", js: "mergeSystemsTitle", typ: "any" },
         { json: "noServerFound", js: "noServerFound", typ: "any" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "any" },
         { json: "otherSystem", js: "otherSystem", typ: "any" },
@@ -1317,6 +1324,7 @@ const typeMap: any = {
         { json: "serversDetach", js: "serversDetach", typ: "any" },
         { json: "serversReset", js: "serversReset", typ: "any" },
         { json: "serversRestart", js: "serversRestart", typ: "any" },
+        { json: "changePasswordFor", js: "changePasswordFor", typ: "any" },
     ], false),
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
@@ -1508,6 +1516,7 @@ const typeMap: any = {
         { json: "download", js: "download", typ: "any" },
         { json: "downloadPlatform", js: "downloadPlatform", typ: "any" },
         { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "any" },
+        { json: "failedToAccessCamera", js: "failedToAccessCamera", typ: "any" },
         { json: "integrations", js: "integrations", typ: "any" },
         { json: "login", js: "login", typ: "any" },
         { json: "pageNotFound", js: "pageNotFound", typ: "any" },

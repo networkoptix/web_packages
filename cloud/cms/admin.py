@@ -367,6 +367,7 @@ class AssetAdmin(CMSAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []
+        extra_context['object_id'] = object_id
         approved = AssetCustomizationReview.REVIEW_STATES.accepted
         asset = Asset.objects.get(id=object_id)
         asset_customizations = AssetCustomizationReview.objects.filter(version__asset=asset)
@@ -1226,7 +1227,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                     conflicts = structure.check_asset_conflicts(file.get('assets', []))
                     if not conflicts or force:
                         conflicts = []
-                        task = async_menu_import.apply_async(args=[file, menu.name, request.user.email, accept_reviews])
+                        task = async_menu_import.apply_async(args=[cache_key, menu.name, request.user.email, accept_reviews])
                     else:
                         messages.warning(request, 'Some assets contain conflicts with existing records. To force update with new values please check the "Force Update" checkbox.')
                     return render(request, 'cms/menu_porting.html',

@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Объединить текущую систему с",
             "mergeFailedTitle": "Объединение систем не удалось",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Объединить текущую систему с",
             "noServerFound": "Cервер не обнаружен",
             "newSystemDisplayName": "Новая система",
             "otherSystem": "Другая система...",
@@ -333,7 +334,8 @@
             "removeUser": "Удалить пользователя?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Отключите все системы, владельцем которых вы являетесь, от портала %CLOUD_NAME%, чтобы удалить свою учетную запись."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Не удается удалить систему",
         "emailNotFound": "Учетная запись не существует.",
         "failedToAccessSystem": "Ни одна система не может быть доступна по этой ссылке. Это может произойти, когда система была отключена от %CLOUD_NAME%, доступ к этой системе был отозван, или если вы вошли с некорректнуой учетной записью.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Отсутствуют полномочия на выполнение этого действия",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Не удалось активировать лицензию. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
         "licenseTimeout": "Не удалось активировать лицензию из-за таймаута соединения. Пожалуйста, убедитесь, что сервер онлайн, и повторите попытку.",
         "licenseServerError": "Не удалось активировать лицензию. Сервер лицензий не ответил. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Контроль доступа",
@@ -552,6 +557,7 @@
         "download": "Скачать %VMS_NAME%",
         "downloadPlatform": "Скачать %VMS_NAME% для ",
         "failedToAccessSystem": "Не удалось получить доступ к системе",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Войти",
         "pageNotFound": "Страница не найдена",

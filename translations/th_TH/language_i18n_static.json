@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "ผสานระบบปัจจุบันเข้ากับ",
             "mergeFailedTitle": "การผสานระบบล้มเหลว",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "ผสานระบบปัจจุบันเข้ากับ",
             "noServerFound": "ไม่พบเซิร์ฟเวอร์",
             "newSystemDisplayName": "ระบบใหม่",
             "otherSystem": "ระบบอื่น",
@@ -333,7 +334,8 @@
             "removeUser": "นำผู้ใช้ออกหรือไม่",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "ยกเลิกการเชื่อมต่อระบบทั้งหมดที่คุณเป็นเจ้าของจากพอร์ทัล %CLOUD_NAME% เพื่อลบบัญชีของคุณ"
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "ไม่สามารถลบระบบได้",
         "emailNotFound": "ไม่มีบัญชีนี้อยู่",
         "failedToAccessSystem": "ลิงค์นี้ไม่สามารถเข้าถึงระบบได้ สิ่งนี้อาจเกิดขึ้นเมื่อระบบถูกตัดการเชื่อมต่อจาก %CLOUD_NAME%การเข้าถึงระบบนี้ถูกเพิกถอนหรือหากคุณเข้าสู่บัญชีที่ไม่ถูกต้อง",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "ไม่สามารถเปิดใช้งานใบอนุญาตเนื่องจากการหมดเวลาการเชื่อมต่อ โปรดตรวจสอบว่าเซิร์ฟเวอร์ออนไลน์และลองอีกครั้ง",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",
@@ -552,6 +557,7 @@
         "download": "ดาวน์โหลด %VMS_NAME%",
         "downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
         "failedToAccessSystem": "ไม่สามารถเข้าถึงระบบ",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "ลงชื่อเข้าสู่ระบบ",
         "pageNotFound": "ไม่พบหน้านี้",

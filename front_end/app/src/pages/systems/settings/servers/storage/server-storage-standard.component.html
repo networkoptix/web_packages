@@ -89,7 +89,7 @@
                                         <div *ngSwitchDefault class="error-label" translate>Inaccessible</div>
                                     </ng-container>
                                 </ng-template>
-                                <div *ngIf="reindexingStorages.includes(store.mode); else notReindexing" translate [style.margin-left.px]="16">Reindexing...</div>
+                                <div *ngIf="reindexingStorages.includes(store.mode) && store.isWritable else notReindexing" translate [style.margin-left.px]="16">Reindexing...</div>
                             </td>
                             <ng-template #updatingMode>
                                 <td [ngClass]="{'px-0' : [STATUS.IN_USE, STATUS.BEING_CHECKED].includes(store.status)}" [style.width.px]="ddWidth">

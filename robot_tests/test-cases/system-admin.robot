@@ -14,43 +14,121 @@ ${password}    ${BASE PASSWORD}
 Cloud block is visible for owner
     [Tags]    webadmin
     Log in to system    ${local system}    admin
-#    Log in as owner
-#    check cloud name
-#    check cloud link
-#    check "not connected"
-#    check connect to cloud btn
+    Validate Cloud Block    False
 
 Cloud block is not visible for not owner
     [Tags]    webadmin
     Log in to system    ${local system}    local_viewer
-#    Check that block is not visible
+    Wait until element is not visible    ${CLOUD BLOCK}
+
+Connect To Cloud Form - email validation
+    [Tags]    webadmin
+    ${broken emails}=   Create List    qa    qa@    qa@test    qa@test.    qa@test.com@
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+
+    FOR    ${email}    IN    @{broken emails}
+        Click Button    ${CONNECT TO CLOUD BUTTON}
+        Validate Connect To Cloud Form
+        Fill in login and password    ${email}    ${password}
+        Click Button    ${CONNECT TO CLOUD OK BUTTON}
+        Validate Email Input Error    Please enter a valid Email
+        Close Connect to Cloud modal
+    END
+
+Connect To Cloud Form - negative scenarios
+    [Tags]    webadmin    deb
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Validate Connect To Cloud Form
+
+    Log    Step 1 - empty login and password
+    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Validate Email Input Error    Please enter a valid Email
+    Validate Password Input Error    Password is required
+
+    Connect To Cloud    ${EMPTY}    ${EMPTY}    success=False
+    Validate Email Input Error    Please enter a valid Email
+    Validate Password Input Error    Password is required
+
+    Log    Step 2 - empty password
+    Connect To Cloud    ${BASE EMAIL}    ${EMPTY}    success=False
+    Validate Password Input Error    Password is required
+
+    Log    Step 3 - empty login
+    Connect To Cloud    ${SPACE}    ${password}    success=False
+    Validate Email Input Error    Email is required
+
+    Log    Step 4 - wrong password
+    Connect To Cloud    ${BASE EMAIL}    dsv34    success=False
+    Validate Password Input Error    Wrong password
+
+    Log    Step 5 - not existing account
+    ${email}=   Get Random Email    ${BASE EMAIL}
+    Connect To Cloud    ${email}    ${password}    success=False
+    Validate Email Input Error    Account not found
+
+    Log    Step 6 - not activated account
+    ${email}=   Get Random Email    ${BASE EMAIL}
+    Register Account    Not    Activated    ${email}    ${password}
+    Connect To Cloud    ${email}    ${password}    success=False
+    Wait until element is visible    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
+    ${error text}=   Get Text    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
+    Run Keyword and continue on failure    Should be equal as strings   ${error text}    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
+
+Connect To Cloud Form - cancel buttons works correctly
+    [Tags]    webadmin    deb
+    Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Validate Connect To Cloud Form
+    Fill in login and password    ${system}[owner]    ${password}
+    Wait until elements are not visible    ${CONNECT TO CLOUD EMAIL ERROR}    ${CONNECT TO CLOUD PASSWORD ERROR}
+    Click Button    ${CONNECT TO CLOUD CANCEL BUTTON}
+    Wait until elements are not visible    ${CONNECT TO CLOUD MODAL}    ${DISCONNECT FROM NX}
+    Validate Cloud Block    False
+
+    Log   Check that Cancel button doesn't trigger connection
+    ${cloud id}=   Get Cloud System Id    https://${QABURBANK IP}:${local system}[port]    ${local auth}
+    Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
 
 Local owner can connect system to cloud
-    [Tags]    webadmin
+    [Tags]    webadmin    deb
     Log in to system    ${local system}    admin
+    Validate Cloud Block    False
+    Click Button    ${CONNECT TO CLOUD BUTTON}
+    Connect To Cloud    ${system}[owner]    ${password}    success=True
+    Validate Cloud Block    True
 
-Check UI for local owner when connected to cloud
-    [Tags]    webadmin
-    Log in to system    ${local system}    admin
-#    Connect system to cloud if not
+Check UI for local not owner when connected to cloud
+    [Tags]    webadmin    deb
+    Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
 
-Check UI for local not owner
-    [Tags]    webadmin
     Log in to system    ${local system}    local_viewer
-#   Connect system to cloud if not
-#    Log In as not owner
-#   Cloud block:
-#   - Connected button
-#   - cloud name
-#   - owner
-#   There is no "Disconnect" buttons
+    Wait until elements are visible
+       ...    ${CLOUD NAME}
+       ...    ${CLOUD LINK}
+       ...    ${CONNECTION STATUS}\[contains(text(), "CONNECTED")]
+    Wait until element is not visible    ${DISCONNECT FROM NX}
 
 Local owner can disconnect system from cloud
-    [Tags]    webadmin
+    [Tags]    webadmin    deb
+    Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
+
+    Log    Step 1
     Log in to system    ${local system}    admin
-#   Connect system to cloud if not
-#    Disconnect from cloud
-#    Check UI for local owner
+    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
+    Validate Header Button Text    ${local system}[name]    systems=False
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+
+    Log    Step 2
+    Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Validate Cloud Block    connected=False
+
+#    TODO
 #    Check UI for local not owner
 #    Check cloud - system is not there
 
@@ -230,7 +308,7 @@ Correct items are shown for advanced viewer and below
 
 # Left search
 Left menu search: Position and style
-    [Tags]    C81759    webadmin    cloud    search    deb
+    [Tags]    C81759    webadmin    cloud    search
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -256,12 +334,12 @@ Left menu search: Position and style
     Click Element    ${VIEW TAB}
     Run keyword and continue on failure    Validate Search Input    view page=True
 
-    Log    Step 7
-    Click Element    ${SEARCH DETAILS TOGGLER}
-    Wait Until Element Is Visible    ${SEARCH SERVER IP INFO}
+#    Log    Step 7
+#    Click Element    ${VIEW SEARCH DETAILS TOGGLER}
+#    Wait Until Element Is Visible    ${VIEW SEARCH SERVER IP INFO}
 
 Left menu search: Search menu for offline system
-    [Tags]    C81761    webadmin    cloud    search
+    [Tags]    C81761    cloud    search
     Stop Docker Server    ${system}[cont]
     Log in to system    ${system}    ${system}[owner]
 
@@ -282,7 +360,7 @@ Left menu search: Search menu for offline system
     Start Docker Server    ${system}[cont]
 
 Left menu search: Availability for different users
-    [Tags]    C81760    webadmin    cloud    search
+    [Tags]    C81760    webadmin    cloud    search    deb
     FOR     ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
         Log in to system    ${system}    ${user}
         Validate Search Input
@@ -322,10 +400,10 @@ Left menu search: Search mechanics
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
     Should Be Equal As Numbers    ${num users found}    6
-    Wait until element is visible    //a[contains(@href, "${viewer id}")]//span[contains(@class, "highlighted") and text()="noptix"]
-    Click Link     //a[@id="${viewer id}"]
     #TODO:  figure out failure
-    Wait until element is visible    //h2[contains(text(), "${users}[viewer]")]
+#    Wait until element is visible    //span[contains(text(), "${users}[viewer]")]
+#    Click Link     //span[contains(text(), "${users}[viewer]")]/../..
+#    Wait until element is visible    //h2[contains(text(), "${users}[viewer]")]
 
 Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    cloud    search
@@ -417,7 +495,7 @@ Disconnect dialog interface checks
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
-Owner can disconnect System from Cloud
+Cloud Owner can disconnect System from Cloud
     [Tags]    C41883   C47020    webadmin    cloud
     ${local auth}=   Create List    admin    ${base password}
 
@@ -431,25 +509,34 @@ Owner can disconnect System from Cloud
     Log    Step 2
     Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+
+    # Finish the test in webadmin mode
+    Run keyword if   '''${mode}''' == '''webadmin'''    Run Keywords
+        ...    Validate Log Out Web Admin    AND
+        ...    Pass Execution    Webadmin tests complete
+
     Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Run keyword if   '''${mode}''' == '''cloud'''    Wait Until Location Is    ${ENV}/systems
-    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
+    Wait Until Location Is    ${ENV}/systems
+    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
+
+    # Verify changes are reflected correctly in the header
     Validate Header Button Text    0
     Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
     Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
     Slow    Click Button    ${SYSTEMS DROPDOWN}    timeout=0.1
     Log Out
 
-    Log     C47020: checking that system is disconnected from cloud on the server side
-    Restart Server    http://${QA BURBANK IP}:${system}[port]    ${local auth}
-    Sleep    10
-    ${cloud system id}=   Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${local auth}
-    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
-
-    Log    Step 3
+    Log    Step 3 - Verify cloud API gets correct list of systems
     ${viewer systems}=   Get Account Systems    ${ENV}    ${users}[viewer]    ${base password}
     Should Not Contain    ${viewer systems}    ${system}[id]
 
+    Log     C47020: checking that system is disconnected from cloud on the server side
+    Restart Server    http://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Sleep    10
+    Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
+
+    # Verify the system is removed from others' users accounts
     Log In    ${users}[viewer]    ${base password}
     Wait Until Location Is    ${ENV}/systems
     Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]

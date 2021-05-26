@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
 @Injectable()
+// @ts-ignore
 export class NxSwCacheInterceptor implements HttpInterceptor {
-
     constructor(private cloudApiService: NxCloudApiService) {}
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

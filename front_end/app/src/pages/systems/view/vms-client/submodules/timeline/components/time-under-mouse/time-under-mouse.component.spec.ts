@@ -3,23 +3,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import TimeUnderMouseComponent from './time-under-mouse.component';
 
 describe('TimeUnderMouseComponent', () => {
-  let component: TimeUnderMouseComponent;
-  let fixture: ComponentFixture<TimeUnderMouseComponent>;
+    let component: TimeUnderMouseComponent;
+    let fixture: ComponentFixture<TimeUnderMouseComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TimeUnderMouseComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [TimeUnderMouseComponent]
+        })
+            .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TimeUnderMouseComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TimeUnderMouseComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

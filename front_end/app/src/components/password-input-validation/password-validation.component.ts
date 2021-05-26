@@ -3,14 +3,14 @@ import {
     OnChanges, Output, SimpleChanges
 }                                    from '@angular/core';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-password-input-validation',
-    templateUrl: 'password-validation.component.html',
-    styleUrls  : ['password-validation.component.scss']
+    selector    : 'nx-password-input-validation',
+    templateUrl : 'password-validation.component.html',
+    styleUrls   : ['password-validation.component.scss']
 })
 export class NxPasswordValidationComponent implements OnChanges {
     @Input() forElement;

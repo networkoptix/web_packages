@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
             "latestBuild": "última versión",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de combinar los sistemas <strong>{primarySystem}</strong> y <strong>{secondarySystem}</strong>.</p><p>La configuración y el nombre se tomarán de <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Fusionar el sistema actual con",
             "mergeFailedTitle": "La fusión de sistemas falló",
+            "mergeSuccess": "Combinación de sistemas {primaryName} y {secondaryName} completada",
+            "mergeSystemsTitle": "Fusionar el sistema actual con",
             "noServerFound": "Servidor no encontrado",
             "newSystemDisplayName": "Nuevo sistema",
             "otherSystem": "Otro sistema...",
@@ -333,7 +334,8 @@
             "removeUser": "¿Eliminar usuario?",
             "serversDetach": "¿Separar el servidor \"{ title }\" del sistema actual?",
             "serversReset": "¿Restablecer el servidor \"{ title }\" a los valores predeterminados?",
-            "serversRestart": "¿Reiniciar el servidor \"{ title }\"?"
+            "serversRestart": "¿Reiniciar el servidor \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos los sistemas de los que es dueño del portal %CLOUD_NAME% para eliminar su cuenta."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "No se puede eliminar el sistema",
         "emailNotFound": "La cuenta no existe.",
         "failedToAccessSystem": "No se puede acceder al sistema a través de este enlace. Esto puede suceder cuando un sistema ha sido desconectado de %CLOUD_NAME%, el acceso a este sistema ha sido revocado, o si ha iniciado sesión en la cuenta incorrecta.",
+        "failedToAccessCamera": "No se puede acceder a ninguna cámara a través de este enlace.",
         "forbidden": "No tiene permisos para realizar esta acción",
         "lostConnection": "Conexión a {systemName} perdida",
         "mergedSystemIsOffline": "Sistema <strong>{failedSystem}</strong> está desconectado.",
@@ -472,7 +475,9 @@
         "licenseFail": "Error al activar la licencia. Por favor intente nuevamente o contacte a soporte.",
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
-        "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red."
+        "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red.",
+        "archiveEncrypted": "ARCHIVO<br>ENCRIPTADO",
+        "archiveEncryptedMessage": "Pídale al administrador del sistema que ingrese la<br>para descifrar este archivo."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -552,6 +557,7 @@
         "download": "Descargar %VMS_NAME%",
         "downloadPlatform": "Descargar %VMS_NAME% para ",
         "failedToAccessSystem": "Error al acceder al sistema",
+        "failedToAccessCamera": "No se pudo acceder a la cámara",
         "integrations": "Integraciones de %VMS_NAME%",
         "login": "Inicia sesión",
         "pageNotFound": "Página no encontrada",
@@ -624,7 +630,7 @@
             "reject": "Rechazar",
             "backToEditText": "Volver a las interfaces de edición",
             "previewRibbon": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Esta página es la versión en vivo que está disponible públicamente."
         },
         "systemOffline": "El sistema está desconectado. Algunas configuraciones pueden no estar disponibles.",
         "systemsMerging": "Este sistema está actualmente en una operación de fusión."
@@ -801,7 +807,7 @@
             "required": "{number} más requeridos",
             "activated": "Clave de licencia activada",
             "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Licencia de tiempo activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
     "settingsConfig": {

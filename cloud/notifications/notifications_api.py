@@ -13,6 +13,7 @@ from api.models import Account
 from notifications.models import Message, Event, Feedback, PushDevice, PushNotification
 from cms.models import Asset, get_cloud_portal_asset
 
+import botocore
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +91,7 @@ def _write_push_result(notification_object, result_data):
     notification_object.save()
 
 
-def log_push_result(notification_object, message, level=logging.INFO, device_token=None, stack_trace=False):
+def log_push_result(notification_object, message, level=logging.INFO, device_token=None, device_id=None, stack_trace=False):
     result_data = _read_push_result(notification_object)
     log_message = f'Push Notification: {notification_object.id}, {message}'
     if stack_trace:
@@ -105,6 +106,14 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
             result_data['devices'][device_token] += '\n' + message
         else:
             result_data['devices'][device_token] = message
+    elif device_id:
+        if 'device_ids' not in result_data:
+            result_data['device_ids'] = dict()
+
+        if device_id in result_data['device_ids']:
+            result_data['device_ids'][device_id] += '\n' + message
+        else:
+            result_data['device_ids'][device_id] = message
     else:
         if 'log' in result_data:
             result_data['log'] += '\n' + message
@@ -147,7 +156,7 @@ def get_system_with_users(notification_object, request_data):
     return system
 
 
-def process_push_response(responses, notification_object, dry_run=False):
+def process_fcm_push_response(responses, notification_object, dry_run=False):
     resend_tokens = []
     error = False
 
@@ -182,7 +191,7 @@ def process_push_response(responses, notification_object, dry_run=False):
         notification_object.state = PushNotification.RESULT_STATES.success
         log_push_result(notification_object, 'Successfully completed')
 
-    return resend_tokens
+    return list(PushDevice.objects.filter(registration_id__in=resend_tokens).values_list('id', flat=True))
 
 
 def set_subscriptions_from_targets(notification_object, request_data):
@@ -206,8 +215,10 @@ def set_subscriptions_from_targets(notification_object, request_data):
 
     return PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        application_id=notification_object.customization.name
+        application_id=notification_object.customization.name, active=True
     ).distinct()
     # notification_object.devices.set(matching_devices)
 
     # return matching_devices.values_list('id', flat=True)
+
+

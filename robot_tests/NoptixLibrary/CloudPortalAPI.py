@@ -1,26 +1,24 @@
 import requests
-from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 import base64
 import uuid
 import json
-from random import *
-import random
-import time
 import string
-from urllib3.util.timeout import current_time
 import os
-
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth
+from robot.api import logger
 
 class CloudPortalAPI(object):
 
     def log_in(self, env, email, password):
-        s = requests.Session()
+        s = requests.session()
         r = s.post(f'{env}/api/account/login', json={'email': email, 'password': password})
         assert r.status_code == 200, "Log In Failed"
+        s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+
         return s
 
     def log_out(self, env, session_id, csrftoken):
-        with requests.Session() as s:
+        with requests.session() as s:
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
             r = s.post(f'{env}/api/account/logout')
@@ -29,21 +27,22 @@ class CloudPortalAPI(object):
 
     def merge_cloud_systems(self, env, master_id, slave_id, email, password):
         with self.log_in(env, email, password) as s:
-            data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             r = s.post(f'{env}/api/systems/merge', data)
             assert r.status_code == 200
             return r.json()
 
     def change_password(self, env, email, old_password, new_password):
         with self.log_in(env, email, old_password) as s:
-            data = {'old_password': old_password, 'new_password': new_password}
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            data = {'old_password': old_password, 'new_password': new_password}
             r = s.post(f'{env}/api/account/changePassword', data)
             return r.status_code
 
     def restore_password(self, env, email, code=None, new_password=None):
         with requests.Session() as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             data = {'user_email': email}
             if code and new_password:
                 data.update({'code': code, 'new_password': new_password})
@@ -56,56 +55,28 @@ class CloudPortalAPI(object):
 
     def get_account_language(self, env, email, password):
         with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.get(f'{env}/api/utils/language')
             return r.json()['language']
 
     def get_account_data(self, env, email, password):
         with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.get(f'{env}/api/account/')
             return r.json()
 
     def get_account_systems(self, env, email, password):
         with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             data = s.get(f'{env}/api/systems/')
-            # systems = []
-            # for system in data.json():
-            #     systems.append(system['id'])
-            # return systems
-        return data.json()
-
-    def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
-        assert r.status_code == 200, 'Failed to get system settings'
-        return r.json()
-
-    def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudSystemID':
-                return obj['value']
-        else:
-            return 'Cannot find cloudSystemID key'
-
-    def get_local_system_name(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'systemName':
-                return obj['value']
-        else:
-            return 'Cannot find systemName key'
-
-    def get_local_system_owner(self, server_url, local_auth):
-        system_settings = self.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudAccountName':
-                return obj['value']
-        else:
-            return 'Cannot find cloudAccountName key'
+            return data.json()
 
     def set_account_language(self, env, email, password, new_language='en_US'):
         with self.log_in(env, email, password) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
-            r = s.post(f'{env}/api/utils/language', json={'language': new_language})
+            r = s.post(f'{env}/api/utils/language/', json={'language': new_language})
+            assert 200 == r.status_code, f"api/utils/language failed: {r.status_code}"
+
             return r.json()
 
     def set_account_name(self, env, email, password, first_name, last_name):
@@ -140,6 +111,39 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
+
+    @staticmethod
+    def get_system_settings(server_url, local_auth):
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
+        assert r.status_code == 200, 'Failed to get system settings'
+        return r.json()
+
+    @staticmethod
+    def get_cloud_system_id(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudSystemID':
+                return obj['value']
+        else:
+            return 'Cannot find cloudSystemID key'
+
+    @staticmethod
+    def get_local_system_name(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'systemName':
+                return obj['value']
+        else:
+            return 'Cannot find systemName key'
+
+    @staticmethod
+    def get_local_system_owner(server_url, local_auth):
+        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudAccountName':
+                return obj['value']
+        else:
+            return 'Cannot find cloudAccountName key'
 
     def subscribe_push_notification(self, env, email, password, token, name):
         authAscii = email+":"+password
@@ -278,7 +282,18 @@ class CloudPortalAPI(object):
         return r.status_code
 
     @staticmethod
-    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer):
+    def camera_search(serverUrl):
+        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':'10.1.5.238:12312'}, verify=False)
+        return r.json()['reply']['processUuid']
+
+    @staticmethod
+    def camera_status(serverUrl, uuid):
+        r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'uuid':uuid}, verify=False)
+        logger.console(r.json())
+        return r.json()
+
+    @staticmethod
+    def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
         body = {
             "user": camuser,
             "password": campassword,
@@ -291,6 +306,7 @@ class CloudPortalAPI(object):
                     }
                 ]
             } 
+        logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text
     

@@ -169,6 +169,10 @@ export class NxDialogsService {
     }
 
     login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false) {
+        if (this.CONFIG.browserNotSupported) {
+            return;
+        }
+
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',

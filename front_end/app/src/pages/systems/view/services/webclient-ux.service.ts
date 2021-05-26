@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
-
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 export interface WebclientUxState {
   isFullScreen: boolean,
@@ -9,64 +8,60 @@ export interface WebclientUxState {
 }
 
 const webClientUxInitialState = {
-  isFullScreen: false,
-  isSidebarShown: true,
-  isTimelineShown: true,
-}
-
+    isFullScreen    : false,
+    isSidebarShown  : true,
+    isTimelineShown : true
+};
 
 @Injectable({
-  providedIn: 'root',
- })
+    providedIn: 'root'
+})
 export class WebClientUxService {
-  alternateFullScreen$ = new BehaviorSubject(false)
+    alternateFullScreen$ = new BehaviorSubject(false)
 
-  constructor (
-  ) {
-  }
-
-  protected _subject = new BehaviorSubject<WebclientUxState>({ ...webClientUxInitialState })
-
-  protected _emit (): void {
-    this._subject.next(this.state)
-  }
-
-  public get subject (): BehaviorSubject<WebclientUxState> {
-    return this._subject
-  }
-
-
-  protected _state: WebclientUxState = { ...webClientUxInitialState }
-
-  public get state (): WebclientUxState {
-    return { ...this._state }
-  }
-
-  public set isFullScreen (nv: boolean) {
-    if (this._state.isFullScreen === nv)
-      return
-    this._state.isFullScreen = nv
-    this._state.isSidebarShown = !this._state.isFullScreen
-    this._state.isTimelineShown = !this._state.isFullScreen
-    this._emit()
-  }
-
-  public set isSidebarShown (nv: boolean) {
-    if (this._state.isSidebarShown === nv) {
-      return
+    constructor(
+    ) {
     }
-    this._state.isSidebarShown = nv
-    this._emit()
-  }
 
-  public set isTimelineShown (nv: boolean) {
-    if (this._state.isTimelineShown === nv) {
-      return
+    protected _subject = new BehaviorSubject<WebclientUxState>({ ...webClientUxInitialState })
+
+    protected _emit (): void {
+        this._subject.next(this.state);
     }
-    this._state.isTimelineShown = nv
-    this._emit()
-  }
 
+    public get subject (): BehaviorSubject<WebclientUxState> {
+        return this._subject;
+    }
+
+    protected _state: WebclientUxState = { ...webClientUxInitialState }
+
+    public get state (): WebclientUxState {
+        return { ...this._state };
+    }
+
+    public set isFullScreen (nv: boolean) {
+        if (this._state.isFullScreen === nv) { return; }
+        this._state.isFullScreen = nv;
+        this._state.isSidebarShown = !this._state.isFullScreen;
+        this._state.isTimelineShown = !this._state.isFullScreen;
+        this._emit();
+    }
+
+    public set isSidebarShown (nv: boolean) {
+        if (this._state.isSidebarShown === nv) {
+            return;
+        }
+        this._state.isSidebarShown = nv;
+        this._emit();
+    }
+
+    public set isTimelineShown (nv: boolean) {
+        if (this._state.isTimelineShown === nv) {
+            return;
+        }
+        this._state.isTimelineShown = nv;
+        this._emit();
+    }
 }
 
-export default WebClientUxService
+export default WebClientUxService;

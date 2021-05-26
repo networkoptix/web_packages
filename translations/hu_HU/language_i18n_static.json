@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Egyesítse a jelenlegi rendszert a",
             "mergeFailedTitle": "A rendszeregyesítés sikertelen",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Egyesítse a jelenlegi rendszert a",
             "noServerFound": "Nem találhatók szerverek",
             "newSystemDisplayName": "Új rendszer",
             "otherSystem": "Más rendszerek...",
@@ -333,7 +334,8 @@
             "removeUser": "Eltávolítja a felhasználót?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "A rendszer törlése nem lehetséges",
         "emailNotFound": "A fiók nem létezik.",
         "failedToAccessSystem": "Ez a link nem érhető el rendszerrel. Ez akkor fordulhat elő, ha a rendszert lekapcsolják a %CLOUD_NAME%, visszavonják a rendszerhez való hozzáférést, vagy ha helytelen fiókba jelentkezett be.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Nincs engedélye erre a műveletre",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "A licenc aktiválása nem sikerült. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
         "licenseTimeout": "A licenc aktiválása a kapcsolat időtúllépése miatt nem sikerült. Kérjük, ellenőrizze, hogy a kiszolgáló online-e, és próbálkozzon újra.",
         "licenseServerError": "A licenc aktiválása nem sikerült. A licencszerver nem válaszolt. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Hozzáférés vezérlés",
@@ -552,6 +557,7 @@
         "download": "%VMS_NAME% letöltése",
         "downloadPlatform": "%VMS_NAME% letöltése ",
         "failedToAccessSystem": "Belépés sikertelen",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Bejelentkezés",
         "pageNotFound": "Az oldal nem található",

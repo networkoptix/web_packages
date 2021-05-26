@@ -1,10 +1,8 @@
 *** Variables ***
-#${LM PORT 1}      7755
-#${LM PORT 2}      7756
-#${LM PORT 3}      7757
 ${LM HOST}        http://nxlicensed.test.hdw.mx
 ${LM OWNER}       licautotests+owner@gmail.com
 ${LM PASSWORD}    qweasd123
+@{LOCAL AUTH}     admin    ${BASE PASSWORD}
 @{LM AUTH}        ${LM OWNER}    ${LM PASSWORD}
 @{CLOUD AUTH}     ${LM OWNER}    ${BASE PASSWORD}
 
@@ -23,8 +21,9 @@ ${LM PASSWORD}    qweasd123
 ...    videowall=Video Wall
 ...    vmax=VMAX
 ...    bridge=Bridge
+...    nvr=NVR
 
-#${TRIAL LICENSE}    0000-0000-0000-0005
+${TRIAL LICENSE}    0000-0000-0000-0005
 ${LICENSES LINK}    //a[@id="licenses"]
 
 # System is offline

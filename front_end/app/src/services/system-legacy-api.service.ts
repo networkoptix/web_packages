@@ -1,21 +1,22 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Location }                            from '@angular/common';
-import md5                                     from 'md5';
-import { from, of, throwError, Observable }    from 'rxjs';
+import md5                                         from 'md5';
+import { from, of, throwError, Observable, EMPTY } from 'rxjs';
 import {
     flatMap, map, mergeMap, retryWhen, timeout, tap
-}                                              from 'rxjs/operators';
+}                                                  from 'rxjs/operators';
 
-import { NxConfigService, IConfig }            from './nx-config';
-import { ICamera, NxSystemUser }               from './system.service';
-import * as t                                  from './system-api.types';
-import { Account }                             from './account.service';
-import { NxUriCacheService }                   from './uri-cache.service';
-import { NxAppStateService }                   from './nx-app-state.service';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '../pages/health/health.service';
-import { IParams, ResourceParam, User }                       from './system-api.service';
-import { environment }                         from '@environments/environment';
+import { NxConfigService, IConfig }     from './nx-config';
+import { ICamera, NxSystemUser }        from './system.service';
+import * as t                           from './system-api.types';
+import { Account }                      from './account.service';
+import { NxUriCacheService }            from './uri-cache.service';
+import { NxAppStateService }            from './nx-app-state.service';
+import { CookieService }                from 'ngx-cookie-service';
+import { NxHealthService }              from '../pages/health/health.service';
+import { IParams, ResourceParam, User } from './system-api.service';
+import { environment }                  from '@environments/environment';
+import { auth }                         from 'firebase';
 
 export class NxSystemAPI {
     /*
@@ -192,7 +193,8 @@ export class NxSystemAPI {
                 retryWhen((request) => this.retryHandler(request)),
                 timeout(requestTimeout),
                 tap(undefined, (error) => {
-                    if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                    // 'Gateway Timeout' is added for 'local' testing of webadmin
+                    if (this.CONFIG.isLocal && (error.name === 'TimeoutError' || error.statusText === 'Gateway Timeout')) {
                         this.appState.systemAvailable$.next(false);
                     }
                 })
@@ -384,6 +386,21 @@ export class NxSystemAPI {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
         return this.http.get<JSON>('/static/openapi_v1.json');
+    }
+
+    authCurrentUser(username: string, password: string) {
+        let auth, nonce, realm;
+
+        username = username.toLowerCase();
+
+        return this.getNonce(username).pipe(
+            mergeMap((response: any) => {
+                nonce = response.reply.nonce;
+                realm = response.reply.realm;
+                auth = this.digest(username, password, realm, nonce);
+                return this.cookieLogin(auth, false);
+            })
+        );
     }
 
     login(
@@ -950,6 +967,10 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
+        if (!environment.isLocal && !this.authGet) {
+            return EMPTY; // prevent unauthorized calls in cloud-portal
+        }
+
         return this.getRequestAggregator<
             t.NormalResponse<[t.SystemTime, t.GetCameras]>
         >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(
@@ -1242,35 +1263,33 @@ export class NxSystemAPI {
         }&time=${t || 'now'}`;
     }
 
-    public getPlaybackUrl (cameraId, transport='webm', resolution='low', position=undefined) {
-        let url
-        function hlsResolutionOrEmpty (res) {
-            if (res === 'hi' || res === 'lo')
-                return res
-            return ''
+    public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
+        let url;
+        function hlsResolutionOrEmpty(res) {
+            if (res === 'hi' || res === 'lo') { return res; }
+            return '';
         }
         switch (transport) {
             case 'hls':
-                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`
+                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
             default:
-                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`
+                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
         }
     }
-
 
     /** Merge Systems */
     getPeerSystems(showAddresses = true) {
@@ -1279,11 +1298,11 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
+    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
         const data = {
             url,
             currentPassword,
-            takeRemoteSettings: false,
+            takeRemoteSettings,
             dryRun
         };
         return this.post<t.MergeSystems>('/api/mergeSystems', data);
@@ -1315,14 +1334,15 @@ export class NxSystemAPI {
     deprecatedMergeSystems(
         url: string,
         currentPassword: string,
-        adminPassword: string
+        adminPassword: string,
+        takeRemoteSettings = false
     ) {
         return this.getDigestKeys(adminPassword).then(({ getKey, postKey }) => {
             const data = {
                 getKey,
                 postKey,
                 currentPassword,
-                takeRemoteSettings: false,
+                takeRemoteSettings,
                 url
             };
             return this.post('/api/mergeSystems', data).toPromise();

@@ -17,5 +17,8 @@
   "40072": {
     "name": "lxml",
     "note": "The HTML cleaner in lxml 4.6.3 no longer includes the HTML5 'formaction' attribute to avoid it from allowing JavaScript to pass through."
+  },
+  "40291": {
+    "name": "pip"
   }
 }

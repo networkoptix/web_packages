@@ -35,8 +35,8 @@ Remove Test Servers
     END
 
 Setup System
-    [Arguments]    ${image}=${IMAGE 4.1}    ${network}=bridge    ${cloud email}=${None}
-    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
+    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
+    ${server}=   Create Docker Server    network=${network}    image=${image}
     ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]    server name=${server}[name]
     Append To List    ${test servers}    ${server}[name]
     Set To Dictionary    ${system}    cont=${system}[cont]

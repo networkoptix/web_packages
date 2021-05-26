@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Slå sammen nåværende system med",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Slå sammen nåværende system med",
             "noServerFound": "Ingen server funnet",
             "newSystemDisplayName": "Nytt system",
             "otherSystem": "Annet system...",
@@ -333,7 +334,8 @@
             "removeUser": "Vil du fjerne bruker?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan ikke slette system",
         "emailNotFound": "Kontoen eksisterer ikke.",
         "failedToAccessSystem": "Ingen koblinger kan nås via denne lenken. Dette kan skje når et system er koblet fra %CLOUD_NAME%, tilgang til dette systemet er opphevet, eller du er logget inn på feil konto.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Adgangskontroll",
@@ -552,6 +557,7 @@
         "download": "Last ned %VMS_NAME%",
         "downloadPlatform": "Last ned %VMS_NAME% for ",
         "failedToAccessSystem": "Kunne ikke få tilgang til systemet",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Logg Inn",
         "pageNotFound": "Siden ble ikke funnet",

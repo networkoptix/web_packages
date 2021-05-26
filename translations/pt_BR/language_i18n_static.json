@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Mesclar o sistema atual com",
             "mergeFailedTitle": "Falha na mesclagem do sistema",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Mesclar o sistema atual com",
             "noServerFound": "Nenhum servidor encontrado",
             "newSystemDisplayName": "Novo Sistema",
             "otherSystem": "Outro sistema...",
@@ -333,7 +334,8 @@
             "removeUser": "Remover usuário?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do portal %CLOUD_NAME% para excluir sua conta."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Não é possível apagar o Sistema",
         "emailNotFound": "Conta não existe.",
         "failedToAccessSystem": "Nenhum sistema pode ser acessado por este link. Isso pode acontecer quando um sistema for desconectado do %CLOUD_NAME%, acesso a este sistema foi revogado ou se você estiver logado na conta incorreta.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Não tem permissões para efetuar esta ação",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Não foi possível ativar a licença devido a um tempo limite de conexão. Por favor, certifique-se de que o servidor está online e tente novamente.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Controle de Acesso",
@@ -552,6 +557,7 @@
         "download": "Baixar %VMS_NAME%",
         "downloadPlatform": "Baixar %VMS_NAME% para ",
         "failedToAccessSystem": "Falha ao acessar o sistema",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Log in",
         "pageNotFound": "Página não encontrada",

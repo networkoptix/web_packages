@@ -87,7 +87,8 @@
             "optional": true
           },
           {
-            "name": "additional-file-1",
+            "old_name": "additional-file-1",
+            "name": "%additional-file-1%",
             "label": "Additional file 1",
             "value": "",
             "description": "Upload any other necessary files.",
@@ -99,7 +100,8 @@
             }
           },
           {
-            "name": "additional-file-2",
+            "old_name": "additional-file-2",
+            "name": "%additional-file-2%",
             "label": "Additional file 2",
             "value": "",
             "description": "Upload any other necessary files.",
@@ -111,7 +113,8 @@
             }
           },
           {
-            "name": "additional-file-3",
+            "old_name": "additional-file-3",
+            "name": "%additional-file-3%",
             "label": "Additional file 3",
             "value": "",
             "description": "Upload any other necessary files.",
@@ -123,7 +126,8 @@
             }
           },
           {
-            "name": "additional-file-4",
+            "old_name": "additional-file-4",
+            "name": "%additional-file-4%",
             "label": "Additional file 4",
             "value": "",
             "description": "Upload any other necessary files.",
@@ -135,7 +139,8 @@
             }
           },
           {
-            "name": "additional-file-5",
+            "old_name": "additional-file-5",
+            "name": "%additional-file-5%",
             "label": "Additional file 5",
             "value": "",
             "description": "Upload any other necessary files.",

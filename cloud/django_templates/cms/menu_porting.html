@@ -143,7 +143,10 @@
                     setTimeout(pollStatus, pollingInterval)
                 } else if(status === 'SUCCESS') {
                     togglePending(false)
-                    document.getElementById('download-button').href = downloadUrl
+                    const downloadButton = document.getElementById('download-button')
+                    if (downloadButton) {
+                        downloadButton.href = downloadUrl
+                    }
                     window.open(downloadUrl)
                 } else {
                     console.error(status)

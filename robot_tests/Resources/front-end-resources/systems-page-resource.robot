@@ -36,7 +36,7 @@ Systems Page Suite Teardown
     FOR    ${sys}    IN    @{offline systems}    ${extra system}
         Delete Docker Server    ${sys}[cont]
     END
-    Remove Temporary Users
+    # Remove Temporary Users
     Close All Browsers
 
 Validate on Systems Page

@@ -102,6 +102,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
+            successMessage  : this.LANG.account.accountSavedSuccess(),
             errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
             logoutForbidden : true
         }).then((result) => {
@@ -124,7 +125,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 if (account) {
                     this.account = account;
                     this.setOriginal();
-                    if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
+                    if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.isUserASystemOwner();

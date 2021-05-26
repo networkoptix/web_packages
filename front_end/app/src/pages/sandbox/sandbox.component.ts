@@ -18,7 +18,7 @@ export class NxSandboxComponent {
     agree: boolean;
     show: boolean;
     toggleDisabled: boolean;
-    show5: boolean;
+        show5: boolean;
     edit: boolean;
     sections;
     options;

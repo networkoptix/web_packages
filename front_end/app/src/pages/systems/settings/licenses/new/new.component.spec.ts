@@ -14,6 +14,7 @@ import { NxProcessService }               from '@services/process.service';
 import { NxDialogsService }               from '@dialogs/dialogs.service';
 import { NxProcessButtonComponent }       from '@components/process-button/process-button.component';
 import { NxLicenseTrialComponent }        from '@pages/systems/settings/licenses/trial/trial.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -54,8 +55,12 @@ describe('Licenses (New)', () => {
                 NxContentBlockSectionComponent, NxProcessButtonComponent,
                 NxLicenseTrialComponent
             ],
-            imports     : [FormsModule, TranslateTestingModule],
-            providers   : [
+            imports: [
+                CommonModule,
+                FormsModule,
+                TranslateTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxDialogsService, useValue: {} },
@@ -79,7 +84,7 @@ describe('Licenses (New)', () => {
     });
 
     it('should call formatLicenseKey and get formatted key', () => {
-        const key = component['formatLicenseKey']('0000000000000000');
+        const key = (component as any).formatLicenseKey('0000000000000000');
         expect(key).toBe('0000-0000-0000-0000');
     });
 
@@ -97,7 +102,7 @@ describe('Licenses (New)', () => {
         component.licenses = [{
             key: '0000-0000-0000-0000'
         }];
-        const res = component['isActivated']('0000000000000000');
+        const res = (component as any).isActivated('0000000000000000');
         expect(res).toBeTruthy();
     });
 

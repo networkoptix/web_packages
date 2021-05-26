@@ -15,6 +15,7 @@ import { FormsModule }                    from '@angular/forms';
 import { NxProcessButtonComponent }       from '@components/process-button/process-button.component';
 import { TranslateModule }                from '@ngx-translate/core';
 import { NxSystem }                       from '@services/system.service';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -50,8 +51,12 @@ describe('Licenses (Trial)', () => {
                 NxLicenseTrialComponent, NxContentBlockComponent,
                 NxContentBlockSectionComponent, NxProcessButtonComponent
             ],
-            imports   : [FormsModule, TranslateTestingModule],
-            providers : [
+            imports: [
+                CommonModule,
+                FormsModule,
+                TranslateTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxSystem, useValue: spySystem },
@@ -113,14 +118,14 @@ describe('Licenses (Trial)', () => {
                 const line1 = form.querySelector('#trial_license_line1');
                 const line2 = form.querySelector('#trial_license_line2');
 
-                expect(line1.innerHTML).toBe('You have an unused time license.');
+                expect(line1.innerHTML).toBe('You have an unused trial license.');
                 expect(line2.innerHTML).toBe('Once activated, it will allow you to record up to 4 cameras for 30 days.');
             });
 
             it('should have button w/ caption', () => {
                 expect(button).toBeTruthy();
                 // nx-process-button caption will contain extra html which at this point is commented out
-                expect(button.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('Activate Time License');
+                expect(button.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('Activate Trial License');
             });
         });
 

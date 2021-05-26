@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Merge current system with",
             "noServerFound": "No server found",
             "newSystemDisplayName": "Uusi järjestelmä",
             "otherSystem": "Other System...",
@@ -333,7 +334,8 @@
             "removeUser": "Remove user?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Järjestelmää ei voi poistaa",
         "emailNotFound": "Tiliä ei ole olemassa.",
         "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Sinulla ei ole oikeuksia tämän toiminnon suorittamiseen",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kulunvalvonta",
@@ -552,6 +557,7 @@
         "download": "Lataa %VMS_NAME%",
         "downloadPlatform": "Lataa %VMS_NAME% ",
         "failedToAccessSystem": "Failed to access system",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Kirjaudu sisään",
         "pageNotFound": "Sivua ei löydy",

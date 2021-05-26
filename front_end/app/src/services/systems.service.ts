@@ -6,12 +6,12 @@ import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService }         from './nx-cloud-api';
 import { NxPollService }             from './poll.service';
-import { NxToastService }            from '../dialogs/toast.service';
+import { NxToastService }            from '@dialogs/toast.service';
 import { NxUtilsService }            from './utils.service';
 import { NxUriService }              from './uri.service';
-import { NxRibbonService }           from '../components/ribbon/ribbon.service';
+import { NxRibbonService }           from '@components/ribbon/ribbon.service';
 import { NxSystem }                  from './system.service';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from './storage.service';
 
 interface IParams<Value = any> {
@@ -56,6 +56,10 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
+    get isPolling() {
+        return this.systemsPoll?.destination?.observers?.length > 0;
+    }
+
     processMerge<T extends {primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo}>(mergeInfo: T) {
         this.systemsMerging.primary = mergeInfo.primary;
         this.systemsMerging.secondary = mergeInfo.secondary;
@@ -68,12 +72,11 @@ export class NxSystemsService implements OnDestroy {
     private removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
-
-            const message = NxLanguageProviderService.translate(
-                this.LANG.toastMessage.system.merge.success, {
-                    primaryName   : this.systemsMerging.primary.name,
-                    secondaryname : this.systemsMerging.secondary.name
-                });
+            const primaryName = this.systemsMerging.primary.name;
+            const secondaryName = this.systemsMerging.secondary.name;
+            const message = (primaryName && secondaryName) ? NxLanguageProviderService.translate(
+                this.LANG.dialogs.merge.mergeSuccess, { primaryName, secondaryName }
+            ) : this.LANG.toastMessage.system.merge.success();
             this.systemsMerging = {
                 primary   : undefined,
                 secondary : undefined
@@ -166,7 +169,7 @@ export class NxSystemsService implements OnDestroy {
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap(() => this.processSystems(this.systems)),
+                tap((systems: NxSystemWithUserInfo[]) => this.processSystems(systems)),
                 distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));

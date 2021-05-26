@@ -1,13 +1,21 @@
 import json
 
 from django.conf import settings
+from django.core.cache import caches
 from rest_framework import serializers
 
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from cms.models import get_cloud_portal_asset
 from notifications.models import PushSubscription, PushDevice, PushNotification
+from notifications.conf import get_sns_client
+
+import botocore
+import logging
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
+PROVIDERS = tuple(PushDevice.PROVIDERS._identifier_map.keys())
+PROVIDERS_REVERSE_MAP = {i: name for name, i in PushDevice.PROVIDERS._identifier_map.items()}
 
 FCM_ERRORS = {
     'MismatchSenderId': 'Device token does not match with the current configuration',
@@ -15,6 +23,20 @@ FCM_ERRORS = {
     'NotRegistered': 'Device token is no longer valid',
     'InvalidApnsCredential': 'APNs key is not valid for this device'
 }
+
+logger = logging.getLogger(__name__)
+
+
+def get_aws_platform_arns(customization_name):
+    arn_customizations = caches['push_config'].get('platform_arns', {})
+    if customization_name not in arn_customizations:
+        current_portal = get_cloud_portal_asset(customization_name)
+        arn_customizations[customization_name] = {}
+        for provider in ('FIREBASE', 'BAIDU', 'APN', 'APN_SANDBOX'):
+            arn_customizations[customization_name][provider.lower()] = current_portal.read_global_value(
+                f'%PUSH_ARN_{provider}%')
+        caches['push_config'].set('platform_arns', arn_customizations)
+    return arn_customizations[customization_name]
 
 
 class NotificationSerializer(serializers.Serializer):
@@ -50,25 +72,35 @@ class SubscriptionSerializer(serializers.Serializer):
     isEnabled = serializers.BooleanField(required=False)
     deviceInfo = serializers.DictField(required=False)
     type = serializers.ChoiceField(choices=PUSHDEVICE_TYPES, required=False)
+    provider = serializers.ChoiceField(choices=PROVIDERS, required=False, default='firebase_legacy')
+    userId = serializers.CharField(required=False, allow_blank=True)
 
-    def validate_deviceToken(self, value):
-        if self.instance:
-            return value
-        else:
-            device = PushDevice(
-                registration_id=value, cloud_message_type='FCM', user=self.context['request'].user,
-                application_id=settings.CUSTOMIZATION
-            )
-            response = device.send_message(message='', dry_run=True)
-            if response['success'] == 1:
-                return value
-            else:
-                fcm_error = response['results'][0]['error']
+    def validate(self, data):
+        device_token = data.get('deviceToken')
+        provider = data.get('provider')
+        user_id = data.get('userId')
+
+        if not self.instance:
+            if provider == 'firebase_legacy':
+                device = PushDevice(
+                    registration_id=device_token, cloud_message_type='FCM', user=self.context['request'].user,
+                    application_id=settings.CUSTOMIZATION
+                )
+                response = device.send_message(message='', dry_run=True)
+                if response['success'] == 1:
+                    return data
+                else:
+                    fcm_error = response['results'][0]['error']
+                    raise serializers.ValidationError({
+                        'message': 'Token could not be validated',
+                        'code': fcm_error,
+                        'error': FCM_ERRORS.get(fcm_error, fcm_error)
+                    })
+            elif provider == 'baidu' and not user_id:
                 raise serializers.ValidationError({
-                    'message': 'Token could not be validated',
-                    'code': fcm_error,
-                    'error': FCM_ERRORS.get(fcm_error, fcm_error)
+                    'userId': 'This field is required when using provider "baidu"'
                 })
+        return data
 
     def validate_systems(self, value):
         if value is not None:
@@ -123,6 +155,42 @@ class SubscriptionSerializer(serializers.Serializer):
                 instance.os = getattr(PushDevice.OS, device_info['os'], PushDevice.OS.web)
         return instance
 
+    def create_platform_endpoint(self, instance):
+        provider = self.validated_data.get('provider')
+        user_id = self.validated_data.get('userId')
+        platform_arns = get_aws_platform_arns(settings.CUSTOMIZATION)
+        platform_arn = platform_arns[provider]
+        if not platform_arn:
+            raise serializers.ValidationError(f'ARN is not configured for provider {provider}')
+
+        sns_client = get_sns_client()
+        try:
+            if provider == 'baidu':
+                platform_endpoint = sns_client.create_platform_endpoint(
+                    PlatformApplicationArn=platform_arn, Token=instance.registration_id,
+                    Attributes={'UserId': user_id, 'ChannelId': instance.registration_id}
+                )
+                instance.baidu_user_id = user_id
+            else:
+                platform_endpoint = sns_client.create_platform_endpoint(PlatformApplicationArn=platform_arn, Token=instance.registration_id)
+        except botocore.exceptions.ClientError as client_error:
+            logger.warning(f'Provider: {provider}, Device Id: {instance.registration_id}, UserId: {user_id}, PlatformARN: {platform_arn}\n'
+                           f'Boto3 ClientError: {client_error}')
+            raise serializers.ValidationError({'message': 'Error registering the provided token'})
+
+        endpoint_arn = platform_endpoint.get('EndpointArn')
+        instance.arn = endpoint_arn
+        return endpoint_arn
+
+    def handle_duplicate_fcm(self, device):
+        # Delete devices that have the same registration id from the opposite provider
+        if device.provider == PushDevice.PROVIDERS.firebase:
+            PushDevice.objects.filter(provider=PushDevice.PROVIDERS.firebase_legacy,
+                                      registration_id=device.registration_id).delete()
+        if device.provider == PushDevice.PROVIDERS.firebase_legacy:
+            PushDevice.objects.filter(provider=PushDevice.PROVIDERS.firebase,
+                                      registration_id=device.registration_id).delete()
+
     def create(self, validated_data):
         device = PushDevice(
             registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
@@ -132,14 +200,20 @@ class SubscriptionSerializer(serializers.Serializer):
         is_enabled = validated_data.get('isEnabled', True)
         device_info = validated_data.get('deviceInfo', {})
         device_type = validated_data.get('type', None)
+        device_provider = validated_data.get('provider')
 
         if device_type is not None:
             device.type = getattr(PushDevice.TYPES, device_type)
+        device.provider = getattr(PushDevice.PROVIDERS, device_provider)
+
+        if device.provider != PushDevice.PROVIDERS.firebase_legacy:
+            self.create_platform_endpoint(device)
 
         device.active = is_enabled
 
         device = self.assign_device_info(device, device_info)
         device.save()
+        self.handle_duplicate_fcm(device)
 
         self.assign_systems(device, systems)
 
@@ -161,7 +235,7 @@ class SubscriptionSerializer(serializers.Serializer):
         instance.save()
 
         self.assign_systems(instance, systems)
-
+        self.handle_duplicate_fcm(instance)
         return instance
 
 
@@ -170,10 +244,11 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
     deviceInfo = serializers.SerializerMethodField()
     isEnabled = serializers.BooleanField(required=False, source='active')
     type = serializers.SerializerMethodField()
+    provider = serializers.SerializerMethodField()
 
     class Meta:
         model = PushDevice
-        fields = ['type', 'deviceInfo','systems', 'isEnabled']
+        fields = ['type', 'deviceInfo','systems', 'isEnabled', 'provider']
 
     def get_systems(self, obj):
         return [sub.system_id for sub in obj.subscriptions.all()]
@@ -183,3 +258,6 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
 
     def get_type(self, obj):
         return PushDevice.TYPES[obj.type]
+
+    def get_provider(self, obj):
+        return PROVIDERS_REVERSE_MAP[obj.provider]

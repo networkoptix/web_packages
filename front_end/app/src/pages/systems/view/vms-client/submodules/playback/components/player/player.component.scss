@@ -1,0 +1,26 @@
+:host {
+  > .overlay {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #000a;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.0;
+    transition: opacity .2s ease-in-out;
+
+    &.active {
+      opacity: 1.0;
+    }
+  }
+
+  * {
+    width: 100%;
+  }
+}
