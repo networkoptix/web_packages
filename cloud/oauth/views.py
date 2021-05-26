@@ -12,17 +12,74 @@ from api.helpers.exceptions import (
     require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes
 )
 
-access_token__body = openapi.Schema(description="An access token.", type=openapi.TYPE_STRING)
+client_description = "A registered client_id"
+redirect_uri_description = "Where the endpoint should redirect to after authorization"
+response_type_description = "Valid options are code or token"
+
+access_token_param = openapi.Parameter('access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+client_id_param = openapi.Parameter('client_id', openapi.IN_QUERY, required=True, description=client_description, type=openapi.TYPE_STRING)
+email_param = openapi.Parameter('email', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+grant_type_param = openapi.Parameter('grant_type', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+password_param = openapi.Parameter('password', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+redirect_uri_param = openapi.Parameter('redirect_uri', openapi.IN_QUERY, required=True, description=redirect_uri_description, type=openapi.TYPE_STRING)
+response_type_param = openapi.Parameter('response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
+
+access_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
-client_id__body = openapi.Schema(description="A registered client_id", type=openapi.TYPE_STRING)
+client_id__body = openapi.Schema(description=client_description, type=openapi.TYPE_STRING)
 description__body = openapi.Schema(description="Who is the client and what is it for.", type=openapi.TYPE_STRING)
 grant_type__body = openapi.Schema(description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
-login__body = openapi.Schema(type=openapi.TYPE_STRING)
-name_body = openapi.Schema(description="The name of the application", type=openapi.TYPE_STRING)
+email__body = openapi.Schema(type=openapi.TYPE_STRING)
+name__body = openapi.Schema(description="The name of the application", type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
-redirect_url__body = openapi.Schema(description="Where the endpoint should redirect to after authorization", type=openapi.TYPE_STRING)
-response_type__body = openapi.Schema(description="Valid options are code or token", type=openapi.TYPE_STRING)
+redirect_uri__body = openapi.Schema(description=redirect_uri_description, type=openapi.TYPE_STRING)
+response_type__body = openapi.Schema(description=response_type_description, type=openapi.TYPE_STRING)
 token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
+
+successful_authenticate_response = openapi.Response(
+    description="Returns a redirect link with a valid access code.",
+    examples={
+        "application/json": {
+            "link": "{redirect_uri}?code={some access code}"
+        }
+    })
+
+successful_introspect_response = openapi.Response(
+    description="Returns information related to an access token.",
+    examples={
+        "application/json": {
+            "access_token": "{access token}",
+            "expires_in": "86389",
+            "expires_at": "1622078072542",
+            "token_type": "bearer",
+            "prolongation_period": "0",
+            "scope": "{cloud instance} cloudSystemId=*",
+            "username": "{email of token owner}",
+            "time_since_password": "11"
+        }
+    }
+)
+
+successful_revoke_response = openapi.Response(
+    description="Returns ",
+    examples={
+        "application/json": {}
+    }
+)
+
+successful_token_response = openapi.Response(
+    description="Returns an access and refresh token",
+    examples={
+        "application/json": {
+            "access_token": "{access token}",
+            "refresh_token": "{refresh token}",
+            "expires_in": "86400",
+            "expires_at": "1622077477993",
+            "token_type": "bearer",
+            "scope": "{cloud instance} cloudSystemId=*"
+        }
+    }
+)
 
 
 def get_param(request, name):
@@ -43,17 +100,10 @@ def set_params_for_redirect(code, state):
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Get an authorization code using email and password",
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "client_id": client_id__body,
-                             "login": login__body,
-                             "password": password__body,
-                             "redirect_url": redirect_url__body,
-                             "response_type": response_type__body
-                         },
-                         required=["client_id", "email", "password", "redirect_url", "response_type"]
-                     ))
+                     manual_parameters=[client_id_param, email_param, password_param, redirect_uri_param, response_type_param],
+                     responses={
+                         200: successful_authenticate_response
+                     })
 @api_view(["GET"])
 @permission_classes((AllowAny, ))
 def authenticate(request):
@@ -79,15 +129,10 @@ def authenticate(request):
 
 @swagger_auto_schema(method="GET", auto_schema=None,
                      operation_description="Login using existing session",
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "client_id": client_id__body,
-                             "redirect_url": redirect_url__body,
-                             "response_type": response_type__body
-                         },
-                         required=["client_id", "redirect_url", "response_type"]
-                     ))
+                     manual_parameters=[client_id_param, redirect_uri_param, response_type_param],
+                     responses={
+                         200: successful_authenticate_response
+                     })
 @api_view(["GET"])
 @permission_classes((IsAuthenticated, ))
 def authenticate_with_session(request):
@@ -112,7 +157,7 @@ def authenticate_with_session(request):
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "description": description__body,
-                             "name": name_body
+                             "name": name__body
                          },
                          required=["description", "name"]
                      ))
@@ -125,19 +170,28 @@ def register_client(request):
     return Auth.register_client(request, description, name)
 
 
-@swagger_auto_schema(methods=["GET", "POST"],  # auto_schema=None,
-                     operation_description="Returns a new access token.",
+@swagger_auto_schema(methods=["GET"],  # auto_schema=None,
+                     operation_description="Returns new access and refresh tokens.",
+                     manual_parameters=[client_id_param, email_param, grant_type_param, password_param, response_type_param],
+                     responses={
+                         200: successful_token_response
+                     })
+@swagger_auto_schema(methods=["POST"],  # auto_schema=None,
+                     operation_description="Returns new access and refresh tokens.",
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "client_id": client_id__body,
-                             "email": login__body,
+                             "email": email__body,
                              "grant_type": grant_type__body,
                              "password": password__body,
                              "response_type": response_type__body,
                          },
-                         required=["grant_type", "response_type"]
-                     ))
+                         required=["grant_type", "response_type"],
+                     ),
+                     responses={
+                         200: successful_token_response
+                     })
 @api_view(["GET", "POST"])
 @permission_classes((AllowAny, ))
 def token(request):
@@ -177,23 +231,21 @@ def token(request):
                              "token": token__body
                          },
                          required=["token"]
-                     ))
+                     ),
+                     responses={})
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope,))
 def revoke_token(request):
     require_params(request, ("token", ))
-    return Auth.delete_token(request, token.data["token"])
+    return Auth.delete_token(request, request.data["token"])
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Validates access token.",
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "token": access_token__body
-                         },
-                         required=["token"]
-                     ))
+                     manual_parameters=[access_token_param],
+                     responses={
+                         200: successful_introspect_response
+                     })
 @api_view(["GET"])
 @permission_classes((AllowAny, ))
 def validate_token(request):
