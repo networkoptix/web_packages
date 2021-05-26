@@ -166,7 +166,7 @@ export class Process {
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
             // @ts-ignore
-            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage}`;
+            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage?.()}`;
 
             const options = {
                 autohide  : !this.settings.holdAlerts,
