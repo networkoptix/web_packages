@@ -1,4 +1,4 @@
-@use '../../../../../../../../../styles/_theme_palette' as *;
+@use "../../../../../../../../../styles/_theme_palette" as *;
 
 :host {
     .media-server-list {
@@ -73,21 +73,21 @@
 
                     &:before {
                         // expand/collapse indicator
-                        content: '';
+                        content: "";
                         position: absolute;
                         right: 8px;
                         top: 16px;
                         width: 10px;
                         height: 10px;
                         cursor: pointer;
-                        background-image: url('/static/images/web_interface_sprite@2x.png');
+                        background-image: url("/static/images/web_interface_sprite@2x.png");
                         background-size: 192px 408px;
                         background-position: -61px -49px;
                     }
 
                     .name {
                         color: $dark10;
-                        font-family: 'robotomedium', 'roboto', sans-serif;
+                        font-family: "robotomedium", "roboto", sans-serif;
                         font-weight: 500;
                         height: 40px;
                         overflow: hidden;
@@ -138,7 +138,7 @@
 
                         > .name {
                             color: $dark10;
-                            font-family: 'robotomedium', 'roboto', sans-serif;
+                            font-family: "robotomedium", "roboto", sans-serif;
                             font-size: 14px;
                             height: 40px;
                             overflow: hidden;
@@ -165,7 +165,7 @@
                         }
 
                         > .preview {
-                            content: '';
+                            content: "";
                             position: absolute;
                             left: 7px;
                             top: 8px;
@@ -178,6 +178,10 @@
                                 height: 100%;
                                 object-fit: contain;
                                 z-index: 1;
+                            }
+                            
+                            svg-icon svg path {
+                                fill: $light16;
                             }
 
                             > .preloader {
@@ -193,7 +197,7 @@
 
                         &.recording {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;
@@ -228,7 +232,7 @@
 
                         &.isScheduleEnabled {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;
@@ -241,7 +245,7 @@
 
                         &.hasArchive {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;

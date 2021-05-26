@@ -80,7 +80,7 @@
           </nx-player-placeholder>
           <ng-template #unreachable>
             <nx-player-placeholder
-                    *ngIf="transportError; else unreachable"
+                    *ngIf="!camera.isUnauthorized && transportError"
                     svgFileName="placeholder_camera_alert"
                     [heading]="LANG.common.cameraStates.error()"
                     [description]="LANG.common.cameraStates.noFormat()">
