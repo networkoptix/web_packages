@@ -12,7 +12,7 @@ import {
     createCameraNotSelectedState,
     createCameraSelectedState
 } from '../datatypes/VmsState';
-import ICamera from '../datatypes/ICamera';
+import ICamera, { CameraArchive } from '../datatypes/ICamera';
 
 @Injectable({
     providedIn: 'root'
@@ -105,6 +105,19 @@ export class VideoManagementSystemService {
             });
         } else {
             this._warn('attempt to set camera records while in NOT_INITIALIZED state', cameraId, range, records);
+        }
+    }
+
+    public setCameraNewlyRecordedChunks (cameraId: string, records: CameraArchive) {
+        if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
+            this._state.mediaServers.map(ms => {
+                const c = ms.cameras.find(c => c.id === cameraId);
+                if (c) {
+                    c.setNewlyRecordedChunks(records);
+                }
+            });
+        } else {
+            this._warn('attempt to set camera newly recorded records while in NOT_INITIALIZED state', cameraId, records);
         }
     }
 

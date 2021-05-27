@@ -166,6 +166,19 @@ export class Camera implements ICamera {
     protected _initBirdView () {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
+
+    public setNewlyRecordedChunks (rs: CameraArchive) {
+        // console.log('SNR', rs, this)
+        this._birdViewTree.newlyRecorded = rs
+    }
+
+    public isThereRecord (t: ms) {
+        return this._birdViewTree.isThereRecord(t)
+    }
+
+    public getNextRecord (t: ms): ISimpleTimeRange {
+        return this._birdViewTree.getNextRecord(t)
+    }
 }
 
 export default Camera;

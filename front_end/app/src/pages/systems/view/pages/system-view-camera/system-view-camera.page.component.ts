@@ -298,35 +298,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.getRecordsInProgress = undefined;
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
-                const [{
-                    // osTimeOffset,
-                    serverId,
-                    // timeZoneOffset,
-                    // vmsTime,
-                    vmsTimeOffset,
-                }] = await this.system.getServerTimes();
-                const offsetsByServer = this.system.mediaservers.reduce((
-                    reduced, { id, addParams, timeInfo = {} }: any
-                ) => ({
-                    ...reduced,
-                    [id]: serverId === id ? 0 : parseInt(
-                        timeInfo?.timeZoneOffset ??
-                        (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
-                        vmsTimeOffset
-                    ) - vmsTimeOffset
-                }), {});
-
-                const timezoneAdjusted = [];
-                ar.reply.forEach(({ guid, periods }) => {
-                    const cleanId = NxUtilsService.cleanId(guid);
-                    periods.forEach(period => {
-                        timezoneAdjusted.push({
-                            ...period,
-                            startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
-                        });
-                    });
-                });
-                ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
+                ar = await this._prepareArchiveRecords(ar)
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('empty archive');
@@ -345,6 +317,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         }
                         this._log('non-empty archive', this.id, range, archive);
                         this.vms.setCameraRecords(this.id, range, archive);
+                        this.startPollingForNewlyRecordedChunks();
                     } catch (e) {
                         this._warn(e, 'caught while requesting camera archive ranges');
                     }
@@ -357,6 +330,80 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
         });
     }
+
+    protected _newlyRecordedIntervalHandle
+
+    public startPollingForNewlyRecordedChunks () {
+        const since = this.vms.selectedCamera.archiveRange.end
+        if (this._newlyRecordedIntervalHandle) {
+            clearInterval(this._newlyRecordedIntervalHandle)
+        }
+        this._newlyRecordedIntervalHandle = setInterval(() => {
+            const now = Date.now();
+            const cameraId = this.id
+            this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
+                ar = await this._prepareArchiveRecords(ar)
+                if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
+                    this._log('no newly recorded');
+                } else {
+                    this._log('newly recorded', ar);
+                    const prepared = ar.reply.map(r => {
+                        // the server has a weird habit of sending strings instead of numbers every now and then
+                        let start = parseInt(r.startTimeMs)
+                        start = Math.max(start, since)
+                        const duration = parseInt(r.durationMs)
+                        return new SimpleTimeRange(
+                            start,
+                            r.durationMs < 0
+                                ? now
+                                : start + duration
+                        )
+                    })
+                    this.vms.setCameraNewlyRecordedChunks(cameraId, prepared);
+                }
+            })
+        }, 10 * 1000)
+    }
+
+    protected async _getServerTimes () {
+        // TODO: caching
+        const result =  await this.system.getServerTimes();
+        return result
+    }
+
+    protected async _prepareArchiveRecords (ar) {
+        const [{
+            // osTimeOffset,
+            serverId,
+            // timeZoneOffset,
+            // vmsTime,
+            vmsTimeOffset,
+        }] = await this._getServerTimes();
+        const offsetsByServer = this.system.mediaservers.reduce((
+            reduced, { id, addParams, timeInfo = {} }: any
+        ) => ({
+            ...reduced,
+            [id]: serverId === id ? 0 : parseInt(
+                timeInfo?.timeZoneOffset ??
+                (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
+                vmsTimeOffset
+            ) - vmsTimeOffset
+        }), {});
+
+        const timezoneAdjusted = [];
+        ar.reply.forEach(({ guid, periods }) => {
+            const cleanId = NxUtilsService.cleanId(guid);
+            periods.forEach(period => {
+                timezoneAdjusted.push({
+                    ...period,
+                    startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
+                });
+            });
+        });
+        ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
+        return ar
+    }
+
 
     public ngAfterViewInit () {
         this.$self.classList.add('controls-shown');
