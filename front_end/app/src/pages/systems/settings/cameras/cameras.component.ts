@@ -771,6 +771,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     new InfoBlockLine(this.LANG.common.server(), parentName)
                 ])
             ];
+            debugger;
             this.cameraDetailColumns = this.selectedCamera.isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;
