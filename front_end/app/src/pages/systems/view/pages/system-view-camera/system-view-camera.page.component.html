@@ -45,7 +45,7 @@
   </header>
 
   <div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
-    <div class="section transportSelection">
+    <div *ngIf="CONFIG.allowDebugMode" class="section transportSelection">
       <div class="caption">Transport</div>
       <div class="options" *ngIf="(transports$ | async)?.length else noTransportsAvailable">
         <div *ngFor="let st of transports$ | async" class="option" [ngClass]="{ selected: (selectedTransport$ | async) === st }" (click)="selectedTransport = st">{{ st }}</div>

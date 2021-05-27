@@ -499,7 +499,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public resetTransport () {
         const transports = this.transports;
         this.selectedTransport = (this.cameraTransportStorage.get(this.id) || (
-            transports.includes('webm') ? 'webm' : transports[0]
+            transports.includes('hls') ? 'hls' : transports[0]
         ));
     }
 
