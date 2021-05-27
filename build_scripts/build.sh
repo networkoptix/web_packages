@@ -6,13 +6,13 @@ set -e
 # or from cloud_portal "./build_scripts/build.sh"
 #or like this from outside the repository "../build_scripts/build.sh"
 
-VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-[[ "$VMS_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
+PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+[[ "$PORTAL_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
     echo "Updating Cloud Portal sources"
-    rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $VMS_REPOSITORY .
+    rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $PORTAL_REPOSITORY .
 else
     echo "In repository skip copying sources"
 fi
@@ -20,8 +20,10 @@ fi
 echo "pip install requirements"
 [ ! -d "env" ] && virtualenv env -p python3
 . ./env/bin/activate
-pip install -r build_scripts/requirements.txt
+pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
+
+cd $PORTAL_REPOSITORY
 
 pushd front_end
     echo "npm install cloud portal"
@@ -56,7 +58,7 @@ for dir in ../skins/*/
 do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
-    ./build_skin.sh $SKIN $VMS_REPOSITORY
+    ./build_skin.sh $SKIN $PORTAL_REPOSITORY
     if [ -n "$LOCAL_ENV" ]; then
       break
     fi
