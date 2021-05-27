@@ -57,7 +57,7 @@ Test Every Loglevel Option
     [Arguments]    ${dropdown}    ${id}    ${server url}
     FOR    ${option}    IN    @{LOGLEVEL OPTIONS}
         Set Log Level Option    ${dropdown}    ${id}    ${option}
-        Evaluate Log Level via API    ${server auth}    ${server url}    ${id}    ${option}
+        Evaluate Log Level via API    ${server['local auth']}    ${server url}    ${id}    ${option}
     END
 
 Set Log Level Option

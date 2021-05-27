@@ -23,6 +23,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { UntilDestroy }                    from '@ngneat/until-destroy';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { NxUtilsService }                  from '@services/utils.service';
+import fullscreen from '../system-view-camera/fullscreen';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,7 +46,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public system: NxSystem
     public systems: NxSystem[];
 
-    protected CONFIG: IConfig;
+    CONFIG: IConfig;
+    fullscreenMode: boolean;
+    showElementsInFSM: boolean;
+    onMoveShowElements: any;
 
     public initialized: boolean = false
     public initializedWithError: boolean = false
@@ -68,6 +72,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         return this._state && this._state.mode !== VMS_MODE.NOT_INITIALIZED
             ? this._state.mediaServers
             : [];
+    }
+
+    @HostListener('mousemove', ['$event'])
+    @HostListener('touch', ['$event'])
+    @HostListener('touchmove', ['$event'])
+    onEvent(event: Event) {
+        if (this.fullscreenMode && !this.showElementsInFSM) {
+            this.showElementsInFSM = true;
+            clearTimeout(this.onMoveShowElements);
+            this.onMoveShowElements = setTimeout(() => {
+                this.showElementsInFSM = false;
+            }, 3000);
+        }
     }
 
     protected _windowWidth = 1024 // should be larger than the threshold
@@ -109,6 +126,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this._onRouteChange = this._onRouteChange.bind(this);
         this._onUxStateChange = this._onUxStateChange.bind(this);
+
+        this.fullscreenMode = false;
+        this.showElementsInFSM = true;
     }
 
     public ngOnInit (): void {
@@ -153,6 +173,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         // this._log('ux state change sidebar visibility', s.isSidebarShown)
         this.isSidebarShown = s.isSidebarShown;
         setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
+
+        // setTimeout(() => {
+            if (s.isFullScreen) {
+                this.fullscreenMode = true;
+                setTimeout(() => {
+                    this.showElementsInFSM = false;
+                }, 3000);
+            } else {
+                clearTimeout(this.onMoveShowElements);
+                this.fullscreenMode = false;
+                this.showElementsInFSM = true;
+            }
+        // });
     }
 
     protected _onVmsSubjectChange (s: VmsState) {
@@ -233,22 +266,25 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return this.system.getCameraRecords(cid, 0, now, now).then(response => {
                         const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
                         // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
-                        const extractChunk = chunk => {
-                            let start, duration;
-                            // 4.3 api response changed
-                            if (chunk?.periods.length) {
-                                start = parseInt(chunk.periods[0].startTimeMs);
-                                duration = parseInt(chunk.periods[0].durationMs);
-                            } else {
-                                start = parseInt(chunk.startTimeMs);
-                                duration = parseInt(chunk.durationMs);
-                            }
-                            const now = Date.now();
-                            const end = (duration === -1) ? now : (start + duration);
-                            return [start, end];
+                        const extractChunk = chunks => {
+                            let longestDuration = 0;
+                            let earliestStart = Number.POSITIVE_INFINITY;
+                            chunks.forEach((chunk) => {
+                                // 4.3 api response changed
+                                const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
+                                const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
+                                if (start < earliestStart) {
+                                    earliestStart = start;
+                                }
+                                if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
+                                    longestDuration = duration;
+                                }
+                            });
+                            const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
+                            return [earliestStart, end];
                         };
                         if (hasArchive) {
-                            const [start, end] = extractChunk(response.reply[0]);
+                            const [start, end] = extractChunk(response.reply);
                             archiveRanges[cid] = new SimpleTimeRange(start, end);
                         }
                     });
