@@ -117,7 +117,7 @@ ${THIS SYSTEM IS OFFLINE}             //div[@name="OFFLINE" and contains(text(),
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      ${SYSTEM NAME}/following-sibling::div[contains(@class, "edit-button")]
-
+${THIS PAGE CANNOT BE LOADED}         //h2[@name="NO_SETTINGS" and contains(text(),"${THIS PAGE CANNOT BE LOADED TEXT}")]
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
 ${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
@@ -181,7 +181,7 @@ ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='fi
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
-${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="button"]
+${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type="reset"]
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]

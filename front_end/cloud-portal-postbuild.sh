@@ -8,7 +8,7 @@ sed -i -e 's/href="static\/styles\./href="static\/styles\/styles\./g' dist/index
 
 mv ./dist/*.js ./dist/scripts;
 sed -i -e 's/src="static\//type="text\/javascript" src="static\/scripts\//g' dist/index.html;
-rm dist/index.html-e;
+[ -e dist/index.html-e ] && rm dist/index.html-e;
 
 # Webadmin specific actions
 if [ $IS_WEBADMIN ]; then

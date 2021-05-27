@@ -262,6 +262,8 @@ class PushNotificationAdmin(admin.ModelAdmin):
 
 @admin.register(PushDevice)
 class PushDeviceAdmin(GCMDeviceAdmin):
+    list_display = ('name', 'user', 'active', 'date_created', 'provider')
+
     def get_readonly_fields(self, request, obj=None):
         return list(set(
             [field.name for field in self.opts.local_fields] +

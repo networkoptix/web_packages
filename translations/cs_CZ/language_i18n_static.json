@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Sloučit aktuální systém s",
             "mergeFailedTitle": "Spojení systémů selhalo",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Sloučit aktuální systém s",
             "noServerFound": "Nebyl nalezen žádný server",
             "newSystemDisplayName": "Nový systém",
             "otherSystem": "Ostatní systémy...",
@@ -333,7 +334,8 @@
             "removeUser": "Odstranit uživatele?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Chcete-li smazat svůj účet, odpojte od systému %CLOUD_NAME% všechny systémy, které vlastníte."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Systém nelze smazat",
         "emailNotFound": "Účet neexistuje.",
         "failedToAccessSystem": "Tento odkaz nemá přístup k žádnému systému. K tomu může dojít, když byl systém odpojen od %CLOUD_NAME%, přístup k tomuto systému byl zrušen nebo pokud jste přihlášeni k nesprávnému účtu.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "K provedení této akce nemáte oprávnění",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Aktivace licence se nezdařila. Zkuste to prosím znovu nebo kontaktujte podporu.",
         "licenseTimeout": "Nepodařilo se aktivovat licenci z důvodu vypršení časového limitu připojení. Ujistěte se, že je server online a zkuste to znovu.",
         "licenseServerError": "Aktivace licence se nezdařila. Licenční server neodpověděl. Zkuste to prosím znovu nebo kontaktujte podporu.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kontrola Přístupu",
@@ -552,6 +557,7 @@
         "download": "Stáhnout %VMS_NAME%",
         "downloadPlatform": "Stáhnout %VMS_NAME% pro ",
         "failedToAccessSystem": "Přístup k systému se nezdařil",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Přihlásit se",
         "pageNotFound": "Stránka nenalezna",

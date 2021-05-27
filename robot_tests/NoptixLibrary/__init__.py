@@ -80,12 +80,6 @@ class NoptixLibrary(object):
 #         for x in range(len(text)):
 #             element.send_keys(Keys.BACKSPACE)
 
-    def input_content_editable_text(self, locator, text):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        element = seleniumlib.find_element(locator)
-        self.delete_all_text(element)
-        element.send_keys(text)
-
     def get_random_email(self, email):
         index = email.find('@')
         email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + email[index:]

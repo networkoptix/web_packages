@@ -1,27 +1,24 @@
-import { isDevMode } from '@angular/core'
+import { isDevMode } from '@angular/core';
 
-export function LoggerDecorator(prefix: string = '', disable: boolean = false) {
-
-    return function <T extends { new (...args: any[]): {} }>(constructor: T) {
-
+export function LoggerDecorator (prefix: string = '', disable: boolean = false) {
+    return function <T extends { new(...args: any[]): {} }>(constructor: T) {
         return class extends constructor {
-
             protected _log (...args: any[]) {
                 if (isDevMode() && !disable) {
-                    console.log.apply(console, [prefix, ...arguments])
+                    console.log.apply(console, [prefix, ...arguments]);
                 }
             }
 
             protected _warn (...args: any[]) {
                 if (isDevMode() && !disable) {
-                    console.warn.apply(console, [prefix, ...arguments])
+                    console.warn.apply(console, [prefix, ...arguments]);
                 }
             }
         };
-    }
+    };
 }
 
-export default LoggerDecorator
+export default LoggerDecorator;
 
 /*
 Usage:

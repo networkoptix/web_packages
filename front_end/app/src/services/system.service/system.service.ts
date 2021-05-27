@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject }    from 'rxjs';
 
 import { NxConfigService, IConfig }        from '../nx-config';
 import { NxLanguageProviderService }       from '../nx-language-provider';
@@ -12,6 +11,7 @@ import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types
 import { NxRibbonService }                 from '@components/ribbon';
 import { NxSystem }                        from './system/system';
 import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
+import { Router }                          from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +21,6 @@ export class NxSystemService {
     LANG: LanguageI18NStaticTypes;
     private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
-    private cancelPoll$ = new Subject<string>();
 
     constructor(
         configService: NxConfigService,
@@ -31,6 +30,7 @@ export class NxSystemService {
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private appState: NxAppStateService,
+        private router: Router,
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
@@ -39,9 +39,6 @@ export class NxSystemService {
     }
 
     createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
-        if (!skipPoll) {
-            this.cancelPoll$.next('cancel system polling');
-        }
         let system: NxSystem;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
@@ -50,12 +47,12 @@ export class NxSystemService {
             system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
-                this.cancelPoll$,
                 this.cloudApi,
                 this.systemApiService,
                 this.pollService,
                 this.systemsService,
                 this.ribbonService,
+                this.router,
                 currentUserEmail,
                 systemId,
                 serverId
@@ -76,16 +73,15 @@ export class NxSystemService {
         if (this.system !== undefined) {
             return this.system;
         }
-        this.cancelPoll$.next('cancel system polling');
         this.system = new NxSystem(
             this.CONFIG,
             this.LANG,
-            this.cancelPoll$,
             this.cloudApi,
             this.systemApiService,
             this.pollService,
             this.systemsService,
             this.ribbonService,
+            this.router,
             userEmail,
             '',
             '',

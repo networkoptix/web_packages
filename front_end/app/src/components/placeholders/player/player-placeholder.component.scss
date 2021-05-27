@@ -1,0 +1,43 @@
+@use '../../../styles/typography';
+
+#opacity {
+    opacity : .6;
+}
+
+:host {
+    width: 100%;
+    height: 100%;
+
+    .player-placeholder {
+        height          : 100%;
+        width           : 80%;
+        display         : flex;
+        flex-direction  : column;
+        justify-content : center;
+        align-items     : center;
+        margin          : 0 auto !important;
+
+        svg {
+            @extend #opacity;
+        }
+
+        .heading {
+            @include typography.light40light10;
+            text-align     : center;
+            line-height    : 48px;
+            margin-top     : 24px;
+            text-transform : uppercase;
+            @extend #opacity;
+        }
+
+        .description {
+            @include typography.light18light10;
+            text-align  : center;
+            line-height : 24px;
+            margin-top  : 16px;
+            width       : 80%;
+            line-break  : anywhere;
+            @extend #opacity;
+        }
+    }
+}

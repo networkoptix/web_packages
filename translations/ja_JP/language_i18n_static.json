@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
             "latestBuild": "最新のビルド",
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{primarySystem}</strong> と <strong>{secondarySystem}</strong> のシステムを統合しようとしています。</p><p>設定と名称は <strong>{primarySystem}</strong> の値を使用します。</p>",
-            "mergeSystemsTitle": "現在のシステムと統合",
             "mergeFailedTitle": "システム統合が失敗しました",
+            "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました。",
+            "mergeSystemsTitle": "現在のシステムと統合",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
             "otherSystem": "その他のシステム...",
@@ -333,7 +334,8 @@
             "removeUser": "ユーザーを削除しますか?",
             "serversDetach": "現在のシステムからサーバー \"{ title }\" を切断しますか？",
             "serversReset": "サーバー \"{ title }\" をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー \"{ title }\" を再起動しますか？"
+            "serversRestart": "サーバー \"{ title }\" を再起動しますか？",
+            "changePasswordFor": "{username} のパスワードを変更する"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
         "emailNotFound": "アカウントが存在しません",
         "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、システムが %CLOUD_NAME%から切断されている場合、このシステムへのアクセスが取り消されている場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
+        "failedToAccessCamera": "このリンクからアクセスできるカメラはありません。",
         "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{systemName} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{failedSystem}</strong> はオフラインです。",
@@ -472,7 +475,9 @@
         "licenseFail": "ライセンスの有効化に失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスの有効化に失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
-        "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。"
+        "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
+        "archiveEncrypted": "アーカイブ<br>が暗号化されています",
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化<br>パスワードを入力するようシステム管理者に依頼してください。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -552,6 +557,7 @@
         "download": "%VMS_NAME% をダウンロード",
         "downloadPlatform": "%VMS_NAME% をダウンロード ",
         "failedToAccessSystem": "システムにアクセスできませんでした",
+        "failedToAccessCamera": "カメラにアクセスできませんでした",
         "integrations": "%VMS_NAME% 統合",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",

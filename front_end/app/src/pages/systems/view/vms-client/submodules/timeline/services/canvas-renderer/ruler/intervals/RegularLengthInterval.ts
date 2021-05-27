@@ -1,5 +1,5 @@
-import { ms } from '../../../../../../utils/type-aliases'
+import { ms } from '../../../../../../utils/type-aliases';
 
 export type RegularLengthInterval = ms
 
-export default RegularLengthInterval
+export default RegularLengthInterval;

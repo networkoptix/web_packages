@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.deletion import Collector
-from django.db.models.signals import post_delete, m2m_changed, post_save
+from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
 from django.db.utils import ProgrammingError
 from django.dispatch import receiver
 from django.utils.functional import cached_property
@@ -1502,7 +1502,6 @@ class ExternalFileManager(models.Manager):
         return external_file_obj
 
 
-
 class AssetDsPair(models.Model):
     data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
@@ -1550,6 +1549,13 @@ def file_saved(sender, created, signal, instance, **kwargs):
             instance.save()
 
 post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
+
+@receiver(pre_delete, sender=AssetDsPair)
+def delete_asset_ds_reverse(sender, instance, **kwargs):
+    external_files = instance.externalfile_set.all()
+    files_to_delete = [file for file in external_files if not file.asset_ds_pair.exclude(id=instance.id).count()]
+    for file in files_to_delete:
+        file.delete()
 
 
 class DataRecord(models.Model):

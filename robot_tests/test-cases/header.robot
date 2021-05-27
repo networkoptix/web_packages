@@ -41,28 +41,28 @@ Anonymous: Clicking on the main header button closes the dropdown
     Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
+    Log    Clicking on the main header button closes the dropdown
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
+    Log    Clicking ENETR closes the dropdown
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
     Press Keys    //body    ENTER
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
+    Log    Clicking outside the dropdown closes it
+    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
     Click Element    ${LARGE CREATE ACCOUNT BUTTON}
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
-Anonymous: Clicking outside the dropdown closes it
-    [Tags]    threadable    anon
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
-
 Anonymous: Different page widths
     [Tags]    threadable    anon    ui
     Go To    ${knowledge base}[url]
-    Check Header Items    False
 
+    Check Header Items    False
 
 # User has no systems connected to cloud
 No systems: Header button text is correct
@@ -176,9 +176,10 @@ One system: Check header links - Services
     END
 
 One system: Check navigation links - System
-    [Tags]    threadable    one_sys
-    Log In    ${one system owner}    ${BASE PASSWORD}
+    [Tags]    threadable    one_sys   CLOUD-7200
+    Log In    ${one system owner}    ${BASE PASSWORD}    validate=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
+    Sleep    1
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -308,23 +309,25 @@ Many systems: Different page widths
     [Tags]    threadable    diff_width    ui
     Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
     Log in to user and system    ${many systems owner}    ${main system}[id]
-    Verify In System    ${main system}[name]
+    Wait until element is visible    //h2[text()="${main system}[name]"]
 
     Wait Until Element is Visible    ${VIEW TAB}
     Click Element    ${VIEW TAB}
     Run keyword and continue on failure    Check Header Items    True
 
-    ${system list count}=   Get Element Count    ${SYSTEMS LIST BUTTONS}
+    ${systems}=   Get Account Systems    ${ENV}    ${many systems owner}    ${base password}
+    ${system list count}=    Get Length     ${systems}
     Go To    ${ENV}/account
     Check Drop Menu Systems Grid System    ${system list count}
 
-
 # Other cases
 Check header and dropdown content for not admins
-    [Tags]    threadable    other    CLOUD-6794
+    [Tags]    threadable    other    CLOUD-6794    CLOUD-7200
     FOR    ${user}    IN    @{main system users}
         Log in to user and system    ${user}    ${main system}[id]
-        Verify In System    ${main system}[name]    editable=False
+        Wait until element is visible    ${SYSTEM NAME}\[contains(text(), "${main system}[name]")]
+        # Commented out due to CLOUD-7200
+        # Verify In System    ${main system}[name]    editable=False
         Validate Header Button Text    ${main system}[name]    systems=False
         Wait Until Element Is Not Visible    ${INFORMATION TAB}
         Click Element    ${SYSTEMS DROPDOWN}
@@ -353,7 +356,6 @@ Check external links - For Developers
         Set Local variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
-
 
 Check External links
     [Tags]    threadable    other

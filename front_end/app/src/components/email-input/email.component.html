@@ -9,7 +9,8 @@
        required
        autocomplete="off"
        maxlength="255"
-       nxFocusMe="setFocus">
+       nxFocusMe
+       [setFocus]="setFocus">
 
 <input *ngIf="lockEmail"
        type="text"

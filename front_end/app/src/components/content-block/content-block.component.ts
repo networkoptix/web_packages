@@ -57,8 +57,8 @@ export class NxContentBlockComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.haveHeader = (this.headerWrapper.nativeElement.childNodes[0].childNodes.length > 0);
-        this.haveFooter = (this.footerWrapper.nativeElement.childNodes.length > 0);
+        this.haveHeader = (this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0);
+        this.haveFooter = (this.footerWrapper.nativeElement.childNodes?.length > 0);
 
         this.fixedHeight = (this.fixedHeight !== undefined);
         this.hoverable = (this.hoverable !== undefined);

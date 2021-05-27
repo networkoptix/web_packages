@@ -1,11 +1,13 @@
-import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { NxRibbonService, RibbonActionInput }              from './ribbon.service';
-import { BehaviorSubject }                                 from 'rxjs';
-import { NgModule }                          from '@angular/core';
-import { TranslateModule }                                 from '@ngx-translate/core';
-import { NxAppStateService }                               from '@services/nx-app-state.service';
-import { NxHeaderService }                                 from '@services/nx-header.service';
-import { NxDialogsService }                                from '@dialogs/dialogs.service';
+import { TestBed, inject, waitForAsync }      from '@angular/core/testing';
+import { NxRibbonService, RibbonActionInput } from './ribbon.service';
+import { BehaviorSubject }                    from 'rxjs';
+import { NgModule }                           from '@angular/core';
+import { TranslateModule }                    from '@ngx-translate/core';
+import { NxAppStateService }                  from '@services/nx-app-state.service';
+import { NxHeaderService }                    from '@services/nx-header.service';
+import { NxDialogsService }                   from '@dialogs/dialogs.service';
+import { NxLanguageProviderService }          from '@services/nx-language-provider';
+import { HttpClient }                         from '@angular/common/http';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -15,7 +17,11 @@ class TranslateTestingModule {
 }
 
 describe('NxRibbonService', () => {
-    beforeEach(() => {
+    const translateMock = {
+        translations: {}
+    };
+
+    beforeEach(waitForAsync(() => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
         const spyAppState = jasmine.createSpyObj('NxDialogsService', ['ribbonVisibility']);
 
@@ -23,11 +29,13 @@ describe('NxRibbonService', () => {
             imports   : [],
             providers : [
                 NxRibbonService,
+                { provide: HttpClient, useValue: {} },
+                { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxHeaderService, useValue: spyHeader },
                 { provide: NxAppStateService, useValue: spyAppState }
             ]
         });
-    });
+    }));
 
     it('should be created', inject([NxRibbonService], (service: NxRibbonService) => {
         expect(service).toBeTruthy();
@@ -42,6 +50,23 @@ describe('NxRibbonService', () => {
 
     it('show() should emit data to contextSubject',
         inject([NxRibbonService], (service: NxRibbonService) => {
+            service.LANG.ribbon = {
+                beingMerged   : {
+                    mayTake: () => 'Depending on the size of the database, it may take up to several hours.',
+                    to     : () => 'is being merged to this system'
+                },
+                finishingMerge: () => 'Finishing systems merge',
+                integration   : {
+                    accept         : () => 'Accept',
+                    backToEditText : () => 'Back to the editing interfaces',
+                    previewRibbon  : () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
+                    publishedRibbon: () => 'This page is the live version that is publicly available.',
+                    reject         : () => 'Reject'
+                },
+                systemOffline : () => 'System is offline. Some settings may not be available.',
+                systemsMerging: () => 'This system is currently involved in a merge operation.'
+            };
+
             const actions: RibbonActionInput[] = [{
                 type  : 'link',
                 text  : 'Go back',

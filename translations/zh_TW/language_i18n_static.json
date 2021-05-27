@@ -2,8 +2,8 @@
     "language": "en_US",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "開發人員使用",
+    "Integrations (β)": "整合（β）",
     "Privacy": "隱私政策",
     "Support": "支援",
     "Terms": "條款",
@@ -131,7 +131,7 @@
         "chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
         "login": "login",
         "recordingSettingsWarning": "請更新遺失的錄影設定。",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "錄影模式將變更為“全時錄影”",
         "recordingModes": {
             "always": "全時錄影",
             "motion": "位移錄影",
@@ -186,7 +186,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "該電子郵件已在 %systemName% 系統中註冊"
         },
         "buttons": {
             "cancel": "取消",
@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "合併當前系統",
             "mergeFailedTitle": "系統合併失敗",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "合併當前系統",
             "noServerFound": "找不到伺服器",
             "newSystemDisplayName": "新系統",
             "otherSystem": "其它系統...",
@@ -333,7 +334,8 @@
             "removeUser": "是否要移除使用者？",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "無法刪除系統",
         "emailNotFound": "帳號不存在.",
         "failedToAccessSystem": "此連結無法連接至任何系統。可能當系統中斷 %CLOUD_NAME%時，取消了對該系統的登入權限, 或您登入了錯誤的帳號。",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您沒有權限執行此操作",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "無法啟用授權。請重試或聯繫支援人員。",
         "licenseTimeout": "連接超時，啟用授權失敗。請確認伺服器在線並重試。",
         "licenseServerError": "無法啟用授權。授權伺服器未回應。請重試或聯繫支援人員。",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "門禁管理",
@@ -552,7 +557,8 @@
         "download": "下載 %VMS_NAME%",
         "downloadPlatform": "下載 %VMS_NAME% ",
         "failedToAccessSystem": "連接系統失敗",
-        "integrations": "%VMS_NAME% Integrations",
+        "failedToAccessCamera": "Failed to access camera",
+        "integrations": "%VMS_NAME% 整合",
         "login": "登入",
         "pageNotFound": "找不到頁面",
         "register": "新增帳號",
@@ -765,7 +771,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "系統資源報告瀏覽器{systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -909,7 +915,7 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
+            "main": "主要設定",
             "backup": "Backup",
             "notInUse": "Not in use",
             "reserved": "Reserved",

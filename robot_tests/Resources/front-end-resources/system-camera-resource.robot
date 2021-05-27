@@ -1,3 +1,6 @@
+*** Settings ***
+Library    SSHLibrary
+Library    ../../NoptixLibrary/CloudPortalAPI.py
 *** Keywords ***
 Start up
     [Arguments]    ${url}
@@ -133,3 +136,16 @@ Reset All cameras
     Sleep    1
     Reset Camera    UDP cam    ${AUTO SYS IP}
     Sleep    1
+
+Add Software Cameras
+    [Arguments]    ${num of cams}    ${server port}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    FOR    ${counter}    IN RANGE    ${num of cams}
+        Log    ${counter}
+        Execute Command    ./camera.sh &
+    END
+    Close Connection
+    ${uuid}=    Camera Search    http://10.1.5.238:${server port}
+    ${camera}=    Camera Status    http://10.1.5.238:${server port}    ${uuid}
+    Add Camera    http://10.1.5.238:${server port}    ${EMPTY}    ${EMPTY}    uniqueId    url    manufacturer

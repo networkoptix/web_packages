@@ -8,6 +8,11 @@ nx-process-button {
         max-width: 100% !important;
     }
 
+    .login-full-width {
+        width: calc(100vw - 48px) !important;
+        max-width: 100% !important;
+    }
+
     @include mixins.keyframe(bubblingG) {
         0% {
             opacity:1;

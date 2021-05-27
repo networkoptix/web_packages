@@ -7,6 +7,7 @@ import { NxAccountService, Account } from '@services/account.service';
 import { filter, skip, take, switchMap, tap } from 'rxjs/operators';
 import { MenuStructure } from '@services/nx-config/base-config';
 import { MenuNodeWithParent } from '@components/left-menu/left-menu.component';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -33,11 +34,23 @@ export class NxKnowledgebaseService {
     constructor(
         configService: NxConfigService,
         private menusService: NxMenusService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
         this.accountService.get().then(account => {
             this.account = account;
+
+            this.accountService.accountSubject.subscribe(account => {
+                if (account !== this.account) {
+                    this.account = account;
+                    this.menuSubject.next(undefined);
+                    const url = this.router.url;
+                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
+                        this.router.navigateByUrl(url, { skipLocationChange: true });
+                    });
+                }
+            });
         });
     }
 

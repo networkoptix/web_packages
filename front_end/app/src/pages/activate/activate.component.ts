@@ -12,6 +12,7 @@ import { NxUriService }              from '@services/uri.service';
 import { NxUrlProtocolService }      from '@services/url-protocol.service';
 import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
     selector    : 'nx-activate-component',
@@ -20,7 +21,6 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 })
 
 export class NxActivateComponent implements OnInit {
-
     @Input() uriParam;
     @Input() uriParamCode;
 
@@ -76,6 +76,7 @@ export class NxActivateComponent implements OnInit {
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
             this.sessionStorage.store('activationSuccess', true);
+            this.appStateService.canManuallyAccess = true;
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -111,6 +112,7 @@ export class NxActivateComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private appStateService: NxAppStateService,
                 private languageService: NxLanguageProviderService,
                 private configService: NxConfigService,
                 private pageService: NxPageService
@@ -132,15 +134,14 @@ export class NxActivateComponent implements OnInit {
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        
         this.loading = true;
-        
+
         if (this.reactivating) {
             this.accountService.redirectAuthorised();
         }
-        
+
         this.accountInfo.email = this.accountService.email;
-        
+
         if (this.accountInfo.activateCode) {
             this.checkingActivation = true;
             this.checkActivate().catch(e => {
@@ -167,7 +168,7 @@ export class NxActivateComponent implements OnInit {
             this.pageService.pageTitle = this.LANG.pageTitles.activateCode?.();
             return new Promise((resolve, reject) => this.activate.run(resolve, reject));
         }
-        return Promise.reject()
+        return Promise.reject();
     }
 
     login() {

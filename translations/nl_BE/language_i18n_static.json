@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
             "latestBuild": "nieuwste build",
             "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>Instellingen en de naam worden overgenomen van <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
+            "mergeSuccess": "Samenvoegen van systemen {primaryName} en {secondaryName} voltooid",
+            "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "noServerFound": "Geen server gevonden",
             "newSystemDisplayName": "Nieuw systeem",
             "otherSystem": "Ander systeem...",
@@ -333,7 +334,8 @@
             "removeUser": "Gebruiker verwijderen?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Wachtwoord wijzigen voor gebruiker \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
         "emailNotFound": "Account bestaat niet.",
         "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
+        "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
         "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
         "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIEF<br>VERSLEUTELD",
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling<br>wachtwoord in te voeren om dit archief te decoderen."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -552,6 +557,7 @@
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% voor ",
         "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
+        "failedToAccessCamera": "Geen toegang tot de camera",
         "integrations": "%VMS_NAME% Integraties",
         "login": "Inloggen",
         "pageNotFound": "Pagina niet gevonden",

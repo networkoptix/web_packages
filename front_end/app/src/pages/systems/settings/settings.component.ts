@@ -276,10 +276,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .get()
             .then((account) => {
                 if (account) {
+                    this.account = account;
                     if (!this.CONFIG.isLocal) {
-                        this.account = account;
                         // Starts the systems poll if starting on a system.
-                        if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
+                        if (!this.systemsService.isPolling) {
                             this.systemsService.getSystems(account.email);
                         }
 
@@ -293,7 +293,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     this.systemNoAccess = true;
                                     return;
                                 }
-
+                                if (this.systemId === this.system?.id) {
+                                    return;
+                                }
                                 this.system = this.systemService.createSystem(this.account.email, this.systemId);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
@@ -344,17 +346,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     });
                             });
                     } else {
-                        // this.systemsService.stopPoll();
-                        if (!this.settingsService.system) {
-                            this.settingsService.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-                        }
-                        this.system = this.settingsService.system;
+                        this.system = this.settingsService.system
+                            ? this.settingsService.system
+                            : this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+
                         this.system.update();
-                        this.system.getInfoAndPermissions();
                         this.systems = [this.system];
                         this.system.isAvailable = true;
                         this.system.isOnline = true;
-                        this.settingsService.system = this.system;
                         setTimeout(() => {
                             this.pageService.pageTitle = this.system.info.systemName || this.system.info.name;
                         });

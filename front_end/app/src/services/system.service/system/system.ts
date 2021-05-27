@@ -24,6 +24,7 @@ import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
 }                                                   from './system-types';
+import { Router }                                   from '@angular/router';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -120,12 +121,12 @@ export class NxSystem extends System {
     constructor(
         CONFIG: IConfig,
         LANG: LanguageI18NStaticTypes,
-        private cancelPoll$: Subject<string>,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
         private ribbonService: NxRibbonService,
+        private router: Router,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
@@ -177,9 +178,7 @@ export class NxSystem extends System {
         });
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
-        this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval).pipe(
-            takeUntil(this.cancelPoll$)
-        );
+        this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
@@ -346,22 +345,18 @@ export class NxSystem extends System {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else {
-            if (this.systemPoll instanceof Subscription) {
-                this.systemPoll.unsubscribe();
-            }
             if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }
 
             this.infoPromise = undefined;
             this.usersPromise = undefined;
-            this.systemInfo = undefined;
+            // this.systemInfo = undefined;
             this.subscriberCount--;
         }
     }
 
     update = (): Promise<any> => {
-        this.ribbonService.hide();
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
@@ -374,6 +369,14 @@ export class NxSystem extends System {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
+                })
+                .finally(() => {
+                    // TODO: re-do ribbonService to handle multiple pages better
+                    // watch out: HM stopsPoll on navigate, but not on refresh
+                    const { url } = this.router;
+                    if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
+                        this.ribbonService.hide();
+                    }
                 });
         })).toPromise();
     };
@@ -407,8 +410,8 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
-        return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
+    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+        return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
     }
 
     checkMergeStatus(forceReload = true) {
@@ -888,7 +891,7 @@ export class NxSystem extends System {
                 const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled && status !== 'Offline').length;
             const available = total - used;
             return { total, used, available };
         });

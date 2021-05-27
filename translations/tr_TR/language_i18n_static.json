@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Mevcut sistemi ile birleştir",
             "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Mevcut sistemi ile birleştir",
             "noServerFound": "Hiç bir sunucu bulunamadı",
             "newSystemDisplayName": "Yeni sistem",
             "otherSystem": "Diğer Sistemler...",
@@ -333,7 +334,8 @@
             "removeUser": "Kullanıcı kaldırılsın mı?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Hesabınızı silmek için sahibi olduğunuz tüm sistemlerin %CLOUD_NAME% portalından bağlantısını kesin."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
         "emailNotFound": "Hesap mevcut değil.",
         "failedToAccessSystem": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %CLOUD_NAME% bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun.",
         "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
         "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Erişim Kontrolü",
@@ -552,6 +557,7 @@
         "download": "İndir %VMS_NAME%",
         "downloadPlatform": "İçin %VMS_NAME% indir ",
         "failedToAccessSystem": "Sisteme erişim sağlanılamadı",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Giriş yap",
         "pageNotFound": "Sayfa bulunamadı",

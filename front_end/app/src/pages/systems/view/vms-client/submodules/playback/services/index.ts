@@ -1,5 +1,5 @@
-import PlaybackService from './playback.service'
+import PlaybackService from './playback.service';
 
 export default [
-  PlaybackService
-]
+    PlaybackService
+];

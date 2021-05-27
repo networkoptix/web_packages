@@ -69,7 +69,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new (useRest ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState);
+        return new (useRest || this.CONFIG.isLocal ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState);
     }
 }
 

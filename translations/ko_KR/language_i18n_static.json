@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "와 현재 시스템을 병합",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "와 현재 시스템을 병합",
             "noServerFound": "미디어 서버 없음",
             "newSystemDisplayName": "새로운 시스템",
             "otherSystem": "다른 시스템...",
@@ -333,7 +334,8 @@
             "removeUser": "사용자를 삭제 하시겠습니까?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "시스템을 삭제할 수 없습니다.",
         "emailNotFound": "계정이 존재하지 않습니다.",
         "failedToAccessSystem": "이 링크로 시스템에 액세스 할 수 없습니다. 시스템이 %CLOUD_NAME%에서 연결이 끊어 졌거나이 시스템에 대한 액세스가 취소되었거나 잘못된 계정으로 로그인 한 경우에 발생할 수 있습니다.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "이 작업을 수행 할 수있는 권한이 없습니다.",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "라이선스를 활성화하지 못 했습니다. 다시 시도하시거나 지원 부서에 문의하십시오.",
         "licenseTimeout": "연결 시간이 초과되어 라이선스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
         "licenseServerError": "라이선스를 활성화하지 못 했습니다. 라이선스 서버가 응답하지 않았습니다. 다시 시도하시거나 지원 부서에 문의하십시오.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "접근 제어",
@@ -552,6 +557,7 @@
         "download": "%VMS_NAME% 다운로드",
         "downloadPlatform": "에 대한 %VMS_NAME% 다운로드 ",
         "failedToAccessSystem": "시스템에 액세스 실패",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "로그인",
         "pageNotFound": "페이지를 찾을 수 없음",

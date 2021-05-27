@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Hợp nhất hệ thống hiện tại với",
             "mergeFailedTitle": "Hợp nhất hệ thống không thành công",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Hợp nhất hệ thống hiện tại với",
             "noServerFound": "Không tìm thấy máy chủ",
             "newSystemDisplayName": "Hệ thống mới",
             "otherSystem": "Hệ thống khác...",
@@ -333,7 +334,8 @@
             "removeUser": "Xóa người dùng?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi cổng %CLOUD_NAME% để xóa tài khoản của bạn."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Không thể xóa bỏ hệ thống",
         "emailNotFound": "Tài khoản không tồn tại.",
         "failedToAccessSystem": "Không có hệ thống có thể được truy cập bởi liên kết này. Điều này có thể xảy ra khi một hệ thống bị ngắt kết nối từ %CLOUD_NAME%, quyền truy cập vào hệ thống này đã bị thu hồi hoặc nếu bạn đăng nhập vào tài khoản không chính xác.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Bạn không có quyền thực hiện công việc này",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
         "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
         "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",
@@ -552,6 +557,7 @@
         "download": "Tải xuống %VMS_NAME%",
         "downloadPlatform": "Tải xuống %VMS_NAME% cho ",
         "failedToAccessSystem": "Không thể truy cập hệ thống",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Đăng nhập",
         "pageNotFound": "Không tìm thấy trang",

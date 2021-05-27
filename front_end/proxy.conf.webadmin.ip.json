@@ -1,29 +1,30 @@
 {
   "/api/*": {
-    "target": "https://10.1.5.196:7011",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/api/systems/*": {
-    "target": "http://cloud-test.hdw.mx",
+  "/web/media/*": {
+    "target": "https://10.1.5.196:7001",
     "secure": false,
+    "logLevel": "debug",
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://10.1.5.196:7011",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://10.1.5.196:7011",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/customization/*": {
-    "target": "https://10.1.5.196:7011",
+    "target": "https://10.1.5.196:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

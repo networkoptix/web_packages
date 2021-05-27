@@ -10,7 +10,7 @@ import { FormsModule }                             from '@angular/forms';
 import { NxLanguageProviderService }               from '@services/nx-language-provider';
 import { NxConfigService }                         from '@services/nx-config';
 import { NxSystem }                                from '@services/system.service';
-import { DatePipe }                                from '@angular/common';
+import { CommonModule, DatePipe }                                from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -47,8 +47,12 @@ describe('Licenses (Details)', () => {
                 NxLicenseDetailComponent, NxContentBlockComponent,
                 NxContentBlockSectionComponent, NxInfoBlockComponent
             ],
-            imports   : [FormsModule, TranslateTestingModule],
-            providers : [
+            imports: [
+                CommonModule,
+                FormsModule,
+                TranslateTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxSystem, useValue: systemMock },
@@ -72,7 +76,7 @@ describe('Licenses (Details)', () => {
     });
 
     it('should call formatLicenseKey and get formatted key', () => {
-        const key = component['formatLicenseKey']('0000000000000000');
+        const key = (component as any).formatLicenseKey('0000000000000000');
         expect(key).toBe('0000-0000-0000-0000');
     });
 
@@ -202,7 +206,7 @@ describe('Licenses (Details)', () => {
                     deactivationsAllowed : 0
                 }
             ];
-            component['orderedDetails'](component.licenses[0].info);
+            (component as any).orderedDetails(component.licenses[0].info);
 
             fixture.detectChanges();
         });
@@ -230,7 +234,6 @@ describe('Licenses (Details)', () => {
 
                 // Last item "Deactivations should be hidden
                 expect(properties.length).toBe(7);
-
 
                 // ? value for class is empty
                 // expect(properties[0].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.class);

@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "Combina el sistema actual amb",
             "mergeFailedTitle": "S'ha produït un error en la combinació de sistemes",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "Combina el sistema actual amb",
             "noServerFound": "No s'ha trobat cap servidor",
             "newSystemDisplayName": "Sistema nou",
             "otherSystem": "Un altre sistema...",
@@ -333,7 +334,8 @@
             "removeUser": "Voleu suprimir l'usuari?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "No es pot eliminar el sistema",
         "emailNotFound": "El compte no existeix.",
         "failedToAccessSystem": "No es pot accedir a cap sistema mitjançant aquest enllaç. Això pot passar quan s'ha desconnectat un sistema de %CLOUD_NAME%, s'ha revocat l'accés a aquest sistema o si heu iniciat la sessió al compte incorrecte.",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "No teniu permisos per realitzar aquesta acció",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "No s'ha pogut activar la llicència. Torneu-ho a intentar o poseu-vos en contacte amb el servei de suport.",
         "licenseTimeout": "No s'ha pogut activar la llicència perquè s'ha esgotat el temps d'espera per a la connexió. Assegureu-vos que el servidor està connectat i torneu-ho a intentar.",
         "licenseServerError": "No s'ha pogut activar la llicència. El servidor de llicències no ha respost. Torneu-ho a intentar o poseu-vos en contacte amb el servei de suport.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "Control d'accés",
@@ -552,6 +557,7 @@
         "download": "Descarrega %VMS_NAME%",
         "downloadPlatform": "Descarrega %VMS_NAME% per a ",
         "failedToAccessSystem": "No s'ha pogut accedir al sistema",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "Inicia la sessió",
         "pageNotFound": "No s'ha trobat la pàgina",

@@ -65,6 +65,10 @@
                         left: 7px;
                         top: -2px;
                         width: 29px;
+
+                        svg path {
+                            fill: #2B383F !important;
+                        }
                     }
 
                     &:before {

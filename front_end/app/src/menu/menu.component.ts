@@ -21,6 +21,8 @@ import { NxApplyService }                   from '@services/apply.service';
  </nx-menu>
  */
 
+const SCROLL_AREA_LIMIT = 120;
+
 @UntilDestroy()
 @Component({
     selector      : 'nx-menu',
@@ -55,6 +57,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     scrollHeight: number;
     menuHeightFit: string;
+    menuOverflow: string;
     containerHeight: number;
     scrollHeightFit: string;
     permHeight: number;
@@ -69,6 +72,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     private origLevel1: string;
     private origLevel2: string;
     private origLevel3: string;
+
+    private menuOverflowCalc;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -146,8 +151,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
-            if (this.menuService.hasUpdatedContent(changes.content.currentValue.level1)) {
-                this.menuService.content = this.menuService.sanitizeContent(changes.content.currentValue.level1);
+            const sanitizedContent = this.menuService.sanitizeContent(changes.content.currentValue.level1);
+            if (this.menuService.hasUpdatedContent(sanitizedContent)) {
+                this.menuService.content = sanitizedContent;
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
@@ -197,6 +203,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                         return;
                     }
 
+                    this.menuHeightFit = '';
+                    this.scrollHeightFit = '';
                     setTimeout(() => {
                         this.menuInit = false;
                         this.getMenuDimensions();
@@ -234,14 +242,32 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     resizeMenu() {
         if (this.autoFit && this.scrollArea) {
-            this.menuHeightFit = '';
-            this.scrollHeightFit = '';
             setTimeout(() => {
+                let windowHeightFit;
+                this.menuOverflow = 'hidden';
+
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
-                    const windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
-                    this.menuHeightFit = windowHeightFit + 'px';
-                    this.scrollHeightFit = (windowHeightFit - this.permHeight) + 'px';
+                    // TODO: might want to subtract more if ribbon exists
+                    windowHeightFit = this.windowHeight - 40/* search box */ - 16/* bottom padding */;
+                } else {
+                    windowHeightFit = this.menuHeight;
                 }
+
+                this.menuHeightFit = windowHeightFit + 'px';
+
+                // 120px is the min height for taller scrollArea - keep height if shorter
+                if (this.scrollArea.nativeElement.scrollHeight > SCROLL_AREA_LIMIT) {
+                    this.scrollHeightFit = Math.max(SCROLL_AREA_LIMIT, (windowHeightFit - this.permHeight)) + 'px';
+                } else {
+                    this.scrollHeightFit = this.scrollArea.nativeElement.scrollHeight;
+                }
+
+                // set scrollbar if needed but only after resizing finishes
+                clearTimeout(this.menuOverflowCalc);
+                this.menuOverflowCalc = setTimeout(() => {
+                    const magicNumberToAdd  = 40/* search box */ + 2 * 16/* bottom and top padding */;
+                    this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight) ? 'auto' : 'hidden';
+                }, 500);
             });
         }
     }

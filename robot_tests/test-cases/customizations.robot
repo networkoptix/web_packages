@@ -18,12 +18,12 @@ Restart
 *** Test Cases ***
 Verify List of Available Languages
     [Tags]    C43008
-    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}
-    Click Element    ${LANGUAGE DROPDOWN}
     ${dict} =    Get Lang List
-    @{CUST LANGUAGE LIST} =    Get Dictionary Keys    ${dict}        
+    @{CUST LANGUAGE LIST} =    Get Dictionary Keys    ${dict}       
+    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}
+    Click Element    ${LANGUAGE DROPDOWN}    
     FOR    ${lang}    IN    @{CUST LANGUAGE LIST}
-        Wait Until Element is Visible    //span[@lang='${lang}']
+        Wait Until Element is Visible    //header//nx-header-language-select//span[@lang='${lang}']
     END
     
 Verify Default language for Cloud Portal
@@ -62,14 +62,13 @@ Verify Download VMS Name
     Log    Step 3
     Click Link    ${WHATS NEW LINK}
     Wait Until Number Of Tabs Are Open    2
-    @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    NEW    
     Wait Until Location Is    ${RELEASE NOTES URL}
     Log    With Hanwha The wollowing keyword only passes in headless:false mode. 
     Run Keyword and Ignore Error   Wait Until Element is Visible    ${RELEASE NOTES LATEST}'${version}']
     Close Window
     Log    Step 4
-    Select Window    @{tabs}[0]
+    Switch Window    MAIN    
     ${itunes url} =    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href
     ${play store url} =    Get Element Attribute    ${PLAY STORE DOWNLOAD BUTTON}    href
     Should Be Equal   ${itunes url}    ${ITUNES STORE LINK}      
@@ -80,12 +79,11 @@ Verify Support Page
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Click Link    ${FOOTER SUPPORT LINK}
     Wait Until Number Of Tabs Are Open    2
-    @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    NEW
     ${SUPPORT URL} =    Get Substring    ${SUPPORT URL}     6
     Wait Until Location Contains   ${SUPPORT URL}    
     Close Window
-    Select Window    @{tabs}[0]
+    Switch Window    MAIN
     
 Verify Terms Page
     [Tags]    C43018
@@ -98,11 +96,10 @@ Verify Privacy Page
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Click Link    ${FOOTER PRIVACY LINK}
     Wait Until Number Of Tabs Are Open    2
-    @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    NEW
     Wait Until Location Is    ${PRIVACY POLICY URL FULL}
     Close Window
-    Select Window    @{tabs}[0]
+    Switch Window    MAIN
         
 Verify Copyrights
     [Tags]    C43020

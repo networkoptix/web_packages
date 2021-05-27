@@ -21,7 +21,7 @@ Merge Systems
 Merge Systems Local
     [Documentation]    Merge two systems via server commands
     [Arguments]    ${primary auth}    ${secondary auth}    ${primary url}    ${secondary url}    ${currentPassword}=${BASE PASSWORD}
-    ${data}=   Create Dictionary    currentPassword=${current password}    url=https://${secondary auth}@${secondary url}
+    ${data}=   Create Dictionary    currentPassword=${current password}    dryRun=${False}    url=https://${secondary auth}@${secondary url}
     Create Digest Session    local merge session    ${primary url}    auth=${primary auth}    disable_warnings=1
     ${resp}=   Post Request    local merge session    /api/mergeSystems    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -180,6 +180,14 @@ Disconnect Server via API
     Should Be Equal As Strings    ${resp.status_code}    200
 
 # Keywords which use System/Server API
+Cookie Logout
+    [Arguments]    ${auth}    ${server url}
+    ${cookies}=    Create Dictionary    x-runtime-guid=_DELETED_COOKIE_VALUE_
+    ${data}=    Create Dictionary
+    Create Digest Session    cookieLogout   ${server url}    auth=${auth}    cookies=${cookies}
+    ${resp}=   Post Request    cookieLogout    /api/cookieLogout    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Setup Local System
     [Arguments]    ${server url}    ${new password}    ${system name}
     @{auth}=   Create List    admin    admin
@@ -370,7 +378,7 @@ Get Log Level
     Create Digest Session    Get Log Level session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=    Get Request    Get Log Level session   /api/logLevel
     Should Be Equal As Strings    ${resp.status_code}    200
-    Should Be Equal As Strings    ${resp.json}[error]    0
+    Should Be Equal As Strings    ${resp.json()}[error]    0
     Return From Keyword    ${resp.json()}[reply]
 
 Get Users
@@ -439,7 +447,7 @@ Save User
     [Return]    ${resp.json()}
 
 Save User Existing
-    [Arguments]    ${auth}    ${server url}    ${name}  ${permissions}  ${email}    ${user role id}    ${user id}
+    [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}   ${email}    ${user role id}    ${user id}
     &{data}=   Create Dictionary    email=${email}   id=${user id}   isCloud=${True}    isEnabled=${True}    name=${name}    permissions=${permissions}    userRoleId=${userRoleId}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10

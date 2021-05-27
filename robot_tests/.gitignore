@@ -20,3 +20,4 @@ pabot_results
 *check.robot
 chromedriver
 *.csv
+DockerQA/*

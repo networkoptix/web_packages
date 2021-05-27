@@ -21,8 +21,8 @@ ${or criteria}          s|a
 *** Keywords ***
 Restart
     Common Restart Logout    ${url}
-    Log in to user and system    ${owner}      ${sysId0}
-    @{local users} =   Reset Local Users    ${auth}    https://${QA BURBANK IP}:${port0} 
+    Log in to user and system    ${owner}      ${server0['full id']}
+    @{local users} =   Reset Local Users    ${auth}    https://${QA BURBANK IP}:${server0['port']}
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -53,14 +53,14 @@ System Settings Menu Suite Setup
     @{server auth}=   Create List    admin    qweasd 123
     
     FOR    ${n}    IN RANGE    3
-        ${port} =    Create Docker Server    system-menu${n}-${random}    4.3    VMS=${EMPTY}
-        Set Suite Variable    ${port${n}}    ${port[0]}
+        ${server} =    Create Docker Server    system-menu${n}-${random}    VMS=new
+        Set Suite Variable    ${server${n}}    ${server}
         Sleep     10
-        Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
-        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${owner}    ${BASE PASSWORD}
-        Set Suite Variable    ${sysId${n}}    ${sysId}
+        Setup Local System    https://${QA BURBANK IP}:${server['port']}    ${BASE PASSWORD}    ${system names[${n}]}
+        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server['port']}    ${system names[${n}]}    ${owner}    ${BASE PASSWORD}
+        Set To Dictionary    ${server${n}}    full id    ${sysId}
+
         Sleep    10
-        Close Connection
     END
     
     ${SUITE AUTO TESTS USERS} =    Create Dictionary
@@ -74,33 +74,32 @@ System Settings Menu Suite Setup
     Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS} 
     
     FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
-        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
+        Add user to cloud system if not there    ${server0['full id']}    ${user role}    ${user email}    ${auth}
     END
     
     Open Browser and go to URL    ${url}
-    Log in to user and system    ${owner}      ${sysId0}
+    Log in to user and system    ${owner}      ${server0['full id']}
     
-    FOR    ${system}    IN    ${sysId0}    ${sysId1}    ${sysId2}
+    FOR    ${system}    IN    ${server0['full id']}    ${server1['full id']}    ${server2['full id']}
         Go To    ${ENV}/systems/${system}
         Wait Until Element is Visible    ${SERVERS LINK}
         Click Link    ${SERVERS LINK}
         Verify on Servers Page    timeout=120
     END
     
-    
-    Merge Systems    ${auth}    ${sysId0}    ${sysId1}
-    Go To    ${ENV}/systems/${sysId0}
+    Merge Systems Local    ${server auth}    ${server auth}    http://10.1.5.238:${server0['port']}    http://10.1.5.238:${server1['port']}
+    Go To    ${ENV}/systems/${server0['full id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=150
-    Merge Systems    ${auth}    ${sysId0}    ${sysId2} 
-    Go To    ${ENV}/systems/${sysId0}
+    Merge Systems Local    ${server auth}    ${server auth}    http://10.1.5.238:${server0['port']}    http://10.1.5.238:${server2['port']}
+    Go To    ${ENV}/systems/${server0['full id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=150
     
 System Settings Menu Suite Tear Down  
-    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
+    Disconnect Server via API    ${auth}    ${server0['full id']}    ${password}    ${owner}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     ${results}    Execute Command    docker container stop system-menu0-${random} system-menu1-${random} system-menu2-${random}
@@ -111,7 +110,7 @@ System Settings Menu Suite Tear Down
 *** Test Cases ***
 Should login as "viewer" and should have no ability to "search" in left menu
     Common Restart Logout    ${url}
-    Log in to user and system    ${viewer}      ${sysId0}
+    Log in to user and system    ${viewer}      ${server0['full id']}
     Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Does Not Contain Element    ${LEFT MENU SEARCH INPUT}
     
@@ -265,8 +264,8 @@ Should navigate with up/down arrows when search criteria is entered
 
 # Should show system settings with left menu with 18 systems
     # [Tags]    system settings    left_menu    threaded
-    # Log in to user and system    ${owner large}    ${sysId0}
-    # # @{local users} =    Local User Start   ${owner large}    ${auth}    https://${QA BURBANK IP}:${port0}    ${sysId0}
+    # Log in to user and system    ${owner large}    ${server0['full id']}
+    # # @{local users} =    Local User Start   ${owner large}    ${auth}    https://${QA BURBANK IP}:${port0}    ${server0['full id']}
     # @{local users} =   Reset Local Users    ${auth}    https://${QA BURBANK IP}:${port0} 
     # Wait Until Page Contains Element    ${LEFT MENU}
     # Verify Menu Developers Test

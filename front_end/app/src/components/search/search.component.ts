@@ -9,10 +9,8 @@ import {
 }                                           from '@angular/forms';
 import { ActivatedRoute }                   from '@angular/router';
 import { Location }                         from '@angular/common';
-import { UntilDestroy }                     from '@ngneat/until-destroy';
-import {
-    Subscription, SubscriptionLike, Subject
-}                                           from 'rxjs';
+import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
+import { Subject }                          from 'rxjs';
 import { debounceTime }                     from 'rxjs/operators';
 import { isArray }                          from 'rxjs/internal-compatibility';
 
@@ -67,7 +65,7 @@ export interface SearchFilter {
     search?: any
 }
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector      : 'nx-search',
     templateUrl   : './search.component.html',
@@ -99,9 +97,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     LANG: LanguageI18NStaticTypes;
 
     private debounceTime: number;
-    private searchSubscription: Subscription;
-    private locationSubscription: SubscriptionLike;
-    private modelSubscription: SubscriptionLike;
     private params: any = {};
     private searchUpdated: any = Subject;
     private modelUpdated: any = Subject;
@@ -126,7 +121,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.buttonArrowTypeUp = ButtonArrowType.up;
         this.buttonArrowTypeDown = ButtonArrowType.down;
 
-        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+        this.location.subscribe((event: PopStateEvent) => {
             // force search component update
             setTimeout(() => {
                 this.updateFilter(this.uri.getURI());
@@ -139,7 +134,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
-
         this.dataLoaded = this.dataLoaded === undefined ? true : this.dataLoaded;
         this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
         this.debounceTime = (this.instant !== undefined) ? 0 : this.CONFIG.search.debounceTime; // optional param
@@ -154,15 +148,15 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             this.updateFilter(undefined, false);
         });
 
-        this.searchSubscription = this.searchUpdated
-            .pipe(debounceTime(this.debounceTime))
+        this.searchUpdated
+            .pipe(untilDestroyed(this), debounceTime(this.debounceTime))
             .subscribe((data: string) => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
 
-        this.modelSubscription = this.modelUpdated
-            .pipe(debounceTime(this.debounceTime))
+        this.modelUpdated
+            .pipe(untilDestroyed(this), debounceTime(this.debounceTime))
             .subscribe(data => {
                 this.modelChanged();
             });

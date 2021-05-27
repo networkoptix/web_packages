@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
             "latestBuild": "neueste Build",
             "mergeConfirmation": "<p class=\"mb-0\">Sie sind dabei, die Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong> zusammenzuführen.</p><p>Die Einstellungen und der Name werden von <strong>{primarySystem}</strong> übernommen.</p>",
-            "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
+            "mergeSuccess": "Zusammenführung der Systeme {primaryName} und {secondaryName} abgeschlossen",
+            "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "noServerFound": "Keine Server gefunden",
             "newSystemDisplayName": "Neues System",
             "otherSystem": "Andere Systeme...",
@@ -333,7 +334,8 @@
             "removeUser": "Nutzer entfernen?",
             "serversDetach": "Server { title } vom aktuellen System trennen?",
             "serversReset": "Server { title } auf Standard zurücksetzen?",
-            "serversRestart": "Server { title } neustarten?"
+            "serversRestart": "Server { title } neustarten?",
+            "changePasswordFor": "Passwort für Benutzer \"{username}\" ändern"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "System kann nicht gelöscht werden",
         "emailNotFound": "Account existiert nicht.",
         "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde oder wenn Sie bei dem falschen Konto angemeldet sind.",
+        "failedToAccessCamera": "Über diesen Link kann auf keine Kamera zugegriffen werden.",
         "forbidden": "Sie haben keine Berechtigung diese Aktion auszuführen",
         "lostConnection": "Verbindung zu {systemName} verloren",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> ist offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "Fehler beim Aktivieren der Lizenz. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
         "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
         "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
-        "networkConnection": "Verbindung zu %CLOUD_NAME% kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
+        "networkConnection": "Verbindung zu %CLOUD_NAME% kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
+        "archiveEncrypted": "ARCHIV<br>ENTSCHLÜSSELT",
+        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort<br>einzugeben, um dieses Archiv zu entschlüsseln."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -552,6 +557,7 @@
         "download": "%VMS_NAME% herunterladen",
         "downloadPlatform": "Download %VMS_NAME% für ",
         "failedToAccessSystem": "Fehler beim Zugriff auf das System",
+        "failedToAccessCamera": "Zugriff auf Kamera fehlgeschlagen",
         "integrations": "%VMS_NAME% Integrationen",
         "login": "Anmelden",
         "pageNotFound": "Seite nicht gefunden",

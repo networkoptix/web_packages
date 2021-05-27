@@ -3,7 +3,9 @@
 @mixin font-source($font-family, $size, $color: false, $weight: false,  $lh: false) {
     font-family : $font-family;
     font-size : $size !important;
-    color : $color !important;
+    @if $color {
+        color : $color !important;
+    }
     @if $weight {
         font-weight : $weight !important;
     }
@@ -76,7 +78,7 @@ p {
 }
 
 @mixin light14light16 {
-    @include font-source($font-family-light, $h6-font-size, $light16);
+    @include font-source($font-family-light, $h5-font-size, $light16);
 }
 
 @mixin light15light16 {
@@ -85,6 +87,18 @@ p {
 
 @mixin light18light16 {
     @include font-source($font-family-light, $h3-font-size, $light16);
+}
+
+@mixin light18light10 {
+    @include font-source($font-family-light, $h3-font-size, $light10);
+}
+
+@mixin light40light16 {
+    @include font-source($font-family-light, $font-size-xxxlg, $light16);
+}
+
+@mixin light40light10 {
+    @include font-source($font-family-light, $font-size-xxxlg, $light10);
 }
 // LIGHT
 
@@ -146,19 +160,19 @@ p {
 }
 
 @mixin regular14brand {
-    @include font-source($font-family-regular, $h6-font-size, $brand_core);
+    @include font-source($font-family-regular, $h5-font-size, $brand_core);
 }
 
 @mixin regular14dark9 {
-    @include font-source($font-family-regular, $h6-font-size, $dark9);
+    @include font-source($font-family-regular, $h5-font-size, $dark9);
 }
 
 @mixin regular14dark10 {
-    @include font-source($font-family-regular, $h6-font-size, $dark10);
+    @include font-source($font-family-regular, $h5-font-size, $dark10);
 }
 
 @mixin regular14light {
-    @include font-source($font-family-regular, $h6-font-size, $light16);
+    @include font-source($font-family-regular, $h5-font-size, $light16);
 }
 
 @mixin regular15dark9 {
@@ -227,16 +241,20 @@ p {
     @include font-source($font-family-medium, $font-size-base, $light1);
 }
 
+@mixin medium13light13{
+    @include font-source($font-family-medium, $font-size-base, $light13);
+}
+
 @mixin medium13nocolor {
     @include font-source($font-family-medium, $font-size-base);
 }
 
 @mixin medium14dark9 {
-    @include font-source($font-family-medium, $h6-font-size, $dark9);
+    @include font-source($font-family-medium, $h5-font-size, $dark9);
 }
 
 @mixin medium14light1-50 {
-    @include font-source($font-family-medium, $h6-font-size, rgba($light1, 0.5));
+    @include font-source($font-family-medium, $h5-font-size, rgba($light1, 0.5));
 }
 
 @mixin medium15dark9 {

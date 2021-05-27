@@ -2,10 +2,11 @@
 
   <nx-media-server-list-header
     (ipVisibilityStateChange)="updateShowIP($event)"
-    (filterTokenChange)="updateFilteredList($event)"
-  ></nx-media-server-list-header>
+    (filterTokenChange)="updateFilteredList($event)">
+  </nx-media-server-list-header>
 
   <div class="server-list">
+
     <div
       class="server"
       *ngFor="let server of mediaservers"
@@ -15,9 +16,10 @@
         'online': server.status === 'Online',
         'offline': server.status === 'Offline',
         'empty': !server.cameras.length
-      }"
-    >
-      <div class="server-name" (click)=changeServerVisibility(server.id)>
+      }">
+      <div class="server-name"
+           (click)=changeServerVisibility(server.id)
+           [title]="server.url | ip_info">
         <span class="name" [ngClass]="server.status" [innerHTML]="server.name | highlight:token"></span>
         <span class="ip-info" [innerHTML]="server.url | ip_info | highlight:token"></span>
         <svg-icon nx-add-svg-src

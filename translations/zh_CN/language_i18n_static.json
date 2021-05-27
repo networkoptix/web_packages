@@ -2,7 +2,7 @@
     "language": "en_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
-    "For developers": "For developers",
+    "For developers": "开发人员适用",
     "Integrations (β)": "Integrations (β)",
     "Privacy": "隐私政策",
     "Support": "技术支持",
@@ -259,8 +259,9 @@
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
-            "mergeSystemsTitle": "合并当前系统",
             "mergeFailedTitle": "系统合并失败",
+            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSystemsTitle": "合并当前系统",
             "noServerFound": "找不到服务器",
             "newSystemDisplayName": "新系统",
             "otherSystem": "其它系统...",
@@ -333,7 +334,8 @@
             "removeUser": "是否删除用户？",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "请经由%CLOUD_NAME%断开您为所有者的全部系统，以删除您的帐户。"
@@ -451,6 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "不能删除系统",
         "emailNotFound": "帐户不存在.",
         "failedToAccessSystem": "此连结无法连接至任何系统。可能当系统断开 %CLOUD_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
+        "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您没有权限执行此操作",
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
@@ -472,7 +475,9 @@
         "licenseFail": "无法激活授权。请重试或联系支持人员。",
         "licenseTimeout": "连接超时，激活授权失败。请确保服务器在线，然后重试。",
         "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系支持人员。",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
     },
     "integration": {
         "Access Control": "门禁管理",
@@ -552,6 +557,7 @@
         "download": "下载 %VMS_NAME%",
         "downloadPlatform": "下载 %VMS_NAME% ",
         "failedToAccessSystem": "无法访问系统",
+        "failedToAccessCamera": "Failed to access camera",
         "integrations": "%VMS_NAME% Integrations",
         "login": "登录",
         "pageNotFound": "找不到页面",
@@ -765,7 +771,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "系统资源报告浏览器{systemName}"
     },
     "license": {
         "licenseTypeTitles": {

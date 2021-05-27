@@ -106,7 +106,7 @@
     }
 
     &.item-disabled {
-        color : $light13;
+        @include typography.medium13light13;
         svg .st0 {
             fill: $light13;
         }

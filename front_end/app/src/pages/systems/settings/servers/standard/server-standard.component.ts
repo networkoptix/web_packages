@@ -150,35 +150,23 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 delete previousValue.shownStatus;
             }
 
-            if (currentValue.id !== previousValue?.id) {
-                this.setServer();
+            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+                this.storagesLoading = true;
+                if (!this.applyService.locked) {
+                    setTimeout(() => this.setServer(currentValue?.id !== previousValue?.id));
+                }
             } else {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
             }
         }
-        this.applyService.addWatchers([this.saveStorageWatcher]);
     }
 
     ngOnDestroy() {}
 
-    setServer(): void {
+    setServer(isDifferentServer = false): void {
         this.initForApplyService();
 
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.ipPortWatcher, this.serverNameWatcher],
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                this.applyService.unsetInvalidField('port');
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
-                    this.selectDefaultStorage();
-                this.setSystemStorageChosen(this.selectedStorage);
-            }
-        );
-
         this.applyService.setVisible(false);
-        this.systemStorageChosen = false;
-        this.storagesLoading = true;
         this.serverLoaded = false;
         this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
@@ -204,7 +192,21 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checkIfOnline(this.parsedServerId).finally(() => {
             this.serverLoaded = true;
         });
-        this.getCurrentStorages();
+
+        this.getCurrentStorages(isDifferentServer);
+
+        this.applyService.addWatchers([this.saveStorageWatcher]);
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.ipPortWatcher, this.serverNameWatcher],
+            this.saveSettings,
+            () => {
+                this.applyService.reset();
+                this.applyService.unsetInvalidField('port');
+                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
+                    this.selectDefaultStorage();
+                this.setSystemStorageChosen(this.selectedStorage);
+            }
+        );
     }
 
     initForApplyService(): void {
@@ -244,7 +246,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 } else if (port.value !== port.originalValue) {
                     const portReturn = await this.system.changeServerPort(port.value, serverId);
                     switch (portReturn.error) {
-                        case '0': newPort = port.originalValue = port.value; break;
+                        case '0':
+                            await this.system.update();
+                            newPort = port.originalValue = port.value;
+                            break;
                         case '3':
                             this.portBusy = true;
                             port.value = port.originalValue;
@@ -290,6 +295,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         if (!this.serverOffline && (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id))) {
             this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
+        }
+
+        if (this.serverOffline || this.serverUnavailable) {
+            this.storagesLoading = false;
+            this.dropdownStorages = [];
         }
     }
 
@@ -436,8 +446,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checkingForDataAnalytics = false;
     }
 
-    getCurrentStorages() {
-        if (this.storageSubscription) {
+    getCurrentStorages(isDifferentServer = false) {
+        if (isDifferentServer && this.storageSubscription) {
+            this.storageSubscription.unsubscribe();
+        } else if (this.storageSubscription) {
             return;
         }
         this.storageSubscription = this.system.storageManager.storageState$.pipe(
@@ -455,7 +467,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     name        : url,
                     isOnline,
                     isWritable,
-                    isNotSystem : !storageStatus?.includes('system'),
+                    isNotSystem : !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
                     selected,
                     id          : storageId,
                     value       : storageId,

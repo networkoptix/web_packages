@@ -1,3 +1,4 @@
+import { NxSystemRestAPI }                              from '@services/system-rest-api.service';
 import { NxUtilsService }                               from '@services/utils.service';
 import { ServerManager }                                from '../server-manager/server-manager';
 import { NxSystemServer, ModuleInfo }                   from '../system-types';
@@ -31,10 +32,15 @@ export class CameraManager {
 
     async getCameras(serverTimes?, cameras?) {
         if (!serverTimes || !cameras) {
-            [serverTimes, cameras] = await this.serverManager.mediaserver.getCamerasWithSeverTime().toPromise();
-            if (!cameras) {
-                return Promise.reject(new Error(`Request to server has failed ${cameras}`));
-            }
+            await this.serverManager.mediaserver
+                .getCamerasWithSeverTime().toPromise()
+                .then((response) => {
+                    if (!response) {
+                        cameras = [];
+                        return;
+                    }
+                    [serverTimes, cameras] = response;
+                });
         }
         const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
             const backupType = deprecatedBackupType || (<any>camera).backupQuality;
@@ -69,7 +75,8 @@ export class CameraManager {
                 params[name] = value;
                 return params;
             }, {});
-            const parentName = this.servers.find(server => server.id === parentId)?.name;
+
+            const parentName = this.servers?.find(server => server.id === parentId)?.name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
@@ -90,18 +97,23 @@ export class CameraManager {
             }
             const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
             const motionLowResEnabled = !camera.disableDualStreaming && (multiStream || !!hasDualStreaming);
+
+            const newApi = this.serverManager.mediaserver instanceof NxSystemRestAPI;
+            const motionOnly = newApi ? RecordingType.META_ONLY : RecordingType.MOTION_ONLY;
+            const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
+
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
                 fps       : this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
                 modes     : [
-                    { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'motion', id: 'RT_MetadataOnly', value: this.parseRecordingMode(camera, 'RT_MetadataOnly'), enabled: motionEnabled },
+                    { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, [RecordingType.ALWAYS]), enabled: true },
+                    { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
                     {
                         name    : 'motionLowRes',
-                        id      : 'RT_MetadataAndLowQuality',
-                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MetadataAndLowQuality'),
+                        id      : motionLowRes,
+                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
                         enabled : motionLowResEnabled && motionEnabled
                     }
                 ]
@@ -123,7 +135,7 @@ export class CameraManager {
             bitrateKbps   : 0,
             endTime       : 0,
             startTime     : 0,
-            recordingType : 'RT_Never'
+            recordingType : RecordingType.NEVER
         };
 
         const updateParams: Partial<ICamera> | any = cameraSettings;
@@ -139,7 +151,7 @@ export class CameraManager {
     }
 
     private parseFps(schedule: ITask[], max: number): number | 'various' {
-        const schedulesWithFps = schedule.filter(({ fps, recordingType }) => fps !== 0 && recordingType !== 'RT_Never').map(({ fps }) => fps);
+        const schedulesWithFps = schedule.filter(({ fps, recordingType }) => fps !== 0 && recordingType !== RecordingType.NEVER).map(({ fps }) => fps);
         const uniqueFps = new Set(schedulesWithFps);
         const currentFps = Array.from(uniqueFps);
         return schedulesWithFps.length === 0 ? max : currentFps.length === 1 ? currentFps[0] : 'various';
@@ -156,15 +168,15 @@ export class CameraManager {
         return quality;
     }
 
-    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, id: RecordingType) {
+    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, types: RecordingType[]) {
         const partialSchedule = scheduleTasks.some(({ recordingType, startTime, endTime, fps }) => (
-            recordingType === id &&
+            types.includes(recordingType) &&
         fps > 0 &&
         startTime < endTime
         ));
 
         const fullSchedule = scheduleTasks.length && scheduleTasks.every(({ recordingType, startTime, endTime, fps }) => (
-            recordingType === id &&
+            types.includes(recordingType) &&
         fps > 0 &&
         startTime < endTime
         ));
@@ -176,7 +188,7 @@ export class CameraManager {
             return status;
         }
         const recording = scheduleTasks.some(({ dayOfWeek: day, startTime, endTime, recordingType }) => (
-            recordingType !== 'RT_Never' &&
+            recordingType !== RecordingType.NEVER &&
         day === dayOfWeek &&
         startTime < secondsToday &&
         secondsToday < endTime

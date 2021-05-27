@@ -66,6 +66,24 @@
                             <input class="form-control" type="text" name="deviceModel" id="deviceModel"
                             [(ngModel)]="newDevice.model">
                         </div>
+                        <div class="form-group">
+                            <label for="deviceProvider">Provider*</label>
+                            <select class="form-control" type="text" name="deviceProvder" id="deviceProvider" required
+                                    [(ngModel)]="newDevice.provider">
+                                <option selected="selected" value="">Please select a provider</option>
+                                <option value="firebase_legacy">Firebase Legacy</option>
+                                <option value="firebase">Firebase</option>
+                                <option value="apn">APN</option>
+                                <option value="apn_sandbox">APN Sandbox</option>
+                                <option value="baidu">Baidu</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceUserId">Baidu User Id</label>
+                            <input class="form-control" type="text" name="deviceUserId" id="deviceUserId"
+                            [(ngModel)]="newDevice.userId">
+                            <p class="footnote">Only required for baidu device registrations</p>
+                        </div>
                         <button [disabled]="!formNewDevice.valid" class="btn btn-success d-inline-block"
                         (click)="onRegisterDevice(formNewDevice)">Register Device
                         </button><span class="ml-2 text-success" *ngIf="newDevice.success && formNewDevice.untouched">Success!</span>
@@ -106,13 +124,13 @@
                                 <td>
                                     <nx-checkbox
                                             [(ngModel)]="deviceSubscriptions[device.deviceToken].all"
-                                            (change)="onToggleSubscribe(device.deviceToken, 'all')">
+                                            (change)="onToggleSubscribe(device, 'all')">
                                     </nx-checkbox>
                                 </td>
                                 <td *ngFor="let system of this.systems">
                                     <nx-checkbox
                                             [(ngModel)]="deviceSubscriptions[device.deviceToken][system.id]"
-                                            (change)="onToggleSubscribe(device.deviceToken, system.id)">
+                                            (change)="onToggleSubscribe(device, system.id)">
                                     </nx-checkbox>
                                 </td>
                             </tr>

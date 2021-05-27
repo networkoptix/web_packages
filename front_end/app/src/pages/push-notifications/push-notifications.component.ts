@@ -3,11 +3,10 @@ import { AngularFireMessaging }         from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders }      from '@angular/common/http';
 import { Router }                       from '@angular/router';
 import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { timer }                        from 'rxjs/observable/timer';
-import { Subscription }                 from 'rxjs';
+import { Subscription, timer }          from 'rxjs';
 
-import { NxSystemsService }             from '../../services/systems.service';
-import { NxAccountService }             from '../../services/account.service';
+import { NxSystemsService }             from '@services/systems.service';
+import { NxAccountService }             from '@services/account.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -47,6 +46,8 @@ export class PushComponent implements OnInit, OnDestroy {
             deviceTokenError : '',
             name             : '',
             model            : '',
+            provider         : '',
+            userId           : '',
             success          : false
         };
         this.registered = undefined;
@@ -186,18 +187,23 @@ export class PushComponent implements OnInit, OnDestroy {
             model : ''
         };
         const isEnabled = true;
+        let provider;
+        let userId;
         if (form === undefined) {
             deviceToken = this.deviceToken;
             deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
             deviceInfo.model = window.navigator.userAgent;
+            provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;
             deviceInfo.name = this.newDevice.name;
             deviceInfo.model = this.newDevice.model ? this.newDevice.model : 'custom';
+            provider = this.newDevice.provider;
+            userId = this.newDevice.userId;
         }
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
         this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
-            deviceInfo, isEnabled, systems
+            deviceInfo, isEnabled, systems, provider, userId
         }, { headers }).subscribe(
             () => {
                 if (deviceToken === this.deviceToken) {
@@ -206,6 +212,7 @@ export class PushComponent implements OnInit, OnDestroy {
                 if (form) {
                     this.newDevice.success = true;
                     form.reset();
+                    this.newDevice.provider = '';
                 }
                 this.updateSubStates();
             },
@@ -270,7 +277,9 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    onToggleSubscribe(deviceToken, systemId) {
+    onToggleSubscribe(device, systemId) {
+        const deviceToken = device.deviceToken;
+        const provider = device.provider;
         this.subChanges = true;
         const systems = [];
         if (systemId === 'all' && this.deviceSubscriptions[deviceToken].all) {
@@ -288,7 +297,8 @@ export class PushComponent implements OnInit, OnDestroy {
             })
         };
         this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
-            systems
+            systems,
+            provider
         }, httpOptions).subscribe(
             (response: any) => {
                 this.writeSubscription(response, deviceToken);

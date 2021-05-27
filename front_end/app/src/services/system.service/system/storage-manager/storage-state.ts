@@ -1,4 +1,4 @@
-import { filter, map, retry, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, retry, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { combineLatest, Observable, Subject }       from 'rxjs';
 
 import { ServerManager }                                    from '../server-manager/server-manager';
@@ -72,6 +72,8 @@ export class StorageState extends BaseManager {
 
     storageState: CurrentStorageState;
 
+    refresh$ = new Subject<boolean>();
+
     /**
      * The storageState$ contains an instance of the CurrentStorageState which has a locations property with an array of Storage.
      * The remaining properties on the CurrentStorage state are for properties that apply to the storages as a whole and not an individual storage.
@@ -86,6 +88,8 @@ export class StorageState extends BaseManager {
             this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
+        takeUntil(this.refresh$),
+        filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map((cur) => {
             if (
@@ -101,7 +105,54 @@ export class StorageState extends BaseManager {
         })
     );
 
-    statsUpdated$ = new Subject<any>()
+    statsUpdated$ = new Subject<any>();
+
+    /**
+     * A hack specifically for an edge case in server-storage-standard.component.ts
+     * Reinitializes in the situation when previous server was offline, but still loaded
+     * Only addresses and should only be used for this edge case where
+     *   previous offline server was loaded and update tick also occurred
+     */
+    reinitializeForOfflineToOnlineServer() {
+        this.#storageInfoStateManager = new StateManager(this.#getStorageInfoHandler, this.#updateOn(UpdateTriggers.INFO));
+        this.#storageStatsStateManager = new StateManager(this.#getStorageStatsHandler, this.#updateOn(UpdateTriggers.STATS));
+        this.#storageMetricsStateManager = new StateManager(this.#getStorageMetricsHandler, this.#updateOn(UpdateTriggers.METRICS));
+        this.#storageAnalyticsStateManager = new StateManager(this.#getAnalyticsHandler, this.#updateOn(UpdateTriggers.ANALYTICS));
+
+        this.refresh$.next(true);
+        this.refresh$ = new Subject<boolean>();
+
+        this.storageState$ = combineLatest(
+            [
+                this.#storageInfoStateManager.state$.pipe(fallback([])),
+                this.#storageMetricsStateManager.state$.pipe(fallback({})),
+                this.#storageStatsStateManager.state$.pipe(fallback({ storages: [] })),
+                this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
+            ]
+        ).pipe(
+            takeUntil(this.refresh$),
+            filter((res: any) => res[2]),
+            map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
+            map((cur) => {
+                if (
+                    this.storageState &&
+                    (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&
+                    !cur.storageStatsLoaded &&
+                    this.storageState.storageInfoLoaded
+                ) {
+                    return this.storageState;
+                }
+                this.storageState = cur;
+                return cur;
+            })
+        );
+        this.storageState$.subscribe(NxLogger.logCustom({
+            logIdentifier : 'Storage State',
+            prettyPrint   : false
+        }));
+
+        this.statsUpdated$ = new Subject<any>();
+    }
 
     constructor(public serverManager: ServerManager) {
         super();

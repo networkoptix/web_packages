@@ -4,6 +4,7 @@ import {
 import { FormsModule }        from '@angular/forms';
 import { DebugElement }       from '@angular/core';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
+import { CommonModule } from '@angular/common';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -19,10 +20,13 @@ describe('NumericComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-                imports      : [FormsModule],
-                declarations : [NxNumericComponent],
-                providers    : []
-            })
+            imports: [
+                CommonModule,
+                FormsModule
+            ],
+            declarations : [NxNumericComponent],
+            providers    : []
+        })
             .compileComponents()
             .then(() => {
                 fixture = TestBed.createComponent(NxNumericComponent);

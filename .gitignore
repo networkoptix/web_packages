@@ -35,6 +35,7 @@ subinclude:robot_tests/.hgignore
 *.pid
 *.log
 *.sql
+*.deb
 
 env
 venv
@@ -45,3 +46,4 @@ cloud/notifications/static/templates/*.mustache
 cloud/notifications/static/templates/email_logo.png
 tools/docker/external.dat
 .DS_Store
+.vscode

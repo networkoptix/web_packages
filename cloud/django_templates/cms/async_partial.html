@@ -1,0 +1,35 @@
+{% load i18n admin_urls static admin_modify %}
+{% load cms_filters %}
+<div class="modal" id="preparing-package">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="progress-modal-title">Preparing Package</h5>
+        </div>
+        <div class="modal-body">
+            <div id="pending">
+                <p id="context-status">Processing contexts...</p>
+                <div class="progress progress-popup">
+                    <div class="progress-bar custom-download-transition"></div>
+                </div>
+                <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+            </div>
+            <div id="done">
+                <p id="success-message">The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.</p>
+                <a class="btn btn-success" id="download-button" href="" download="">Download Package</a>
+                <button type="button" class="btn btn-light" onclick="event.preventDefault(); closeModal()">Close</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+    window.conflicts = {{conflicts|safe}}
+    window.celeryStatusUrl = "{% url 'celery_check_status' 'task_id' %}"
+    window.celeryDownloadUrl = "{% url 'celery_download_result' 'task_id' %}"
+    window.taskId = "{{task_id}}"
+    window.fileName = '{{file}}'
+    window.menuName = ''
+    window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'
+</script>
+<script src="{% static 'js/packagePoll.js' %}"></script>

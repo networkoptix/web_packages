@@ -8,7 +8,7 @@ import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { WINDOW } from '@services/window-provider';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-get-started',
     templateUrl : 'get-started.component.html',
@@ -28,7 +28,7 @@ export class NxGetStartedComponent implements OnChanges {
     }
 
     ngOnInit() {
-        const capabilitiesConfig = this.errorManager.buildConfig(
+        const getStartedConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
                 ['icon', 'title', 'subtitle'],
@@ -39,7 +39,7 @@ export class NxGetStartedComponent implements OnChanges {
             ));
         this.errorManager.checkAboutNode(
             this.getStartedNode,
-            capabilitiesConfig
+            getStartedConfig
         );
     }
 

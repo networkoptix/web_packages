@@ -9,8 +9,8 @@ COPY stage/cloud/requirements.txt /app/requirements.txt
 
 RUN set -ex \
     apk update \
-    && apk add --no-cache bash ca-certificates gettext libcurl libffi libgcc libjpeg-turbo libressl2.6-libcrypto libressl2.6-libssl libstdc++ \
-        libwebp libxml2 libxslt mariadb-client mariadb-client-libs musl openjpeg tiff tini wget yaml zlib \
+    && apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget \
+        libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib \ 
     && pip install --prefer-binary -r /app/requirements.txt
 
 ENV CLOUD_PORTAL_BASE_CONF_DIR /app/app/static

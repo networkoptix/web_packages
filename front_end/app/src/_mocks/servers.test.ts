@@ -189,5 +189,5 @@ export function setupServers() {
         ip         : '10.1.5.110',
         port       : '7001',
         osName     : 'linux_x64'
-    }
+    };
 }
