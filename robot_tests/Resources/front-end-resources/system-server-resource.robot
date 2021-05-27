@@ -1,5 +1,6 @@
 *** Settings ***
 Library    SeleniumLibrary
+
 *** Keywords ***
 Verify on Servers Page
     [Arguments]    ${timeout}=${selenium_timeout}

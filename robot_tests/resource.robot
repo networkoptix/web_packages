@@ -165,7 +165,7 @@ Log in to Auto Tests System
 Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
     ${url}=   Set Variable If
-    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
