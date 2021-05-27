@@ -233,22 +233,25 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return this.system.getCameraRecords(cid, 0, now, now).then(response => {
                         const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
                         // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
-                        const extractChunk = chunk => {
-                            let start, duration;
-                            // 4.3 api response changed
-                            if (chunk?.periods.length) {
-                                start = parseInt(chunk.periods[0].startTimeMs);
-                                duration = parseInt(chunk.periods[0].durationMs);
-                            } else {
-                                start = parseInt(chunk.startTimeMs);
-                                duration = parseInt(chunk.durationMs);
-                            }
-                            const now = Date.now();
-                            const end = (duration === -1) ? now : (start + duration);
-                            return [start, end];
+                        const extractChunk = chunks => {
+                            let longestDuration = 0;
+                            let earliestStart = Number.POSITIVE_INFINITY;
+                            chunks.forEach((chunk) => {
+                                // 4.3 api response changed
+                                const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
+                                const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
+                                if (start < earliestStart) {
+                                    earliestStart = start;
+                                }
+                                if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
+                                    longestDuration = duration;
+                                }
+                            });
+                            const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
+                            return [earliestStart, end];
                         };
                         if (hasArchive) {
-                            const [start, end] = extractChunk(response.reply[0]);
+                            const [start, end] = extractChunk(response.reply);
                             archiveRanges[cid] = new SimpleTimeRange(start, end);
                         }
                     });
