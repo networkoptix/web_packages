@@ -25,7 +25,8 @@
             <a class="dropdown-item inset"
                *ngIf="!node.new_window"
                [ngClass]="{ 'selected': node.url === path}"
-               (click)="headerService.handleNav(node, $event);hide()">
+               [routerLink]="node.url"
+               (click)="headerService.handleNav(node, $event);$event.preventDefault();hide()">
                <span>{{node.name}}</span></a>
         </li>
     </ul>
