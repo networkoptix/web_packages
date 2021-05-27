@@ -1,33 +1,41 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, HostListener } from '@angular/core';
-import { PlaybackQuality, PlaybackTransport } from '../../view.types';
-import { ActivatedRoute } from '@angular/router';
-import { NxSystemService, NxSystem } from '../../../../../services/system.service';
-import { NxAccountService } from '../../../../../services/account.service';
-import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service';
-import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service';
-import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service';
+import {
+    Component, OnInit, OnDestroy, ElementRef,
+    AfterViewInit, HostListener
+}                                                 from '@angular/core';
+import { PlaybackQuality, PlaybackTransport }     from '../../view.types';
+import { ActivatedRoute }                         from '@angular/router';
+import {
+    NxSystemService,
+    NxSystem
+}                                                 from '../../../../../services/system.service';
+import { NxAccountService }                       from '../../../../../services/account.service';
+import TimelineService                            from '../../vms-client/submodules/timeline/services/timeline.service';
+import TimelineExtendToNowService                 from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import VideoManagementSystemService               from '../../vms-client/submodules/vms/services/vms.service';
 import ICamera, {
     AvailableTransportsAndResolutions,
     SimpleTimeRange
-} from '../../vms-client/submodules/vms/datatypes/ICamera';
-import PlaybackService from '../../vms-client/submodules/playback/services/playback.service';
+}                                                 from '../../vms-client/submodules/vms/datatypes/ICamera';
+import PlaybackService                            from '../../vms-client/submodules/playback/services/playback.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
-import FpsMeterService from '@services/fps-meter.service';
-import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import { NxConfigService, IConfig }      from '../../../../../services/nx-config';
-import { CameraQualityStorageService }   from '../../services/cameraQualityStorage.service';
-import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
-import sidebarLayout                     from '../sidebarLayout.cfg';
-import { NxUtilsService }                from '@services/utils.service';
-import fullscreen                        from './fullscreen';
-import { LoggerDecorator }               from '../../vms-client/utils';
-import { PLAYBACK_MODE }                 from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }             from 'rxjs/operators';
-import { UntilDestroy }                  from '@ngneat/until-destroy';
-import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
-
+import VmsState, { VMS_MODE }                     from '../../vms-client/submodules/vms/datatypes/VmsState';
+import FpsMeterService                            from '@services/fps-meter.service';
+import WebClientUxService, { WebclientUxState }   from '../../services/webclient-ux.service';
+import {
+    NxConfigService,
+    IConfig
+}                                                 from '../../../../../services/nx-config';
+import { CameraQualityStorageService }            from '../../services/cameraQualityStorage.service';
+import { CameraTransportStorageService }          from '../../services/cameraTransportStorage.service';
+import sidebarLayout                              from '../sidebarLayout.cfg';
+import { NxUtilsService }                         from '@services/utils.service';
+import fullscreen                                 from './fullscreen';
+import { LoggerDecorator }                        from '../../vms-client/utils';
+import { PLAYBACK_MODE }                          from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }                      from 'rxjs/operators';
+import { UntilDestroy }                           from '@ngneat/until-destroy';
+import { NxLanguageProviderService }              from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }                from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -349,9 +357,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public ngOnDestroy (): void {
-        this._routeSubscription.unsubscribe();
-        this._vmsStateSubscription.unsubscribe();
-        this._uxStateSubscription.unsubscribe();
+        this._routeSubscription?.unsubscribe();
+        this._vmsStateSubscription?.unsubscribe();
+        this._uxStateSubscription?.unsubscribe();
 
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }

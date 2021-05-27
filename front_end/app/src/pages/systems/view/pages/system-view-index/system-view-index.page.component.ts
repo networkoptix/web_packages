@@ -3,27 +3,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject, Subscription, timer } from 'rxjs';
 
-import { ServerTimeInfo, NxSystemService, NxMediaServer, NxSystem } from '../../../../../services/system.service';
-import { NxAccountService } from '../../../../../services/account.service';
-
-import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service';
-import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
-import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer';
-import Camera from '../../vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera';
-import { ms } from '../../vms-client/utils/type-aliases';
-import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service';
+import {
+    ServerTimeInfo, NxSystemService,
+    NxMediaServer, NxSystem
+}                                               from '@services/system.service';
+import { NxAccountService }                     from '@services/account.service';
+import VideoManagementSystemService             from '../../vms-client/submodules/vms/services/vms.service';
+import VmsState, { VMS_MODE }                   from '../../vms-client/submodules/vms/datatypes/VmsState';
+import MediaServer                              from '../../vms-client/submodules/vms/datatypes/MediaServer';
+import Camera                                   from '../../vms-client/submodules/vms/datatypes/Camera';
+import { CAMERA_STATUS, SimpleTimeRange }       from '../../vms-client/submodules/vms/datatypes/ICamera';
+import { ms, LoggerDecorator }                  from '../../vms-client/utils';
+import TimelineService                          from '../../vms-client/submodules/timeline/services/timeline.service';
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-
-import { NxConfigService, IConfig } from '@services/nx-config';
-
-import sidebarLayout from '../sidebarLayout.cfg';
-import { LoggerDecorator } from '../../vms-client/utils';
-import { NxSystemsService } from '@services/systems.service';
-import { UntilDestroy }                    from '@ngneat/until-destroy';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { NxUtilsService }                  from '@services/utils.service';
-import fullscreen from '../system-view-camera/fullscreen';
+import { NxConfigService, IConfig }             from '@services/nx-config';
+import { NxSystemsService }                     from '@services/systems.service';
+import { UntilDestroy }                         from '@ngneat/until-destroy';
+import { distinctUntilChanged, takeUntil }      from 'rxjs/operators';
+import { NxUtilsService }                       from '@services/utils.service';
+import sidebarLayout                            from '../sidebarLayout.cfg';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -323,8 +321,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                               archiveRanges[c.id] || new SimpleTimeRange(0, 0),
                               archives[c.id] || [],
                               c.status === 'Recording' || c.status === 'Online' ? this.system.getCameraThumbnailUrl(c.id) : undefined,
-                              (transport: string, quality: string, t?: ms) => this.system.getPlaybackUrl(c.id, transport, quality, t),
-                              (t?: ms) => this.system.getCameraThumbnailUrl(c.id, 128, 128, t)
+                              (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
+                              (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
                             );
                             result.parseAdditionalParams(c.addParams);
                             return result;
@@ -355,26 +353,33 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(
             takeUntil(this.cancelPoll$)
         ).subscribe(async() => {
-            const cameras = await this.system.cameraManager?.getCameras().then(cameras => cameras.reduce((parsed, camera) => ({
-                ...parsed,
-                [NxUtilsService.cleanId(camera.id)]: camera
-            }), {}));
-            let anythingChanged = false;
-            for (const serverId in cachedMediaServers) {
-                const server = cachedMediaServers[serverId];
-                for (const camera of server.cameras) {
-                    const updatedCamera = cameras[camera.id];
-                    if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
-                        this._log('camera updated', updatedCamera);
-                        camera.status = updatedCamera.status;
-                        camera.name = updatedCamera.name;
-                        anythingChanged = true;
+            if (this.system?.cameraManager) {
+                const cameras = await this.system.cameraManager
+                    .getCameras()
+                    .then(cameras => cameras.reduce((parsed, camera) => ({
+                        ...parsed,
+                        [NxUtilsService.cleanId(camera.id)]: camera
+                    }), {}));
+
+                let anythingChanged = false;
+
+                cachedMediaServers && Object.keys(cachedMediaServers).forEach(serverId => {
+                    const server = cachedMediaServers[serverId];
+                    for (const camera of server.cameras) {
+                        const updatedCamera = cameras[camera.id];
+                        if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
+                            this._log('camera updated', updatedCamera);
+                            camera.status = updatedCamera.status;
+                            camera.name = updatedCamera.name;
+                            anythingChanged = true;
+                        }
                     }
+                });
+
+                if (anythingChanged) {
+                    this._log('poll: setMediaServers');
+                    this.vms.setMediaServers(this.systemId, cachedMediaServers, true);
                 }
-            }
-            if (anythingChanged) {
-                this._log('poll: setMediaServers');
-                this.vms.setMediaServers(this.systemId, cachedMediaServers, true);
             }
         });
     }
@@ -382,7 +387,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected _tryToRedirectToCamera () {
         const cid = this.vms.getLastAccessedCameraId();
         if (cid) {
-            this.router.navigate([cid], { relativeTo: this.route });
+            this.router.navigate([cid], { relativeTo: this.route, replaceUrl: true });
         }
     }
 }
