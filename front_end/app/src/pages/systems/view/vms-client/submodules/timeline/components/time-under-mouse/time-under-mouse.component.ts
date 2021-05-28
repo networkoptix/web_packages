@@ -7,6 +7,7 @@ import TimelineService from '../../services/timeline.service';
 import { Subscription } from 'rxjs';
 import * as df from 'dateformat';
 import { px } from '../../../../utils/type-aliases';
+import VideoManagementSystemService from '../../../vms/services/vms.service';
 
 const dateformat = df.default || df;
 
@@ -30,6 +31,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
 
     constructor(
         private self: ElementRef,
+        private vms: VideoManagementSystemService,
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
@@ -60,8 +62,8 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             this.self.nativeElement.style.left = `${offset}px`;
             // sometimes Infinity comes in as the timestamp and dateformat fails
             try {
-                this.date = dateformat(s.timeUnderMouse, 'ddd mmm dd yyyy');
-                this.time = dateformat(s.timeUnderMouse, 'HH:MM:ss');
+                this.date = dateformat(s.timeUnderMouse - this.vms.timeZoneOffset, 'ddd mmm dd yyyy');
+                this.time = dateformat(s.timeUnderMouse - this.vms.timeZoneOffset, 'HH:MM:ss');
             } catch (e) {
                 // console.error(e, s)
             }

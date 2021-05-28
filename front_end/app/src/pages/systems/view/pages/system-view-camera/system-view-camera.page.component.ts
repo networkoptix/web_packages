@@ -366,8 +366,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _getServerTimes () {
-        // TODO: caching
+        // TODO: caching?
         const result =  await this.system.getServerTimes();
+        // console.log('server times', result)
+        this.vms.serverTimes = result
         return result
     }
 
