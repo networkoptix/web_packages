@@ -1,13 +1,11 @@
+import { DOCUMENT }                               from '@angular/common';
 import {
     Component, OnInit, OnDestroy, ElementRef,
-    AfterViewInit, HostListener
+    AfterViewInit, HostListener, Inject
 }                                                 from '@angular/core';
 import { PlaybackQuality, PlaybackTransport }     from '../../view.types';
 import { ActivatedRoute }                         from '@angular/router';
-import {
-    NxSystemService,
-    NxSystem
-}                                                 from '../../../../../services/system.service';
+import { NxSystemService, NxSystem }              from '../../../../../services/system.service';
 import { NxAccountService }                       from '../../../../../services/account.service';
 import TimelineService                            from '../../vms-client/submodules/timeline/services/timeline.service';
 import TimelineExtendToNowService                 from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service';
@@ -21,10 +19,7 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import VmsState, { VMS_MODE }                     from '../../vms-client/submodules/vms/datatypes/VmsState';
 import FpsMeterService                            from '@services/fps-meter.service';
 import WebClientUxService, { WebclientUxState }   from '../../services/webclient-ux.service';
-import {
-    NxConfigService,
-    IConfig
-}                                                 from '../../../../../services/nx-config';
+import { NxConfigService, IConfig }               from '../../../../../services/nx-config';
 import { CameraQualityStorageService }            from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService }          from '../../services/cameraTransportStorage.service';
 import sidebarLayout                              from '../sidebarLayout.cfg';
@@ -36,6 +31,7 @@ import { filter, takeUntil }                      from 'rxjs/operators';
 import { UntilDestroy }                           from '@ngneat/until-destroy';
 import { NxLanguageProviderService }              from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }                from '../../../../../../language_i18n_static_types';
+import Hls from 'hls.js';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -48,6 +44,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     _log: Function
     _warn: Function
 
+    private readonly isMobile: boolean;
     public id: string
     public camera: ICamera
     public system: NxSystem
@@ -83,6 +80,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        utilsService: NxUtilsService,
         protected self: ElementRef,
         protected route: ActivatedRoute,
         protected vms: VideoManagementSystemService,
@@ -94,13 +92,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
         protected cameraQualityStorage: CameraQualityStorageService,
-        protected cameraTransportStorage: CameraTransportStorageService
+        protected cameraTransportStorage: CameraTransportStorageService,
+        @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
+        this.isMobile = this.isMobile = utilsService.isMobile() || utilsService.isTablet();
     }
 
     public handleControlsTogglingEarClick () {
@@ -151,7 +151,21 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.availableTransportsAndResolutions$
             .pipe(filter((TaR) => TaR !== undefined))
             .subscribe((transportsAndResolutions: AvailableTransportsAndResolutions) => {
-                this.transports = <PlaybackTransport[]>Object.keys(transportsAndResolutions);
+                const videoTypes = {
+                    ogg  : 'video/ogg',
+                    mp4  : 'video/mp4',
+                    webm : 'video/webm',
+                    hls  : 'application/x-mpegURL',
+                    rtsp : 'video/webm'
+                };
+                const video = this.document.createElement('video');
+                const isHlsSupported = Hls.isSupported();
+                this.transports = <PlaybackTransport[]>Object.keys(transportsAndResolutions)
+                    .filter((transport) => (
+                        transport === 'hls' && !this.isMobile
+                            ? isHlsSupported
+                            : video.canPlayType(videoTypes[transport] || transport) !== '')
+                    );
             });
 
         this.transports$.subscribe((transports) => {
@@ -159,10 +173,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.selectedTransport = undefined;
                 this.qualities = undefined;
             } else if (!transports.includes(this.selectedTransport)) {
-                this.selectedTransport = transports.slice().shift();
-                this.qualities = this.availableTransportsAndResolutions[this.selectedTransport];
+                this.resetTransport();
             }
-
+            this.qualities = this.availableTransportsAndResolutions[this.selectedTransport];
             this.transportError = (this.selectedTransport === undefined);
         });
 
@@ -210,7 +223,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     set selectedTransport (transport: PlaybackTransport) {
         this._log('setTransport', transport);
-        if (this.selectedTransport !== transport) {
+        if (transport && this.selectedTransport !== transport) {
             this.qualities = this.availableTransportsAndResolutions[transport];
             this.cameraTransportStorage.set(this.id, transport);
             this._log('actual selectedTransport change', transport);
@@ -227,10 +240,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.selectedQuality$.getValue();
     }
 
-    set selectedQuality (quality: PlaybackQuality) {
-        quality = (quality || 'auto').toLowerCase();
+    set selectedQuality (initialQuality: PlaybackQuality) {
+        const quality = (initialQuality || 'auto').toLowerCase();
         this._log('setQuality', quality);
-        if (this.selectedQuality !== quality) {
+        if (this.selectedQuality !== initialQuality) {
             this.cameraQualityStorage.set(this.id, quality);
             this._log('quality change', quality);
             this.playback.changeQuality(this.qualityFromVerbose(quality));
@@ -258,7 +271,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             case 'low':
                 return 'lo';
             case 'auto':
-                return 'lo';
+                return !this.camera?.disableDualStreaming ? 'lo' : 'hi';
             default:
                 return q;
         }
@@ -506,9 +519,17 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public resetTransport () {
         const transports = this.transports;
-        this.selectedTransport = (this.cameraTransportStorage.get(this.id) || (
-            transports.includes('hls') ? 'hls' : transports[0]
-        ));
+        let transport = this.cameraTransportStorage.get(this.id);
+        if (!transport) {
+            if (transports.includes('hls')) {
+                transport = 'hls';
+            } else if (transports.includes('webm')) {
+                transport = 'webm';
+            } else {
+                transport = transports[0];
+            }
+        }
+        this.selectedTransport = transport;
     }
 
     public onVideoDblClick (_: boolean) {

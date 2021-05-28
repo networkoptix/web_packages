@@ -69,6 +69,7 @@ export interface ICamera {
     isAuthorized: boolean,
 
     isScheduleEnabled: boolean,
+    disableDualStreaming: boolean,
 
     hasArchive: boolean,
     archiveRange: ISimpleTimeRange,

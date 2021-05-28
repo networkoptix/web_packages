@@ -34,6 +34,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         const isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
         return isMobile || (
             this.transport === 'webm' ||
+            this.transport === 'rtsp' ||
             // || this.transport === 'mpegts'
             // || this.transport === 'mpjpeg'
             this.transport === 'mp4'
