@@ -4,8 +4,10 @@
 . ../common.sh
 
 MODULE=cloud_portal
-VERSION=${CLOUD_PORTAL_VERSION:-$VERSION}
+BUILD_NUMBER=${BUILD_NUMBER:-0}
 BUILD_ARGS=(--build-arg CACHE_DATE=$(date +%s))
+
+VERSION="$(cat ../../version.txt).$BUILD_NUMBER"
 
 function build()
 {
@@ -41,7 +43,7 @@ function publish_deps()
     local dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     local img=009544449203.dkr.ecr.us-west-1.amazonaws.com/devtools/wheel_uploader:3.8-alpine3.12
 
-    [ -f ~/.pypirc ] || { echo "Error: you need section [local] in the ~/.pypirc file with artifactory credentials"; exit 1; } 
+    [ -f ~/.pypirc ] || { echo "Error: you need section [local] in the ~/.pypirc file with artifactory credentials"; exit 1; }
 
     docker pull $img
     docker run --rm -i -v ~/.pypirc:/root/.pypirc:ro $img < $dir/../../../cloud_portal/cloud/requirements.txt
