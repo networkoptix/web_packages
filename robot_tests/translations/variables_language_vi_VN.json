@@ -364,6 +364,7 @@
     "IP TEXT": "IP camera",
     "OS TEXT": "OS",
     "VERSION TEXT": "Phiên bản",
+    "SERVER PORT IS REQUIRED TEXT": "Server port is required",
     "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
     "SERVER RESTARTED TEXT": "Máy chủ đã khởi động lại thành công.",
     "HOURS TEXT": "giờ",

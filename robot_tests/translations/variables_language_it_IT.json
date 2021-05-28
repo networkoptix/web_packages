@@ -364,6 +364,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "Sistema operativo",
     "VERSION TEXT": "Versione",
+    "SERVER PORT IS REQUIRED TEXT": "Server port is required",
     "PORT TOO LOW TEXT": "I numeri di porta inferiori a 1024 sono limitati. Il server potrebbe diventare inaccessibile.",
     "SERVER RESTARTED TEXT": "Il server è stato riavviato correttamente.",
     "HOURS TEXT": "ore",
