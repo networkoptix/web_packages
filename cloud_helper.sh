@@ -229,7 +229,7 @@ function local_build() {
     REPO=$PWD
 
     pushd $BUILD_DIR
-        cp server-external/bin/external.dat $REPO/tools/docker
+        cp external.dat $REPO/tools/docker
     popd
 
     echo "Stop mediaserver"
