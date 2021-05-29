@@ -364,7 +364,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "BS",
     "VERSION TEXT": "Version",
-    "SERVER PORT IS REQUIRED TEXT": "Server port is required",
+    "SERVER PORT IS REQUIRED TEXT": "Serverport ist erforderlich",
     "PORT TOO LOW TEXT": "Portnummern unter 1024 sind eingeschränkt. Auf den Server kann nicht mehr zugegriffen werden.",
     "SERVER RESTARTED TEXT": "Server wurde erfolgreich neu gestartet.",
     "HOURS TEXT": "stunden",
