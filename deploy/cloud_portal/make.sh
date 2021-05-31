@@ -27,18 +27,6 @@ function stage()
     rm -rf stage/cloud/.idea
 }
 
-function stage_cmake()
-{
-    local cmakeBuildDirectory=$1
-    #local moduleName=$2
-
-    rm -rf stage
-
-    mkdir -p stage/cloud/static/common/static
-    rsync -a $cmakeBuildDirectory/cloud_portal/cloud_portal/cloud stage
-    rm -rf stage/cloud/.idea
-}
-
 function publish_deps()
 {
     local dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
