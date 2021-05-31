@@ -13,8 +13,9 @@ function build()
 {
     [ -z "$NX_PORTAL_DIR" ] && { echo "NX_PORTAL_DIR variable is unset"; exit 1; }
 
-    cd $NX_PORTAL_DIR/build_scripts
-    ./build.sh
+    pushd $NX_PORTAL_DIR/build_scripts
+        ./build.sh
+    popd
 }
 
 function stage()
