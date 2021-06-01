@@ -1,10 +1,13 @@
+from api.helpers.exceptions import ErrorCodes
+from api.tests.utils import MockResponse
 from api.views import utils
 
-from django.contrib.auth.models import AnonymousUser
-from django.core.cache import caches
+from django.contrib.auth.models import AnonymousUser, Group, Permission
+from django.core.cache import caches, cache
 
 from rest_framework import status
 
+import copy
 from datetime import datetime
 from dateutil import parser as date_parser
 import pytest
@@ -16,119 +19,6 @@ def cloud_capabilities(request):
     if request.param is not None:
         capabilities['integration_store_enabled'] = request.param
     return capabilities
-
-
-@pytest.fixture(scope='module')
-def customization_config():
-    return {
-        'app_types_for_platform': {'arm': ['client', 'server'], 'linux': ['bundle', 'client', 'server'],
-                                   'macos': ['client'], 'sdk': ['metadata_sdk', 'storage_sdk', 'video_source_sdk'],
-                                   'windows': ['bundle', 'client', 'server']},
-        'available_downloads_platform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'cloud_storage_enabled': False,
-        'cloud_storage_size': '53687091200', 'copyright_year': '2020', 'company_name': 'Network Optix',
-        'company_link': 'https://www.networkoptix.com', 'developers_enabled': True, 'feedback_enabled': True,
-        'integration_filter_items': [{'id': 'automation', 'name': 'Automation', 'enabled': True},
-                                     {'id': 'videoAnalytics', 'name': 'Video Analytics', 'enabled': True},
-                                     {'id': 'objectDetection', 'name': 'Object Detection', 'enabled': True},
-                                     {'id': 'eventDetection', 'name': 'Event Detection', 'enabled': True},
-                                     {'id': 'faceRecognition', 'name': 'Face Recognition', 'enabled': True},
-                                     {'id': 'licensePlateRecognition', 'name': 'License Plate Recognition',
-                                      'enabled': True},
-                                     {'id': 'health', 'name': 'Health Monitoring', 'enabled': False},
-                                     {'id': 'storage', 'name': 'Storage', 'enabled': True},
-                                     {'id': 'mine', 'name': 'My Integrations', 'enabled': True}],
-        'integration_filter_limitation': '12',
-        'integration_seo_page_description': 'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Nx Witness, all available in Nx Cloud so that you can find solutions to build and customize your IP Video system.',
-        'integration_store_enabled': True,
-        'landing_description': 'A simple way to connect to, manage and expand Nx Witness Systems. %CLOUD_HOST% - %CLOUD_LINK% test',
-        'health_monitor_cache_timeout': 60, 'public_downloads': True, 'public_releases': True,
-        'show_all_betas': False, 'show_analytics_events': True, 'sort_supported_devices_by_popularity': False,
-        'support_link': 'https://support.networkoptix.com',
-        'privacy_link': 'https://www.networkoptix.com/privacy-policy/',
-        'supported_resolutions': [{'value': '0', 'name': 'All'}, {'value': '84480', 'name': '1CIF'},
-                                  {'value': '168960', 'name': '2CIF'}, {'value': '337920', 'name': 'D1'},
-                                  {'value': '307200', 'name': 'VGA'}, {'value': '786432', 'name': 'SVGA'},
-                                  {'value': '921600', 'name': '720p'}, {'value': '1310720', 'name': '1mp'},
-                                  {'value': '2073600', 'name': '1080p'}, {'value': '1920000', 'name': '2mp'},
-                                  {'value': '3145728', 'name': '3mp'}, {'value': '4915200', 'name': '5mp'},
-                                  {'value': '8000000', 'name': '8mp'}, {'value': '10039296', 'name': '10mp'}],
-        'supported_hardware_types': [{'id': 'camera', 'label': 'Camera'},
-                                     {'id': 'multiSensorCamera', 'label': 'Multi-Sensor Camera'},
-                                     {'id': 'encoder', 'label': 'Encoder'}, {'id': 'dvr', 'label': 'DVR'},
-                                     {'id': 'other', 'label': 'Other'}],
-        'search_tags': [{'id': 'isAudioSupported', 'value': False}, {'id': 'isTwAudioSupported', 'value': False},
-                        {'id': 'isPtzSupported', 'value': False}, {'id': 'isAptzSupported', 'value': False},
-                        {'id': 'isFisheye', 'value': False}, {'id': 'isMdSupported', 'value': False},
-                        {'id': 'isIoSupported', 'value': False}, {'id': 'isH265', 'value': False},
-                        {'id': 'isMultiSensor', 'value': False}, {'id': 'isAnalyticsSupported', 'value': False}],
-        'tested_operating_systems': {'linux': 'Ubuntu LTS: 16.04, 18.04, 20.04',
-                                     'macos': 'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”.',
-                                     'windows': 'Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607'},
-        'vendors_shown': '30', 'cloud_name': 'Nx Cloud', 'vms_name': 'Nx Witness',
-        'push_config': {'apiKey': 'AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI',
-                        'authDomain': 'nx-push-test.firebaseapp.com',
-                        'databaseURL': 'https://nx-push-test.firebaseio.com', 'projectId': 'nx-push-test',
-                        'storageBucket': 'nx-push-test.appspot.com', 'messagingSenderId': '627461092708',
-                        'appId': '1:627461092708:web:1b140238961b4213'}, 'google_tag_manager_id': '  ',
-        'trial_license_key': '0000-0000-0000-0005'
-    }
-
-
-@pytest.fixture(scope='module')
-def settings_from_cache():
-    return {
-        'appTypesForPlatform': {'arm': ['client', 'server'], 'linux': ['bundle', 'client', 'server'],
-                                'macos': ['client'], 'sdk': ['metadata_sdk', 'storage_sdk', 'video_source_sdk'],
-                                'windows': ['bundle', 'client', 'server']},
-        'availableDownloadsPlatform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'cloudName': 'Nx Cloud',
-        'vmsName': 'Nx Witness', 'cloudStorageEnabled': False, 'cloudStorageSize': '53687091200',
-        'copyrightYear': '2020', 'companyName': 'Network Optix', 'companyLink': 'https://www.networkoptix.com',
-        'developersEnabled': True, 'feedbackEnabled': True,
-        'integrationFilterItems': [{'id': 'automation', 'name': 'Automation', 'enabled': True},
-                                   {'id': 'videoAnalytics', 'name': 'Video Analytics', 'enabled': True},
-                                   {'id': 'objectDetection', 'name': 'Object Detection', 'enabled': True},
-                                   {'id': 'eventDetection', 'name': 'Event Detection', 'enabled': True},
-                                   {'id': 'faceRecognition', 'name': 'Face Recognition', 'enabled': True},
-                                   {'id': 'licensePlateRecognition', 'name': 'License Plate Recognition',
-                                    'enabled': True}, {'id': 'health', 'name': 'Health Monitoring', 'enabled': False},
-                                   {'id': 'storage', 'name': 'Storage', 'enabled': True},
-                                   {'id': 'mine', 'name': 'My Integrations', 'enabled': True}],
-        'integrationFilterLimitation': '12',
-        'integrationSeoPageDescription': 'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Nx Witness, all available in Nx Cloud so that you can find solutions to build and customize your IP Video system.',
-        'integrationStoreEnabled': True,
-        'landingDescription': 'A simple way to connect to, manage and expand Nx Witness Systems. %CLOUD_HOST% - %CLOUD_LINK% test',
-        'healthMonitorCacheTimeout': 60, 'trafficRelayHost': '{systemId}.relay-bur.vmsproxy.hdw.mx',
-        'publicDownloads': True, 'publicReleases': True, 'showAllBetas': False, 'showAnalyticsEvents': True,
-        'sortSupportedDevicesByPopularity': False,
-        'testedOperatingSystems': {'linux': 'Ubuntu LTS: 16.04, 18.04, 20.04',
-                                   'macos': 'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”.',
-                                   'windows': 'Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607'},
-        'supportLink': 'https://support.networkoptix.com',
-        'privacyLink': 'https://www.networkoptix.com/privacy-policy/',
-        'supportedResolutions': [{'value': '0', 'name': 'All'}, {'value': '84480', 'name': '1CIF'},
-                                 {'value': '168960', 'name': '2CIF'}, {'value': '337920', 'name': 'D1'},
-                                 {'value': '307200', 'name': 'VGA'}, {'value': '786432', 'name': 'SVGA'},
-                                 {'value': '921600', 'name': '720p'}, {'value': '1310720', 'name': '1mp'},
-                                 {'value': '2073600', 'name': '1080p'}, {'value': '1920000', 'name': '2mp'},
-                                 {'value': '3145728', 'name': '3mp'}, {'value': '4915200', 'name': '5mp'},
-                                 {'value': '8000000', 'name': '8mp'}, {'value': '10039296', 'name': '10mp'}],
-        'supportedHardwareTypes': [{'id': 'camera', 'label': 'Camera'},
-                                   {'id': 'multiSensorCamera', 'label': 'Multi-Sensor Camera'},
-                                   {'id': 'encoder', 'label': 'Encoder'}, {'id': 'dvr', 'label': 'DVR'},
-                                   {'id': 'other', 'label': 'Other'}],
-        'searchTags': [{'id': 'isAudioSupported', 'value': False}, {'id': 'isTwAudioSupported', 'value': False},
-                       {'id': 'isPtzSupported', 'value': False}, {'id': 'isAptzSupported', 'value': False},
-                       {'id': 'isFisheye', 'value': False}, {'id': 'isMdSupported', 'value': False},
-                       {'id': 'isIoSupported', 'value': False}, {'id': 'isH265', 'value': False},
-                       {'id': 'isMultiSensor', 'value': False}, {'id': 'isAnalyticsSupported', 'value': False}],
-        'vendorsShown': '30', 'pushConfig': {'apiKey': 'AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI',
-                                             'authDomain': 'nx-push-test.firebaseapp.com',
-                                             'databaseURL': 'https://nx-push-test.firebaseio.com',
-                                             'projectId': 'nx-push-test', 'storageBucket': 'nx-push-test.appspot.com',
-                                             'messagingSenderId': '627461092708',
-                                             'appId': '1:627461092708:web:1b140238961b4213'},
-        'googleTagManagerId': '  ', 'trialLicenseKey': '0000-0000-0000-0005'
-    }
 
 
 def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings):
@@ -253,5 +143,305 @@ class TestLanguage:
         active_user.refresh_from_db()
         assert active_user.language == 'es_ES'
 
-class DownloadHistory:
-    pass
+
+@pytest.fixture
+def download_user(active_user):
+    group = Group.objects.create(name='downloader')
+    releases_permission = Permission.objects.filter(codename='can_view_release').first()
+    group.permissions.add(releases_permission)
+    active_user.groups.add(group)
+    return active_user
+
+
+class TestDownloadHistory:
+    downloads_json_data = {'d1': 'd1val', 'd2': 'd2val'}
+
+    @pytest.fixture(autouse=True)
+    def setup(self, download_user, mocker, arf):
+        self.user = download_user
+        self.arf = arf
+        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
+        self.settings_mock.return_value = {'publicReleases': True, 'showAllBetas': True}
+
+    def make_request(self):
+        request = self.arf.get('/api/utils/downloads/history')
+        request.user = self.user
+        request.session = {}
+        return utils.downloads_history(request)
+
+    def test_no_permission_not_public(self, django_user_model):
+        self.settings_mock.return_value['publicReleases'] = False
+        self.user = django_user_model.objects.create()
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_json_not_found(self, mocker):
+        downloads_json = mocker.patch.object(utils.requests, 'get')
+        downloads_json.return_value.status_code = status.HTTP_404_NOT_FOUND
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert not response.data
+
+    def test_show_betas(self, mocker):
+        self.settings_mock.return_value['showAllBetas'] = True
+        downloads_request = mocker.patch.object(utils.requests, 'get')
+        downloads_request.return_value.json.return_value = self.downloads_json_data
+        downloads_request.return_value.status_code = status.HTTP_200_OK
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == self.downloads_json_data
+        assert 'betas' not in response.data
+
+    def test_not_show_betas(self, mocker):
+        downloads_request = mocker.patch.object(utils.requests, 'get')
+        filtered_data = self.downloads_json_data.copy()
+        filtered_data['betas'] = 'betasHere'
+        downloads_request.return_value.status_code = status.HTTP_200_OK
+        downloads_request.return_value.json.return_value = filtered_data
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == filtered_data
+
+
+class DownloadsBase:
+    @pytest.fixture(autouse=True)
+    def setup(self, download_user, mocker, arf, downloads_json, updates_json, settings_from_cache):
+        def mock_requests(*args, **kwargs):
+            url = kwargs.get('method', '') or (args[0] if len(args) >= 1 else None)
+            if 'downloads.json' in url:
+                return MockResponse(json=downloads_json)
+            elif 'updates.json' in url:
+                return MockResponse(json=updates_json)
+
+        self.downloads_json = downloads_json
+        self.updates_json = updates_json
+        self.arf = arf
+        self.user = download_user
+        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
+        self.settings_mock.return_value = settings_from_cache
+        self.downloads_request = mocker.patch.object(utils.requests, 'get')
+        self.downloads_request.side_effect = mock_requests
+        caches['global'].clear()
+
+
+class TestDownloadBuild(DownloadsBase):
+    def make_request(self, build_number='12345'):
+        request = self.arf.get('/api/utils/downloads/12345')
+        request.user = self.user
+        request.session = {}
+        return utils.download_build(request, build_number)
+
+    def test_no_permission_not_public(self, django_user_model):
+        self.settings_mock.return_value['publicReleases'] = False
+        self.user = django_user_model.objects.create()
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_build_regex(self):
+        # Fails regex
+        response = self.make_request(build_number='fail')
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.data['resultCode'] == ErrorCodes.bad_request.value
+
+        # Sucessful
+        response = self.make_request(build_number='4.2.0.32840')
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_build_does_not_exist(self):
+        self.downloads_request.return_value = MockResponse(status_code=400)
+        self.downloads_request.side_effect = None
+        response = self.make_request(build_number='4.1.242')
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.data['resultCode'] == ErrorCodes.not_found.value
+
+    def test_no_release_notes(self):
+        del self.downloads_json['releaseNotes']
+        response = self.make_request(build_number='4.2.0.32840')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.data['resultCode'] == ErrorCodes.not_found.value
+
+    def test_no_customization(self, settings, other_portal):
+        settings.CUSTOMIZATION = 'other'
+        response = self.make_request(build_number='4.2.0.32840')
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_success(self):
+        response = self.make_request(build_number='4.2.0.32840')
+        assert response.status_code == status.HTTP_200_OK
+        expected_downloads_json = copy.deepcopy(self.downloads_json)
+        expected_downloads_json['updatesPrefix'] = self.updates_json['default']['updates_prefix']
+        assert response.data == expected_downloads_json
+
+
+class TestDownloads(DownloadsBase):
+    def make_request(self):
+        request = self.arf.get('/api/utils/downloads')
+        request.user = self.user
+        request.session = {}
+        return utils.downloads(request)
+
+    def test_success(self):
+        assert not caches['global'].get('downloads_default')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_default')
+
+        # With cache
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_default')
+
+    def test_downloads_not_public(self):
+        self.settings_mock.return_value['publicDownloads'] = False
+        self.user = AnonymousUser()
+
+        response = self.make_request()
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_clear_cache(self, mocker):
+        assert not caches['global'].get('downloads_default')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert caches['global'].get('downloads_default')
+
+        cache_mock = mocker.patch.object(utils, 'caches')
+        cache_mock['global'].set = mocker.MagicMock()
+        request = self.arf.post('/api/utils/downloads')
+        request.user = self.user
+        request.session = {}
+        utils.downloads(request)
+        cache_mock['global'].set.assert_called_with('downloads_default', False)
+
+
+class TestGetSettings:
+    @pytest.fixture(autouse=True)
+    def setup(self, settings_from_cache, mocker, arf, active_user):
+        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
+        self.settings_mock.return_value = settings_from_cache
+        self.arf = arf
+        self.user = active_user
+
+    def make_request(self):
+        request = self.arf.get('/api/utils/settings')
+        request.user = self.user
+        request.session = {}
+        return utils.get_settings(request)
+
+    def test_user_no_perms(self):
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+
+    def test_no_version_id(self):
+        self.settings_mock.return_value['version_id'] = 'test'
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert 'version_id' not in response.data
+
+    def test_cloud_merge_false(self):
+        self.settings_mock.return_value['cloudMerge'] = False
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert 'cloudMerge' not in response.data
+
+    def test_cloud_merge_true(self):
+        self.settings_mock.return_value['cloudMerge'] = True
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert 'cloudMerge' in response.data
+        assert response.data['cloudMerge']
+
+    def test_show_all_betas_removed(self):
+        self.settings_mock.return_value['showAllBetas'] = True
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert 'showAllBetas' not in response.data
+
+    def test_developers_with_perm(self, add_permission):
+        self.settings_mock.return_value['developersEnabled'] = False
+        add_permission(self.user, 'access_developers')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert response.data['developersEnabled']
+
+    def test_developers_without_perm(self):
+        self.settings_mock.return_value['developersEnabled'] = False
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert not response.data['developersEnabled']
+
+    def test_developers_enabled(self):
+        self.settings_mock.return_value['developersEnabled'] = True
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert response.data['developersEnabled']
+
+    def test_integrations_with_perm(self, add_permission):
+        self.settings_mock.return_value['integrationStoreEnabled'] = False
+        add_permission(self.user, 'access_integration_store')
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert response.data['integrationStoreEnabled']
+
+    def test_integrations_without_perm(self):
+        self.settings_mock.return_value['integrationStoreEnabled'] = False
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert not response.data['integrationStoreEnabled']
+
+    def test_integrations_enabled(self):
+        self.settings_mock.return_value['integrationStoreEnabled'] = True
+        response = self.make_request()
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data
+        assert response.data['integrationStoreEnabled']
+
+
+class TestIPVD:
+    def test_post(self, arf, mocker):
+        cache_mock = mocker.patch.object(utils.cache, 'set')
+        request = arf.post('/api/ipvd')
+        response = utils.get_ipvd(request)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {'IPVD cache cleared'}
+        cache_mock.assert_called_with('ipvd', {})
+
+    def test_get(self, arf, mocker, ipvd_data, ipvd_data_processed):
+        ipvd_mock = mocker.patch.object(utils.requests, 'get')
+        ipvd_mock.return_value = MockResponse(json=ipvd_data)
+
+        request = arf.get('/api/ipvd')
+        response = utils.get_ipvd(request)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == ipvd_data_processed
+        ipvd_data_processed['cached'] = True
+
+        # Test cached
+        request = arf.get('/api/ipvd')
+        response = utils.get_ipvd(request)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == ipvd_data_processed
+
+
+def test_cloud_capabilities_view(arf, mocker):
+    capabilities_mock = mocker.patch.object(utils, 'get_cloud_capabilities_from_cache')
+    capabilities_mock.return_value = mocker.sentinel.capabilities
+    request = arf.get('/api/utils/cloudCapabilities/')
+    response = utils.cloud_capabilities(request)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data == mocker.sentinel.capabilities

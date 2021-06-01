@@ -1,6 +1,7 @@
 import api.controllers.cloud_api as cloud_api
 from api.controllers.cloud_api import *
 from api.helpers.exceptions import *
+from api.tests.utils import MockResponse
 
 import pytest
 from unittest import TestCase
@@ -54,15 +55,6 @@ class TestAPIWrappers:
     def test_delete_wrapper(self, mocker):
         request_mock = mocker.patch.object(cloud_api.requests, 'delete')
         self.check_wrapper(delete_wrapper, request_mock, include_params=False, include_json=False)
-
-
-class MockResponse:
-    def __init__(self, **kwargs):
-        self.status_code = kwargs.get('status_code', status.HTTP_200_OK)
-        self.json_data = kwargs.get('json', {})
-
-    def json(self):
-        return self.json_data
 
 
 class TestSystemAPI:

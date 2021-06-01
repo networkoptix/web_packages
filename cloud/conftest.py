@@ -72,7 +72,7 @@ def default_customization(english_language, db):
 
 @pytest.fixture
 def cloud_portal_type(db):
-    return AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
+    return AssetType.get_model_by_type(AssetType.ASSET_TYPES.cloud_portal)
 
 
 @pytest.fixture
@@ -80,6 +80,31 @@ def default_portal(default_customization, cloud_portal_type, db):
     return Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)[0]
 
 
+@pytest.fixture()
+def other_customization(english_language, db):
+    return Customization.objects.get_or_create(name='other', default_language=english_language)[0]
+
+
+@pytest.fixture()
+def other_portal(other_customization, cloud_portal_type, db):
+    return Asset.objects.get_or_create(name='Other Cloud', asset_type=cloud_portal_type)[0]
+
+
 @pytest.fixture
 def active_user(db, django_user_model):
     return django_user_model.objects.create(email='active_user@fixture.com', is_active=True)
+
+
+@pytest.fixture()
+def add_permission(db, cloud_portal_type):
+    def _add_permission(user, codename):
+        group = Group.objects.create(name=f'{user.email}_{codename}_auto',)
+        group.options.all_assets = True
+        group.options.save()
+        UserGroupsToAssetType.objects.get_or_create(asset_type=cloud_portal_type, group=group)
+        permission = Permission.objects.filter(codename=codename).first()
+        if not permission:
+            raise Exception('Permission not found')
+        group.permissions.add(permission)
+        user.groups.add(group)
+    return _add_permission
