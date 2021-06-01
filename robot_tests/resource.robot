@@ -1138,7 +1138,7 @@ Create Base System
 Delete Base Cloud System
     [Documentation]    Wipe out all resources related to "Create Base Cloud System"
     Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
-    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
+    FOR    ${email}    IN   $system['users'].values()    ${system}[owner]    ${email noperm}
         Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
     END
     Delete Docker Server    ${system}[id]

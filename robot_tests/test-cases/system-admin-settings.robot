@@ -6,11 +6,6 @@ Test Teardown     System Admin Test Restart
 Suite Teardown    System Admin Suite Teardown
 Force Tags        system
 
-
-*** Variables ***
-${server url}    https://${QABURBANK IP}:${system}[port]
-
-
 *** Test Cases ***
 Should show system settings and security settings and they should match settings on server
     [Tags]    system settings    cloud    webadmin    threaded

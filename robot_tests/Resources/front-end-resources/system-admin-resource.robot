@@ -4,22 +4,12 @@ Library    String
 
 # Setups and teardowns
 System Admin Suite Setup
-#    Create Base Cloud System    image=${IMAGE 4.3}
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
     ${rand}=   Generate Random String
     ${system}=   Create Base System    system_admin_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
-    ${local system}=   Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
-#    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
-#    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
-#        ...    ${local auth}
-#        ...    https://${QABURBANK IP}:${local system}[port]
-#        ...    local_viewer
-#        ...    ${permissions}[viewer]
-#        ...    noptixautoqa+local_viewer@gmail.com
-#        ...    local_viewer
-#        ...    ${base password}
-#        ...    is cloud=${False}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
@@ -39,8 +29,8 @@ System Admin Test Restart
     Close Modal If There
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
-    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-#    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
+    Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
     Run Keyword If Test Failed    Start Docker Server    ${system}[cloud id]
 
 # Waits
