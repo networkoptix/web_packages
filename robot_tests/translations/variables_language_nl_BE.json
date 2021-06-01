@@ -364,6 +364,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "OS",
     "VERSION TEXT": "Versie",
+    "SERVER PORT IS REQUIRED TEXT": "Serverpoort is vereist",
     "PORT TOO LOW TEXT": "Poortnummers minder dan 1024 zijn gereserveerd. De server kan ontoegankelijk worden.",
     "SERVER RESTARTED TEXT": "Server is succesvol opnieuw gestart.",
     "HOURS TEXT": "uren",

@@ -364,6 +364,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "OS",
     "VERSION TEXT": "バージョン",
+    "SERVER PORT IS REQUIRED TEXT": "サーバーポートが必要です",
     "PORT TOO LOW TEXT": "1024未満のポート番号は制限されています。サーバーにアクセスできなくなる可能性があります。",
     "SERVER RESTARTED TEXT": "サーバーは正常に再起動しました。",
     "HOURS TEXT": "時間",

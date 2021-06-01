@@ -124,12 +124,21 @@ export class PlaybackService implements OnDestroy {
         this._emit();
     }
 
-    public playArchive(t: ms, paused = false) {
+    public playArchive (t: ms, paused = false) {
         if (!this.canPlayArchive(t)) {
             return;
         }
         if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.stop();
+            setTimeout(() => this.playArchive(t, paused), 0)
+            return
+        }
+        const LAST_MINUTE_SIZE = 9e4 // 1.5 minutes
+        if (t > Date.now() - LAST_MINUTE_SIZE || (
+            !this.vms.selectedCamera.isThereRecord(t) &&
+            !this.vms.selectedCamera.getNextRecord(t)
+        )) {
+            return this.playLive()
         }
         this._state = createInitialArchiveState(
             this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality, t),
@@ -423,8 +432,8 @@ export class PlaybackService implements OnDestroy {
         if (this.vms.selectedCamera && this._state.mode === PLAYBACK_MODE.ARCHIVE) {
             const state = this._state as ArchivePlaybackState;
 
-            if (!_isThereRecord(this.vms.selectedCamera.archive, state.currentTime)) {
-                const nextChunk = _getNextRecord(this.vms.selectedCamera.archive, state.currentTime);
+            if (!this.vms.selectedCamera.isThereRecord(state.currentTime)) {
+                const nextChunk = this.vms.selectedCamera.getNextRecord(state.currentTime);
                 if (nextChunk) {
                     const wasVisible = !this.isBeyondVisibleRange;
 
@@ -507,51 +516,6 @@ export class PlaybackService implements OnDestroy {
         //   console.log('no real source change', this.state.sourceUrl)
         // }
     }
-}
-
-function _isThereRecord (archive: Array<IRecord>, t: ms): boolean {
-    let l = 0;
-    let r = archive.length - 1;
-    while (l < r) {
-        const m = l + Math.floor((r - l) / 2);
-        const rec = archive[m];
-        if (rec.start <= t && rec.end >= t) {
-            return true;
-        }
-        if (rec.start > t) {
-            r = (m < r) ? m : (r - 1);
-        } else {
-            l = (m > l) ? m : (l + 1);
-        }
-    }
-    return false;
-
-    // naive linear search approach
-    // return !!archive.find(r => r.start <= t && r.end >= t)
-}
-
-function _getNextRecord (archive: Array<IRecord>, t: ms): IRecord {
-    let l = 0;
-    let r = archive.length - 1;
-    while (l < r) {
-        const m = l + Math.floor((r - l) / 2);
-        const rec = archive[m];
-        const prevRec = m > 0 ? archive[m - 1] : null;
-        if (rec.start >= t && (!prevRec || prevRec.end <= t)) {
-            return rec;
-        }
-        if (rec.start > t) {
-            r = (m < r) ? m : (r - 1);
-        } else {
-            l = (m > l) ? m : (l + 1);
-        }
-    }
-    if (l === r && archive[l].start >= t) {
-        return archive[l];
-    }
-    return null;
-    // naive linear search approach
-    // return archive.find(r => r.start >= t)
 }
 
 export default PlaybackService;
