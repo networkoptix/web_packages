@@ -6,6 +6,11 @@ Test Teardown     System Admin Test Restart
 Suite Teardown    System Admin Suite Teardown
 Force Tags        system
 
+
+*** Variables ***
+${server url}    https://${QABURBANK IP}:${system}[port]
+
+
 *** Test Cases ***
 Should show system settings and security settings and they should match settings on server
     [Tags]    system settings    cloud    webadmin    threaded
@@ -79,7 +84,7 @@ Systems Settings Block is Available for Administrator or Owner
     Log    Preconditions
     Set System Settings    ${local auth}    ${server url}    ${default settings}
 
-    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+    FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Wait Until Settings Are Visible
         Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -91,7 +96,7 @@ Systems Settings Block is Available for Administrator or Owner
 
 System and Security Settings block is not available for other users
     [Tags]    C69737    C65698    cloud    webadmin    system settings     threaded
-    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]     ${users}[custom]
+    FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
         ...    //h2[contains(text(), "${system}[name]")]
@@ -149,10 +154,10 @@ Moving to a different page after making changes in System Settings without savin
     Log    Step 3
     Click Button    ${DISCARD CHANGES BUTTON}
     Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
-    Wait Until Location is    ${env}/systems/${system}[id]/health/alerts
+    Wait Until Location is    ${env}/systems/${system}[cloud id]/health/alerts
 
     Log    Step 4
-    Go To    ${env}/systems/${system}[id]
+    Go To    ${env}/systems/${system}[cloud id]
     Wait Until Settings Are Visible
     FOR    ${setting}    IN    @{tested settings}
         Change Setting     ${setting}
@@ -369,8 +374,8 @@ Security block is available for administrator or owner
     Set System Settings    ${local auth}    ${server url}     ${default settings}
 
     Log    Step 1, 2
-    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
-    Log in to user and system    ${user}    ${system}[id]
+    FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
+    Log in to user and system    ${user}    ${system}[cloud id]
         Wait Until Settings Are Visible    timeout=60
         Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
         Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
@@ -383,7 +388,7 @@ Security block is available for administrator or owner
 
 System Settings block is not available when the system is offline
     [Tags]    C69744    cloud    system settings    threaded
-    Stop Docker Server    ${system}[cont]
+    Stop Docker Server    ${system}[id]
     Log in to system    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
@@ -391,13 +396,13 @@ System Settings block is not available when the system is offline
     ...    ${PLACEHOLDER ICON}
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
-    Start Docker Server    ${system}[cont]
+    Start Docker Server    ${system}[id]
 
 System settings block view for different System versions
     [Tags]    C69743    C65829    cloud    system settings    threaded
     ${4.0 system}=   Setup Docker System    image=${image 4.0}    cloud email=${EMAIL OWNER}
     Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
-    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
+    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
     ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[id]
     ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
     Common Restart Logout    ${ENV}
@@ -654,7 +659,7 @@ Check HTTPS traffic encryption
     Should Be Equal As Strings    ${resp}    200
 
     Log    Step 5
-    Go To    ${env}/systems/${system}[id]
+    Go To    ${env}/systems/${system}[cloud id]
     Wait Until Settings Are Visible
     Change Setting And Save    ${ALLOW ONLY SECURE CHECKBOX}
 
@@ -680,7 +685,7 @@ Security block view for 3 dot 2 System
     [Tags]    C65829    cloud    system settings    threaded
     Log    Preconditions
     Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
-    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${local auth}
+    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
 
     Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
     Wait Until Settings Are Visible    old system=True
