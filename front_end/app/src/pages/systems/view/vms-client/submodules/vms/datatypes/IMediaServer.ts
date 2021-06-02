@@ -7,6 +7,7 @@ export interface IMediaServer {
     networkAddresses: string,
     ip?: string,
     port?: string,
+    url?: string,
     cameras: Array<ICamera>,
 }
 
