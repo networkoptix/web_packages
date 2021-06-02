@@ -304,12 +304,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     // })
                 })).then(() => {
                     // console.log('archiveRanges', archiveRanges)
-                    cachedMediaServers = mediaServers.map(ms => ({
-                        id      : ms.id,
-                        name    : ms.name,
-                        url     : ms.url,
-                        status  : ms.status,
-                        cameras : ms.cameras.map(c => {
+                    cachedMediaServers = mediaServers.map(ms => NxUtilsService.formatURL(({
+                        id               : ms.id,
+                        name             : ms.name,
+                        networkAddresses : ms.networkAddresses,
+                        status           : ms.status,
+                        cameras          : ms.cameras.map(c => {
                             this.hasCameras = true;
                             const result = new Camera(
                                 c.id,
@@ -328,7 +328,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             result.parseAdditionalParams(c.addParams);
                             return result;
                         })
-                    }));
+                    })));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
                     this._log(`system ${this.system.id} view initialized`, this.hasCameras);
