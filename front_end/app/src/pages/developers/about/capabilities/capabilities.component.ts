@@ -7,7 +7,7 @@ import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-capabilities',
     templateUrl : 'capabilities.component.html',

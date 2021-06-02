@@ -1,0 +1,154 @@
+#!/bin/bash
+set -ex
+
+echo "Running with args: $@"
+echo "Environment:"
+env
+echo "---------------------------"
+
+PORTAL_WORKERS=${PORTAL_WORKERS:-1}
+
+function update_with_module_configuration()
+{
+    local config_file=$1
+    local configuration=$2
+
+    echo "$configuration" | /usr/local/bin/merge_config.py "$config_file"
+}
+
+function instantiate_config()
+{
+    export CUSTOMIZATION=$1
+    export CLOUD_PORTAL_CONF_DIR=$CLOUD_PORTAL_BASE_CONF_DIR/$customization
+    mkdir -p $CLOUD_PORTAL_CONF_DIR
+
+    local CLOUD_PORTAL_CONF_TEMPLATE=$CLOUD_PORTAL_BASE_CONF_DIR/_source/cloud_portal.yaml
+    local CLOUD_PORTAL_CONF=$CLOUD_PORTAL_CONF_DIR/cloud_portal.yaml
+    local CLOUD_PORTAL_LOCK=${CLOUD_PORTAL_CONF}.lock
+
+    local CLOUD_PORTAL_HOST_var=CLOUD_PORTAL_HOST_$customization
+    export CLOUD_PORTAL_HOST=${!CLOUD_PORTAL_HOST_var:-$CLOUD_PORTAL_HOST}
+
+    (
+        flock -n 9 || exit 1
+        tmp=$(mktemp)
+
+        envsubst < $CLOUD_PORTAL_CONF_TEMPLATE > $tmp
+        mv $tmp $CLOUD_PORTAL_CONF
+
+        if [ -n "$MODULE_CONFIGURATION" ]
+        then
+            update_with_module_configuration $CLOUD_PORTAL_CONF "$MODULE_CONFIGURATION"
+        fi
+
+        rm $CLOUD_PORTAL_LOCK
+    ) 9> $CLOUD_PORTAL_LOCK
+
+}
+
+function write_my_cnf()
+{
+    cat > ~/.my.cnf << EOF
+[client]
+user = $DB_USER
+password = $DB_PASSWORD
+host = $DB_HOST
+port = $DB_PORT
+database = $DB_NAME
+EOF
+}
+
+function instantiate_configs()
+{
+    ORIG_CUSTOMIZATION=$CUSTOMIZATION
+
+    for customization in $ALL_CUSTOMIZATIONS
+    do
+        instantiate_config $customization
+    done
+
+    CUSTOMIZATION=$ORIG_CUSTOMIZATION
+}
+
+for command in $@
+do
+    case "$command" in
+        migratedb)
+            write_my_cnf
+            python manage.py resetdeploymentstatus
+            echo "CREATE DATABASE IF NOT EXISTS $DB_NAME" | mysql -Dinformation_schema
+
+            yes "yes" | python manage.py migrate
+            python manage.py readstructure
+            sleep 10 # Wait a bit to make sure cache is set
+            ;;
+        config)
+            instantiate_configs
+            ;;
+        copystatic)
+            cp -R /app/app/static /static_volume
+            ;;
+        web)
+            write_my_cnf
+            sleep 10
+            if ! python manage.py healthcheck; then
+                sleep 10
+                exit
+            fi
+
+            # On non-prod instances block webcrawlers
+            if [ $INSTANCE_NAME != "prod" ]; then
+                sed -i 's$<base href="/">$<base href="/"><meta name="robots" content="noindex,nofollow">$g' static/_source/*/static/index.html
+                sed -i 's/allow/disallow/g' static/_source/*/static/robots.txt
+
+                # Hash needs to be recalculated since index.html was changed
+                for skinDir in static/_source/*/
+                do
+                  index_sha1=$(sha1sum "$skinDir"static/index.html | cut -d " " -f 1)
+                  sed -i 's/\(index.html": "\).*"/\1'"$index_sha1"'"/g' "$skinDir"static/ngsw.json
+                done
+
+            fi
+            python manage.py filldata
+            python manage.py filldata --preview=True &
+
+            echo "Customization is $CUSTOMIZATION. Instance name is $INSTANCE_NAME"
+            if [ "$CUSTOMIZATION" == "default" ]; then
+                wget -O- http://depcon.hdw.mx/api/updateInstanceStatus --post-data="instance=$INSTANCE_NAME"
+            fi
+
+            find /app/app/static | xargs touch
+            exec gunicorn cloud.wsgi --capture-output --workers ${PORTAL_WORKERS} --bind :5000 --log-level=debug --timeout 300
+            ;;
+        celery)
+            write_my_cnf
+            rm -f /tmp/*.pid
+
+            echo $'\n'Notifications started: Version $VERSION$'\n'
+            exec celery worker -A notifications -l info --concurrency=1 --pidfile=/tmp/celery-w1.pid
+            ;;
+        celery_beat)
+            write_my_cnf
+
+            echo Starting celery beat: Version $VERSION$'\n'
+            exec celery -A notifications beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+            ;;
+        broadcast_notifications)
+            write_my_cnf
+            rm -f /tmp/*.pid
+
+            echo $'\n'Broadcast notifications started: Version $VERSION$'\n'
+            exec celery worker -Q broadcast-notifications -A notifications -l info -B --concurrency=1 --pidfile=/tmp/celery-w1.pid
+            ;;
+        push_notifications)
+            write_my_cnf
+            rm -f /tmp/*.pid
+
+            echo $'\n'Push Notifications started: Version $VERSION$'\n'
+            exec celery worker -A notifications -Q push-notification -l info --pidfile=/tmp/celery-w1.pid
+            ;;
+        *)
+            echo Usage: cloud_portal '[web|broadcast_notifications|push_notifications|celery|celery_beat|config|copystatic|migratedb]'
+            ;;
+    esac
+done

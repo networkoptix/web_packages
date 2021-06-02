@@ -104,9 +104,7 @@ cat static/version.txt >&2
 
 #Pack
 echo "Pack external.dat" >&2
-zip -qq -r external.dat ./static
-mkdir -p ../server-external/bin
-mv external.dat ../server-external/bin/external.dat
+zip -qq -r "../external.dat" ./static
 popd
 
 echo "Webadmin build done" >&2

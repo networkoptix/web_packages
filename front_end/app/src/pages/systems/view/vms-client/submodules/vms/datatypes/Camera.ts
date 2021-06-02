@@ -32,6 +32,7 @@ export class Camera implements ICamera {
         public readonly url: string,
         public readonly status: CAMERA_STATUS,
         public readonly isScheduleEnabled: boolean,
+        public readonly disableDualStreaming: boolean,
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
         public readonly thumbnailUrl: string | undefined = undefined,
@@ -76,6 +77,7 @@ export class Camera implements ICamera {
                 case 'hls':
                 case 'webm':
                 case 'mp4':
+                case 'rtsp':
                     return true;
                 default:
                     return false;
@@ -99,7 +101,7 @@ export class Camera implements ICamera {
                 return ['', 'hi'];
             } else {
                 const hlsResult = [''];
-                if (result.filter(r => this._resolutionIsLow(r)).length) {
+                if (!this.disableDualStreaming && result.filter(r => this._resolutionIsLow(r)).length) {
                     hlsResult.push('lo');
                 }
                 if (result.filter(r => !this._resolutionIsLow(r)).length) {
@@ -163,6 +165,19 @@ export class Camera implements ICamera {
 
     protected _initBirdView () {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
+    }
+
+    public setNewlyRecordedChunks (rs: CameraArchive) {
+        // console.log('SNR', rs, this)
+        this._birdViewTree.newlyRecorded = rs
+    }
+
+    public isThereRecord (t: ms) {
+        return this._birdViewTree.isThereRecord(t)
+    }
+
+    public getNextRecord (t: ms): ISimpleTimeRange {
+        return this._birdViewTree.getNextRecord(t)
     }
 }
 

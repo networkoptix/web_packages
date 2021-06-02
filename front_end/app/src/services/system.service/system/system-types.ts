@@ -99,6 +99,7 @@ export interface NxCamera {
     url: string;
     status: string; // TODO: enum (@gbezyuk)
     scheduleEnabled: boolean;
+    disableDualStreaming: boolean;
     addParams: Array<AdditionalParam>;
 }
 

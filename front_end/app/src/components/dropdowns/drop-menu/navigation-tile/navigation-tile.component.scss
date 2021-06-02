@@ -76,6 +76,18 @@
         }
 
         & > a {
+            position: relative;
+            &::after {
+                content: "";
+                position: absolute;
+                top: -4px;
+                bottom: -4px;
+                left: -8px;
+                right: -8px;
+            }
+            &.has-icon::after {
+                right: -24px !important;
+            }
             color           : $dark9;
             height          : 24px !important;
             line-height     : 22px !important;

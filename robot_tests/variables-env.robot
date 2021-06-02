@@ -48,6 +48,7 @@ ${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BAS
 ${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
 ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
+
 &{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
 ...    ${EMAIL ADV VIEWER}=advancedViewer

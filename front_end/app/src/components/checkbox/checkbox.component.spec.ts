@@ -16,13 +16,11 @@ describe('NxCheckboxComponent', () => {
                 providers    : []
             })
             .compileComponents();
-    }));
 
-    beforeEach(() => {
         fixture = TestBed.createComponent(NxCheckboxComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
+    }));
 
     it('should create NxCheckboxComponent', () => {
         expect(component).toBeTruthy();
@@ -52,7 +50,7 @@ describe('NxCheckboxComponent', () => {
             });
             fixture.detectChanges();
             component.value = false;
-            expect(component.state).toBe('unchecked');
+            expect(component.state).toBe(component['cbxStates'].false);
         });
 
         it('to true', () => {
@@ -61,7 +59,7 @@ describe('NxCheckboxComponent', () => {
             });
             fixture.detectChanges();
             expect(component.value).toBeTrue();
-            expect(component.state).toBe('checked');
+            expect(component.state).toBe(component['cbxStates'].true);
         });
 
         it('on toggle', () => {
@@ -76,9 +74,7 @@ describe('NxCheckboxComponent', () => {
             fixture.detectChanges();
             expect(emitValue).toBeFalse();
             expect(component.value).toBeFalse();
-            expect(component.state).toBe('unchecked');
-
-            //
+            expect(component.state).toBe(component['cbxStates'].false);
         });
     });
 });

@@ -9,6 +9,7 @@ import { NxCloudApiService }                from '@services/nx-cloud-api';
 import { of }                               from 'rxjs';
 import { delay }                            from 'rxjs/operators';
 import { NxLanguageProviderService }        from '@services/nx-language-provider';
+import { CommonModule } from '@angular/common';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -33,7 +34,10 @@ describe('NxPasswordComponent', () => {
         const spyApi = jasmine.createSpyObj('NxCloudApiService', ['getCommonPasswords']);
 
         TestBed.configureTestingModule({
-            imports      : [FormsModule],
+            imports      : [
+                CommonModule,
+                FormsModule
+            ],
             declarations : [NxPasswordComponent],
             providers    : [
                 { provide: NxLanguageProviderService, useValue: translateMock },

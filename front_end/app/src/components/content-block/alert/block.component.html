@@ -1,7 +1,7 @@
 <div class="card simple-{{type}}">
     <nx-section [nonPadded]="isNotDefaultType">
-        <div class="d-flex row m-0 py-2 px-3 justify-content-between" [ngClass]="{'warning-error-padding': isNotDefaultType}">
-            <div class="d-flex flex-row">
+        <div class="d-flex row alert-block m-0 py-2 px-3 justify-content-between" [ngClass]="{'warning-error-padding': isNotDefaultType}">
+            <div class="d-flex flex-row alert-block-text align-items-center">
                 <div class="d-flex" [ngClass]="isNotDefaultType ? 'align-items-center h20' : 'align-items-start'">
                     <svg-icon nx-add-svg-src [src]="iconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
                 </div>
@@ -10,7 +10,7 @@
                     <span *ngIf="line2" [innerHTML]="line2"></span>
                 </div>
             </div>
-            <div *ngIf="btnCaption || btnIconSrc" class="d-flex" [ngClass]="isNotDefaultType ? 'align-items-center' : 'align-items-start'">
+            <div *ngIf="btnCaption || btnIconSrc" class="d-flex alert-block-button" [ngClass]="isNotDefaultType ? 'align-items-center' : 'align-items-start'">
                 <button class="btn btn-text has-icon pr-0 py-0"
                         [ngClass]="isNotDefaultType ? 'd-flex align-items-center h20' : 'float-right float-md-left'"
                         (click)="onClick()">

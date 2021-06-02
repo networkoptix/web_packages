@@ -10,7 +10,7 @@ License Management availability for different users
     [Tags]    C76523
 
     # System Owner
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Reload Page
     Wait Until Elements Are Visible
     ...    ${SYSTEM ADMINISTRATION LINK}
@@ -49,20 +49,20 @@ License Management availability for offline system
     [Tags]    C76533    cloud
 #    Run Keyword If   '''${mode}'''=='''webadmin'''    Pass Execution     Not relevant in webadmin mode
     Skip If Irrelevant
-    Stop Docker Server    ${system 1}[cont]    # Get the server offline
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Stop Docker Server    ${system 1}[id]    # Get the server offline
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Open Licenses Page
     Wait Until Elements Are Visible
     ...    ${THIS PAGE CANNOT BE LOADED}
     ...    ${MAKE SURE SERVERS ARE ONLINE}
 
-    Start Docker Server    ${system 1}[cont]
+    Start Docker Server    ${system 1}[id]
     Sleep    30
     Log Out
 
 License Key Input
     [Tags]    C76534
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
@@ -107,7 +107,7 @@ License Key Input
 
 Input validation errors
     [Tags]    C76535    C76536    C76537    C76538   C76539    C76540   C76541    input_errors
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
@@ -191,8 +191,8 @@ Input validation errors
 
 Server response errors: Failed to get response from license server
     [Tags]    C76544    server_errors    CLOUD-7316
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
@@ -210,8 +210,8 @@ Server response errors: Failed to get response from license server
 
 Server response errors: License key is expired
     [Tags]    server_errors
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
@@ -224,32 +224,32 @@ Server response errors: License key is expired
 Server response errors: Media server becomes offline during license activation
     [Tags]    C76545    server_errors    cloud
 
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}   ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True
 
-    Stop Docker Server    ${system 1}[cont]
+    Stop Docker Server    ${system 1}[id]
     ${key}=   Generate Licenses
     Activate Key    ${key}    success=False
     Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=10
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Docker Server    ${system 1}[cont]
+    Start Docker Server    ${system 1}[id]
     Log Out
 
 Server response errors: Server offline(System has two servers)
     [Tags]    C76532    C76542    server_errors
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 1}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
 
-    Stop Docker Server    ${system 3}[cont]
+    Stop Docker Server    ${system 3}[id]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -267,14 +267,14 @@ Server response errors: Server offline(System has two servers)
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
-    Start Docker Server    ${system 3}[cont]
+    Start Docker Server    ${system 3}[id]
     Log Out
 
 Successful scenarios
     [Tags]    C76531    C76548    C76549    C76554    success
     Log    Test Set Up
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}    ${system 1}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
 
@@ -341,8 +341,8 @@ Successful scenarios
 
 License Details Block: Purchase permanent keys
     [Tags]    C76532    C76550    C76557    C76561    C76562    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -367,8 +367,8 @@ License Details Block: Purchase permanent keys
 
 License Details Block: SAAS keys
     [Tags]    C76560    C76561    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -391,8 +391,8 @@ License Details Block: SAAS keys
 
 License Details Block: Video Wall licenses
     [Tags]    C76561    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -409,8 +409,8 @@ License Details Block: Video Wall licenses
 
 License Details Block: License with date within 30 days
     [Tags]    C76565    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    several servers=True    trial left=True
@@ -436,8 +436,8 @@ License Details Block: License with date within 30 days
 
 License Details Block: Deactivated license
     [Tags]    C76566    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -469,8 +469,8 @@ License Details Block: Deactivated license
 
 License Details Block: License with expired status
     [Tags]    C76563    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -492,8 +492,8 @@ License Details Block: License with expired status
 
 License Details Block: License with error status
     [Tags]    C76564    details
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -503,7 +503,7 @@ License Details Block: License with error status
     Activate Key    ${key}    server name=${server 3}
     ${activated}=   License Is Activated    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system 3}[port]    ${key}
     Should Be True    ${activated}
-    Stop Docker Server    ${system 3}[cont]
+    Stop Docker Server    ${system 3}[id]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -513,7 +513,7 @@ License Details Block: License with error status
     ${status}=   Get Key Status    ${key}
     Run keyword and ignore error    Should Be Equal As Strings    ${status}    Error
 
-    Start Docker Server    ${system 3}[cont]
+    Start Docker Server    ${system 3}[id]
     Sleep    10
     Reload Page
     Validate Licenses Page    several servers=True    trial left=True    clean=False
@@ -523,8 +523,8 @@ License Details Block: License with error status
 License Summary Block: Server goes offline
     [Tags]    C76567    C76631    summary    cloud
     Skip If Irrelevant
-    Remove all keys from system    ${system 2}[port]    ${system 2}[cont]
-    Log in to system    ${system 2}    ${system 2}[owner]
+    Remove all keys from system    ${system 2}[port]
+    Log in to system    ${system 2}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -547,20 +547,20 @@ License Summary Block: Server goes offline
     Validate License Info    ${pro on}    server num=2
     Validate License Info    ${pro off}    server num=3
 
-    Stop Docker Server    ${system 3}[cont]
+    Stop Docker Server    ${system 3}[id]
     Sleep    30
     Reload Page
 
     Validate Licenses Page    several servers=True    trial left=True    clean=False
     Validate Summary Record    ${LIC TYPES}[digital]    ${total}    ${num online}
 
-    Start Docker Server    ${system 3}[cont]
+    Start Docker Server    ${system 3}[id]
     Log Out
 
 License Summary Block: License key is expired
     [Tags]    C76567    C76632    summary
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}    ${system 2}[cloud auth][0]
 
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
@@ -597,8 +597,8 @@ License Summary Block: License key is expired
 VMS integration
     [Documentation]    Validate information on cloud for license keys activated/deactivated/removed in client
     [Tags]    C76568    C76569    C76570    vms
-    Remove all keys from system    ${system 1}[port]    ${system 1}[cont]
-    Log in to system    ${system 1}    ${system 1}[owner]
+    Remove all keys from system    ${system 1}[port]
+    Log in to system    ${system 1}    ${system 2}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Open Licenses Page
     Validate Licenses Page    trial left=True    clean=True
@@ -620,6 +620,7 @@ VMS integration
         Restart Server    https://${QABURBANK IP}:${system 1}[port]    ${LOCAL AUTH}
         Sleep    10
         Reload Page
+        Sleep    10
         Validate Licenses Page    trial left=True    clean=False
         # Verify licenses' summary records are updated correctly
         Validate Summary Record    ${LIC TYPES}[${type}]    ${types counter}[${type}]    ${types counter}[${type}]

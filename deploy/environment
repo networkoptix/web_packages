@@ -1,0 +1,19 @@
+BUILD_CONFIGURATION=release
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+NX_PORTAL_DIR=$(dirname $DIR)
+
+export VERSION=${VERSION:-3.0.0.0}
+
+# Build variables. No need to export.
+echo "============ $NX_PORTAL_DIR ================"
+if [ -d "$NX_PORTAL_DIR/.git" ]; then
+    REVISION="$(cd $NX_PORTAL_DIR; git rev-parse --short=12 HEAD)"
+else
+    echo "cannot get revision either from git or from hg" && exit 1
+fi
+
+BUILD_DATE="$(TZ=GMT date)"
+BUILD_HOST="$(hostname)"
+BUILD_USER="$(id -un)"

@@ -1,5 +1,5 @@
 import { Component, Input, HostListener, OnInit, Output, EventEmitter, ViewChild, ElementRef, Inject } from '@angular/core';
-import { UntilDestroy }                           from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed }                           from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
@@ -10,7 +10,7 @@ import { WINDOW } from '@services/window-provider';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-integrations',
     templateUrl : 'integrations.component.html',
@@ -88,7 +88,7 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.cloudApi.getIntegrationsCount().subscribe(data => {
+        this.cloudApi.getIntegrationsCount().pipe(untilDestroyed(this)).subscribe(data => {
             this.pluginCount = data.count || 0;
             this.integrations = this.integrationsDetails();
         });

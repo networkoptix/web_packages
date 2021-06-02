@@ -14,7 +14,7 @@ import { IParams }              from './system.service';
 import { NxUriCacheService }    from './uri-cache.service';
 import * as t                   from './system-api.types';
 import { NxAccountService }     from '@services/account.service';
-import { NxDialogsService }       from '@dialogs/dialogs.service';
+import { NxDialogsService }     from '@dialogs/dialogs.service';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.

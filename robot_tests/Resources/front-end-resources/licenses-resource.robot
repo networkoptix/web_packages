@@ -1,16 +1,17 @@
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
-        ${system}=   Setup Docker System    network=bridge    cloud email=${LM OWNER}
+        ${rand}=   Generate Random String
+        ${system}=   Create Base System    license_system_${i}_${rand}    network=bridge    owner=${LM OWNER}
         Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system}[port]   ${LM HOST}
         Set Suite Variable    ${system ${i}}    ${system}
         ${server name}=   Catenate    SEPARATOR=${SPACE}
-        Set Suite Variable    ${server ${i}}    Server ${system}[cont]
+        Set Suite Variable    ${server ${i}}    Server ${system}[id]
     END
     Sleep    30
 
-    Merge Systems Local    ${LOCAL AUTH}    admin:qweasd 123    https://${QA BURBANK IP}:${system 2}[port]    ${QA BURBANK IP}:${system 3}[port]    currentPassword=${BASE PASSWORD}
-    Sleep    10
+    Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${system 2}[port]    ${QA BURBANK IP}:${system 3}[port]    currentPassword=${BASE PASSWORD}
+    Sleep    30
 
     FOR    ${role}    IN    @{LM USERS.keys()}
         REST Save User
@@ -33,7 +34,7 @@ LM Suite Teardown
         Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys}[id]
     END
     FOR   ${i}    IN RANGE    1    4
-        Delete Docker Server    ${system ${i}}[cont]
+        Delete Docker Server    ${system ${i}}[id]
     END
     Close All Browsers
 
@@ -41,13 +42,13 @@ LM Test Restart
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
     Run Keyword If    ${status}    Log Out
     FOR    ${i}    IN RANGE    1    4
-        Start Docker Server    ${system ${i}}[cont]
+        Start Docker Server    ${system ${i}}[id]
         Sleep    10
         Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system ${i}}[port]    ${LM HOST}
     END
 
 Remove all keys from system
-    [Arguments]    ${port}    ${name}
+    [Arguments]    ${port}    #${name}
     ${licenses}=   Get Licenses    ${LOCAL AUTH}    https://${QA BURBANK IP}:${port}
     FOR    ${lic}    IN    @{licenses}
         Remove License    ${LOCAL AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]

@@ -13,7 +13,7 @@ function brew_install() {
     brew install node n pyenv openssl docker docker-compose mysql mysql-client
 
     echo 'Installing node v11.15.0'
-    n 11.15.0
+    n 12.18.4
     echo 'Installing python 3.7.6'
     pyenv install 3.7.6
     pip install virtualenv
@@ -202,7 +202,7 @@ function stop_mediaserver() {
 function update_webadmin() {
     TARGET=$1
     TARGET_DIR=/opt/networkoptix/mediaserver/bin
-    BUILD_FILE=~/Desktop/build/server-external/bin/external.dat
+    BUILD_FILE=~/Desktop/build/external.dat
 
     echo "Copying..."
     echo $(scp $BUILD_FILE $TARGET:$TARGET_DIR)
@@ -229,7 +229,7 @@ function local_build() {
     REPO=$PWD
 
     pushd $BUILD_DIR
-        cp server-external/bin/external.dat $REPO/tools/docker
+        cp external.dat $REPO/tools/docker
     popd
 
     echo "Stop mediaserver"

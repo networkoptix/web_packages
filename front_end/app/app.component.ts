@@ -168,6 +168,9 @@ export class AppComponent {
         this.router.events.pipe(
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
+            if ('debug' in queryParams) {
+                this.CONFIG.allowDebugMode = true;
+            }
             this.uriService.queryParams = queryParams;
             this.mainContainer.nativeElement.scrollTop = 0;
         });
