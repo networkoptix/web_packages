@@ -46,7 +46,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected queryParamSubscription: Subscription;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    protected dialogs: NxDialogsService;
+    dialogs: NxDialogsService;
     protected applyService: NxApplyService;
     public mediaServerApi: any;
 

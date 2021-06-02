@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "https://localhost:8012",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -11,13 +11,13 @@
     "changeOrigin": true
   },
   "/web/api/*": {
-    "target": "https://localhost:8012",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/ec2/*": {
-    "target": "https://localhost:8012",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -29,6 +29,12 @@
     "changeOrigin": false
   },
   "/web/hls/*": {
+    "target": "https://localhost:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/proxy/*": {
     "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
@@ -47,7 +53,7 @@
     "changeOrigin": false
   },
   "/static/customization/*": {
-    "target": "https://localhost:8012",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

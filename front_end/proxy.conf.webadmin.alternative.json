@@ -23,13 +23,19 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/proxy/*": {
+    "target": "https://localhost:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
   "/ec2/*": {
     "target": "https://10.1.5.210:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/rest/v1/*": {
+  "/rest/*": {
     "target": "https://10.1.5.210:7001",
     "secure": false,
     "logLevel": "debug",

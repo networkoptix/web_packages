@@ -410,8 +410,8 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
-        return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
+    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
+        return this.mediaserver.mergeSystems(url, targetSystemId, dryRun, currentPassword, takeRemoteSettings);
     }
 
     checkMergeStatus(forceReload = true) {

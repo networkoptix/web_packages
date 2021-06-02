@@ -59,7 +59,7 @@ export class NxSystemAPI {
 
     protected serverId: string;
     protected systemId: string;
-    protected currentUser: t.NormalResponse<User>;
+    protected currentUser: any;
     protected userEmail: string;
     protected userRequest: Promise<t.NormalResponse<User>>;
     protected urlBase: string;
@@ -1289,7 +1289,7 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
         const data = {
             url,
             currentPassword,

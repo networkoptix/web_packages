@@ -381,7 +381,7 @@ export class MergeModalContent {
                                 this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
                             }
                             this.machine.transition(this.confirmMerge);
-                        } else if (res.error === '0') {
+                        } else if (!Object.keys(res).length || res.error === '0') {
                             if (this.serverUrlInputExists) {
                                 this.machine.transition('adminPassword');
                             } else {
@@ -412,7 +412,7 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
                 // when trying again, does not have access to previous state template
-                if (this.machine.state.template.passwordValue) {
+                if (!this.CONFIG.isLocal && this.machine.state.template.passwordValue) {
                     // for use case when password gets changed
                     if (this.serverUrl.includes('//admin:')) {
                         const startIndex = this.serverUrl.indexOf('//admin') + 2;
@@ -427,9 +427,9 @@ export class MergeModalContent {
                     this.checkMergeabilityProcess.finished = true;
                     this.machine.transition(this.confirmMerge);
                 } else {
-                    return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                    return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true, this.machine.state.template.passwordValue).toPromise()
                         .then(res => {
-                            if (res.error === '0') {
+                            if (!res.error || res.error === '0') {
                                 this.machine.transition(this.confirmMerge);
                                 const { history } = this.machine;
                                 if (history[history.length - 1] === this.serverUrlErrors) {
@@ -478,13 +478,13 @@ export class MergeModalContent {
 
                 if (this.nonCloudMerge || this.CONFIG.isLocal) {
                     // if current system is not cloud and secondary system is cloud, merge settings should be taken from secondary
-                    const takeRemoteSettings = !this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId;
+                    const takeRemoteSettings = !!(!this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId);
                     if (takeRemoteSettings) {
                         this.setPrimarySystem(this.targetSystem);
                         this.setSystems();
                     }
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, false, password, takeRemoteSettings).toPromise()
+                        ? this.system.mergeSystems(this.serverUrl, this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
@@ -509,7 +509,7 @@ export class MergeModalContent {
                 ignoreError: true
             })
             .then(res => {
-                if (res.error === '0' || res.resultCode === this.LANG.errorCodes.ok?.()) {
+                if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok?.()) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     if (this.CONFIG.isLocal) {
                         const template =
@@ -643,9 +643,9 @@ export class MergeModalContent {
          * else = cloud-connected merge check
          */
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
-            return this.system.mergeSystems(this.serverUrl, true).toPromise()
+            return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true).toPromise()
                 .then(res => {
-                    if (res.error !== '0') {
+                    if (res.error && res.error !== '0') {
                         switch (res.errorString) {
                             case 'FAIL':
                                 throw Error(this.noServerFound);
