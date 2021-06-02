@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
 #Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Restart
-Suite Teardown    Storage Suite Teardown
+#Suite Teardown    Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
@@ -304,21 +304,21 @@ Storages order in "Analytics DB Storage" dropdown
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
-    Wait Until Element is Visible    //span[contains(text(),"disk3") and @class="ellipsis"]
-    @{storages} =    Get WebElements    ${STORAGE ITEM}
-    @{remove} =    Get WebElements    //div[contains(text(),"${INACCESSIBLE}")]/ancestor::td/preceding-sibling::td${STORAGE ITEM}
-    Remove Values From List    ${storages}    @{remove}
-    FOR    ${storage}    IN    @{storages}
-        ${disk} =    Get Text    ${storage}
-        Append To List    ${menu order}    ${disk}
-    END
-    Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Click Button    ${ANALYTICS DROPDOWN}
     @{storages} =    Get WebElements    //a[@tabindex="0"]/span[contains(text(),"disk")]
     FOR    ${storage}    IN    @{storages}
         ${disk} =    Get Text    ${storage}
         Append To List    ${dropdown order}    ${disk}
     END
+    Wait Until Element is Visible    //span[contains(text(),"disk3") and @class="ellipsis"]
+    @{storages} =    Get WebElements    ${STORAGE ITEM}
+    Wait Until Element is Visible    //div[contains(text(),"${INACCESSIBLE}")]/ancestor::td/preceding-sibling::td${STORAGE ITEM}
+    @{remove} =    Get WebElements    //div[contains(text(),"${INACCESSIBLE}")]/ancestor::td/preceding-sibling::td${STORAGE ITEM}
+    Remove Values From List    ${storages}    @{remove}
+    FOR    ${storage}    IN    @{storages}
+        ${disk} =    Get Text    ${storage}
+        Append To List    ${menu order}    ${disk}
+    END 
     Lists Should Be Equal    ${menu order}    ${dropdown order}
 
 Cancel Changing "Analytics DB Storage"
@@ -1070,6 +1070,7 @@ Change Storage from Backup to Not in Use
 
 
 Add Storage Close button works
+    [Tags]    external
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
@@ -1082,6 +1083,7 @@ Add Storage Close button works
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
 Add Storage Cancel button works
+    [Tags]    external
     Log in to user and system    ${owner}     ${sysId0}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}

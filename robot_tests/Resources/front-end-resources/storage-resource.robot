@@ -216,7 +216,7 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    5
+    FOR    ${n}    IN RANGE    4
         ${url} =    Set variable    ${storages dict[${n}]['url']}
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
