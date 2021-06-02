@@ -478,7 +478,7 @@ export class MergeModalContent {
 
                 if (this.nonCloudMerge || this.CONFIG.isLocal) {
                     // if current system is not cloud and secondary system is cloud, merge settings should be taken from secondary
-                    const takeRemoteSettings = !this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId;
+                    const takeRemoteSettings = (!this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId) || false;
                     if (takeRemoteSettings) {
                         this.setPrimarySystem(this.targetSystem);
                         this.setSystems();
