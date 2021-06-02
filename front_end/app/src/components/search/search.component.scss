@@ -1,8 +1,8 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/_mixins';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/_mixins";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .nx-search {
     .btn-arrow {
@@ -119,6 +119,10 @@
 
     .drop-container {
         max-width: 992px;
+    
+        @include media-breakpoint-down(sm) {
+            flex-direction : column !important;
+        }
 
         .drop {
             padding: 0 1rem 0 0;

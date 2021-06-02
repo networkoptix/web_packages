@@ -103,6 +103,11 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
 
     writeValue(value: any) {
         this.selected = value;
+        if (!this.selected) {
+            this.deselectTag();
+        } else {
+            this.selectTag();
+        }
     }
 
     /**

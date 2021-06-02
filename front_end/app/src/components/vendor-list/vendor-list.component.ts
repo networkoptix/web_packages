@@ -75,7 +75,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         this.filters = [
             {
                 label       : this.LANG.cameraFilters.highRes(),
-                select      : { id: 'resolution', value: '8mp' },
+                select      : { id: 'resolution', value: '8000000' },
                 multiselect : { id: 'hardwareTypes', value: 'camera' }
             },
             {
@@ -224,9 +224,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             this.filter.selects.find((select) => {
                 if (select.id === filter.select.id) {
                     select.selected = select.items.find(item => {
-                        return item.name === filter.select.value;
+                        return item.value === filter.select.value;
                     });
-                    queryParams.resolution = select.selected.name;
+                    queryParams.resolution = select.selected.value;
                 }
             });
         }
