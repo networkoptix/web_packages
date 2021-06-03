@@ -169,15 +169,15 @@ export class Camera implements ICamera {
 
     public setNewlyRecordedChunks (rs: CameraArchive) {
         // console.log('SNR', rs, this)
-        this._birdViewTree.newlyRecorded = rs
+        this._birdViewTree.newlyRecorded = rs;
     }
 
     public isThereRecord (t: ms) {
-        return this._birdViewTree.isThereRecord(t)
+        return this._birdViewTree.isThereRecord(t);
     }
 
     public getNextRecord (t: ms): ISimpleTimeRange {
-        return this._birdViewTree.getNextRecord(t)
+        return this._birdViewTree.getNextRecord(t);
     }
 }
 

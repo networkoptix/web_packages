@@ -85,17 +85,21 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo> = []
 
     public set serverTimes (st: Array<ServerTimeInfo>) {
-        this._serverTimes = [...st]
+        this._serverTimes = [...st];
         // if (this.serverTimes?.length) {
         //     console.log('SET TIMEZONE', this.serverTimes[0].timeZoneOffset)
         // }
     }
 
+    public get serverTimes() {
+        return this._serverTimes;
+    }
+
     public get timeZoneOffset (): ms {
         if (!this.serverTimes?.length) {
-            return 0
+            return 0;
         }
-        return this.serverTimes[0].timeZoneOffset - (new Date()).getTimezoneOffset() * 60000
+        return this.serverTimes[0].timeZoneOffset - (new Date()).getTimezoneOffset() * 60000;
     }
 
     public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {

@@ -71,7 +71,7 @@
 
   <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">
     <div class="player-wrapper">
-      <player *ngIf="camera && showPlayerSection && !transportError; else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
+      <player *ngIf="camera && showPlayer() else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
           <nx-player-placeholder

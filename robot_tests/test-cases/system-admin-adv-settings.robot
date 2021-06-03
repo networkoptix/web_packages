@@ -10,7 +10,7 @@ Force Tags        system    cloud    webadmin
 Advanced system settings availability
     [Tags]    C76633    advanced settings    threaded
     Log    Step 1, 2 - advanced block is available for admins
-    FOR    ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+    FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Show Advanced Settings
         Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}    timeout=60
@@ -18,7 +18,7 @@ Advanced system settings availability
     END
 
     Log    Step 3 - advanced block is not available for other users
-    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]    ${users}[custom]
+    FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]    ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Show Advanced Settings
         Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
@@ -28,14 +28,14 @@ Advanced system settings availability
 
 Advanced system settings for offline system
     [Tags]    C76634    advanced settings    threaded
-    Stop Docker Server    ${system}[cont]
-    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Stop Docker Server    ${system}[cloud id]
+    Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
     Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
     Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
 
     Log    Get System back online and check advanced settings
-    Start Docker Server    ${system}[cont]
+    Start Docker Server    ${system}[cloud id]
     Reload Page
     Run keyword and continue on failure    Wait Until Elements Are Visible
         ...    @{ADVANCED SETTINGS ALERT BAR}
@@ -44,13 +44,12 @@ Advanced system settings for offline system
 
 Hide Advanced Settings button functionality
     [Tags]    C76635    advanced settings    threaded
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
     Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
-    Go To    ${ENV}/systems/${system}[id]${ADVANCED SETTINGS}
+    Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
 
 Audit trail, backup and statistics section
@@ -65,8 +64,7 @@ Audit trail, backup and statistics section
         ...    backupNewCamerasByDefault=false
         ...    backupQualities=${BACKUP QUALITIES DEFAULT TEXT}
         ...    clientStatisticsSettingsUrl=${EMPTY}
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -108,9 +106,8 @@ Cloud connect and video codec
        ...    disabledVendors=${EMPTY}
        ...    downloaderPeers={}
        ...    ec2AliveUpdateIntervalSec=60
-    Set System Settings    ${local auth}    ${server url}    ${settings}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
 
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -119,7 +116,7 @@ Cloud connect and video codec
     ${host} =    Get Text    ${CLOUD HOST}
     Should Contain    ${ENV}    ${host}
     ${sys id} =    Get Text   ${CLOUD SYSTEM ID}
-    Should Be Equal As Strings    ${system}[id]    ${sys id}
+    Should Be Equal As Strings    ${system}[cloud id]    ${sys id}
     
     Log    Step 1
     Changing setting changes it on server    ${CLOUD CONNECT RELAYING ENABLED CHECKBOX}    cloudConnectRelayingEnabled    advanced=True
@@ -154,9 +151,8 @@ Connection and email
        ...    crossdomainEnabled=false
        ...    defaultExportVideoCodec=mpeg4
        ...    defaultVideoCodec=h263p
-    Set System Settings    ${local auth}    ${server url}    ${settings}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
 
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -187,8 +183,7 @@ Recording and log
        ...    keepHanwhaIoPortStateIntactOnInitialization=false
        ...    lastMergeMasterId=${EMPTY}
        ...    lastMergeSlaveId=${EMPTY}
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -222,8 +217,7 @@ LDAP and license server
        ...    ldapSearchTimeoutS=30
        ...    ldapUri=${EMPTY}
        ...    licenseServer=https://licensing.vmsproxy.com
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FIVE    timeout=60
@@ -254,8 +248,7 @@ Screen quality, time settings and event log
        ...    maxDifferenceBetweenSynchronizedAndInternetTime=2000
        ...    maxDifferenceBetweenSynchronizedAndLocalTimeMs=5000
        ...    maxEventLogRecords=100000
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
 
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
@@ -282,8 +275,7 @@ Max P2P, record queue size, and remote archive
        ...    maxRecordQueueSizeBytes=25165824
        ...    maxRecordQueueSizeElements=1000
        ...    maxRemoteArchiveSynchronizationThreads=-1
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVEN    timeout=60
@@ -312,8 +304,7 @@ RTP, Rtsp, scene items, archive sync, WEBM
        ...    maxSceneItems=0
        ...    maxVirtualCameraArchiveSynchronizationThreads=-1
        ...    maxHttpTranscodingSessions=2
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT    timeout=60
@@ -342,8 +333,7 @@ Meta data storage, OS time change, proxy connection timeout, push notification l
        ...    osTimeChangeCheckPeriodMs=1000
        ...    proxyConnectTimeoutSec=5
        ...    pushNotificationsLanguage=${EMPTY}
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    NINE    timeout=60
@@ -372,8 +362,7 @@ File URI, RTP timeout, rtsp buffer, Flir Onvif
        ...    rtpTimeoutMs=10000
        ...    sequentialFlirOnvifSearcherEnabled=false
        ...    serverDiscoveryPingTimeoutSec=60
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -401,8 +390,7 @@ SMTP settings
        ...    smtpSimple=true
        ...    smtpTimeout=300
        ...    smtpUser=${EMPTY}
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ELEVEN    timeout=60
@@ -436,8 +424,7 @@ Specific features, statistics report
        ...    statisticsReportTimeCycle=${EMPTY}
        ...    statisticsReportUpdateDelay=${EMPTY}
 
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
@@ -478,8 +465,7 @@ Sync, Camera Ownership, Time, UPNP, Video Traffic
        ...    useTextEmailFormat=false
        ...    useWindowsEmailLineFeed=false
        ...    webSocketEnabled=true
-    Set System Settings    ${local auth}    ${server url}    ${settings}
-#    Log in to user and system    ${system}[owner]    ${system}[id]${ADVANCED SETTINGS}
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Wait Until Advanced Settings Are Visible    THIRTEEN    timeout=60

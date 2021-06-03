@@ -201,7 +201,7 @@ User can rename System: change in web -> check server
     Log    Check that system name is changed - server
     Restart Server   http://${QABURBANK IP}:${system}[port]    ${system}[cloud auth]
     Sleep    10
-    ${settings}=   Get System Settings    ${cloud auth}    http://${QABURBANK IP}:${system}[port]
+    ${settings}=   Get System Settings    ${system}[local auth]    http://${QABURBANK IP}:${system}[port]
     FOR    ${s}    IN    @{settings}
         Run Keyword If    '''${s}[name]''' == '''systemName'''    Run Keywords
            ...   Should be equal as strings    ${new system name}    ${s}[value]   AND
@@ -209,7 +209,7 @@ User can rename System: change in web -> check server
     END
 
     Log    Get initial system name back
-    Rename System    ${cloud auth}    ${system}[cloud id]    ${system}[name]
+    Rename System    ${system}[cloud auth]    ${system}[cloud id]    ${system}[name]
     ${settings}=   Get Cloud System Settings    ${system}[cloud auth]    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
@@ -229,7 +229,7 @@ User can rename System: change on server side -> check in web
 
     Log    Get initial system name back
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[cloud id]
+    ${settings}=   Get Cloud System Settings    ${system}[cloud auth]    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 # System Settings for different users
@@ -258,7 +258,7 @@ Correct items are shown for owner
 
 Correct items are shown for admin
     [Tags]    C41561    webadmin    cloud
-    Log in to system    ${system}    ${system}[users][cloudAdmin]
+    Log in to system    ${system}    ${system}[cloud users][cloudAdmin]
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     Wait Until Elements Are Visible
@@ -282,7 +282,11 @@ Correct items are shown for admin
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin    cloud
-    ${viewers}=    Create List    ${system}[users][advancedViewer]    ${system}[users][viewer]     ${system}[users][liveViewer]     ${system}[users][custom]
+    ${viewers}=    Create List
+        ...    ${system}[cloud users][advancedViewer]
+        ...    ${system}[cloud users][viewer]
+        ...    ${system}[cloud users][liveViewer]
+        ...    ${system}[cloud users][custom]
     ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
@@ -361,13 +365,13 @@ Left menu search: Search menu for offline system
 
 Left menu search: Availability for different users
     [Tags]    C81760    webadmin    cloud    search
-    FOR     ${user}    IN    ${system}[owner]    ${system}[users][cloudAdmin]
+    FOR     ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Validate Search Input
         Log Out
     END
 
-    FOR     ${user}    IN    ${system}[users][advancedViewer]    ${system}[users][viewer]
+    FOR     ${user}    IN    ${system}[cloud users][advancedViewer]    ${system}[cloud users][viewer]
         Log in to system    ${system}    ${user}
         Wait until element is not visible    ${SEARCH INPUT}
         Log Out
@@ -533,7 +537,7 @@ Cloud Owner can disconnect System from Cloud
     Log     C47020: checking that system is disconnected from cloud on the server side
     Restart Server    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Sleep    10
-    Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
+    ${cloud system id}=   Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     # Verify the system is removed from others' users accounts

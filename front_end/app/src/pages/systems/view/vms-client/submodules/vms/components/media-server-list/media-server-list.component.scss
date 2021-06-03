@@ -128,7 +128,7 @@
                         width: 100%;
                         position: relative;
                         text-decoration: none;
-                        color: auto;
+                        color: inherit;
                         padding: 8px 16px 8px 87px;
 
                         &:hover {
@@ -182,6 +182,10 @@
                                 object-fit: contain;
                                 z-index: 1;
                             }
+                            
+                            svg-icon svg path {
+                                fill: $light16;
+                            }
 
                             > .preloader {
                                 position: absolute;
@@ -222,6 +226,10 @@
                                     left: 50%;
                                     width: 36%;
                                     transform: translate(-50%, -50%);
+                                    
+                                    svg path {
+                                        fill: $light16 !important;
+                                    }
                                 }
                                 > img {
                                     display: none;

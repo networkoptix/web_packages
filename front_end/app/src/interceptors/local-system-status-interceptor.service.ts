@@ -33,7 +33,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
 
     // appState.systemAvailable for webadmin, overlay-modal.component
     checkIfSystemAvailable(res: any) {
-        const offlineStatus = [504, 502, 0].includes(res.status);
+        const offlineStatus = [504, 502, 0].includes(res.status || res.type);
         const errorStatus = [504, 502, 0].includes(this.appState.lastErrorStatus$.value);
 
         if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== errorStatus) {
