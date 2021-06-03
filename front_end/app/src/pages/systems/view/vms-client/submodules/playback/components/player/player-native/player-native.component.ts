@@ -82,6 +82,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnDestroy (): void {
         this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
+        this.$video.pause();
+        this.$video.src = '';
     }
 
     public onPlaybackSubjectChange (s: PlaybackState) {

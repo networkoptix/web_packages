@@ -85,6 +85,12 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const dynamicLicense = getDynamicLicense(this);
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
+
+        if (typeof info.expiration === 'string') {
+            // Safari doesn't like date format like "2021-04-22 06:59"
+            info.expiration = info.expiration ? new Date(info.expiration.replace(' ', 'T')).getTime() : '';
+        }
+
         const warning = info.expiration ? info.expiration < next30days.getTime() : false;
         const deactivationsRemaining = dynamicLicense[info.class].deactivationsAllowed - (info.deactivations === '-' ? 0 : info.deactivations);
         const block = new InfoBlockSection(

@@ -64,6 +64,8 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.timerSubscription = timer(0, minute).pipe(startWith(currentHmAge)).subscribe((minutes) => {
             if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
                 this.ribbonService.show(this.LANG.common.viewingOutdatedReport(), [{ type: 'link', text: 'Refresh', value: '' }], 'alert', this.refreshHealth);
+            } else {
+                this.ribbonService.hide();
             }
             if (minutes) {
                 const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');

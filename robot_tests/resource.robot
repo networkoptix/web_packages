@@ -165,7 +165,7 @@ Log in to Auto Tests System
 Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
     ${url}=   Set Variable If
-    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
@@ -1061,7 +1061,7 @@ Create Base System
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
-
+    Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
     ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
@@ -1137,11 +1137,11 @@ Create Base System
 
 Delete Base Cloud System
     [Documentation]    Wipe out all resources related to "Create Base Cloud System"
-    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
+    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
     FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
         Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
     END
-    Delete Docker Server    ${system}[cont]
+    Delete Docker Server    ${system}[id]
 
 Create Custom Network
     [Arguments]    ${name}    ${num}

@@ -14,8 +14,8 @@ function brew_install() {
 
     echo 'Installing node v11.15.0'
     n 12.18.4
-    echo 'Installing python 3.7.6'
-    pyenv install 3.7.6
+    echo 'Installing python 3.8'
+    pyenv install 3.8
     pip install virtualenv
     echo 'Brew install complete.'
 }
@@ -128,9 +128,9 @@ function setup_robot_env() {
 }
 
 function setup_or_activate_virtualenv() {
-    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
+    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.8
 
-    printf "Activating python3.7 env\n\n"
+    printf "Activating python3.8 env\n\n"
     . ./env/bin/activate
 }
 
@@ -229,7 +229,7 @@ function local_build() {
     REPO=$PWD
 
     pushd $BUILD_DIR
-        cp server-external/bin/external.dat $REPO/tools/docker
+        cp external.dat $REPO/tools/docker
     popd
 
     echo "Stop mediaserver"

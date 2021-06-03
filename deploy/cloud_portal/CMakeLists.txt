@@ -1,1 +1,0 @@
-nx_add_cloud_deploy_target(cloud_portal)

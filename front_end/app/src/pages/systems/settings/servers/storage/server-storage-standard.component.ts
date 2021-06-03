@@ -181,7 +181,7 @@ export class NxSystemStorageComponent implements OnInit {
                     }
                 });
                 const backupState = await this.system.storageManager.getBackupState(
-                    this.serverId, !!this.currentStorageState.onlineBackups
+                    this.serverId
                 ).catch(err => {
                     console.error(err);
                     return { backup: false, custom: false };
@@ -370,10 +370,12 @@ export class NxSystemStorageComponent implements OnInit {
                 }
                 return cameras;
             }, [] as (() => Promise<ChangedIdReturned>)[]);
-            await of(...cameraSettingsToSave).pipe(
-                bufferCount(30),
-                concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
-            ).toPromise();
+            if (cameraSettingsToSave.length) {
+                await of(...cameraSettingsToSave).pipe(
+                    bufferCount(30),
+                    concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
+                ).toPromise();
+            }
             await this.system.update();
         }
         this.customSettings = false;
@@ -492,13 +494,13 @@ export class NxSystemStorageComponent implements OnInit {
             this.modeWatchers[this.normalizeId(id)].value = selected.value;
             this.changedModes = [...this.changedModes, id];
             const store = this.currentStorageState.locations.find(({ storageId }) => this.normalizeId(storageId) === this.normalizeId(id));
+            store.usedForWriting = updateParams.usedForWriting;
             if (selected.value !== 'modeNotUsed') {
                 store.isBackup = updateParams.isBackup;
                 if (store.isBackup && !store.currentStorageState.onlineBackups) {
                     this.backupState ||= store.isBackup;
                 }
             }
-            store.usedForWriting = updateParams.usedForWriting;
         }
 
         const hasArchive = id => !!this.currentStorageState.locations.find(({ storageId }) => id === `{${storageId}}`)?.vmsSpace;

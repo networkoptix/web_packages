@@ -4,8 +4,12 @@ import uuid
 import json
 import string
 import os
+import urllib3
+
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class CloudPortalAPI(object):
 

@@ -50,31 +50,6 @@ function copy_deps()
     true
 }
 
-function stage_cmake_extra()
-{
-    true
-}
-
-function stage_cmake()
-{
-    local cmakeBuildDirectory=$1
-    local moduleName=$2
-
-    rm -rf stage
-
-    mkdir -p stage/$moduleName/bin/sqldrivers stage/$moduleName/lib stage/var/log
-
-    cp ${QT_DIR}/plugins/sqldrivers/libqsqlmysql.so stage/${moduleName}/bin/sqldrivers/
-    cp ${QT_DIR}/plugins/sqldrivers/libqsqlite.so stage/${moduleName}/bin/sqldrivers/
-
-    cp -l $cmakeBuildDirectory/bin/$moduleName stage/$moduleName/bin/$moduleName
-    copy_deps stage/$moduleName/bin/$moduleName $cmakeBuildDirectory/lib stage/$moduleName/lib
-    copy_deps stage/$moduleName/bin/sqldrivers/libqsqlmysql.so $cmakeBuildDirectory/lib stage/$moduleName/lib
-    copy_deps stage/$moduleName/bin/sqldrivers/libqsqlite.so $cmakeBuildDirectory/lib stage/$moduleName/lib
-
-    stage_cmake_extra
-}
-
 function pack()
 {
     echo "Packing $MODULE:$VERSION to a container"
@@ -134,7 +109,6 @@ function version()
 
 function main()
 {
-    local args=""
     local n=1
 
     # Check if we have docker here
@@ -147,17 +121,6 @@ function main()
     for ((n=1;n <= numargs; n++))
     do
         func=$1; shift
-        args=""
-
-        if [ "$func" = "build" ]
-        then
-            args="$1"; shift || true; n=$((n+1))
-        fi
-        if [ "$func" = "stage_cmake" ]
-        then
-            args="$1 $2"; shift; n=$((n+2))
-        fi
-
-        $func $args
+        $func
     done
 }

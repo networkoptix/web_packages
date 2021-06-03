@@ -7,23 +7,19 @@ Suite Teardown    Server Settings Suite Tear Down
 Force Tags        system    Threaded
 
 *** Variables ***
-# change password here because for web admin it needs to be sent in the url
-#${password}    qweasd1234
 ${password}    ${BASE PASSWORD}
 @{server auth}   admin    ${password}
 
 *** Keywords ***
 Server Settings Suite Setup
-#    Run Keyword if    '''${mode}'''=='''cloud'''    Set Suite Variable    ${extra port}    7654
-#    ...    ELSE    Set Suite Variable    ${extra port}    8765
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     Set Suite Variable    ${user in charge}    ${owner}
     @{auth}=    Create List    ${user in charge}    ${password}
-    Set Suite Variable    @{auth}    @{auth} 
-    
+    Set Suite Variable    ${auth}
+
     Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    # we setup one server manually here because we need 2 ports
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # We setup one server manually here because we need 2 ports
     ${random}=    Generate Random String
     ${port 1}=   Get Random Available Port
     Set Suite Variable    ${port 1}
@@ -32,89 +28,87 @@ Server Settings Suite Setup
     ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
 
-    Sleep    5 
+    Sleep    5
     Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    servers1-${random}
-    ${server id 1}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
-    &{server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server id 1}
-        
+    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
+    ${server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server 1 id}
+
     ${server 2} =    Create Base System    servers2-${random}    owner=${user in charge}
+    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}    Server ${server 2}[id]
     ${server 3} =    Create Base System    servers3-${random}    owner=${user in charge}
 
-    Change server name via API    ${server auth}    server 1    ${server id 1}    https://${QA BURBANK IP}:${port 1}
-    Change server name via API    ${server 2}[local auth]    server 2    ${server 2}[id]    https://${QA BURBANK IP}:${server 2}[port]
-    Set Suite Variable    &{server 1}    &{server 1}
-    Set Suite Variable    &{server 2}    &{server 2}
-    Set Suite Variable    &{server 3}    &{server 3}
+    Change server name via API    ${server auth}    server 1    ${server 1 id}    https://${QA BURBANK IP}:${port 1}
+    Change server name via API    ${server 2}[local auth]    server 2    ${server 2 id}    https://${QA BURBANK IP}:${server 2}[port]
+    FOR    ${i}    IN RANGE    1    4
+        Set Suite Variable    ${server ${i}}
+    END
+
     Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     ...    ELSE    Web Admin Suite Setup
 
 Web Admin Suite Setup
     Set Suite Variable    ${user in charge}    admin
-    @{server auth}=   Create List    admin    ${password}
     #sleep    120
-    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1['port']}   ${QA BURBANK IP}:${server 2['port']}    currentPassword=${password}
-    #Sleep    120
+    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1}[port]   ${QA BURBANK IP}:${server 2}[port]    currentPassword=${password}
+    Sleep    120
     #Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
     #Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     #Log In    admin    ${password}
     #Wait Until Element is Visible    ${SERVERS LINK}
-    #Click Link    ${SERVERS LINK}    
+    #Click Link    ${SERVERS LINK}
     #Sleep    5
     #Select Server By Name    server 1
     #Wait Until Element is Visible    //header//button[@id="accountSettingsSelect"]
     #click button    //header//button[@id="accountSettingsSelect"]
     #Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
     #Click Link    //header//a/span[text()="Log Out"]/..
-    
-    @{local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    password=${password}
+
+    @{local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    password=${password}
     Set Suite Variable    ${admin}          Local+${local users[1]}
     Set Suite Variable    ${viewer}         Local+${local users[4]}
     Set Suite Variable    ${live viewer}    Local+${local users[3]}
     Set Suite Variable    ${adv viewer}     Local+${local users[0]}
     Set Suite Variable    ${custom}         Local+${local users[2]}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['id']}
-    Close Connection
+    Execute Command Remotely    docker container stop ${server 2}[id]
 
 Cloud Suite Setup
 
     Open Browser and go to URL    ${ENV}
-       
-    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}    2serverstest1    ${user in charge}    ${password}
-    Set To Dictionary    ${server 1}    sysId=${sysId1}
-    Set To Dictionary    ${server 2}    sysId=${server 2}[cloud id] 
-    Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id] 
 
-    Log in to user and system    ${user in charge}    ${server 1['sysId']}    password=${password}
+    ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    2serverstest1    ${user in charge}    ${password}
+    Set To Dictionary    ${server 1}    sysId=${sysId1}
+    Set To Dictionary    ${server 2}    sysId=${server 2}[cloud id]
+    Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id]
+
+    Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
     Sleep    5
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
-    
-    Go To    ${ENV}/systems/${server 2['sysId']}
+
+    Go To    ${ENV}/systems/${server 2}[sysId]
     Sleep    5
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
     Common Restart Logout    ${ENV}
-    
-    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1['port']}   ${QA BURBANK IP}:${server 2['port']}    currentPassword=${password}
-    Sleep    30
-    
-    &{users}=    Register and Activate Generic Users    password=${password}
+
+    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1}[port]   ${QA BURBANK IP}:${server 2}[port]    currentPassword=${password}
+    Sleep    120
+
+    ${users}=    Register and Activate Generic Users    password=${password}
     Set Suite Variable    ${admin}          ${users}[cloudAdmin]
     Set Suite Variable    ${viewer}         ${users}[viewer]
     Set Suite Variable    ${live viewer}    ${users}[liveViewer]
     Set Suite Variable    ${adv viewer}     ${users}[advancedViewer]
     Set Suite Variable    ${custom}         ${users}[custom]
-    Add user to cloud system if not there    ${server 1['sysId']}    cloudAdmin        ${admin}          auth=${auth}
-    Add user to cloud system if not there    ${server 1['sysId']}    viewer            ${viewer}         auth=${auth}
-    Add user to cloud system if not there    ${server 1['sysId']}    advancedViewer    ${adv viewer}     auth=${auth}
-    Add user to cloud system if not there    ${server 1['sysId']}    custom            ${custom}         auth=${auth}
-    Add user to cloud system if not there    ${server 1['sysId']}    liveViewer        ${live viewer}    auth=${auth}
-        
-    Log in to user and system    ${user in charge}    ${server 1['sysId']}    password=${password}
+    Add user to cloud system if not there    ${server 1}[sysId]    cloudAdmin        ${admin}          auth=${auth}
+    Add user to cloud system if not there    ${server 1}[sysId]    viewer            ${viewer}         auth=${auth}
+    Add user to cloud system if not there    ${server 1}[sysId]    advancedViewer    ${adv viewer}     auth=${auth}
+    Add user to cloud system if not there    ${server 1}[sysId]    custom            ${custom}         auth=${auth}
+    Add user to cloud system if not there    ${server 1}[sysId]    liveViewer        ${live viewer}    auth=${auth}
+
+    Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
     Sleep    10
     Wait Until Element is Visible    ${SERVERS LINK}    300
     Sleep    5
@@ -122,7 +116,7 @@ Cloud Suite Setup
     Verify on Servers Page    timeout=120
     Log Out
 
-    Log in to user and system    ${user in charge}    ${server 3['sysId']}    password=${password}
+    Log in to user and system    ${user in charge}    ${server 3}[sysId]    password=${password}
 
     Wait Until Element is Visible    ${SERVERS LINK}    300
     Sleep    5
@@ -130,43 +124,31 @@ Cloud Suite Setup
     Verify on Servers Page    timeout=120
     Log Out
     Open Browser and go to URL    ${ENV}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['id']}
-    Close Connection
+    Execute Command Remotely    docker container stop ${server 2}[id]
 
 
 Server Settings Suite Tear Down
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server 1['sysId']}    ${password}    ${user in charge}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server 2['sysId']}    ${password}    ${user in charge}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server 3['sysId']}    ${password}    ${user in charge}
     FOR    ${i}    IN RANGE    1    4
         Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server ${i}}[sysId]    ${password}    ${user in charge}
     END
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#    ${results}    Execute Command    docker container stop ${server 1}[contId] ${server 2}[id] ${server 3}[id]
-#    ${results}    Execute Command    docker container rm ${server 1}[contId] ${server 2}[id] ${server 3}[id]
+
     Execute Command Remotely     docker container rm -f ${server 1}[contId] ${server 2}[id] ${server 3}[id]
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${admin}          ${password}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${viewer}         ${password}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${live viewer}    ${password}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${adv viewer}     ${password}
-#    Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${custom}         ${password}
+
     FOR    ${user}    IN    ${admin}    ${viewer}    ${live viewer}    ${adv viewer}    ${custom}
         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}    ${password}
     END
+
     Close All Connections
     Close All Browsers
 
 Server Settings Test Setup
-    [Arguments]    ${server}=&{server 1}    ${user}=${user in charge}    ${verify}=${True}
+    [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
     Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
     ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
 
 Cloud Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
-    Log in to user and system    ${user}    ${server['sysId']}    password=${password}
+    Log in to user and system    ${user}    ${server}[sysId]    password=${password}
     Sleep    5
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
     Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
@@ -174,8 +156,7 @@ Cloud Test Setup
 
 Web Admin Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
-    ${current port}=    Set Variable    ${server['port']}
-    Open Browser and go to URL    https://${QA BURBANK IP}:${current port}
+    Open Browser and go to URL    https://${QA BURBANK IP}:${server}[port]
     Log In Web Admin    ${user}    ${password}
     Sleep    5
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
@@ -184,9 +165,15 @@ Web Admin Test Setup
 Server Settings Test Teardown
     Run Keyword If    '''${mode}'''=='''cloud'''    Common Restart Logout    ${ENV}
     ...    ELSE    Close Browser
+    Run Keyword If Test Failed    Run Keywords
+        ...    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]    AND
+        ...    Execute Command Remotely    docker container stop ${server 2}[id]
 
 Cloud Test Teardown
     Common Restart Logout    ${ENV}
+    Run Keyword If Test Failed    Run Keywords
+        ...    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]    AND
+        ...    Execute Command Remotely    docker container stop ${server 2}[id]
 
 Web Admin Test Teardown
     Close Browser
@@ -207,18 +194,15 @@ Server name can be changed
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     Capture Page Screenshot
-    Rename System or Hardware    server 1 name changed
-    Click Button    ${SYSTEM SAVE}
-    Capture Page Screenshot
+    Change System Name    server 1 name changed    save=True
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-    Reload Page 
+    Reload Page
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
 
     Log    Reset the name to server 1
-    Change server name via API    ${server auth}    server 1    ${server 1['serverId']}    https://${QA BURBANK IP}:${server 1['port']}
+    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page
     Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
-    capture page screenshot
 
 Server name changed via API updates on cloud
     [Tags]    C70961    threaded
@@ -227,22 +211,22 @@ Server name changed via API updates on cloud
     Verify Server Buttons Are Enabled
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/%7B
-    Change server name via API    ${server auth}    server 1 name changed    ${server 1['serverId']}    https://${QA BURBANK IP}:${server 1['port']}
+    Change server name via API    ${server auth}    server 1 name changed    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Sleep    1
     Reload Page
     Sleep   5
     Select Server By Name    server 1 name changed
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..   
-    
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+
     Log    Reset the name to server 1
-    Change server name via API    ${server auth}    server 1    ${server 1['serverId']}    https://${QA BURBANK IP}:${server 1['port']}
-    
+    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
+
 Restart close button works
     [Tags]    C70968    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
-    Verify Restart Dialog 
+    Verify Restart Dialog
     Click Button    ${RESTART DIALOG CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
@@ -251,7 +235,7 @@ Restart cancel button works
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
-    Verify Restart Dialog 
+    Verify Restart Dialog
     Click Button    ${RESTART DIALOG CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
@@ -260,43 +244,36 @@ Restart server as owner
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
-    Verify Restart Dialog  
+    Verify Restart Dialog
     Click Button    ${RESTART DIALOG RESTART BUTTON}
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
-    Wait Until Elements are Visible    
+    Wait Until Elements are Visible
     ...    ${RESTARTING BANNER}
     Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
-    Run Keyword If    '''${mode}'''!='''cloud'''    Sleep    60
-    Run Keyword If    '''${mode}'''!='''cloud'''    Close Browser
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#    ${results}    Execute Command    docker container port ${server 1['contId']} 7001
-#    ${port info}=   Split String    ${results}    :
-#    Set To Dictionary    ${server 1}    port=${port info[1]}
-    Run Keyword If    '''${mode}'''!='''cloud'''    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
-    Run Keyword If    '''${mode}'''!='''cloud'''    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
- 
-    Close Connection
-      
+       ...    ELSE   Run Keywords
+           ...    Sleep    60    AND
+           ...    Close Browser    AND
+           ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]    AND
+           ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+
 Restart server as administrator
     [Tags]    C70968
     [Setup]    Server Settings Test Setup    user=${admin}
     Verify on Servers Page
     Wait Until Element Is Enabled    ${RESTART SERVER BUTTON}
     Click Button    ${RESTART SERVER BUTTON}
-    Verify Restart Dialog  
+    Verify Restart Dialog
     Click Button    ${RESTART DIALOG RESTART BUTTON}
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
-    Wait Until Elements are Visible    
-    ...    ${RESTARTING BANNER}
+    Wait Until Element Is Visible    ${RESTARTING BANNER}
     Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
-    Run Keyword If    '''${mode}'''!='''cloud'''    Run Keywords
-       ...    Sleep    60    AND
-       ...    Close Browser    AND
-       ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}    AND
-       ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+        ...    ELSE    Run Keywords
+            ...    Sleep    60    AND
+            ...    Close Browser    AND
+            ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}    AND
+            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
 Change port is only available for owner
     [Tags]    C70927    threaded
@@ -308,67 +285,74 @@ Port field validation
     [Tags]    C70929    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
+
     Log    Step 1
     ${before port}=    Get Value    ${PORT INPUT}
+    Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
-    Wait Until Element is Visible    ${SYSTEM SAVE}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Sleep    1
+    Wait Until Element Is Visible    ${SERVER PORT IS REQUIRED ERROR}
+    Reload Page
+    Wait Until Element Is Visible    ${PORT INPUT}
+    Wait Until Element Is Not Visible    ${SERVER PORT IS REQUIRED ERROR}
     ${after port}=    Get Value    ${PORT INPUT}
-    Should Be Equal As Integers    ${before port}    ${after port}
+    Should Be Equal    ${before port}    ${after port}
+
     Log    Step 2
+    Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
     Press Keys    ${PORT INPUT}    0
     Sleep    1
-    ${current port}=    Get Value    ${PORT INPUT} 
+    ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    ${EMPTY}
+    Element Should Be Disabled     ${SAVE BUTTON}
+
     Log    Step 3
     Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
     Press Keys    ${PORT INPUT}    1023
     Wait Until Element Is Visible    ${PORT TOO LOW ERROR}
+
     Log    Step 4
     Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
     Press Keys    ${PORT INPUT}    77777
-    ${current port}=    Get Value    ${PORT INPUT} 
+    Wait Until Element Is Not Visible    ${PORT TOO LOW ERROR}
+    ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    7777
+
     Log    Step 5
     Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
     Press Keys    ${PORT INPUT}    -1
-    ${current port}=    Get Value    ${PORT INPUT} 
+    Wait Until Element Is Visible    ${PORT TOO LOW ERROR}
+    ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    1
+
     Log    Step 6
     Click Element    ${PORT INPUT}
     Delete All Text    ${PORT INPUT}
     Press Keys    ${PORT INPUT}    1024
-    ${current port}=    Get Value    ${PORT INPUT} 
+    Wait Until Element Is Not Visible    ${PORT TOO LOW ERROR}
+    ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    1024
+
     Log    Step 7
-    Click Button    ${SYSTEM CANCEL}
-    ${current port}=    Get Value    ${PORT INPUT} 
+    Click Button    //nx-cancel-button/button
+    ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    ${before port}
 
 Change port
     [Tags]    C70975
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#    ${results}    Execute Command    docker container port ${server 1['contId']} 7001
-#    ${port info}=   Split String    ${results}    :
-#    Set To Dictionary    ${server 1}    port=${port info[1]}
-#    Close Connection
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
     Sleep    1
     @{auth}=    Create List    ${user in charge}    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${extra port}
-    Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    7001    ${server 1['serverId']}
+    Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    7001    ${server 1}[serverId]
     Log To Console    port changed back
     Sleep    1
-    Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1['port']}
+    Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1}[port]
 
 # Waiting to hear back from server team about proper error code
 Admin cannot change port via API
@@ -377,27 +361,28 @@ Admin cannot change port via API
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
     @{auth}=    Create List    ${admin}    ${password}
-    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1['sysId']}.relay.vmsproxy.hdw.mx    7777    ${split[1]}
-    ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${server 1['port']}    7777    ${split[1]}
-    Should Be Equal As Strings    ${resp.status_code}    401
+    ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1}[sysId].relay.vmsproxy.hdw.mx    7777    ${split[1]}
+    ...    ELSE    Change server port via API    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
+    ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
+    Should Be True    ${status is correct}
 
 Check status
-    [Tags]    C70957
+    [Tags]    C70957    deb
     Verify on Servers Page
-    Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}    
+    Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}
     Select Server By Name    server 2
     Verify on Servers Page
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container start ${server 2['contId']}
+    ${results}    Execute Command    docker container start ${server 2}[id]
     Sleep    1
     Click Button    ${CHECK STATUS BUTTON}
     Wait Until Element is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
     Sleep    1
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}    95
-    ${results}    Execute Command    docker container stop ${server 2['contId']}
+    ${results}    Execute Command    docker container stop ${server 2}[id]
     Close Connection
 
 Detailed info 1 server
@@ -407,42 +392,33 @@ Detailed info 1 server
     Click Button    ${SERVER DETAILED INFO BUTTON}
     ${loc}=    Get Location
     log    ${loc}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 3['sysId']}/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 3['port']}/#/health/servers
+    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
+    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
 Detailed info 2 servers
-    [Tags]    C70923    threaded
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container start ${server2['id']}
-    Close Connection
-    Verify on Servers Page
+    [Tags]    C70923    threaded    deb
+    Execute Command Remotely   docker container start ${server 2}[id]
     Select Server By Name    server 1
-    Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 1['sysId']}/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 1['port']}/#/health/servers
+    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
+    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
     
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
     Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server2['id']}
-    Close Connection
+    Execute Command Remotely    docker container stop ${server 2}[id]
 
 Offline system 1 server settings
-    [Tags]    C70950    threaded
+    [Tags]    C70950    threaded    deb
     [Setup]    Server Settings Test Setup    server=${server 3}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${server 3['id']}
-    Close Connection
+    Execute Command Remotely    docker container stop ${server 3}[id]
     Reload Page
-    Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
-    Wait Until Element is Visible    ${SYSTEM OFFLINE HEADER} 
+    Wait Until Elements Are Visible
+        ...    ${SERVER NOT ACCESIBLE IMAGE}
+        ...    ${THIS PAGE CANNOT BE LOADED}
+        ...    ${SYSTEM OFFLINE}
     Element Should not be Visible    ${PORT INPUT}
     Element Should not be Visible    ${RENAME SERVER BUTTON}
     Element Should not be Visible    ${RESTART SERVER BUTTON}
@@ -456,9 +432,8 @@ Online two servers
     Verify Server Buttons Are Enabled
     
 Offline two servers
-    [Tags]    C70955    threaded
+    [Tags]    C70955    threaded    deb
     Select Server By Name    server 2
-    Verify on Servers Page
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
     Element Should be Disabled    ${PORT INPUT}
     Element Should be Disabled    ${RESTART SERVER BUTTON}

@@ -46,8 +46,8 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy (): void {
-        this._routeSubscription.unsubscribe();
-        this._vmsStateSubscription.unsubscribe();
+        this._routeSubscription?.unsubscribe();
+        this._vmsStateSubscription?.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 

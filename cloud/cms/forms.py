@@ -6,6 +6,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import When, Case
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from dal import autocomplete
 from urllib.parse import quote
 
@@ -299,14 +300,23 @@ class AssetSettingsForm(forms.Form):
         widget=forms.RadioSelect,
         required=True,
         choices=(
-            ('generate_json', 'Generate structure template based on archive'),
-            ('merge_with_db', 'Generate structure using archive and db'),
+            ('generate_json', mark_safe('Generate structure template based on archive<br>'
+                                        '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
+            ('merge_with_db', mark_safe('Generate structure using archive and db<br>'
+                              '<span class="radio-hint">Upload a zip archive to generate a structure.json file that uses values of the asset from the db and archive<br>'
+                              'If a value doesn\'t exist in the db it takes the value from the zip archive.</span>')),
             ('update_structure',
-             'Update CMS structure and default values based on archive with structure.json and asset_type template, '
-             'or upload just the structure.json'),
-            ('update_asset_by_json', 'Update data records from a json file'),
-            ('update_content', 'Upload content files for asset'),
-            ('import_assets_from_json', 'Create and update all assets from json file'),
+             mark_safe(
+                 'Update CMS structure and default values based on archive with structure.json and asset_type template, '
+                 'or upload just the structure.json<br>'
+                 '<span class="radio-hint">If you upload only structure.json it will only modify the structure of the asset_type.<br>'
+                 'If you upload an archive with the structure.json in the base directory it will update contexts and datastructure in the asset_type.</span>')),
+            ('update_content', mark_safe('Upload content files for this asset<br>'
+                                         '<span class="radio-hint">Upload a zip archive to update content such as images for the asset.</span>')),
+            ('update_asset_by_json', mark_safe('Update data records for this asset from a json file<br>'
+                                               '<span class="radio-hint">Upload a structure.json to update the data records for the current asset</span>')),
+            ('import_assets_from_json', mark_safe('Create assets and update data records for existing assets from a json file<br>'
+                                                  '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets</span>')),
         )
     )
 
@@ -320,7 +330,9 @@ class AssetSettingsForm(forms.Form):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user and user.is_superuser:
-            self.fields['action'].choices += ('import_assets_from_json_publish', 'Create and update all assets from json file and publish/accept reviews'),
+            self.fields['action'].choices += ('import_assets_from_json_publish',
+                                              mark_safe('Create assets and update data records for existing assets from a json file and publish/accept reviews<br>'
+                                                        '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets. Also submits and accepts reviews</span>')),
 
 
 class AssetForm(forms.ModelForm):
