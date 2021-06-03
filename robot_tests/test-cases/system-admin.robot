@@ -214,7 +214,7 @@ User can rename System: change in web -> check server
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 User can rename System: change on server side -> check in web
-    [Tags]    C47019    C30678    webadmin    cloud    deb
+    [Tags]    C47019    C30678    webadmin    cloud
     Log    Rename System on server side and check it's changed in web
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${new system name}
 
@@ -500,7 +500,7 @@ Disconnect dialog interface checks
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
 Cloud Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020    webadmin    cloud    deb
+    [Tags]    C41883   C47020    webadmin    cloud
     ${local auth}=   Create List    admin    ${base password}
 
     Log    Step 1

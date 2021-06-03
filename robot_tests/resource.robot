@@ -959,15 +959,9 @@ Register and Activate Generic Users
     ${generic users}=    Create Dictionary
     FOR    ${user}    IN    @{permissions.keys()}
         ${email}=   Register and activate account with random email    mark    hamil    ${password}
-        Add To Dictionary    ${generic users}    ${user}=${email}
+        Set To Dictionary    ${generic users}    ${user}=${email}
         Sleep    0.1
     END
-#    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
-#    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
-#    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
-#    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
-#    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
-#    &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
     [Return]    ${generic users}
 
 Add Cloud Users

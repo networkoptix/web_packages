@@ -44,7 +44,7 @@ Changing the Setting 'Encrypt video traffic' changes it on the server
     Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting 'Limit session duration to' changes it on the server
-    [Tags]    system settings    cloud    webadmin    threaded    deb
+    [Tags]    system settings    cloud    webadmin    threaded
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}

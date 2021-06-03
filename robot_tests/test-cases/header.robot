@@ -66,7 +66,7 @@ Anonymous: Different page widths
 
 # User has no systems connected to cloud
 No systems: Header button text is correct
-    [Tags]    threadable    no_sys$
+    [Tags]    threadable    no_sys
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    0    systems=True
