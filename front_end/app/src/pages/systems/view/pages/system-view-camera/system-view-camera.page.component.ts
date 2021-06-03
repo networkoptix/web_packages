@@ -25,9 +25,9 @@ import { CameraTransportStorageService }          from '../../services/cameraTra
 import sidebarLayout                              from '../sidebarLayout.cfg';
 import { NxUtilsService }                         from '@services/utils.service';
 import fullscreen                                 from './fullscreen';
-import { LoggerDecorator }                        from '../../vms-client/utils';
-import { PLAYBACK_MODE }                          from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }                      from 'rxjs/operators';
+import { LoggerDecorator }              from '../../vms-client/utils';
+import PlaybackState, { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }            from 'rxjs/operators';
 import { UntilDestroy }                           from '@ngneat/until-destroy';
 import { NxLanguageProviderService }              from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }                from '../../../../../../language_i18n_static_types';
@@ -302,7 +302,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.getRecordsInProgress = undefined;
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
-                ar = await this._prepareArchiveRecords(ar)
+                ar = await this._prepareArchiveRecords(ar);
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('empty archive');
@@ -338,43 +338,41 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _newlyRecordedIntervalHandle
 
     public startPollingForNewlyRecordedChunks () {
-        const since = this.vms.selectedCamera.archiveRange.end
+        const since = this.vms.selectedCamera.archiveRange.end;
         if (this._newlyRecordedIntervalHandle) {
-            clearInterval(this._newlyRecordedIntervalHandle)
+            clearInterval(this._newlyRecordedIntervalHandle);
         }
         this._newlyRecordedIntervalHandle = setInterval(() => {
             const now = Date.now();
-            const cameraId = this.id
+            const cameraId = this.id;
             this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
-                ar = await this._prepareArchiveRecords(ar)
+                ar = await this._prepareArchiveRecords(ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('no newly recorded');
                 } else {
                     this._log('newly recorded', ar);
                     const prepared = ar.reply.map(r => {
                         // the server has a weird habit of sending strings instead of numbers every now and then
-                        let start = parseInt(r.startTimeMs)
-                        start = Math.max(start, since)
-                        const duration = parseInt(r.durationMs)
+                        let start = parseInt(r.startTimeMs);
+                        start = Math.max(start, since);
+                        const duration = parseInt(r.durationMs);
                         return new SimpleTimeRange(
                             start,
                             r.durationMs < 0
                                 ? now
                                 : start + duration
-                        )
-                    })
+                        );
+                    });
                     this.vms.setCameraNewlyRecordedChunks(cameraId, prepared);
                 }
-            })
-        }, 10 * 1000)
+            });
+        }, 10 * 1000);
     }
 
     protected async _getServerTimes () {
         // TODO: caching?
-        const result =  await this.system.getServerTimes();
-        // console.log('server times', result)
-        this.vms.serverTimes = result
-        return result
+        this.vms.serverTimes = await this.system.getServerTimes();
+        return this.vms.serverTimes;
     }
 
     protected async _prepareArchiveRecords (ar) {
@@ -383,8 +381,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             serverId,
             // timeZoneOffset,
             // vmsTime,
-            vmsTimeOffset,
+            vmsTimeOffset
         }] = await this._getServerTimes();
+
         const offsetsByServer = this.system.mediaservers.reduce((
             reduced, { id, addParams, timeInfo = {} }: any
         ) => ({
@@ -407,9 +406,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             });
         });
         ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
-        return ar
+        return ar;
     }
-
 
     public ngAfterViewInit () {
         this.$self.classList.add('controls-shown');
@@ -537,6 +535,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.playback.stop();
         this.resetTransport();
         this.resetQuality();
+
+        if (this.camera?.isLive) {
+            setTimeout(() => this.playback.playLive());
+        }
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {

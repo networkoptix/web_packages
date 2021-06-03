@@ -226,6 +226,10 @@
                                     left: 50%;
                                     width: 36%;
                                     transform: translate(-50%, -50%);
+                                    
+                                    svg path {
+                                        fill: $light16 !important;
+                                    }
                                 }
                                 > img {
                                     display: none;
