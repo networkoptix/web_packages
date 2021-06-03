@@ -1,7 +1,6 @@
-import { start } from 'repl';
-import { last, min } from 'rxjs/operators';
 import { int, ms } from '../../../utils/type-aliases';
 import { CameraArchive, ISimpleTimeRange, IRecord, SimpleTimeRange } from './ICamera';
+import { _getNextRecord } from './utils';
 
 export interface SubrangeIdicies {
     firstIndex: int,
@@ -54,6 +53,7 @@ export class BirdViewTree {
     }
 
     protected _treeRoot: BirdViewTreeNode
+    protected _newlyRecorded: CameraArchive = []
 
     protected _initTree () {
         this._treeRoot = new BirdViewTreeNode(
@@ -66,8 +66,50 @@ export class BirdViewTree {
         );
     }
 
+    public set newlyRecorded (nr: CameraArchive) {
+        this._newlyRecorded = nr
+    }
+
+    public get newlyRecorded () {
+        return this._newlyRecorded
+    }
+
+    public isThereRecord (t: ms) {
+        return this.getRecords(t-1, t+1, 0).length > 0
+    }
+
+    public getNextRecord (t: ms): ISimpleTimeRange {
+        return _getNextRecord(this._originalArchive, t) ||
+            _getNextRecord(this._newlyRecorded, t)
+    }
+
+
     public getRecords (startMs: ms, endMs: ms, minGapMs: ms): CameraArchive {
-        return this._treeRoot.getRecords(startMs, endMs, minGapMs);
+        if (startMs < this._originalArchiveRange.start) {
+            if (endMs < this._originalArchiveRange.start) {
+                console.warn('BirdViewTree::getRecords hard miss in the past');
+            } else {
+                console.warn('BirdViewTree::getRecords soft miss in the past');
+            }
+            return []
+        }
+        if (startMs < this._originalArchiveRange.start) {
+            startMs = this._originalArchiveRange.start
+            // console.log('narrowed start')
+        }
+        const treeRecords = this._treeRoot.getRecords(
+            startMs,
+            endMs > this._originalArchiveRange.end ? this._originalArchiveRange.end : endMs,
+            minGapMs
+        )
+        if (endMs > this._originalArchiveRange.end) {
+            // console.log('GNRR', this.newlyRecorded, this.newlyRecorded.filter(r => r.start < endMs))
+            this.newlyRecorded.filter(r => r.start < endMs).map(r => {
+                treeRecords.push(r)
+            })
+        }
+        return treeRecords
+
     }
 
     protected _zoomingRequiredCallback = (node: BirdViewTreeNode, part: 'left' | 'right', minGapMs: ms) => {
@@ -78,61 +120,6 @@ export class BirdViewTree {
         node.setChild(part, minGapMs, records, perfect);
     }
 
-    // protected _binarySearchForArchiveSubRange (startMs: ms, endMs: ms) {
-    //     let l = 0
-    //     let r = this._originalArchive.length - 1
-    //     let firstIndex = l // the first record to end after startMs
-    //     let lastIndex = r // the last record to start before endMs
-
-    //     // first records first
-    //     while (l < r) {
-    //         // console.log('F', l, r)
-    //         const m = l + Math.round((r - l) / 2)
-    //         const mRec = this._originalArchive[m]
-    //         const prevRec = m > 0 ? this._originalArchive[m - 1] : null
-    //         // console.log(l, r, m, mRec, prevRec)
-    //         if (mRec.end > startMs) {
-    //             if (!prevRec || prevRec.end < startMs) {
-    //                 firstIndex = m
-    //                 // console.log('found!', m)
-    //                 break
-    //             } else {
-    //                 // console.log('going left')
-    //                 r = (m === r) ? (r - 1) : m
-    //             }
-    //         } else {
-    //             // console.log('going right')
-    //             l = (m === l) ? (l + 1) : m
-    //         }
-    //     }
-
-    //     l = 0
-    //     r = this._originalArchive.length - 1
-    //     // last records last
-    //     while (l < r) {
-    //         // console.log('L', l, r)
-    //         const m = l + Math.round((r - l) / 2)
-    //         const mRec = this._originalArchive[m]
-    //         const nextRec = m < this._originalArchive.length - 1 ? this._originalArchive[m + 1] : null
-    //         // console.log(l, r, m, mRec, prevRec)
-    //         if (mRec.start < endMs) {
-    //             if (!nextRec || nextRec.start > endMs) {
-    //                 lastIndex = m
-    //                 // console.log('found!', m)
-    //                 break
-    //             } else {
-    //                 // console.log('going left')
-    //                 r = (m === r) ? (r - 1) : m
-    //             }
-    //         } else {
-    //             // console.log('going right')
-    //             l = (m === l) ? (l + 1) : m
-    //         }
-    //     }
-
-    //     return { firstIndex, lastIndex }
-
-    // }
 
     protected _undetalizeArchiveSubRange (firstIndex: int, lastIndex: int, minGapMs) {
         const records = [];
@@ -338,7 +325,7 @@ export class BirdViewTreeNode {
         // console.log('GR', new Date(startMs), new Date(endMs))
         // console.log('GR', this.depth, this.startMs, this.endMs, '|',  this._minGapMs, '||', startMs, endMs, minGapMs)
         if (startMs > this._endMs || endMs < this._startMs) {
-            console.warn('BirdViewTree::getRecords miss');
+            // console.warn('BirdViewTree::getRecords miss');
             return [];
         }
 

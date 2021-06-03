@@ -39,6 +39,33 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 
+    videoErrorEventHandler (event: any) {
+        if (this.videoView.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+            // if 'webm' switch to 'hlc'
+            this.playback.changeTransport('hls');
+            return;
+        }
+
+        if (event.type === 'error') {
+            this.http.get(event.target.src)
+                .subscribe((response: any) => {
+                    switch (response.error) {
+                        case '4':
+                            if (response.errorString === 'Cannot decrypt media') {
+                                this.playback.unplayableArchive();
+                            } else {
+                                this.playback.setError(response.errorString);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }, (error) => {
+                    this.playback.setError(error.message);
+                });
+        }
+    }
+
     ngAfterViewInit(): void {
         const options = { autoplay: true };
         this.player = videojs(this.videoView.nativeElement, options);
@@ -62,33 +89,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         //     debugger;
         // });
 
-        this.videoView.nativeElement.addEventListener('error', (event: any) => {
-            // TODO: see if "this.videoView.nativeElement.error" object can be used (same?)
-            if (event.target.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
-                // if 'webm' switch to 'hlc'
-                this.playback.changeTransport('hls');
-                return;
-            }
-
-            if (event.type === 'error') {
-                this.http.get(event.target.src)
-                    .subscribe((response: any) => {
-                        switch (response.error) {
-                            case '4':
-                                if (response.errorString === 'Cannot decrypt media') {
-                                    this.playback.unplayableArchive();
-                                } else {
-                                    this.playback.setError(response.errorString);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }, (error) => {
-                        this.playback.setError(error.message);
-                    });
-            }
-        });
+        this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
 
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
         this.ux.alternateFullScreen$.subscribe(fullscreen => {
@@ -106,6 +107,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         if (this.player) {
             this.player.dispose();
         }
+        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
     }
 

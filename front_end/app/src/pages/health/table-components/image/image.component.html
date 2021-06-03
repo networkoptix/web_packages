@@ -3,7 +3,7 @@
         wide: aspect === '16:9' || aspect === 'Auto',
         normal: aspect === '4:3',
         square: aspect === '1:1'
-    }">
+    }" id="preloader-wrapper">
     <nx-pre-loader [type]="'generic-camera-preview'"></nx-pre-loader>
 </div>
 <div *ngIf="time && !show" class="header">{{time}}</div>

@@ -11,6 +11,7 @@ import { docMenuMap } from '../../_mocks/knowledge_base_landing.mock';
 import { nxConfig } from '../../services/nx-config/config';
 import { DirectivesModule } from '../../directives/directives.module';
 import { DebugElement } from '@angular/core';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('Test NxLeftMenuComponent', () => {
     let component: NxLeftMenuComponent;
@@ -51,7 +52,7 @@ describe('Test NxLeftMenuComponent', () => {
                     CommonModule,
                     DirectivesModule
                 ],
-                declarations : [NxLeftMenuComponent],
+                declarations : [NxLeftMenuComponent, RouterLinkDirectiveStub],
                 providers    : [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(Location, locationMock),

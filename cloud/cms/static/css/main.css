@@ -419,3 +419,9 @@ img.light {
     margin-left: -16px;
     margin-right: 8px;
 }
+
+.radio-hint {
+    font-weight: normal;
+    font-style: italic;
+    color: lightcoral;
+}

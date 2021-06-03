@@ -9,11 +9,12 @@ import {
 } from '@angular/forms';
 
 /* Usage
- <nx-radio name="groupName" id="groupID"
+ <nx-radio
+     [name]="groupName" componentId="groupID"
      [(ngModel)]="user.remember_me"
      (click)?="onClick($event)"
-     value="SOME_VALUE"
-     disabled?>LABEL
+     [value]="SOME_VALUE"
+     disabled?=BOOLEAN
  </nx-radio>
  */
 

@@ -18,7 +18,7 @@ Cloud block is visible for owner
 
 Cloud block is not visible for not owner
     [Tags]    webadmin
-    Log in to system    ${local system}    local_viewer
+    Log in to system    ${local system}    ${local system}[local users][viewer]
     Wait until element is not visible    ${CLOUD BLOCK}
 
 Connect To Cloud Form - email validation
@@ -37,7 +37,7 @@ Connect To Cloud Form - email validation
     END
 
 Connect To Cloud Form - negative scenarios
-    [Tags]    webadmin    deb
+    [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}
@@ -78,7 +78,7 @@ Connect To Cloud Form - negative scenarios
     Run Keyword and continue on failure    Should be equal as strings   ${error text}    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
 
 Connect To Cloud Form - cancel buttons works correctly
-    [Tags]    webadmin    deb
+    [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}
@@ -90,11 +90,11 @@ Connect To Cloud Form - cancel buttons works correctly
     Validate Cloud Block    False
 
     Log   Check that Cancel button doesn't trigger connection
-    ${cloud id}=   Get Cloud System Id    https://${QABURBANK IP}:${local system}[port]    ${local auth}
+    ${cloud id}=   Get Cloud System Id    https://${QABURBANK IP}:${local system}[port]    ${system}[local auth]
     Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
 
 Local owner can connect system to cloud
-    [Tags]    webadmin    deb
+    [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}
@@ -102,10 +102,10 @@ Local owner can connect system to cloud
     Validate Cloud Block    True
 
 Check UI for local not owner when connected to cloud
-    [Tags]    webadmin    deb
+    [Tags]    webadmin
     Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
 
-    Log in to system    ${local system}    local_viewer
+    Log in to system    ${local system}    ${local system}[local users][viewer]
     Wait until elements are visible
        ...    ${CLOUD NAME}
        ...    ${CLOUD LINK}
@@ -113,7 +113,7 @@ Check UI for local not owner when connected to cloud
     Wait until element is not visible    ${DISCONNECT FROM NX}
 
 Local owner can disconnect system from cloud
-    [Tags]    webadmin    deb
+    [Tags]    webadmin
     Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
 
     Log    Step 1
@@ -135,7 +135,7 @@ Local owner can disconnect system from cloud
 # CLOUD
 Should confirm, if not owner deletes system
     [Tags]    cloud
-    Log in to system    ${system}    ${users}[viewer]
+    Log in to system    ${system}    ${system}[cloud users][viewer]
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL WARNING}
@@ -147,26 +147,26 @@ Should confirm, if not owner deletes system
 
 Should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    cloud
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
 
 Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    cloud
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]   ${base password}    button=None
     Verify In System    ${system}[name]
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    cloud
     Log In    ${email noperm}    ${base password}
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    cloud
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${email noperm}    ${base password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
@@ -199,7 +199,7 @@ User can rename System: change in web -> check server
     Validate Header Button Text    ${new system name}    systems=False
 
     Log    Check that system name is changed - server
-    Restart Server   http://${QABURBANK IP}:${system}[port]    ${cloud auth}
+    Restart Server   http://${QABURBANK IP}:${system}[port]    ${system}[cloud auth]
     Sleep    10
     ${settings}=   Get System Settings    ${cloud auth}    http://${QABURBANK IP}:${system}[port]
     FOR    ${s}    IN    @{settings}
@@ -209,8 +209,8 @@ User can rename System: change in web -> check server
     END
 
     Log    Get initial system name back
-    Rename System    ${cloud auth}    ${system}[id]    ${system}[name]
-    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+    Rename System    ${cloud auth}    ${system}[cloud id]    ${system}[name]
+    ${settings}=   Get Cloud System Settings    ${system}[cloud auth]    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 User can rename System: change on server side -> check in web
@@ -229,7 +229,7 @@ User can rename System: change on server side -> check in web
 
     Log    Get initial system name back
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+    ${settings}=   Get Cloud System Settings    ${cloud auth}    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 # System Settings for different users
@@ -258,7 +258,7 @@ Correct items are shown for owner
 
 Correct items are shown for admin
     [Tags]    C41561    webadmin    cloud
-    Log in to system    ${system}    ${users}[cloudAdmin]
+    Log in to system    ${system}    ${system}[users][cloudAdmin]
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     Wait Until Elements Are Visible
@@ -282,7 +282,7 @@ Correct items are shown for admin
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin    cloud
-    ${viewers}=    Create List    ${users}[advancedViewer]    ${users}[viewer]     ${users}[liveViewer]     ${users}[custom]
+    ${viewers}=    Create List    ${system}[users][advancedViewer]    ${system}[users][viewer]     ${system}[users][liveViewer]     ${system}[users][custom]
     ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
@@ -340,7 +340,7 @@ Left menu search: Position and style
 
 Left menu search: Search menu for offline system
     [Tags]    C81761    cloud    search
-    Stop Docker Server    ${system}[cont]
+    Stop Docker Server    ${system}[id]
     Log in to system    ${system}    ${system}[owner]
 
     Log    Steps 2, 3
@@ -349,7 +349,7 @@ Left menu search: Search menu for offline system
     FOR    ${link}    ${alias}    IN ZIP    ${links}    ${aliases}
         Wait until element is visible    ${link}
         Click Link    ${link}
-        Wait Until Location Contains    ${ENV}/systems/${system}[id]/${alias}
+        Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/${alias}
         Run keyword and continue on failure    Validate Search Input
     END
 
@@ -357,24 +357,24 @@ Left menu search: Search menu for offline system
     Click Link    ${VIEW TAB}
     Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
     Wait Until element Is Not Visible    ${SEARCH INPUT}
-    Start Docker Server    ${system}[cont]
+    Start Docker Server    ${system}[id]
 
 Left menu search: Availability for different users
-    [Tags]    C81760    webadmin    cloud    search    deb
-    FOR     ${user}    IN    ${system}[owner]    ${users}[cloudAdmin]
+    [Tags]    C81760    webadmin    cloud    search
+    FOR     ${user}    IN    ${system}[owner]    ${system}[users][cloudAdmin]
         Log in to system    ${system}    ${user}
         Validate Search Input
         Log Out
     END
 
-    FOR     ${user}    IN    ${users}[advancedViewer]    ${users}[viewer]
+    FOR     ${user}    IN    ${system}[users][advancedViewer]    ${system}[users][viewer]
         Log in to system    ${system}    ${user}
         Wait until element is not visible    ${SEARCH INPUT}
         Log Out
     END
 
 Left menu search: Search mechanics
-    [Tags]    C81762    webadmin    cloud    search    deb
+    [Tags]    C81762    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
 
     Log    Step 1
@@ -394,16 +394,16 @@ Left menu search: Search mechanics
     ...    ${SEARCH RESULT ARROW}
 
     Log    Step 4
-    ${viewer info}=   Get Account Info    ${users}[viewer]
+    ${viewer info}=   Get Account Info    ${system}[cloud users][viewer]
     ${viewer id}=   Set Variable    ${viewer info}[id]
     Set Suite Variable    ${viewer id}
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
     Should Be Equal As Numbers    ${num users found}    6
     #TODO:  figure out failure
-#    Wait until element is visible    //span[contains(text(), "${users}[viewer]")]
-#    Click Link     //span[contains(text(), "${users}[viewer]")]/../..
-#    Wait until element is visible    //h2[contains(text(), "${users}[viewer]")]
+#    Wait until element is visible    //span[contains(text(), "${system}[cloud users]")]
+#    Click Link     //span[contains(text(), "${system}[cloud users]")]/../..
+#    Wait until element is visible    //h2[contains(text(), "$${system}[cloud users]")]
 
 Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    cloud    search
@@ -445,13 +445,13 @@ Left menu search: Searchable fields
     Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and contains(text(), "viewer")]
 
     Log    Step 8
-    Search For    ${users}[viewer]
-    ${highlighted}=   Fetch From Right    ${users}[viewer]    ${TEST EMAIL}+
+    Search For    ${system}[cloud users][viewer]
+    ${highlighted}=   Fetch From Right    ${system}[cloud users][viewer]    ${TEST EMAIL}+
     Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and text()="${TEST EMAIL}"]/following-sibling::span[contains(@class, "highlighted") and text()="${highlighted}"]
 
     Log    Step 9
-    Search For    ${system}[cont]
-    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and text()="${system}[cont]"]
+    Search For    ${system}[id]
+    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and text()="${system}[id]"]
 
 
 # Disconnect System from Cloud
@@ -527,17 +527,17 @@ Cloud Owner can disconnect System from Cloud
     Log Out
 
     Log    Step 3 - Verify cloud API gets correct list of systems
-    ${viewer systems}=   Get Account Systems    ${ENV}    ${users}[viewer]    ${base password}
-    Should Not Contain    ${viewer systems}    ${system}[id]
+    ${viewer systems}=   Get Account Systems    ${ENV}    ${system}[cloud users][viewer]    ${base password}
+    Should Not Contain    ${viewer systems}    ${system}[cloud id]
 
     Log     C47020: checking that system is disconnected from cloud on the server side
-    Restart Server    http://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Restart Server    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Sleep    10
-    Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${local auth}
+    Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     # Verify the system is removed from others' users accounts
-    Log In    ${users}[viewer]    ${base password}
+    Log In    ${system}[cloud users][viewer]    ${base password}
     Wait Until Location Is    ${ENV}/systems
     Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]
     Validate Header Button Text    0

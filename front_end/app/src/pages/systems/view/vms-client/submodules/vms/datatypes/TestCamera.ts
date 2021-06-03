@@ -1,6 +1,7 @@
 import { ms, int } from '../../../utils/type-aliases';
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
+import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive, SimpleTimeRange } from './ICamera';
 import BirdViewTree from './BirdViewTree';
+import { _getNextRecord, _isThereRecord } from './utils';
 
 export class TestCamera implements ICamera {
     protected _birdViewTree: BirdViewTree
@@ -98,6 +99,19 @@ export class TestCamera implements ICamera {
     public get availableTransports () {
         return ['hls', 'wemb'];
     }
+
+    public setNewlyRecordedChunks (rs: CameraArchive) {
+        // noop
+    }
+
+    public isThereRecord (t: ms) {
+        return _isThereRecord(this.archive, t)
+    }
+
+    public getNextRecord (t: ms): ISimpleTimeRange {
+        return _getNextRecord(this.archive, t)
+    }
+
 }
 
 export default TestCamera;

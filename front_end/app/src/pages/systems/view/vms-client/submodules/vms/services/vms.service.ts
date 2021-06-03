@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import IMediaServer from '../datatypes/IMediaServer';
 import Camera from '../datatypes/Camera';
 // import testMediaServers from '../testMediaServers'
-import { GUID } from '../../../utils/type-aliases';
+import { GUID, ms } from '../../../utils/type-aliases';
 import {
     VmsState,
     VMS_MODE,
@@ -12,7 +12,8 @@ import {
     createCameraNotSelectedState,
     createCameraSelectedState
 } from '../datatypes/VmsState';
-import ICamera from '../datatypes/ICamera';
+import ICamera, { CameraArchive } from '../datatypes/ICamera';
+import { ServerTimeInfo } from '@services/system.service';
 
 @Injectable({
     providedIn: 'root'
@@ -81,6 +82,22 @@ export class VideoManagementSystemService {
         }
     }
 
+    protected _serverTimes: Array<ServerTimeInfo> = []
+
+    public set serverTimes (st: Array<ServerTimeInfo>) {
+        this._serverTimes = [...st]
+        // if (this.serverTimes?.length) {
+        //     console.log('SET TIMEZONE', this.serverTimes[0].timeZoneOffset)
+        // }
+    }
+
+    public get timeZoneOffset (): ms {
+        if (!this.serverTimes?.length) {
+            return 0
+        }
+        return this.serverTimes[0].timeZoneOffset - (new Date()).getTimezoneOffset() * 60000
+    }
+
     public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {
         this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this._systemId = systemId;
@@ -105,6 +122,19 @@ export class VideoManagementSystemService {
             });
         } else {
             this._warn('attempt to set camera records while in NOT_INITIALIZED state', cameraId, range, records);
+        }
+    }
+
+    public setCameraNewlyRecordedChunks (cameraId: string, records: CameraArchive) {
+        if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
+            this._state.mediaServers.map(ms => {
+                const c = ms.cameras.find(c => c.id === cameraId);
+                if (c) {
+                    c.setNewlyRecordedChunks(records);
+                }
+            });
+        } else {
+            this._warn('attempt to set camera newly recorded records while in NOT_INITIALIZED state', cameraId, records);
         }
     }
 

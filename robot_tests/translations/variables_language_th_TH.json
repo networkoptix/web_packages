@@ -364,6 +364,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "ระบบปฏิบัติการ",
     "VERSION TEXT": "เวอร์ชัน",
+    "SERVER PORT IS REQUIRED TEXT": "Server port is required",
     "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
     "SERVER RESTARTED TEXT": "เซิร์ฟเวอร์รีสตาร์ทสำเร็จแล้ว",
     "HOURS TEXT": "ชั่วโมง",

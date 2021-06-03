@@ -1,6 +1,6 @@
 import {
     Component, Inject, OnDestroy,
-    OnInit, ViewContainerRef
+    OnInit, ViewChild, ViewContainerRef
 }                                               from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
@@ -23,6 +23,7 @@ import { NxToastService }                       from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { WINDOW }                               from '@services/window-provider';
 import { environment }                          from '@environments/environment';
+import { NxContentBlockSectionComponent } from '../../../../components/content-block/section/section.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -58,6 +59,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     emptyName = false;
     username: string;
     role: string;
+
+    @ViewChild('userSettingsForm') userSettingsForm: HTMLFormElement;
 
     get localUserName() {
         return this.localUserNameWatcher.value;
@@ -174,6 +177,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     initProcesses() {
         this.editUser = this.processService.createProcess(async() => {
+            if (this.userSettingsForm?.invalid) {
+                return Promise.reject();
+            }
             const user = this.selectedUser;
             if (!user.name || this.locked[user.email]) {
                 return Promise.reject();

@@ -8,7 +8,7 @@ import { WINDOW } from '../../../../services/window-provider';
 import {
     integrationsNode
 } from '../../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider, sanitizerMock, TranslateTestingModule } from '../../../../_mocks/helpers.test';
+import { getMockTranslations, MockProvider, sanitizerMock, TranslateTestingModule } from '../../../../_mocks/helpers.test';
 import { Router } from '@angular/router';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxCloudApiService } from '../../../../services/nx-cloud-api';
@@ -17,6 +17,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Integrations Node', () => {
     let component: NxIntegrationsComponent;
@@ -32,13 +33,11 @@ describe('For Developers Landing - Integrations Node', () => {
 
     const configMock = { config: nxConfig };
 
-    const langMock = {
-        translations: {
-            common: {
-                morePlugins: ({ count, startTag, endTag }) => `${startTag}${count}${endTag} more integrations...`
-            }
+    const langMock = getMockTranslations({
+        common: {
+            morePlugins: ({ count, startTag, endTag }) => `${startTag}${count}${endTag} more integrations...`
         }
-    };
+    });
 
     const cloudApiMock = {
         getIntegrationsCount: () => new BehaviorSubject(integrations)
@@ -69,7 +68,7 @@ describe('For Developers Landing - Integrations Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxIntegrationsComponent],
+                declarations : [NxIntegrationsComponent, RouterLinkDirectiveStub],
                 imports      : [
                     PipesModule,
                     CommonModule,

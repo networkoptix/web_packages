@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
-Test Setup        Advanced Server Settings Test Setup    ${owner}    ${cloud id}
+Test Setup        Advanced Server Settings Test Setup    ${server['owner']}    ${server['cloud id']}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
@@ -15,34 +15,20 @@ Server Advanced Settings Suite Setup
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    Set Suite Variable    ${owner}    ${owner}
-    Set Suite Variable    @{cloud auth}    ${owner}    ${password}
-    #system(name,port,cont,owner,id)
-    #local auth, cloud auth, server url,
-    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
-    ${system}=   Create Docker Server    servers_advanced${random}    storage string=-v recordings:/recordings
-    Set Suite Variable    ${system}    ${system}
-    Set Suite Variable    @{server auth}    admin    ${password}
-    Setup Local System    https://${QA BURBANK IP}:${system['port']}    ${password}    2servertest1
-    ${cloud id}=    Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${system['port']}    2servertest1    ${owner}    ${password}
-    Set Suite Variable    ${cloud id}    ${cloud id}
-    &{users}=    Register and Activate Generic Users    password=${password}
-    Set Suite Variable    ${users}    ${users}
-    Add user to cloud system if not there    ${cloud id}    cloudAdmin        ${users['cloudAdmin']}          auth=${cloud auth}
-    Add user to cloud system if not there    ${cloud id}    viewer            ${users['viewer']}         auth=${cloud auth}
-    Add user to cloud system if not there    ${cloud id}    advancedViewer    ${users['advancedViewer']}     auth=${cloud auth}
-    Add user to cloud system if not there    ${cloud id}    custom            ${users['custom']}         auth=${cloud auth}
-    Add user to cloud system if not there    ${cloud id}    liveViewer        ${users['liveViewer']}    auth=${cloud auth}
+    ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
+    Set Suite Variable    &{server}    &{server} 
     Open Browser and go to URL    ${url}
 
 Advanced Server Settings Test Setup
     [Arguments]    ${email}    ${system id}
-    Log in to user and system    ${email}    ${system id}/servers
+    Log in to user and system      ${email}    ${system id}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
 
 Server Advanced Settings Suite Teardown
     Close All Browsers
-    Stop Docker Server    ${system['id']}
-    Delete Docker Server    ${system['id']}
+    Stop Docker Server    ${server['id']}
+    Delete Docker Server    ${server['id']}
 
 *** Test Cases ***
 Advanced server settings availability
@@ -61,7 +47,7 @@ Advanced server settings availability
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 3
     Log Out
-    Log in to user and system    ${users['admin']}    ${cloud id}
+    Log in to user and system    ${server['cloud users']['cloudAdmin']}    ${server['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Elements Should Not Be Visible
@@ -76,7 +62,7 @@ Advanced server settings availability
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 4
     Log Out
-    Log in to user and system    ${users['advViewer']}    ${cloud id}
+    Log in to user and system    ${server['cloud users']['advancedViewer']}    ${server['cloud id']}
     Elements Should Not Be Visible    ${SERVERS LINK}
     Go To    ${location}${ADVANCED SETTINGS}
     Elements Should Not Be Visible
@@ -221,7 +207,7 @@ Log settings functionality
        ${id} =    Get Element Attribute    ${dropdown}    id
        ${original} =    Get Text    ${dropdown}/span
        ${original} =    Fetch From Left    ${original}    (
-       Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${system['port']}
+       Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${server['port']}
        Set Log Level Option    ${dropdown}    ${id}    ${original}
        Reload Page
     END
@@ -230,11 +216,11 @@ Advanced server settings for offline system
     [Tags]    C76559    threaded
     Log    Preconditions
     Log Out
-    Log in to user and system    ${owner}    ${cloud id}
+    Log in to user and system    ${server['owner']}    ${server['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
-    Stop Docker Server    ${system['id']}
+    Stop Docker Server    ${server['id']}
     ${location} =    Get Location
 
     Log    Step 1
@@ -246,7 +232,7 @@ Advanced server settings for offline system
     ...    @{LOG SETTINGS BLOCK}
 
     Log    Step 2: make sure settings are back after the server is back online
-    Start Docker Server    ${system['id']}
+    Start Docker Server    ${server['id']}
     Reload Page
     Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=90
     Verify on Servers Page
