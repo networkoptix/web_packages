@@ -22,19 +22,14 @@ import {
     introNode,
     routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
+import { getMockTranslations, MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
+import { CommonModule } from '@angular/common';
 
 describe('For Developers Landing', () => {
     let component: NxAboutComponent;
     let fixture: ComponentFixture<NxAboutComponent>;
     let el: DebugElement;
-    const translateMock = {
-        translations: {
-            pageTitles: {
-                systems: () => 'Systems'
-            }
-        }
-    };
+    const translateMock = getMockTranslations();
     const configMock = { config: { ...nxConfig, docMenuMap } };
 
     const account = { is_superuser: false };
@@ -64,8 +59,12 @@ describe('For Developers Landing', () => {
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations : [NxAboutComponent],
-                imports      : [FormsModule, TranslateTestingModule],
-                providers    : [
+                imports      : [
+                    CommonModule,
+                    FormsModule,
+                    TranslateTestingModule
+                ],
+                providers: [
                     new MockProvider(NxCloudApiService, cloudApiMock),
                     NxHeaderService,
                     new MockProvider(ActivatedRoute, landingRoute),

@@ -299,12 +299,16 @@ export class NxUtilsService {
         return (isArray(target) ? target[0] : target)?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
+    static findTouch(e: TouchEvent) {
+        return e.targetTouches?.[0] || e.changedTouches?.[0] || e.touches?.[0];
+    }
+
     static calcClientX(e: MouseEvent|TouchEvent): number {
         let clientX;
         if (e instanceof MouseEvent) {
             clientX = e.clientX;
         } else {
-            clientX = e?.targetTouches[0].clientX;
+            clientX = NxUtilsService.findTouch(e).clientX || 0;
         }
         return clientX;
     }
@@ -316,7 +320,7 @@ export class NxUtilsService {
         } else {
             // @ts-ignore
             const rect = (e.target)?.getBoundingClientRect();
-            offsetX = e?.targetTouches?.[0]?.pageX - rect.left;
+            offsetX = (NxUtilsService.findTouch(e)?.pageX || 0) - rect.left;
         }
         return offsetX;
     }
@@ -326,7 +330,7 @@ export class NxUtilsService {
         if (e instanceof MouseEvent) {
             screenX = e.screenX;
         } else {
-            screenX = e.touches?.[0]?.screenX || 0;
+            screenX = NxUtilsService.findTouch(e)?.screenX || 0;
         }
         return screenX;
     }

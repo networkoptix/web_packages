@@ -18,6 +18,7 @@ module.exports = function(config) {
             require('karma-safari-launcher'),
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
+            require('karma-spec-reporter'),
             require('@angular-devkit/build-angular/plugins/karma')
         ],
 
@@ -43,7 +44,7 @@ module.exports = function(config) {
         preprocessors: {},
 
         // test results reporter to use
-        // possible values: 'dots', 'progress'
+        // possible values: 'dots', 'progress', 'coverage-istanbul', 'kjhtml', 'spec'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         // reporters: ['progress'],
         reporters: ['progress'],

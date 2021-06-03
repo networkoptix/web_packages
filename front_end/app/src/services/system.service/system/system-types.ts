@@ -99,20 +99,22 @@ export interface NxCamera {
     url: string;
     status: string; // TODO: enum (@gbezyuk)
     scheduleEnabled: boolean;
+    disableDualStreaming: boolean;
     addParams: Array<AdditionalParam>;
 }
 
 export interface NxMediaServer {
     id: string;
     name: string;
-    url: string;
+    networkAddresses: any;
     status: string;
     timeInfo: ServerTimeInfo;
+    ip?: string,
+    port?: string,
 
     // considered obligatory for now, though may change later on (@gbezyuk)
     cameras: NxCamera[];
 }
-
 
 export interface Condition {
     paramId: string;

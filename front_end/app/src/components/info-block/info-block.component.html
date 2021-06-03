@@ -16,7 +16,7 @@
             <div class="block-section-values">
                 <p *ngFor="let line of block.lines; let lineIndex=index"
                    [ngClass]="line.customClass"
-                   [style.min-height.px]="heightCache[getLookup(columnIndex, blockIndex, lineIndex)]"
+                   [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                    [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                    [title]="line.tooltip || line.name + '-' + line.value"
                 >{{line.value}}<span *ngIf="line.icon">

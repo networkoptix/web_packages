@@ -11,6 +11,8 @@ import {
 } from '../../../../_mocks/knowledge_base_landing.mock';
 import { MockProvider } from '../../../../_mocks/helpers.test';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Capabilities Node', () => {
     const stepToTest = 1;
@@ -37,8 +39,8 @@ describe('For Developers Landing - Capabilities Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxGetStartedComponent],
-                imports      : [],
+                declarations : [NxGetStartedComponent, RouterLinkDirectiveStub],
+                imports      : [CommonModule],
                 providers    : [
                     new MockProvider(Router, routeLandingMock),
                     new MockProvider(NxConfigService, configMock),

@@ -12,6 +12,7 @@ export function setupConfig(): IConfig {
             }
         },
         apiBase                      : '/api',
+        browserNotSupported          : false,
         cameraCredentialUpdateTimeout: 1500,
         cameraSettings               : {
             sensitivityColors: [

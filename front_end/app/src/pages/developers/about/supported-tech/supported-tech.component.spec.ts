@@ -11,6 +11,8 @@ import {
 } from '../../../../_mocks/knowledge_base_landing.mock';
 import { MockProvider } from '../../../../_mocks/helpers.test';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Supported Tech Node', () => {
     let component: NxSupportedTechComponent;
@@ -22,8 +24,8 @@ describe('For Developers Landing - Supported Tech Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxSupportedTechComponent],
-                imports      : [],
+                declarations : [NxSupportedTechComponent, RouterLinkDirectiveStub],
+                imports      : [CommonModule],
                 providers    : [
                     new MockProvider(Router, routeLandingMock),
                     new MockProvider(NxConfigService, configMock),

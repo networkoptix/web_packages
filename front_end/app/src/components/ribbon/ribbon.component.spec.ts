@@ -9,6 +9,7 @@ import { RouterLinkDirectiveStub }            from '@src/_testing';
 import { TranslateModule }                    from '@ngx-translate/core';
 import { NxLanguageProviderService }          from '@services/nx-language-provider';
 import { setupConfig }                        from '@src/_mocks/config.test';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -32,7 +33,10 @@ describe('NxRibbonComponent', () => {
 
         TestBed.configureTestingModule({
             declarations : [NxRibbonComponent, RouterLinkDirectiveStub],
-            imports      : [TranslateTestingModule],
+            imports      : [
+                CommonModule,
+                TranslateTestingModule
+            ],
             providers    : [
                 NxRibbonService,
                 { provide: NxLanguageProviderService, useValue: translateMock },

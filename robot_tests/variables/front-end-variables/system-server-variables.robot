@@ -5,6 +5,7 @@ ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/..//input[@type="number"]
+${SERVER PORT IS REQUIRED ERROR}    //div/span[contains(@class,"input-error") and contains(text(),"${SERVER PORT IS REQUIRED TEXT}")]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
@@ -33,7 +34,7 @@ ${CS MODAL KEEP BUTTON}             ${CHANGE ANALYTICS MODAL}/div[contains(@clas
 ${CS MODAL CANCEL BUTTON}           ${CHANGE ANALYTICS MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
 ${CS MODAL PARAGRAPH}               ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE TEXT}")]
 ${CS MODAL CONTACT}                 ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE CONTACT TEXT}")]
-${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a 
+${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a
 
 ${STORAGE LOCATIONS BLOCK}          //nx-block/div[contains(@class, "storage-info")]
 ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE LOCATIONS BLOCK}//div[contains(@class, "placeholder-preloader")]

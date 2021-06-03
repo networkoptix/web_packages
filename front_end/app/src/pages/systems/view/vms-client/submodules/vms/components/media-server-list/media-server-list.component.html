@@ -19,9 +19,9 @@
       }">
       <div class="server-name"
            (click)=changeServerVisibility(server.id)
-           [title]="server.url | ip_info">
+           [title]="server.ip">
         <span class="name" [ngClass]="server.status" [innerHTML]="server.name | highlight:token"></span>
-        <span class="ip-info" [innerHTML]="server.url | ip_info | highlight:token"></span>
+        <span *ngIf="showIP" class="ip-info" [innerHTML]="server.ip | highlight:token"></span>
         <svg-icon nx-add-svg-src
           [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
           [applyClass]="true"></svg-icon>

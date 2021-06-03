@@ -57,7 +57,7 @@ export class StorageManager extends StorageState {
         return this.serverManager.checkForAnalyticsData(serverId);
     }
 
-    async getBackupState(serverId: string, hasOnlineBackups: boolean) {
+    async getBackupState(serverId: string) {
         const settings = (await this.system.updateOrGetSystemSettings().toPromise()).reply?.settings;
         try {
             const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
@@ -81,7 +81,7 @@ export class StorageManager extends StorageState {
             console.info('getting backup state for legacy system');
         }
         const backupType = this.serverManager.servers.find(({ id }) => id === serverId).backupType;
-        const backup = hasOnlineBackups && backupType !== 'BackupManual';
+        const backup = backupType !== 'BackupManual';
         const custom = backup && (
             backupType === 'BackupSchedule' ||
                 !this.system.cameraManager.cameras.every(({ backupType }) => ['CameraBackupLowQuality', 'CameraBackupDefault'].includes(backupType)) ||

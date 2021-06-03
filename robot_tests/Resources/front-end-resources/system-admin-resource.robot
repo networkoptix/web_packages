@@ -4,25 +4,30 @@ Library    String
 
 # Setups and teardowns
 System Admin Suite Setup
-    Create Base Cloud System    image=${IMAGE 4.3}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
-    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${local auth}    ${CAMERA NAME}
-    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
-        ...    ${local auth}
-        ...    https://${QABURBANK IP}:${local system}[port]
-        ...    local_viewer
-        ...    ${permissions}[viewer]
-        ...    noptixautoqa+local_viewer@gmail.com
-        ...    local_viewer
-        ...    ${base password}
-        ...    is cloud=${False}
+#    Create Base Cloud System    image=${IMAGE 4.3}
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
+    ${local system}=   Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
+#    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
+#    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
+#        ...    ${local auth}
+#        ...    https://${QABURBANK IP}:${local system}[port]
+#        ...    local_viewer
+#        ...    ${permissions}[viewer]
+#        ...    noptixautoqa+local_viewer@gmail.com
+#        ...    local_viewer
+#        ...    ${base password}
+#        ...    is cloud=${False}
+    Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
     Open browser and go to URL    ${ENV}
 
 System Admin Suite Teardown
     Delete Base Cloud System
-    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[cont]
+    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[id]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
 
@@ -36,7 +41,7 @@ System Admin Test Restart
     Run Keyword If    ${logged in}    Log Out
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
 #    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
-    Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
+    Run Keyword If Test Failed    Start Docker Server    ${system}[cloud id]
 
 # Waits
 Wait until settings are visible

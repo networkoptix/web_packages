@@ -2,55 +2,28 @@
 set -e
 
 #DIR is the location of the cloud_portal build script in the repository
-#Can be called like this from with cloud_portal/build_scripts "./build.sh"
+#Can be called like this from with build_scripts "./build.sh"
 # or from cloud_portal "./build_scripts/build.sh"
-#or like this from outside the repository "../nx_vms/cloud_portal/build_scripts/build.sh"
+#or like this from outside the repository "../build_scripts/build.sh"
 
-VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
-[[ "$VMS_REPOSITORY" =~ (.*)\/cloud_portal.* ]]; REPO=${BASH_REMATCH[1]}
+PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+[[ "$PORTAL_REPOSITORY" =~ (.*\/cloud_portal).* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
     echo "Updating Cloud Portal sources"
-    if [ -e "cloud_portal" ]; then
-        pushd cloud_portal
-            for entry in $(ls -A $VMS_REPOSITORY/cloud_portal/)
-            do
-                if [ "$entry" == "robot_tests" ]; then
-                    continue
-                fi
-
-                if [ "$entry" == "front_end" ] ; then
-                    pushd $entry
-                    for element in $(ls -A $VMS_REPOSITORY/cloud_portal/$entry/)
-                    do
-                        echo "copy $entry/$element"
-                        [ -e "$element" ] && rm -rf "$element"
-                        cp -pr "$VMS_REPOSITORY/cloud_portal/$entry/$element" "$element"
-                    done
-                    popd
-                else
-                    echo "copy $entry"
-                    [ -e "$entry" ] && rm -rf "$entry"
-                    cp -pr "$VMS_REPOSITORY/cloud_portal/$entry" "$entry"
-                fi
-            done
-        popd
-    else
-        echo "Blindly Copying cloud_portal"
-        rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
-    fi
-    pushd cloud_portal
+    rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $PORTAL_REPOSITORY .
 else
     echo "In repository skip copying sources"
-    pushd $VMS_REPOSITORY/cloud_portal
 fi
 
 echo "pip install requirements"
 [ ! -d "env" ] && virtualenv env -p python3
 . ./env/bin/activate
-pip install -r build_scripts/requirements.txt
+pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
+
+cd $PORTAL_REPOSITORY
 
 pushd front_end
     echo "npm install cloud portal"
@@ -85,7 +58,7 @@ for dir in ../skins/*/
 do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
-    ./build_skin.sh $SKIN $VMS_REPOSITORY
+    ./build_skin.sh $SKIN $PORTAL_REPOSITORY
     if [ -n "$LOCAL_ENV" ]; then
       break
     fi

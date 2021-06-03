@@ -64,11 +64,13 @@
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
                 </div>
             </nx-section>
-            <nx-section *ngIf="!selectedUser.isCloud" type="no-spacing">
+
+            <nx-section type="no-spacing" >
                 <form #userSettingsForm="ngForm"
-                    name="userSettingsForm"
-                    class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
-                    novalidate>
+                      *ngIf="!selectedUser.isCloud"
+                      name="userSettingsForm"
+                      class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
+                      novalidate>
                     <div class="form-group d-md-table-row d-flex flex-column">
                         <label for="fullName"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
@@ -91,11 +93,12 @@
                             pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
                             [disabled]="!(isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
-                        <span class="input-error" *ngIf="emailInput.invalid && emailInput.touched"
+                        <span class="input-error mt-1 ml-2 d-block" *ngIf="emailInput.invalid && emailInput.touched"
                             translate>Email format incorrect</span>
                     </div>
                 </form>
             </nx-section>
+
             <nx-section *ngIf="(selectedUser.isCloud || selectedUser.isLocalOwner && selectedUser.isMe) || selectedUser.canBeEdited">
                 <div *ngIf="!CONFIG.isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"

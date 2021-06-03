@@ -8,7 +8,7 @@ import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { WINDOW } from '@services/window-provider';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-get-started',
     templateUrl : 'get-started.component.html',
