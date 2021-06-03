@@ -237,7 +237,7 @@ def token(request):
 @permission_classes((IsAuthenticatedOrTokenHasScope,))
 def revoke_token(request):
     require_params(request, ("token", ))
-    return Auth.delete_token(request, request.data["token"])
+    return api_success(Auth.delete_token(request, request.data["token"]))
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,

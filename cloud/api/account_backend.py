@@ -6,6 +6,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
+from rest_framework.authentication import TokenAuthentication
 
 from api.models import AccountLoginHistory, AccountManager, Account
 from api.controllers.cloud_api import Auth
@@ -72,6 +73,19 @@ class AccountBackend(ModelBackend):
             return Account.objects.get(pk=user_id)
         except ObjectDoesNotExist:
             return None
+
+
+class BearerAuthentication(TokenAuthentication):
+    keyword = 'Bearer'
+    model = Account
+
+    def authenticate_credentials(self, token):
+        model = self.get_model()
+        try:
+            validate_token = Auth.validate_token(token)
+        except APINotAuthorisedException:
+            return None
+        return model.objects.get(email=validate_token['username']), token
 
 
 @receiver(user_logged_in)

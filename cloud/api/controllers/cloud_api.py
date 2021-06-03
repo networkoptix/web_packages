@@ -62,7 +62,9 @@ def auto_refresh_token(func):
         except requests.exceptions.HTTPError as e:
             response_data = hasattr(res, "json") and res.json()
             if not refresh_token:
-                if response_data and response_data["resultCode"] in [ErrorCodes.not_authorized.value,
+                if response_data and response_data["resultCode"] in [ErrorCodes.bad_username.value,
+                                                                     ErrorCodes.not_authorized.value,
+                                                                     ErrorCodes.not_found.value,
                                                                      ErrorCodes.account_not_activated.value]:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
