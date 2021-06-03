@@ -54,6 +54,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
     showElementsInFSM: boolean;
+    onShowElements: any;
     onMoveShowElements: any;
 
     protected _routeSubscription: Subscription
@@ -127,10 +128,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this._log('fullscreenchange', e, fse);
             this.fullscreenMode = !!fse;
             if (this.fullscreenMode) {
-                setTimeout(() => {
+                this.onShowElements = setTimeout(() => {
                     this.showElementsInFSM = false;
                 }, 3000);
             } else {
+                clearTimeout(this.onShowElements);
                 clearTimeout(this.onMoveShowElements);
                 this.showElementsInFSM = true;
             }
@@ -458,7 +460,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 fullscreen.exit();
                 this.self.nativeElement.classList.remove('is-full-screen');
             }
-        }, 0);
+        });
     }
 
     protected _onRouteChange (params) {
