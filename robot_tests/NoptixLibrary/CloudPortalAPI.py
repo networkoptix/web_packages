@@ -117,7 +117,7 @@ class CloudPortalAPI(object):
             return r.json()
 
     @staticmethod
-    def my_get_system_settings(server_url, local_auth):
+    def get_system_settings(server_url, local_auth):
         r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
         assert r.status_code == 200, 'Failed to get system settings'
         return r.json()
