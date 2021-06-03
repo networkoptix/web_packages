@@ -166,8 +166,6 @@ Log Out via API
     Sleep    2
     Reload Page
     Sleep    5
-    Reload Page
-    Sleep    5
     Go To    ${ENV}
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
@@ -229,6 +227,7 @@ Restart Server
     Create Digest Session    Restart Server session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
     ${resp}=   Get Request    Restart Server session     /api/restart    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
 
 Restore Factory Defaults
     [Arguments]    ${server url}    ${auth}

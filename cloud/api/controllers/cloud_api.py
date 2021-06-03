@@ -37,7 +37,11 @@ def basic_digest_handler(use_basic_auth=False):
 
         def handler(*args, **kwargs):
             nonlocal use_basic_auth
-            credentials = kwargs.get('auth')
+            credentials = kwargs.get("auth")
+            if not credentials:
+                kwargs["auth"] = None
+                return func(*args, **kwargs)
+
             email = credentials["email"]
             password = credentials["password"]
             res = None
@@ -48,12 +52,10 @@ def basic_digest_handler(use_basic_auth=False):
                 return res
             except requests.HTTPError:
                 # If none that means we chose correctly for the auth type.
-                if res and not res.headers.get('WWW-Authenticate'):
-                    res.raise_for_status()
+                if res is not None and not res.headers.get("WWW-Authenticate"):
+                    return res
                 use_basic_auth = not use_basic_auth
-                res = (basic_auth_handler if use_basic_auth else digest_auth_handler)(email, password, *args, **kwargs)
-                res.raise_for_status()
-                return res
+                return (basic_auth_handler if use_basic_auth else digest_auth_handler)(email, password, *args, **kwargs)
         return handler
     return outer_handler
 
