@@ -133,12 +133,14 @@ export class PlaybackService implements OnDestroy {
             setTimeout(() => this.playArchive(t, paused), 0)
             return
         }
-        const LAST_MINUTE_SIZE = 9e4 // 1.5 minutes
-        if (t > Date.now() - LAST_MINUTE_SIZE || (
-            !this.vms.selectedCamera.isThereRecord(t) &&
-            !this.vms.selectedCamera.getNextRecord(t)
-        )) {
-            return this.playLive()
+        if (!paused) {
+            const LAST_MINUTE_SIZE = 9e4 // 1.5 minutes
+            if (t > Date.now() - LAST_MINUTE_SIZE || (
+                !this.vms.selectedCamera.isThereRecord(t) &&
+                !this.vms.selectedCamera.getNextRecord(t)
+            )) {
+                return this.playLive()
+            }
         }
         this._state = createInitialArchiveState(
             this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality, t),
@@ -148,10 +150,7 @@ export class PlaybackService implements OnDestroy {
             this.vms.selectedCamera.getPosterUrl(t)
         );
         this._state.paused = paused;
-        if (!paused && t >= this.vms.selectedCamera.archiveRange.end) {
-            this._state.started = true;
-        }
-        this._log('started archive', this._state.quality, this._state.currentTime, this._state.sourceUrl);
+        this._log('archive playback initiated', t, paused, this._state.quality, this._state.currentTime, this._state.sourceUrl);
         this._emit();
     }
 
@@ -180,10 +179,11 @@ export class PlaybackService implements OnDestroy {
                 this._warn('PAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                this._warn('PAUSE request while playback mode is LIVE (performing STOP instead)');
-                if (this.canPlayArchive(0)) {
+                if (this.vms.selectedCamera.isRecording) {
+                    this._log('camera is recording, transition to archive playback')
                     this.playArchive(Date.now(), true);
                 } else {
+                    this._log('camera is not recording, playback stop')
                     this.stop();
                 }
                 break;
@@ -394,7 +394,7 @@ export class PlaybackService implements OnDestroy {
             case PLAYBACK_MODE.STOPPED:
                 return false;
             case PLAYBACK_MODE.LIVE:
-                return false;
+                return true;
             case PLAYBACK_MODE.ARCHIVE:
                 return !this._state.paused;
             default:
@@ -502,19 +502,6 @@ export class PlaybackService implements OnDestroy {
                 setTimeout(() => this.playArchive(t), 0);
                 break;
         }
-        // if (this.state.mode === PLAYBACK_MODE.STOPPED) {
-        //   return
-        // }
-        // const was = this.state.sourceUrl
-        // this.state.sourceUrl = this.state.sourceUrl
-        //   .replace('?lo', '%QUALITY%').replace('?hi', '%QUALITY%').replace('?', '%QUALITY%')
-        //   .replace('%QUALITY', '?' + (q === 'auto' ? '' : q.slice(0, 2)))
-        // if (was !== this.state.sourceUrl) {
-        //   console.log('playback: changing stream quality, from', was, 'to', this.state.sourceUrl)
-        //   this._emit()
-        // } else {
-        //   console.log('no real source change', this.state.sourceUrl)
-        // }
     }
 }
 
