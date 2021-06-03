@@ -494,13 +494,13 @@ export class NxSystemStorageComponent implements OnInit {
             this.modeWatchers[this.normalizeId(id)].value = selected.value;
             this.changedModes = [...this.changedModes, id];
             const store = this.currentStorageState.locations.find(({ storageId }) => this.normalizeId(storageId) === this.normalizeId(id));
+            store.usedForWriting = updateParams.usedForWriting;
             if (selected.value !== 'modeNotUsed') {
                 store.isBackup = updateParams.isBackup;
                 if (store.isBackup && !store.currentStorageState.onlineBackups) {
                     this.backupState ||= store.isBackup;
                 }
             }
-            store.usedForWriting = updateParams.usedForWriting;
         }
 
         const hasArchive = id => !!this.currentStorageState.locations.find(({ storageId }) => id === `{${storageId}}`)?.vmsSpace;
