@@ -181,7 +181,7 @@ export class NxSystemStorageComponent implements OnInit {
                     }
                 });
                 const backupState = await this.system.storageManager.getBackupState(
-                    this.serverId, !!this.currentStorageState.onlineBackups
+                    this.serverId
                 ).catch(err => {
                     console.error(err);
                     return { backup: false, custom: false };
@@ -370,10 +370,12 @@ export class NxSystemStorageComponent implements OnInit {
                 }
                 return cameras;
             }, [] as (() => Promise<ChangedIdReturned>)[]);
-            await of(...cameraSettingsToSave).pipe(
-                bufferCount(30),
-                concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
-            ).toPromise();
+            if (cameraSettingsToSave.length) {
+                await of(...cameraSettingsToSave).pipe(
+                    bufferCount(30),
+                    concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
+                ).toPromise();
+            }
             await this.system.update();
         }
         this.customSettings = false;
