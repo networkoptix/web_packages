@@ -66,7 +66,7 @@ Anonymous: Different page widths
 
 # User has no systems connected to cloud
 No systems: Header button text is correct
-    [Tags]    threadable    no_sys
+    [Tags]    threadable    no_sys$
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    0    systems=True
@@ -103,7 +103,7 @@ One system: Logo goes to view for that system
     Log In    ${one system owner}    ${BASE PASSWORD}
     Wait Until Element is Visible    ${HEADER ICON LINK}
     Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${ENV}/systems/${main system}[id]/view
+    Wait Until Location is    ${ENV}/systems/${main system}[cloud id]/view
 
 One system: Header button displays the system name
     [Tags]    threadable    one_sys
@@ -228,7 +228,7 @@ One system: Check navigation links - Services
 
 One System: Different page widths
     [Tags]    threadable    one_sys    ui
-    Log in to user and system    ${one system owner}    ${main system}[id]
+    Log in to user and system    ${one system owner}    ${main system}[cloud id]
     Verify In System    ${main system}[name]
     Wait Until Element is Visible    ${VIEW TAB}
     Click Element    ${VIEW TAB}
@@ -263,7 +263,7 @@ Many systems: Check dropdown content if 16 or less systems
 
 Many systems: Check dropdown content if 17 or more systems
     [Tags]    threadable    many_sys   CLOUD-6778
-    Share    ${auth}    ${main system}[id]    ${access roles}[admin]    ${many systems owner}
+    Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
     Run keyword and continue on failure    Validate Header Button Text    17    systems=True
@@ -288,7 +288,7 @@ Many systems: Check dropdown content if 17 or more systems
 
 Many systems: Links in Systems grid lead to proper pages
     [Tags]    threadable    many_sys
-    Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
+    Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
 
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
@@ -307,8 +307,8 @@ Many systems: Links in Systems grid lead to proper pages
 
 Many systems: Different page widths
     [Tags]    threadable    diff_width    ui
-    Add user to cloud system if not there    ${main system}[id]    ${access roles}[admin]    ${many systems owner}    ${auth}
-    Log in to user and system    ${many systems owner}    ${main system}[id]
+    Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
+    Log in to user and system    ${many systems owner}    ${main system}[cloud id]
     Wait until element is visible    //h2[text()="${main system}[name]"]
 
     Wait Until Element is Visible    ${VIEW TAB}
@@ -323,8 +323,13 @@ Many systems: Different page widths
 # Other cases
 Check header and dropdown content for not admins
     [Tags]    threadable    other    CLOUD-6794    CLOUD-7200
-    FOR    ${user}    IN    @{main system users}
-        Log in to user and system    ${user}    ${main system}[id]
+#    FOR    ${user}    IN    @{main system users}
+    FOR    ${user}    IN
+        ...    ${main system}[cloud users][viewer]
+        ...    ${main system}[cloud users][liveViewer]
+        ...    ${main system}[cloud users][advancedViewer]
+        ...    ${main system}[cloud users][custom]
+        Log in to user and system    ${user}    ${main system}[cloud id]
         Wait until element is visible    ${SYSTEM NAME}\[contains(text(), "${main system}[name]")]
         # Commented out due to CLOUD-7200
         # Verify In System    ${main system}[name]    editable=False

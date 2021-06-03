@@ -44,7 +44,7 @@ Changing the Setting 'Encrypt video traffic' changes it on the server
     Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting 'Limit session duration to' changes it on the server
-    [Tags]    system settings    cloud    webadmin    threaded
+    [Tags]    system settings    cloud    webadmin    threaded    deb
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
@@ -393,33 +393,34 @@ System Settings block is not available when the system is offline
     Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
     Start Docker Server    ${system}[id]
 
-System settings block view for different System versions
-    [Tags]    C69743    C65829    cloud    system settings    threaded
-    ${4.0 system}=   Setup Docker System    image=${image 4.0}    cloud email=${EMAIL OWNER}
-    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
-    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
-    ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[id]
-    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
-    Common Restart Logout    ${ENV}
-    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
-        Set System Settings    ${local auth}    ${url}     ${default settings}
-        Log in to user and system    ${EMAIL OWNER}    ${id}
-        Reload Page
-        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
-        ...    ELSE    Wait Until Settings Are Visible    timeout=60    old system=False
-        Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-        Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-        Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
-
-        Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX}    autoDiscoveryEnabled    ${url}
-        Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX}    statisticsAllowed    ${url}
-        Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    cameraSettingsOptimization    ${url}
-        Changing setting changes it on server    ${ENABLE AUDIT TRAIL CHECKBOX}    auditTrailEnabled    ${url}
-        Log Out
-    END
-
-    Delete Docker Server    ${4.0 cont}
+#System settings block view for different System versions
+#    [Tags]    C69743    C65829    cloud    system settings    threaded
+#    ${rand}=   Generate Random String
+#    ${4.0 system}=   Create Base System    system_4.0_${rand}    image=${image 4.0}    owner=${EMAIL OWNER}
+#    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
+#    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
+#    ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[cloud id]
+#    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
+#    Common Restart Logout    ${ENV}
+#    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
+#        Set System Settings    ${local auth}    ${url}     ${default settings}
+#        Log in to user and system    ${EMAIL OWNER}    ${id}
+#        Reload Page
+#        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
+#        ...    ELSE    Wait Until Settings Are Visible    timeout=60    old system=False
+#        Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+#        Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
+#        Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
+#        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+#
+#        Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX}    autoDiscoveryEnabled    ${url}
+#        Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX}    statisticsAllowed    ${url}
+#        Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    cameraSettingsOptimization    ${url}
+#        Changing setting changes it on server    ${ENABLE AUDIT TRAIL CHECKBOX}    auditTrailEnabled    ${url}
+#        Log Out
+#    END
+#
+#    Delete Docker Server    ${4.0 system}[id]
 
 Cancel changes in Security block
     [Tags]    C65724    cloud    webadmin    system settings    threaded
@@ -676,15 +677,15 @@ Check HTTPS traffic encryption
 
     Go To    ${ENV}
 
-Security block view for 3 dot 2 System
-    [Tags]    C65829    cloud    system settings    threaded
-    Log    Preconditions
-    Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
-    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
-
-    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
-    Wait Until Settings Are Visible    old system=True
-    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
+#Security block view for 3 dot 2 System
+#    [Tags]    C65829    cloud    system settings    threaded
+#    Log    Preconditions
+#    Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
+#    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
+#
+#    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
+#    Wait Until Settings Are Visible    old system=True
+#    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
 Changes in System Settings block are displayed in thick client
     [Tags]    C69740    cloud    webadmin    threaded    system settings

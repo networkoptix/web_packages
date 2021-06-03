@@ -956,13 +956,19 @@ Log In If Needed
 
 Register and Activate Generic Users
     [Arguments]    ${password}=${BASE PASSWORD}
-    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
-    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
-    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
-    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
-    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
-    &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
-    [Return]    &{generic users}
+    ${generic users}=    Create Dictionary
+    FOR    ${user}    IN    @{permissions.keys()}
+        ${email}=   Register and activate account with random email    mark    hamil    ${password}
+        Add To Dictionary    ${generic users}    ${user}=${email}
+        Sleep    0.1
+    END
+#    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
+#    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
+#    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
+#    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
+#    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
+#    &{generic users}=    Create Dictionary     cloudAdmin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advancedViewer=${adv viewer}    custom=${custom}
+    [Return]    ${generic users}
 
 Add Cloud Users
     [Arguments]    ${auth}    ${users}    ${system id}
@@ -1135,12 +1141,26 @@ Create Base System
 #    Set Suite Variable    ${users}
 #    Set Suite Variable    ${local users}
 
-Delete Base Cloud System
-    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
-    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
-    FOR    ${email}    IN   $system['users'].values()    ${system}[owner]    ${email noperm}
-        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+#Delete Base Cloud System
+#    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
+#    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+#    FOR    ${email}    IN   $system['users'].values()    ${system}[owner]    ${email noperm}
+#        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+#    END
+#    Delete Docker Server    ${system}[id]
+
+Delete Accounts
+    [Arguments]    ${accounts}
+    FOR    ${email}    IN   @{accounts}
+        Delete Account    ${ENV}    ${email}    ${base password}
     END
+
+Delete Base System
+    [Arguments]     ${system}
+    [Documentation]    Wipe out all resources related to the system
+    Run Keyword If    $system['owner']    Run Keywords
+        ...    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]    AND
+        ...    Delete Accounts    $system['cloud users'].values() + $system['owner']
     Delete Docker Server    ${system}[id]
 
 Create Custom Network

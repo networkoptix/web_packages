@@ -29,6 +29,9 @@ System Admin Test Restart
     Close Modal If There
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
+    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out via API
+
     Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
     Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
     Run Keyword If Test Failed    Start Docker Server    ${system}[cloud id]
