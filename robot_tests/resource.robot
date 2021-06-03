@@ -1281,3 +1281,38 @@ Input Content Editable Text
     [Arguments]    ${element}    ${text}
     Delete All Text    ${element}
     Press Keys    ${element}    ${text}
+    
+Create Virtual Disk
+    [Arguments]    ${disk location}    ${disk name}    ${disk size}    ${disk target}
+    &{disk}=   Create Dictionary
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
+    Should Be Equal As Integers   ${results}    0
+    Close Connection
+    Set To Dictionary    ${disk}    img=${disk location}/${disk name}.img
+    Set To Dictionary    ${disk}    folder=${disk name}
+    Set To Dictionary    ${disk}    size=${disk size}
+    Set To Dictionary    ${disk}    target=${disk target}
+    Set To Dictionary    ${disk}    string=--mount type=bind,source="/home/qaburbank/${disk name}",target=/${disk target}
+    [Return]    ${disk}
+    
+Delete Virtual Disk
+    [Arguments]    ${img path}    ${folder}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     umount ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm ${img path}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm -r ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Make Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    mkdir ${dir name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    

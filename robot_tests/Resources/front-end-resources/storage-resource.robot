@@ -9,7 +9,9 @@ Storage Suite Setup
         ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
         Set Suite Variable    ${${account}}          ${random email}
     END
-
+    
+    Log    users created ..... | PASS |    DEBUG      console=${console}
+    
     @{system names} =    Create List
     ...    ${AUTO TESTS}
     ...    ${AUTO TESTS 2}
@@ -22,31 +24,21 @@ Storage Suite Setup
     Set Suite Variable     ${random}    ${random}
 
     @{server auth}=   Create List    admin    qweasd 123
-
     Set Suite Variable    ${server auth}    ${server auth}   
     
-    @{size} =    Create List    160000    40000    40000    12000    12000
-
+    @{disk size} =    Create List    160000    40000    40000    12000    12000
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    mkdir disk-invalid    sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
+    Make Directory    disk-invalid
     Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}
-
-    Log    users created ..... | PASS |    DEBUG      console=${console}
+    
+    @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    Set Suite Variable    @{disk}    @{disk}
     FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     dd if=/dev/zero of=${disk location}/disk${n}-${random}.img bs=1M count=${size[${n}]}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mkfs -t ext4 ${disk location}/disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mount -t auto -o loop ${disk location}/disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
-        Should Be Equal As Integers   ${results}    0
-        Close Connection
+        ${new disk} =     Create Virtual Disk    ${disk location}    disk${n}-${random}    ${disk size[${n}]}    disk${n}
+        Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}
-        Run Keyword If    ${n} < 4     Catenate Storages One    ${n}
-        ...    ELSE     Catenate Storages Two    ${n}
+        Run Keyword If    ${n} < 4     Catenate Storages One    ${disk[${n}]}[string]
+        ...    ELSE     Catenate Storages Two    ${disk[${n}]}[string]
     END
 
     #${storage string 1} =    Get Substring    ${storage string 1}    1
@@ -138,13 +130,13 @@ Storage Suite Setup
     Verify Storages    ${sysId1}    1
 
 Catenate Storages One
-    [Arguments]    ${n}
-    ${storage string 1} =    Catenate    ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}
+    [Arguments]    ${string}
+    ${storage string 1} =    Catenate    ${storage string 1}    ${string}
     Set Suite Variable    ${storage string 1}    ${storage string 1}
 
 Catenate Storages Two
-    [Arguments]    ${n}
-    ${storage string 2} =    Catenate    ${storage string 2}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}
+    [Arguments]    ${string}
+    ${storage string 2} =    Catenate    ${storage string 2}    ${string}
     Set Suite Variable    ${storage string 2}    ${storage string 2}
 
 Storage Suite Teardown
@@ -157,12 +149,13 @@ Storage Suite Teardown
     ${results}    Execute Command    docker container rm storage0-${random} storage1-${random} storage2-${random}
     Close Connection
     FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm ${disk location}/disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm -r disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
-        Close Connection
+        Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
+        # Open Connection    ${QA BURBANK IP}
+        # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+        # ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
+        # ${results}    Execute Command     rm ${disk location}/disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
+        # ${results}    Execute Command     rm -r disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
+        # Close Connection
     END
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
