@@ -1154,7 +1154,8 @@ Delete Base System
     [Documentation]    Wipe out all resources related to the system
     Run Keyword If    $system['owner']    Run Keywords
         ...    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]    AND
-        ...    Delete Accounts    $system['cloud users'].values() + $system['owner']
+        ...    Delete Account    ${ENV}    ${system}[owner]    ${base password}    AND
+        ...    Delete Accounts    ${system['cloud users'].values()}
     Delete Docker Server    ${system}[id]
 
 Create Custom Network
