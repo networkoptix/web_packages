@@ -19,7 +19,7 @@ import WebClientUxService, { WebclientUxState } from '../../services/webclient-u
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxSystemsService }                     from '@services/systems.service';
 import { UntilDestroy }                         from '@ngneat/until-destroy';
-import { distinctUntilChanged, takeUntil }      from 'rxjs/operators';
+import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { NxUtilsService }                       from '@services/utils.service';
 import sidebarLayout                            from '../sidebarLayout.cfg';
 
@@ -239,149 +239,127 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         };
 
         let cachedMediaServers;
+        const firstLoad = new Subject();
 
-        createSystem()
-            .then(() => this.system.getMediaServersAndCameras())
-            .then(mediaServers => {
-                return this.system.getServerTimes().then(
-                    (serverTimeInfos: Array<ServerTimeInfo>) => {
-                        serverTimeInfos.map(sti => {
-                            mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti;
-                        });
-                        return mediaServers;
-                    }
-                );
-            }).then((mediaServers: Array<NxMediaServer>) => {
-                const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), []);
-                const archiveRanges = {};
-                const archives = {};
-                const now = Date.now();
-                Promise.all(cameraIds.map(cid => {
-                    // (check archive presence mode)
-                    if (!this.system.userManager.permissions.viewArchives) {
-                        return Promise.resolve();
-                    }
-                    return this.system.getCameraRecords(cid, 0, now, now).then(response => {
-                        const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
-                        // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
-                        const extractChunk = chunks => {
-                            let longestDuration = 0;
-                            let earliestStart = Number.POSITIVE_INFINITY;
-                            chunks.forEach((chunk) => {
-                                // 4.3 api response changed
-                                const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
-                                const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
-                                if (start < earliestStart) {
-                                    earliestStart = start;
-                                }
-                                if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
-                                    longestDuration = duration;
-                                }
-                            });
-                            const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
-                            return [earliestStart, end];
-                        };
-                        if (hasArchive) {
-                            const [start, end] = extractChunk(response.reply);
-                            archiveRanges[cid] = new SimpleTimeRange(start, end);
-                        }
+        firstLoad.pipe(take(1)).subscribe(() => {
+            this.vms.setMediaServers(this.systemId, cachedMediaServers);
+            this._log(`system ${this.system.id} view initialized`, this.hasCameras);
+            this._setInitializationState(true, false);
+            if (!this.route.snapshot.children.length) {
+                this._tryToRedirectToCamera();
+            }
+
+            setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
+        });
+
+        createSystem().then(() => {
+            timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
+                .subscribe(async () => {
+                    const mediaServers = await this.system.getMediaServersAndCameras(true);
+                    const serverTimeInfos = await this.system.getServerTimes();
+                    serverTimeInfos.map(sti => {
+                        mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti;
                     });
-                    // (full archive prefetch mode)
-                    // return this.system.getCameraRecords(cid, 0, now, 1).then(ar => {
-                    //   // this._log('got camera archive range', cid, ar)
-                    //   if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-                    //     // this._log('empty archive')
-                    //   } else try {
-                    //     archiveRanges[cid] = new SimpleTimeRange(
-                    //       parseInt(ar.reply[0].startTimeMs),
-                    //       parseInt(ar.reply[ar.reply.length - 1].startTimeMs) + parseInt(ar.reply[ar.reply.length - 1].durationMs),
-                    //     )
-                    //     archives[cid] = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)))
-                    //     this._log('non-empty archive', cid, archiveRanges[cid], archives[cid].length, 'records', ar)
-                    //   } catch (e) {
-                    //     this._warn(e, 'caught while requesting camera archive ranges')
-                    //   }
-                    // })
-                })).then(() => {
-                    // console.log('archiveRanges', archiveRanges)
+                    const findCameraArchiveRanges = (cid) => {
+                        // (check archive presence mode)
+                        if (!this.system.userManager.permissions.viewArchives) {
+                            return Promise.resolve();
+                        }
+                        return this.system.getCameraRecords(cid, 0, now, now).then(response => {
+                            const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
+                            // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
+                            const extractChunk = chunks => {
+                                let longestDuration = 0;
+                                let earliestStart = Number.POSITIVE_INFINITY;
+                                chunks.forEach((chunk) => {
+                                    // 4.3 api response changed
+                                    const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
+                                    const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
+                                    if (start < earliestStart) {
+                                        earliestStart = start;
+                                    }
+                                    if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
+                                        longestDuration = duration;
+                                    }
+                                });
+                                const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
+                                return [earliestStart, end];
+                            };
+                            if (hasArchive) {
+                                const [start, end] = extractChunk(response.reply);
+                                archiveRanges[cid] = new SimpleTimeRange(start, end);
+                            }
+                        });
+                    };
+                    const processCameras = (c) => {
+                        this.hasCameras = true;
+                        const result = new Camera(
+                            c.id,
+                            c.preferredServerId,
+                            c.name,
+                            c.url,
+                            (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
+                            c.scheduleEnabled,
+                            c.disableDualStreaming,
+                            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
+                            archives[c.id] || [],
+                            this.system?.getCameraThumbnailUrl(c.id),
+                            (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
+                            (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
+                        );
+                        result.parseAdditionalParams(c.addParams);
+                        return result;
+                    };
+                    const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), []);
+                    const archiveRanges = {};
+                    const archives = {};
+                    const now = Date.now();
+                    await Promise.all(cameraIds.map(findCameraArchiveRanges));
+
                     cachedMediaServers = mediaServers.map(ms => NxUtilsService.formatURL(({
                         id               : ms.id,
                         name             : ms.name,
                         networkAddresses : ms.networkAddresses,
                         status           : ms.status,
-                        cameras          : ms.cameras.map(c => {
-                            this.hasCameras = true;
-                            const result = new Camera(
-                                c.id,
-                                c.preferredServerId,
-                                c.name,
-                                c.url,
-                              (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
-                              c.scheduleEnabled,
-                              c.disableDualStreaming,
-                              archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                              archives[c.id] || [],
-                              this.system?.getCameraThumbnailUrl(c.id),
-                              (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
-                              (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
-                            );
-                            result.parseAdditionalParams(c.addParams);
-                            return result;
-                        })
+                        cameras          : ms.cameras.map(processCameras)
                     })));
+                    firstLoad.next();
 
-                    this.vms.setMediaServers(this.systemId, cachedMediaServers);
-                    this._log(`system ${this.system.id} view initialized`, this.hasCameras);
-                    this._setInitializationState(true, false);
+                    if (this.system?.cameraManager) {
+                        const cameras = await this.system.cameraManager
+                            .getCameras()
+                            .then(cameras => cameras.reduce((parsed, camera) => ({
+                                ...parsed,
+                                [NxUtilsService.cleanId(camera.id)]: {
+                                    ...camera,
+                                    status: (camera.status === 'Online' ? 'Live' : camera.status) as CAMERA_STATUS
+                                }
+                            }), {}));
 
-                    if (!this.route.snapshot.children.length) {
-                        this._tryToRedirectToCamera();
-                    }
+                        let anythingChanged = false;
 
-                    setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
+                        cachedMediaServers && Object.keys(cachedMediaServers).forEach(serverId => {
+                            const server = cachedMediaServers[serverId];
+                            for (const camera of server.cameras) {
+                                const updatedCamera = cameras[camera.id];
+                                if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
+                                    this._log('camera updated', updatedCamera);
+                                    camera.status = updatedCamera.status;
+                                    camera.name = updatedCamera.name;
+                                    anythingChanged = true;
+                                }
+                            }
+                        });
 
-                    // if (!this.animated) {
-                    //   this.animated = true
-                    //   this.$self.classList.add('animated')
-                    // }
-                });
-            }).catch(e => {
-                this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
-                setTimeout(() => this._setInitializationState(true, true));
-            });
-
-        this.cancelPoll$.next('cancel');
-        timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(
-            takeUntil(this.cancelPoll$)
-        ).subscribe(async() => {
-            if (this.system?.cameraManager) {
-                const cameras = await this.system.cameraManager
-                    .getCameras()
-                    .then(cameras => cameras.reduce((parsed, camera) => ({
-                        ...parsed,
-                        [NxUtilsService.cleanId(camera.id)]: camera
-                    }), {}));
-
-                let anythingChanged = false;
-
-                cachedMediaServers && Object.keys(cachedMediaServers).forEach(serverId => {
-                    const server = cachedMediaServers[serverId];
-                    for (const camera of server.cameras) {
-                        const updatedCamera = cameras[camera.id];
-                        if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
-                            this._log('camera updated', updatedCamera);
-                            camera.status = updatedCamera.status;
-                            camera.name = updatedCamera.name;
-                            anythingChanged = true;
+                        if (anythingChanged) {
+                            this._log('poll: setMediaServers');
+                            this.vms.setMediaServers(this.systemId, cachedMediaServers);
                         }
                     }
                 });
-
-                if (anythingChanged) {
-                    this._log('poll: setMediaServers');
-                    this.vms.setMediaServers(this.systemId, cachedMediaServers, true);
-                }
-            }
+        }).catch(e => {
+            this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
+            setTimeout(() => this._setInitializationState(true, true));
         });
     }
 

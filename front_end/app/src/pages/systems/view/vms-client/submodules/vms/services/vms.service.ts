@@ -52,6 +52,7 @@ export class VideoManagementSystemService {
     }
 
     protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState())
+    protected _selectedCamera = new BehaviorSubject<ICamera>(undefined);
 
     protected _emit (): void {
         this._log('_emit', { ...this.state });
@@ -75,11 +76,11 @@ export class VideoManagementSystemService {
     }
 
     public get selectedCamera () {
-        if (this.state.mode === VMS_MODE.CAMERA_SELECTED) {
-            return this.state.selectedCamera;
-        } else {
-            return undefined;
-        }
+        return this._selectedCamera.getValue();
+    }
+
+    public set selectedCamera (camera) {
+        this._selectedCamera.next(camera);
     }
 
     protected _serverTimes: Array<ServerTimeInfo> = []
@@ -131,12 +132,7 @@ export class VideoManagementSystemService {
 
     public setCameraNewlyRecordedChunks (cameraId: string, records: CameraArchive) {
         if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
-            this._state.mediaServers.map(ms => {
-                const c = ms.cameras.find(c => c.id === cameraId);
-                if (c) {
-                    c.setNewlyRecordedChunks(records);
-                }
-            });
+            this.selectedCamera.setNewlyRecordedChunks(records);
         } else {
             this._warn('attempt to set camera newly recorded records while in NOT_INITIALIZED state', cameraId, records);
         }
@@ -153,6 +149,9 @@ export class VideoManagementSystemService {
             return;
         }
         this._state = createCameraSelectedState(this._state, cameraId);
+        if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
+            this.selectedCamera = this._state.selectedCamera;
+        }
         const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
         this.cookieService.set(cookieName, cameraId, 365, '/');
         this._emit();

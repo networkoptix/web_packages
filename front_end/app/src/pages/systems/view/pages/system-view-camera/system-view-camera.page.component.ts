@@ -492,9 +492,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 break;
             case VMS_MODE.CAMERA_SELECTED:
                 this._log('-> CAMERA_SELECTED');
-                this.camera = s.selectedCamera;
-                this._updateAvailableTransportsAndResolutions();
-                this._initSelectedCamera();
+                if (this.camera?.id !== s.selectedCamera.id) {
+                    this.camera = s.selectedCamera;
+                    this._updateAvailableTransportsAndResolutions();
+                    this._initSelectedCamera();
+                } else {
+                    this.camera.name = s.selectedCamera.name;
+                    this.camera.status = s.selectedCamera.status;
+                }
         }
     }
 
