@@ -1320,5 +1320,12 @@ Remove Directory
     [Arguments]    ${dir name}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    rm -r {dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command    rm -r ${dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Remove All Files 
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
     Close Connection
