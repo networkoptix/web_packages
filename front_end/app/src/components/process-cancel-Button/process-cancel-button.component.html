@@ -2,7 +2,7 @@
     type="reset" 
     class="min-w-80 btn btn-default {{customClass}}" 
     (mousedown)="handleClick()">{{
-        !process.processing && showDiscard
+        !process?.processing && showDiscard
         ? ('Discard' | translate) 
         : ('Cancel' | translate) 
     }}</button>

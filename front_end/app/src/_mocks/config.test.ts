@@ -33,6 +33,7 @@ export function setupConfig(): IConfig {
                 strongClassesCount: 3
             }
         },
+        browserNotSupported          : false,
         defaultLanguage              : 'en_US',
         developers                   : {
             landing: {
@@ -174,15 +175,15 @@ export function setupConfig(): IConfig {
                 { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
-            devTools              : '/static/images/icons/dev_tools/',
-            backgrounds           : '/static/images/icons/backgrounds/',
-            dir                   : '/static/images/icons/standard/',
-            dirDevtools           : '/static/images/icons/dev_tools/',
-            dirButtons            : '/static/images/icons/buttons/',
-            dirNonStandard        : '/static/images/icons/',
-            dirNonStandardView    : '/static/images/icons/view/',
-            dirPagePlaceholder    : '/static/images/placeholders/page/',
-            dirSectionPlaceholder : '/static/images/placeholders/section/'
+            devTools             : '/static/images/icons/dev_tools/',
+            backgrounds          : '/static/images/icons/backgrounds/',
+            dir                  : '/static/images/icons/standard/',
+            dirDevtools          : '/static/images/icons/dev_tools/',
+            dirButtons           : '/static/images/icons/buttons/',
+            dirNonStandard       : '/static/images/icons/',
+            dirNonStandardView   : '/static/images/icons/view/',
+            dirPagePlaceholder   : '/static/images/placeholders/page/',
+            dirSectionPlaceholder: '/static/images/placeholders/section/'
         },
         images                       : {
             dir          : '/static/images/',

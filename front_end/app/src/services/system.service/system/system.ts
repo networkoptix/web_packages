@@ -558,20 +558,20 @@ export class NxSystem extends System {
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
-            () => this.mediaserver.getServerTimes().toPromise().then(
-                r => {
-                    const now = Date.now();
-                    // @ts-ignore
-                    return r.reply.map(i => ({
-                        vmsTime        : parseInt(i.vmsTime),
-                        vmsTimeOffset  : now - parseInt(i.vmsTime),
-                        osTimeOffset   : now - parseInt(i.osTime),
-                        serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                        timeZoneOffset : parseInt(i.timeZoneOffset)
-                    }));
-                }
-            )
-        );
+            () => {
+                return this.mediaserver.getServerTimes().toPromise().then(
+                    r => {
+                        const now = Date.now();
+                        // @ts-ignore
+                        return r.reply.map(i => ({
+                            vmsTime        : parseInt(i.vmsTime),
+                            vmsTimeOffset  : now - parseInt(i.vmsTime),
+                            osTimeOffset   : now - parseInt(i.osTime),
+                            serverId       : i.serverId.slice(1, i.serverId.length - 1),
+                            timeZoneOffset : parseInt(i.timeZoneOffset)
+                        }));
+                    });
+            });
     }
 
     /**

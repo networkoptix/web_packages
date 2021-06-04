@@ -27,7 +27,14 @@ function requestFullscreen (el) {
 
     if (requestFullScreen) {
         _log('entering full screen', requestFullScreen);
-        requestFullScreen.call(el);
+        requestFullScreen
+            .call(el)
+            .catch(() => {
+                // It's working but ...
+                // fullscreen.ts:30 Failed to execute 'requestFullscreen' on 'Element': API can only be initiated by a user gesture.
+                // produces "Uncaught (in promise)" error.
+                // ... lets not show it
+            });
     } else {
         _log('can not enter full screen', docEl);
     }

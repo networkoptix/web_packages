@@ -49,6 +49,27 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit (): void {
     }
 
+    videoErrorEventHandler(event: any) {
+        if (this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+            this.http.get(event.target.src)
+                .subscribe((response: any) => {
+                    switch (response.error) {
+                        case '4':
+                            if (response.errorString === 'Cannot decrypt media') {
+                                this.playback.unplayableArchive();
+                            } else {
+                                this.playback.setError(response.errorString);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }, (error) => {
+                    this.playback.setError(error.message);
+                });
+        }
+    }
+
     public ngAfterViewInit (): void {
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
         this.ux.alternateFullScreen$.subscribe(fullscreen => {
@@ -60,29 +81,11 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
 
-        this.videoView.nativeElement.addEventListener('error', (event: any) => {
-            if (event.type === 'error') {
-                this.http.get(event.target.src)
-                    .subscribe((response: any) => {
-                        switch (response.error) {
-                            case '4':
-                                if (response.errorString === 'Cannot decrypt media') {
-                                    this.playback.unplayableArchive();
-                                } else {
-                                    this.playback.setError(response.errorString);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }, (error) => {
-                        this.playback.setError(error.message);
-                    });
-            }
-        });
+        this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
     }
 
     public ngOnDestroy (): void {
+        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.hls?.destroy();
     }
@@ -97,7 +100,6 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.$video.pause();
-                this.$video.src = '';
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
@@ -150,6 +152,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.hls.loadSource(sourceUrl);
                     this.hls.attachMedia(this.$video);
                     this.bufferingChange.emit(true);
+
                     this.hls.on(Hls.Events.ERROR, (event, data) => {
                         this._warn('HLS PLAYER HLS.js ERROR', event, data);
                         if (data.fatal) {

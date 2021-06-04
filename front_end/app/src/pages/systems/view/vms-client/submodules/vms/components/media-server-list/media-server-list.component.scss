@@ -1,4 +1,4 @@
-@use '../../../../../../../../../styles/_theme_palette' as *;
+@use "../../../../../../../../../styles/_theme_palette" as *;
 
 :host {
     .media-server-list {
@@ -28,7 +28,7 @@
                 &.show-ip {
                     .server-name {
                         > .name {
-                            width: 160px;
+                            width: 60%
                         }
                         .ip-info {
                             opacity: 1;
@@ -73,36 +73,39 @@
 
                     &:before {
                         // expand/collapse indicator
-                        content: '';
+                        content: "";
                         position: absolute;
                         right: 8px;
                         top: 16px;
                         width: 10px;
                         height: 10px;
                         cursor: pointer;
-                        background-image: url('/static/images/web_interface_sprite@2x.png');
+                        background-image: url("/static/images/web_interface_sprite@2x.png");
                         background-size: 192px 408px;
                         background-position: -61px -49px;
                     }
 
                     .name {
                         color: $dark10;
-                        font-family: 'robotomedium', 'roboto', sans-serif;
+                        font-family: "robotomedium", "roboto", sans-serif;
                         font-weight: 500;
                         height: 40px;
                         overflow: hidden;
                         display: inline-block;
-                        width: 220px;
+                        width: 100%;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                     }
 
                     .ip-info {
-                        font-size: 12px;
-                        color: $light16;
-                        position: absolute;
-                        right: 30px;
-                        opacity: 0;
+                        font-size     : 12px;
+                        color         : $light16;
+                        width         : 40%;
+                        float         : right;
+                        text-align    : right;
+                        text-overflow : ellipsis;
+                        overflow      : hidden;
+                        opacity       : 0;
                         // transition: opacity .2s ease-in-out;
                     }
                 }
@@ -125,8 +128,8 @@
                         width: 100%;
                         position: relative;
                         text-decoration: none;
-                        color: auto;
-                        padding: 8px 36px 8px 87px;
+                        color: inherit;
+                        padding: 8px 16px 8px 87px;
 
                         &:hover {
                             background-color: $additional_light3;
@@ -138,14 +141,14 @@
 
                         > .name {
                             color: $dark10;
-                            font-family: 'robotomedium', 'roboto', sans-serif;
+                            font-family: "robotomedium", "roboto", sans-serif;
                             font-size: 14px;
                             height: 40px;
                             overflow: hidden;
                             line-height: 40px;
                             display: block;
                             text-overflow: ellipsis;
-                            width: 165px;
+                            width: 100%;
                             white-space: nowrap;
                             // transition: all .2s ease-in-out;
                         }
@@ -165,7 +168,7 @@
                         }
 
                         > .preview {
-                            content: '';
+                            content: "";
                             position: absolute;
                             left: 7px;
                             top: 8px;
@@ -178,6 +181,10 @@
                                 height: 100%;
                                 object-fit: contain;
                                 z-index: 1;
+                            }
+                            
+                            svg-icon svg path {
+                                fill: $light16;
                             }
 
                             > .preloader {
@@ -193,7 +200,7 @@
 
                         &.recording {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;
@@ -219,6 +226,10 @@
                                     left: 50%;
                                     width: 36%;
                                     transform: translate(-50%, -50%);
+                                    
+                                    svg path {
+                                        fill: $light16 !important;
+                                    }
                                 }
                                 > img {
                                     display: none;
@@ -228,7 +239,7 @@
 
                         &.isScheduleEnabled {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;
@@ -241,7 +252,7 @@
 
                         &.hasArchive {
                             > .preview:after {
-                                content: '';
+                                content: "";
                                 position: absolute;
                                 left: 4px;
                                 top: 4px;
