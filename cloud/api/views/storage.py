@@ -61,9 +61,8 @@ def create(request):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def delete(request):
     require_params(request, ['systemId', 'password'])
-    cloud_api.Storage.delete_from_system(request.user.email,
-                                         request.data.get('password'),
-                                         request.data.get('systemId'))
+    with cloud_api.TempLogin(request.user.email, request.data.get('password')) as credentials:
+        cloud_api.Storage.delete_from_system(credentials, request.data.get('systemId'))
     return api_success()
 
 
@@ -116,7 +115,7 @@ def usage_stats(request):
         if storage_id is None:
             continue
 
-        storage_info = cloud_api.Storage.statistics(request.auth, storage_id)
+        storage_info = cloud_api.Storage.statistics(request, storage_id)
 
         aggregated_storage_info['cameraCount'] += storage_info.get('cameraCount', 0)
         aggregated_storage_info['maxCameraRetention'] += storage_info.get('maxCameraRetention', 0)

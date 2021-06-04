@@ -78,18 +78,21 @@ def sharing(request, system_id):
         return api_success(data['sharing'])
 
     elif request.method == 'POST':
+        require_params(request, ('user_email', 'role'))
+        # 2. share or change sharing
+        user_email = request.data['user_email'].lower()
         if not request.user.is_authenticated:
             require_params(request, ('email', 'password'))
             login = request.data['email'].lower()
             password = request.data['password']
+
+            with cloud_api.TempLogin(login, password) as credentials:
+                data = cloud_api.System.share(credentials.tokens,
+                                              system_id,
+                                              user_email,
+                                              request.data['role'])
         else:
-            login = request.session['login']
-            password = request.session['password']
-        require_params(request, ('user_email', 'role'))
-        # 2. share or change sharing
-        user_email = request.data['user_email'].lower()
-        with cloud_api.TempLogin(login, password) as credentials:
-            data = cloud_api.System.share(credentials.tokens,
+            data = cloud_api.System.share(request,
                                           system_id,
                                           user_email,
                                           request.data['role'])
@@ -243,7 +246,7 @@ def connect(request):
 
     require_params(request, ('email', 'password'))
     with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
-        data = cloud_api.System.bind(credentials.tokens)
+        data = cloud_api.System.bind(credentials.tokens, request.data['name'])
     return api_success(data)
 
 

@@ -22,7 +22,7 @@ from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
 
 from api import models
-from api.controllers.cloud_api import Account, Auth, TempLogin
+from api.controllers.cloud_api import Account, Auth
 from api.account_backend import get_ip
 from api.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException,
@@ -267,8 +267,7 @@ def delete_user(request):
     user = request.user
 
     try:
-        with TempLogin(user.email, request.data.get('password')) as credentials:
-            Account.delete(credentials)
+        Account.delete(user.email, request.data.get('password'))
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
                                   error_data={'password': error.error_data})
@@ -302,7 +301,7 @@ def change_password(request):
                                   error_data={'new_password': error.detail})
 
     try:
-        Account.change_password(request, request.user.email, old_password, new_password)
+        Account.change_password(request.user.email, old_password, new_password)
         models.Account.objects.get(email=request.user.email).password_changed()
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
@@ -383,7 +382,7 @@ def restore_password(request):
                                       error_data={'new_password': error.detail})
 
         email = Account.extract_temp_credentials(code)[1]
-        Account.restore_password(request, code, new_password)
+        Account.restore_password(code, new_password)
         models.Account.objects.get(email=email).password_changed()
 
         account = models.Account.objects.get(email=email)

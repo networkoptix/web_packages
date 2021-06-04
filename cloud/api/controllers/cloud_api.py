@@ -217,7 +217,10 @@ class System(object):
         if one_customization:
             params['customization'] = settings.CUSTOMIZATION
 
-        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth={"email": email, "password": password})
+        if email and password:
+            auth = {"email": email, "password": password}
+
+        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -226,7 +229,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -235,7 +238,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/getCloudUsers', params=params, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f'{CLOUD_DB_URL}/system/getCloudUsers', params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -247,7 +250,7 @@ class System(object):
             'accountEmail': account_email,
             'accessRole': role
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/share', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/system/share', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -256,7 +259,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/auth/getNonce', params=params, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f'{CLOUD_DB_URL}/auth/getNonce', params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -266,7 +269,7 @@ class System(object):
             'systemId': system_id,
             'name': system_name
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/rename', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/system/rename', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -275,7 +278,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/getAccessRoleList', params=params, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f'{CLOUD_DB_URL}/system/getAccessRoleList', params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -284,7 +287,7 @@ class System(object):
         params = {
             'systemId': system_id,
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/unbind', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/system/unbind', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -295,7 +298,7 @@ class System(object):
             'name': name,
             'customization': customization
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/bind', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/system/bind', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -304,7 +307,7 @@ class System(object):
         params = {
             'systemId': slave_system_id
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/{master_system_id}/merged_systems/', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/system/{master_system_id}/merged_systems/', json=params, headers=headers)
 
 
 class Account(object):
@@ -378,21 +381,20 @@ class Account(object):
             return data
 
     @staticmethod
-    def restore_password(request, code, new_password):
+    def restore_password(code, new_password):
         temp_password, email = Account.extract_temp_credentials(code)
-        return Account.change_password(request, email, temp_password, new_password)
+        return Account.change_password(email, temp_password, new_password)
 
     @staticmethod
     @validate_response
-    @auto_refresh_token
-    def change_password(request, email, new_password, headers=None):
+    def change_password(email, old_password, new_password):
         email = email.lower()
         password_ha1, password_ha1_sha256 = Account.encode_password(email, new_password)
         params = {
             'passwordHa1': password_ha1,
             'passwordHa1Sha256': password_ha1_sha256
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, auth={"email": email, "password": old_password})
 
     @staticmethod
     @auto_refresh_token
@@ -412,7 +414,7 @@ class Account(object):
             if prolongation_period:
                 params['timeouts']['prolongationPeriod'] = str(prolongation_period)
 
-        return post_wrapper(f'{CLOUD_DB_URL}/account/createTemporaryCredentials', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/account/createTemporaryCredentials', json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -447,7 +449,7 @@ class Account(object):
     @validate_response
     @lower_case_email
     def delete(email, password):
-        return delete_wrapper(f'{CLOUD_DB_URL}/account/self', auth=HTTPBasicAuth(email, password), auth={"email": email, "password": password})
+        return delete_wrapper(f'{CLOUD_DB_URL}/account/self', auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -456,13 +458,13 @@ class Account(object):
         params = {
             'fullName': ' '.join((first_name, last_name))
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers, auth={"email": email, "password": password})
+        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def get(request, email=None, password=None, headers=None):
-        return get_wrapper(request, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f'{CLOUD_DB_URL}/account/get', headers=headers, auth={"email": email, "password": password})
 
 
 class Storage(object):
@@ -489,7 +491,7 @@ class Storage(object):
     @validate_response
     @auto_refresh_token
     def _delete(request, storage_id, headers=None):
-        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}", headers=headers, auth={"email": email, "password": password})
+        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}", headers=headers)
 
     @staticmethod
     @validate_response
@@ -498,7 +500,7 @@ class Storage(object):
         body = {
             "slaveStorageId": slave_storage_id
         }
-        return put_wrapper(request, json=body, auth=(HTTPBasicAuth(email, password)))
+        return put_wrapper(f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
@@ -507,13 +509,13 @@ class Storage(object):
         body = {
             "id": system_id
         }
-        return put_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/systems/", json=body, headers=headers, auth={"email": email, "password": password})
+        return put_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/systems/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def _remove_from_system(request, system_id, storage_id, headers=None):
-        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers, auth={"email": email, "password": password})
+        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers)
 
     @staticmethod
     @validate_response
@@ -523,7 +525,7 @@ class Storage(object):
             "systems": [system_id],
             "totalSpace": storage_size
         }
-        return put_wrapper(f"{CLOUD_STORAGES_URL}/", json=body, headers=headers, auth={"email": email, "password": password})
+        return put_wrapper(f"{CLOUD_STORAGES_URL}/", json=body, headers=headers)
 
     @staticmethod
     @validate_response
@@ -544,13 +546,13 @@ class Storage(object):
         params = {
             "system-id": system_id
         }
-        return get_wrapper(f"{CLOUD_STORAGES_URL}/", params=params, headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f"{CLOUD_STORAGES_URL}/", params=params, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def list_cameras(request, storage_id, headers=None):
-        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers, auth={"email": email, "password": password})
+        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers)
 
     @staticmethod
     @validate_response
@@ -583,7 +585,6 @@ class Storage(object):
     @validate_response
     @auto_refresh_token
     def statistics(request, storage_id, headers=None):
-        # email and password
         return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/statistics", headers=headers)
 
 

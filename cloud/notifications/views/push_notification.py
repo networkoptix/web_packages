@@ -14,7 +14,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
+from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System, TempLogin
 from api.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
 )
@@ -64,7 +64,8 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
                 raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
-                    system_response = Clouddb_System.get(user, password, user)
+                    with TempLogin(user, password) as credentials:
+                        system_response = Clouddb_System.get(credentials.tokens, user)
                     if 'systems' in system_response and system_response['systems'][0]:
                         request.data['system'] = system_response['systems'][0]
                         authentication_cache.set(f'{user}:{password}', request.data['system'])
