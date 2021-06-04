@@ -1155,7 +1155,7 @@ Delete Base System
     Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
     Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
 
-    # Delete user if he doesn't owe any cloud systems
+    # Delete user if he doesn't own any cloud systems
     ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
     ${num systems}=   Evaluate    len($systems)
     Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
