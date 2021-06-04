@@ -1316,3 +1316,9 @@ Make Directory
     ${results}    Execute Command    mkdir ${dir name}    sudo=True    sudo_password=${QA BURBANK PASS}
     Close Connection
     
+Remove Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm -r {dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
