@@ -102,11 +102,18 @@ export class LoginModalContent implements OnInit {
             delete errors.not_activated;
             this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
         }
-        if (!this.loginForm.valid) {
+        
+        const passwordErrors = this.loginForm.controls.login_password.errors;
+        if (passwordErrors?.pattern) {
+            this.loginForm.controls.login_password.setErrors({ pattern: true });
+            this.wrongPassword = false;
+            this.accountBlocked = false;
+        } else if (!this.loginForm.valid) {
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
         }
+        this.hideErrors = !passwordErrors?.pattern;
     }
 
     setEmail(email) {
