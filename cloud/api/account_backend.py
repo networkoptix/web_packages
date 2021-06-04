@@ -6,8 +6,10 @@ from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
+from rest_framework.authentication import TokenAuthentication
 
 from api.models import AccountLoginHistory, AccountManager, Account
+from api.controllers.cloud_api import Auth
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
@@ -27,11 +29,22 @@ def get_ip(request):
         return ''
 
 
+# TODO: Probably dead code.
 class AccountBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None):
         try:
-            ip = get_ip(request)
-            user = Clouddb_Account.get(username, password, ip)  # first - check cloud_db
+            auth = request.META.get('HTTP_AUTHORIZATION', '')
+            validate_token = None
+            if auth:
+                auth_type, token = auth.split()
+                validate_token = Auth.validate_token(token)
+                user = {
+                    'email': validate_token['username']
+                }
+            else:
+                user = Clouddb_Account.get(request, username=username, password=password)
+            if username is None:
+                username = user['email']
         except APINotAuthorisedException as exception:
             if request and exception.error_code == ErrorCodes.account_blocked:
                 request.session['account_blocked'] = True
@@ -50,6 +63,9 @@ class AccountBackend(ModelBackend):
             if not AccountManager.is_email_in_portal(user['email']):
                 # so - user is in cloud_db, but not in cloud_portal
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
+        if validate_token:
+            request.session['access_token'] = validate_token.get('access_token')
+            request.session['refresh_token'] = None
         return Account.objects.get(email=user['email'])
 
     def get_user(self, user_id):
@@ -57,6 +73,19 @@ class AccountBackend(ModelBackend):
             return Account.objects.get(pk=user_id)
         except ObjectDoesNotExist:
             return None
+
+
+class BearerAuthentication(TokenAuthentication):
+    keyword = 'Bearer'
+    model = Account
+
+    def authenticate_credentials(self, token):
+        model = self.get_model()
+        try:
+            validate_token = Auth.validate_token(token)
+        except APINotAuthorisedException:
+            return None
+        return model.objects.get(email=validate_token['username']), token
 
 
 @receiver(user_logged_in)

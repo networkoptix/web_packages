@@ -362,8 +362,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 this.accountService
                     .get()
                     .then(account => {
-                        this.renderer.removeClass(document.body, 'loading');
-
                         if (account) {
                             this.dropdownsVisible = true;
                             this.loginState = true;
@@ -381,6 +379,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             this.renderer.removeClass(document.body, 'authorized');
                             this.renderer.addClass(document.body, 'anonymous');
                         }
+                    }).finally(() => {
+                        this.renderer.removeClass(document.body, 'loading');
                     });
             });
 

@@ -2,7 +2,9 @@ import {
     Component, HostListener, Inject,
     ViewEncapsulation, ViewChild, ElementRef
 }                                                  from '@angular/core';
-import { ActivationStart, Event, Router }          from '@angular/router';
+import {
+    ActivatedRoute, ActivationStart, Event, NavigationEnd, Router
+}                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
 import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
@@ -17,6 +19,7 @@ import { NxPageService }                           from '@services/page.service'
 import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
 import { NxDialogsService }                        from '@dialogs/dialogs.service';
 import { NxConfigService, IConfig }                from '@services/nx-config';
+import { NxCloudApiService }                       from '@services/nx-cloud-api';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -25,7 +28,7 @@ require('./scripts/vendor/protocolcheck');
     selector : 'nx-app',
     template : `
         <div class="headerContainer">
-            <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
+            <nx-header *ngIf="!appStateService.authorizing && (appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"
@@ -56,11 +59,13 @@ export class AppComponent {
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
+        private cloudApiService: NxCloudApiService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
+        private route: ActivatedRoute,
         private ribbonService: NxRibbonService,
         private uriService: NxUriService,
         private pageService: NxPageService,
@@ -68,6 +73,16 @@ export class AppComponent {
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
+
+        // hides header if an authorize (oauth) route
+        this.router.events
+            .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
+            .subscribe((ev: NavigationEnd) => {
+                this.appStateService.authorizing =
+                    ev.url.includes('authorize') ||
+                    ev.url.includes('activate') ||
+                    ev.url.includes('restore_password');
+            });
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases

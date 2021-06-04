@@ -21,6 +21,7 @@
       "@directives/*": ["src/directives/*"],
       "@dialogs/*": ["src/dialogs/*"],
       "@environments/*": ["environments/*"],
+      "@interceptors/*": ["src/interceptors/*"],
       "@pages/*": ["src/pages/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],

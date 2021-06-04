@@ -110,7 +110,7 @@ class SubscriptionSerializer(serializers.Serializer):
                 return ['all']
 
             try:
-                systems = System.list(email=request_data['username'], password=request_data['password'])
+                systems = System.list(self.context['request'], email=request_data['username'], password=request_data['password'])
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:

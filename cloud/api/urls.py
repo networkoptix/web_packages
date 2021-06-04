@@ -3,7 +3,7 @@ __author__ = 'noptix'
 from django.conf.urls import url
 from django.conf import settings
 
-from api.views import account, systems, common, utils, robot, storage
+from api.views import account, common, robot, storage, systems, utils
 from notifications.views import send
 
 urlpatterns = [
@@ -21,11 +21,13 @@ urlpatterns = [
 
     url(r'^account/activate$',           account.activate),
     url(r'^account/login$',              account.login),
+    url(r'^account/loginCode$',          account.login_with_code),
     url(r'^account/logout$',             account.logout),
     url(r'^account/register$',           account.register),
     url(r'^account/restorePassword$',    account.restore_password),
     url(r'^account/changePassword$',     account.change_password),
     url(r'^account/authKey$',            account.auth_key),
+    url(r'^account/check$',              account.check_account_in_portal),
     url(r'^account/checkCode$',          account.check_code_in_portal),
     url(r'^account/checkAuthCode$',      account.check_auth_code),
     url(r'^account/delete$',             account.delete_user),

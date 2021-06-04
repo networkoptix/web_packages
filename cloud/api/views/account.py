@@ -7,23 +7,25 @@ import django
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ObjectDoesNotExist
+
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.serializers import ValidationError
+from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
 
 from api import models
-from api.controllers.cloud_api import Account
-from api.account_backend import AccountManager, get_ip
+from api.controllers.cloud_api import Account, Auth
+from api.account_backend import get_ip
 from api.helpers.exceptions import (
-    handle_exceptions, APIRequestException, APINotAuthorisedException,
+    APIRequestException, APINotAuthorisedException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session)
 from api.views.account_serializers import (
@@ -45,25 +47,43 @@ activate_code__body = openapi.Schema(description="The code used to activate the 
 restore_code__body = openapi.Schema(description="The code used to restore the password for an account.",
                                     type=openapi.TYPE_STRING)
 
+authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
 code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_STRING)
 
 # Swagger Responses
 account__response = openapi.Response('Account info.', AccountSerializer)
 
 
-def set_session_credentials(request, email, password):
-    """
-        The user will have temporary credentials that lasts for 2 weeks without usage.
-        During that time the user has to use the credentials at least once to keep the
-        credentials valid for another two weeks. Otherwise the credentials will become
-        invalid and the user will have to login again.
-    """
-    tempCredentials = Account.create_temporary_credentials(email, password,
-                                                           expiration_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-                                                           auto_prolongation_enabled=True,
-                                                           prolongation_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-    request.session['login'] = tempCredentials['login']
-    request.session['password'] = tempCredentials['password']
+def extract_tokens(token):
+    return {
+        'access_token': token['access_token'],
+        'refresh_token': token['refresh_token']
+    }
+
+
+def kill_tokens(request):
+    for key in ['refresh_token', 'access_token']:
+        token = request.session.get(key)
+        if token:
+            Auth.delete_token(request, token)
+
+
+def login_helper(request, token, user):
+    django.contrib.auth.login(request, user)
+    request.session['access_token'] = token['access_token']
+    request.session['refresh_token'] = token['refresh_token']
+
+    # If the user does not have an activated_date set it to the current time
+    if not user.activated_date:
+        user.activated_date = timezone.now()
+        user.save()
+
+    request.session['time'] = time.time()
+    if 'timezone' in request.data:
+        request.session['timezone'] = request.data['timezone']
+
+    serializer = AccountSerializer(user, many=False)
+    return api_success(serializer.data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -90,7 +110,7 @@ def register(request):
 
     account = models.Account.objects.filter(email=data['email']).first()
     if not account or account.is_active:
-        AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
+        models.AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
         serializer = CreateAccountSerializer(data=data)
         if not serializer.is_valid():
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
@@ -98,10 +118,10 @@ def register(request):
         logger.debug('/api/account/register calling serializer.save')
         serializer.save()
     else:
-        AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
+        models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
 
     logger.debug('/api/account/register checking if activated')
-    activated = AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
+    activated = models.AccountManager().check_if_activated(request, data['email'], data['password'])
     logger.debug('/api/account/register completed')
     return api_success({'activated': activated})
 
@@ -110,28 +130,30 @@ def register(request):
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "login": login__body,
-                             "password": password__body,
+                             "code": authorization_code__body,
                              "remember": remember__body,
                              "timezone": timezone__body
                          },
-                         required=["login", "password"]
-                     ),
-                     responses={'200': account__response})
-@api_view(['POST'])
+                         required=["code"]
+                     ))
+@api_view(["POST"])
 @permission_classes((AllowAny, ))
 def login(request):
-    user = None
-    if 'login' in request.session and 'password' in request.session:
-        email = request.session['login']
-        password = request.session['password']
-        user = django.contrib.auth.authenticate(request=request, username=email, password=password)
+    require_params(request, ('email', 'password'))
 
-    if user is None:
-        require_params(request, ('email', 'password'))
-        email = request.data['email'].lower()
-        password = request.data['password']
-        user = django.contrib.auth.authenticate(request=request, username=email, password=password)
+    email = request.data.get('email').lower()
+    password = request.data.get('password')
+    ip = get_ip(request)
+
+    token = Auth.get_token(email, password, ip=ip)
+    validate_token = Auth.validate_token(token['access_token'])
+    if email != validate_token['username']:
+        raise APIInternalException("Token does not match email.")
+
+    try:
+        user = models.Account.objects.get(email=email)
+    except models.Account.DoesNotExist:
+        user = None
 
     if user is None:
         # If account was blocked we put it in the session to log the login error
@@ -139,7 +161,7 @@ def login(request):
             request.session.pop('account_blocked', None)
             raise APINotAuthorisedException("Account is blocked", ErrorCodes.account_blocked)
         # try to find user in the DB
-        if not AccountManager.is_email_in_portal(email):
+        if not models.AccountManager.is_email_in_portal(email):
             raise APINotFoundException("User not in cloud portal")  # user not found here
         raise APINotAuthorisedException("Password is invalid")
 
@@ -148,25 +170,31 @@ def login(request):
     else:
         request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
 
-    django.contrib.auth.login(request, user)
+    return login_helper(request, token, user)
 
-    # If the user does not have an activated_date set it to the current time
-    if not user.activated_date:
-        user.activated_date = timezone.now()
-        user.save()
 
-    set_session_credentials(request, email, password)
-    request.session['time'] = time.time()
-    if 'timezone' in request.data:
-        request.session['timezone'] = request.data['timezone']
-    serializer = AccountSerializer(user, many=False)
-    return api_success(serializer.data)
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def login_with_code(request):
+    require_params(request, ["code"])
+    ip = get_ip(request)
+    token = Auth.get_access_token(request.data.get("code"), ip)
+    validate_token = Auth.validate_token(token['access_token'])
+
+    try:
+        user = models.Account.objects.get(email=validate_token['username'])
+    except models.Account.DoesNotExist:
+        raise APINotFoundException("User not in cloud")
+
+    request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+    return login_helper(request, token, user)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def logout(request):
+    kill_tokens(request)
     kill_session(request)
     return api_success()
 
@@ -191,9 +219,6 @@ def index(request):
         return api_success({'is_authenticated': False})
 
     if request.method == 'GET':
-        # validate credentials in cloud_db
-        # password could be changed, ot temporary link expired
-        Account.get(request.session['login'], request.session['password'])
         # get authorized user here
         serializer = AccountSerializer(request.user, many=False)
         return Response(serializer.data)
@@ -206,8 +231,7 @@ def index(request):
                                       ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
 
-        Account.update(request.session['login'], request.session['password'], request.data['first_name'],
-                       request.data['last_name'])
+        Account.update(request, request.data['first_name'], request.data['last_name'])
         # if not success:
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -218,9 +242,9 @@ def index(request):
                      operation_description="Returns an temporary authkey based on the user's credentials.",
                      responses={"200": "auth_key"})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def auth_key(request):
-    data = Account.create_temporary_credentials(request.session['login'], request.session['password'], 'short')
+    data = Account.create_temporary_credentials(request, credential_type='short')
 
     key = base64.b64encode((data['login'] + ':' + data['password']).encode('utf-8'))
     return api_success({'auth_key': key})
@@ -237,7 +261,7 @@ def auth_key(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def delete_user(request):
     require_params(request, ('password',))
     user = request.user
@@ -247,7 +271,7 @@ def delete_user(request):
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
                                   error_data={'password': error.error_data})
-
+    kill_tokens(request)
     kill_session(request)
     user.delete()
     return api_success()
@@ -264,7 +288,7 @@ def delete_user(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def change_password(request):
     require_params(request, ('old_password', 'new_password'))
     old_password = request.data['old_password']
@@ -282,8 +306,6 @@ def change_password(request):
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
                                   error_data={'old_password': error.error_data})
-
-    set_session_credentials(request, request.user.email, new_password)
     return api_success()
 
 
@@ -315,7 +337,7 @@ def activate(request):
             raise APIInternalException('No email from cloud_db', ErrorCodes.cloud_invalid_response)
 
         email = user_data['email'].lower()
-        if not AccountManager.is_email_in_portal(email):
+        if not models.AccountManager.is_email_in_portal(email):
             raise APIInternalException('No email in portal_db', ErrorCodes.portal_critical_error)
 
         user = models.Account.objects.get(email=email)
@@ -369,12 +391,24 @@ def restore_password(request):
             account.save()
     elif 'user_email' in request.data:
         user_email = request.data['user_email'].lower()
-        Account.reset_password(get_ip(request), user_email)
+        Account.reset_password(user_email, get_ip(request))
     else:
         raise APIRequestException('Parameters are missing', ErrorCodes.wrong_parameters,
                                   error_data={'code': ['This field is required.'],
                                               'user_email': ['This field is required.']})
     return api_success()
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def check_account_in_portal(request):
+    require_params(request, ('email',))
+    email = request.data['email']
+    email_exists = models.AccountManager.is_email_in_portal(email)
+    return api_success({
+        'active': email_exists and models.Account.objects.get(email=email).activated_date != None,
+        'emailExists': email_exists
+    })
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -391,9 +425,8 @@ def restore_password(request):
 @permission_classes((AllowAny, ))
 def check_code_in_portal(request):
     require_params(request, ('code',))
-    code = request.data['code']
-    (temp_password, email) = Account.extract_temp_credentials(code)
-    email_exists = AccountManager.is_email_in_portal(email)
+    (temp_password, email) = Account.extract_temp_credentials(request.data['code'])
+    email_exists = models.AccountManager.is_email_in_portal(email)
     return api_success({'emailExists': email_exists})
 
 
@@ -411,8 +444,7 @@ def check_code_in_portal(request):
 @permission_classes((AllowAny,))
 def check_auth_code(request):
     require_params(request, ('code',))
-    code = request.data['code']
-    (email, temp_password) = Account.extract_temp_credentials(code)
+    (email, temp_password) = Account.extract_temp_credentials(request.data['code'])
     user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
     if user is None:
         raise APINotAuthorisedException("Auth code has expired.", ErrorCodes.not_authorized)

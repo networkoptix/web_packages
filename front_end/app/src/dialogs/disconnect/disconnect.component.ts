@@ -103,7 +103,7 @@ export class DisconnectModalContent {
 
     private disconnectLocal(password) {
         this.mediaServerApi = this.systemApiService
-            .createConnection(undefined, undefined, undefined, () => of(''));
+            .createConnection(undefined, undefined, undefined, () => of(''), true);
 
         return this.mediaServerApi.disconnectFromCloud(password);
     }

@@ -130,7 +130,8 @@ export interface IPVDCameras {
 }
 
 export interface RegisterUser {
-    activated: boolean
+    activated: boolean,
+    resultCode?: string
 }
 
 export interface System {
@@ -231,4 +232,9 @@ export interface CloudStorageUsage extends CloudResponse {
     recordingBitrate: number,
     delayFromLive: number,
     spaceUsed: number
+}
+
+export interface CheckEmailExists {
+    active: boolean,
+    emailExists: boolean
 }

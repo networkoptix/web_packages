@@ -19,7 +19,7 @@ module.exports = merge(common, {
         port: port,
         proxy: [
             {
-                context: ['/web/', '/api/', '/ec2/', '/hls/', '/media/', '/proxy/'],
+                context: ['/web/', '/api/', '/ec2/', '/hls/', '/media/', '/proxy/', '/rest/'],
                 // target: 'https://fb7a19a3-2b0c-4feb-be48-539231e50113.relay.vmsproxy.hdw.mx/',
                 target: server_address,
                 changeOrigin: true,

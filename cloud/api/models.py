@@ -7,7 +7,9 @@ from django.utils.html import format_html
 from jsonfield import JSONField
 
 from api.controllers.cloud_api import Account as cloud_api_account
-from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
+from api.helpers.exceptions import (
+    APIRequestException, APIException, APILogicException, APINotAuthorisedException, ErrorCodes
+)
 from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions
 from cloud.settings import CUSTOMIZATION
 
@@ -36,7 +38,7 @@ class AccountManager(models.Manager):
 
         # this line will send request to cloud_db and raise an exception if fails:
         try:
-            cloud_api_account.register(ip, email, password, first_name, last_name, code=code)
+            cloud_api_account.register(email, password, first_name, last_name, ip=ip, code=code)
         except APIException as a:
             if a.error_code == ErrorCodes.account_exists and not AccountManager.is_email_in_portal(email):
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
@@ -66,7 +68,7 @@ class AccountManager(models.Manager):
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
-        cloud_api_account.register(ip, email, password, first_name, last_name)
+        cloud_api_account.register(email, password, first_name, last_name, ip=ip)
         user = Account.objects.get(email=email)
         """
         When an account is created using cloud invites it is disabled because its registration
@@ -94,12 +96,12 @@ class AccountManager(models.Manager):
         return True
 
     @staticmethod
-    def check_if_activated(email, password, ip):
+    def check_if_activated(request, email, password):
         activated = False
         try:
-            cloud_api_account.get(email, password, ip)  # try to authenticate with clouddb to check if activated
+            cloud_api_account.get(request, email, password)  # try to authenticate with clouddb to check if activated
             activated = True
-        except APILogicException as exception:
+        except (APILogicException, APINotAuthorisedException) as exception:
             if exception.error_code != ErrorCodes.account_not_activated:
                 raise exception
         return activated
@@ -290,6 +292,7 @@ def group_saved(sender, created, signal, instance, **kwargs):
 
 post_save.connect(group_saved, sender=Group, dispatch_uid='group_post_save')
 post_save.connect(group_saved, sender=ProxyGroup, dispatch_uid='proxy_group_post_save')
+
 
 class AccountCustomProperty(models.Model):
     class Meta:

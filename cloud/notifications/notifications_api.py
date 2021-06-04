@@ -140,7 +140,8 @@ def get_system_with_users(notification_object, request_data):
             system = system['systems'][0]
 
         if system:
-            users = cloud_api.System.users(request_data['username'], request_data['password'], system['id'])
+            with cloud_api.TempLogin(request_data['username'], request_data['password']) as credentials:
+                users = cloud_api.System.users(credentials.tokens, system['id'])
             system['users'] = {user.get('accountEmail', None) for user in users['sharing']}
     except Exception as exception:
         if isinstance(exception, exceptions.APINotAuthorisedException):

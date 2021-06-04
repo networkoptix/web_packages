@@ -1,4 +1,4 @@
-import { Injectable }                          from '@angular/core';
+import { Injectable, Injector }                from '@angular/core';
 import { HttpClient }                          from '@angular/common/http';
 import { Location }                            from '@angular/common';
 import { NxConfigService, IConfig }            from './nx-config';
@@ -11,21 +11,6 @@ import { NxHealthService }                     from '../pages/health/health.serv
 
 export interface IParams<Value = any> {
     [key: string]: Value;
-}
-
-export interface User {
-    canBeEdited: boolean;
-    canBeDeleted: boolean;
-    email: string;
-    id: string;
-    isCloud: boolean;
-    isAdmin?: boolean;
-    isEnabled: boolean;
-    userRoleId: string;
-    permissions: string;
-    // TODO: Remove the trash below after #VMS-2968
-    name: string;
-    fullName: string;
 }
 
 export interface AddResponseTypeHere extends IParams {}
@@ -46,7 +31,8 @@ export class NxSystemAPIService {
         protected cacheService: NxUriCacheService,
         protected cookieService: CookieService,
         protected healthService: NxHealthService,
-        protected appState: NxAppStateService
+        protected appState: NxAppStateService,
+        protected injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -69,7 +55,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new (useRest || this.CONFIG.isLocal ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState);
+        return new (useRest || this.CONFIG.isLocal ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState, this.injector);
     }
 }
 

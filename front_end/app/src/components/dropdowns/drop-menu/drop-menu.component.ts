@@ -101,9 +101,14 @@ export class NxDropMenu extends BaseDropdown {
 
     async ngOnChanges(changes: SimpleChanges) {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
-            const { reply: { isAdmin } }: any = await (this.CONFIG.isLocal
-                ? this.accountService.mediaServerApi.getCurrentUser(true)
-                : Promise.resolve({ reply: { isAdmin: false } }));
+            // Todo: Fix so that it checks for admin correctly.
+            let user: any;
+            if (this.CONFIG.isLocal) {
+                user = await this.accountService.mediaServerApi.getCurrentUser(true);
+            } else {
+                user = await this.accountService.get(true);
+            }
+            const isAdmin = user?.permissions.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
             const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);

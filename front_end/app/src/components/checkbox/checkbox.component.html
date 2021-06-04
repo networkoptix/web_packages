@@ -1,4 +1,4 @@
-<label class="nx-checkbox" [attr.disabled]="disabled ? '' : null">
+<label class="nx-checkbox" [attr.disabled]="disabled ? '' : null" [ngClass]="color">
     <input type="checkbox"
            [id]="componentId"
            [attr.checked]="value ? '' : null"

@@ -109,8 +109,8 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                     return Promise.resolve({
                         data: {
-                            account: result,
-                            resultCode: this.CONFIG.responseOk
+                            account    : result,
+                            resultCode : this.CONFIG.responseOk
                         }
                     });
                 }
@@ -122,13 +122,13 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                 return Promise.resolve({
                     data: {
-                        account: result,
-                        resultCode: this.CONFIG.responseOk
+                        account    : result,
+                        resultCode : this.CONFIG.responseOk
                     }
                 });
             }
             // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject({ error : { resultCode : result.resultCode } });
+            return Promise.reject({ error: { resultCode: result.resultCode } });
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
             // TODO: CLOUD-7267: Handle account changes without reload
@@ -139,7 +139,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
                 // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode : result.error.resultCode });
+                return Promise.reject({ resultCode: result.error.resultCode });
             }
         });
     }

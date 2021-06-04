@@ -152,7 +152,6 @@ export class NxRegisterComponent implements OnInit {
                     this.accountInfo.password,
                     this.accountInfo.firstName,
                     this.accountInfo.lastName,
-                    this.accountInfo.accept,
                     this.accountInfo.code);
         }, {
             errorCodes: {

@@ -26,6 +26,7 @@ export class LoginWebadminModalContent implements OnInit {
     @Input() account;
     @Input() login;
     @Input() keepPage;
+    @Input() blockNavigation;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -142,6 +143,9 @@ export class LoginWebadminModalContent implements OnInit {
             }
         }, (result) => {
             this.activeModal.close(result);
+            if (this.blockNavigation) {
+                return;
+            }
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             // prevent manual input of url for activate routes

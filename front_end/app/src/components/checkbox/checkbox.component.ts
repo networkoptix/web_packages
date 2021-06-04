@@ -44,6 +44,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() checked;
     @Input() disabled;
     @Input() description: string;
+    @Input() color: string;
     @Output() onClick = new EventEmitter<string>();
 
     public value: any;
