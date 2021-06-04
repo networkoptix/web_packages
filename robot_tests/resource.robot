@@ -1076,12 +1076,15 @@ Create Base System
 
     # Add cloud info to dict if owner is true
     Run Keyword If    $owner    Set To Dictionary    ${server}    owner=${owner}    cloud auth=${cloud auth}    cloud id=${system id}
+        ...    ELSE    Set To Dictionary    ${server}    owner=${None}
 
     # Add local users if add users is true
     Run Keyword If    $add_users    Set To Dictionary    ${server}    local users=${local users}
 
     # Add cloud users if both are true
     Run Keyword If    $add_users and $owner    Set To Dictionary    ${server}    cloud users=${cloud users}
+       ...    ELSE    Set To Dictionary    ${server}    cloud users=${None}
+
     [Return]    ${server}
 
 #Create Base Cloud System
@@ -1155,12 +1158,14 @@ Delete Base System
     Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
     Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
 
+    Delete Docker Server    ${system}[id]
+
     # Delete user if he doesn't own any cloud systems
+    Run Keyword If    not $system['owner']    Pass Execution    System is not connected to cloud
     ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
     ${num systems}=   Evaluate    len($systems)
     Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
 
-    Delete Docker Server    ${system}[id]
 
 Create Custom Network
     [Arguments]    ${name}    ${num}
