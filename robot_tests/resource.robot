@@ -1152,10 +1152,14 @@ Delete Accounts
 Delete Base System
     [Arguments]     ${system}
     [Documentation]    Wipe out all resources related to the system
-    Run Keyword If    $system['owner']    Run Keywords
-        ...    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]    AND
-        ...    Delete Account    ${ENV}    ${system}[owner]    ${base password}    AND
-        ...    Delete Accounts    ${system['cloud users'].values()}
+    Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+    Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
+
+    # Delete user if he doesn't owe any cloud systems
+    ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
+    ${num systems}=   Evaluate    len($systems)
+    Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
+
     Delete Docker Server    ${system}[id]
 
 Create Custom Network
