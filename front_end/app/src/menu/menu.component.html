@@ -28,7 +28,7 @@
                     [item]="item"
                     [base]="content.base"
                     [selected]="selectedLevel1 == item.id || menuModel.query != ''"
-                    (toggle)="toggleItem($event, idx)"
+                    (toggle)="toggleItem($event, item.id)"
                     *ngIf="item.id">
             </nx-level-1-item>
 

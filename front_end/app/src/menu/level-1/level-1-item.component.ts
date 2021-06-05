@@ -35,13 +35,12 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
                 private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
-
-        this._toggle = false;
     }
 
     ngOnInit() {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        this._toggle = this.item.toggle || false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -57,8 +56,8 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         if (changes.item?.currentValue) {
             if (this.searchMode) {
                 this._searchableItemsLength = changes.item.currentValue.level3.filter((itm) => !itm.horizontal).length;
+                this._toggle = changes.item.currentValue.toggle;
             }
-            this._toggle = changes.item.currentValue.toggle;
         }
     }
 

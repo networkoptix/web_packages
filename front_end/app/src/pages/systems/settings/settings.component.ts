@@ -419,7 +419,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     contentToggle(event) {
-        this.content.level1[event.idx].toggle = event.state;
+        this.content.level1.find((node) => {
+            if (node.id === event.nodeId) {
+                node.toggle = event.state;
+            }
+        });
+    }
+
+    menuMode(event) {
+        setTimeout(() => {
+            this._menuSearchMode = event;
+        });
     }
 
     updateMenu() {
