@@ -67,12 +67,14 @@ export function createCameraSelectedState (
     cameraId: GUID
 ): CameraSelectedVmsState | CameraNotSelectedVmsState {
     if (cameraId in currentState.cameras) {
-        return {
+        const newState = {
             ...currentState,
             mode             : VMS_MODE.CAMERA_SELECTED,
             selectedCameraId : cameraId,
             selectedCamera   : currentState.cameras[cameraId]
         };
+        // console.log('createCameraSelectedState', currentState, newState)
+        return newState as CameraSelectedVmsState
     } else {
         return currentState;
     }

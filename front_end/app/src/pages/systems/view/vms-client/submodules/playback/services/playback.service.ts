@@ -503,6 +503,24 @@ export class PlaybackService implements OnDestroy {
                 break;
         }
     }
+
+    protected _prevState: PlaybackState
+
+    public save () {
+        this._prevState = { ...this.state }
+        // console.log('PLAYBACK SAVE', { ...this.state })
+    }
+
+    public restore (hasArchive = false) {
+        // console.log('PLAYBACK RESTORE', hasArchive, { ...this._prevState })
+        if (hasArchive && this._prevState.mode === PLAYBACK_MODE.ARCHIVE) {
+            // console.log('trying to start archive from the same place')
+            this.playArchive(this._prevState.currentTime)
+        } else {
+            // console.log('trying to play live')
+            this.playLive()
+        }
+    }
 }
 
 export default PlaybackService;

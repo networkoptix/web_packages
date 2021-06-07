@@ -316,6 +316,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('empty archive');
+                    this.playback.restore(false);
                 } else {
                     try {
                         const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
@@ -331,6 +332,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         }
                         this._log('non-empty archive', this.id, range, archive);
                         this.vms.setCameraRecords(this.id, range, archive);
+                        this.playback.restore(true);
                         this.startPollingForNewlyRecordedChunks();
                     } catch (e) {
                         this._warn(e, 'caught while requesting camera archive ranges');
@@ -526,7 +528,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && this.camera.hasArchive && this.canViewArchives;
     }
 
-    showPlayer() {
+    showPlayer () {
         const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
 
@@ -547,14 +549,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _initSelectedCamera () {
         this._log('_initSelectedCamera');
-        this.playback.stop();
+
+        this.playback.pause();
+        this.playback.save();
         this.resetTransport();
         // this.resetQuality();
         this.setQuality()
-
-        if (this.camera?.isLive) {
-            setTimeout(() => this.playback.playLive());
-        }
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
