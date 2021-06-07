@@ -100,7 +100,10 @@ export class VideoManagementSystemService {
         if (!this.serverTimes?.length) {
             return 0;
         }
-        return this.serverTimes[0].timeZoneOffset - (new Date()).getTimezoneOffset() * 60000;
+        const clientTZO = -(new Date()).getTimezoneOffset() * 60000
+        const serverTZO = this.serverTimes[0].timeZoneOffset
+        // console.log('timeZoneOffset', clientTZO, serverTZO, clientTZO - serverTZO)
+        return serverTZO - clientTZO; // use yourTimestampMs + vms.timeZoneOffset to display server time on client
     }
 
     public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {

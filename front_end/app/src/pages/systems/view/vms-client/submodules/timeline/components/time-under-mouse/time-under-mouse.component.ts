@@ -62,8 +62,8 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             this.self.nativeElement.style.left = `${offset}px`;
             // sometimes Infinity comes in as the timestamp and dateformat fails
             try {
-                this.date = dateformat(s.timeUnderMouse - this.vms.timeZoneOffset, 'ddd mmm dd yyyy');
-                this.time = dateformat(s.timeUnderMouse - this.vms.timeZoneOffset, 'HH:MM:ss');
+                this.date = dateformat(s.timeUnderMouse + this.vms.timeZoneOffset, 'ddd mmm dd yyyy');
+                this.time = dateformat(s.timeUnderMouse + this.vms.timeZoneOffset, 'HH:MM:ss');
             } catch (e) {
                 // console.error(e, s)
             }
