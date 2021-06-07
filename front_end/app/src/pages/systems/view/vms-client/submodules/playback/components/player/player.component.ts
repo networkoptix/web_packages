@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, isDevMode } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
 import PlaybackService from '../../services/playback.service';
 import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '../../../../../../../../../language_i18n_static_types';
 import { NxUtilsService } from '@services/utils.service';
+import VideoManagementSystemService from '../../../vms/services/vms.service';
 
 @Component({
     selector    : 'player',
@@ -29,6 +30,18 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public errorEncryption: boolean = false;
     public errorPlayback: boolean = false;
     public errorPlaybackDescription: string;
+
+    public transformExpr
+
+    @HostListener('window:resize', ['$event'])
+    protected _updateTransformExpr () {
+        const rotateDeg = this.vms.selectedCamera?.rotation || 0
+        const boundingRect = this.self.nativeElement.getBoundingClientRect()
+        const scale = Math.abs(rotateDeg) === 90
+            ?  boundingRect.height / boundingRect.width
+            : 1.0
+        this.transformExpr = `rotate(${rotateDeg}deg) scale(${scale})`
+    }
 
     public get useNativePlayer () {
         const isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
@@ -54,7 +67,9 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor (
         translateService: NxLanguageProviderService,
         public playback: PlaybackService,
-        private utilsService: NxUtilsService
+        protected vms: VideoManagementSystemService,
+        private utilsService: NxUtilsService,
+        protected self: ElementRef,
     ) {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
@@ -62,6 +77,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public ngOnInit (): void {
         this.onPlaybackSubjectChange(this.playback.state);
+        this._updateTransformExpr()
     }
 
     public ngAfterViewInit (): void {

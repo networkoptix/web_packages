@@ -58,9 +58,11 @@ export class Camera implements ICamera {
             this._rotation = parseInt(rotation.value) || 0;
             // console.log('got camera rotation', this._rotation)
         }
+        // console.log('CAMERA ROTATION RECEIVED', rotation, this._rotation)
     }
 
     public get rotation () {
+        // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
     }
 
