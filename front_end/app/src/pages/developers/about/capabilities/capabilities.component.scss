@@ -2,14 +2,21 @@
 @use '../../../../../styles/theme_variables' as *;
 @use 'app/src/styles/_bootstrap_utils' as bootstrap;
 
-.heading-link {
-    @include typography.regular24dark9;
-    cursor: pointer;
 
+
+
+.heading-non-link {
+    @include typography.regular24dark9;
+}
+
+.heading-link {
+    @extend .heading-non-link;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }
 }
+
 
 .capabilities {
     display: flex;

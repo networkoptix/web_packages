@@ -27,7 +27,10 @@
 </ng-template>
 
 <section *ngIf="!errorManager.hasErrors; else showError" class="integrations">
-    <h2 class="heading-link" [routerLink]="integrationsNode.url">{{integrationsNode.title}}</h2>
+    <h2  *ngIf="integrationsNode.url; else nonLinkHeader"  class="heading-link" [routerLink]="integrationsNode.url">{{integrationsNode.title}}</h2>
+    <ng-template #nonLinkHeader>
+        <h2 class="heading-non-link">{{integrationsNode.title}}</h2>
+    </ng-template>
     <div class="integrations-wrapper">
         <div *ngIf="integrationsShortDescription" class="card info-block">
             <h3>{{integrationsNode.nodes[0].title}}</h3>
