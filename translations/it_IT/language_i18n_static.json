@@ -260,7 +260,7 @@
             "latestBuild": "ultima Build",
             "mergeConfirmation": "<p class=\"mb-0\">Stai per unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.</p><p>Le impostazioni ed il nome verranno presi da <strong>{{primarySystem}}</strong>.</p>",
             "mergeFailedTitle": "Unione di sistemi fallita",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Unione dei sistemi {primaryName} e {secondaryName} completata",
             "mergeSystemsTitle": "Unisci il sistema corrente con",
             "noServerFound": "Nessun server trovato",
             "newSystemDisplayName": "Nuovo sistema",
@@ -335,7 +335,7 @@
             "serversDetach": "Scollegare il server \"{ title }\" dal sistema corrente?",
             "serversReset": "Reimpostare il server \"{ title }\" ai valori predefiniti?",
             "serversRestart": "Riavviare il server \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "changePasswordFor": "Modifica la password per l'utente \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Disconnetti tutti i sistemi di cui sei il proprietario dal portale %CLOUD_NAME% per eliminare il tuo account."
@@ -453,7 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Impossibile cancellare il sistema",
         "emailNotFound": "L'account non esiste.",
         "failedToAccessSystem": "Nessun sistema è accessibile da questo link. Ciò può accadere quando un sistema è stato disconnesso da %CLOUD_NAME%, e l'accesso a questo sistema è stato revocato o se si è effettuato l'accesso con un account errato.",
-        "failedToAccessCamera": "No camera can be accessed by this link.",
+        "failedToAccessCamera": "Non è possibile accedere a nessuna telecamera da questo link.",
         "forbidden": "Non ha il permesso per effettuare questa azione",
         "lostConnection": "Connessione a {systemName} persa",
         "mergedSystemIsOffline": "Il sistema <strong>{failedSystem}</strong> è offline.",
@@ -476,8 +476,8 @@
         "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
         "licenseServerError": "Impossibile attivare la licenza. Il server delle licenze non risponde. Riprova o contatta l'assistenza.",
         "networkConnection": "Impossibile connettersi a %CLOUD_NAME%, controlla la connessione di rete.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVIO<br>CRITTOGRAFATO",
+        "archiveEncryptedMessage": "Chiedere all'amministratore di sistema di immettere la password di crittografia<br>per decifrare questo archivio."
     },
     "integration": {
         "Access Control": "Controllo accesso",
@@ -557,7 +557,7 @@
         "download": "Scarica %VMS_NAME%",
         "downloadPlatform": "Scarica %VMS_NAME% per ",
         "failedToAccessSystem": "Impossibile accedere al sistema",
-        "failedToAccessCamera": "Failed to access camera",
+        "failedToAccessCamera": "Impossibile accedere alla telecamera",
         "integrations": "Integrazioni %VMS_NAME%",
         "login": "Accesso",
         "pageNotFound": "Pagina non trovata",
@@ -776,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Orario",
-            "Trial": "Orario",
+            "Trial": "Prova",
             "Professional": "Professionale",
             "Analog": "Analogico",
             "Edge": "Edge",
