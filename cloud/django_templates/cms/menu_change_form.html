@@ -1,6 +1,15 @@
 {% extends "admin/change_form.html" %}
 {% load static %}
 {% block extrahead %}
+    <style>
+        .duplicate-url:after {
+            content: "Duplicate Url";
+            position: absolute;
+            color: red;
+            right: 6px;
+            top: 0;
+        }
+    </style>
     <link rel="stylesheet" href="{% static "css/nested_stacked_overrides.css" %}">
     {{ block.super }}
 {% endblock %}
