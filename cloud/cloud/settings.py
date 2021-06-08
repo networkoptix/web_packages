@@ -484,7 +484,7 @@ Regex allows cors for the following api calls:
 These urls need to be whitelisted because mediaserver use them.
 """
 # Comment out for swagger-ui local.
-CORS_URLS_REGEX = r'^/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?)'
+CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?))'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
