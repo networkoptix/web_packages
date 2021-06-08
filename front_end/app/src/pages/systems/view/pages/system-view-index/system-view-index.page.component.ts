@@ -242,7 +242,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
-            this.vms.setMediaServers(this.systemId, cachedMediaServers);
             this._log(`system ${this.system.id} view initialized`, this.hasCameras);
             this._setInitializationState(true, false);
             if (!this.route.snapshot.children.length) {
@@ -323,39 +322,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         status           : ms.status,
                         cameras          : ms.cameras.map(processCameras)
                     })));
+
                     firstLoad.next();
-
-                    if (this.system?.cameraManager) {
-                        const cameras = await this.system.cameraManager
-                            .getCameras()
-                            .then(cameras => cameras.reduce((parsed, camera) => ({
-                                ...parsed,
-                                [NxUtilsService.cleanId(camera.id)]: {
-                                    ...camera,
-                                    status: (camera.status === 'Online' ? 'Live' : camera.status) as CAMERA_STATUS
-                                }
-                            }), {}));
-
-                        let anythingChanged = false;
-
-                        cachedMediaServers && Object.keys(cachedMediaServers).forEach(serverId => {
-                            const server = cachedMediaServers[serverId];
-                            for (const camera of server.cameras) {
-                                const updatedCamera = cameras[camera.id];
-                                if (updatedCamera && (camera.status !== updatedCamera.status || camera.name !== updatedCamera.name)) {
-                                    this._log('camera updated', updatedCamera);
-                                    camera.status = updatedCamera.status;
-                                    camera.name = updatedCamera.name;
-                                    anythingChanged = true;
-                                }
-                            }
-                        });
-
-                        if (anythingChanged) {
-                            this._log('poll: setMediaServers');
-                            this.vms.setMediaServers(this.systemId, cachedMediaServers);
-                        }
-                    }
+                    this.vms.setMediaServers(this.systemId, cachedMediaServers);
                 });
         }).catch(e => {
             this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);

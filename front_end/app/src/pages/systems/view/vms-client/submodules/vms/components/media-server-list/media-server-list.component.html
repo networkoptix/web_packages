@@ -9,7 +9,7 @@
 
     <div
       class="server"
-      *ngFor="let server of mediaservers"
+      *ngFor="let server of mediaservers; trackBy: serverID"
       [ngClass]="{
         'show-ip': showIP,
         'expanded': isServerExpanded[server.id],
@@ -29,7 +29,7 @@
       <div class="cameras">
         <a
           class="camera"
-          *ngFor="let camera of server.cameras"
+          *ngFor="let camera of server.cameras; trackBy: cameraId"
           [routerLink]="[camera.id]"
           [ngClass]="{
             online: camera.isOnline,
