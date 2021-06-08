@@ -5,7 +5,7 @@ import logging
 from django.utils.log import AdminEmailHandler
 
 logger = logging.getLogger(__name__)
-DOWNGRADE_ROUTES = ['/api/account', '/api/systems']
+DOWNGRADE_ROUTES = ['/api/account', '/api/systems', '/api/notifications/push_notification']
 
 
 class LimitAdminEmailHandler(AdminEmailHandler):

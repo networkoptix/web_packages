@@ -397,11 +397,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        // Avoid unnecessary model update
-        if (!NxUtilsService.isEqual(this.filterModel, model)) {
-            this.filterModel = NxUtilsService.deepCopy(model);
-            this.searchVendor();
-        }
+        this.filterModel = NxUtilsService.deepCopy(model);
+        this.searchVendor();
     }
 
     getIPVDData() {

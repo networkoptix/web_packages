@@ -209,7 +209,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
-        const dateStr = dateformat(s.time - this.vms.timeZoneOffset, format);
+        const dateStr = dateformat(s.time + this.vms.timeZoneOffset, format);
         // console.log(dateStr, s)
         ctx.font = `${fontSize}px ${fontFace}`;
         ctx.fillText(dateStr, x, y1 + 5);

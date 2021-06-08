@@ -129,36 +129,27 @@ class CloudSessionAuthentication(SessionAuthentication):
 @permission_classes((IsAuthenticatedUserOrSystem,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
-    # Try/except is a temporary solution for logging DRF handled exceptions
-    # TODO: CLOUD-5625: Subclass DRF exception handler and combine it with handle_exceptions decorator
-    try:
-        serializer = NotificationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+    serializer = NotificationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
 
-        payload = data['notification'].get('payload', None)
-        payload_str = json.dumps(payload) if payload else ''
-        options = data['notification'].get('options', None)
-        options_str = json.dumps(options) if options else ''
+    payload = data['notification'].get('payload', None)
+    payload_str = json.dumps(payload) if payload else ''
+    options = data['notification'].get('options', None)
+    options_str = json.dumps(options) if options else ''
 
-        notification_object = PushNotification.objects.create(
-            title=data['notification']['title'], body=data['notification']['body'],
-            payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
-            raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
-        )
+    notification_object = PushNotification.objects.create(
+        title=data['notification']['title'], body=data['notification']['body'],
+        payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
+        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
+    )
 
-        transaction.on_commit(lambda: send_push_notification.apply_async(
-            args=[notification_object.id], kwargs={'request_data': request.data},
-            queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-        ))
+    transaction.on_commit(lambda: send_push_notification.apply_async(
+        args=[notification_object.id], kwargs={'request_data': request.data},
+        queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
+    ))
 
-        return api_success({'notificationId': notification_object.id})
-    except (exceptions.APIException, Http404, PermissionDenied) as e:
-        request_data = request.data.copy()
-        clean_passwords(request_data)
-        logger.warning(f'Request data: {request_data}')
-        logger.warning(f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}')
-        raise e
+    return api_success({'notificationId': notification_object.id})
 
 
 class DeviceSubscriptionListView(RetrieveAPIView):

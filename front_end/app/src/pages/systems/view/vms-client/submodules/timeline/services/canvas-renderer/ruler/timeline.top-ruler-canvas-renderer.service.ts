@@ -163,7 +163,7 @@ export class TimelineTopRulerCanvasRendererService {
         const format = topRulerDateFormats[interval];
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const topString = dateformat(curTime - this.vms.timeZoneOffset, format.top);
+        const topString = dateformat(curTime + this.vms.timeZoneOffset, format.top);
         const x = Math.round((x0 + x1) / 2);
         const y = Math.round((y0 + y1) / 2);
         ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
@@ -172,7 +172,7 @@ export class TimelineTopRulerCanvasRendererService {
         ctx.fillText(topString, x, y);
 
         if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
-            const serifString = dateformat(curTime - this.vms.timeZoneOffset, format.serif);
+            const serifString = dateformat(curTime + this.vms.timeZoneOffset, format.serif);
             ctx.fillStyle = `${drawingConfig.bottomLabel.baseColorHex}${percentageToHex(drawingConfig.bottomLabel.opacity)}`;
             ctx.font = `${drawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
             ctx.textBaseline = 'top';

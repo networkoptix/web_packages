@@ -776,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Tid",
+            "Trial": "Provperiod",
             "Professional": "Professionell",
             "Analog": "Analog",
             "Edge": "Edge",

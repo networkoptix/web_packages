@@ -15,7 +15,7 @@ Header Suite Setup
 
 #    ${main system}=   Setup Docker System    cloud email=${one system owner}
     ${rand}=   Generate Random String
-    ${main system}=   Create Base System    name=header_main_system_${rand}    owner=${one system owner}
+    ${main system}=   Create Base System    header_main_system_${rand}    owner=${one system owner}
     Set Suite Variable    ${main system}
 #    ${auth}=   Create List    ${one system owner}    ${BASE PASSWORD}
 #    Set Suite Variable    ${auth}
@@ -34,7 +34,7 @@ Header Suite Setup
     ${rand}=   Generate Random String
     FOR    ${i}    IN RANGE    1    17
 #        ${system}=   Setup Docker System    cloud email=${many systems owner}
-        ${system}=   Create Base System    name=header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=False
+        ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=False
         Sleep    2
         Append To List    ${offline systems}    ${system}
         Delete Docker Server    ${system}[id]

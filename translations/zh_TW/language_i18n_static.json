@@ -776,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "時效性",
-            "Trial": "時效性",
+            "Trial": "測試版",
             "Professional": "專業版",
             "Analog": "類比",
             "Edge": "Edge",
@@ -807,7 +807,7 @@
             "required": "{number} more required",
             "activated": "授權已啟用",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "測試授權已啟用。即日起可享有4台攝影機錄影30天的試用。"
         }
     },
     "settingsConfig": {

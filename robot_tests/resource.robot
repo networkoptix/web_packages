@@ -1076,12 +1076,15 @@ Create Base System
 
     # Add cloud info to dict if owner is true
     Run Keyword If    $owner    Set To Dictionary    ${server}    owner=${owner}    cloud auth=${cloud auth}    cloud id=${system id}
+        ...    ELSE    Set To Dictionary    ${server}    owner=${None}
 
     # Add local users if add users is true
     Run Keyword If    $add_users    Set To Dictionary    ${server}    local users=${local users}
 
     # Add cloud users if both are true
     Run Keyword If    $add_users and $owner    Set To Dictionary    ${server}    cloud users=${cloud users}
+       ...    ELSE    Set To Dictionary    ${server}    cloud users=${None}
+
     [Return]    ${server}
 
 #Create Base Cloud System
@@ -1152,11 +1155,17 @@ Delete Accounts
 Delete Base System
     [Arguments]     ${system}
     [Documentation]    Wipe out all resources related to the system
-    Run Keyword If    $system['owner']    Run Keywords
-        ...    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]    AND
-        ...    Delete Account    ${ENV}    ${system}[owner]    ${base password}    AND
-        ...    Delete Accounts    ${system['cloud users'].values()}
+    Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+    Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
+
     Delete Docker Server    ${system}[id]
+
+    # Delete user if he doesn't own any cloud systems
+    Run Keyword If    not $system['owner']    Pass Execution    System is not connected to cloud
+    ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
+    ${num systems}=   Evaluate    len($systems)
+    Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
+
 
 Create Custom Network
     [Arguments]    ${name}    ${num}
@@ -1272,3 +1281,51 @@ Input Content Editable Text
     [Arguments]    ${element}    ${text}
     Delete All Text    ${element}
     Press Keys    ${element}    ${text}
+    
+Create Virtual Disk
+    [Arguments]    ${disk location}    ${disk name}    ${disk size}    ${disk target}
+    &{disk}=   Create Dictionary
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
+    Should Be Equal As Integers   ${results}    0
+    Close Connection
+    Set To Dictionary    ${disk}    img=${disk location}/${disk name}.img
+    Set To Dictionary    ${disk}    folder=${disk name}
+    Set To Dictionary    ${disk}    size=${disk size}
+    Set To Dictionary    ${disk}    target=${disk target}
+    Set To Dictionary    ${disk}    string=--mount type=bind,source="/home/qaburbank/${disk name}",target=/${disk target}
+    [Return]    ${disk}
+    
+Delete Virtual Disk
+    [Arguments]    ${img path}    ${folder}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     umount ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm ${img path}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm -r ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Make Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    mkdir ${dir name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Remove Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm -r ${dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Remove All Files 
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
