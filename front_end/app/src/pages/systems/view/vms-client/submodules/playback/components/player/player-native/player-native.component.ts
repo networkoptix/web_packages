@@ -7,7 +7,6 @@ import Hls from 'hls.js';
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
 import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
 import { NxUtilsService } from '@services/utils.service';
-import {catchError} from "rxjs/operators";
 
 @Component({
     selector    : 'player-native',
@@ -61,7 +60,9 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
                             break;
                     }
                 }, (error) => {
-                    this.playback.setError(error.message);
+                    if (error.status !== 0) {
+                        this.playback.setError(error.message);
+                    }
                 });
         }
     }
