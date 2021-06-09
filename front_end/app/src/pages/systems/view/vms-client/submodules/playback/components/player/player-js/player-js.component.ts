@@ -39,14 +39,14 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 
-    videoErrorEventHandler (event: any) {
-        if (this.videoView?.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+    videoErrorEventHandler = (event: any) => {
+        if (this.videoView?.nativeElement.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
             // if 'webm' switch to 'hlc'
             this.playback.changeTransport('hls');
             return;
         }
 
-        if (this.http && event.type === 'error') {
+        if (event.type === 'error') {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {

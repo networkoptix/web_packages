@@ -7,6 +7,7 @@ import Hls from 'hls.js';
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
 import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
 import { NxUtilsService } from '@services/utils.service';
+import {catchError} from "rxjs/operators";
 
 @Component({
     selector    : 'player-native',
@@ -44,8 +45,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit (): void {
     }
 
-    videoErrorEventHandler (event: any) {
-        if (this.http && this.videoView?.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+    videoErrorEventHandler = (event: any) => {
+        if (this.videoView?.nativeElement.error?.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
