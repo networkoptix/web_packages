@@ -140,8 +140,11 @@ export class TimelineService {
     }
 
     public shiftVisibleRange (offset: ms) {
-        this._visibleRange.shift(offset);
-        this._emit();
+        // If the visible start is less than full range ignore the move.
+        if (this.fullRange.start <= this.visibleRange.start + offset && this.visibleRange.end + offset <= this.fullRange.end) {
+            this._visibleRange.shift(offset);
+            this._emit();
+        }
     }
 
     public zoom (durationDelta: ms, offset: float) {
