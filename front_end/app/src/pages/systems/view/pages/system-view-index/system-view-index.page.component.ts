@@ -46,6 +46,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
     fullscreenMode: boolean;
+    fullscreenToggle: boolean;
     showElementsInFSM: boolean;
     onShowElements: any;
     onMoveShowElements: any;
@@ -110,6 +111,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     constructor(
+        configService: NxConfigService,
         private self: ElementRef,
         protected router: Router,
         protected route: ActivatedRoute,
@@ -119,7 +121,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
-        configService: NxConfigService
+        private utilsService: NxUtilsService
     ) {
         this.CONFIG = configService.getConfig();
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
@@ -175,6 +177,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
         if (s.isFullScreen) {
             this.fullscreenMode = true;
+            this.fullscreenToggle = true;
             this.onShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
             }, 3000);
@@ -183,6 +186,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             clearTimeout(this.onMoveShowElements);
             this.fullscreenMode = false;
             this.showElementsInFSM = true;
+
+            if (this.utilsService.isMobile() && this.fullscreenToggle) {
+                this.ux.isSidebarShown = false;
+            }
+            this.fullscreenToggle = false;
         }
     }
 
