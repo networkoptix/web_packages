@@ -294,11 +294,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
-                            .pipe(
-                                untilDestroyed(this)
-                            )
                             .subscribe((systems) => {
-                                console.log('systemSubscription ->');
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
                                     return;
@@ -317,7 +313,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 }
                                 this.systemInfoSubscription = this.system.infoSubject
                                     .pipe(
-                                        untilDestroyed(this),
                                         filter((system: any) => system !== undefined),
                                         tap(({ isOnline }) => {
                                             this.applyService.isOnline$.next(!!isOnline);
@@ -329,7 +324,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         })
                                     )
                                     .subscribe(() => {
-                                        console.log('systemInfoSubscription ->');
                                         // if system is removed while on page, redirects to systems page
                                         if (
                                             this.system && this.systemsService.systems &&
