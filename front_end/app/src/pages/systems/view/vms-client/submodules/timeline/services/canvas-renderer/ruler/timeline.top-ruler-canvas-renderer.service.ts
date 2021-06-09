@@ -29,7 +29,7 @@ export class TimelineTopRulerCanvasRendererService {
 
     public render (ctx: CanvasRenderingContext2D) {
         const interval = this.getInterval();
-        const serifTimes = this.getSerifTimes()
+        const serifTimes = this.getSerifTimes();
         // console.log('TOP SERIFS', serifTimes, serifTimes.map(st => new Date(st)))
         this._withContext(ctx, () => {
             const h = this.timeline.canvasGeometry.height * cfg.ruler.top.relativeHeight;
@@ -86,7 +86,11 @@ export class TimelineTopRulerCanvasRendererService {
     }
 
     protected _getSerifTimes (interval: IrregularLengthInterval): Array<ms> {
-        return interval ? this.timeline.visibleRange.iterate(interval, -this.vms.timeZoneOffset) : [];
+        return interval ?
+            this.timeline.visibleRange.iterate(
+                interval, -this.vms.timeZoneOffset
+            ) : []
+        ;
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
@@ -111,18 +115,13 @@ export class TimelineTopRulerCanvasRendererService {
         nextTime: ms
     ) {
         let x0: px = this.timeline.timeToCanvasOffsetX(curTime);
+
         const xNext: px = nextTime
             ? this.timeline.timeToCanvasOffsetX(nextTime)
             : x0 + this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval));
-        // const xPrev: px = prevTime
-        //   ? this.timeline.timeToCanvasOffsetX(prevTime)
-        //   : x0 - this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval))
-        let x1 = xNext;
 
-        // if (xPrev < 0 && xNext > this.timeline.canvasGeometry.width && x0 < this.timeline.canvasGeometry.width) {
-        //   x0 = 0
-        //   x1 = this.timeline.canvasGeometry.width
-        // }
+            let x1 = xNext;
+
         if (x0 < 0) {
             x0 = 0;
         }
@@ -139,10 +138,7 @@ export class TimelineTopRulerCanvasRendererService {
             ctx.fillRect(x0, y0, x1 - x0, y1);
         }
 
-        // const MIN_WIDTH = 130 * this.timeline.canvasGeometry.dpr;
-        // if (x1 - x0 >= MIN_WIDTH) {
-            this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2);
-        // }
+        this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2);
     }
 
     protected _drawSerifText (

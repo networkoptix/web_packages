@@ -1,6 +1,5 @@
 import { ms } from '../../../../../../../utils/type-aliases';
 import IrregularLengthInterval from '../IrregularLengthInterval';
-import regularLengthIntervals from '../regularLengthIntervals';
 
 export type timeStampMs = ms
 export type durationMs = ms
@@ -72,13 +71,3 @@ export function alignTimeStamp (
 }
 
 export default alignTimeStamp;
-
-/*
-[
-    1620838800000,      Wed May 12 2021 20:00:00 GMT+0300 (Moscow Standard Time)
-    1620889200000,      Thu May 13 2021 10:00:00 GMT+0300 (Moscow Standard Time)
-    1620975600000,      Fri May 14 2021 10:00:00 GMT+0300 (Moscow Standard Time)
-    1621062000000,      Sat May 15 2021 10:00:00 GMT+0300 (Moscow Standard Time)
-    1621148400000       Sun May 16 2021 10:00:00 GMT+0300 (Moscow Standard Time)
-]]
-*/
