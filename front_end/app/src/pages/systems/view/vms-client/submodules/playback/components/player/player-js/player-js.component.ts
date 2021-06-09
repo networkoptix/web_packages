@@ -46,7 +46,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
             return;
         }
 
-        if (event.type === 'error') {
+        if (this.http && event.type === 'error') {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
