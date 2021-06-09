@@ -444,7 +444,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
-                        // this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.serverManager.initSystemMediaServers().catch((_) => {});
