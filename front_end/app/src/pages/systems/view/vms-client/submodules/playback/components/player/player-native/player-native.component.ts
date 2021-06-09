@@ -45,7 +45,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     videoErrorEventHandler (event: any) {
-        if (this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        if (this.videoView?.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -80,7 +80,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnDestroy (): void {
-        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.$video.pause();
         this.$video.src = '';

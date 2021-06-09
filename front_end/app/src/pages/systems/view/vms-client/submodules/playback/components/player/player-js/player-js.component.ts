@@ -40,7 +40,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
     }
 
     videoErrorEventHandler (event: any) {
-        if (this.videoView.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+        if (this.videoView?.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
             // if 'webm' switch to 'hlc'
             this.playback.changeTransport('hls');
             return;
@@ -107,7 +107,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
         if (this.player) {
             this.player.dispose();
         }
-        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
     }
 
