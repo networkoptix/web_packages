@@ -121,16 +121,7 @@ export class VideoManagementSystemService {
     }
 
     public setCameraRecords (cameraId: string, range, records) {
-        if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
-            this._state.mediaServers.map(ms => {
-                const c = ms.cameras.find(c => c.id === cameraId);
-                if (c) {
-                    c.setRecords(range, records);
-                }
-            });
-        } else {
-            this._warn('attempt to set camera records while in NOT_INITIALIZED state', cameraId, range, records);
-        }
+        this.selectedCamera?.setRecords(range, records);
     }
 
     public setCameraNewlyRecordedChunks (cameraId: string, records: CameraArchive) {
