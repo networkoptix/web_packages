@@ -43,7 +43,7 @@ from cloud.logger import downgrade_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
-TESTING = sys.argv[1:2] == ['test']
+TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
@@ -308,6 +308,13 @@ CACHES = {
         "KEY_PREFIX": 'agreement'
     }
 }
+
+if TESTING:
+    for key, cache in CACHES.items():
+        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
+        cache['OPTIONS'] = {}
+        cache['LOCATION'] = key
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER

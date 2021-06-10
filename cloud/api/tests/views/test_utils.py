@@ -428,11 +428,11 @@ class TestIPVD:
         response = utils.get_ipvd(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
-        ipvd_data_processed['cached'] = True
 
         # Test cached
         request = arf.get('/api/ipvd')
         response = utils.get_ipvd(request)
+        ipvd_data_processed['cached'] = True
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
 

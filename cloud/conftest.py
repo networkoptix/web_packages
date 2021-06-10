@@ -1,5 +1,3 @@
-
-from datetime import datetime
 from typing import Iterable
 
 import pytest
@@ -27,8 +25,7 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
 @pytest.fixture(autouse=True)
 def set_settings(settings):
     settings.TESTING = True
-    for key, cache in settings.CACHES.items():
-        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
+    settings.USE_ASYNC_QUEUE = False
 
 
 @pytest.fixture()

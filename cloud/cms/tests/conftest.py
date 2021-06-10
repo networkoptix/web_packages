@@ -1,10 +1,13 @@
 from itertools import cycle
 import json
+import os
 from uuid import UUID
 
 from model_bakery import baker
 from model_bakery.recipe import seq
 import pytest
+
+from django.conf import settings
 
 from cms.models import Menu, MenuNode
 
@@ -1177,5 +1180,5 @@ def expected_menu_dict():
 
 @pytest.fixture(scope='session')
 def menu_import_dict():
-    with open('_mocks/menu_import.json', 'r') as import_file:
+    with open(os.path.join(settings.BASE_DIR, 'cms/tests/_mocks/menu_import.json'), 'r') as import_file:
         return json.load(import_file)

@@ -885,4 +885,4 @@ def ipvd_data_processed():
             'analytics': ['Attended baggage', 'Camera tampering', 'Defocusing detection', 'Entering the area',
                           'Exiting the area', 'Face detection', 'Intrusion detection', 'Live stream accessed',
                           'Scene changed', 'Tampering detection', 'Unattended baggage', 'Virtual line crossing'],
-            'num_cameras': 9, 'cached': True}
+            'num_cameras': 9}
