@@ -17,24 +17,12 @@ export class CameraQualityStorageService {
         });
     }
 
-    protected _getLocalStorageKey (user, cameraId) {
-        // return `${this.user}_quality_${cameraId}`
-        return `${this.user}_quality`
-    }
-
     public get (cameraId: string) {
-        const result = this.localStorageService.retrieve(
-            this._getLocalStorageKey(this.user, cameraId
-        )) || 'auto';
-        // console.log('QUALITY GET', cameraId, result)
-        return result
+        return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || 'auto';
     }
 
     public set (cameraId: string, quality: PlaybackQuality) {
-        // console.log('QUALITY SET', cameraId, quality)
-        return this.localStorageService.store(
-            this._getLocalStorageKey(this.user, cameraId
-        ), quality);
+        this.localStorageService.store(`${this.user}_quality_${cameraId}`, quality);
     }
 }
 

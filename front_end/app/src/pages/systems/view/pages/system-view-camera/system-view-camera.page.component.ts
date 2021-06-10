@@ -183,14 +183,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.transportError = (this.selectedTransport === undefined);
         });
 
-        // this.qualities$.subscribe((qualities) => {
-        //     if (!qualities.includes(this.selectedQuality)) {
-        //         this.selectedQuality = <PlaybackQuality>qualities.slice().shift();
-        //     } else {
-        //         this.selectedQuality$.next(this.selectedQuality);
-        //     }
-        // });
-
+        this.qualities$.subscribe((qualities) => {
+            if (!qualities.includes(this.selectedQuality)) {
+                this.selectedQuality = <PlaybackQuality>qualities.slice().shift();
+            } else {
+                this.selectedQuality$.next(this.selectedQuality);
+            }
+        });
         this.accountService.get().then((account) => {
             if (!account) {
                 this._warn('accountService returned no account');
@@ -254,15 +253,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.playback.changeQuality(this.qualityFromVerbose(quality));
         }
         this.selectedQuality$.next(quality);
-    }
-
-    public setQuality () {
-        const q = this.cameraQualityStorage.get(this.id);
-        if (this.selectedQuality !== q) {
-            this._log('quality change', q);
-            this.playback.changeQuality(this.qualityFromVerbose(q));
-            this.selectedQuality$.next(q);
-        }
     }
 
     public qualityToVerbose (q: PlaybackQuality) {
@@ -478,7 +468,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('ROUTE CHANGE: NEW CAMERA', this.id);
         this.vms.selectCamera(this.id);
         this.resetTransport();
-        // this.resetQuality();
+        this.resetQuality();
 
         if (this.vms.selectedCamera && this.system) {
             this._getRecords();
@@ -536,12 +526,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _initSelectedCamera () {
         this._log('_initSelectedCamera');
-
-        this.playback.pause();
-        this.playback.save();
+        this.playback.stop();
         this.resetTransport();
-        // this.resetQuality();
-        this.setQuality();
+        this.resetQuality();
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
