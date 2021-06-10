@@ -25,7 +25,7 @@ require('./scripts/vendor/protocolcheck');
     selector : 'nx-app',
     template : `
         <div class="headerContainer">
-            <nx-header *ngIf="appStateService.ready || CONFIG.isLocal"></nx-header>
+            <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"
@@ -67,6 +67,8 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        this.CONFIG = configService.getConfig();
+
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases
          *
@@ -99,13 +101,13 @@ export class AppComponent {
                 this.router.navigate(['/browser'])
                     .catch((error) => console.error(error))
                     .finally(() => {
+                        this.CONFIG.browserNotSupported = true;
                         this.appStateService.ready = true;
                     });
                 return;
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        this.CONFIG = configService.getConfig();
         if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
@@ -151,6 +153,9 @@ export class AppComponent {
         this.router.events.pipe(
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
+            if ('debug' in queryParams) {
+                this.CONFIG.allowDebugMode = true;
+            }
             this.uriService.queryParams = queryParams;
             this.mainContainer.nativeElement.scrollTop = 0;
         });

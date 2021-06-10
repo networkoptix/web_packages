@@ -1,183 +1,186 @@
 *** Keywords ***
 Storage Suite Setup
+    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    Set Suite Variable     ${random}    ${random}
     ${loglevel} =    Set Loglevel    INFO
     ${ignore} =    Set Loglevel    ${loglevel}
     ${console} =    Set Variable If    '${loglevel}' != 'INFO'    yes    no
     Set Suite Variable    ${console}    ${console}
-    Log    Storage Suite Setup    DEBUG      console=${console}
-    FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
-        ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-        Set Suite Variable    ${${account}}          ${random email}
-    END
-
-    @{system names} =    Create List
-    ...    ${AUTO TESTS}
-    ...    ${AUTO TESTS 2}
-    ...    Auto Tests 3
-
-    @{auth}=    Create List    ${owner}    ${password}
-    Set Suite Variable    ${auth}    ${auth}
-
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
-    Set Suite Variable     ${random}    ${random}
-
-    @{server auth}=   Create List    admin    qweasd 123
-
-    Set Suite Variable    ${server auth}    ${server auth}   
+    # @{disk size} =    Create List    160000    40000    40000    12000    12000
     
-    @{size} =    Create List    160000    40000    40000    12000    12000
+    Log    Storage Suite Setup    DEBUG      console=${console}
+    
+    # FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
+        # ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+        # Set Suite Variable    ${${account}}          ${random email}
+    # END
+    
+    ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    Log    owner created ..... | PASS |    DEBUG      console=${console}
+    
+    # @{system names} =    Create List
+    # ...    ${AUTO TESTS}
+    # ...    ${AUTO TESTS 2}
+    # ...    Auto Tests 3
 
+    # @{auth}=    Create List    ${owner}    ${password}
+    # Set Suite Variable    ${auth}    ${auth}
+
+
+
+    # @{server auth}=   Create List    admin    qweasd 123
+    # Set Suite Variable    ${server auth}    ${server auth}   
+    
+   
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    mkdir disk-invalid    sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
+    Make Directory    disk-invalid
     Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}
-
-    Log    users created ..... | PASS |    DEBUG      console=${console}
+    
+    @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    Set Suite Variable    @{disk}    @{disk}
     FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     dd if=/dev/zero of=${disk location}/disk${n}-${random}.img bs=1M count=${size[${n}]}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mkfs -t ext4 ${disk location}/disk${n}-${random}.img    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mkdir disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     mount -t auto -o loop ${disk location}/disk${n}-${random}.img disk${n}-${random}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
-        Should Be Equal As Integers   ${results}    0
-        Close Connection
+        ${new disk} =     Create Virtual Disk    ${disk location}    disk${n}-${random}    ${disk size[${n}]}    disk${n}
+        Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}
-        Run Keyword If    ${n} < 4     Catenate Storages One    ${n}
-        ...    ELSE     Catenate Storages Two    ${n}
+        Run Keyword If    ${n} < 4     Catenate Storages One    ${disk[${n}]}[string]
+        ...    ELSE     Catenate Storages Two    ${disk[${n}]}[string]
     END
 
     #${storage string 1} =    Get Substring    ${storage string 1}    1
     ${storage string 2} =    Get Substring    ${storage string 2}    1
+    
+    ${server 1} =    Create Base System    storage0-${random}    owner=${owner}    storage string=${storage string 1}
+    Set Suite Variable    ${server 1}    ${server 1}
+    # ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string 1}
+    # Set Suite Variable    ${port0}    ${port['port']}
+    # Sleep     10
+    Log    docker ${server 1['name']} created ..... | PASS |    DEBUG      console=${console}
+    # Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
+    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
+    # Set Suite Variable    ${sysId0}    ${sysId}
+    # Sleep    10
+    # Close Connection
+    Log    ${server 1['name']} system created ..... | PASS |    DEBUG      console=${console}
 
-    ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string 1}
-    Set Suite Variable    ${port0}    ${port[0]}
-    Sleep     10
-    Log    docker storage0-${random} created ..... | PASS |    DEBUG      console=${console}
-    Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
-    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId0}    ${sysId}
-    Sleep    10
-    Close Connection
-    Log    ${system names[0]} system created ..... | PASS |    DEBUG      console=${console}
+    ${server 2} =    Create Base System    storage1-${random}    owner=${owner}    add users=${False}    storage string=${storage string 2}
+    Set Suite Variable    ${server 2}    ${server 2}
+    # ${port} =    Create Docker Server    storage1-${random}    4.1_test    ${storage string 2}
+    # Set Suite Variable    ${port1}    ${port['port']}
+    # Sleep     10
+    Log    docker ${server 2['name']} created ..... | PASS |    DEBUG      console=${console}
+    # Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
+    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
+    # Set Suite Variable    ${sysId1}    ${sysId}
+    # Sleep    10
+    # Close Connection
+    Log   ${server 2['name']} system created ..... | PASS |    DEBUG      console=${console}
 
-    ${port} =    Create Docker Server    storage1-${random}    4.1_test    ${storage string 2}
-    Set Suite Variable    ${port1}    ${port[0]}
-    Sleep     10
-    Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}
-    Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
-    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId1}    ${sysId}
-    Sleep    10
-    Close Connection
-    Log   ${system names[1]} system created ..... | PASS |    DEBUG      console=${console}
+    ${server 3} =    Create Base System    storage2-${random}    owner=${owner}    add users=${False}
+    Set Suite Variable    ${server 3}    ${server 3}
+    # ${port} =    Create Docker Server    storage2-${random}    4.1_test
+    # Set Suite Variable    ${port2}    ${port['port']}
+    # Sleep     10
+    Log    docker ${server 3['name']} created ..... | PASS |    DEBUG      console=${console}
+    # Setup Local System    https://${QA BURBANK IP}:${port2}    ${BASE PASSWORD}    ${system names[2]}
+    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2}    ${system names[2]}    ${owner}    ${BASE PASSWORD}
+    # Set Suite Variable    ${sysId2}    ${sysId}
+    # Sleep    10
+    # Close Connection
+    Log    ${server 3['name']} system created ..... | PASS |    DEBUG      console=${console}
 
-    ${port} =    Create Docker Server    storage2-${random}    4.1_test
-    Set Suite Variable    ${port2}    ${port[0]}
-    Sleep     10
-    Log    docker storage1-${random} created ..... | PASS |    DEBUG      console=${console}
-    Setup Local System    https://${QA BURBANK IP}:${port2}    ${BASE PASSWORD}    ${system names[2]}
-    ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2}    ${system names[2]}    ${owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${sysId2}    ${sysId}
-    Sleep    10
-    Close Connection
-    Log   ${system names[2]} system created ..... | PASS |    DEBUG      console=${console}
+    # ${SUITE AUTO TESTS USERS} =    Create Dictionary
+    # ...    ${viewer}=viewer
+    # ...    ${adv viewer}=advancedViewer
+    # ...    ${live viewer}=liveViewer
+    # ...    ${not owner}=viewer
+    # ...    ${admin}=cloudAdmin
+    # ...    ${custom}=custom
 
-    ${SUITE AUTO TESTS USERS} =    Create Dictionary
-    ...    ${viewer}=viewer
-    ...    ${adv viewer}=advancedViewer
-    ...    ${live viewer}=liveViewer
-    ...    ${not owner}=viewer
-    ...    ${admin}=cloudAdmin
-    ...    ${custom}=custom
+    # Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS}
 
-    Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS}
-
-    FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
-        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
-    END
-    Log    users added to ${system names[0]} ..... | PASS |    DEBUG      console=${console}
+    # FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
+        # Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
+    # END
+    Log    users added to ${server 1['name']} ..... | PASS |    DEBUG      console=${console}
 
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
+    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
     Log    default storage config set .....| PASS |    DEBUG      console=${console}
 
-    Activate License    ${server auth}    https://${QA BURBANK IP}:${port0}    ${TRIAL LICENSE}
+    Activate License    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    ${TRIAL LICENSE}
     Sleep    5
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
 
-    Add Analytics stub plugin   storage0-${random}
-    ${results} =    Add Camera    https://${QA BURBANK IP}:${port0}    admin    admin    ${camera}    http://10.1.5.116:80/onvif/device_service    Digital Watchdog
+    Add Analytics stub plugin   ${server 1['name']}
+    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    admin    admin    ${camera}    http://10.1.5.116:80/onvif/device_service    Digital Watchdog
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
 
     Sleep    15
     # restarting server and creating inaccessible disk
-    Restart Server    https://${QA BURBANK IP}:${port0}    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['cloud auth']}
     Sleep    3
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    rm -r disk-invalid    sudo=True    sudo_password=${QA BURBANK PASS}
+    
+    Remove Directory    disk-invalid
     Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}
     Sleep    90
+    
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
-    ${results}    Execute Command    docker container port storage0-${random}
-    @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    Close Connection
-    Set Suite Variable    ${port0}    ${portnew[0]}
+    # ${results}    Execute Command    docker container port storage0-${random}
+    # @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
+    # Close Connection
+    # Set Suite Variable    ${port0}    ${portnew[0]}
 
     # Sleep    30
 
     Open Browser and go to URL    ${url}
-    Turn On Recording    ${sysId0}
+    Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
 
-    Verify Storages    ${sysId0}    5
-    Verify Storages    ${sysId1}    1
+    Verify Storages    ${server 1['owner']}    ${server 1['cloud id']}    5
+    Verify Storages    ${server 1['owner']}    ${server 2['cloud id']}    1
 
 Catenate Storages One
-    [Arguments]    ${n}
-    ${storage string 1} =    Catenate    ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}
+    [Arguments]    ${string}
+    ${storage string 1} =    Catenate    ${storage string 1}    ${string}
     Set Suite Variable    ${storage string 1}    ${storage string 1}
 
 Catenate Storages Two
-    [Arguments]    ${n}
-    ${storage string 2} =    Catenate    ${storage string 2}    --mount type=bind,source="/home/qaburbank/disk${n}-${random}",target=/disk${n}
+    [Arguments]    ${string}
+    ${storage string 2} =    Catenate    ${storage string 2}    ${string}
     Set Suite Variable    ${storage string 2}    ${storage string 2}
 
 Storage Suite Teardown
-    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
-    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
-    Disconnect Server via API    ${auth}    ${sysId2}    ${password}    ${owner}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker container stop storage0-${random} storage1-${random} storage2-${random}
-    ${results}    Execute Command    docker container rm storage0-${random} storage1-${random} storage2-${random}
-    Close Connection
+    Delete Base System    ${server 1}
+    Delete Base System    ${server 2}
+    Delete Base System    ${server 3}
+    # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${owner}
+    # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${owner}
+    # Disconnect Server via API    ${server 3['cloud auth']}    ${server 3['cloud id']}    ${password}    ${owner}
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # ${results}    Execute Command    docker container stop storage0-${random} storage1-${random} storage2-${random}
+    # ${results}    Execute Command    docker container rm storage0-${random} storage1-${random} storage2-${random}
+    # Close Connection
     FOR    ${n}    IN RANGE    5
-        Open Connection    ${QA BURBANK IP}
-        SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-        ${results}    Execute Command     umount disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm ${disk location}/disk${n}-${random}.img     sudo=True    sudo_password=${QA BURBANK PASS}
-        ${results}    Execute Command     rm -r disk${n}-${random}     sudo=True    sudo_password=${QA BURBANK PASS}
-        Close Connection
+        Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command     rm -r networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     rm networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
-    Close Connection
+    Remove Directory    networkDisk/*
+    Remove All Files    networkDisk/*
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # ${results}    Execute Command     rm -r networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    # ${results}    Execute Command     rm networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    # Close Connection
 
-    FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}
-        Delete Account    ${ENV}    ${user email}    ${password}
-    END
+    # FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}
+        # Delete Account    ${ENV}    ${user email}    ${password}
+    # END
 
     Close All Browsers
 
 Verify Storages
-    [Arguments]    ${system}    ${storages number}
+    [Arguments]    ${owner}    ${system}    ${storages number}
     Log in to user and system    ${owner}     ${system}
     Wait Until Element is Visible with Retry    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
@@ -190,7 +193,7 @@ Verify Storages
     Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG      console=${console}
 
 Turn on Recording
-    [Arguments]    ${system}
+    [Arguments]    ${owner}    ${system}
     Log in to user and system    ${owner}     ${system}
     Go To Cameras
     Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}
@@ -216,7 +219,7 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    5
+    FOR    ${n}    IN RANGE    4
         ${url} =    Set variable    ${storages dict[${n}]['url']}
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
@@ -235,7 +238,7 @@ Set Default Storage Config
 Reset to Default Storage Config
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${port0}    ${disabled}    ${backups}
+    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
 
 Add Analytics stub plugin
     [Arguments]    ${server name}

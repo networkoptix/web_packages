@@ -187,6 +187,13 @@ angular.module('webInlineWizard')
             };
         }
 
+        function expireCookies() {
+            document.cookie.split(';')
+                .filter(cookie => cookie.indexOf('x-runtime') > -1).forEach((cookie) => {
+                    document.cookie = cookie + '=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                });
+        }
+
         mediaserver = {
             // TODO: remove this method and all usages in 4.1 release or later. We keep it for now to simplify merges
             /*checkCurrentPassword:function(password){
@@ -393,6 +400,7 @@ angular.module('webInlineWizard')
                 });
             },
             setupCloudSystem:function(systemName, systemId, authKey, cloudAccountName, systemSettings){
+                expireCookies();
                 return wrapPost(proxy + '/web/api/setupCloudSystem',{
                     systemName: systemName,
                     cloudSystemID: systemId,
@@ -403,6 +411,7 @@ angular.module('webInlineWizard')
             },
 
             setupLocalSystem:function(systemName, adminAccount, adminPassword, systemSettings){
+                expireCookies();
                 return wrapPost(proxy + '/web/api/setupLocalSystem',{
                     systemName: systemName,
                     adminAccount: adminAccount,

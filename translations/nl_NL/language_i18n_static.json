@@ -334,7 +334,8 @@
             "removeUser": "Gebruiker verwijderen?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tijd",
-            "Trial": "Tijd",
+            "Trial": "Test",
             "Professional": "Professional",
             "Analog": "Analoog",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} more required",
             "activated": "Licentie geactiveerd",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
     "settingsConfig": {

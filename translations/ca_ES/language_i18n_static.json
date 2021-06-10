@@ -334,7 +334,8 @@
             "removeUser": "Voleu suprimir l'usuari?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Temporal",
-            "Trial": "Temporal",
+            "Trial": "Prova",
             "Professional": "Professional",
             "Analog": "Analògic",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} more required",
             "activated": "Clau de llicència activada",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "S'ha activat la llicència de prova. A partir d'avui podeu enregistrar fins a 4 càmeres durant 30 dies."
         }
     },
     "settingsConfig": {

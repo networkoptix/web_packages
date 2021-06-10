@@ -22,7 +22,7 @@ function stage ()
 	mkdir -p stage/mediaserver stage/var/log
 	#Recursive and hardlink instead of copy. f is force
     cp -Rl build/opt/networkoptix/mediaserver/{bin,lib,plugins} stage/mediaserver
-    
+
 
 }
 
@@ -53,10 +53,6 @@ function main()
         if [ "$func" = "publish" ]
         then
             args="$1"; shift; n=$((n+1))
-        fi
-        if [ "$func" = "stage_cmake" ]
-        then
-            args="$1 $2"; shift; n=$((n+2))
         fi
 
         $func $args

@@ -351,7 +351,7 @@ export class NxSystem extends System {
 
             this.infoPromise = undefined;
             this.usersPromise = undefined;
-            this.systemInfo = undefined;
+            // this.systemInfo = undefined;
             this.subscriberCount--;
         }
     }
@@ -558,20 +558,22 @@ export class NxSystem extends System {
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
-            () => this.mediaserver.getServerTimes().toPromise().then(
-                r => {
-                    const now = Date.now();
-                    // @ts-ignore
-                    return r.reply.map(i => ({
-                        vmsTime        : parseInt(i.vmsTime),
-                        vmsTimeOffset  : now - parseInt(i.vmsTime),
-                        osTimeOffset   : now - parseInt(i.osTime),
-                        serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                        timeZoneOffset : parseInt(i.timeZoneOffset)
-                    }));
-                }
-            )
-        );
+            () => {
+                return this.mediaserver.getServerTimes().toPromise().then(
+                    r => {
+                        const now = Date.now();
+                        // @ts-ignore
+                        const sanitized = r.reply.map(i => ({
+                            vmsTime        : parseInt(i.vmsTime),
+                            vmsTimeOffset  : now - parseInt(i.vmsTime),
+                            osTimeOffset   : now - parseInt(i.osTime),
+                            serverId       : i.serverId.slice(1, i.serverId.length - 1),
+                            timeZoneOffset : parseInt(i.timeZoneOffset)
+                        }));
+                        // console.log('getServerTimes', now, r.reply, sanitized)
+                        return sanitized
+                    });
+            });
     }
 
     /**
@@ -891,7 +893,7 @@ export class NxSystem extends System {
                 const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
-            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const used = this.cameras.filter(({ scheduleEnabled, status }) => scheduleEnabled && status !== 'Offline').length;
             const available = total - used;
             return { total, used, available };
         });

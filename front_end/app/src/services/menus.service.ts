@@ -44,7 +44,7 @@ export class MenuNode {
         public related_asset_ids = [],
         public next_item = false,
         public urlified = '',
-        public subtitle = '',
+        public subtitle = ''
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

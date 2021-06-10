@@ -334,7 +334,8 @@
             "removeUser": "Vil du fjerne bruker?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Tid",
+            "Trial": "Prøve",
             "Professional": "Profesjonell",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} more required",
             "activated": "Lisensnøkkel aktivert",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
         }
     },
     "settingsConfig": {

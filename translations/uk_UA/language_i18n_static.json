@@ -334,7 +334,8 @@
             "removeUser": "Видалити користувача?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Відключіть усі системи, якими ви володієте, від порталу %CLOUD_NAME% щоб видалити свій обліковий запис."
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Час",
-            "Trial": "Час",
+            "Trial": "Пробна версія",
             "Professional": "Професіонал",
             "Analog": "Аналоговий",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} more required",
             "activated": "Ліцензійний ключ активовано",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "trialActivated": "Пробна ліцензія активована. Починаючи з сьогоднішнього дня, ви можете записувати до 4-х камер протягом 30 днів."
         }
     },
     "settingsConfig": {

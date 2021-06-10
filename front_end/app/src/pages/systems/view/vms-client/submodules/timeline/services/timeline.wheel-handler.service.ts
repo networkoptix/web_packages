@@ -1,76 +1,74 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 
-import { int, float, px } from '../../../utils/type-aliases'
-import TimelineService from './timeline.service'
-import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service'
-
+import { int, float, px } from '../../../utils/type-aliases';
+import TimelineService from './timeline.service';
+import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service';
 
 @Injectable({
-  providedIn: 'root',
- })
+    providedIn: 'root'
+})
 export class TimelineWheelHandlerService {
-
-  constructor (
-    protected timeline: TimelineService,
-    protected timeUnderMouse: TimelineTimeUnderMouseService
-  ) {
-  }
-
-  public handleWheel (e: WheelEvent) {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      this.wheelScroll(e.deltaX)
-    } else {
-      this.wheelZoom(e)
+    constructor(
+        protected timeline: TimelineService,
+        protected timeUnderMouse: TimelineTimeUnderMouseService
+    ) {
     }
-    this.timeUnderMouse.handleMouseMove(e)
-  }
 
-  protected _sanitizeOffset (offset) {
-    if (offset > 0) {
-      if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
-        offset = this.timeline.fullRange.end - this.timeline.visibleRange.end
-      }
-    } else {
-      if (this.timeline.visibleRange.start + offset < this.timeline.fullRange.start) {
-        offset = this.timeline.fullRange.start - this.timeline.visibleRange.start
-      }
+    public handleWheel (e: WheelEvent) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            this.wheelScroll(e.deltaX);
+        } else {
+            this.wheelZoom(e);
+        }
+        this.timeUnderMouse.handleMouseMove(e);
     }
-    return offset
-  }
 
-  public wheelScroll (delta: int) {
-    const step = 0.01
-    const offset = this._sanitizeOffset(
-      Math.round(delta * step * this.timeline.visibleRange.duration)
-    )
-    this.timeline.shiftVisibleRange(offset)
-  }
+    protected _sanitizeOffset (offset) {
+        if (offset > 0) {
+            if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
+                offset = this.timeline.fullRange.end - this.timeline.visibleRange.end;
+            }
+        } else {
+            if (this.timeline.visibleRange.start + offset < this.timeline.fullRange.start) {
+                offset = this.timeline.fullRange.start - this.timeline.visibleRange.start;
+            }
+        }
+        return offset;
+    }
 
-  public wheelZoom (e: WheelEvent) {
-    const delta: int = -e.deltaY
-    const edge_offset_px: px = 80
-    let offset: float
-    // console.log('wheel', e.offsetX, this.timeline.canvasGeometry.width, edge_offset_px, (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edge_offset_px))
-    if (e.offsetX < edge_offset_px) {
-      offset = 0
-      // console.log('left edge')
-    } else if (e.offsetX > (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edge_offset_px)) {
-      offset = 1.0
-      // console.log('right edge')
-    } else {
-      offset = e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
-      // console.log('normal')
+    public wheelScroll (delta: int) {
+        const step = 0.01;
+        const offset = this._sanitizeOffset(
+            Math.round(delta * step * this.timeline.visibleRange.duration)
+        );
+        this.timeline.shiftVisibleRange(offset);
     }
-    const duration = this.timeline.visibleRange.duration
-    const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr
-    const step = 0.002
-    let durationDelta = duration * step * delta
-    const d2 = duration - durationDelta
-    if (d2 < MIN_DURATION) {
-        durationDelta = d2
+
+    public wheelZoom (e: WheelEvent) {
+        const delta: int = -e.deltaY;
+        const edgeOffsetPx: px = 80;
+        let offset: float;
+        // console.log('wheel', e.offsetX, this.timeline.canvasGeometry.width, edgeOffsetPx, (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeOffsetPx))
+        if (e.offsetX < edgeOffsetPx) {
+            offset = 0;
+            // console.log('left edge')
+        } else if (e.offsetX > (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeOffsetPx)) {
+            offset = 1.0;
+            // console.log('right edge')
+        } else {
+            offset = e.offsetX / (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr);
+            // console.log('normal')
+        }
+        const duration = this.timeline.visibleRange.duration;
+        const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr;
+        const step = 0.002;
+        let durationDelta = duration * step * delta;
+        const d2 = duration - durationDelta;
+        if (d2 < MIN_DURATION) {
+            durationDelta = d2;
+        }
+        this.timeline.zoom(durationDelta, offset);
     }
-    this.timeline.zoom(durationDelta, offset)
-  }
 }
 
-export default TimelineWheelHandlerService
+export default TimelineWheelHandlerService;

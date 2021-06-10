@@ -111,17 +111,19 @@ Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
     ...    ELSE    Log In Web Admin    ${user}    ${password}
+    Check Language Logged In    ${user}    ${password}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
+    # Check Language Logged In    ${email}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
-     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
+    Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
@@ -163,11 +165,12 @@ Log in to Auto Tests System
 Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
     ${url}=   Set Variable If
-    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[id]
+    ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
-    
+    Reload Page
+
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -211,10 +214,10 @@ Validate Log Out
 
 Validate Log Out Web Admin
     Sleep    5
-    Element Should Be Visible    //input[@id="login_email"]        
-    Element Should Be Visible    //input[@id="login_password"]
-    Element Should Be Visible    //button[@type="submit"]
-    Wait Until Element Is Not Visible    locator
+#    Element Should Be Visible    //input[@id="login_email"]
+#    Element Should Be Visible    //input[@id="login_password"]
+#    Element Should Be Visible    //button[@type="submit"]
+    Wait Until Element Is Not Visible    ${ACCOUNT DROPDOWN}
 
 Log Out No Language
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -953,56 +956,36 @@ Log In If Needed
 
 Register and Activate Generic Users
     [Arguments]    ${password}=${BASE PASSWORD}
-    ${admin}=          Register and activate account with random email    mark    hamil    ${password}
-    ${viewer}=         Register and activate account with random email    mark    hamil    ${password}
-    ${live viewer}=    Register and activate account with random email    mark    hamil    ${password}
-    ${adv viewer}=     Register and activate account with random email    mark    hamil    ${password}
-    ${custom}=         Register and activate account with random email    mark    hamil    ${password}
-    &{generic users}=    Create Dictionary     admin=${admin}    viewer=${viewer}    liveViewer=${live viewer}    advViewer=${adv viewer}    custom=${custom}
-    [Return]    &{generic users}
+    ${generic users}=    Create Dictionary
+    FOR    ${user}    IN    @{permissions.keys()}
+        ${email}=   Register and activate account with random email    mark    hamil    ${password}
+        Set To Dictionary    ${generic users}    ${user}=${email}
+        Sleep    0.1
+    END
+    [Return]    ${generic users}
+
+Add Cloud Users
+    [Arguments]    ${auth}    ${users}    ${system id}
+    FOR  ${permission}  ${user}  IN  &{users}
+        Add user to cloud system if not there    ${system id}    ${permission}    ${user}    auth=${auth}
+    END
+
+Get Random Available Port
+    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+    [Return]    ${port}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE 4.1}     ${storage string}=${EMPTY}    ${VMS}=-e VMS=old
-    ${mac}=   Get Random MAC
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    docker run -d -it --name ${name} --restart always -p 7001 ${VMS} --privileged --mac-address=${mac} ${storage string} ${image}
-    ${results}    Execute Command    docker container port ${name}
-    @{port1}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    [Return]    ${port1}
-
-Setup Docker Server
-    [Arguments]    ${image}=${IMAGE}
-    ${server}=   Create Dictionary
-    Acquire Lock   create_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
-    ${id}=   Evaluate    $full_id[:12]
-    Set to Dictionary    ${server}    id=${id}
-    ${port info}=   Execute Command    docker container port ${id}
-    ${port info}=   Split String    ${port info}    :
-    Set to Dictionary    ${server}    port=${port info}[1]
-    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-    Set to Dictionary    ${server}    name=${name}
-    Close Connection
-    Release Lock   create_server_lock
-    [Return]    ${server}
-
-Setup Custom Docker Server
-    [Arguments]    ${network}=host    ${image}=${IMAGE}
-    ${server}=   Create Dictionary
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge
+    &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
+    Run Keyword If    '4.3' not in $image   Set Local Variable   ${vms}    old
     ...    ELSE   Set Local Variable    ${vms}    new
-    # Get random available port
-    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${image}
-                  ...    ELSE    Execute Command    docker run -d --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${image}
-
+    ${port}=   Get Random Available Port
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
@@ -1012,25 +995,100 @@ Setup Custom Docker Server
     Release Lock   create_server_lock
     [Return]    ${server}
 
-Setup Docker System
-    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
-    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
-    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
-    Set To Dictionary    ${system}    cont=${system}[cont]
-    ${auth}=   Create List    admin    ${base password}
-    Slow    REST Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
-    Return From Keyword If    not $cloud_email    ${system}
+#Setup Custom Docker Server
+#    [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
+#    ${server}=   Create Dictionary
+#    ${mac}=   Get Random MAC
+#    Acquire Lock   setup_server_lock
+#    Open Connection    ${QA BURBANK IP}
+#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+#
+#    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
+#    ...    ELSE   Set Local Variable    ${vms}    new
+#
+#    # Get random available port
+#    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
+#
+#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+#                  ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
+#
+#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
+#                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
+#    ${id}=   Evaluate    $full_id[:12]
+#    Set to Dictionary    ${server}    id=${id}
+#    Set to Dictionary    ${server}    port=${port}
+#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+#    Set to Dictionary    ${server}    name=${name}
+#    Close Connection
+#    Release Lock   setup_server_lock
+#    [Return]    ${server}
 
-#   Connect system to cloud if email is provided
-    Set To Dictionary    ${system}    owner=${cloud email}
-    ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
-    Set To Dictionary    ${system}    id=${id}
-    [Return]    ${system}
+#Setup Docker Server
+#    [Arguments]    ${image}=${IMAGE}
+#    ${server}=   Create Dictionary
+#    Acquire Lock   create_server_lock
+#    Open Connection    ${QA BURBANK IP}
+#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+#    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
+#    ${id}=   Evaluate    $full_id[:12]
+#    Set to Dictionary    ${server}    id=${id}
+#    ${port info}=   Execute Command    docker container port ${id}
+#    ${port info}=   Split String    ${port info}    :
+#    Set to Dictionary    ${server}    port=${port info}[1]
+#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
+#    Set to Dictionary    ${server}    name=${name}
+#    Close Connection
+#    Release Lock   create_server_lock
+#    [Return]    ${server}
 
+#Setup Docker System
+#    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
+#    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
+#    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
+#    Set To Dictionary    ${system}    cont=${system}[cont]
+#    ${auth}=   Create List    admin    ${base password}
+#    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
+#    Return From Keyword If    not $cloud_email    ${system}
+#
+##   Connect system to cloud if email is provided
+#    Set To Dictionary    ${system}    owner=${cloud email}
+#    ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
+#    Set To Dictionary    ${system}    id=${id}
+#    [Return]    ${system}
 
-#  Getting 403 when savinf a user -> switch to REST API
+Create Base System
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}
+    ${local auth}=   Create List    admin    ${base password}
+    ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
+    Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
+    Set To Dictionary    ${server}    name=${container name}
+    # If cloud is true connect to cloud and get the cloud ID
+    ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
+
+    # If add users is true add local users.  Add cloud users if both are true.
+    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://10.1.5.238:${server}[port]
+    ${cloud users}=   Run Keyword If    $add_users and $owner   Register and Activate Generic Users
+    Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
+
+    # Add local auth to dict
+    Set To Dictionary    ${server}    local auth=${local auth}
+
+    # Add cloud info to dict if owner is true
+    Run Keyword If    $owner    Set To Dictionary    ${server}    owner=${owner}    cloud auth=${cloud auth}    cloud id=${system id}
+        ...    ELSE    Set To Dictionary    ${server}    owner=${None}
+
+    # Add local users if add users is true
+    Run Keyword If    $add_users    Set To Dictionary    ${server}    local users=${local users}
+
+    # Add cloud users if both are true
+    Run Keyword If    $add_users and $owner    Set To Dictionary    ${server}    cloud users=${cloud users}
+       ...    ELSE    Set To Dictionary    ${server}    cloud users=${None}
+
+    [Return]    ${server}
+
 #Create Base Cloud System
-#    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
+#    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
 #    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
 #    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
 #    ...               where "Create Base Cloud System" is called
@@ -1038,9 +1096,10 @@ Setup Docker System
 #    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
 #    ${local auth}=   Create List    admin    ${base password}
 #    ${cloud auth}=   Create List    ${owner}    ${base password}
+#    ${random}=    Generate Random String
 #    Set Suite Variable    ${cloud auth}
 #    Set Suite Variable    ${local auth}
-#    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
+#    ${system}=   Create Docker Server    ${container name}    ${image}    cloud email=${owner}
 #    Set Suite Variable    ${system}
 #    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
 #    Return From Keyword If    not $add_users
@@ -1054,87 +1113,59 @@ Setup Docker System
 #        Sleep    2
 #        ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
 #        #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
-#        Save User
+#        REST Save User
 #        ...    ${local auth}
 #        ...    ${server url}
 #        ...    ${email}
 #        ...    ${permissions}[${role}]
 #        ...    ${email}
 #        ...    Cloud User
-#        ...    ${base password}
+#        ...    password=${None}
+#        ...    is_cloud=${True}
 #
-#        Save User
+#        REST Save User
 #        ...    ${local auth}
 #        ...    ${server url}
 #        ...    Local+${role}
 #        ...    ${permissions}[${role}]
 #        ...    noptixautoqa+local_${role}@gmail.com
 #        ...    Local User
-#        ...    ${base password}
-#        ...    is cloud=${False}
+#        ...    password=${base password}
+#        ...    is_cloud=${False}
 #        Set To Dictionary    ${users}    ${role}=${email}
 #        Set To Dictionary    ${local users}    ${role}=Local+${role}
 #    END
 #    Set Suite Variable    ${users}
 #    Set Suite Variable    ${local users}
 
-Create Base Cloud System
-    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
-    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
-    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
-    ...               where "Create Base Cloud System" is called
+#Delete Base Cloud System
+#    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
+#    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+#    FOR    ${email}    IN   $system['users'].values()    ${system}[owner]    ${email noperm}
+#        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
+#    END
+#    Delete Docker Server    ${system}[id]
 
-    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
-    ${local auth}=   Create List    admin    ${base password}
-    ${cloud auth}=   Create List    ${owner}    ${base password}
-    Set Suite Variable    ${cloud auth}
-    Set Suite Variable    ${local auth}
-    ${system}=   Setup Docker System    ${image}    ${network}    cloud email=${owner}
-    Set Suite Variable    ${system}
-    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
-    Return From Keyword If    not $add_users
-
-    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
-    Set Suite Variable    ${email noperm}
-    ${users}=   Create Dictionary
-    ${local users}=    Create Dictionary
-    FOR    ${role}    IN    @{permissions.keys()}
-        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
-        Sleep    2
-        ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
-        #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
-        REST Save User
-        ...    ${local auth}
-        ...    ${server url}
-        ...    ${email}
-        ...    ${permissions}[${role}]
-        ...    ${email}
-        ...    Cloud User
-        ...    password=${None}
-        ...    is_cloud=${True}
-
-        REST Save User
-        ...    ${local auth}
-        ...    ${server url}
-        ...    Local+${role}
-        ...    ${permissions}[${role}]
-        ...    noptixautoqa+local_${role}@gmail.com
-        ...    Local User
-        ...    password=${base password}
-        ...    is_cloud=${False}
-        Set To Dictionary    ${users}    ${role}=${email}
-        Set To Dictionary    ${local users}    ${role}=Local+${role}
+Delete Accounts
+    [Arguments]    ${accounts}
+    FOR    ${email}    IN   @{accounts}
+        Delete Account    ${ENV}    ${email}    ${base password}
     END
-    Set Suite Variable    ${users}
-    Set Suite Variable    ${local users}
 
-Delete Base Cloud System
-    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
-    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[id]
-    FOR    ${email}    IN   @{users.values()}    ${system}[owner]    ${email noperm}
-        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
-    END
-    Delete Docker Server    ${system}[cont]
+Delete Base System
+    [Arguments]     ${system}
+    [Documentation]    Wipe out all resources related to the system
+    Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+    Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
+
+    Delete Docker Server    ${system}[id]
+
+    # Delete user if he doesn't own any cloud systems
+    Run Keyword If    not $system['owner']    Pass Execution    System is not connected to cloud
+    ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
+    ${num systems}=   Evaluate    len($systems)
+    Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
+
 
 Create Custom Network
     [Arguments]    ${name}    ${num}
@@ -1245,3 +1276,56 @@ Delete All Text
 Skip If Irrelevant
     ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
     Skip If    not ${relevant}    Test skipped - not relevant
+
+Input Content Editable Text
+    [Arguments]    ${element}    ${text}
+    Delete All Text    ${element}
+    Press Keys    ${element}    ${text}
+    
+Create Virtual Disk
+    [Arguments]    ${disk location}    ${disk name}    ${disk size}    ${disk target}
+    &{disk}=   Create Dictionary
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
+    Should Be Equal As Integers   ${results}    0
+    Close Connection
+    Set To Dictionary    ${disk}    img=${disk location}/${disk name}.img
+    Set To Dictionary    ${disk}    folder=${disk name}
+    Set To Dictionary    ${disk}    size=${disk size}
+    Set To Dictionary    ${disk}    target=${disk target}
+    Set To Dictionary    ${disk}    string=--mount type=bind,source="/home/qaburbank/${disk name}",target=/${disk target}
+    [Return]    ${disk}
+    
+Delete Virtual Disk
+    [Arguments]    ${img path}    ${folder}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command     umount ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm ${img path}     sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}    Execute Command     rm -r ${folder}     sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Make Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    mkdir ${dir name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Remove Directory
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm -r ${dir name}   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    
+Remove All Files 
+    [Arguments]    ${dir name}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection

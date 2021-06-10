@@ -1,4 +1,4 @@
-@use '../styles/theme_variables' as *;
+@use '../../../../styles/theme_variables' as *;
 
 :host {
     margin-right : auto;
@@ -10,9 +10,12 @@
     .heading-style {
         font-family    : $font-family-medium;
         line-height    : 40px;
-        vertical-align : middle;
         height         : 40px;
         font-size      : 24px;
+        display        : block;
+        white-space    : nowrap;
+        overflow       : hidden;
+        text-overflow  : ellipsis;
     }
 
     .header-title {

@@ -13,27 +13,31 @@ Header Suite Setup
         Append To List    ${HEADER TMP USERS}    ${user}
     END
 
-    ${main system}=   Setup Docker System    cloud email=${one system owner}
+#    ${main system}=   Setup Docker System    cloud email=${one system owner}
+    ${rand}=   Generate Random String
+    ${main system}=   Create Base System    header_main_system_${rand}    owner=${one system owner}
     Set Suite Variable    ${main system}
-    ${auth}=   Create List    ${one system owner}    ${BASE PASSWORD}
-    Set Suite Variable    ${auth}
-    ${main system users}=   Create List
-
-    FOR    ${role}    IN    viewer    liveViewer    advancedViewer    custom
-        ${user}=   Register and activate account with random email    User    ${role}    ${BASE PASSWORD}
-        Sleep    2
-        Share    ${auth}    ${main system}[id]    ${role}    ${user}
-        Append To List    ${HEADER TMP USERS}    ${user}
-        Append To List    ${main system users}    ${user}
-    END
-    Set Suite Variable    ${main system users}
+#    ${auth}=   Create List    ${one system owner}    ${BASE PASSWORD}
+#    Set Suite Variable    ${auth}
+#    ${main system users}=   Create List
+#
+#    FOR    ${role}    IN    viewer    liveViewer    advancedViewer    custom
+#        ${user}=   Register and activate account with random email    User    ${role}    ${BASE PASSWORD}
+#        Sleep    2
+#        Share    ${auth}    ${main system}[cloud id]    ${role}    ${user}
+#        Append To List    ${HEADER TMP USERS}    ${user}
+#        Append To List    ${main system users}    ${user}
+#    END
+#    Set Suite Variable    ${main system users}
 
     ${offline systems}=   Create List
+    ${rand}=   Generate Random String
     FOR    ${i}    IN RANGE    1    17
-        ${system}=   Setup Docker System    cloud email=${many systems owner}
+#        ${system}=   Setup Docker System    cloud email=${many systems owner}
+        ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=False
         Sleep    2
         Append To List    ${offline systems}    ${system}
-        Delete Docker Server    ${system}[cont]
+        Delete Docker Server    ${system}[id]
     END
     Set Suite Variable    ${offline systems}
 
@@ -41,9 +45,9 @@ Header Suite Setup
 
 Header Suite Teardown
     # Disconnect all systems from cloud
-    Disconnect    ${ENV}    ${one system owner}    ${base password}    ${main system}[id]
+    Disconnect    ${ENV}    ${one system owner}    ${base password}    ${main system}[cloud id]
     FOR    ${system}    IN    @{offline systems}
-        Run keyword and ignore error    Disconnect    ${ENV}    ${many systems owner}    ${base password}    ${system}[id]
+        Run keyword and ignore error    Disconnect    ${ENV}    ${many systems owner}    ${base password}    ${system}[cloud id]
     END
 
     # Delete all related accounts

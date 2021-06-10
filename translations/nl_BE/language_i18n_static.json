@@ -334,7 +334,8 @@
             "removeUser": "Gebruiker verwijderen?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?"
+            "serversRestart": "Restart server \"{ title }\"?",
+            "changePasswordFor": "Wachtwoord wijzigen voor gebruiker \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -475,8 +476,8 @@
         "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
         "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIEF<br>VERSLEUTELD",
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling<br>wachtwoord in te voeren om dit archief te decoderen."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Tijd",
-            "Trial": "Tijd",
+            "Trial": "Test",
             "Professional": "Professional",
             "Analog": "Analoog",
             "Edge": "Edge",

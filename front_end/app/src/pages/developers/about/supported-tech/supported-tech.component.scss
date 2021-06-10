@@ -1,6 +1,6 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
-@use 'bootstrap_utils' as bootstrap;
+@use 'app/src/styles/_bootstrap_utils' as bootstrap;
 
 .header-non-link {
     @include typography.regular24dark9;
@@ -36,6 +36,7 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
+        max-width: 85vw;
         margin: 24px -72px -44px 16px;
         @include bootstrap.media-breakpoint-down(xs) {
             margin: 24px -24px -32px 16px;

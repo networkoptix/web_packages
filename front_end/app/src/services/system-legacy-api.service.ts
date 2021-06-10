@@ -6,16 +6,17 @@ import {
     flatMap, map, mergeMap, retryWhen, timeout, tap
 }                                                  from 'rxjs/operators';
 
-import { NxConfigService, IConfig }            from './nx-config';
-import { ICamera, NxSystemUser }               from './system.service';
-import * as t                                  from './system-api.types';
-import { Account }                             from './account.service';
-import { NxUriCacheService }                   from './uri-cache.service';
-import { NxAppStateService }                   from './nx-app-state.service';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '../pages/health/health.service';
-import { IParams, ResourceParam, User }                       from './system-api.service';
-import { environment }                         from '@environments/environment';
+import { NxConfigService, IConfig }     from './nx-config';
+import { ICamera, NxSystemUser }        from './system.service';
+import * as t                           from './system-api.types';
+import { Account }                      from './account.service';
+import { NxUriCacheService }            from './uri-cache.service';
+import { NxAppStateService }            from './nx-app-state.service';
+import { CookieService }                from 'ngx-cookie-service';
+import { NxHealthService }              from '../pages/health/health.service';
+import { IParams, ResourceParam, User } from './system-api.service';
+import { environment }                  from '@environments/environment';
+import { auth }                         from 'firebase';
 
 export class NxSystemAPI {
     /*
@@ -385,6 +386,21 @@ export class NxSystemAPI {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
         return this.http.get<JSON>('/static/openapi_v1.json');
+    }
+
+    authCurrentUser(username: string, password: string) {
+        let auth, nonce, realm;
+
+        username = username.toLowerCase();
+
+        return this.getNonce(username).pipe(
+            mergeMap((response: any) => {
+                nonce = response.reply.nonce;
+                realm = response.reply.realm;
+                auth = this.digest(username, password, realm, nonce);
+                return this.cookieLogin(auth, false);
+            })
+        );
     }
 
     login(
@@ -1247,35 +1263,37 @@ export class NxSystemAPI {
         }&time=${t || 'now'}`;
     }
 
-    public getPlaybackUrl (cameraId, transport='webm', resolution='low', position=undefined) {
-        let url
-        function hlsResolutionOrEmpty (res) {
-            if (res === 'hi' || res === 'lo')
-                return res
-            return ''
+    public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
+        let url;
+        function hlsResolutionOrEmpty(res) {
+            if (res === 'hi' || res === 'lo') { return res; }
+            return '';
         }
         switch (transport) {
             case 'hls':
-                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`
+                url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
             default:
-                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`
+                // Rtsp plays as webm but does not support transcoding.
+                if (transport === 'rtsp') {
+                    transport = 'webm';
+                }
+                url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
                 }
                 if (position) {
                     url += `pos=${position}&`;
                 }
-                return url
+                return url;
         }
     }
-
 
     /** Merge Systems */
     getPeerSystems(showAddresses = true) {

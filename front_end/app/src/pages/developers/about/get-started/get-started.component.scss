@@ -1,8 +1,8 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '../../../../styles/typography';
-@use 'bootstrap_utils' as bootstrap;
+@use 'app/src/styles/_bootstrap_utils' as bootstrap;
 
-h2.get-started-heading {
+.get-started-heading {
     font-family: $font-family-light;
     font-size: 56px !important;
     color: $dark10 !important;
@@ -11,6 +11,15 @@ h2.get-started-heading {
     @include bootstrap.media-breakpoint-down(xs) {
         font-size: 36px !important;
         margin-top: 36px !important;
+    }
+}
+
+.get-started-heading-link {
+    @extend .get-started-heading;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 0.08em;
     }
 }
 

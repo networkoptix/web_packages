@@ -334,7 +334,8 @@
             "removeUser": "Usunąć użytkownika?",
             "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
             "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
-            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?"
+            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?",
+            "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
@@ -475,8 +476,8 @@
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIWUM<br>ZASZYFROWANE",
+        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła do szyfrowania,<br> aby odszyfrować to archiwum."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Czas",
-            "Trial": "Czas",
+            "Trial": "Okres próbny",
             "Professional": "Professional",
             "Analog": "Analogowy",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} więcej wymaganych",
             "activated": "Klucz licencyjny aktywowany",
             "inuse": "Klucz licencyjny został już aktywowany i powiązany z serwerem o identyfikatorze sprzętu {hwid} w innym systemie",
-            "trialActivated": "Licencja okresowa aktywowana. Począwszy od dzisiaj, możesz nagrywać maksymalnie 4 kamery przez 30 dni."
+            "trialActivated": "Licencja próbna aktywowana. Począwszy od dzisiaj, możesz nagrywać maksymalnie 4 kamery przez 30 dni."
         }
     },
     "settingsConfig": {

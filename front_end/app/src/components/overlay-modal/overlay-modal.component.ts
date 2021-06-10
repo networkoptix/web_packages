@@ -37,7 +37,7 @@ export class NxOverlayModalComponent implements OnInit {
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
     oneCheckAtATime = false
-    available = true;
+    showOverlay = false;
     refreshMessage: string;
 
     timeoutUntilRefresh$ = new BehaviorSubject(5);
@@ -61,13 +61,16 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe((state) => {
-            // Don't show the overlay if main server is online
-            if (!state && this.system.serverManager.servers.length > 1) {
-                const mainServer = this.system.serverManager.servers.find(server => server.id === this.serverId);
-                this.available = mainServer.status === 'Online' ? true : state;
+        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async(state) => {
+            if (!state && this.system?.serverManager.servers.length > 1) {
+                // mainServer.status is unreliable ...
+                // if system availability state was changed to FALSE -> check if current server is available
+                !this.showOverlay && await this.checkIfOnline().catch(
+                    () => {
+                        this.showOverlay = true;
+                    });
             } else {
-                this.available = state;
+                this.showOverlay = !state;
             }
         });
 

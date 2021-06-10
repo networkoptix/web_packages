@@ -334,7 +334,8 @@
             "removeUser": "¿Eliminar usuario?",
             "serversDetach": "¿Separar el servidor \"{ title }\" del sistema actual?",
             "serversReset": "¿Restablecer el servidor \"{ title }\" a los valores predeterminados?",
-            "serversRestart": "¿Reiniciar el servidor \"{ title }\"?"
+            "serversRestart": "¿Reiniciar el servidor \"{ title }\"?",
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos los sistemas de los que es dueño del portal %CLOUD_NAME% para eliminar su cuenta."
@@ -475,8 +476,8 @@
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
         "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVO<br>ENCRIPTADO",
+        "archiveEncryptedMessage": "Pídale al administrador del sistema que ingrese la<br>para descifrar este archivo."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Hora",
-            "Trial": "Hora",
+            "Trial": "Prueba",
             "Professional": "Profesional",
             "Analog": "Análogo",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} más requeridos",
             "activated": "Clave de licencia activada",
             "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
-            "trialActivated": "Licencia de tiempo activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
+            "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
     "settingsConfig": {

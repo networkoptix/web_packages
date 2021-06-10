@@ -25,11 +25,22 @@
 
     <player-native
         *ngIf="useNativePlayer"
-        (bufferingChange)="onBufferingChange($event)">
+        (bufferingChange)="onBufferingChange($event)"
+        [style.transform]="transformExpr"
+    >
     </player-native>
+
+    <player-js
+        *ngIf="useJsPlayer"
+        (bufferingChange)="onBufferingChange($event)"
+        [style.transform]="transformExpr"
+    >
+    </player-js>
 
     <player-hls
         *ngIf="useHlsPlayer"
-        (bufferingChange)="onBufferingChange($event)">
+        (bufferingChange)="onBufferingChange($event)"
+        [style.transform]="transformExpr"
+    >
     </player-hls>
 </ng-template>

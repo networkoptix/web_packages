@@ -35,6 +35,7 @@ subinclude:robot_tests/.hgignore
 *.pid
 *.log
 *.sql
+*.deb
 
 env
 venv

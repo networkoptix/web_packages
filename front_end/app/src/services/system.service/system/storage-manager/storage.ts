@@ -94,7 +94,7 @@ export class Storage extends StorageDataStructure {
     }
 
     get mode() {
-        if (!this.isWritable && !this.usedForWriting) {
+        if (!this.usedForWriting) {
             return MODE.NOT_IN_USE;
         }
         return this.isBackup ? MODE.BACKUP : MODE.MAIN;
@@ -107,11 +107,8 @@ export class Storage extends StorageDataStructure {
 
     get mainOnly() {
         return this.usedForWriting &&
-            this.isWritable &&
             !this.isBackup &&
-            this.currentStorageState.locations.filter(({
-                mode
-            }) => mode === MODE.MAIN).length <= 1;
+            this.currentStorageState.onlineMains <= 1;
     }
 
     get reindexing() {
@@ -126,11 +123,12 @@ export class Storage extends StorageDataStructure {
      * Need to add checking for inaccessible
      */
     get status(): STORAGE_STATUS {
-        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !this.isWritable) {
-            return STORAGE_STATUS.INACCESSIBLE;
-        }
         if (!this.isOnline && !this.totalSpace) {
             return STORAGE_STATUS.BEING_CHECKED;
+        }
+        // `| !this.isWritable` added here may prevent some weird states from showing, but was also making the reserved state show as inaccessible
+        if (this.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !this.isOnline) {
+            return STORAGE_STATUS.INACCESSIBLE;
         }
 
         if (

@@ -2,7 +2,7 @@ import {
     Component, OnDestroy, OnInit,
     Inject, ViewContainerRef
 }                                       from '@angular/core';
-import { ActivatedRoute, Router }       from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router }       from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subject, Subscription, BehaviorSubject,
@@ -23,6 +23,7 @@ import {
     ICamera, IRecordingModes,
     IRecordingSettings, ITask,
     MotionType, NxSystem,
+    RecordingType,
     StreamQuality
 }                                       from '@services/system.service';
 import { NxDialogsService }             from '@dialogs/dialogs.service';
@@ -219,7 +220,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         let quality;
         return !this.recordingSettingsChanged &&
             this.selectedCamera.scheduleTasks.length &&
-            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never') &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === RecordingType.NEVER) &&
             !this.selectedCamera.scheduleTasks.every(({ recordingType, fps: currentFps, streamQuality }, index) => {
                 if (index === 0) {
                     type = recordingType;
@@ -273,7 +274,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     get safeToUpdateRecordingSettings() {
         return !this.recordingSettingsChanged ||
         (!this.selectedCamera.scheduleTasks.length ||
-            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never')) ||
+            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === RecordingType.NEVER)) ||
             !this.variousQualities && !this.variousFps && !this.existingModesSelected;
     }
 
@@ -307,7 +308,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set motionEnabled(enabled) {
-        this.motionEnabledWatcher.value = !enabled ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
+        this.motionEnabledWatcher.value = !enabled ? MotionType.noMotion : ![MotionType.noMotion, MotionType.none].includes(this.motionEnabledWatcher.originalValue as MotionType)
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
@@ -360,9 +361,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
 
+        this.router.events.subscribe(route => {
+            if (route instanceof NavigationStart) {
+                // remove unnecessary system update (ex. health monitor will trigger system update)
+                // and orphan metrics request in cameraSubscription
+                this.cameraSubscription?.unsubscribe();
+                this.settingsSubscription?.unsubscribe();
+            }
+        });
+
         this.routeParamsSubscription = this.route
             .params
-            .pipe(untilDestroyed(this), distinctUntilChanged())
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
             .subscribe((params: any) => {
                 if (params.cameraId) {
                     this.warnings = [];
@@ -379,7 +392,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
 
         this.settingsSubscription = this.settingsService.systemSubject
-            .pipe(untilDestroyed(this), filter(data => data !== undefined))
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined)
+            )
             .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
@@ -419,6 +435,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
+                        distinctUntilChanged(),
                         map((system: NxSystem) => {
                             if (!system.cameras) {
                                 throw system;
@@ -427,12 +444,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
-                        this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.serverManager.initSystemMediaServers().catch((_) => {});
                             }
-                            if (!this.applyService.locked) this.setCamera();
+                            if (!this.applyService.locked) {
+                                this.setCamera();
+                            }
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
                         if (this.noCameras) {
@@ -502,7 +520,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
-                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || 'RT_Always',
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || RecordingType.ALWAYS,
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
 
@@ -634,9 +652,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     preventContext = event => event.preventDefault();
 
     checkModeEnabled(id, enabled = this.motionEnabled) {
-        return id === 'RT_Always' ||
-        id === 'RT_Never' ||
-        (id === 'RT_MetadataAndLowQuality'
+        return id === RecordingType.ALWAYS ||
+        id === RecordingType.NEVER ||
+        (id === RecordingType.META_LOW
             ? this.selectedCamera.motionLowResEnabled
             : enabled);
     }
@@ -678,7 +696,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     disableMotion = () => {
         this.motionEnabled = false;
         this.recordingModes = this.recordingModes.map(({ name, id }) => {
-            const enabled = id === 'RT_Always';
+            const enabled = id === RecordingType.ALWAYS;
             const value =  enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
@@ -690,7 +708,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (updateModes) {
             this.recordingModes = this.recordingModes.map(({ name, id }) => {
                 const enabled = this.checkModeEnabled(id);
-                const value =  id === 'RT_MetadataOnly' ? 2 : 0;
+                const value =  [RecordingType.MOTION_ONLY, RecordingType.META_ONLY].includes(id) ? 2 : 0;
                 return { name, id, enabled, value };
             });
         } else {

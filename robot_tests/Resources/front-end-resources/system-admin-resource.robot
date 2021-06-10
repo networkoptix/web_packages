@@ -1,26 +1,23 @@
+*** Settings ***
+Library    String
 *** Keywords ***
 
 # Setups and teardowns
 System Admin Suite Setup
-    Create Base Cloud System    image=${IMAGE 4.3}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Setup Docker System    image=${IMAGE 4.3}
-    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${local auth}    ${CAMERA NAME}
-    Run Keyword If   '''${mode}'''=='''webadmin'''    Save User
-        ...    ${local auth}
-        ...    https://${QABURBANK IP}:${local system}[port]
-        ...    local_viewer
-        ...    ${permissions}[viewer]
-        ...    noptixautoqa+local_viewer@gmail.com
-        ...    local_viewer
-        ...    ${base password}
-        ...    is cloud=${False}
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
+    Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
+    Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
     Open browser and go to URL    ${ENV}
 
 System Admin Suite Teardown
     Delete Base Cloud System
-    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[cont]
+    Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[id]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}
 
@@ -29,13 +26,15 @@ System Admin Test Setup
 
 System Admin Test Restart
     Skip If Irrelevant
-    Go To    https://${QABURBANK IP}:${system}[port]
-    Wait until element is visible    Wait until element is visible    ${SYSTEM NAME}
-    Run keyword and ignore error    Log Out
-    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-    Run keyword and ignore error    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
-    Run Keyword If Test Failed    Start Docker Server    ${system}[cont]
-    Delete All Cookies
+    Close Modal If There
+    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out
+    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out via API
+
+    Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
+    Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
+    Run Keyword If Test Failed    Start Docker Server    ${system}[cloud id]
 
 # Waits
 Wait until settings are visible
@@ -280,7 +279,6 @@ Validate Cloud Block
             ...    ELSE    Wait until elements are visible
                 ...    ${CONNECTION STATUS}\[contains(text(), "NOT CONNECTED")]
                 ...    ${CONNECT TO CLOUD BUTTON}
-#                ...    ${OWNER YOU}
 
 Validate Connect To Cloud Form
     Wait until elements are visible
@@ -296,33 +294,35 @@ Validate Connect To Cloud Form
 
 Fill in login and password
     [Arguments]    ${login}    ${password}
-    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${email}    timeout= 0.1
+    Slow    Input Text    ${CONNECT TO CLOUD EMAIL INPUT}    ${login}    timeout= 0.1
     Slow    Input Text    ${CONNECT TO CLOUD PASSWORD INPUT}    ${password}    timeout= 0.1
 
 Close Connect to Cloud modal
     Wait until element is visible    ${CONNECT TO CLOUD X BUTTON}
     Click Button    ${CONNECT TO CLOUD X BUTTON}
-    Wait untile element is not visible    ${CONNECT TO CLOUD MODAL}
+    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}
 
 Validate Email Input Error
     [Arguments]    ${error text}
     #TODO ADD CHECKING RED COLOR
-    Wait until element is visible    ${CONNECT TO CLOUD EMAIL ERROR}\[contains(text(), "${error text}")]
+    ${error path}=   Replace String   ${CONNECT TO CLOUD EMAIL ERROR}    %ERROR TEXT%    ${error text}
+    Wait until element is visible    ${error path}
 
 Validate Password Input Error
     [Arguments]    ${error text}
     #TODO ADD CHECKING RED COLOR
-    Wait until element is visible    ${CONNECT TO CLOUD PASSWORD ERROR}\[contains(text(), "${error text}")]
+    ${error path}=   Replace String   ${CONNECT TO CLOUD PASSWORD ERROR}    %ERROR TEXT%    ${error text}
+    Wait until element is visible    ${error path}
 
 Connect To Cloud
     [Arguments]    ${email}    ${password}    ${success}=${True}
     Validate Connect To Cloud Form
     Fill in login and password    ${email}    ${password}
-    Click Button    ${CONNECT TO CLOUD OK BUTTON}
+    Slow    Click Button    ${CONNECT TO CLOUD OK BUTTON}    timeout=0.1
     Run Keyword If    ${success}    Run Keywords
        ...    Check For Alert    System connected to Nx Cloud    AND
        ...    Wait until element is not visible    ${CONNECT TO CLOUD MODAL}    AND
-       ...    Wait until element is visible   ${DISCONNECT FROM NX CLOUD}
+       ...    Wait until element is visible   ${DISCONNECT FROM NX}
 
 # API - based
 Evaluate System Settings via API
@@ -331,13 +331,24 @@ Evaluate System Settings via API
     Dictionary should contain item    ${settings}    ${key}    ${expected value}
 
 Evaluate Log Level via API
-    [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
+    [Arguments]    ${auth}    ${server url}    ${key}    ${value}
     ${logLevel}=   Get Log Level    ${auth}    ${server url}
-    Dictionary should contain item    ${logLevel}    ${key}    ${expected value}
+    ${value}=    Convert To Lower Case    ${value}
+    Dictionary should contain item    ${logLevel}    ${key}    ${value}
 
 
 # Misc
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
-    Should Be True    $selected == $stat
+    Should Be True    $selected == $state
+
+Close Modal If There
+    ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
+    Run Keyword If     ${modal is visible}    Run Keywords
+        ...    Click Element    ${COMMON CLOSE BUTTON}   AND
+        ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}
+
+Show Advanced Settings
+    ${location}=   Get Location
+    Go To    ${location}${ADVANCED SETTINGS}

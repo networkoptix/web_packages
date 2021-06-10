@@ -1,15 +1,22 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
-@use 'bootstrap_utils' as bootstrap;
+@use 'app/src/styles/_bootstrap_utils' as bootstrap;
+
+
+
+
+.heading-non-link {
+    @include typography.regular24dark9;
+}
 
 .heading-link {
-    @include typography.regular24dark9;
+    @extend .heading-non-link;
     cursor: pointer;
-
     &:hover {
         text-decoration: underline;
     }
 }
+
 
 .capabilities {
     display: flex;

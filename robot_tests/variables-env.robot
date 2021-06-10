@@ -1,7 +1,9 @@
 *** Variables ***
 ${IMAGE}                              ${IMAGE 4.3}
-${IMAGE 4.3}                          32834
+${IMAGE 4.3}                          4.3.0.32689
+${IMAGE 4.2}                          4.2_test
 ${IMAGE 4.1}                          4.1_test
+${image 4.0}                          4.0_test
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
@@ -46,6 +48,7 @@ ${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-developer${BAS
 ${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+portal_manager${BASE EMAIL DOMAIN}
 ${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
 ${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-developer${BASE EMAIL DOMAIN}
+
 &{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
 ...    ${EMAIL ADV VIEWER}=advancedViewer

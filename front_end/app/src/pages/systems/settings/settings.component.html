@@ -1,8 +1,8 @@
-<nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
+<nx-pre-loader type="page" *ngIf="account && !system"></nx-pre-loader>
 
-<div *ngIf="system && (systemNoAccess || secondaryMerge || system.show404); else cameras">
+<div *ngIf="systemNoAccess || system && (secondaryMerge || system.show404); else cameras">
     <nx-page-placeholder
-            *ngIf="system.show404" type="404"
+            *ngIf="system?.show404" type="404"
             withFooter showMainButton="true">
     </nx-page-placeholder>
 
@@ -24,14 +24,14 @@
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
-                <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
+                <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
                 <nx-menu *ngIf="menuVisible"
                          [ngStyle]="{'display' : _menuSearchMode ? 'contents': 'block'}"
                          [content]="content"
                          [system]="system"
                          [searchable]="content.searchableResults"
                          [autoFit]="true"
-                         (menuSearchMode)="_menuSearchMode = $event"
+                         (menuSearchMode)="menuMode($event)"
                          (contentToggle)="contentToggle($event)"></nx-menu>
             </div>
             <!-- Offset for the fixed menu -->

@@ -298,4 +298,40 @@ export class NxUtilsService {
     static htmlToEntity(target) {
         return (isArray(target) ? target[0] : target)?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
+
+    static findTouch(e: TouchEvent) {
+        return e.targetTouches?.[0] || e.changedTouches?.[0] || e.touches?.[0];
+    }
+
+    static calcClientX(e: MouseEvent|TouchEvent): number {
+        let clientX;
+        if (e instanceof MouseEvent) {
+            clientX = e.clientX;
+        } else {
+            clientX = NxUtilsService.findTouch(e).clientX || 0;
+        }
+        return clientX;
+    }
+
+    static calcOffsetX(e: MouseEvent|TouchEvent): number {
+        let offsetX;
+        if (e instanceof MouseEvent) {
+            offsetX = e.offsetX;
+        } else {
+            // @ts-ignore
+            const rect = (e.target)?.getBoundingClientRect();
+            offsetX = (NxUtilsService.findTouch(e)?.pageX || 0) - rect.left;
+        }
+        return offsetX;
+    }
+
+    static calcScreenX(e: MouseEvent|TouchEvent): number {
+        let screenX;
+        if (e instanceof MouseEvent) {
+            screenX = e.screenX;
+        } else {
+            screenX = NxUtilsService.findTouch(e)?.screenX || 0;
+        }
+        return screenX;
+    }
 }

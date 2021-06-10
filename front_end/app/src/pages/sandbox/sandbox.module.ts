@@ -1,8 +1,8 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }          from '@angular/forms';
-import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule, Routes }             from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 
 import { ComponentsModule }     from '../../components/components.module';
 import { DialogsModule }        from '../../dialogs/dialogs.module';
@@ -13,6 +13,7 @@ import { AuthGuard }            from '../../routeGuards';
 import { NxSandboxComponent }   from './sandbox.component';
 import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';
+import { DynamicFormApplyExampleComponent } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
 import { VmsClientModule } from '@pages/systems/view/vms-client/vms-client.module';
 
 const appRoutes: Routes = [
@@ -32,14 +33,16 @@ const appRoutes: Routes = [
         DirectivesModule,
         RouterModule.forChild(appRoutes),
         NxGridLayoutModule,
-        VmsClientModule
+        VmsClientModule,
+        ReactiveFormsModule
     ],
     providers: [
     ],
     declarations: [
         NxSandboxComponent,
         SectionApplyExampleComponent,
-        FormApplyExampleComponent
+        FormApplyExampleComponent,
+        DynamicFormApplyExampleComponent
     ],
     bootstrap: [
     ],

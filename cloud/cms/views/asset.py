@@ -435,7 +435,7 @@ def asset_settings(request, asset_id):
             elif not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             else:
-                cms_structure = json.load(file)
+                cms_structure = loaded_json
                 if type(cms_structure) == list and len(cms_structure) > 1:
                     messages.warning(request, "You can only update one asset_type at a time. "
                                               "Only the first asset type from structure.json was used.")

@@ -82,7 +82,7 @@ class ServerAPI:
 
         with requests.session() as s:
             self._login(server_url, auth[0], auth[1])
-            time.sleep(2)
+            time.sleep(3)
             r = s.post(f'{server_url}/rest/v1/users', auth=self._auth, json=data, verify=False)
             if r.status_code != 200:
                 raise APIError(f'Cannot save user: {r.status_code}')
@@ -101,7 +101,6 @@ class ServerAPI:
                 "password": password
             }
         }
-
         with requests.session() as s:
             r = s.post(
                 f'{server_url}/rest/v1/system/setup',
@@ -110,4 +109,4 @@ class ServerAPI:
                 verify=False
             )
             if r.status_code != 200:
-                raise APIError(f'Cannot get system settings: {r.status_code}')
+                raise APIError(f'Cannot setup local system: {r.status_code}')

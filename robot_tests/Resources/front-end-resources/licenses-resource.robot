@@ -1,53 +1,59 @@
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
-        ${server}=   Setup Docker Server
-        Set Suite Variable    ${cont ${i}}    ${server}[name]
-        Set Suite Variable    ${cont id ${i}}    ${server}[id]
-        Set Suite Variable    ${LM PORT ${i}}    ${server}[port]
-        ${server name}=   Catenate    SEPARATOR=${SPACE}    Server    ${cont id ${i}}
-        Set Suite Variable    ${server ${i}}    ${server name}
-        ${sys id}=   Create system and attach to cloud    https://${QA BURBANK IP}   ${LM PORT ${i}}    System ${i}    ${LM OWNER}    ${BASE PASSWORD}
-        Set Suite Variable    ${sys id ${i}}    ${sys id}
-        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${i}}   ${LM HOST}
+        ${rand}=   Generate Random String
+        ${system}=   Create Base System    license_system_${i}_${rand}    network=bridge    owner=${LM OWNER}
+        Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system}[port]   ${LM HOST}
+        Set Suite Variable    ${system ${i}}    ${system}
+        ${server name}=   Catenate    SEPARATOR=${SPACE}
+        Set Suite Variable    ${server ${i}}    Server ${system}[id]
     END
-    Sleep    120
-    Merge Systems    ${CLOUD AUTH}    ${sys id 2}    ${sys id 3}
-    Sleep    90
+    Sleep    30
+
+    Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${system 2}[port]    ${QA BURBANK IP}:${system 3}[port]    currentPassword=${BASE PASSWORD}
+    Sleep    30
 
     FOR    ${role}    IN    @{LM USERS.keys()}
-        Share    ${cloud auth}    ${sys id 1}    ${role}    ${LM USERS}[${role}]
+        REST Save User
+            ...    ${LOCAL AUTH}
+            ...    https://${QA BURBANK IP}:${system 1}[port]
+            ...    ${LM USERS}[${role}]
+            ...    ${permissions}[${role}]
+            ...    ${LM USERS}[${role}]
+            ...    LM ${role}
+            ...    password=${BASE PASSWORD}
+            ...    is_cloud=${True}
+        Sleep   1
     END
-
+    Sleep    30
     Open Browser and go to URL    ${ENV}
 
 LM Suite Teardown
     ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
-    FOR   ${sys id}    IN    @{systems}
-        Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys id}
+    FOR   ${sys}    IN    @{systems}
+        Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys}[id]
     END
     FOR   ${i}    IN RANGE    1    4
-        Delete Docker Server    ${cont ${i}}
+        Delete Docker Server    ${system ${i}}[id]
     END
     Close All Browsers
 
 LM Test Restart
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
-    Run Keyword If    ${status}    Log Out via API
+    Run Keyword If    ${status}    Log Out
     FOR    ${i}    IN RANGE    1    4
-        ${port}=   Start Docker Server    ${cont ${i}}
-        Set Suite Variable    ${LM PORT ${i}}    ${port}
+        Start Docker Server    ${system ${i}}[id]
         Sleep    10
-        Change License Portal Host    ${CLOUD AUTH}    https://${QA BURBANK IP}:${lm port ${i}}    ${LM HOST}
+        Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system ${i}}[port]    ${LM HOST}
     END
 
 Remove all keys from system
-    [Arguments]    ${port}    ${name}
-    ${licenses}=   Get Licenses    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}
+    [Arguments]    ${port}    #${name}
+    ${licenses}=   Get Licenses    ${LOCAL AUTH}    https://${QA BURBANK IP}:${port}
     FOR    ${lic}    IN    @{licenses}
-        Remove License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]
+        Remove License    ${LOCAL AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]
     END
-    ${port}=   Restart Docker Server    ${port}    ${name}    ${CLOUD AUTH}
+    Restart Server    https://${QABURBANK IP}:${port}    ${LOCAL AUTH}
     [Return]    ${port}
 
 Open Licenses Page
@@ -131,8 +137,8 @@ Validate Input Error
     Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
 
 Validate Input Normal State
-    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    rgba(18, 21, 23, 1)
-    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    rgb(47, 162, 219)
+    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${DISABLED TEXT COLOR}   # rgba(43, 56, 63, 1)
+    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    rgb(205, 215, 220)    #rgb(47, 162, 219)
 
 # Licenses Summary
 Number of Channels
@@ -162,7 +168,7 @@ Verify license is listed first
 
 Get Key Server
     [Arguments]    ${key}
-    ${server path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
+    ${server path}=   Set Variable    //header[h4="${key}"]/../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Server")]
     ${server}=   Get Text    ${server path}
     ${class}=   Get Element Attribute    ${server path}    class
     Run Keyword If    '''${server}''' == '''Server not found'''    Run Keywords
@@ -172,7 +178,7 @@ Get Key Server
 
 Get Key Status
     [Arguments]    ${key}
-    ${status path}=   Set Variable    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
+    ${status path}=   Set Variable    //header[h4="${key}"]/../following-sibling::nx-section/div//div[contains(@class, "values")]//p[contains(@title, "Status")]
     ${status}=   Get Text    ${status path}
     ${class}=   Get Element Attribute    ${status path}    class
     Run Keyword If    '${status}' in ['Error', 'Expired']    Run Keywords
@@ -183,8 +189,8 @@ Get Key Status
 Validate License Info
     [Documentation]   Verify the key's info on server is the same as on cloud
     [Arguments]    ${key}    ${status}=OK    ${server num}=1
-    ${key info}=   Get key info from server    ${CLOUD AUTH}    https://${QA BURBANK IP}:${LM PORT ${server num}}    ${key}
-    ${key params}=   Get Child WebElements    //header[h4="${key}"]/../../following-sibling::nx-section/div//div[contains(@class, "values")]
+    ${key info}=   Get key info from server    ${CLOUD AUTH}    https://${QA BURBANK IP}:${system ${server num}}[port]    ${key}
+    ${key params}=   Get Child WebElements    //header[h4="${key}"]/../following-sibling::nx-section/div//div[contains(@class, "values")]
 
     @{supp_params}=   Create List    Status    Server
     FOR    ${p}    IN    @{key params}
@@ -201,5 +207,5 @@ Validate License Info
 
     ${key status}=   Get Key Status    ${key}
     ${key server}=   Get Key Server    ${key}
-    Should Be Equal As Strings    ${key status}    ${status}
-    Should Be Equal As Strings    ${key server}    ${server ${server num}}
+    Run keyword and ignore error    Should Be Equal As Strings    ${key status}    ${status}
+    Run keyword and ignore error    Should Be Equal As Strings    ${key server}    ${server ${server num}}

@@ -1,4 +1,4 @@
-<nx-pre-loader *ngIf="!system"></nx-pre-loader>
+<nx-pre-loader *ngIf="user && !system"></nx-pre-loader>
 
 <div *ngIf="system" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
@@ -10,7 +10,7 @@
                             (editModeState)="editMode = $event"
                             [nameWatcher]="systemNameWatcher"
                             [editEnabled]="system.isOnline && system.userManager.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
-                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [textOnly]="true"></nx-client-button>
+                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
                 </div>
 
                 <span class="system-owner" *ngIf="!CONFIG.isLocal">

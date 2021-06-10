@@ -5,6 +5,7 @@ ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/..//input[@type="number"]
+${SERVER PORT IS REQUIRED ERROR}    //div/span[contains(@class,"input-error") and contains(text(),"${SERVER PORT IS REQUIRED TEXT}")]
 ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-text") and contains(text(),"${PORT TOO LOW TEXT}")]
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
@@ -33,7 +34,7 @@ ${CS MODAL KEEP BUTTON}             ${CHANGE ANALYTICS MODAL}/div[contains(@clas
 ${CS MODAL CANCEL BUTTON}           ${CHANGE ANALYTICS MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
 ${CS MODAL PARAGRAPH}               ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE TEXT}")]
 ${CS MODAL CONTACT}                 ${CHANGE ANALYTICS MODAL}//p[contains(text(),"${ANALYTICS DATA MOVE CONTACT TEXT}")]
-${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a 
+${CS MODAL SUPPORT LINK}            ${CHANGE ANALYTICS MODAL}//a
 
 ${STORAGE LOCATIONS BLOCK}          //nx-block/div[contains(@class, "storage-info")]
 ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE LOCATIONS BLOCK}//div[contains(@class, "placeholder-preloader")]
@@ -156,14 +157,14 @@ ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${C
 
 # ADVANCED
 # Storage Locations Block
-${STORAGE LOCATIONS TITLE}          //h4[text()="${STORAGE LOCATIONS TEXT}"]
+${STORAGE LOCATIONS TITLE}          //div[@class="card mt-3"]//h4[text()="${STORAGE LOCATIONS TEXT}"]
 ${RESERVED SPACE INPUT}             //input[@id="reservedSpace0"]   
 ${RESERVED SPACE DROPDOWN}          //select[@id="reservedSpaceUnit0"]
 ${RESERVED DROPDOWN SELECTED}       ${RESERVED SPACE DROPDOWN}//option[@selected]
 ${RESERVED DROPDOWN OPTION GB}      ${RESERVED SPACE DROPDOWN}//option[@value='GB']
 ${RESERVED DROPDOWN OPTION TB}      ${RESERVED SPACE DROPDOWN}//option[@value='TB']
 ${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0']
-@{STORAGE LOCATIONS BLOCK}
+@{STORAGE LOCATIONS BLOCK ITEMS}
 ...    ${STORAGE LOCATIONS TITLE}
 ...    ${RESERVED SPACE INPUT}
 ...    ${RESERVED SPACE DROPDOWN}
@@ -205,3 +206,4 @@ ${STORAGE SAVE BUTTON}             ${STORAGE LOCATIONS TITLE}//ancestor::div[@cl
 ${STORAGE CANCEL BUTTON}           ${STORAGE LOCATIONS TITLE}//ancestor::div[@class='card--header']//following-sibling::nx-section[@class='ng-star-inserted']//button[text()='${CANCEL BUTTON TEXT}']
 ${LOG SAVE BUTTON}                 ${LOG SETTINGS TITLE}//ancestor::div[@class='card']//button[text()='${SAVE BUTTON TEXT}']
 
+${ADVANCED SAVE MODAL CLOSE BUTTON}    //nx-modal-generic-content//button[text()="${CLOSE TEXT}"]

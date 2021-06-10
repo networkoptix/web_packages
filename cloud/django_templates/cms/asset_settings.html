@@ -73,6 +73,7 @@ Example for vms
         const packageUrl = "{% url 'download_package' asset.id %}"
         const downloadUrl = "{% url 'download_package_async' asset.id %}"
     </script>
+    {% include "cms/async_partial.html" %}
     <script>
         function pollStructure(config, taskId = null) {
             const {assetId = null, assetType = null, outputFormat = null} = config
@@ -84,6 +85,8 @@ Example for vms
             const structureUrl = assetType ? assetTypeJSON : outputFormat === 'html' ? assetIdHTML : assetIdJSON
             const progressModalTitle = document.getElementById('progress-modal-title')
             const contextStatus = document.getElementById('context-status')
+            const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+            progressWrapper.style = "display: block;"
             progressModalTitle.innerText = "Preparing Structure(s)"
             contextStatus.innerText = "Processing asset(s)..."
             if(taskId) {
@@ -104,9 +107,9 @@ Example for vms
                         successMessage.innerText = `The structure(s) is ready and should have automatically downloaded. If the structure(s) didn't download automatically use the "Download Structure(s)" link below.`
                         window.open(downloadUrl)
                     } else {
-                        alert('Some unknown error occurred')
+                        showError()
                     }
-                })
+                }).catch(err => showError(err))
             }
             fetch(structureUrl).then(
                 res => res.json()
@@ -123,7 +126,6 @@ Example for vms
             })
         }
     </script>
-    {% include "cms/async_partial.html" %}
     <script src="{% static 'js/assetImportConflicts.js' %}"></script>
 </form>
 {% endblock%}

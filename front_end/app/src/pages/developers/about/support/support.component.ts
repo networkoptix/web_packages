@@ -9,7 +9,7 @@ import { DomSanitizer }        from '@angular/platform-browser';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { WINDOW } from '@services/window-provider';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-support',
     templateUrl : 'support.component.html',

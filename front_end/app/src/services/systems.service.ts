@@ -6,12 +6,12 @@ import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService }         from './nx-cloud-api';
 import { NxPollService }             from './poll.service';
-import { NxToastService }            from '../dialogs/toast.service';
+import { NxToastService }            from '@dialogs/toast.service';
 import { NxUtilsService }            from './utils.service';
 import { NxUriService }              from './uri.service';
-import { NxRibbonService }           from '../components/ribbon/ribbon.service';
+import { NxRibbonService }           from '@components/ribbon/ribbon.service';
 import { NxSystem }                  from './system.service';
-import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from './storage.service';
 
 interface IParams<Value = any> {

@@ -37,10 +37,13 @@
                    [(ngModel)]="password"
                    (ngModelChange)="resetForm()"
                    maxlength="255"
+                   [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
                    required>
             <ng-container *ngIf="login_password.invalid">
                 <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
                 <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                <div class="input-error" *ngIf="login_password.touched && login_password.errors?.pattern">
+                    {{LANG.passwordRequirements.requiredMessage()}}</div>
             </ng-container>
         </div>
         <div class="form-group">

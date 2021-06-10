@@ -28,7 +28,7 @@ module.exports = {
         "window"   : "readonly"
     },
     rules: {
-        "accessor-pairs"               : "error",
+        "accessor-pairs"               : "off",
         "array-bracket-spacing"        : ["error", "never"],
         "arrow-spacing"                : ["error", { "before": true, "after": true }],
         "block-spacing"                : ["error", "always"],
@@ -87,7 +87,7 @@ module.exports = {
         "no-array-constructor"         : "error",
         "no-async-promise-executor"    : "error",
         "no-caller"                    : "error",
-        "no-case-declarations"         : "error",
+        "no-case-declarations"         : "off",
         "no-class-assign"              : "error",
         "no-compare-neg-zero"          : "error",
         "no-cond-assign"               : "error",
@@ -211,7 +211,7 @@ module.exports = {
         "semi"                         : ["error", "always"],
         "semi-spacing"                 : ["error", { "before": false, "after": true }],
         "space-before-blocks"          : ["error", "always"],
-        "space-before-function-paren"  : ["error", "never"],
+        "space-before-function-paren"  : "off",
         "space-in-parens"              : ["error", "never"],
         "space-infix-ops"              : "error",
         "space-unary-ops"              : ["error", { "words": true, "nonwords": false }],

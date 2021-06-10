@@ -334,7 +334,8 @@
             "removeUser": "Supprimer Utilisateur?",
             "serversDetach": "Détacher le serveur \"{ title }\" du système actuel ?",
             "serversReset": "Réinitialiser le serveur \"{ title }\" aux valeurs par défaut ?",
-            "serversRestart": "Redémarrer le serveur \"{ title } \" ?"
+            "serversRestart": "Redémarrer le serveur \"{ title } \" ?",
+            "changePasswordFor": "Changer le mot de passe pour l'utilisateur \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -475,8 +476,8 @@
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
         "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance.",
         "networkConnection": "Impossible de se connecter à %CLOUD_NAME%, veuillez vérifier votre connexion réseau.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE<br>ENCRYPTEE",
+        "archiveEncryptedMessage": "Demandez à votre administrateur système d'entrer le mot de passe de cryptage<br>pour déchiffrer cette archive."
     },
     "integration": {
         "Access Control": "Contrôle d'accès",
@@ -629,7 +630,7 @@
             "reject": "Refuser",
             "backToEditText": "Retour aux interfaces d'édition",
             "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Cette page est la version live qui est disponible au public."
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "Temps",
-            "Trial": "Temps",
+            "Trial": "Essai",
             "Professional": "Professionnel",
             "Analog": "Analogique",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "{number} de plus sont requis",
             "activated": "Clé de licence activée",
             "inuse": "La clé de licence a déjà été activée et liée au serveur avec l'ID matériel {hwid} dans un autre système",
-            "trialActivated": "Licence de temps activée. À partir d'aujourd'hui, vous pouvez enregistrer jusqu'à 4 caméras pendant 30 jours."
+            "trialActivated": "Licence d'essai activée. À partir d'aujourd'hui, vous pouvez enregistrer jusqu'à 4 caméras pendant 30 jours."
         }
     },
     "settingsConfig": {

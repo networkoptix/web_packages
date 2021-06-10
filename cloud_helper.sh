@@ -13,9 +13,9 @@ function brew_install() {
     brew install node n pyenv openssl docker docker-compose mysql mysql-client
 
     echo 'Installing node v11.15.0'
-    n 11.15.0
-    echo 'Installing python 3.7.6'
-    pyenv install 3.7.6
+    n 12.18.4
+    echo 'Installing python 3.8'
+    pyenv install 3.8
     pip install virtualenv
     echo 'Brew install complete.'
 }
@@ -128,9 +128,9 @@ function setup_robot_env() {
 }
 
 function setup_or_activate_virtualenv() {
-    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
+    [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.8
 
-    printf "Activating python3.7 env\n\n"
+    printf "Activating python3.8 env\n\n"
     . ./env/bin/activate
 }
 
@@ -179,12 +179,13 @@ function remove_mediaserver() {
 function run_mediaserver() {
     VERSION=$1
     PORTS="$2"
-    EMAIL=$3
-    PASSWORD=$4
+    CLOUD_HOST="$3"
+    EMAIL=$4
+    PASSWORD=$5
     for PORT in $PORTS
     do
         echo "Starting mediaserver $PORT"
-        docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+        docker run -d -p $PORT:$PORT --env PORT=$PORT --env CLOUD_HOST=$CLOUD_HOST --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
         if [[ -e $EMAIL ]]; then
             pushd cloud
                 python manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
@@ -201,7 +202,7 @@ function stop_mediaserver() {
 function update_webadmin() {
     TARGET=$1
     TARGET_DIR=/opt/networkoptix/mediaserver/bin
-    BUILD_FILE=~/Desktop/build/server-external/bin/external.dat
+    BUILD_FILE=~/Desktop/build/external.dat
 
     echo "Copying..."
     echo $(scp $BUILD_FILE $TARGET:$TARGET_DIR)
@@ -228,7 +229,7 @@ function local_build() {
     REPO=$PWD
 
     pushd $BUILD_DIR
-        cp server-external/bin/external.dat $REPO/tools/docker
+        cp external.dat $REPO/tools/docker
     popd
 
     echo "Stop mediaserver"
@@ -376,9 +377,10 @@ do
         run_mediaserver)
             VERSION=$2
             PORTS="$3"
-            EMAIL=$4
-            PASSWORD=$5
-            run_mediaserver $VERSION "$PORTS" $EMAIL $PASSWORD
+            CLOUD_HOST="$4"
+            EMAIL=$5
+            PASSWORD=$6
+            run_mediaserver $VERSION "$PORTS" "$CLOUD_HOST" $EMAIL $PASSWORD
             break
             ;;
          stop_mediaserver)

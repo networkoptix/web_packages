@@ -1,22 +1,20 @@
 import {
     Component, Input,
-    OnChanges, SimpleChanges,
     ViewEncapsulation
 }                                    from '@angular/core';
-
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector     : 'nx-password-input-tag-validation',
-    templateUrl  : 'password-tag-validation.component.html',
-    styleUrls    : ['password-tag-validation.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-password-input-tag-validation',
+    templateUrl   : 'password-tag-validation.component.html',
+    styleUrls     : ['password-tag-validation.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxPasswordTagValidationComponent {
     @Input() forElement;
-    @Input() value;
+    // @Input() value;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

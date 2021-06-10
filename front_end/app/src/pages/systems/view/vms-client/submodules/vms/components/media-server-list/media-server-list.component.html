@@ -9,7 +9,7 @@
 
     <div
       class="server"
-      *ngFor="let server of mediaservers"
+      *ngFor="let server of mediaservers; trackBy: serverID"
       [ngClass]="{
         'show-ip': showIP,
         'expanded': isServerExpanded[server.id],
@@ -19,9 +19,9 @@
       }">
       <div class="server-name"
            (click)=changeServerVisibility(server.id)
-           [title]="server.url | ip_info">
+           [title]="server.ip">
         <span class="name" [ngClass]="server.status" [innerHTML]="server.name | highlight:token"></span>
-        <span class="ip-info" [innerHTML]="server.url | ip_info | highlight:token"></span>
+        <span *ngIf="showIP" class="ip-info" [innerHTML]="server.ip | highlight:token"></span>
         <svg-icon nx-add-svg-src
           [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
           [applyClass]="true"></svg-icon>
@@ -29,7 +29,7 @@
       <div class="cameras">
         <a
           class="camera"
-          *ngFor="let camera of server.cameras"
+          *ngFor="let camera of server.cameras; trackBy: cameraId"
           [routerLink]="[camera.id]"
           [ngClass]="{
             online: camera.isOnline,
@@ -48,9 +48,9 @@
             <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
             <svg-icon nx-add-svg-src
               *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
-              [src]="previewLoaded[camera.id] === -1
-                ? '/static/images/icons/view/placeholder_preview_alert.svg'
-                : CONFIG.icons.dir + 'cameras_list_placeholder_' + (!camera.isAuthorized ? 'unauthorized' : 'offline') + '.svg'"
+              [src]="CONFIG.icons.dir + 'cameras_list_placeholder_' + 
+                (!camera.isOnline ? 'offline' : !camera.isAuthorized ? 'unauthorized' : 'alert')
+                + '.svg'"
               [applyClass]="true"></svg-icon>
           </div>
           <span class="name" [ngClass]="camera.status" [innerHTML]="camera.name | highlight:token"></span>

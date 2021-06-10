@@ -5,7 +5,7 @@ import string
 import logging
 
 import requests
-from requests.auth import HTTPBasicAuth
+from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,6 +20,46 @@ CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
 
 
+# Todo: Once cloud_db supports basic and digest switch to true.
+def basic_digest_handler(use_basic_auth=False):
+    """
+        Tracks if basic or digest auth should be used.
+        If the request fails the decorator will try the other auth type.
+    """
+    def outer_handler(func):
+        def basic_auth_handler(email, password, *args, **kwargs):
+            kwargs["auth"] = HTTPBasicAuth(email, password)
+            return func(*args, **kwargs)
+
+        def digest_auth_handler(email, password, *args, **kwargs):
+            kwargs["auth"] = HTTPDigestAuth(email, password)
+            return func(*args, **kwargs)
+
+        def handler(*args, **kwargs):
+            nonlocal use_basic_auth
+            credentials = kwargs.get("auth")
+            if not credentials:
+                kwargs["auth"] = None
+                return func(*args, **kwargs)
+
+            email = credentials["email"]
+            password = credentials["password"]
+            res = None
+
+            try:
+                res = (basic_auth_handler if use_basic_auth else digest_auth_handler)(email, password, *args, **kwargs)
+                res.raise_for_status()
+                return res
+            except requests.HTTPError:
+                # If none that means we chose correctly for the auth type.
+                if res is not None and not res.headers.get("WWW-Authenticate"):
+                    return res
+                use_basic_auth = not use_basic_auth
+                return (basic_auth_handler if use_basic_auth else digest_auth_handler)(email, password, *args, **kwargs)
+        return handler
+    return outer_handler
+
+
 def lower_case_email(func):
     def validator(email, *args, **kwargs):
         email = email.lower()
@@ -31,6 +71,7 @@ def salt_machine(char_pool=string.ascii_lowercase + string.digits, size=15):
     return ''.join(random.choice(char_pool) for _ in range(size))
 
 
+@basic_digest_handler()
 def delete_wrapper(url, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
     logger.info(f'\nDELETE: {url}\n Query Parameters: {default_params}')
@@ -38,6 +79,7 @@ def delete_wrapper(url, auth=None, headers=None):
     return requests.delete(url, auth=auth, headers=headers)
 
 
+@basic_digest_handler()
 def get_wrapper(url, params=None, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
 
@@ -49,6 +91,7 @@ def get_wrapper(url, params=None, auth=None, headers=None):
     return requests.get(url, params=default_params, auth=auth, headers=headers)
 
 
+@basic_digest_handler()
 def post_wrapper(url, params=None, auth=None, json=None, headers=None):
     default_params = {'salt': salt_machine()}
 
@@ -60,6 +103,7 @@ def post_wrapper(url, params=None, auth=None, json=None, headers=None):
     return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
 
 
+@basic_digest_handler()
 def put_wrapper(url, params=None, auth=None, json=None, headers=None):
     default_params = {'salt': salt_machine()}
 
@@ -86,7 +130,7 @@ class System(object):
         if one_customization:
             params['customization'] = settings.CUSTOMIZATION
 
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -96,7 +140,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -106,7 +150,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -119,7 +163,7 @@ class System(object):
             'accountEmail': account_email,
             'accessRole': role
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -129,7 +173,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -140,7 +184,7 @@ class System(object):
             'systemId': system_id,
             'name': system_name
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -150,7 +194,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -160,7 +204,7 @@ class System(object):
         params = {
             'systemId': system_id,
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -172,7 +216,7 @@ class System(object):
             'name': name,
             'customization': customization
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -182,7 +226,7 @@ class System(object):
         params = {
             'systemId': slave_system_id
         }
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
 
 class Account(object):
@@ -223,7 +267,7 @@ class Account(object):
         def _update(login, password, params):
             request = CLOUD_DB_URL + '/account/update'
             logger.debug('cloud_api.Account.register - making request: ' + request)
-            return post_wrapper(request, json=params, auth=HTTPBasicAuth(login, password), headers=headers)
+            return post_wrapper(request, json=params, auth={"email": login, "password": password}, headers=headers)
 
         @validate_response
         def _register(params):
@@ -270,7 +314,7 @@ class Account(object):
             'passwordHa1Sha256': password_ha1_sha256
         }
         request = CLOUD_DB_URL + '/account/update'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -291,7 +335,7 @@ class Account(object):
                 params['timeouts']['prolongationPeriod'] = str(prolongation_period)
 
         request = CLOUD_DB_URL + '/account/createTemporaryCredentials'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -330,7 +374,7 @@ class Account(object):
     @lower_case_email
     def delete(email, password):
         request = CLOUD_DB_URL + '/account/self'
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return delete_wrapper(request, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -340,7 +384,7 @@ class Account(object):
             'fullName': ' '.join((first_name, last_name))
         }
         request = CLOUD_DB_URL + '/account/update'
-        return post_wrapper(request, json=params, auth=HTTPBasicAuth(email, password))
+        return post_wrapper(request, json=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -353,7 +397,7 @@ class Account(object):
             headers['X-Forwarded-For'] = ip
 
         request = CLOUD_DB_URL + '/account/get'
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password), headers=headers)
+        return get_wrapper(request, auth={"email": email, "password": password}, headers=headers)
 
 
 class Storage(object):
@@ -381,7 +425,7 @@ class Storage(object):
     @lower_case_email
     def _delete(email, password, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}"
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return delete_wrapper(request, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -401,14 +445,14 @@ class Storage(object):
         body = {
             "id": system_id
         }
-        return put_wrapper(request, json=body, auth=HTTPBasicAuth(email, password))
+        return put_wrapper(request, json=body, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
     @lower_case_email
     def _remove_from_system(email, password, system_id, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
-        return delete_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return delete_wrapper(request, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -419,7 +463,7 @@ class Storage(object):
             "systems": [system_id],
             "totalSpace": storage_size
         }
-        return put_wrapper(request, json=body, auth=HTTPBasicAuth(email, password))
+        return put_wrapper(request, json=body, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -442,14 +486,14 @@ class Storage(object):
         params = {
             "system-id": system_id
         }
-        return get_wrapper(request, params=params, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, params=params, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
     @lower_case_email
     def list_cameras(email, password, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/cameras"
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, auth={"email": email, "password": password})
 
     @staticmethod
     @validate_response
@@ -458,7 +502,7 @@ class Storage(object):
         try:
             source_storages = Storage.list_system_storages(email, password, source_system_id)
         except APINotFoundException:
-            raise APIRequestException('Source System has no storages')
+            raise APIRequestException('Source System has no storages', ErrorCodes.bad_request)
 
         try:
             destination_storages = Storage.list_system_storages(email, password, destination_system_id)
@@ -484,4 +528,4 @@ class Storage(object):
     @lower_case_email
     def statistics(email, password, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
-        return get_wrapper(request, auth=HTTPBasicAuth(email, password))
+        return get_wrapper(request, auth={"email": email, "password": password})

@@ -1,5 +1,5 @@
 {
-    "language": "en_US",
+    "language": "sv_SE",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
@@ -260,7 +260,7 @@
             "latestBuild": "senaste versionen",
             "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.</p><p>Inställningar och namnet tas från <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Sammanfogning av system {primaryName} och {secondaryName} slutförd",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "noServerFound": "Inga servrar hittades",
             "newSystemDisplayName": "Nytt system",
@@ -334,7 +334,8 @@
             "removeUser": "Ta bort användare?",
             "serversDetach": "Koppla från servern \"{ title }\" från nuvarande system?",
             "serversReset": "Återställ servern \"{ title }\" till standard?",
-            "serversRestart": "Starta om servern \"{ title }\"?"
+            "serversRestart": "Starta om servern \"{ title }\"?",
+            "changePasswordFor": "Ändra lösenord för användare \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -452,7 +453,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan inte ta bort System",
         "emailNotFound": "Kontot existerar inte.",
         "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
-        "failedToAccessCamera": "No camera can be accessed by this link.",
+        "failedToAccessCamera": "Ingen kamera kan nås via den här länken.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
         "lostConnection": "Anslutning till {systemName} förlorade",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> är offline.",
@@ -475,8 +476,8 @@
         "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARKIV<br>KRYPTERAD",
+        "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet<br>för att dekryptera detta arkiv."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -549,14 +550,14 @@
         "activate": "Aktivera konto",
         "activateCode": "Aktivera konto",
         "activateSuccess": "Kontot aktiverat",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} för {VMS_NAME}",
         "changePassword": "Ändra lösenord",
         "debug": "Debugläge",
         "default": "%CLOUD_NAME%",
         "download": "Ladda ner %VMS_NAME%",
         "downloadPlatform": "Hämta %VMS_NAME% för ",
         "failedToAccessSystem": "Misslyckades med att komma åt system",
-        "failedToAccessCamera": "Failed to access camera",
+        "failedToAccessCamera": "Det gick inte att komma åt kameran",
         "integrations": "%VMS_NAME% Integrationer",
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
@@ -629,7 +630,7 @@
             "reject": "Avvisa",
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
             "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Den här sidan är den liveversionen som är allmänt tillgänglig."
         },
         "systemOffline": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
         "systemsMerging": "Detta system är för närvarande involverat i en sammanslagningsoperation."
@@ -732,8 +733,8 @@
             "local": "Lokal",
             "usb": "USB",
             "network": "Nätverk, tillagt via OS",
-            "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "smb": "Nätverk (smb), läggs till via VMS",
+            "cloud": "Moln"
         }
     },
     "systemStatuses": {
@@ -747,22 +748,22 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
-        "nameFail": "Failed to change {type} name",
-        "reviewAccepted": "The review has been accepted",
+        "nameFail": "Det gick inte att ändra {type} namn",
+        "reviewAccepted": "Avtal har accepterats",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "System {systemName} har tagits bort från ditt konto"
             },
             "disconnected": {
                 "success": "Systemet har kopplats bort från %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "success": "System anslutet till %CLOUD_NAME%",
+                "failed": "Misslyckades att ansluta systemet till %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Systemsammanslagning misslyckades",
-                "success": "System merge completed"
+                "success": "Systemsammanslagning slutförd"
             },
             "rename": {
                 "success": "Systemnamnet sparat"
@@ -770,12 +771,12 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Heath-rapport för system {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
             "Time": "Tid",
-            "Trial": "Tid",
+            "Trial": "Provperiod",
             "Professional": "Professionell",
             "Analog": "Analog",
             "Edge": "Edge",
@@ -803,10 +804,10 @@
             "serverNotFound": "Servern hittades inte"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} krävs",
             "activated": "Licensnyckel aktiverad",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
-            "trialActivated": "Time license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "inuse": "Licensnyckel har redan aktiverats och bundits till server med hårdvaru-ID {hwid} i ett annat system",
+            "trialActivated": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar."
         }
     },
     "settingsConfig": {
@@ -891,7 +892,7 @@
         "osTimeChangeCheckPeriodMs": "Kontroll av OS-tidsinställningar",
         "syncTimeExchangePeriod": "Synkronisera tidssynkroniseringsintervall för nätverksförfrågningar",
         "syncTimeEpsilon": "Synkronisera tidsepsilon. Nytt värde tillämpas inte om tidsdeltat mindre än epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max synkroniseringstrådar för virtuella kameror",
         "updateNotificationsEnabled": "Uppdateringsaviseringar aktiverade",
         "upnpPortMappingEnabled": "UPNP-portmappning aktiverad",
         "useTextEmailFormat": "Skicka e-post med vanlig text",
@@ -900,7 +901,7 @@
         "videoTrafficEncryptionForced": "Tvinga videotrafikkryptering",
         "updateStatus": "Uppdatera status",
         "watermarkSettings": "Vattenmärkesinställningar",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Max antal HTTP-anslutningar med transkodning för servern. Chrome öppnar 2 anslutningar samtidigt och stäng sedan den första. Så det rekommenderas att ställa in värde> = 2 för denna parameter.",
         "maxEventLogRecords": "Maximala händelseloggposter för att hålla i databasen. Den verkliga mängden obestängda poster kan vara upp till 20% högre än det angivna värdet.",
         "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran)."
     },
@@ -908,32 +909,32 @@
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Omindexering av huvudlagring slutförd",
+            "backupSuccess": "Omindexering av säkerhetskopieringslagring slutförd",
+            "mainFailed": "Omindexering av huvudlagring misslyckades",
+            "backupFailed": "Omindexering av säkerhetskopieringslagring misslyckades"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "main": "Primär",
+            "backup": "Säkerhetskopia",
+            "notInUse": "Ej i bruk",
+            "reserved": "Reserverad",
+            "inaccessible": "Otillgänglig",
+            "changing": "Ändrar läge...",
+            "disabled": "Inaktiverad"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Lagringsväg {url} används redan av en annan server.",
+        "deleteExternalStorage": "Radera extern lagring?",
+        "failed": "Det gick inte att lägga till extern lagring",
+        "invalidPath": "Ogiltig sökväg.",
+        "stillHasArchivesPreWarning": "Inspelning till avaktiverad lagring stoppas. Men det kommer att fortsätta att radera utdaterat material från det.",
+        "stillHasArchives": "Inspelning till avaktiverad lagring stoppas. Men det kommer att fortsätta att radera utdaterat material från det.",
+        "storageDeleted": "Lagring {url} raderad",
+        "failedRemove": "Det gick inte att ta bort extern lagring {url}",
+        "reservedTooSmallTooltip": "Den här lagringsplatsen kan inte användas för inspelning eftersom den är för liten, och det finns andra större lagringsplatser tillgängliga för inspelning.",
+        "reservedSystemTooltip": "Den här lagringsplatsen kan inte användas för inspelning eftersom den är för liten, och det finns andra större lagringsplatser tillgängliga för inspelning.",
+        "serverOffline": "Det gick inte att lägga till extern lagring - servern svarar inte",
+        "success": "Extern lagring har lagts till",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     }
 }

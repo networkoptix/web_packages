@@ -1,15 +1,17 @@
-import { Component, Input }          from '@angular/core';
+import {
+    Component, Input,
+    Renderer2, ViewChild
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-change-password',
-    templateUrl: 'change-password.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-change-password',
+    templateUrl : 'change-password.component.html',
+    styleUrls   : []
 })
 export class ChangePasswordModalContent {
     @Input() system;
@@ -20,36 +22,68 @@ export class ChangePasswordModalContent {
     CONFIG: IConfig;
     changePassword: Process;
     newPasswordForUser: string;
+    currentPasswordForUser: string;
+    confirmNewPasswordForUser: string;
     hideErrors = true;
+    currentPasswordToggle = true;
+    confirmPasswordToggle = true;
 
-    constructor(public activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private configService: NxConfigService
+    @ViewChild('changePasswordForm') changePasswordForm: HTMLFormElement;
+
+    constructor(
+        public activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private language: NxLanguageProviderService,
+        private processService: NxProcessService,
+        private configService: NxConfigService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
         this.newPasswordForUser = '';
+        this.currentPasswordForUser = '';
+        this.confirmNewPasswordForUser = '';
     }
 
     ngOnInit() {
         this.changePassword = this.processService
             .createProcess(() => {
                 this.user.password = this.newPasswordForUser;
-                return this.system.saveUser(this.user, this.user.role)
+
+                if (this.user.isLocalOwner && this.user.isMe) {
+                    if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
+                        this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
+                        this.renderer.selectRootElement('#confirmNewPassword').focus();
+                        return Promise.reject('dontMatch');
+                    }
+
+                    return this.system.userManager
+                        .authCurrentUser('admin', this.currentPasswordForUser)
+                        .then(response => {
+                            if (!response.reply) {
+                                this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
+                                this.renderer.selectRootElement('#currentPassword').focus();
+                                return Promise.reject('wrongPassword');
+                            }
+
+                            return this.system
+                                .saveUser(this.user, this.user.role)
+                                .then(() => this.activeModal.close());
+                        });
+                }
+
+                return this.system
+                    .saveUser(this.user, this.user.role)
                     .then(() => this.activeModal.close());
             }, {
                 errorCodes: {
                     notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.()
+                    wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    dontMatch        : () => {},
+                    wrongPassword    : () => {}
                 },
                 successMessage     : this.LANG.account.passwordChangedSuccess?.(),
                 errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
                 ignoreUnauthorized : true
             });
-    }
-
-    setPassword(e) {
-        this.newPasswordForUser = e;
     }
 }

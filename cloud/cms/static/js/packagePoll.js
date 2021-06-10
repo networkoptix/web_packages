@@ -9,7 +9,6 @@ const pollingInterval = 1000
 const modal = document.getElementById('preparing-package')
 const progressBar = modal.getElementsByClassName('progress-bar')[0]
 const contextStatus = document.getElementById('context-status')
-const taskId = "{{task_id}}"
 var cookieCheckInterval = undefined;
 var checkCookie = function () {
     var lastCookie = document.cookie;
@@ -47,12 +46,22 @@ function togglePending (showPending) {
 
 togglePending(true)
 
+function showError(message = 'Some unknown error occurred') {
+    const contextStatus = document.getElementById('context-status')
+    const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+    contextStatus.innerText = message
+    progressWrapper.style = "display: none;"
+
+}
+
 function pollPackage (isDraft, taskId = null) {
     const package = packageUrl + (isDraft ? '?draft=True' : '')
     let download = downloadUrl + (isDraft ? '?draft=True' : '')
     const generateStatusUrl = (taskId) => celeryStatusUrl.replace('task_id', taskId)
     const progressModalTitle = document.getElementById('progress-modal-title')
     const contextStatus = document.getElementById('context-status')
+    const progressWrapper = document.getElementsByClassName('progress-popup')[0]
+    progressWrapper.style = "display: block;"
     progressModalTitle.innerText = "Preparing Package"
     contextStatus.innerText = "Processing contexts..."
     if(taskId) {
@@ -72,8 +81,10 @@ function pollPackage (isDraft, taskId = null) {
                 downloadButton.innerText = "Download Package"
                 successMessage.innerText = `The package is ready and should have automatically downloaded. If the package didn't download automatically use the "Download Package" link below.`
             } else {
-                alert('Some unknown error occurred')
+                showError()
             }
+        }).catch(_ => {
+            showError()
         })
     }
     fetch(package).then(
@@ -104,7 +115,7 @@ function pollPackage (isDraft, taskId = null) {
         messageList.appendChild(asyncStatusInfo)
     }
 
-    const generateStatusUrl = (taskId) => celeryDownloadUrl.replace('task_id', taskId)
+    const generateStatusUrl = (taskId) => celeryStatusUrl.replace('task_id', taskId)
     return fetch(generateStatusUrl(taskId)).then(
         res => res.json()
     ).then(status => {
@@ -132,7 +143,7 @@ function closeModal() {
     modal.classList.remove('show')
 }
 
-const fileName = '{{file}}'
+
 if (fileName) {
     const fileInput = document.getElementById('id_file')
     const uploadButton = document.getElementById('upload')
@@ -146,6 +157,3 @@ if (fileName) {
         uploadButton.disabled = !event.target.value && !forceInput.checked
     })
 }
-
-window.menuName = ''
-window.conflictsHeader = '<h4>The file "{{file}}" contains name conflicts with existing assets.<h4> <h5>Review conflicts below and check the "Force Update" checkbox and click upload again to override existing with new values.</h5>'

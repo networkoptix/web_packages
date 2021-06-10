@@ -1,6 +1,6 @@
 {
     "language": "ja_JP",
-    "About %CLOUD_NAME%": "%CLOUD_NAME%について",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% について",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "For developers": "開発者向け",
     "Integrations (β)": "統合 (β)",
@@ -334,7 +334,8 @@
             "removeUser": "ユーザーを削除しますか?",
             "serversDetach": "現在のシステムからサーバー \"{ title }\" を切断しますか？",
             "serversReset": "サーバー \"{ title }\" をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー \"{ title }\" を再起動しますか？"
+            "serversRestart": "サーバー \"{ title }\" を再起動しますか？",
+            "changePasswordFor": "{username} のパスワードを変更する"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -475,8 +476,8 @@
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスの有効化に失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "アーカイブ<br>が暗号化されています",
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化<br>パスワードを入力するようシステム管理者に依頼してください。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -524,7 +525,7 @@
         "primaryCodec": "コー​​デック",
         "resolutionArea": "領域",
         "sndResolution": "セカンダリストリーム",
-        "vendor": "製造メーカー",
+        "vendor": "メーカー",
         "sortKey": ""
     },
     "ipvdFeedback": {
@@ -544,7 +545,7 @@
         }
     },
     "pageTitles": {
-        "about": "について",
+        "about": "概要:",
         "account": "アカウント設定",
         "activate": "アカウント有効化",
         "activateCode": "アカウント有効化",
@@ -647,8 +648,8 @@
         "minResolution": "最小解像度",
         "search_ipvd": "モデルまたはメーカーで検索",
         "selected": "{count, plural, =0{# 選択中} one{# 選択中} other{# 選択中}}",
-        "vendor": "製造メーカー",
-        "vendors": "製造メーカー"
+        "vendor": "メーカー",
+        "vendors": "メーカー"
     },
     "servers": {
         "analyticsDataPolicyError": "分析データの削除または保持中にエラーが発生しました。",
@@ -775,7 +776,7 @@
     "license": {
         "licenseTypeTitles": {
             "Time": "時間",
-            "Trial": "時間",
+            "Trial": "試用",
             "Professional": "プロフェッショナル",
             "Analog": "アナログ",
             "Edge": "Edge",
@@ -806,7 +807,7 @@
             "required": "追加で {number} 必要",
             "activated": "ライセンスキーが有効化されました",
             "inuse": "ライセンスキーは既に有効化されており、別のシステムでハードウェアID {hwid} を持つサーバーに登録されています。",
-            "trialActivated": "期限付きライセンスが有効になりました。今日から30日間最大4台のカメラを録画できます。"
+            "trialActivated": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。"
         }
     },
     "settingsConfig": {

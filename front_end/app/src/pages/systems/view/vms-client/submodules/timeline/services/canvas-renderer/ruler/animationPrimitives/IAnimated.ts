@@ -3,13 +3,19 @@
  * that's why we have this generalizing interface.
  */
 export interface IAnimated<T> {
-  set (v: T)
-  get (): T
-  reset (v: T)
-  abort ()
-  force ()
-  forceShift (v: T)
-  target: T
+    set(v: T)
+
+    get(): T
+
+    reset(v: T)
+
+    abort()
+
+    force()
+
+    forceShift(v: T)
+
+    target: T
 }
 
-export default IAnimated
+export default IAnimated;

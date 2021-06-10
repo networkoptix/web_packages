@@ -6,13 +6,13 @@
 
 <ng-template #primary>
   <header
-    *ngIf="camera"
-    [ngClass]="{
-      isOnline: camera.isOnline,
-      isLive: camera.isLive,
-      isRecording: camera.isRecording,
-      isScheduleEnabled: camera.isScheduleEnabled}">
-
+          *ngIf="camera && showElementsInFSM"
+          [ngClass]="{
+            isOnline: camera.isOnline,
+            isLive: camera.isLive,
+            isRecording: camera.isRecording,
+            isScheduleEnabled: camera.isScheduleEnabled
+          }">
     <span class="glyph"></span>
     <span class="name">
       {{ camera.name }}
@@ -21,7 +21,8 @@
     </span>
 
     <div class="buttons">
-      <div class="settings-toggler" (click)="toggleSettings($event)">
+      <div class="settings-toggler"
+           (click)="toggleSettings($event)">
         <svg viewBox="0 0 36 36">
           <path class="st0" d="M34.7,23l-3.5-2c0.2-1,0.4-2,0.4-3s-0.1-2.1-0.4-3l3.5-2c0.5-0.3,0.6-0.9,0.4-1.4l-3-5.2
             c-0.3-0.5-0.9-0.6-1.4-0.4l-3.5,2C25.8,6.6,24,5.6,22,5V0.5C22,0.2,21.8,0,21.5,0h-7C14.2,0,14,0.2,14,0.5V5C12,5.6,10.2,6.6,8.7,8
@@ -31,19 +32,20 @@
             c-4.2,0-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6s7.6,3.4,7.6,7.6S22.2,25.6,18,25.6z"/>
           </svg>
       </div>
-      <div class="fullscreen-toggler" (click)="toggleFullScreen($event)">
-        <svg viewBox="0 0 24 24">
-          <path class="st0" d="M10,6V4H4v6h2V7.4l2.8,2.8l1.4-1.4L7.4,6H10z"/>
-          <path class="st0" d="M18,16.6l-2.8-2.8l-1.4,1.4l2.8,2.8H14v2h6v-6h-2V16.6z"/>
-          <path class="st0" d="M14,4v2h2.6l-2.8,2.8l1.4,1.4L18,7.4V10h2V4H14z"/>
-          <path class="st0" d="M8.8,13.8L6,16.6V14H4v6h6v-2H7.4l2.8-2.8L8.8,13.8z"/>
-        </svg>
+      <div class="fullscreen-toggler"
+           (click)="toggleFullScreen($event)">
+        <svg-icon nx-add-svg-src
+                  *ngIf="!fullscreenMode"
+                  [src]="CONFIG.icons.dirNonStandardView + 'fullscreen.svg'"></svg-icon>
+        <svg-icon nx-add-svg-src
+                  *ngIf="fullscreenMode"
+                  [src]="CONFIG.icons.dirNonStandardView + 'exit_fullscreen.svg'"></svg-icon>
       </div>
     </div>
   </header>
 
   <div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
-    <div class="section transportSelection">
+    <div *ngIf="CONFIG.allowDebugMode" class="section transportSelection">
       <div class="caption">Transport</div>
       <div class="options" *ngIf="(transports$ | async)?.length else noTransportsAvailable">
         <div *ngFor="let st of transports$ | async" class="option" [ngClass]="{ selected: (selectedTransport$ | async) === st }" (click)="selectedTransport = st">{{ st }}</div>
@@ -67,42 +69,55 @@
     </div>
   </div>
 
-  <div class="player-and-controls-wrapper">
+  <div class="player-and-controls-wrapper" [ngClass]="{'slim': !camera.hasArchive && !camera.isScheduleEnabled}">
     <div class="player-wrapper">
-      <player *ngIf="camera && showPlayerSection else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
+      <player *ngIf="camera && showPlayer() else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
-          <svg viewBox="0 0 96 96" *ngIf="camera.isOffline">
-            <line x1="0" y1="0" x2="96" y2="96"/>
-            <line x1="96" y1="0" x2="0" y2="96"/>
-          </svg>
-          <svg viewBox="0 0 96 96" *ngIf="camera.isUnauthorized">
-            <path class="st0" d="M83,40h-7c0-5.9,0-11.6,0-11.6C76,12.7,63.5,0,48,0C32.5,0,20,12.7,20,28.4c0,0,0,5.8,0,11.6h-6
-              c-2.2,0-4,1.8-4,4v44c0,2.2,1.8,4,4,4h69c2.2,0,4-1.8,4-4V44C87,41.8,85.2,40,83,40z M23,28.4C23,14.4,34.2,3,48,3s25,11.4,25,25.4
-              V40H23V28.4z M84,88c0,0.6-0.4,1-1,1H14c-0.6,0-1-0.4-1-1V44c0-0.6,0.4-1,1-1h69c0.6,0,1,0.4,1,1V88z"/>
-            <path class="st0" d="M48.5,55c-3.6,0-6.5,2.9-6.5,6.5c0,3.1,2.1,5.6,5,6.3c0,0.1,0,0.1,0,0.2v9c0,0.8,0.7,1.5,1.5,1.5
-              c0.8,0,1.5-0.7,1.5-1.5v-9c0-0.1,0-0.1,0-0.2c2.9-0.7,5.1-3.2,5.1-6.3C55,57.9,52.1,55,48.5,55z M48.5,65c-1.9,0-3.5-1.6-3.5-3.5
-              s1.6-3.5,3.5-3.5s3.5,1.6,3.5,3.5S50.5,65,48.5,65z"/>
-          </svg>
-          <span>{{ camera.isOffline ? 'offline' : (camera.isUnauthorized ? 'authentication required' : 'error' ) }}</span>
+          <nx-player-placeholder
+                  *ngIf="cameraError && !transportError; else unreachable"
+                  svgFileName="placeholder_camera_alert"
+                  [heading]="LANG.common.cameraStates.error()"
+                  [description]="cameraError">
+          </nx-player-placeholder>
+          <ng-template #unreachable>
+            <nx-player-placeholder
+                    *ngIf="transportError && !camera.isOffline && !camera.isUnauthorized"
+                    svgFileName="placeholder_camera_alert"
+                    [heading]="LANG.common.cameraStates.error()"
+                    [description]="LANG.common.cameraStates.noFormat()">
+            </nx-player-placeholder>
+            <nx-player-placeholder
+                    *ngIf="camera.isOffline && !camera.isUnauthorized"
+                    svgFileName="placeholder_camera_offline"
+                    [heading]="LANG.common.cameraStates.offline()"
+                    description="">
+            </nx-player-placeholder>
+            <nx-player-placeholder
+                    *ngIf="!camera.isOffline && camera.isUnauthorized"
+                    svgFileName="placeholder_camera_unauthorized"
+                    [heading]="LANG.common.cameraStates.unauthorized()"
+                    description="">
+            </nx-player-placeholder>
+          </ng-template>
         </div>
       </ng-template>
     </div>
 
-    <div class="controls-wrapper">
+    <div class="controls-wrapper" *ngIf="showElementsInFSM">
       <div class="controls-toggling-ear-outer-wrapper">
         <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
           <div class="controls-toggling-ear"  (click)="handleControlsTogglingEarClick()"></div>
         </div>
       </div>
       <div class="controls">
-        <playback-controls [enabled]="camera && showPlayerSection"></playback-controls>
-        <zoom-controls></zoom-controls>
+        <playback-controls [enabled]="camera && !transportError && camera.isOnline && !camera.isUnauthorized"></playback-controls>
+        <zoom-controls *ngIf="canViewArchives"></zoom-controls>
         <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
         <ng-template #noArchiveYet>
           <nx-pre-loader class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive"></nx-pre-loader>
           <ng-template #noArchive>
-            <div class="no-archive-message">No Archive</div>
+            <div class="no-archive-message"><span *ngIf="canViewArchives" translate>No Archive</span></div>
           </ng-template>
         </ng-template>
         <playback-state-indicator></playback-state-indicator>

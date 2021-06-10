@@ -22,11 +22,13 @@
                 [style.padding-right.px]="link.new_window || link.icon ? 0 : 8"
                 [ngClass]="{'active': headerService.currentLocation.path === link.url || checkActive(link.url) }">
                 <ng-template #internalLink>
-                    <a [routerLink]="link.url">
+                    <a [routerLink]="link.url" [ngClass]="{'has-icon': link.new_window || link.icon}">
                         {{link.name}}
                     </a>
                 </ng-template>
-                <a *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink" [href]="link.url" [target]="link.new_window ? '_blank' : '_self'">
+                <a *ngIf="link.new_window || !link.url.startsWith('/'); else internalLink"
+                    [href]="link.url" [target]="link.new_window ? '_blank' : '_self'"
+                    [ngClass]="{'has-icon': link.new_window || link.icon}">
                     {{link.name}}
                 </a>
                 <svg-icon

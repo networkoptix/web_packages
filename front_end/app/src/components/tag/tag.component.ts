@@ -38,8 +38,8 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() static;
     @Input() link;
     @Input() linkParam;
-
     @Input('value') selected: boolean;
+
     @Output() onClick = new EventEmitter<boolean>();
 
     public badgeType: string;
@@ -67,14 +67,15 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.selected = changes.selected?.currentValue;
-        setTimeout(() => {
-            if (!this.selected) {
-                this.deselectTag();
-            } else {
-                this.selectTag();
-            }
-        });
+        if (changes.selected?.currentValue) {
+            setTimeout(() => {
+                if (!changes.selected?.currentValue) {
+                    this.deselectTag();
+                } else {
+                    this.selectTag();
+                }
+            });
+        }
     }
 
     deselectTag() {
@@ -102,6 +103,11 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
 
     writeValue(value: any) {
         this.selected = value;
+        if (!this.selected) {
+            this.deselectTag();
+        } else {
+            this.selectTag();
+        }
     }
 
     /**

@@ -20,7 +20,10 @@
 </ng-template>
 
 <section *ngIf="capabilitiesNode.nodes && !errorManager.hasErrors; else showError" class="capabilities">
-    <h2 class="heading-link">{{capabilitiesNode.title}}</h2>
+    <h2 class="heading-link" *ngIf="capabilitiesNode.url; else noLinkHeader" [routerLink]="capabilitiesNode.url">{{capabilitiesNode.title}}</h2>
+    <ng-template #noLinkHeader>
+        <h2 class="heading-non-link" >{{capabilitiesNode.title}}</h2>
+    </ng-template>
     <div class="detail-blocks">
         <ng-container *ngFor="let capability of capabilitiesNode.nodes">
             <ng-container *ngTemplateOutlet="capabilityBlock;context{capability:capability}"></ng-container>

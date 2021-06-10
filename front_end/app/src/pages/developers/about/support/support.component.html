@@ -3,7 +3,10 @@
 </ng-template>
 
 <div *ngIf="!errorManager.hasErrors; else showError" class="support-footer">
-    <h2 class="support-link"[routerLink]="cleanSupportNode.url">{{cleanSupportNode.title}}</h2>
+    <h2 *ngIf="cleanSupportNode.url; else noLinkHeading" class="support-link"[routerLink]="cleanSupportNode.url">{{cleanSupportNode.title}}</h2>
+    <ng-template #noLinkHeading>
+        <h2>{{cleanSupportNode.title}}</h2>
+    </ng-template>
     <div class="support-wrapper">
         <div class="left-image">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + supportNode.icon.split(' ')[1]"></svg-icon>
