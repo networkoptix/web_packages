@@ -402,4 +402,161 @@ class TestMenuNodeFields:
 
 
 class TestMenuNodeMethods:
-    pass
+    def test_str(self, mocker):
+        mocker.patch.object(MenuNode, 'display_name', return_value='Epic Node')
+
+        no_parent_node = baker.prepare('MenuNode')
+        assert str(no_parent_node) == 'Item: Epic Node (Menu: None)'
+
+        level_1_node = baker.prepare('MenuNode', parent_menu=baker.prepare('Menu', name='Amazing Menu'))
+        assert str(level_1_node) == 'Item: Epic Node (Menu: Amazing Menu)'
+
+        level_3_node = baker.prepare(
+            'MenuNode', parent_menu=None,
+            parent_node=baker.prepare(
+                'MenuNode', parent_menu=None,
+                parent_node=baker.prepare(
+                    'MenuNode', parent_node=None,
+                    parent_menu=baker.prepare('Menu', name='Great Menu')
+                )
+            )
+        )
+        assert str(level_3_node) == 'Item: Epic Node (Menu: Great Menu)'
+
+    def test_display_name(self):
+        node = baker.prepare('MenuNode', name='', asset=None)
+        assert node.display_name() == 'New'
+
+        node = baker.prepare('MenuNode', name='Cool node', asset=None)
+        assert node.display_name() == 'Cool node'
+
+        node = baker.prepare('MenuNode', name='', asset=baker.prepare('Asset', name='Great Asset', asset_type=None))
+        assert node.display_name() == '(Asset: Great Asset)'
+
+        node = baker.prepare('MenuNode', name='Cool node', asset=baker.prepare('Asset', name='Great Asset', asset_type=None))
+        assert node.display_name() == 'Cool node'
+
+        node = baker.prepare('MenuNode', name='', asset=None, pk=999)
+        assert node.display_name() == str(999)
+
+    class TestGenerateNodeStructure:
+        @pytest.fixture(autouse=True)
+        def menu_node(self, menu_with_nodes, default_portal, default_customization):
+            self.menu = menu_with_nodes(1, 2)
+            self.portal = default_portal
+            self.customization = default_customization
+
+        @pytest.fixture()
+        def dss_mock(self, mocker):
+            dss = {
+                'title': mocker.MagicMock(),
+                'url': mocker.MagicMock()
+            }
+            dss['title'].find_actual_value.return_value = 'Great title'
+            dss['url'].find_actual_value.return_value = 'my_url'
+            return dss
+
+        # TODO: Revisit and add more variation to get more branch coverage
+        def test_simple(self, asset_factory, superuser, customization_factory, dss_mock):
+            cust_1 = customization_factory(name='cust1')
+            docs = list(asset_factory(
+                'doc', asset_type=AssetType.ASSET_TYPES.documentation, account=superuser, qty=3, customization_name='cust1'
+            ))
+            nodes = list(self.menu.nodes.all())
+            nodes[0].asset = docs[0]
+            nodes[0].save()
+            nodes[1].asset = docs[1]
+            nodes[1].save()
+            prefetched_menu = Menu.get_prefetched_menus(menu_name='auto_menu')[0]
+            prefetched_menu.nodes_list[0].nodes_list = []
+            prefetched_menu.nodes_list[1].nodes_list = []
+
+            node_structure = MenuNode.generate_node_structure(
+                prefetched_menu.nodes_list, self.portal, cust_1, {}, 1, 2, document_dss=dss_mock
+            )
+            assert node_structure == [
+                {
+                    'subtitle': 'node1_subtitle',
+                    'url': 'node1_url',
+                    'asset_id': docs[0].id,
+                    'accepted': True,
+                    'pending': False,
+                    'draft': False,
+                    'asset_type': 'Documentation Page',
+                    'related_asset_ids': [asset.id for asset in nodes[0].related_assets.all()],
+                    'next_item': True,
+                    'new_window': False,
+                    'icon': 'icon1.svg',
+                    'permissions': [],
+                    'authentication': 'Logged Out',
+                    'order': 0,
+                    'condition': '%DEVELOPERS_ENABLED%',
+                    'condition_met': False,
+                    'urlified': f'{docs[0].id}-my_url',
+                    'name': 'node1',
+                    'display_name': 'node1'
+                }, {
+                    'subtitle': 'node2_subtitle',
+                    'url': 'node2_url',
+                    'asset_id': docs[1].id,
+                    'accepted': True,
+                    'pending': False,
+                    'draft': False,
+                    'asset_type': 'Documentation Page',
+                    'related_asset_ids': [asset.id for asset in nodes[1].related_assets.all()],
+                    'next_item': False,
+                    'new_window': True,
+                    'icon': 'icon2.svg',
+                    'permissions': [],
+                    'authentication': 'Logged In',
+                    'order': 1,
+                    'condition': '',
+                    'condition_met': True,
+                    'urlified': f'{docs[1].id}-my_url',
+                    'name': 'node2',
+                    'display_name': 'node2'
+                }
+            ]
+
+    def test_enable_global(self, default_portal):
+        nodes = baker.make('MenuNode', _quantity=2, enabled=[])
+        MenuNode.enable_global(default_portal)
+        for node in nodes:
+            assert node.enabled.filter(name='default').exists()
+
+    def test_enabled_customizations(self, db):
+        node = baker.make('MenuNode')
+        cust1, cust2, cust3 = baker.make('Customization', name=baker.seq('cust'), _quantity=3)
+        node.enabled.set([cust1])
+        assert list(node.enabled_customizations) == [cust1]
+        node.enabled_list = [cust1, cust2]
+        assert node.enabled_customizations == [cust1, cust2]
+
+        node = baker.make('MenuNode')
+        node.asset = baker.make('Asset', name='asset', customizations=[cust1])
+        assert list(node.enabled_customizations) == [cust1]
+        node.asset.asset_customizations_list = [cust1, cust3]
+        assert node.enabled_customizations == [cust1, cust3]
+
+    def test_is_enabled(self, mocker):
+        node = baker.prepare('MenuNode')
+        cust = baker.prepare('Customization')
+        cust.id = 1
+        enabled_cust_patch = mocker.patch.object(type(node), 'enabled_customizations', new_callable=mocker.PropertyMock, return_value=[])
+        assert not node.is_enabled(cust)
+        enabled_cust_patch.return_value = [cust]
+        assert node.is_enabled(cust)
+
+    def test_get_parent(self):
+        menu = baker.prepare('Menu')
+        node = baker.prepare('MenuNode', parent_menu=menu)
+        assert node.get_parent() == menu
+        node = baker.prepare(
+            'MenuNode', parent_menu=None,
+            parent_node=baker.prepare(
+                'MenuNode', parent_menu=None,
+                parent_node=baker.prepare('MenuNode', parent_menu=menu, parent_node=None)
+            )
+        )
+        assert node.get_parent() == menu
+

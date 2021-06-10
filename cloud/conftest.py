@@ -1,6 +1,7 @@
 from typing import Iterable
 
 import pytest
+import model_bakery
 from model_bakery import baker
 
 from api.tests.utils import NxTestClient, NxAPIClient
@@ -80,7 +81,10 @@ def cloud_portal_type(db):
 
 @pytest.fixture
 def default_portal(default_customization, cloud_portal_type, db):
-    return Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)[0]
+    portal, created = Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)
+    if created:
+        portal.customizations.add(default_customization)
+    return portal
 
 
 @pytest.fixture()
@@ -267,3 +271,8 @@ def add_permission(db, cloud_portal_type):
         group.permissions.add(permission)
         user.groups.add(group)
     return _add_permission
+
+
+@pytest.fixture(scope='session')
+def bakery():
+    return model_bakery
