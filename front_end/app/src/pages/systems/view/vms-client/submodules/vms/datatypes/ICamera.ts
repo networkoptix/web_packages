@@ -67,6 +67,7 @@ export interface ICamera {
     isRecording: boolean,
     isLive: boolean,
     isAuthorized: boolean,
+    isUnauthorized: boolean,
 
     isScheduleEnabled: boolean,
     disableDualStreaming: boolean,

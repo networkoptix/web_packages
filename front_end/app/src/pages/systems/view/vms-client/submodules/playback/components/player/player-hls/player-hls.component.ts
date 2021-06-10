@@ -158,7 +158,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                             fatalErrorTimer = setTimeout(() => {
                                 console.error('HLS error, cannot recover');
                                 fatalErrorTimer = undefined;
-                                this.playback.setError(data.response.text);
+                                this.playback.setError(data.response?.text || '');
                             }, 30 * 1000);
                             // TODO: try to switch to WEBM or another alternative stream here
                             switch (data.type) {
