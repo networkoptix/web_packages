@@ -59,7 +59,7 @@ class FindActualValuesTestCase(TestCase):
         self.against_find_actual_value(draft=False, with_version=True)
 
 
-class TestMenuModelFields:
+class TestMenuFields:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.menu1 = baker.prepare('Menu', name='test-menu', depth=3)
@@ -280,3 +280,126 @@ class TestMenuMethods:
         menu = baker.prepare('Menu')
         assert menu.all_asset_ids == [1, 2, 3]
 
+
+class TestMenuNodeFields:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.node = baker.prepare('MenuNode')
+
+    def test_name(self):
+        name = self.node._meta.get_field('name')
+        assert name.verbose_name == 'name'
+        assert name.max_length == 255
+        assert name.blank
+
+    def test_subtitle(self):
+        subtitle = self.node._meta.get_field('subtitle')
+        assert subtitle.verbose_name == 'subtitle'
+        assert subtitle.max_length == 255
+        assert subtitle.blank
+
+    def test_url(self):
+        url = self.node._meta.get_field('url')
+        assert url.verbose_name == 'url'
+        assert url.max_length == 2048
+        assert url.blank
+
+    def test_asset(self):
+        asset = self.node._meta.get_field('asset')
+        assert asset.verbose_name == 'asset'
+        assert asset.null
+        assert asset.blank
+        assert asset.related_model == Asset
+        assert asset.related_query_name() == 'nodes'
+
+    def test_related_assets(self):
+        related_assets = self.node._meta.get_field('related_assets')
+        assert related_assets.verbose_name == 'related assets'
+        assert related_assets.default is None
+        assert related_assets.blank
+        assert related_assets.related_model == Asset
+        assert related_assets.related_query_name() == 'nodes_related'
+
+    def test_next_item(self):
+        next_item = self.node._meta.get_field('next_item')
+        assert not next_item.default
+        assert next_item.verbose_name == 'Link to next'
+
+    def test_new_window(self):
+        new_window = self.node._meta.get_field('new_window')
+        assert new_window.verbose_name == 'new window'
+        assert not new_window.default
+
+    def test_icon(self):
+        icon = self.node._meta.get_field('icon')
+        assert icon.verbose_name == 'icon'
+        assert icon.blank
+        assert icon.max_length == 255
+
+    def test_available(self):
+        available = self.node._meta.get_field('available')
+        assert available.verbose_name == 'available'
+        assert available.blank
+        assert available.related_model == Customization
+        assert available.related_query_name() == 'available_nodes'
+
+    def test_enabled(self):
+        enabled = self.node._meta.get_field('enabled')
+        assert enabled.verbose_name == 'enabled'
+        assert enabled.blank
+        assert enabled.related_model == Customization
+        assert enabled.related_query_name() == 'enabled_nodes'
+
+    def test_authentication(self):
+        authentication = self.node._meta.get_field('authentication')
+        assert authentication.verbose_name == 'authentication'
+        assert authentication.choices == MenuNode.AUTH_CHOICES
+        assert authentication.default == MenuNode.AUTH_CHOICES.both
+
+    def test_condition(self):
+        condition = self.node._meta.get_field('condition')
+        assert condition.verbose_name == 'condition'
+        assert condition.blank
+        assert condition.max_length == 255
+
+    def test_permissions(self):
+        permissions = self.node._meta.get_field('permissions')
+        assert permissions.verbose_name == 'permissions'
+        assert permissions.related_model == Permission
+        assert permissions.default is None
+        assert permissions.blank
+
+    def test_order(self):
+        order = self.node._meta.get_field('order')
+        assert order.verbose_name == 'order'
+        assert order.default == 0
+
+    def test_is_global(self):
+        is_global = self.node._meta.get_field('is_global')
+        assert is_global.default
+        assert is_global.verbose_name == 'Global'
+
+    def test_parent_menu(self):
+        parent_menu = self.node._meta.get_field('parent_menu')
+        assert parent_menu.verbose_name == 'parent menu'
+        assert parent_menu.null
+        assert parent_menu.blank
+        assert parent_menu.related_model == Menu
+        assert parent_menu.related_query_name() == 'nodes'
+
+    def test_parent_node(self):
+        parent_node = self.node._meta.get_field('parent_node')
+        assert parent_node.verbose_name == 'parent node'
+        assert parent_node.null
+        assert parent_node.blank
+        assert parent_node.related_model == MenuNode
+        assert parent_node.related_query_name() == 'nodes'
+
+    def test_touched(self):
+        touched = self.node._meta.get_field('touched')
+        assert touched.verbose_name == 'touched'
+        assert not touched.default
+
+
+class TestMenuNodeMethods:
+    pass
