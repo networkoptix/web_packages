@@ -1,7 +1,7 @@
 /* Here we override some default bootstrap styles and behavior for our purposes */
 
 
-@import '_theme_variables';
+@import "_theme_variables";
 
 /*
 These hacks are to make header and dialog have a bit different colors
@@ -114,7 +114,8 @@ button, select, .form-control{
 
   &:active,
   &.active {
-    background-color: $dark10;
+    background-color: $dark10 !important;
+    border: 1px solid $dark8 !important;
     box-shadow: inset 0 1px 0 0 $dark8;
     -webkit-box-shadow: inset 0 1px 0 0 $dark8;
   }
