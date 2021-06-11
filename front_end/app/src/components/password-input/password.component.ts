@@ -38,9 +38,10 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
+    @Input() readonly = false;
     @Input() hideErrors = false;
     @Input() hasError = false;
-    @Input() showTag = true;
+    @Input() web = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -65,7 +66,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
-        this.tagWidth = this.addons.nativeElement.offsetWidth;
+        this.tagWidth = this.addons?.nativeElement.offsetWidth;
 
         if (!c.value) {
             return {
@@ -122,7 +123,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     private loadCommonPasswords() {
         if (!this.CONFIG.commonPasswordsList) {
             this.passwordSubscription = this.api.getCommonPasswords()
-                .subscribe((data: { [key: string]: number; }) => {
+                .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
                 });
         }

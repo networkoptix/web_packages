@@ -555,11 +555,10 @@ angular.module('webInlineWizard')
             $log.log("Request /api/setupLocalSystem on cloud portal ...");
             stopCheckingIfSystemIsReady();
             mediaserver.setupLocalSystem($scope.settings.systemName,
-                $scope.settings.localLogin,
                 $scope.settings.localPassword,
                 $scope.systemSettings
             ).then(function(r){
-                if(r.data.error !== 0 && r.data.error !=='0') {
+                if(r.status !== 200 || r.data.error && r.data.error !== 0 && r.data.error !=='0') {
                     offlineErrorHandler(r);
                     return;
                 }

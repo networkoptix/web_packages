@@ -3,9 +3,9 @@
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
        [id]="componentId" [name]="componentId"
-       [ngClass]="{'hide-errors': hideErrors}"
+       [ngClass]="{'hide-errors': hideErrors, 'form-control': web}"
        type="email"
-       class="form-control"
+       [readonly]="readonly"
        required
        autocomplete="off"
        maxlength="255"
@@ -16,6 +16,7 @@
        type="text"
        name="registerEmailLocked"
        class="form-control"
+       [readonly]="readonly"
        [ngClass]="{'hide-errors': hideErrors}"
        [(ngModel)]="value"
        readonly>

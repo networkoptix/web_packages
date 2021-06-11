@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'django_celery_beat',
     'rest_framework',
     'rest_hooks',
+    'oauth2_provider',
     'corsheaders',
     'push_notifications',
     'api',
@@ -122,6 +123,7 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -444,7 +446,9 @@ IP_WHITELISTS = {
 }
 
 AUTH_USER_MODEL = 'api.Account'
-AUTHENTICATION_BACKENDS = ('api.account_backend.AccountBackend', )
+AUTHENTICATION_BACKENDS = (
+    'api.account_backend.AccountBackend',
+)
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
@@ -490,7 +494,7 @@ Regex allows cors for the following api calls:
 These urls need to be whitelisted because mediaserver use them.
 """
 # Comment out for swagger-ui local.
-CORS_URLS_REGEX = r'^/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?)'
+CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/login|ping|systems/(?:(?:dis)?connect|(?:[\w\d-]+/users))?))'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
@@ -553,8 +557,9 @@ SNS_CLIENT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.account_backend.BearerAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -653,7 +658,7 @@ SKINS = ['blue', 'green', 'orange']
 DEFAULT_SKIN = 'blue'
 
 if LOCAL_ENVIRONMENT:
-    _HOST = 'https://cloud-test.hdw.mx'
+    _HOST = 'https://dev3.cloud.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"

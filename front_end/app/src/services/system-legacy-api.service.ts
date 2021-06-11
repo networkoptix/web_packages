@@ -6,17 +6,17 @@ import {
     flatMap, map, mergeMap, retryWhen, timeout, tap
 }                                                  from 'rxjs/operators';
 
-import { NxConfigService, IConfig }     from './nx-config';
-import { ICamera, NxSystemUser }        from './system.service';
-import * as t                           from './system-api.types';
-import { Account }                      from './account.service';
-import { NxUriCacheService }            from './uri-cache.service';
-import { NxAppStateService }            from './nx-app-state.service';
-import { CookieService }                from 'ngx-cookie-service';
-import { NxHealthService }              from '../pages/health/health.service';
-import { IParams, ResourceParam, User } from './system-api.service';
-import { environment }                  from '@environments/environment';
-import { auth }                         from 'firebase';
+import { NxConfigService, IConfig }            from './nx-config';
+import { ICamera, NxSystemUser }               from './system.service';
+import * as t                                  from './system-api.types';
+import { Account }                             from './account.service';
+import { NxUriCacheService }                   from './uri-cache.service';
+import { NxAppStateService }                   from './nx-app-state.service';
+import { CookieService }                       from 'ngx-cookie-service';
+import { NxHealthService }                     from '../pages/health/health.service';
+import { IParams, ResourceParam }              from './system-api.service';
+import { User }                                from './system-api.types';
+import { environment }                         from '@environments/environment';
 
 export class NxSystemAPI {
     /*
@@ -59,7 +59,7 @@ export class NxSystemAPI {
 
     protected serverId: string;
     protected systemId: string;
-    protected currentUser: t.NormalResponse<User>;
+    protected currentUser: any;
     protected userEmail: string;
     protected userRequest: Promise<t.NormalResponse<User>>;
     protected urlBase: string;
@@ -386,21 +386,6 @@ export class NxSystemAPI {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
         return this.http.get<JSON>('/static/openapi_v1.json');
-    }
-
-    authCurrentUser(username: string, password: string) {
-        let auth, nonce, realm;
-
-        username = username.toLowerCase();
-
-        return this.getNonce(username).pipe(
-            mergeMap((response: any) => {
-                nonce = response.reply.nonce;
-                realm = response.reply.realm;
-                auth = this.digest(username, password, realm, nonce);
-                return this.cookieLogin(auth, false);
-            })
-        );
     }
 
     login(
@@ -1266,7 +1251,9 @@ export class NxSystemAPI {
     public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
         let url;
         function hlsResolutionOrEmpty(res) {
-            if (res === 'hi' || res === 'lo') { return res; }
+            if (res === 'hi' || res === 'lo') {
+                return res;
+            }
             return '';
         }
         switch (transport) {
@@ -1302,7 +1289,7 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
         const data = {
             url,
             currentPassword,

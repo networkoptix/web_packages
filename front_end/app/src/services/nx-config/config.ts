@@ -178,6 +178,7 @@ export const nxConfig: IConfig = {
         dir                   : '/static/images/icons/standard/',
         dirDevtools           : '/static/images/icons/dev_tools/',
         dirButtons            : '/static/images/icons/buttons/',
+        dirTextButtons        : '/static/images/icons/text_buttons/',
         dirNonStandard        : '/static/images/icons/',
         dirNonStandardView    : '/static/images/icons/view/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',

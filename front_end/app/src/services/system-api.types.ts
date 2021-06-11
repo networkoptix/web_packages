@@ -216,6 +216,22 @@ interface PredefinedRoles {
 };
 interface ec2PredefinedRoles extends Array<PredefinedRoles> {};
 
+export interface User {
+    canBeEdited: boolean;
+    canBeDeleted: boolean;
+    email: string;
+    id: string;
+    isCloud: boolean;
+    isAdmin?: boolean;
+    isEnabled: boolean;
+    userRoleId: string;
+    permissions: string;
+    // TODO: Remove the trash below after #VMS-2968
+    name: string;
+    fullName: string;
+    username?: string;
+}
+
 interface Users {
     cryptSha512Hash: string,
     digest: string,

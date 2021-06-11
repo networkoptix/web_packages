@@ -11,8 +11,7 @@ import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
-import { MenuNode }                 from './menus.service';
-import { MenuStructure } from '@services/nx-config/base-config';
+import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 
@@ -159,7 +158,7 @@ export class NxCloudApiService {
     }
 
     getCommonPasswords() {
-        return this.http.get('/static/scripts/commonPasswordsList.json');
+        return this.http.get<{ [key: string]: number; }>('/static/scripts/commonPasswordsList.json');
     }
 
     @staffSWBypass
@@ -215,7 +214,6 @@ export class NxCloudApiService {
         password: string,
         firstName: string,
         lastName: string,
-        subscribe: string,
         code: string
     ) {
         return this.http
@@ -225,7 +223,6 @@ export class NxCloudApiService {
                     password,
                     first_name : firstName,
                     last_name  : lastName,
-                    subscribe,
                     code
                 })
             .toPromise();
@@ -299,6 +296,24 @@ export class NxCloudApiService {
         return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
+    checkIfEmailExistsInCloud(email: string) {
+        return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
+    }
+
+    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string) {
+        let params = new HttpParams()
+            .set('email', email)
+            .set('password', password)
+            .set('client_id', clientId)
+            .set('redirect_uri', redirectUrl)
+            .set('response_type', responseType);
+        if (state) {
+            params = params.set('state', state);
+        }
+
+        return this.http.get<any>('/oauth/authenticate', { params: params }).toPromise();
+    }
+
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
@@ -308,6 +323,10 @@ export class NxCloudApiService {
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
+    }
+
+    loginCode(code: string) {
+        return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)

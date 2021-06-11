@@ -14,7 +14,6 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 })
 export class NxPasswordTagValidationComponent {
     @Input() forElement;
-    // @Input() value;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

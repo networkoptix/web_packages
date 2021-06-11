@@ -19,6 +19,7 @@ export interface LanguageI18NStaticTypes {
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
+    authorize:             Authorize;
     cameraFilters:         CameraFilters;
     clientProtocol:        any;
     common:                Common;
@@ -73,6 +74,41 @@ export interface ActiveActions {
     sendConfirm:         any;
     setNewPassword:      any;
     setNewPasswordLabel: any;
+}
+
+export interface Authorize {
+    loginCloudHeader:           any;
+    loginSystemHeader:          any;
+    connectHeader:              any;
+    expiredHeader:              any;
+    loginSystemSubheader:       any;
+    connectSubheader:           any;
+    expiredSubheader:           any;
+    connectAdditional:          any;
+    createText:                 any;
+    setupText:                  any;
+    asAccountSubheader:         any;
+    toAccountSubheader:         any;
+    forAccountSubheader:        any;
+    expiredAccountSubheader:    any;
+    createAccountHeader:        any;
+    activateHeader:             any;
+    createdText:                any;
+    activatedText:              any;
+    createdAdditional:          any;
+    activatedAdditional:        any;
+    passResetHeader:            any;
+    newPassHeader:              any;
+    newPassConfirmText:         any;
+    confirmHeader:              any;
+    loginError:                 any;
+    loginErrorAdditional:       any;
+    connectErrorAdditional:     any;
+    setupErrorAdditional:       any;
+    connectedText:              any;
+    setupConnectedText:         any;
+    stayLoggedInHelpText:       any;
+    termsAndConditionsHelpText: any;
 }
 
 export interface CameraFilters {
@@ -1001,6 +1037,7 @@ const typeMap: any = {
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
+        { json: "authorize", js: "authorize", typ: r("Authorize") },
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
         { json: "clientProtocol", js: "clientProtocol", typ: "any" },
         { json: "common", js: "common", typ: r("Common") },
@@ -1052,6 +1089,40 @@ const typeMap: any = {
         { json: "sendConfirm", js: "sendConfirm", typ: "any" },
         { json: "setNewPassword", js: "setNewPassword", typ: "any" },
         { json: "setNewPasswordLabel", js: "setNewPasswordLabel", typ: "any" },
+    ], false),
+    "Authorize": o([
+        { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },
+        { json: "loginSystemHeader", js: "loginSystemHeader", typ: "any" },
+        { json: "connectHeader", js: "connectHeader", typ: "any" },
+        { json: "expiredHeader", js: "expiredHeader", typ: "any" },
+        { json: "loginSystemSubheader", js: "loginSystemSubheader", typ: "any" },
+        { json: "connectSubheader", js: "connectSubheader", typ: "any" },
+        { json: "expiredSubheader", js: "expiredSubheader", typ: "any" },
+        { json: "connectAdditional", js: "connectAdditional", typ: "any" },
+        { json: "createText", js: "createText", typ: "any" },
+        { json: "setupText", js: "setupText", typ: "any" },
+        { json: "asAccountSubheader", js: "asAccountSubheader", typ: "any" },
+        { json: "toAccountSubheader", js: "toAccountSubheader", typ: "any" },
+        { json: "forAccountSubheader", js: "forAccountSubheader", typ: "any" },
+        { json: "expiredAccountSubheader", js: "expiredAccountSubheader", typ: "any" },
+        { json: "createAccountHeader", js: "createAccountHeader", typ: "any" },
+        { json: "activateHeader", js: "activateHeader", typ: "any" },
+        { json: "createdText", js: "createdText", typ: "any" },
+        { json: "activatedText", js: "activatedText", typ: "any" },
+        { json: "createdAdditional", js: "createdAdditional", typ: "any" },
+        { json: "activatedAdditional", js: "activatedAdditional", typ: "any" },
+        { json: "passResetHeader", js: "passResetHeader", typ: "any" },
+        { json: "newPassHeader", js: "newPassHeader", typ: "any" },
+        { json: "newPassConfirmText", js: "newPassConfirmText", typ: "any" },
+        { json: "confirmHeader", js: "confirmHeader", typ: "any" },
+        { json: "loginError", js: "loginError", typ: "any" },
+        { json: "loginErrorAdditional", js: "loginErrorAdditional", typ: "any" },
+        { json: "connectErrorAdditional", js: "connectErrorAdditional", typ: "any" },
+        { json: "setupErrorAdditional", js: "setupErrorAdditional", typ: "any" },
+        { json: "connectedText", js: "connectedText", typ: "any" },
+        { json: "setupConnectedText", js: "setupConnectedText", typ: "any" },
+        { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
+        { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

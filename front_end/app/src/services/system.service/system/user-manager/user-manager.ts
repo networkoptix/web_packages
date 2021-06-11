@@ -42,6 +42,7 @@ export class UserManager {
         this.checkPermissions();
     }
 
+    // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
         this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;
@@ -218,14 +219,6 @@ export class UserManager {
         });
 
         return this.users;
-    }
-
-    authCurrentUser(username, password) {
-        return this.mediaserver
-            .authCurrentUser(username, password).toPromise()
-            .then(result => {
-                return result;
-            });
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {

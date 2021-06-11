@@ -399,25 +399,31 @@ angular.module('webInlineWizard')
                     currentPassword: currentPassword
                 });
             },
-            setupCloudSystem:function(systemName, systemId, authKey, cloudAccountName, systemSettings){
+
+            setupCloudSystem: function(systemName, cloudSystemID, cloudAuthKey, cloudAccountName, systemSettings) {
+                var config = {
+                    name     : systemName,
+                    settings : stringifyValues(systemSettings),
+                    cloud: {
+                        systemId : cloudSystemID,
+                        authKey  : cloudAuthKey,
+                        owner    : cloudAccountName
+                    }
+                };
                 expireCookies();
-                return wrapPost(proxy + '/web/api/setupCloudSystem',{
-                    systemName: systemName,
-                    cloudSystemID: systemId,
-                    cloudAuthKey: authKey,
-                    cloudAccountName: cloudAccountName,
-                    systemSettings: stringifyValues(systemSettings)
-                });
+                return wrapPost('/rest/v1/system/setup', config);
             },
 
-            setupLocalSystem:function(systemName, adminAccount, adminPassword, systemSettings){
+            setupLocalSystem: function(systemName, password, systemSettings) {
+                var config = {
+                    name     : systemName,
+                    settings : stringifyValues(systemSettings),
+                    local    : {
+                        password: password
+                    }
+                };
                 expireCookies();
-                return wrapPost(proxy + '/web/api/setupLocalSystem',{
-                    systemName: systemName,
-                    adminAccount: adminAccount,
-                    password: adminPassword,
-                    systemSettings: stringifyValues(systemSettings)
-                });
+                return wrapPost('/rest/v1/system/setup', config);
             },
 
 

@@ -3,8 +3,8 @@ import {
 }                                    from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
-import { forkJoin }                  from 'rxjs';
-import { tap, catchError, flatMap }  from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap, catchError }      from 'rxjs/operators';
 
 import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
@@ -60,11 +60,13 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             injector,
             nxSystemAPIService
         );
+        this.mediaServerApi = this.nxSystemAPIService
+            .createConnection(undefined, undefined, undefined, () => of(''), true);
     }
 
     async get(forceUpdate = false) {
         try {
-            const { reply: user } = await this.mediaServerApi.getCurrentUser(forceUpdate);
+            const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
             const account = new Account(user);
             this.account = account;
             return account;
@@ -76,7 +78,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
     }
 
     login(login, password, remember = false, navigateHome = false) {
-        return this.mediaServerApi.login(login, password, remember)
+        return this.mediaServerApi.loginToken(login, password, remember)
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
                     const errorLookup = {
@@ -88,7 +90,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                     const resultCode = errorLookup[errorText];
                     return Promise.resolve({ ...res, errorText, resultCode });
                 }),
-                tap(res => {
+                tap((res: any) => {
                     this.sessionService.loginState = (res.resultCode) ? undefined : login;
                 })
             );

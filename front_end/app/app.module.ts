@@ -43,12 +43,13 @@ import { MenuModule }                          from '@src/menu';
 import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
 import { WebadminPageModule }                  from '@pages/webadmin-page.module';
 import { PagesModule }                         from '@pages/pages.module';
+import { NxAuthorizeModule }                   from '@components/authorize/authorize.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
 import { NxUriCachingInterceptor }             from '@src/interceptors/uri-cache-interceptor.service';
 import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-system-status-interceptor.service';
-import { CloudUnavailableInterceptor } from '@src/interceptors/cloud-unavailable-interceptor';
+import { CloudUnavailableInterceptor }         from '@src/interceptors/cloud-unavailable-interceptor';
 import { NxSwCacheInterceptor }                from '@src/interceptors/sw-cache-interceptor.interceptor';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { ServiceWorkerModule }                 from '@angular/service-worker';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -89,6 +90,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         DeviceDetectorModule.forRoot(),
         NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot(),
+        NxAuthorizeModule,
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production && !environment.isLocal, registrationStrategy: 'registerImmediately' })
@@ -101,12 +103,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CookieService,
         NxUriCacheService,
         {
-            provide: HTTP_INTERCEPTORS,
-            useClass: NxSwCacheInterceptor,
-            multi : true
+            provide  : HTTP_INTERCEPTORS,
+            useClass : NxSwCacheInterceptor,
+            multi    : true
         },
         {
-            provide : HTTP_INTERCEPTORS,
+            provide  : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
             multi    : true
         },

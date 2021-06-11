@@ -1,0 +1,46 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<header #activateHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile', 'd-none': (activated$ | async) }">
+    <div class="for-small">
+        <button *ngIf="!(fromEmail$ | async) && smallView"
+            class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('create')">
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [applyClass]="true"></svg-icon>
+        </button>
+        <h3 class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
+    </div>
+</header>
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
+    [ngStyle]="{ 'height': activateHeader ? 'calc(100% - ' + activateHeader.offsetHeight + 'px)' : '100%' }">
+    <form #activateAccountForm="ngForm">
+        <svg-icon nx-add-svg-src
+            [src]="CONFIG.icons.dirSectionPlaceholder + ((activated$ | async) ? 'success' : 'mail') + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
+            [svgStyle]="{'width.px': 280, 'height.px': 120}"
+            [applyClass]="true"></svg-icon>
+        <h3 class="authorize-header mt-3 mb-2">{{ (contentHeader$ | async) }}</h3>
+        <div class="content-message" [innerHTML]="(contentMessage$ | async)"></div>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="left" *ngIf="!(fromEmail$ | async)">
+            <button class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
+                <span translate>Log In</span>
+            </button>
+        </div>
+        <div class="right" [ngClass]="{ 'w-100': (fromEmail$ | async) }">
+            <button class="btn text-button" type="button" *ngIf="!(fromEmail$ | async) && !smallView" (click)="setCurrentState.emit('create')">
+                <svg-icon nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
+                    [svgStyle]="{'width.px': 24, 'height.px': 20}"
+                    [applyClass]="true"></svg-icon>
+                <span translate>Back</span>
+            </button>
+            <nx-process-button
+                [form]="activateAccountForm"
+                [process]="(activated$ | async) ? loginProcess : checkActivationProcess"
+                [svg]="!(fromEmail$ | async) && { src: 'arrow_right', height: '24', width: '24', color: 'light1' }"
+                buttonText="{{ ((fromEmail$ | async) ? 'Log In' : 'Next') | translate }}">
+            </nx-process-button>
+        </div>
+    </footer>
+</main>

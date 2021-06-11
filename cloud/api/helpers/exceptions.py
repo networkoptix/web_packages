@@ -81,12 +81,19 @@ class ErrorCodes(Enum):
         return logging.ERROR
 
 
-def api_success(data=None, status_code=status.HTTP_200_OK):
-    if data is not None:
-        return Response(data, status=status_code)
-    return Response({
-                'resultCode': ErrorCodes.ok.value
-            }, status=status_code)
+def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
+    if data is None:
+        data = {
+            'resultCode': ErrorCodes.ok.value
+        }
+    response = Response(data, status=status_code)
+    if cookies is not None:
+        for name, value in cookies.items():
+            if value == '':
+                response.delete_cookie(name)
+            else:
+                response.set_cookie(name, value, httponly=True, secure=True)
+    return response
 
 
 def require_params(request, params_list):
@@ -366,8 +373,8 @@ def log_error(request, error, log_level):
 
 
 def kill_session(request):
-    request.session.pop('login', None)
-    request.session.pop('password', None)
+    request.session.pop('access_token', None)
+    request.session.pop('refresh_token', None)
     request.session.pop('timezone', None)
     request.session.pop('time', None)
     django.contrib.auth.logout(request)
