@@ -53,7 +53,8 @@ Valid Email                               myemail@gmail.com
 *** Keywords ***
 Share Form Setup
     ${random}=    Generate Random String
-    ${server} =    Create Base System      shareform-${random}
+    ${owner}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
+    ${server} =    Create Base System      shareform-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}
     Open Browser and Go To URL    ${url}
     Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}

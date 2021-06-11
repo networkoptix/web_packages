@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Camera Suite Setup
-Test Setup        Log in to user and system    ${system['owner']}    ${system['id']}
+Test Setup        Log in to user and system    ${system}[owner]    ${system}[cloud id]
 Test Teardown     reset cameras and log out
 Suite Teardown    Camera Suite Teardown
 Force Tags        system    cameras
@@ -19,36 +19,93 @@ Camera Suite Setup
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${random}=   Generate Random String
     #Create Base Cloud System    cameras${random}
-    ${system}    Create Base System    cameras${random}
+    ${owner}=    Register and activate account with random email    mark    hamill    ${password}
+    ${system}     Create Base System    cameras-${random}    owner=${owner}
+    ${system2}    Create Base System    cameras2-${random}    add users=${False}    owner=${owner}
     Set Suite Variable    ${system}    ${system}
-    #Add Software Cameras    1    ${system['port']}
+    Set Suite Variable    ${system2}    ${system2}
+    Log To Console    starting software cam offline
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${camera port}=   Get Random Available Port
+    Close Connection
+    
+    Start Software Camera    ${system}[port]    ${camera port}
+    
+    Add Software Camera    ${system}[port]    ${camera port}    offline
+    Sleep    15
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${pid}    Execute Command    pgrep -f "port ${camera port}"
+    Execute Command    kill -9 ${pid}
+    Close Connection
+    
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${camera port2}=   Get Random Available Port
+    Close Connection
+    Start Software Camera    ${system}[port]    ${camera port2}
+    Add Software Camera    ${system}[port]    ${camera port2}    unauth
+    Sleep    15
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${pid}    Execute Command    pgrep -f "port ${camera port2}"
+    Execute Command    kill -9 ${pid}
+    Start Command    camera-venv/bin/python -m software_cameras --port ${camera port2} --user jim --password henson
+    Close Connection
+    Sleep    15
+    
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${camera port3}=   Get Random Available Port
+    Close Connection
+    Start Software Camera    ${system}[port]    ${camera port3}
+    Add Software Camera    ${system}[port]    ${camera port3}    online
+    Sleep    30
+    
+
+
+
+    #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    192.168.0.27     manufacturer=Sony    #SNC-XM636
+    #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-C7-C8-89    192.168.0.204    manufacturer=Sony    #SNC-DH210
+    #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    192.168.0.201    manufacturer=Sony    #SNC-CH120
+    #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    192.168.0.208    manufacturer=Sony    #SNC-DH120T
+    #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    192.168.0.209    manufacturer=Sony    #SNC-CH280
+    ${custom cameras}    Create And Add Custom Camera User Type and User
+    Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
+    Sleep    30
+    ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
+    Set Suite Variable    ${no perm}    ${no perm}
+    Set Suite Variable    ${custom cameras}    ${custom cameras}
     Open Browser and go to URL    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup
 
 Camera Suite Teardown
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Execute Command    docker container stop ${system['id']}
-    Execute Command    docker container rm ${system['id']}
-    Close Connection
+    Delete Base System    ${system}
+    Delete Base System    ${system2}
     Close All Browsers
+
+Set Radio Value
+    [Arguments]    ${element}    ${value}
+    ${current value}=   Get Element Attribute    ${element}    value
 
 *** Test Cases ***
 Camera settings is available to owner admin and custom with permission
     [Tags]    C76252     threaded
+    Wait Until Element is Visible    ${CAMERAS LINK}    90
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    capture page screenshot
+    Log Out
+    
+    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Log Out
     
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Log Out
-    
-    Log in to user and system    ${EMAIL CUSTOM CAMERAS}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${custom cameras}    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
@@ -62,7 +119,7 @@ Camera settings is available to owner admin and custom with permission
     Log Out
 
     # Not currentlty being tested
-    #Log in to user and system    ${EMAIL CUSTOM CAMERAS LIMITED}    ${AUTO TESTS SYSTEM ID}
+    #Log in to user and system    ${EMAIL CUSTOM CAMERAS LIMITED}    ${system}[cloud id]
     #Wait Until Element is Visible    ${CAMERAS LINK}
     #Click Link    ${CAMERAS LINK}
     #Wait Until Elements are Visible
@@ -76,57 +133,55 @@ Camera settings is available to owner admin and custom with permission
 
 Camera settings is not available to any viewers
     [Tags]    C76253    threaded
-    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
 Camera settings is not available by direct link to any viewers
     [Tags]    C76255    threaded
-    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
-    ${auth}=    Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
 
     Log Out
 
-    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
+    Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
+    Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
+    Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
 Camera settings are not available by direct url to unauthorized user
     [Tags]    C79007    Threaded
-    [Setup]    Log in    ${EMAIL NOPERM}    ${password}
-    ${auth}=    Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+    [Setup]    Log in    ${no perm}    ${password}
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
     FOR    ${x}   IN RANGE    4
@@ -136,7 +191,7 @@ Camera settings are not available by direct url to unauthorized user
 
 No cameras placeholder
     [Tags]    C76257    threaded
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS 4.0 SYSTEM ID}
+    [Setup]    Log in to user and system    ${system2}[owner]    ${system2}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements Are Visible    
@@ -146,20 +201,20 @@ No cameras placeholder
 
 Camera status match server
     [Tags]    C76256    Threaded
-    @{auth}=   Create List    admin    ${BASE PASS WORD}
+    @{auth}=   Create List    admin    ${BASE PASSWORD}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"SNC-XM636")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"SNC-XM636")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"SNC-XM636")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    no audio cam    scheduleEnabled
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}    no audio cam    scheduleEnabled
     Should Be True    ${value}
 
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    status
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    offline cam    status
     Should Be Equal As Strings    ${value}    Offline
     
-    ${value}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
+    ${value}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status
     Should Be Equal As Strings    ${value}    Unauthorized
 
     Wait Until Elements Are Visible    
@@ -188,64 +243,68 @@ Rename Camera
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera by Name    good cam
+    Select Camera by Name    SNC-XM636
 
-    Rename System or Hardware    good cam name changed 1
+    Rename System or Hardware    SNC-XM636 name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
-    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
-    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
+    Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    SNC-XM636 name changed 1
+    Wait Until Element Contains    ${EDITABLE TITLE}    SNC-XM636 name changed 1
     Log Out
 
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera by Name    good cam name changed 1
-    Rename System or Hardware    good cam name changed 2
+    Select Camera by Name    SNC-XM636 name changed 1
+    Rename System or Hardware    SNC-XM636 name changed 2
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
-    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 2
-    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 2
+    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636 name changed 2    id
+    Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    SNC-XM636 name changed 2
+    Wait Until Element Contains    ${EDITABLE TITLE}    SNC-XM636 name changed 2
     Log Out
 
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera by Name    good cam name changed 2
-    Rename System or Hardware    good cam name changed 3
+    Select Camera by Name    SNC-XM636 name changed 2
+    Rename System or Hardware    SNC-XM636 name changed 3
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
-    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed 3  
-    Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 3
+    Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    SNC-XM636 name changed 3  
+    Wait Until Element Contains    ${EDITABLE TITLE}    SNC-XM636 name changed 3
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam name changed 3    id
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    SNC-XM636 name changed 3    id
+    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    SNC-XM636
 
 Name change in client changes in cloud
     [Tags]    C76261    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera by Name    good cam
+    Select Camera by Name    SNC-XM636
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    cameraName    api name
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name
     Reload Page
-    Wait Until Element Contains    ${EDITABLE TITLE}    api name
+    Wait Until Element Is Visible    ${EDITABLE TITLE}
+    Element Attribute Value Should Be    ${EDITABLE TITLE}    innertext    api name
+    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    SNC-XM636
 
 View button
     [Tags]    C76262    threaded
@@ -254,31 +313,31 @@ View button
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    good cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
     # The above keyword returns the id with {} and we don't want those for the url
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
+    Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/view/${camera id}
     
-    Go To    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    offline cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    offline cam    id
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    offline cam    id
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
+    Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/view/${camera id}
 
-    Go To    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Select Camera by Name    unauth cam
-    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    id
+    ${camera id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    id
     ${camera id}=   Remove String    ${camera id}    }     {
     Click Button    ${CAMERAS VIEW BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view/${camera id}
+    Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/view/${camera id}
 
 Detailed Info
     [Tags]    C76274    Threaded
@@ -286,15 +345,15 @@ Detailed Info
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
+    Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/health
     Log Out
 
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
-    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
+    Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/health
     Log Out
 
 Aspect Ratio
@@ -302,7 +361,7 @@ Aspect Ratio
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Change Aspect Ratio    1:1
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
@@ -311,11 +370,17 @@ Aspect Ratio
     Reload Page
     Aspect Ratio Should Be    1:1
 
+    Change Aspect Ratio    Auto
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+
+
 Rotation
     [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Verify on Cameras Page
     Change Rotation    90˚
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -325,20 +390,25 @@ Rotation
     Reload Page
     Rotation Should Be    90˚
 
+    Change Rotation    0˚
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+
 Audio enable Disabled
     [Tags]    C76378    threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera by Name    good cam
+    Select Camera by Name    SNC-XM636
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${cams}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${cams}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
     FOR    ${camera}  IN  @{cams}
-        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
+        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''SNC-XM636'''    ${camera['audioEnabled']}
         Exit For Loop If    '''${audio enabled}'''=='''True'''
     END
     Should Be True    ${audio enabled}
@@ -395,13 +465,14 @@ Changes made in Image settings in thick client appear correctly on cloud portal
     [Tags]    C76374    Theaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Select Camera by Name    good cam
+    Select Camera by Name    SNC-XM636
     Verify on Cameras Page
     Element Should Contain    ${ASPECT RATIO DROPDOWN}    ${AUTO TEXT}
     Element Should Contain    ${ROTATION DROPDOWN}    0˚
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${data}=   evaluate    json.loads('''[{"name":"overrideAr","value":"1","resourceId":"{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"},{"name":"rotation","value":"90","resourceId":"{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"}]''')
-    Set All Camera Add Params    ${AUTO SYS IP}    ${auth}    ${data}
+    ${camera id}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    ${data}=   evaluate    json.loads('''[{"name":"overrideAr","value":"1","resourceId":"${camera id}"},{"name":"rotation","value":"90","resourceId":"${camera id}"}]''')
+    Set All Camera Add Params    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${data}
     Reload Page
     Verify on Cameras Page
     Element Should Contain    ${ASPECT RATIO DROPDOWN}    1:1
@@ -456,7 +527,7 @@ Recording Status
     Should Be Equal As Strings    ${state}    False
     Wait Until Element Is Visible    ${LICENSE REQUIRED WARNING}
 
-    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}
+    Go to    ${ENV}/systems/${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -477,60 +548,80 @@ Record Always
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Verify recording controls are open
-    ${value}    Get Checkbox Value    ${RECORD MOTION RADIO BUTTON}
-    Should Be Equal As Strings    ${value}    False
+    ${value}    Get Element Attribute     ${RECORD ALWAYS RADIO BUTTON}    value
+    Should Be Equal As Strings    ${value}    0
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
-    Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
+    Click Element    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
     Verify on Cameras Page
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    True
+    ${state}    Get Element Attribute     ${RECORD ALWAYS RADIO BUTTON}    value
+    Should Be Equal As Strings    ${state}    2
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+
+    Toggle Recording
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
     [Tags]    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
-    Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
+    Sleep    5
+    #Click Element    ${RECORD MOTION RADIO BUTTON}/following-sibling::span
+    Log To Console    clicked the radio button
+    sleep    30
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    sleep    5
     Reload Page
     Verify on Cameras Page
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    True
+    ${state}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
+    Log To Console    got elemenet value
+    sleep    30
+    Should Be Equal As Strings    ${state}    2
     Wait Until Element Is Visible    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+
+    Toggle Recording
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
     [Tags]    C76408    Threaded
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Verify Recording Controls Are Open
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
-    Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
+    Click Element    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
     Reload Page
     Verify on Cameras Page
-    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
-    Should Be Equal As Strings    ${state}    True
+    ${state}    Get Element Attribute    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    value
+    Should Be Equal As Strings    ${state}    2
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
 
+    Toggle Recording
+    Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 Check recording triple state
     [Tags]    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
@@ -569,13 +660,13 @@ Recording Mode functionality (with recording schedule set)
 Disabled Motion With Recording
     [Tags]    C78983    Threaded
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    good cam    id
-    Set Camera Attribute    ${AUTO SYS IP}    ${auth}    ${camera id}    motionType    8
+    ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    motionType    8
     Reload Page
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Element Should Be Enabled    ${RECORD ALWAYS RADIO BUTTON}
@@ -597,7 +688,7 @@ Change FPS
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
     Delete All Text    ${FPS INPUT}
@@ -615,7 +706,7 @@ Erasing current FPS has placeholder
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Toggle Recording
     Wait Until Element is Visible    ${FPS INPUT}
     Delete All Text    ${FPS INPUT}
@@ -646,7 +737,7 @@ Enable/disable motion detection with recording off
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Select Camera By Name    good cam
+    Select Camera By Name    SNC-XM636
     Verify on Cameras Page
     Wait Until Element Is Visible    ${DOT-MENU}
     Click Button    ${DOT-MENU}
@@ -706,7 +797,7 @@ Enable/disable motion detection with recording ones
 
 Placeholder shows when system is offline
     [Tags]    C76254    threaded
-    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    [Setup]    Log in to user and system    ${system}[owner]    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
@@ -715,7 +806,7 @@ Placeholder shows when system is offline
     ...    ${OFFLINE MESSAGE}
     Log Out
 
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
@@ -803,12 +894,12 @@ UDP stream settings
     Reload Page
     
     Log    1
-    ${UDP id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    UDP cam    id
+    ${UDP id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    UDP cam    id
     @{auth}=   Create List    admin    ${password}
-    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${UDP id}    UDP cam changed
+    Camera Name Should Be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${UDP id}    UDP cam changed
     Wait Until Element Contains    ${EDITABLE TITLE}    UDP cam changed
     Log    2
-    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${cameras}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
     FOR    ${camera}  IN  @{cameras}
         ${UDP json}=   Set Variable If    '''${camera['name']}'''=='''UDP cam changed'''    ${camera}
         Exit For Loop If    '''${camera['name']}'''=='''UDP cam changed'''
@@ -864,12 +955,12 @@ RTSP stream settings
     Reload Page
     
     Log    1
-    ${RSTP id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    RSTP cam    id
+    ${RSTP id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    RSTP cam    id
     @{auth}=   Create List    admin    ${password}
-    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${RSTP id}    RSTP cam changed
+    Camera Name Should Be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${RSTP id}    RSTP cam changed
     Wait Until Element Contains    ${EDITABLE TITLE}    RSTP cam changed
     Log    2
-    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${cameras}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
     FOR    ${camera}  IN  @{cameras}
         ${RSTP json}=   Set Variable If    '''${camera['name']}'''=='''RSTP cam changed'''    ${camera}
         Exit For Loop If    '''${camera['name']}'''=='''RSTP cam changed'''
@@ -925,12 +1016,12 @@ HTTP stream settings
     Reload Page
     
     Log    1
-    ${http id}=   Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    HTTP cam    id
+    ${http id}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    HTTP cam    id
     @{auth}=   Create List    admin    ${password}
-    Camera Name Should Be    ${auth}    ${AUTO SYS IP}    ${http id}    HTTP cam changed
+    Camera Name Should Be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${http id}    HTTP cam changed
     Wait Until Element Contains    ${EDITABLE TITLE}    HTTP cam changed
     Log    2
-    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${cameras}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
     FOR    ${camera}  IN  @{cameras}
         ${http json}=   Set Variable If    '''${camera['name']}'''=='''HTTP cam changed'''    ${camera}
         Exit For Loop If    '''${camera['name']}'''=='''HTTP cam changed'''
@@ -969,7 +1060,7 @@ Changing credentials from invalid ones to valid ones makes the camera authorized
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
     Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
     @{auth}=   Create List    admin    ${BASE PASSWORD}
-    ${status}    Get Camera Attribute By Camera Name    ${auth}    ${AUTO SYS IP}    unauth cam    status
+    ${status}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status
     Should Be Equal As Strings    ${status}    Online
     Click Button    ${EDIT CREDENTIALS BUTTON}
     Verify Authentication Form

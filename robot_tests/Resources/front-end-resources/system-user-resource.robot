@@ -296,10 +296,10 @@ Check Special Hints
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
 
-Get Client Custom Permissions
-    [Arguments]    ${custom roles}
+Get Custom Permissions
+    [Arguments]    ${custom roles}    ${role name}
     FOR    ${role}    IN    @{custom roles}
-        Return From Keyword If    '''${role["name"]}'''=='''Client Custom'''    ${role}
+        Return From Keyword If    '''${role["name"]}'''=='''${role name}'''    ${role}
     END
 
 Change All Local Users Login
