@@ -15,7 +15,7 @@ import ICamera, {
     SimpleTimeRange
 }                                                 from '../../vms-client/submodules/vms/datatypes/ICamera';
 import PlaybackService                            from '../../vms-client/submodules/playback/services/playback.service';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, timer } from 'rxjs';
 import VmsState, { VMS_MODE }                     from '../../vms-client/submodules/vms/datatypes/VmsState';
 import FpsMeterService                            from '@services/fps-meter.service';
 import WebClientUxService, { WebclientUxState }   from '../../services/webclient-ux.service';
@@ -325,6 +325,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this._log('getRecords ALREADY in progress');
             return;
         }
+        this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
         if (!this.system.userManager.permissions.viewArchives) {
@@ -341,25 +342,24 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
                         const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
                         const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
-                        const showToLive = lastRecordDuration === -1 || this.camera.isLive || this.camera.isUnauthorized;
+                        const showToLive = this.camera.isLive || this.camera.isUnauthorized;
                         const now = Date.now();
                         const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
                         const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
-                        // Extends the last chunk to live. Not sure if we want this.
-                        // if (showToLive) {
-                        //     archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
-                        //     this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
-                        // }
+                        if (lastRecordDuration === -1) {
+                            archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
+                            this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
+                        }
                         this._log('non-empty archive', this.id, range, archive);
                         this.vms.setCameraRecords(this.id, range, archive);
                         this.playback.restore(true);
-                        this.startPollingForNewlyRecordedChunks();
                     } catch (e) {
                         this._warn(e, 'caught while requesting camera archive ranges');
                     }
                 }
             }).then(() => {
                 this._initSelectedCamera();
+                this.startPollingForNewlyRecordedChunks();
                 this.getRecordsInProgress = undefined;
             });
         }
@@ -372,11 +372,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected _newlyRecordedIntervalHandle
 
     public startPollingForNewlyRecordedChunks () {
-        const since = this.vms.selectedCamera.archiveRange.end;
-        if (this._newlyRecordedIntervalHandle) {
-            clearInterval(this._newlyRecordedIntervalHandle);
-        }
-        this._newlyRecordedIntervalHandle = setInterval(() => {
+        timer(0, 10 * 1000).pipe(takeUntil(this.unsub$)).subscribe(() => {
+            const since = this.vms.selectedCamera.archiveRange.end;
             const now = Date.now();
             const cameraId = this.id;
             this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
@@ -387,8 +384,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     this._log('newly recorded', ar);
                     const prepared = ar.reply.map(r => {
                         // the server has a weird habit of sending strings instead of numbers every now and then
-                        let start = parseInt(r.startTimeMs);
-                        start = Math.max(start, since);
+                        const start = parseInt(r.startTimeMs);
                         const duration = parseInt(r.durationMs);
                         return new SimpleTimeRange(
                             start,
@@ -397,10 +393,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                                 : start + duration
                         );
                     });
-                    this.vms.setCameraNewlyRecordedChunks(cameraId, prepared);
+                    if (prepared.length > 0) {
+                        this.vms.addRecordsToSelectedCamera(cameraId, prepared);
+                    }
                 }
             });
-        }, 10 * 1000);
+        });
     }
 
     protected async _getServerTimes () {

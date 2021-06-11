@@ -100,8 +100,8 @@ export class VideoManagementSystemService {
         if (!this.serverTimes?.length) {
             return 0;
         }
-        const clientTZO = -(new Date()).getTimezoneOffset() * 60000
-        const serverTZO = this.serverTimes[0].timeZoneOffset
+        const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
+        const serverTZO = this.serverTimes[0].timeZoneOffset;
         // console.log('timeZoneOffset', clientTZO, serverTZO, clientTZO - serverTZO)
         return serverTZO - clientTZO; // use yourTimestampMs + vms.timeZoneOffset to display server time on client
     }
@@ -124,9 +124,9 @@ export class VideoManagementSystemService {
         this.selectedCamera?.setRecords(range, records);
     }
 
-    public setCameraNewlyRecordedChunks (cameraId: string, records: CameraArchive) {
+    public addRecordsToSelectedCamera (cameraId: string, records: CameraArchive) {
         if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
-            this.selectedCamera.setNewlyRecordedChunks(records);
+            this.selectedCamera.pushRecordedChunks(records);
         } else {
             this._warn('attempt to set camera newly recorded records while in NOT_INITIALIZED state', cameraId, records);
         }
