@@ -5,7 +5,10 @@ mkdir -p /root/.config/nx_ini
 # Override external.dat
 [ "$COPY" == "copy" ] && cp external.dat /opt/$CUSTOMIZATION/mediaserver/bin
 
-# Change cloud host. Defaults to cloud-test
+#Override cloud host for systems >= 4.3
+echo "customizedCloudHost=\"default:$CLOUD_HOST\"" >> /root/.config/nx_ini/nx_vms_server.ini
+
+# Change cloud host for systems < 4.3. Defaults to cloud-test
 /patch-cloud-host.sh $CLOUD_HOST
 
 # Changes the port
