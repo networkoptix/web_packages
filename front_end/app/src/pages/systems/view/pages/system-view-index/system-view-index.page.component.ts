@@ -338,8 +338,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         cameras          : ms.cameras.map(processCameras)
                     })));
 
-                    firstLoad.next();
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
+                    firstLoad.next();
                 });
         }).catch(e => {
             this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
