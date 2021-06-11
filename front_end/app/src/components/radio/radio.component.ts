@@ -19,14 +19,14 @@ import {
  */
 
 @Component({
-    selector     : 'nx-radio',
-    templateUrl  : 'radio.component.html',
-    styleUrls    : ['radio.component.scss'],
-    providers    : [
+    selector    : 'nx-radio',
+    templateUrl : 'radio.component.html',
+    styleUrls   : ['radio.component.scss'],
+    providers   : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxRadioComponent),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxRadioComponent),
+            multi       : true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -35,7 +35,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() componentId: string;
     @Input() name: string;
     @Input() label: string;
-    @Input() value: 'tristate' | string;
+    @Input() value: string | number;
     @Input() disabled;
     @Output() onClick = new EventEmitter<string>();
 
@@ -67,7 +67,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     /**
      * Write a new value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value) {
         if (value === 'tristate' || value === 1) {
             this.state = this._rbxStates.rbOrElse; // 'checked'
         } else if ((value && this.value === value)) {
@@ -104,6 +104,6 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
 
         // Propagate component's value attribute (model)
         this.propagateChange(this.value);
-        this.onClick.emit(this.value);
+        this.onClick.emit(this.value.toString());
     }
 }

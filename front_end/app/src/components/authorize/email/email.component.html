@@ -2,7 +2,7 @@
 <header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <svg-icon nx-add-svg-src
         [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
-        [svgStyle]="{'width.px': 280, 'height.px': 120}"
+        [svgStyle]="{'width.px': '280', 'height.px': '120'}"
         [applyClass]="true"></svg-icon>
     <h3 class="authorize-header">{{ header }}</h3>
     <h4 *ngIf="subHeader" class="authorize-subheader">{{ subHeader }}</h4>
@@ -73,7 +73,7 @@
             >
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'plus.svg'"
-                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
                 <span class="pl-1" translate>Create Account</span>
             </button>

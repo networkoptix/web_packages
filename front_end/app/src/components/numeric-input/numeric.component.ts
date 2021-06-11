@@ -44,7 +44,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     @Input() componentId: string;
     @Input() disabled;
     @Input() required;
-    @Input() placeholder = '- -';
+    @Input() placeholder: string | number = '- -';
 
     @Output() onChange = new EventEmitter<number>();
 

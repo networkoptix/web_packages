@@ -113,7 +113,7 @@
                             <div class="breadcrumb-button collapsed-breadcrumb">
                                 <a class="px-2 d-block w-100 h-100" (click)="headerService.handleNav(filteredBreadcrumbs[hiddenBreadcrumbs$.value - 1], $event)">
                                     <ng-template #backButton>
-                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_back.svg'" [svgStyle]="{'width.px': 24}"></svg-icon>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_back.svg'" [svgStyle]="{'width.px': '24'}"></svg-icon>
                                     </ng-template>
                                     <span *ngIf="filteredBreadcrumbs.length !== (hiddenBreadcrumbs$ | async);else backButton">...</span>
                                 </a>

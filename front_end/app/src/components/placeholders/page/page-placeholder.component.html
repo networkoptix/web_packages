@@ -12,7 +12,7 @@
                 <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
                 <div *ngIf="!iconClass && iconVisible" [attr.name]="type" class="placeholder-icon">
                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
-                              [svgStyle]="{ 'width.px': iconSize }"></svg-icon>
+                              [svgStyle]="{ 'width.px': iconSize.toString() }"></svg-icon>
                 </div>
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
                      [innerHTML]="placeholderTitle"></h2>
@@ -25,5 +25,5 @@
             </div>
         </div>
     </div>
-    <nx-footer *ngIf="withFooter" center="true" [ngClass]="'footer'"></nx-footer>
+    <nx-footer *ngIf="withFooter" [center]="true" [ngClass]="'footer'"></nx-footer>
 </div>

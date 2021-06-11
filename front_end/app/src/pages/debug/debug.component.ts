@@ -10,7 +10,7 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { Watcher }                   from '../../services/apply.service';
-import { NxSystemsService }          from '../../services/systems.service';
+import { NxSystemsService, NxSystemWithUserInfo }          from '../../services/systems.service';
 import { NxSystem }                  from '../../services/system.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { WINDOW }                    from '../../services/window-provider';
@@ -23,6 +23,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 export class NxDebugComponent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    // eslint-disable-next-line no-tabs
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
     debugProcess;
@@ -60,8 +61,8 @@ export class NxDebugComponent {
     notifyCounter = 0;
     password: '';
     result = '';
-    system: NxSystem;
-    systems: NxSystem[];
+    system: NxSystemWithUserInfo;
+    systems: NxSystemWithUserInfo[];
     type = 'activate_account';
     userEmail = 'ebalashov@networkoptix.com';
     constructor(@Inject(WINDOW) private window: Window,
@@ -107,7 +108,7 @@ export class NxDebugComponent {
     }
 
     private init() {
-        this.systemsService.systemsSubject.subscribe((systems: NxSystem[]) => {
+        this.systemsService.systemsSubject.subscribe((systems: NxSystemWithUserInfo[]) => {
             this.systems = systems;
             if (!this.debugProxySettings.systemId.value && this.systems[0]) {
                 this.debugProxySettings.systemId.value = this.systems[0].id;

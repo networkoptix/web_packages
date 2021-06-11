@@ -4,7 +4,7 @@
         <button *ngIf="smallView" class="btn mobile-back-button" type="button" (click)="goBack()">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
                 [applyClass]="true"></svg-icon>
         </button>
         <h3 class="authorize-header">{{ LANG.authorize.passResetHeader() }}</h3>
@@ -37,7 +37,7 @@
             <div class="email-sent">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dirSectionPlaceholder + 'mail' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'" 
-                    [svgStyle]="{'width.px': 280, 'height.px': 120}"
+                    [svgStyle]="{'width.px': '280', 'height.px': '120'}"
                     [applyClass]="true"></svg-icon>
                 <h3 class="authorize-header" translate>We've sent you an email</h3>
                 <p translate>Please follow instructions there to reset your password and return here to log in again.</p>
@@ -49,7 +49,7 @@
             <button class="btn text-button" type="button" (click)="goBack()" *ngIf="!smallView">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{'width.px': 24, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '24', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
                 <span translate>Back</span>
             </button>

@@ -23,9 +23,9 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-cam-table',
-    templateUrl : './cam-table.component.html',
-    styleUrls : ['./cam-table.component.scss'],
+    selector      : 'nx-cam-table',
+    templateUrl   : './cam-table.component.html',
+    styleUrls     : ['./cam-table.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {

@@ -8,6 +8,7 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,7 +28,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Output() loginPasswordChange = new EventEmitter<string>();
     @Input() passwordProcess: Process;
     @Input() errorCode: string;
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     // @Output() isStayingLoggedIn = new EventEmitter<boolean>(); stayLoggedIn likely to be removed
 
     sendPassword: any;

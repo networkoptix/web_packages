@@ -8,6 +8,7 @@ import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
 import { Process }                              from '@services/process.service';
 import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -37,7 +38,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         lastName: string;
     }>();
 
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     existingEmail: string;
     createEmail: string;

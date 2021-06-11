@@ -17,7 +17,8 @@
   <zoom-controls></zoom-controls>
   <timeline *ngIf="showTimeline else noArchiveYet" (dblclick)="onTimeLineDoubleClick($event)"></timeline>
   <ng-template #noArchiveYet>
-    <div class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive">Loading...</div>
+    <!-- Commented out to make strict templates work, this component is part of a view used only for testing/prototyping -->
+    <!-- <div class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive">Loading...</div> -->
     <ng-template #noArchive>
       <div class="no-archive-message">No Archive</div>
     </ng-template>

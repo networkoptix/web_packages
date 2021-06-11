@@ -24,7 +24,6 @@
                        autocomplete="off"
                        placeholder="Search"
                        [ngModel]="filter"
-                       [ngModelOptions]="{debounceTime : 500}"
                        (ngModelChange)="applyLocalFilter($event)">
                 <span class="glyphicon close-icon search-clear"
                       [hidden]="filter == ''" (click)="applyLocalFilter('')"></span>

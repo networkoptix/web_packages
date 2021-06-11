@@ -4,11 +4,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { NxProcessService, Process }     from '../../services/process.service';
 import { NxDialogsService }              from '../../dialogs/dialogs.service';
+import { ISelect } from '@pages/systems/settings/cameras/cameras.component';
 
 @Component({
-    selector : 'sandbox-component',
+    selector    : 'sandbox-component',
     templateUrl : 'sandbox.component.html',
-    styleUrls : ['sandbox.component.scss']
+    styleUrls   : ['sandbox.component.scss']
 })
 
 export class NxSandboxComponent {
@@ -27,6 +28,10 @@ export class NxSandboxComponent {
     mode;
     modeSelected;
     ddWidth: number;
+    selectedAspect: ISelect;
+    aspectRatios: ISelect[];
+    selectedRotation: ISelect;
+    rotations: ISelect[];
     filter;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
@@ -66,6 +71,21 @@ export class NxSandboxComponent {
         this.edit = false;
 
         this.theme = 'default';
+
+        this.aspectRatios = [
+            { name: '4:3', value: 1.33333 },
+            { name: '16:9', value: 1.77778 },
+            { name: '1:1', value: 1 }
+        ];
+        this.selectedAspect = this.aspectRatios[0];
+
+        this.rotations = [
+            { name: '0˚', value: 0 },
+            { name: '90˚', value: 90 },
+            { name: '180˚', value: 180 },
+            { name: '270˚', value: 270 }
+        ];
+        this.selectedRotation = this.rotations[0];
 
         this.filter = {
             query   : '',

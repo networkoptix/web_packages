@@ -23,7 +23,7 @@
             *ngIf="machine.state.show.systemDropdown"
             class="mb-2"
             id="system"
-            merge="true"
+            [merge]="true"
             [stillLoading]="!systemsLoaded"
             [items]="processedSystems"
             [selected]="targetSystemDropdown"

@@ -8,6 +8,7 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -23,7 +24,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
     @Input() smallView: boolean;
     @Input() clientType: string;
     @Input() processTryAgain: Process;
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     additionalText: string;
     templateText: {

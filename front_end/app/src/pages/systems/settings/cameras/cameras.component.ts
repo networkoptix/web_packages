@@ -33,7 +33,8 @@ import { NxUriService, ChildRoutes }    from '@services/uri.service';
 import { NxHealthService }              from '@pages/health/health.service';
 import {
     InfoBlockColumns, InfoBlockSection,
-    InfoBlockLine
+    InfoBlockLine,
+    InfoBlockSize
 }                                       from '@components/info-block/info-block.component';
 import { NxUtilsService }               from '@services/utils.service';
 
@@ -47,7 +48,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     isMobile: boolean;
-
+    infoBlockSizeEnum = InfoBlockSize;
     unsub$: Subject<boolean> = new Subject();
     public reload$ = new BehaviorSubject(0);
     width$ = new BehaviorSubject(0);

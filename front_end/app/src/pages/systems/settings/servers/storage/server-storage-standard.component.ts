@@ -476,10 +476,10 @@ export class NxSystemStorageComponent implements OnInit {
         this.selectMode(store).value === 'modeNotUsed'
 
     changeMode(
-        { isBackup, storageId, id: _id, url, reservedSpace: spaceLimit, isUsedForWriting: usedForWriting, storageType },
+        { isBackup, storageId, url, reservedSpace: spaceLimit, usedForWriting, storageType }: Storage,
         selected
     ) {
-        const id = this.normalizeId(storageId || _id);
+        const id = this.normalizeId(storageId);
         const updateParams = {
             id, isBackup, url, spaceLimit, usedForWriting, parentId: this.serverId, storageType
         };

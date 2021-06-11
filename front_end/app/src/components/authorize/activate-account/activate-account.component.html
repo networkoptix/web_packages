@@ -5,7 +5,7 @@
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('create')">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
                 [applyClass]="true"></svg-icon>
         </button>
         <h3 class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
@@ -16,7 +16,7 @@
     <form #activateAccountForm="ngForm">
         <svg-icon nx-add-svg-src
             [src]="CONFIG.icons.dirSectionPlaceholder + ((activated$ | async) ? 'success' : 'mail') + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
-            [svgStyle]="{'width.px': 280, 'height.px': 120}"
+            [svgStyle]="{'width.px': '280', 'height.px': '120'}"
             [applyClass]="true"></svg-icon>
         <h3 class="authorize-header mt-3 mb-2">{{ (contentHeader$ | async) }}</h3>
         <div class="content-message" [innerHTML]="(contentMessage$ | async)"></div>
@@ -31,7 +31,7 @@
             <button class="btn text-button" type="button" *ngIf="!(fromEmail$ | async) && !smallView" (click)="setCurrentState.emit('create')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{'width.px': 24, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '24', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
                 <span translate>Back</span>
             </button>

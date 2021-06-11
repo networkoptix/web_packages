@@ -8,6 +8,7 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,7 +27,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Input() emailProcess: Process;
     @Input() errorCode: string;
     @Input() reactivate: () => Promise<any>;
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendEmail: any;
     @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;

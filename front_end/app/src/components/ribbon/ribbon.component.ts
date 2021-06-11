@@ -18,10 +18,10 @@ export interface RibbonAction {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector     : 'nx-ribbon',
-    templateUrl  : 'ribbon.component.html',
-    styleUrls    : ['ribbon.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-ribbon',
+    templateUrl   : 'ribbon.component.html',
+    styleUrls     : ['ribbon.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxRibbonComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

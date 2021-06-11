@@ -21,7 +21,6 @@ import {
     encapsulation : ViewEncapsulation.None
 })
 export class NxAlertBlockComponent implements OnInit {
-
     @Input() iconSrc: string;
     @Input() line1: string;
     @Input() line2: string;

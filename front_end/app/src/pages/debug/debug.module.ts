@@ -28,8 +28,8 @@ const appRoutes: Routes = [
     declarations : [
         NxDebugComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxDebugComponent
     ]
 })

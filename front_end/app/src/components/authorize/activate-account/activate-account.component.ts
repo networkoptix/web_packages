@@ -12,6 +12,7 @@ import {
 }                                    from 'rxjs';
 import { filter, map, takeUntil }    from 'rxjs/operators';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,7 +28,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     @Input() viewType: string;
     @Input() smallView: boolean;
     @Input() loginEmail: string;
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     @Input() checkActivationProcess: Process;
     @Input() checkIfActivated: () => {};
     @Input() loginProcess: Process;

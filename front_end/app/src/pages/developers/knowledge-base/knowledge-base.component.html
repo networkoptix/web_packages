@@ -34,7 +34,7 @@
             <div *ngIf="node.cardIcon" class="heading-icon">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + node.cardIcon"
-                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                 ></svg-icon>
             </div>
             <p>{{node.cardLead}}</p>
@@ -46,9 +46,6 @@
     </nx-block>
 </ng-template>
 
-<ng-template #articleBlock  let-index="index">
-    <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
-</ng-template>
 
 <!-- End of Card Templates -->
 
@@ -93,7 +90,7 @@
                 (ngModelChange)="updateSearchQuery($event)"
                 [placeholder]="'Knowledgebase Search' | translate"
                 layout="compact"></nx-search>
-            <ng-container *ngIf="pageNode.cardClass !== 'article';else articleBlock">
+            <ng-container *ngIf="pageNode.cardClass !== 'article'">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading; else preloader">
                         <ng-container *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}"></ng-container>

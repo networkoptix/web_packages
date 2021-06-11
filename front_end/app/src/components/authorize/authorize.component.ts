@@ -34,6 +34,7 @@ interface AuthorizeParams {
     message?: 'passwordReset' | 'activated'
 };
 
+export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error'
 export enum AuthorizeState {
     email = 'email',
     password = 'password',
@@ -145,7 +146,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    setCurrentState(state: AuthorizeState) {
+    setCurrentState(state: AuthorizeStateType) {
         this.currentState = AuthorizeState[state];
     }
 

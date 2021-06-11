@@ -3,7 +3,7 @@
         <header>
             <h4 translate>Advanced System Settings</h4>
         </header>
-        <nx-section *ngIf="(systemSettings | keyvalue)?.length > 0">
+        <nx-section *ngIf="$any(systemSettings | keyvalue)?.length > 0">
             <div class="form-group col-12 row p-0 m-0 mb-3"
                  *ngFor="let setting of systemSettings | keyvalue">
 

@@ -37,7 +37,8 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableIvy": true
+    "enableIvy": true,
+    "strictTemplates": true
   },
   "include": [
     "app/main.ts",

@@ -3,12 +3,12 @@
 <div *ngIf="systemNoAccess || system && (secondaryMerge || system.show404); else cameras">
     <nx-page-placeholder
             *ngIf="system?.show404" type="404"
-            withFooter showMainButton="true">
+            withFooter [showMainButton]="true">
     </nx-page-placeholder>
 
     <nx-page-placeholder
             *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM"
-            withFooter showMainButton="true">
+            withFooter [showMainButton]="true">
     </nx-page-placeholder>
 
     <nx-page-placeholder

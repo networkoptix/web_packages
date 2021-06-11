@@ -5,11 +5,11 @@
                 *ngIf="node.icon"
                 [src]="iconsDir + node.icon"
                 [svgStyle]="{
-                    'width.px': 24,
-                    'height.px': 24,
+                    'width.px': '24',
+                    'height.px': '24',
                     'position': 'absolute',
-                    'top.px': 0,
-                    'left.px': 10,
+                    'top.px': '0',
+                    'left.px': '10',
                     'display': 'inline-block'}"></svg-icon>
         <h5 class="section-title"
             [ngClass]="{'no-link': node.url == ''}"
@@ -36,9 +36,9 @@
                         *ngIf="link.new_window || link.icon"
                         [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
                         [svgStyle]="{
-                            'margin-top.px': -1,
-                            'width.px': 24,
-                            'height.px': 24,
+                            'margin-top.px': '-1',
+                            'width.px': '24',
+                            'height.px': '24',
                             'display': 'inline-block'}"></svg-icon>
             </li>
         </ng-container>

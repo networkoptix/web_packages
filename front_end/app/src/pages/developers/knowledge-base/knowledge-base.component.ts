@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
     Component, OnInit, Renderer2, ViewChild, ElementRef, Inject, OnDestroy
 } from '@angular/core';
@@ -33,9 +34,9 @@ export enum CardClasses {
 
 @UntilDestroy({ checkProperties: false })
 @Component({
-    selector      : 'nx-knowledge-base',
-    templateUrl   : 'knowledge-base.component.html',
-    styleUrls     : ['knowledge-base.component.scss']
+    selector    : 'nx-knowledge-base',
+    templateUrl : 'knowledge-base.component.html',
+    styleUrls   : ['knowledge-base.component.scss']
 })
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
@@ -95,7 +96,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    projectedLinkHandler({url, target}: { url: string, target: string }) {
+    projectedLinkHandler({ url, target }: { url: string, target: string }) {
         const base = this.window.location.origin;
         if (target || !url.startsWith(base)) {
             return this.window.open(url, target || '_self');
@@ -162,8 +163,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippet: content ? highlight(content, matchStart, matchEnd) : shortDescription,
-                title: highlight(title, titleMatchStart, titleMatchEnd)
+                snippet : content ? highlight(content, matchStart, matchEnd) : shortDescription,
+                title   : highlight(title, titleMatchStart, titleMatchEnd)
             };
         });
     }
@@ -171,9 +172,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     showRibbon(id, state, reviewId?) {
         const ribbonActions: RibbonActionInput[] = [
             {
-                type  : 'link',
-                text  : this.LANG.ribbon.integration.backToEditText,
-                value : this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
+                type     : 'link',
+                text     : this.LANG.ribbon.integration.backToEditText,
+                value    : this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
                 external : true
             }
         ];
@@ -181,7 +182,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             const process = this.processService.createProcess(() => {
                 return this.cloudApi.acceptReview(reviewId);
             }, {
-                successMessage : this.LANG.toastMessage.reviewAccepted?.()
+                successMessage: this.LANG.toastMessage.reviewAccepted?.()
             }).then(() => {
                 const url = this.uriService.getURL();
                 this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
@@ -196,9 +197,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                     value : process
                 },
                 {
-                    type  : 'link',
-                    text  : this.LANG.ribbon.integration.reject?.(),
-                    value : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
+                    type     : 'link',
+                    text     : this.LANG.ribbon.integration.reject?.(),
+                    value    : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
                     external : true
                 }
             );
@@ -377,7 +378,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 this.searchMode = !!query;
                 this.searchLoading = this.searchMode;
                 this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({query, page: this.currentSearchResultPage});
+                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
             }),
             untilDestroyed(this)
         ).subscribe((results) => {

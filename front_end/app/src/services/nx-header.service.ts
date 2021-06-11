@@ -11,6 +11,12 @@ enum systemRoutes {
     HEALTH='health'
 }
 
+interface MenuNodeNavProps {
+    url: string;
+    // eslint-disable-next-line camelcase
+    new_window: boolean;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -137,7 +143,7 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow }: MenuNode, event) {
+    handleNav({ url, new_window: newWindow }: MenuNodeNavProps, event) {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
         const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;

@@ -47,7 +47,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private genericModal: NxModalGenericComponent,
+        private genericModal: NxModalGenericComponent
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -119,14 +119,14 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     setTargetSystem({ value, state }: DropdownItem) {
-        this.target$.next(value);
+        this.target$.next(value as string);
         this.targetOnline$.next(state !== 'offline');
         if (value === 'otherSystem') {
             // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
-        this.systemsService.getSystem(value).toPromise().then(({ state }) => {
+        this.systemsService.getSystem(value as string).toPromise().then(({ state }) => {
             if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline?.();
             } else {

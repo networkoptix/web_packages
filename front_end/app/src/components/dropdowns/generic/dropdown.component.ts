@@ -49,7 +49,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() type: string;
     @Input() forcePosition: {left?: number, top?: number, width?: number, offsetTop?: number}
 
-    @Output() onSelected = new EventEmitter<string>();
+    @Output() onSelected = new EventEmitter<DropdownItem>();
 
     dropdownType: string;
     nativeElementTop = 0
@@ -82,7 +82,7 @@ export class NxGenericDropdown extends BaseDropdown {
         });
     }
 
-    change(item) {
+    change(item: DropdownItem) {
         this._selectedItem = item;
         this.onSelected.emit(item);
         this.onChangeCallback(this._selectedItem);
@@ -121,7 +121,7 @@ export class DropdownItem {
     constructor(
         public name: string,
         public help?: string,
-        public value?: string,
+        public value?: string | number,
         public state?: string,
         public disabled?: boolean
     ) {}

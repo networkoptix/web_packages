@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { NxConfigService, IConfig } from '../../services/nx-config';
 
+export type InfoBlockSizeType = 'compact' | 'full';
+
 export enum InfoBlockSize {
     COMPACT='compact',
     FULL='full'
