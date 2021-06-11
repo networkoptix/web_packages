@@ -30,7 +30,7 @@
                               [innerHTML]="getSystemOwnerName(system, userEmail) | highlight:search.value"></span>
 
                         <nx-tag style="display: block; margin-top: 24px;"
-                              type="{{CONFIG.system.status[system.stateOfHealth].style || CONFIG.system.status.default.style}}"
+                              type="{{CONFIG.system.status[system.stateOfHealth]?.style || CONFIG.system.status.default.style}}"
                               *ngIf="canShowTag(system)">
                             <ng-container>{{LANG.systemStatuses[system.stateOfHealth]() || system.stateOfHealth }}</ng-container>
                         </nx-tag>

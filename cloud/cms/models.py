@@ -1703,10 +1703,9 @@ class Menu(models.Model):
     def preview_url(self, state='draft'):
         """Preview url for menu change form.
         """
-        return {
-            self.MENU_TYPES.docs_struct: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}',
-            self.MENU_TYPES.docs_knowledgebase: f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
-        }.get(self.type, '')
+        if self.type in (self.MENU_TYPES.docs_struct, self.MENU_TYPES.docs_knowledgebase):
+            return f'/docs/{self.base_url or self.url}{f"/{self.url}" if self.base_url and self.url else ""}?state={state}'
+        return ''
 
     @property
     def node_preview_url(self):
@@ -1800,9 +1799,9 @@ class Menu(models.Model):
 
     @classmethod
     def get_prefetch_objects(cls, max_depth, depth=1):
-        parent_node_lookup = '__'.join(['nodes_list' for _ in range(1, depth)])
-        nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
         nodes_to_attr = 'nodes_list'
+        parent_node_lookup = '__'.join([nodes_to_attr for _ in range(1, depth)])
+        nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
         permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
         related_assets_lookup = f'{parent_node_lookup}__{nodes_to_attr}__related_assets' if depth > 1 else f'{nodes_to_attr}__related_assets'

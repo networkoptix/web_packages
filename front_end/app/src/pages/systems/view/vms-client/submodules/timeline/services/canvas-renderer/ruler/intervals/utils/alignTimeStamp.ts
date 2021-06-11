@@ -19,6 +19,7 @@ export function alignTimeStamp (
     const tzoMs = date.getTimezoneOffset() * 60 * 1000;
 
     switch (d) {
+
         case 'month':
             date.setHours(0, 0, 0, 0);
             date.setDate(1);
@@ -26,30 +27,36 @@ export function alignTimeStamp (
                 date.setMonth(date.getMonth() + 1);
             }
             break;
+
         case 'quarter-year':
             date.setHours(0, 0, 0, 0);
             date.setDate(1);
             const qy = Math.floor(date.getMonth() / 3);
             date.setMonth((qy + incIfRight) * 3);
             break;
+
         case 'half-year':
             date.setHours(0, 0, 0, 0);
             date.setDate(1);
             const hy = Math.floor(date.getMonth() / 6);
             date.setMonth((hy + incIfRight) * 6);
             break;
+
         case 'year':
             date.setHours(0, 0, 0, 0);
             date.setFullYear(date.getFullYear() + incIfRight, 0, 1);
             break;
+
         case 'decade':
             date.setHours(0, 0, 0, 0);
             date.setFullYear((round(date.getFullYear() / 10 + 0.1) + incIfRight) * 10, 0, 1);
             break;
+
         case 'century':
             date.setHours(0, 0, 0, 0);
             date.setFullYear((round(date.getFullYear() / 100 + 0.1) + incIfRight) * 100, 0, 1);
             break;
+
         case 'millenia':
             date.setHours(0, 0, 0, 0);
             date.setFullYear((round(date.getFullYear() / 1000 + 0.1) + incIfRight) * 1000, 0, 1);

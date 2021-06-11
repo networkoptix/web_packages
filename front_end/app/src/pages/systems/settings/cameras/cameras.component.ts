@@ -2,7 +2,7 @@ import {
     Component, OnDestroy, OnInit,
     Inject, ViewContainerRef
 }                                       from '@angular/core';
-import { ActivatedRoute, Router }       from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router }       from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subject, Subscription, BehaviorSubject,
@@ -361,9 +361,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
 
+        this.router.events.subscribe(route => {
+            if (route instanceof NavigationStart) {
+                // remove unnecessary system update (ex. health monitor will trigger system update)
+                // and orphan metrics request in cameraSubscription
+                this.cameraSubscription?.unsubscribe();
+                this.settingsSubscription?.unsubscribe();
+            }
+        });
+
         this.routeParamsSubscription = this.route
             .params
-            .pipe(untilDestroyed(this), distinctUntilChanged())
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
             .subscribe((params: any) => {
                 if (params.cameraId) {
                     this.warnings = [];
@@ -380,7 +392,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
 
         this.settingsSubscription = this.settingsService.systemSubject
-            .pipe(untilDestroyed(this), filter(data => data !== undefined))
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined)
+            )
             .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
@@ -420,6 +435,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
+                        distinctUntilChanged(),
                         map((system: NxSystem) => {
                             if (!system.cameras) {
                                 throw system;
@@ -428,12 +444,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
-                        this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.serverManager.initSystemMediaServers().catch((_) => {});
                             }
-                            if (!this.applyService.locked) this.setCamera();
+                            if (!this.applyService.locked) {
+                                this.setCamera();
+                            }
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
                         if (this.noCameras) {

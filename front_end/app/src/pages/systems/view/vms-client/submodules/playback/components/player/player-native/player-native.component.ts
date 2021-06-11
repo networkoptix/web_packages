@@ -44,8 +44,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit (): void {
     }
 
-    videoErrorEventHandler (event: any) {
-        if (this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+    videoErrorEventHandler = (event: any) => {
+        if (this.videoView?.nativeElement.error?.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -60,7 +60,9 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
                             break;
                     }
                 }, (error) => {
-                    this.playback.setError(error.message);
+                    if (error.status !== 0) {
+                        this.playback.setError(error.message);
+                    }
                 });
         }
     }
@@ -80,7 +82,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnDestroy (): void {
-        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.$video.pause();
         this.$video.src = '';

@@ -361,7 +361,7 @@ def log_error(request, error, log_level):
     else:
         error_formatted = f'{error.__class__.__name__}:{error_text}\nUser: {user_name} Login: {login_type} Session Time: {session_time} IP: {ip}\n{page_url} Request: {request_data}\n{error_formatted}\nCall Stack: \n{traceback.format_exc().replace("Traceback", "")}'
     # Explicit check so that it will not affect superusers.
-    if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
+    if request.user.is_authenticated and request.user.pk and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO
 
     # Lower log level of merge errors

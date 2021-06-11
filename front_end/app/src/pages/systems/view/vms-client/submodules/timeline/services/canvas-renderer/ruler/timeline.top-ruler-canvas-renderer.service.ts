@@ -86,7 +86,11 @@ export class TimelineTopRulerCanvasRendererService {
     }
 
     protected _getSerifTimes (interval: IrregularLengthInterval): Array<ms> {
-        return interval ? this.timeline.visibleRange.iterate(interval) : [];
+        return interval ?
+            this.timeline.visibleRange.iterate(
+                interval, -this.vms.timeZoneOffset
+            ) : []
+        ;
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
@@ -111,25 +115,19 @@ export class TimelineTopRulerCanvasRendererService {
         nextTime: ms
     ) {
         let x0: px = this.timeline.timeToCanvasOffsetX(curTime);
+
         const xNext: px = nextTime
             ? this.timeline.timeToCanvasOffsetX(nextTime)
             : x0 + this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval));
-        // const xPrev: px = prevTime
-        //   ? this.timeline.timeToCanvasOffsetX(prevTime)
-        //   : x0 - this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval))
-        let x1 = xNext;
 
-        // if (xPrev < 0 && xNext > this.timeline.canvasGeometry.width && x0 < this.timeline.canvasGeometry.width) {
-        //   x0 = 0
-        //   x1 = this.timeline.canvasGeometry.width
-        // }
+            let x1 = xNext;
+
         if (x0 < 0) {
             x0 = 0;
         }
         if (x1 > this.timeline.canvasGeometry.width) {
             x1 = this.timeline.canvasGeometry.width;
         }
-        const MIN_WIDTH = 130 * this.timeline.canvasGeometry.dpr;
 
         const y0: px = 0;
         const y1: px = Math.round(cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height);
@@ -140,9 +138,7 @@ export class TimelineTopRulerCanvasRendererService {
             ctx.fillRect(x0, y0, x1 - x0, y1);
         }
 
-        if (x1 - x0 >= MIN_WIDTH) {
-            this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2);
-        }
+        this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2);
     }
 
     protected _drawSerifText (
@@ -169,7 +165,7 @@ export class TimelineTopRulerCanvasRendererService {
         ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
         ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
-        ctx.fillText(topString, x, y);
+        ctx.fillText(topString, x, y, x1 - x0);
 
         if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
             const serifString = dateformat(curTime + this.vms.timeZoneOffset, format.serif);

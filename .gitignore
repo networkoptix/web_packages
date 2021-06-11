@@ -47,3 +47,5 @@ cloud/notifications/static/templates/email_logo.png
 tools/docker/external.dat
 .DS_Store
 .vscode
+etc/rabbitmq
+cloud/.coverage

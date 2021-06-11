@@ -17,6 +17,9 @@ from cms.views.integration import make_integrations_json
 from util.helpers import get_language_object_from_request
 import re
 
+PAGE_NOT_FOUND = 'Page not found'
+KB_NOT_FOUND = 'Kb not found'
+
 SEARCH_SNIPPET_PADDING = 250
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
@@ -56,7 +59,7 @@ def get_page(request, doc_id):
             ser.is_valid()
             return api_success(ser.data)
 
-    raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+    raise APINotFoundException(error_data={'id': doc_id}, error_text=PAGE_NOT_FOUND)
 
 
 def find_article(nodes, doc_id):
@@ -86,13 +89,13 @@ def kb_for_article(request, doc_id):
         contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
     ).first()
     if not doc:
-        raise APINotFoundException(error_data={'id': doc_id}, error_text='Page not found')
+        raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
     nodes = doc.nodes.all()
     menus = {node.get_parent() for node in nodes}
     for menu in menus:
         if menu.base_url and menu.url and menu.enabled:
             return {'base': menu.base_url, 'kb_name': menu.url}
-    raise APINotFoundException(error_data={'id': doc_id}, error_text='Kb not found')
+    raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
 
 
 # Simple filter for checking that each space delimited string exists somewhere in the doc

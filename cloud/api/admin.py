@@ -164,7 +164,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     def invite(self, request):
         group_id = request.GET.get('group_id')
-        group = Group.objects.filter(id=group_id).first() if group_id.isnumeric() else None
+        group = Group.objects.filter(id=group_id).first() if group_id and group_id.isnumeric() else None
         group_name = group.name if group else None
         context = {
             'title': 'Invite User' + (f' to Group "{group_name}"' if group_name else ""),

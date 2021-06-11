@@ -31,7 +31,7 @@
                          [system]="system"
                          [searchable]="content.searchableResults"
                          [autoFit]="true"
-                         (menuSearchMode)="_menuSearchMode = $event"
+                         (menuSearchMode)="menuMode($event)"
                          (contentToggle)="contentToggle($event)"></nx-menu>
             </div>
             <!-- Offset for the fixed menu -->

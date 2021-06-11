@@ -159,7 +159,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
-            const filtered = this.menuService.fillerItemsBy(this.menuModel);
+            const filtered = this.menuService.cleanMenuContent(this.menuService.fillerItemsBy(this.menuModel));
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
             if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
                 this.menuContent = filtered;
@@ -200,11 +200,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
             if (!this.applyService.locked && changes.content.currentValue.selectedSection) {
                 this.systemId = changes.content.currentValue.system?.id;
 
-                if (this.autoFit && this.scrollArea) {
+                if (this.autoFit && this.scrollArea && !this.searchMode) {
                     if (!this.menuInit) {
                         return;
                     }
-
                     this.menuHeightFit = '';
                     this.scrollHeightFit = '';
                     setTimeout(() => {
@@ -243,7 +242,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     resizeMenu() {
-        if (this.autoFit && this.scrollArea) {
+        if (this.autoFit && this.scrollArea && !this.searchMode) {
             setTimeout(() => {
                 let windowHeightFit;
                 this.menuOverflow = 'hidden';
@@ -254,7 +253,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 } else {
                     windowHeightFit = this.menuHeight;
                 }
-
                 this.menuHeightFit = windowHeightFit + 'px';
 
                 // 120px is the min height for taller scrollArea - keep height if shorter
@@ -269,7 +267,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuOverflowCalc = setTimeout(() => {
                     const magicNumberToAdd  = 40/* search box */ + 2 * 16/* bottom and top padding */;
                     this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight) ? 'auto' : 'hidden';
-                }, 500);
+                }, 250);
             });
         }
     }
@@ -281,7 +279,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     setNav() {
-        this.modelChanged(this.menuModel);
+        this.modelChanged(this.menuModel, false);
     }
 
     private assignItemId() {
@@ -300,19 +298,22 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return this.navItems[this.navItemIdx].id;
     }
 
-    modelChanged(model) {
-        // clear toggled items
-        this.menuContent.forEach((part, index, arr) => {
-            this.toggleItem(false, index);
-        });
-
+    modelChanged(model, resetLayout = true) {
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
         this.menuModel = model;
-
-        this.menuContent = this.menuService.fillerItemsBy(model);
         this.transition = false;
+
+        // clear toggled items and update menu content
+        // setNav(igation) have same model so we have to preserve the layout
+        // and avoid unnecessary content update
+        if (resetLayout) {
+            this.menuContent.forEach((node, index, arr) => {
+                this.toggleItem(false, node.id);
+            });
+            this.menuContent = this.menuService.fillerItemsBy(model);
+        }
 
         this.navItemIdx = -1;
         this.menuService.hoverItemId = undefined;
@@ -324,6 +325,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 // reset height auto fit
                 this.menuHeightFit = '100%';
                 this.scrollHeightFit = '100%';
+                this.menuOverflow = 'auto';
                 this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
             });
         } else {
@@ -372,11 +374,15 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return item ? item.id : undefined;
     }
 
-    toggleItem(state, idx) {
+    toggleItem(state, nodeId) {
         // menu have internal state but also is controlled by parent component
         // so we need to update both states
-        this.menuContent[idx].toggle = state;
-        this.contentToggle.emit({ idx, state });
+        this.menuContent.find((node) => {
+            if (node.id === nodeId) {
+                node.toggle = state;
+            }
+        });
+        this.contentToggle.emit({ nodeId, state });
     }
 
     @HostListener('mousemove', ['$event'])

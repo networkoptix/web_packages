@@ -1,6 +1,7 @@
 import { float, ms } from '../../../utils/type-aliases';
 import IrregularLengthInterval from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
 import alignTimeStamp from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
+import estimateIrregularLengthIntervalPessimistically from './canvas-renderer/ruler/intervals/utils/estimateIrregularLengthIntervalPessimistically';
 
 export class TimeRange {
     constructor(
@@ -39,12 +40,15 @@ export class TimeRange {
         return new TimeRange(this.start, this.end);
     }
 
-    public iterate (interval: IrregularLengthInterval): Array<ms> {
-        const start = alignTimeStamp(this.start, interval, 'left');
+    public iterate (interval: IrregularLengthInterval, offset: ms = 0): Array<ms> {
+        const start = alignTimeStamp(
+            this.start - estimateIrregularLengthIntervalPessimistically(interval),
+            interval, 'left'
+        );
         const end = alignTimeStamp(this.end, interval, 'right');
         const result = [];
         for (let i = start; i <= end; i = alignTimeStamp(i, interval, 'right')) {
-            result.push(i);
+            result.push(i + offset);
         }
         return result;
     }

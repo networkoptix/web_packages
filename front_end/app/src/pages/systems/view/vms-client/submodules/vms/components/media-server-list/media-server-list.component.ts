@@ -135,6 +135,14 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             return acc;
         }, []);
     }
+
+    public cameraId(index, camera) {
+        return camera ? camera.id : undefined;
+    }
+
+    public serverID(index, server) {
+        return server ? server.id : undefined;
+    }
 }
 
 export default MediaServerListComponent;

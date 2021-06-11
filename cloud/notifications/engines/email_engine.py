@@ -4,8 +4,9 @@ import json
 import os
 
 import pystache
+from django.conf import settings
 from django.core.cache import cache
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.mail.backends.smtp import EmailBackend
 
 from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
@@ -82,7 +83,7 @@ def send(email, msg_type, message, language_code, customization_name):
         password=str(customization_cache["smtp_password"]),
         username=str(customization_cache["smtp_user"]),
         use_tls=customization_cache["smtp_tls"],
-    )
+    ) if not settings.TESTING else get_connection()
 
     msg = EmailMultiAlternatives(
         subject, email_txt_body, email_from, to=email)

@@ -43,6 +43,7 @@ from cloud.logger import downgrade_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
@@ -310,6 +311,13 @@ CACHES = {
     }
 }
 
+if TESTING:
+    for key, cache in CACHES.items():
+        cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
+        cache['OPTIONS'] = {}
+        cache['LOCATION'] = key
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
@@ -457,6 +465,8 @@ EMAIL_PORT = conf['smtp']['port']
 EMAIL_USE_TLS = conf['smtp']['tls']
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
+TEST_RUNNER = 'cloud.tests.NxRunner'
 
 
 # Package Settings
@@ -671,7 +681,7 @@ CLOUD_CONNECT = {
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
 CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 
-USE_ASYNC_QUEUE = True
+USE_ASYNC_QUEUE = not LOCAL_ENVIRONMENT and not TESTING
 
 LINKS_LIVE_TIMEOUT = 300  # Five minutes
 

@@ -183,14 +183,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.transportError = (this.selectedTransport === undefined);
         });
 
-        // this.qualities$.subscribe((qualities) => {
-        //     if (!qualities.includes(this.selectedQuality)) {
-        //         this.selectedQuality = <PlaybackQuality>qualities.slice().shift();
-        //     } else {
-        //         this.selectedQuality$.next(this.selectedQuality);
-        //     }
-        // });
-
+        this.qualities$.subscribe((qualities) => {
+            if (!qualities.includes(this.selectedQuality)) {
+                this.selectedQuality = <PlaybackQuality>qualities.slice().shift();
+            } else {
+                this.selectedQuality$.next(this.selectedQuality);
+            }
+        });
         this.accountService.get().then((account) => {
             if (!account) {
                 this._warn('accountService returned no account');
@@ -256,15 +255,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedQuality$.next(quality);
     }
 
-    public setQuality () {
-        const q = this.cameraQualityStorage.get(this.id)
-        if (this.selectedQuality !== q) {
-            this._log('quality change', q);
-            this.playback.changeQuality(this.qualityFromVerbose(q));
-            this.selectedQuality$.next(q);
-        }
-    }
-
     public qualityToVerbose (q: PlaybackQuality) {
         switch (q) {
             case 'hi':
@@ -316,30 +306,35 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('empty archive');
+                    this.playback.restore(false);
                 } else {
                     try {
                         const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
                         const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
                         const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
-                        const stillRecording = lastRecordDuration === -1;
+                        const showToLive = lastRecordDuration === -1 || this.camera.isLive || this.camera.isUnauthorized;
                         const now = Date.now();
-                        const range = new SimpleTimeRange(firstRecordStartTimeMs, stillRecording ? now : (lastRecordStartTimeMs + lastRecordDuration));
+                        const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
                         const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
-                        if (stillRecording) {
-                            archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
-                            this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
-                        }
+                        // Extends the last chunk to live. Not sure if we want this.
+                        // if (showToLive) {
+                        //     archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
+                        //     this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
+                        // }
                         this._log('non-empty archive', this.id, range, archive);
                         this.vms.setCameraRecords(this.id, range, archive);
+                        this.playback.restore(true);
                         this.startPollingForNewlyRecordedChunks();
                     } catch (e) {
                         this._warn(e, 'caught while requesting camera archive ranges');
                     }
                 }
+            }).then(() => {
+                this._initSelectedCamera();
+                this.getRecordsInProgress = undefined;
             });
         }
-        this.getRecordsInProgress = undefined;
-        this._initSelectedCamera();
+
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
             this.canViewArchives = this.system.userManager.permissions.viewArchives;
         });
@@ -386,23 +381,20 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _prepareArchiveRecords (ar) {
-        const [{
-            // osTimeOffset,
-            serverId,
-            // timeZoneOffset,
-            // vmsTime,
-            vmsTimeOffset
-        }] = await this._getServerTimes();
+        const serverTimes = (await this._getServerTimes()).reduce((reduced, server) => ({
+            ...reduced,
+            [server.serverId]: server.vmsTimeOffset
+        }), {});
 
         const offsetsByServer = this.system.mediaservers.reduce((
             reduced, { id, addParams, timeInfo = {} }: any
         ) => ({
             ...reduced,
-            [id]: serverId === id ? 0 : parseInt(
+            [id]: parseInt(
                 timeInfo?.timeZoneOffset ??
                 (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
-                vmsTimeOffset
-            ) - vmsTimeOffset
+                serverTimes[id]
+            ) - serverTimes[id]
         }), {});
 
         const timezoneAdjusted = [];
@@ -478,7 +470,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('ROUTE CHANGE: NEW CAMERA', this.id);
         this.vms.selectCamera(this.id);
         this.resetTransport();
-        // this.resetQuality();
+        this.resetQuality();
 
         if (this.vms.selectedCamera && this.system) {
             this._getRecords();
@@ -526,20 +518,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && this.camera.hasArchive && this.canViewArchives;
     }
 
-    showPlayer() {
+    showPlayer () {
         const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
-
-        if (!this.status && currentStatus) {
-            if (this.camera?.hasArchive) {
-                this._log('timeline reset time', this.camera);
-                this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
-            }
-
-            if (this.camera?.isLive) {
-                setTimeout(() => this.playback.playLive());
-            }
-        }
 
         this.status = currentStatus;
         return this.status;
@@ -549,12 +530,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('_initSelectedCamera');
         this.playback.stop();
         this.resetTransport();
-        // this.resetQuality();
-        this.setQuality()
-
-        if (this.camera?.isLive) {
-            setTimeout(() => this.playback.playLive());
-        }
+        this.resetQuality();
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
@@ -565,14 +541,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             //     this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
         });
 
-        // if (this.camera?.hasArchive) {
-        //     this._log('timeline reset time', this.camera);
-        //     this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
-        // }
-        //
-        // if (this.camera?.isLive) {
-        //     setTimeout(() => this.playback.playLive());
-        // }
+        if (this.camera?.hasArchive) {
+            this._log('timeline reset time', this.camera);
+            this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
+        }
+
+        if (this.camera?.isLive) {
+            setTimeout(() => this.playback.playLive());
+        }
     }
 
     public toggleFullScreen ($event?) {

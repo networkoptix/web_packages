@@ -49,8 +49,8 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit (): void {
     }
 
-    videoErrorEventHandler(event: any) {
-        if (this.videoView && this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+    videoErrorEventHandler = (event: any) => {
+        if (this.videoView?.nativeElement.error?.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -64,8 +64,6 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                         default:
                             break;
                     }
-                }, (error) => {
-                    this.playback.setError(error.message);
                 });
         }
     }
@@ -85,7 +83,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnDestroy (): void {
-        this.videoView.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.hls?.destroy();
     }
@@ -138,6 +136,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
         const sourceUrlMainPart = sourceUrl.split('?')[0];
         const sourceUrlParts = sourceUrlMainPart.split('.');
         const sourceUrlExtension = sourceUrlParts[sourceUrlParts.length - 1];
+        let fatalErrorTimer;
 
         switch (sourceUrlExtension) {
             case 'm3u8':
@@ -156,6 +155,11 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.hls.on(Hls.Events.ERROR, (event, data) => {
                         this._warn('HLS PLAYER HLS.js ERROR', event, data);
                         if (data.fatal) {
+                            fatalErrorTimer = setTimeout(() => {
+                                console.error('HLS error, cannot recover');
+                                fatalErrorTimer = undefined;
+                                this.playback.setError(data.response?.text || '');
+                            }, 30 * 1000);
                             // TODO: try to switch to WEBM or another alternative stream here
                             switch (data.type) {
                                 case Hls.ErrorTypes.NETWORK_ERROR:
@@ -182,6 +186,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                     this.hls.on(Hls.Events.FRAG_LOADED, () => {
                         this._log('HLS Fragment Loaded');
+                        clearTimeout(fatalErrorTimer);
                         // if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
                         //   if (!this.playback.state.started) {
                         //     // console.log('HLS it was the first fragment')

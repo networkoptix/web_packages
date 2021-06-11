@@ -1,34 +1,34 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                    from '@angular/core';
+}                                       from '@angular/core';
 import {
     ActivatedRoute, Router,
-    NavigationEnd
-}                                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subject, Subscription }     from 'rxjs';
-import { filter, takeUntil, tap }    from 'rxjs/operators';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '@src/menu';
+    NavigationEnd, NavigationStart
+}                                       from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject, Subscription }        from 'rxjs';
+import { filter, takeUntil, tap }       from 'rxjs/operators';
+import { NxConfigService, IConfig }     from '../../../services/nx-config';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { NxProcessService, Process }    from '@services/process.service';
+import { NxDialogsService }             from '@dialogs/dialogs.service';
+import { NxSettingsService }            from './settings.service';
+import { NxMenuService }                from '@src/menu';
 import {
     ICamera, NxSystem,
     NxSystemService
-}                                    from '@services/system.service';
-import { NxSystemsService }          from '@services/systems.service';
-import { Account, NxAccountService } from '@services/account.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxUriService }              from '@services/uri.service';
-import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
-import { NxApplyService }            from '@services/apply.service';
-import { NxPageService }             from '@services/page.service';
-import { NxRibbonService }           from '@components/ribbon';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxAppStateService }             from '@services/nx-app-state.service';
+}                                       from '@services/system.service';
+import { NxSystemsService }             from '@services/systems.service';
+import { Account, NxAccountService }    from '@services/account.service';
+import { NxUtilsService }               from '@services/utils.service';
+import { NxUriService }                 from '@services/uri.service';
+import { NxScrollMechanicsService }     from '@services/scroll-mechanics.service';
+import { NxApplyService }               from '@services/apply.service';
+import { NxPageService }                from '@services/page.service';
+import { NxRibbonService }              from '@components/ribbon';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { NxAppStateService }            from '@services/nx-app-state.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -167,6 +167,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.router.events.subscribe(route => {
+            if (route instanceof NavigationStart) {
+                // remove unnecessary system update (ex. health monitor will trigger system update)
+                // and orphan metrics request in systemInfoSubscription
+                this.systemInfoSubscription?.unsubscribe();
+                this.systemSubscription?.unsubscribe();
+            }
             if (route instanceof NavigationEnd) {
                 const isSystemRoute = route.url.includes('/systems');
                 const isCameraRoute = route.url.includes('/cameras');
@@ -284,10 +290,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         }
 
                         if (this.systemSubscription) {
+                            this.systemInfoSubscription?.unsubscribe();
                             this.systemSubscription.unsubscribe();
                         }
-                        this.systemSubscription = this.systemsService
-                            .systemsSubject
+                        this.systemSubscription = this.systemsService.systemsSubject
                             .subscribe((systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
@@ -419,7 +425,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     contentToggle(event) {
-        this.content.level1[event.idx].toggle = event.state;
+        this.content.level1.find((node) => {
+            if (node.id === event.nodeId) {
+                node.toggle = event.state;
+            }
+        });
+    }
+
+    menuMode(event) {
+        setTimeout(() => {
+            this._menuSearchMode = event;
+        });
     }
 
     updateMenu() {

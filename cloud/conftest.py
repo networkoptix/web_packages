@@ -1,0 +1,278 @@
+from typing import Iterable
+
+import pytest
+import model_bakery
+from model_bakery import baker
+
+from api.tests.utils import NxTestClient, NxAPIClient
+from cms.controllers.structure import read_structure_json
+from cms.models import *
+from api.models import Account
+
+from rest_framework.test import APIRequestFactory
+
+
+@pytest.fixture(scope='session')
+def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, django_db_keepdb):
+    with django_db_blocker.unblock():
+        if django_db_createdb:
+            read_structure_json()
+        eng = Language.objects.get_or_create(name='English', code='en_US')[0]
+        Customization.objects.get_or_create(name='default', default_language=eng)
+        portal_type = AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
+        Asset.objects.get_or_create(name='Nx Cloud', asset_type=portal_type)
+
+
+@pytest.fixture(autouse=True)
+def set_settings(settings):
+    settings.TESTING = True
+    settings.USE_ASYNC_QUEUE = False
+
+
+@pytest.fixture()
+def arf():
+    return APIRequestFactory()
+
+
+@pytest.fixture()
+def api_client():
+    return NxAPIClient()
+
+
+@pytest.fixture
+def superuser(django_user_model, db):
+    return django_user_model.objects.get_or_create(email='auto_superuser@networkoptix.com', is_superuser=True, is_staff=True)[0]
+
+
+@pytest.fixture()
+def client():
+    return NxTestClient()
+
+
+@pytest.fixture
+def admin_client(db, superuser):
+    client = NxTestClient()
+    client.force_login(superuser)
+    return client
+
+
+@pytest.fixture
+def authenticated_client(django_user_model, client, db):
+    def _authenticated_client(email):
+        user = django_user_model.objects.get_or_create(email=email)[0]
+        client.force_login(user)
+    return _authenticated_client
+
+
+@pytest.fixture
+def english_language(db):
+    return Language.objects.get_or_create(name='English', code='en_US')[0]
+
+
+@pytest.fixture()
+def default_customization(english_language, db):
+    return Customization.objects.get_or_create(name='default', default_language=english_language)[0]
+
+
+@pytest.fixture
+def cloud_portal_type(db):
+    return AssetType.get_model_by_type(AssetType.ASSET_TYPES.cloud_portal)
+
+
+@pytest.fixture
+def default_portal(default_customization, cloud_portal_type, db):
+    portal, created = Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)
+    if created:
+        portal.customizations.add(default_customization)
+    return portal
+
+
+@pytest.fixture()
+def other_customization(english_language, db):
+    return Customization.objects.get_or_create(name='other', default_language=english_language)[0]
+
+
+@pytest.fixture()
+def other_portal(other_customization, cloud_portal_type, db):
+    return Asset.objects.get_or_create(name='Other Cloud', asset_type=cloud_portal_type)[0]
+
+
+@pytest.fixture
+def active_user(db, django_user_model):
+    return django_user_model.objects.create(email='active_user@fixture.com', is_active=True)
+
+
+@pytest.fixture(scope="session")
+def asset_factory():
+    def generate_mock_assets(name="test", qty=1, state=AssetCustomizationReview.REVIEW_STATES.accepted, customization_name='default', asset_type=AssetType.ASSET_TYPES.integration, account=None, draft=False):
+        """Useful for generating mock assets for testing. Current implementation works well for integrations, some changes might need to be made to use with other asset types.
+
+        Args:
+            name (str, optional): Asset Title. Defaults to "test".
+            qty (int, optional): Number of assets to generate. Defaults to 1.
+            state ([type], optional): Review State. Defaults to AssetCustomizationReview.REVIEW_STATES.accepted.
+            customization_name (str, optional): Customization. Defaults to 'default'.
+            asset_type ([type], optional): Asset Type. Defaults to AssetType.ASSET_TYPES.integration.
+            account ([type], optional): User Account. Defaults to None.
+            draft (bool, optional): Draft. Defaults to False.
+
+        Yields:
+            Asset: With asset type and name from asset_type and name kwargs
+        """
+        language = get_language()
+        customization = get_customization(customization_name)
+        customization.languages.add(language)
+        accepted = state == AssetCustomizationReview.REVIEW_STATES.accepted
+
+        for asset_copy in range(qty):
+            asset = baker.make(
+                Asset, name=f"{name} - {asset_copy}", customizations=[customization], asset_type=get_asset_type(asset_type))
+            accepted_date = datetime.now() if accepted else None
+            accepted_by = account if accepted else None
+            version = baker.make(
+                ContentVersion, asset=asset, customization=customization, created_by=account, accepted_date=accepted_date, accepted_by=accepted_by)
+            if not draft:
+                baker.make(AssetCustomizationReview,
+                           customization=customization, version=version)
+            if accepted:
+                reviews = AssetCustomizationReview.objects.filter(
+                    version__asset=asset)
+                for review in reviews:
+                    review.update_state(
+                        account, AssetCustomizationReview.REVIEW_STATES.accepted)
+
+            yield asset
+    return generate_mock_assets
+
+
+@pytest.fixture(scope="session")
+def account_factory():
+    def get_account(email='super@user.com', is_superuser=True):
+        """Gets existing Account or creates new.
+
+        Args:
+            email (str, optional): Account Email. Defaults to 'py@test.com'.
+            is_superuser (bool, optional): Is Superuser account. Defaults to True.
+
+        Returns:
+            Account: Account with superuser value mocked
+        """
+        account = Account.objects.filter(email=email).first(
+        ) or baker.make(Account, email=email)
+
+        account.is_superuser = is_superuser
+        return account
+    return get_account
+
+
+def get_asset_type(type=AssetType.ASSET_TYPES.integration):
+    """Gets existing AssetType or creates new.
+
+    Args:
+        type (int, optional): Value from AssetType.ASSET_TYPES. Defaults to AssetType.ASSET_TYPES.integration.
+
+    Returns:
+        AssetType: Instance of AssetType
+    """
+    return AssetType.objects.filter(type=type).first(
+    ) or baker.make(AssetType, type=type)
+
+
+@pytest.fixture(scope="session")
+def customization_factory():
+    return get_customization
+
+
+def get_customization(name='default'):
+    """Gets existing Customization or creates new.
+
+    Args:
+        name (str, optional): Customization Name. Defaults to 'default'.
+
+    Returns:
+        Customization: Instance of Customization
+    """
+    return Customization.objects.filter(name=name).first(
+    ) or baker.make(Customization, name=name)
+
+
+@pytest.fixture(scope="session")
+def menu_factory():
+    return get_menu
+
+
+def get_menu(name='Test Menu', base_url='test', url='menu', menu_type = Menu.MENU_TYPES.docs_knowledgebase):
+    """Gets existing Menu or creates new.
+
+    Args:
+        name (str, optional): Menu Name. Defaults to 'Test Menu'.
+        base_url (str, optional): Base Url. Defaults to 'test'.
+        url (str, optional): Url. Defaults to 'menu'.
+        menu_type (str, optional): Menu Type. Defaults to 'Menu.MENU_TYPES.docs_knowledgebase'.
+
+    Returns:
+        Menu: Instance of Menu
+    """
+    return Menu.objects.filter(name=name, base_url=base_url, url=url, type=menu_type).first(
+    ) or baker.make(Menu, name=name, base_url=base_url, url=url, type=menu_type, enabled=True)
+
+@pytest.fixture(scope="session")
+def asset_menu_node_factory():
+    return get_asset_menu_node
+
+
+def get_asset_menu_node(asset: Asset, enabled_customizations: Iterable[Customization] = [], parent_menu: Menu = None, parent_node: MenuNode = None):
+    """Gets existing MenuNode w/ Asset or creates new.
+
+    Args:
+        asset (Asset): Asset. Asset to attach to node.
+        enabled_customizations (Iterable[Customization], optional): Customizations List. Customizations enabled for node.
+        parent_menu (Menu, optional): Parent Menu. Defaults to None.
+        parent_node (MenuNode, optional): Parent Node. Defaults to None.
+
+    Returns:
+        Menu: Instance of MenuNode
+    """
+    existing_node = MenuNode.objects.filter(asset=asset, parent_menu=parent_menu, parent_node=parent_node).first()
+    if existing_node:
+        existing_node.enabled.add(*enabled_customizations)
+    return  existing_node or baker.make(MenuNode, asset=asset, parent_menu=parent_menu, parent_node=parent_node, enabled=enabled_customizations, name=asset.name)
+
+
+@pytest.fixture(scope="session")
+def language_factory():
+    return get_language
+
+
+def get_language(code='en_US', name='English (US)'):
+    """Get existing Language or creates new
+
+    Args:
+        code (str, optional): Language Code. Defaults to 'en_US'.
+        name (str, optional): Language Description. Defaults to 'English (US)'.
+
+    Returns:
+        Language: Instance of Language
+    """
+    return Language.objects.filter(code=code).first(
+    ) or baker.make(Language, code=code, name=name)
+
+
+@pytest.fixture()
+def add_permission(db, cloud_portal_type):
+    def _add_permission(user, codename):
+        group = Group.objects.create(name=f'{user.email}_{codename}_auto',)
+        group.options.all_assets = True
+        group.options.save()
+        UserGroupsToAssetType.objects.get_or_create(asset_type=cloud_portal_type, group=group)
+        permission = Permission.objects.filter(codename=codename).first()
+        if not permission:
+            raise Exception('Permission not found')
+        group.permissions.add(permission)
+        user.groups.add(group)
+    return _add_permission
+
+
+@pytest.fixture(scope='session')
+def bakery():
+    return model_bakery
