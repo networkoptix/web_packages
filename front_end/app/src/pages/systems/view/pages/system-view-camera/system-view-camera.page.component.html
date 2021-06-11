@@ -16,7 +16,7 @@
     <span class="glyph"></span>
     <span class="name">
       {{ camera.name }}
-      (<span class="transport">{{ selectedTransport$ | async | uppercase }}</span>,
+      (<span *ngIf="CONFIG.allowDebugMode" class="transport">{{ selectedTransport$ | async | uppercase }},&nbsp;</span>
       <span class="quality">{{ selectedQuality$ | async }}</span>)
     </span>
 
