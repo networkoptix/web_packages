@@ -67,9 +67,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public availableTransportsAndResolutions$ = new BehaviorSubject<AvailableTransportsAndResolutions>({})
     public transports$ = new BehaviorSubject<PlaybackTransport[]>([])
-    public qualities$ = new BehaviorSubject<PlaybackQuality[]>([])
+    public qualities$ = new BehaviorSubject<any>({});
+    public visibleQualities$ = new BehaviorSubject<PlaybackQuality[]>([]);
     public selectedTransport$ = new BehaviorSubject<PlaybackTransport>(undefined)
     public selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined)
+
+    public drawQualityDivider$ = new BehaviorSubject<string>('');
 
     public controlsShown: boolean = false
     public canViewArchives = false;
@@ -184,8 +187,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
 
         this.qualities$.subscribe((qualities) => {
-            if (!qualities.includes(this.selectedQuality)) {
-                this.selectedQuality = <PlaybackQuality>qualities.slice().shift();
+            if (!qualities[this.selectedQuality]) {
+                this.selectedQuality = undefined;
             } else {
                 this.selectedQuality$.next(this.selectedQuality);
             }
@@ -236,8 +239,22 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedTransport$.next(transport);
     }
 
+    private get qualities() {
+        return this.qualities$.getValue();
+    }
+
     private set qualities (qualities) {
-        this.qualities$.next(qualities?.map((quality) => this.qualityToVerbose(quality)) || []);
+        qualities = qualities || {};
+        const qualityKeys = Object.keys(qualities);
+        this.visibleQualities$.next(qualityKeys.map((quality) => this.qualityToVerbose(quality)) || []);
+        if (qualityKeys.includes('low') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
+            this.drawQualityDivider$.next('low');
+        } else if (qualityKeys.includes('high') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
+            this.drawQualityDivider$.next('high');
+        } else {
+            this.drawQualityDivider$.next('');
+        }
+        this.qualities$.next(qualities);
     }
 
     get selectedQuality (): PlaybackQuality {
@@ -245,37 +262,49 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     set selectedQuality (initialQuality: PlaybackQuality) {
-        const quality = (initialQuality || 'auto').toLowerCase();
-        this._log('setQuality', quality);
-        if (this.selectedQuality !== initialQuality) {
-            this.cameraQualityStorage.set(this.id, quality);
-            this._log('quality change', quality);
-            this.playback.changeQuality(this.qualityFromVerbose(quality));
+        let quality = (initialQuality || '').toLowerCase();
+        if (quality === '') {
+            if (this.selectedTransport === 'hls') {
+                quality = 'high';
+            } else {
+                const qualities = this.visibleQualities$.getValue();
+                if (this.qualities.low) {
+                    quality = 'low';
+                } else if (this.qualities.high) {
+                    quality = 'high';
+                } else if (qualities.length) {
+                    quality = qualities[qualities.length - 1];
+                }
+            }
         }
+
+        this._log('setQuality', quality);
+        this.cameraQualityStorage.set(this.id, quality);
+        this._log('quality change', quality);
+        this.playback.changeQuality(this.qualityFromVerbose(this.qualities[quality]));
         this.selectedQuality$.next(quality);
     }
 
     public qualityToVerbose (q: PlaybackQuality) {
         switch (q) {
             case 'hi':
+            case 'high':
                 return 'High';
             case 'lo':
+            case 'low':
                 return 'Low';
-            case '':
-                return 'Auto';
             default:
                 return q;
         }
     }
 
     public qualityFromVerbose (q: PlaybackQuality) {
+        q = q?.toLowerCase();
         switch (q) {
             case 'high':
                 return 'hi';
             case 'low':
                 return 'lo';
-            case 'auto':
-                return !this.camera?.disableDualStreaming ? 'lo' : 'hi';
             default:
                 return q;
         }
@@ -582,7 +611,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetQuality () {
-        this.selectedQuality = this.cameraQualityStorage.get(this.id) || 'auto';
+        this.selectedQuality = this.cameraQualityStorage.get(this.id) || '';
     }
 
     public resetTransport () {

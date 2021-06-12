@@ -18,7 +18,7 @@ export class CameraQualityStorageService {
     }
 
     public get (cameraId: string) {
-        return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || 'auto';
+        return this.localStorageService.retrieve(`${this.user}_quality_${cameraId}`) || '';
     }
 
     public set (cameraId: string, quality: PlaybackQuality) {

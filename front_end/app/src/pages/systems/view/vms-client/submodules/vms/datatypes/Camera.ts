@@ -94,27 +94,41 @@ export class Camera implements ICamera {
     }
 
     protected _getAvailableResolutions (transport) {
-        const result = [];
+        const result: any = {};
+        const resolutions = [];
+        const isHls = transport === 'hls';
         this._mediaStreams
             .filter(s => s.resolution !== '*')
-            .map(s => s.transports.filter(t => t === transport) && result.push(s.resolution));
-        if (transport === 'hls') {
-            if (result.length === 1) {
-                return ['', 'hi'];
-            } else {
-                const hlsResult = [''];
-                if (!this.disableDualStreaming && result.filter(r => this._resolutionIsLow(r)).length) {
-                    hlsResult.push('lo');
-                }
-                if (result.filter(r => !this._resolutionIsLow(r)).length) {
-                    hlsResult.push('hi');
-                }
-                return hlsResult;
-            }
+            .map(s => s.transports.filter(t => t === transport) && resolutions.push(s.resolution));
+
+        if (resolutions.length === 1) {
+            result.high = isHls ? 'hi' : resolutions[0];
         } else {
-            result.unshift(''); // add "Auto"
-            return result;
+            const high = resolutions.filter(r => !this._resolutionIsLow(r)).sort();
+            if (high.length) {
+                result.high = isHls ? 'hi' : high[high.length - 1];
+            }
+            const low = resolutions.filter(r => this._resolutionIsLow(r)).sort();
+            if (!this.disableDualStreaming && low.length) {
+                result.low = isHls ? 'lo' : low[0];
+            }
         }
+
+        if (resolutions.length && transport !== 'hls') {
+            const primaryResolutionHeight = parseInt(resolutions[0].split('x')[1]);
+            const defaultResolutions = {
+                1080 : '1920x1080',
+                720  : '1280x720',
+                480  : '854x480',
+                360  : '640x360'
+            };
+            Object.keys(defaultResolutions).sort(() => -1).forEach((yResolution) => {
+                if (primaryResolutionHeight >= parseInt(yResolution)) {
+                    result[`${yResolution}p`] = defaultResolutions[yResolution];
+                }
+            });
+        }
+        return result;
     }
 
     protected _resolutionIsLow (s: string): boolean {
