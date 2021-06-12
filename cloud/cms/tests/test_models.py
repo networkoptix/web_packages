@@ -1,11 +1,13 @@
 from collections import Counter
 
+from django.db.models import Count
+
 from django.test import TestCase
 from cms.controllers import filldata
 from cms.models import *
 
 from django_mock_queries.query import MockSet
-from model_bakery import baker
+from model_bakery import baker, seq
 import pytest
 
 
@@ -559,4 +561,279 @@ class TestMenuNodeMethods:
             )
         )
         assert node.get_parent() == menu
+
+
+class TestAssetFields:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.asset = baker.prepare('Asset', asset_type=None)
+
+    def test_name(self):
+        name = self.asset._meta.get_field('name')
+        assert name.verbose_name == 'name'
+        assert name.max_length == 255
+
+    def test_created_by(self, django_user_model):
+        created_by = self.asset._meta.get_field('created_by')
+        assert created_by.verbose_name == 'created by'
+        assert created_by.related_model == django_user_model
+        assert created_by.blank
+        assert created_by.related_query_name() == 'created_asset'
+
+    def test_customizations(self):
+        customizations = self.asset._meta.get_field('customizations')
+        assert customizations.verbose_name == 'customizations'
+        assert customizations.default is None
+        assert customizations.related_model == Customization
+        assert customizations.blank
+
+    def test_asset_type(self):
+        asset_type = self.asset._meta.get_field('asset_type')
+        assert asset_type.verbose_name == 'asset type'
+        assert asset_type.related_model == AssetType
+        assert asset_type.default == get_integration_type
+        assert asset_type.null
+
+    def test_preview_statuses(self):
+        assert Counter(Asset.PREVIEW_STATUS._triples) == Counter([(0, 'draft', 'draft'), (1, 'review', 'review')])
+
+    def test_preview_status(self):
+        preview_status = self.asset._meta.get_field('preview_status')
+        assert preview_status.verbose_name == 'preview status'
+        assert preview_status.choices == Asset.PREVIEW_STATUS
+        assert preview_status.default == Asset.PREVIEW_STATUS.draft
+
+    def test_primary_group(self):
+        primary_group = self.asset._meta.get_field('primary_group')
+        assert primary_group.verbose_name == 'primary group'
+        assert primary_group.related_model == Group
+        assert primary_group.unique
+        assert primary_group.null
+        assert primary_group.blank
+
+    def test_protected(self):
+        protected = self.asset._meta.get_field('protected')
+        assert protected.verbose_name == 'protected'
+        assert protected.default is False
+
+    def test_uuid(self):
+        uuid_field = self.asset._meta.get_field('uuid')
+        assert uuid_field.verbose_name == 'uuid'
+        assert uuid_field.default == uuid.uuid4
+        assert not uuid_field.editable
+        assert uuid_field.unique
+
+
+class TestAssetMethods:
+    @pytest.fixture(autouse=True)
+    def asset(self):
+        self.asset = baker.prepare('Asset', name='Great Asset', asset_type=None)
+
+    @pytest.fixture()
+    def saved_asset(self, db):
+        return baker.make('Asset', name='test asset')
+
+    def test_str(self, default_portal):
+        assert str(self.asset) == 'Great Asset'
+
+        assert str(default_portal) == 'Nx Cloud - Cloud Portal - default'
+
+    def test_can_preview_on_portal(self, default_portal):
+        assert default_portal.can_preview_on_portal
+        integration = baker.prepare(
+            'Asset', asset_type=baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration, can_preview=False)
+        )
+        assert not integration.can_preview_on_portal
+
+    def test_default_language(self, default_portal, english_language, default_customization, other_customization):
+        assert default_portal.default_language == english_language
+        asset = baker.make('Asset', name='test asset', customizations=[default_customization, other_customization])
+        assert asset.default_language == english_language
+
+    def test_languages_list(self, default_customization):
+        asset_no_customizations = baker.make('Asset', name='test', customizations=[])
+        assert list(asset_no_customizations.languages_list) == ['en_US']
+
+        languages = baker.make('Language', code=seq('en_'), _quantity=2)
+        cust = baker.make('Customization', name='test', languages=languages)
+        asset = baker.make('Asset', name='test2', customizations=[default_customization, cust])
+        print(asset.customizations.all())
+        assert Counter(asset.languages_list) == Counter(['en_US', 'en_1', 'en_2'])
+
+    def test_asset_root(self, default_portal):
+        assert default_portal.asset_root == 'default'
+        assert self.asset.asset_root == ''
+
+    def test_is_agreement(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.agreement)
+        assert self.asset.is_agreement
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert not self.asset.is_agreement
+
+    def test_is_article(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.article)
+        assert self.asset.is_article
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert not self.asset.is_article
+
+    def test_is_documentation(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.documentation)
+        assert self.asset.is_documentation
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert not self.asset.is_documentation
+
+    def test_is_cloud_portal(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.cloud_portal)
+        assert self.asset.is_cloud_portal
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert not self.asset.is_cloud_portal
+
+    def test_is_integration(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert self.asset.is_integration
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.agreement)
+        assert not self.asset.is_integration
+
+    def test_is_vms(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.vms)
+        assert self.asset.is_vms
+
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.agreement)
+        assert not self.asset.is_vms
+
+    def test_is_single_customization(self, other_customization):
+        asset_type = baker.prepare('AssetType', single_customization=True)
+        asset = baker.prepare('Asset', name='test', asset_type=asset_type)
+        assert asset.is_single_customization
+        asset_type.single_customization = False
+        assert not asset.is_single_customization
+
+    def test_urlify(self):
+        self.asset.id = 123
+        assert self.asset.urlify() == '123-great-asset'
+        assert self.asset.urlify(name='test name') == '123-test-name'
+        assert self.asset.urlify(name='test--name') == '123-test--name'
+
+    def test_is_dirty_no_versions(self, saved_asset):
+        assert not saved_asset.is_dirty
+
+    def test_is_dirty_no_versions_with_record(self, saved_asset):
+        baker.make('DataRecord', asset=saved_asset)
+        assert saved_asset.is_dirty
+
+    def test_is_dirty_with_version_no_new_records(self, saved_asset):
+        version = baker.make('ContentVersion', asset=saved_asset)
+        baker.make('DataRecord', version=version, _quantity=2)
+        assert not saved_asset.is_dirty
+
+    def test_is_dirty_with_version_and_new_records(self, saved_asset):
+        version = baker.make('ContentVersion', asset=saved_asset)
+        baker.make('DataRecord', version=version, _quantity=2, asset=saved_asset)
+        baker.make('DataRecord', asset=saved_asset)
+        assert saved_asset.is_dirty
+
+    def test_last_modified_no_version(self, saved_asset):
+        assert saved_asset.last_modified == ''
+
+    def test_last_modified_with_version(self, saved_asset, mocker):
+        now = datetime.now()
+        version = baker.make('ContentVersion', asset=saved_asset, accepted_date=now)
+        mocker.patch.object(saved_asset, 'version_id', return_value=version.id)
+        assert saved_asset.last_modified == now.strftime('%m/%d/%Y')
+
+    def test_is_asset_type(self):
+        self.asset.asset_type = baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+        assert self.asset.is_asset_type(AssetType.ASSET_TYPES.integration)
+        assert not self.asset.is_asset_type(AssetType.ASSET_TYPES.documentation)
+
+    def test_version_id(self, saved_asset, default_customization):
+        assert saved_asset.version_id() == 0
+        version = baker.make('ContentVersion', asset=saved_asset)
+        baker.make(
+            'AssetCustomizationReview', version=version, state=AssetCustomizationReview.REVIEW_STATES.accepted,
+            customization=default_customization
+        )
+        assert saved_asset.version_id() == version.id
+
+    def test_version_ids(self, default_customization):
+        asset1 = baker.make('Asset', name='asset1')
+        version1 = baker.make('ContentVersion', asset=asset1)
+        baker.make(
+            'AssetCustomizationReview', version=version1, state=AssetCustomizationReview.REVIEW_STATES.accepted,
+            customization=default_customization
+        )
+
+        asset2 = baker.make('Asset', name='asset2')
+        version2 = baker.make('ContentVersion', asset=asset2)
+        baker.make(
+            'AssetCustomizationReview', version=version2, state=AssetCustomizationReview.REVIEW_STATES.accepted,
+            customization=default_customization
+        )
+
+        assert Asset.version_ids([asset1, asset2]) == {asset1.id: version1.id, asset2.id: version2.id}
+
+    def test_change_preview_status(self, saved_asset):
+        assert saved_asset.preview_status == Asset.PREVIEW_STATUS.draft
+        saved_asset.change_preview_status(Asset.PREVIEW_STATUS.review)
+        assert saved_asset.preview_status == Asset.PREVIEW_STATUS.review
+
+    def test_read_global_value_no_contexts(self, saved_asset):
+        assert saved_asset.read_global_value('%DS1%') is None
+
+    @pytest.fixture()
+    def asset_with_ds(self, saved_asset, mocker):
+        asset_type = baker.make('AssetType', name='test')
+        context = baker.make('Context', asset_type=asset_type, is_global=True)
+        baker.make('DataStructure', context=context, name='%DS1%')
+        saved_asset.asset_type = asset_type
+        saved_asset.save()
+        mocker.patch.object(DataStructure, 'find_actual_value', return_value='test_val')
+        return saved_asset
+
+    def test_read_global_value_doesnt_exists(self, asset_with_ds):
+        assert asset_with_ds.read_global_value('%DS2%') is None
+
+    def test_read_global_value_ds_exists(self, asset_with_ds):
+        assert asset_with_ds.read_global_value('%DS1%') == 'test_val'
+
+    def test_read_global_values(self):
+        context_dict = {'%DS1%': 'val1', "%DS2%": 'val2'}
+        assert self.asset.replace_global_values('text 123 %DS1% text 456 %DS1%\n %DS2% more text %DS3%', context_dict) == \
+               'text 123 val1 text 456 val1\n val2 more text %DS3%'
+
+    def test_clean(self, saved_asset):
+        asset_type = baker.make('AssetType', type=AssetType.ASSET_TYPES.integration, name='integration')
+        saved_asset.asset_type = asset_type
+        saved_asset.save()
+        self.asset.asset_type = asset_type
+        self.asset.name = 'test asset'
+        with pytest.raises(ValidationError):
+            self.asset.clean()
+
+    def test_save_portal(self, db):
+        self.asset.asset_type = baker.make('AssetType', name='portal', type=AssetType.ASSET_TYPES.cloud_portal)
+        self.asset.save()
+        assert self.asset.primary_group
+        assert self.asset.primary_group.name == f'Portal Manager - {self.asset.name} - {self.asset.id}'
+        assert self.asset.primary_group.permissions.filter(
+            codename__in=['access_customization', 'change_account',
+                          'change_assetcustomizationreview',
+                          'change_asset', 'edit_content',
+                          'force_update', 'publish_version']
+        ).aggregate(num_codenames=Count('codename'))['num_codenames'] == 7
+
+    def test_save_integration(self, db):
+        self.asset.asset_type = baker.make('AssetType', name='integration', type=AssetType.ASSET_TYPES.integration)
+        self.asset.save()
+        assert self.asset.primary_group
+        assert self.asset.primary_group.name == f'Developer - {self.asset.name} - {self.asset.id}'
+        assert self.asset.primary_group.permissions.filter(
+            codename__in=['edit_content', 'change_asset','change_assetcustomizationreview']
+        ).aggregate(num_codenames=Count('codename'))['num_codenames'] == 3
+
 

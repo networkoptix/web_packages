@@ -71,7 +71,9 @@ def english_language(db):
 
 @pytest.fixture()
 def default_customization(english_language, db):
-    return Customization.objects.get_or_create(name='default', default_language=english_language)[0]
+    cust, created = Customization.objects.get_or_create(name='default', default_language=english_language)
+    cust.languages.add(english_language)
+    return cust
 
 
 @pytest.fixture
