@@ -167,6 +167,11 @@ def account_factory():
     return get_account
 
 
+@pytest.fixture()
+def asset_type_factory(db):
+    return get_asset_type
+
+
 def get_asset_type(type=AssetType.ASSET_TYPES.integration):
     """Gets existing AssetType or creates new.
 

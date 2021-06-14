@@ -837,3 +837,235 @@ class TestAssetMethods:
         ).aggregate(num_codenames=Count('codename'))['num_codenames'] == 3
 
 
+class TestAssetTypeFields:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.type = baker.prepare('AssetType')
+
+    def test_asset_types(self):
+        assert Counter(AssetType.ASSET_TYPES._triples) == Counter([(0, "cloud_portal", "Cloud Portal"),
+                                                                   (1, "vms", "Vms"),
+                                                                   (2, "integration", "Integration"),
+                                                                   (3, "other", "Other"),
+                                                                   (4, "article", "Article"),
+                                                                   (5, "agreement", "Agreement"),
+                                                                   (6, "documentation", "Documentation Page")])
+
+    def test_name(self):
+        name = self.type._meta.get_field('name')
+        assert name.verbose_name == 'name'
+        assert name.max_length == 255
+        assert name.default == ''
+        assert name.blank
+
+    def test_can_preview(self):
+        can_preview = self.type._meta.get_field('can_preview')
+        assert can_preview.verbose_name == 'can preview'
+        assert can_preview.default is False
+
+    def test_single_customiation(self):
+        single_customization = self.type._meta.get_field('single_customization')
+        assert single_customization.verbose_name == 'single customization'
+        assert single_customization.default is False
+
+    def assert_type(self):
+        typ = self.type._meta.get_field('type')
+        assert typ.verbose_name == 'type'
+        assert typ.choices == AssetType.ASSET_TYPES
+        assert typ.default == AssetType.ASSET_TYPES.cloud_portal
+
+    def test_advanced(self):
+        advanced = self.type._meta.get_field('advanced')
+        assert advanced.verbose_name == 'advanced'
+        assert advanced.default is True
+
+
+class TestAssetTypeMethods:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.asset_type = baker.prepare('AssetType')
+
+    def test_str(self):
+        self.asset_type.type = AssetType.ASSET_TYPES.integration
+        assert str(self.asset_type) == 'Integration'
+
+        self.asset_type.name = 'something'
+        assert str(self.asset_type) == 'something - Integration'
+
+    def test_get_model_by_type(self, asset_type_factory):
+        int_type = asset_type_factory(AssetType.ASSET_TYPES.integration)
+        assert AssetType.get_model_by_type(AssetType.ASSET_TYPES.integration) == int_type
+
+    def test_get_type_by_name(self):
+        assert AssetType.get_type_by_name('') == AssetType.ASSET_TYPES.cloud_portal
+        assert AssetType.get_type_by_name('integration') == AssetType.ASSET_TYPES.integration
+        assert AssetType.get_type_by_name('Integration') == AssetType.ASSET_TYPES.integration
+        assert AssetType.get_type_by_name('nothing') == 0
+
+    def test_get_customization(self, db):
+        asset_type = baker.make('AssetType', name='int', type=AssetType.ASSET_TYPES.integration)
+        cust1, cust2, cust3 = baker.make('Customization', name=seq('cust'), _quantity=3)
+        asset1 = baker.make('Asset', asset_type=asset_type, name='asset1', customizations=[cust1, cust2])
+        baker.make('Asset', asset_type=asset_type, name='asset2', customizations=[cust2, cust3])
+        assert set(asset_type.get_customizations(asset1)) == {'cust2', 'cust3'}
+
+
+class TestLanguage:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.lang = baker.prepare('Language')
+
+    def test_name(self):
+        name = self.lang._meta.get_field('name')
+        assert name.verbose_name == 'name'
+        assert name.max_length == 255
+        assert name.unique
+
+    def test_code(self):
+        code = self.lang._meta.get_field('code')
+        assert code.verbose_name == 'code'
+        assert code.max_length == 8
+        assert code.unique
+
+    def test_str(self):
+        self.lang.code = 'en_NX'
+        assert str(self.lang) == 'en_NX'
+
+    def test_by_code(self, english_language):
+        assert Language.by_code('en_US') == english_language
+        assert Language.by_code('en_NX') is None
+        assert Language.by_code('en_NX', self.lang) == self.lang
+
+
+class TestContextFields:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.context = baker.prepare('Context')
+
+    def test_asset_type(self):
+        asset_type = self.context._meta.get_field('asset_type')
+        assert asset_type.verbose_name == 'asset type'
+        assert asset_type.related_model == AssetType
+        assert asset_type.null
+
+    def test_name(self):
+        name = self.context._meta.get_field('name')
+        assert name.max_length == 1024
+
+    def test_label(self):
+        label = self.context._meta.get_field('label')
+        assert label.max_length == 1024
+        assert label.default == ''
+        assert label.blank
+
+    def test_description(self):
+        description = self.context._meta.get_field('description')
+        assert description.blank
+        assert description.default == ''
+
+    def test_translatable(self):
+        translatable = self.context._meta.get_field('translatable')
+        assert translatable.default
+
+    def test_is_global(self):
+        is_global = self.context._meta.get_field('is_global')
+        assert not is_global.default
+
+    def test_hidden(self):
+        hidden = self.context._meta.get_field('hidden')
+        assert not hidden.default
+
+    def test_order(self):
+        order = self.context._meta.get_field('order')
+        assert order.default == 100000
+
+    def test_deprecated(self):
+        deprecated = self.context._meta.get_field('deprecated')
+        assert not deprecated.default
+
+    def test_file_path(self):
+        file_path = self.context._meta.get_field('file_path')
+        assert file_path.max_length == 1024
+        assert file_path.blank
+        assert file_path.default == ''
+
+    def test_url(self):
+        url = self.context._meta.get_field('url')
+        assert url.max_length == 1024
+        assert url.blank
+        assert url.default == ''
+
+
+class TestContextMethods:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.context = baker.prepare('Context', name='test_context')
+
+    def test_str(self):
+        assert str(self.context) == 'test_context'
+        self.context.asset_type = baker.prepare('AssetType', name='test_type')
+        assert str(self.context) == f'{self.context.asset_type} - test_context'
+
+    def test_get_nice_name(self):
+        assert self.context.get_nice_name() == 'test_context'
+        self.context.label = 'nice label'
+        assert self.context.get_nice_name() == 'nice label'
+
+    def test_template_for_language_exact(self, english_language):
+        context = baker.make('Context')
+        baker.make('ContextTemplate', context=context, language=english_language, template='temp', skin='blue')
+        assert context.template_for_language(english_language, english_language, 'blue') == 'temp'
+
+    @pytest.fixture()
+    def asset_with_context_and_ds(self, db, asset_type_factory):
+        self.customization = baker.make('Customization', name='cust')
+        self.asset_type = asset_type_factory(AssetType.ASSET_TYPES.integration)
+        self.asset = baker.make('Asset', name='test', asset_type=self.asset_type, customizations=[self.customization])
+        self.context = baker.make('Context', name='context')
+        self.dss = baker.make(
+            'DataStructure', context=self.context, name=seq('ds'), _quantity=5, optional=False, default='',
+            type=DataStructure.DATA_TYPES.text
+        )
+        return self.asset
+
+    @pytest.fixture()
+    def asset_with_datarecords(self, asset_with_context_and_ds):
+        self.drs = []
+        for ds in self.dss:
+            self.drs.append(baker.make('DataRecord', data_structure=ds, asset=self.asset, value='test val'))
+
+    @pytest.fixture()
+    def asset_with_datarecords_and_review(self, asset_with_datarecords, settings):
+        settings.CUSTOMIZATION = self.customization.name
+        self.version = baker.make('ContentVersion', asset=self.asset)
+        for dr in self.drs:
+            dr.version = self.version
+            dr.save()
+        self.review = baker.make(
+            'AssetCustomizationReview', version=self.version, customization=self.customization,
+            state=AssetCustomizationReview.REVIEW_STATES.pending
+        )
+
+    def test_get_state_incomplete(self, asset_with_context_and_ds):
+        assert self.context.get_state(self.asset) == 'Incomplete'
+
+    def test_get_state_draft(self, asset_with_datarecords):
+        assert self.context.get_state(self.asset) == 'Draft'
+
+    def test_get_state_review(self, asset_with_datarecords_and_review):
+        assert self.context.get_state(self.asset) == 'In review'
+
+    def test_get_state_published(self, asset_with_datarecords_and_review):
+        self.review.state = AssetCustomizationReview.REVIEW_STATES.accepted
+        self.review.save()
+        assert self.context.get_state(self.asset) == 'Published'
+
+    def test_get_state_rejected(self, asset_with_datarecords_and_review):
+        self.review.state = AssetCustomizationReview.REVIEW_STATES.rejected
+        self.review.save()
+        assert self.context.get_state(self.asset) == 'Rejected'
+
+
+
+
+
