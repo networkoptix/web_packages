@@ -1,0 +1,69 @@
+<ng-container *ngIf="url && externalLink">
+    <a [href]="url" target="_blank">
+        <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+    </a>
+</ng-container>
+
+<ng-container *ngIf="url && !externalLink">
+    <a [routerLink]="url">
+        <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+    </a>
+</ng-container>
+
+<ng-container *ngIf="!url">
+    <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+</ng-container>
+
+
+<ng-template #contentBlock >
+    <div class="card"  
+    [ngClass]="{
+        'content-block-wide': type==='wide', 
+        'content-block-small': type==='small', 
+        'content-block-adaptive': type==='adaptive' 
+    }"
+    >
+    <div
+        [ngClass]="{
+            'header-wide': type==='wide',
+            'header-adaptive': type === 'adaptive',
+            'header-small': type === 'small'
+        }">
+        <svg-icon nx-add-svg-src 
+            [ngClass]="{
+                'svg-large': type === 'wide' || 'adaptive',
+                'svg-small': type === 'small'
+            }"
+            [src]="CONFIG.icons.dir + svg + '.svg'"
+            [svgStyle]="{'width.px': svgSizes.mainSvg.width, 'height.px': svgSizes.mainSvg.height}"
+            [applyClass]="true">
+        </svg-icon>
+        <div 
+            [ngClass]="{
+                'header-title-wide': type === 'wide',
+                'header-title-adaptive': type === 'adaptive',
+                'header-title-small': type === 'small'
+            }"> 
+            <div *ngIf="type === 'small'" class="header-border-small"></div>
+            {{ title }}
+            <svg-icon 
+                *ngIf="url"
+                 nx-add-svg-src 
+                [class]="'arrow-svg'"
+                [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                [svgStyle]="type === 'small'?{'width.px': svgSizes.arrowSmall.width, 'height.px': svgSizes.arrowSmall.height}:
+                                             {'width.px': svgSizes.arrowLarge.width, 'height.px': svgSizes.arrowLarge.height}"
+                [applyClass]="true">
+            </svg-icon>
+        </div>
+    </div>
+    <div 
+        [ngClass]="{
+            'body-wide': type === 'wide',
+            'body-adaptive': type === 'adaptive',
+            'body-small': type === 'small'
+        }">
+        <div *ngIf="type == 'adaptive'" class="body-border-adaptive"></div>{{ content }}
+    </div>
+</div>
+</ng-template>
