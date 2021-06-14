@@ -1,29 +1,29 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { Subject, Subscription, timer } from 'rxjs';
-
 import {
-    ServerTimeInfo, NxSystemService,
-    NxMediaServer, NxSystem
-}                                               from '@services/system.service';
-import { NxAccountService }                     from '@services/account.service';
-import VideoManagementSystemService             from '../../vms-client/submodules/vms/services/vms.service';
-import VmsState, { VMS_MODE }                   from '../../vms-client/submodules/vms/datatypes/VmsState';
-import MediaServer                              from '../../vms-client/submodules/vms/datatypes/MediaServer';
-import Camera                                   from '../../vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange }       from '../../vms-client/submodules/vms/datatypes/ICamera';
-import { ms, LoggerDecorator }                  from '../../vms-client/utils';
-import TimelineService                          from '../../vms-client/submodules/timeline/services/timeline.service';
-import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxSystemsService }                     from '@services/systems.service';
-import { UntilDestroy }                         from '@ngneat/until-destroy';
+    Component, OnInit, OnDestroy, ElementRef,
+    HostListener
+}                                                from '@angular/core';
+import { ActivatedRoute, Router }                from '@angular/router';
+import { Subject, Subscription, timer }          from 'rxjs';
+import {
+    NxSystemService, NxSystem
+}                                                from '@services/system.service';
+import { NxAccountService }                      from '@services/account.service';
+import VideoManagementSystemService              from '../../vms-client/submodules/vms/services/vms.service';
+import VmsState, { VMS_MODE }                    from '../../vms-client/submodules/vms/datatypes/VmsState';
+import MediaServer                               from '../../vms-client/submodules/vms/datatypes/MediaServer';
+import Camera                                    from '../../vms-client/submodules/vms/datatypes/Camera';
+import { CAMERA_STATUS, SimpleTimeRange }        from '../../vms-client/submodules/vms/datatypes/ICamera';
+import { ms, LoggerDecorator }                   from '../../vms-client/utils';
+import TimelineService                           from '../../vms-client/submodules/timeline/services/timeline.service';
+import WebClientUxService, { WebclientUxState }  from '../../services/webclient-ux.service';
+import { NxConfigService, IConfig }              from '@services/nx-config';
+import { NxSystemsService }                      from '@services/systems.service';
+import { UntilDestroy, untilDestroyed }          from '@ngneat/until-destroy';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
-import { NxUtilsService }                       from '@services/utils.service';
-import sidebarLayout                            from '../sidebarLayout.cfg';
+import { NxUtilsService }                        from '@services/utils.service';
+import sidebarLayout                             from '../sidebarLayout.cfg';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-system-view-index-page',
     templateUrl : 'system-view-index.page.component.html',
@@ -132,21 +132,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.showElementsInFSM = true;
     }
 
-    public ngOnInit (): void {
-        this.vms.reset();
-        this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange);
-        this._routerParamsSubscription = this.route.params.subscribe(this._onRouteChange);
-        this._uxStateSubscription = this.ux.subject.subscribe(this._onUxStateChange);
-        this.onResize({ target: { innerWidth: window.innerWidth } });
-
-        this.accountService.get().then((account) => {
-            if (account && !this.CONFIG.isLocal && !this.systemsService.isPolling) {
-                this.systemsService.getSystems(account.email);
-            }
-        });
-
+    private setSystemSubscription() {
+        this.systemsSubscription?.unsubscribe();
         this.systemsSubscription = this.systemsService.systemsSubject
-            .pipe(distinctUntilChanged())
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged())
             .subscribe((systems) => {
                 if (systems.length) {
                     this.systems = systems;
@@ -158,11 +149,24 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             });
     }
 
+    public ngOnInit (): void {
+        this.vms.reset();
+        this._vmsStateSubscription = this.vms.subject.pipe(untilDestroyed(this)).subscribe(this._onVmsSubjectChange);
+        this._routerParamsSubscription = this.route.params.pipe(untilDestroyed(this)).subscribe(this._onRouteChange);
+        this._uxStateSubscription = this.ux.subject.pipe(untilDestroyed(this)).subscribe(this._onUxStateChange);
+        this.onResize({ target: { innerWidth: window.innerWidth } });
+
+        this.accountService.get().then((account) => {
+            if (account && !this.CONFIG.isLocal && !this.systemsService.isPolling) {
+                this.systemsService.getSystems(account.email);
+            }
+        });
+
+        this.setSystemSubscription();
+    }
+
     public ngOnDestroy (): void {
         this.cancelPoll$.next('cancel');
-        this._vmsStateSubscription.unsubscribe();
-        this._routerParamsSubscription.unsubscribe();
-        this._uxStateSubscription.unsubscribe();
     }
 
     protected _onUxStateChange (s: WebclientUxState) {
@@ -207,16 +211,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     protected _onRouteChange (params) {
+        // cancel pool for the previous system
+        this.cancelPoll$.next('cancel');
         this.systemId = params.systemId || null;
         this.system = undefined;
         this.hasCameras = false;
         this._setInitializationState(false, false);
-    }
 
-    protected _quality2resolution (q) {
-        if (q === 'high') return 'hi';
-        if (q === 'low') return 'lo';
-        return undefined;
+        // reset subscription to get values immediately and not waiting for next update
+        this.setSystemSubscription();
     }
 
     protected _initSystem () {
@@ -262,6 +265,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         createSystem().then(() => {
             timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
+                    if (!this.system) {
+                        return;
+                    }
+
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
                     const serverTimeInfos = await this.system.getServerTimes();
                     serverTimeInfos.map(sti => {
