@@ -263,5 +263,5 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
             return errorCodes[errorCode];
         }
     }
-    return lang.errorCodes[errorCode] || lang.errorCodes.unknownError();
+    return (lang.errorCodes[errorCode])(errorCode) || lang.errorCodes.unknownError();
 };
