@@ -167,7 +167,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.router.events.subscribe(route => {
-            if (route instanceof NavigationStart) {
+            if (route instanceof NavigationStart && route.url.includes('health')) {
                 // remove unnecessary system update (ex. health monitor will trigger system update)
                 // and orphan metrics request in systemInfoSubscription
                 this.systemInfoSubscription?.unsubscribe();
