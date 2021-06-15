@@ -2,14 +2,14 @@
 <header #authCodeHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <svg-icon nx-add-svg-src 
         [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header' + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
-        [svgStyle]="{'width.px': 320, 'height.px': 80}"
+        [svgStyle]="{'width.px': '320', 'height.px': '80'}"
         [applyClass]="true"></svg-icon>
     <div class="for-small">
         <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && smallView"
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('password')">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': 36, 'height.px': 36}"
+                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
                 [applyClass]="true"></svg-icon>
         </button>
         <h3 class="authorize-header">{{ LANG.authorize.loginCloudHeader() }}</h3>
@@ -52,7 +52,7 @@
                 (click)="setCurrentState.emit('backup')" [ngClass]="{ 'mt-2': smallView, 'larger-height': needLargerFooter }">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'question.svg'"
-                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
                 <span #backToPasswordSpan class="pl-1" translate>No access to authentication app?</span>
             </button>
@@ -62,7 +62,7 @@
                 class="btn text-button" type="button" (click)="setCurrentState.emit('password')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{'width.px': 20, 'height.px': 20}"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
                 <span class="pl-1" translate>Back</span>
             </button>
