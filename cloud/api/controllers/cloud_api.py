@@ -129,6 +129,9 @@ class TempLogin:
         self.access_token = tokens['access_token']
         self.refresh_token = tokens['refresh_token']
 
+    def __enter__(self):
+        return self
+
     def __exit__(self):
         """Deletes the tokens"""
         Auth.delete_token(self.refresh_token)
