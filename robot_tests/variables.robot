@@ -121,7 +121,7 @@ ${THIS PAGE CANNOT BE LOADED}         //h2[@name="NO_SETTINGS" and contains(text
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
 ${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
-${SYSTEM CANCEL}                      //nx-apply//button[@type='button']
+${SYSTEM CANCEL}                      //nx-cancel-button//button
 
 ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
@@ -241,7 +241,7 @@ ${FOOTER INTEGRATIONS LINK}           //footer//a[contains(text(),"${INTEGRATION
 ${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
 ${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
 ${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
-${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
+${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${COMPANY}")]
 ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}")]
 
 #Misc

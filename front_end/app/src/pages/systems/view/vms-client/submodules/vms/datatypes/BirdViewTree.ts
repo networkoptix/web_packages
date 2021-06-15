@@ -110,6 +110,10 @@ export class BirdViewTree {
         return treeRecords;
     }
 
+    public appendNewlyRecorded(ar) {
+        this._newlyRecorded.push(...ar);
+    }
+
     protected _zoomingRequiredCallback = (node: BirdViewTreeNode, part: 'left' | 'right', minGapMs: ms) => {
         // console.log('_zoomingRequiredCallback', node.depth, minGapMs, part, node.startMs, node.endMs)
         const { records, perfect } = part === 'left'

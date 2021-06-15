@@ -31,7 +31,7 @@
                                     (click)="toggleSort(headerGroup.id, header.id, true, header.format)">
                                     <div class="caption d-flex align-items-end" [ngClass]="header.formatClass"
                                          [title]="header.description || header.name">
-                                        <div class="text-container ellipsis" [innerHTML]="header.name"></div>
+                                        <div class="text-container ellipsis" [innerText]="header.name"></div>
                                         <div [ngClass]="{'dynamic-table-show': !sortOrderASC}"
                                             [style.visibility]="(headerGroup.id == selectedGroup && header.id == selectedHeader) ? 'visible' : 'hidden'">
                                             <div class="sort-dir arrow-flip">

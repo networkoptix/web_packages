@@ -89,7 +89,7 @@ export interface ICamera {
     availableTransports: Array<PlaybackTransport>,
     availableTransportsAndResolutions: AvailableTransportsAndResolutions
 
-    setNewlyRecordedChunks (rs: CameraArchive)
+    pushRecordedChunks (rs: CameraArchive)
 
     isThereRecord (t: ms)
     getNextRecord (t: ms): ISimpleTimeRange

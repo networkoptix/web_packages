@@ -1,5 +1,6 @@
 *** Settings ***
 Library    SSHLibrary
+Resource    ../../resource.robot
 Library    ../../NoptixLibrary/CloudPortalAPI.py
 *** Keywords ***
 Start up
@@ -9,7 +10,6 @@ Start up
 
 Reset cameras and log out
     Common Restart Logout    ${url}
-    Reset All cameras
 
 Go To Cameras
     ${location}=   Get Location
@@ -117,35 +117,30 @@ Reset Camera
     ${data2}=   evaluate    json.loads('''${${camera name} JSON 2}''')
     Set All Camera Add Params    ${server ip}    ${auth}    ${data2}
 
-Reset All cameras
-    Reset Camera    good cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    unauth cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    offline cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    no license cam    https://10.1.5.126:7005
-    Sleep    1
-    Reset Camera    no audio cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    triple state cam    https://10.1.5.126:7005
-    Sleep    1
-    Reset Camera    RTSP cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    HTTP cam    ${AUTO SYS IP}
-    Sleep    1
-    Reset Camera    UDP cam    ${AUTO SYS IP}
-    Sleep    1
-
-Add Software Cameras
-    [Arguments]    ${num of cams}    ${server port}
+Start Software Camera
+    [Arguments]    ${server port}    ${camera port}    ${user}=mark    ${password}=hamill
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    FOR    ${counter}    IN RANGE    ${num of cams}
-        Log    ${counter}
-        Execute Command    ./camera.sh &
-    END
+    Start Command    camera-venv/bin/python -m software_cameras --port ${camera port} --user ${user} --password ${password}
     Close Connection
-    ${uuid}=    Camera Search    http://10.1.5.238:${server port}
-    ${camera}=    Camera Status    http://10.1.5.238:${server port}    ${uuid}
-    Add Camera    http://10.1.5.238:${server port}    ${EMPTY}    ${EMPTY}    uniqueId    url    manufacturer
+    Sleep    5
+
+Add Software Camera
+    [Arguments]    ${server port}    ${camera port}    ${file}
+    ${uuid}=    Camera Search    ${QA BURBANK IP}:${server port}    ${camera port}    ${file}
+    Sleep    5
+    ${camera}=    Camera Status    ${QA BURBANK IP}:${server port}    ${uuid}
+    Add Fake Camera   ${QA BURBANK IP}:${server port}    ${camera}[reply][cameras]
+
+Create And Add Custom Camera User Type and User
+    ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
+    ${role id}=   Save User Role    ${system}[cloud auth]    h${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
+    Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}
+    ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${system['port']}    ${local auth}
+    &{custom permissions}=   Get Custom Permissions    ${custom roles}    Custom Cameras
+    ${user id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]
+    #Save User    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${user}    ${custom permissions}[permissions]    ${user}    ${BASE PASSWORD}    user id=${id}    user role id=${role id}
+    Save User Existing    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${user}    ${custom permissions}[permissions]    ${user}    ${custom permissions}[id]    ${id}
+    [Return]    ${user}

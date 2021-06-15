@@ -174,21 +174,21 @@ $border-color: $light6;
         padding: 5px;
         cursor: pointer;
         text-shadow: 0 1px 3px rgba(0,0,0,1);
-        
+
         svg-icon {
           width  : 26px;
           height : 26px;
           line-height: initial;
-  
+
           svg path {
             fill : $light3;
           }
         }
-  
+
         &:hover svg-icon svg path {
           fill : $light1;
         }
-        
+
         > svg {
           width: 26px;
           height: 26px;
@@ -260,6 +260,15 @@ $border-color: $light6;
             opacity: .2;
             background-color: transparent !important;
           }
+        }
+        > .divider:after {
+          content: "";
+          display: block;
+          background-color: $light16; // #698796
+          opacity: .2;
+          height: 1px;
+          width: 100%;
+          margin: 8px 0;
         }
         &.qualitySelection > .option {
           text-transform: capitalize;

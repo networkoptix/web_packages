@@ -298,7 +298,7 @@
         <div class="form-group" *ngIf="result" [ngClass]="{'has-error':notificationError,'has-success':!notificationError}">
             <label class="col-sm-2 control-label">Result:</label>
             <div class="col-sm-12">
-                <pre *ngIf="result" [innerHTML]="result"></pre>
+                <pre *ngIf="result" [innerText]="result"></pre>
             </div>
         </div>
     </form>

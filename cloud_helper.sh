@@ -225,6 +225,7 @@ function local_build() {
     VERSION=$1
     PORT=$2
     COPY=$3
+    CLOUD_HOST=$4
     BUILD_DIR=~/Desktop/build
     REPO=$PWD
 
@@ -238,7 +239,7 @@ function local_build() {
     build_mediaserver_image $VERSION.deb $VERSION $COPY
     echo "Run mediaserver"
     echo "Starting mediaserver $PORT"
-    docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+    run_mediaserver $VERSION $PORT $CLOUD_HOST
     sleep 10
     open https://localhost:$PORT
 }
@@ -352,8 +353,9 @@ do
             VERSION=$2
             PORT=$3
             COPY=$4
+            CLOUD_HOST=$5
             build_webadmin_locally
-            local_build $VERSION $PORT $COPY
+            local_build $VERSION $PORT $COPY $CLOUD_HOST
             break
             ;;
         update_remote_vms)

@@ -61,13 +61,12 @@
                     <h4>{{ role }}</h4>
                 </ng-template>
                 <div>
-                    <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
+                    <span class="help-block pt-0" [innerText]="accessDescription"></span>
                 </div>
             </nx-section>
 
-            <nx-section type="no-spacing" >
+            <nx-section type="no-spacing" *ngIf="!selectedUser.isCloud">
                 <form #userSettingsForm="ngForm"
-                      *ngIf="!selectedUser.isCloud"
                       name="userSettingsForm"
                       class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
                       novalidate>
@@ -99,7 +98,11 @@
                 </form>
             </nx-section>
 
-            <nx-section *ngIf="(selectedUser.isCloud || selectedUser.isLocalOwner && selectedUser.isMe) || selectedUser.canBeEdited">
+            <nx-section *ngIf="
+                (!CONFIG.isLocal && selectedUser.isCloud && selectedUser.isMe) ||
+                (!selectedUser.isCloud && selectedUser.canBeEdited || (selectedUser.isLocalOwner && selectedUser.isMe)) ||
+                selectedUser.canBeEdited
+            ">
                 <div *ngIf="!CONFIG.isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
                         id="accountSettingsButton"

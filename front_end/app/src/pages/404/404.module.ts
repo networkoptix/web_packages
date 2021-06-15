@@ -6,6 +6,7 @@ import { TranslateModule }      from '@ngx-translate/core';
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 import { Nx404Component }       from './404.component';
+import { PipesModule }          from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: Nx404Component }
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [],

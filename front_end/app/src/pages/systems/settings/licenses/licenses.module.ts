@@ -15,6 +15,7 @@ import { NxSystemLicensesComponent } from './licenses.component';
 import { NxLicenseTrialComponent }   from './trial/trial.component';
 import { NxLicenseDetailComponent }  from './license-details/license.component';
 import { NxLicenseSummaryComponent } from './summary/summary.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import { NxLicenseSummaryComponent } from './summary/summary.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
         OverlayModule,
         NgxMaskModule

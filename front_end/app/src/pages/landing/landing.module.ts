@@ -6,6 +6,7 @@ import { TranslateModule }      from '@ngx-translate/core';
 import { NxLandingComponent }   from './landing.component';
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: NxLandingComponent, pathMatch: 'full' }
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers : [],

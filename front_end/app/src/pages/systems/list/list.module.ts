@@ -10,6 +10,7 @@ import { ComponentsModule }       from '../../../components/components.module';
 import { AuthGuard }              from '../../../routeGuards';
 import { NxSystemsListComponent } from './list.component';
 import { NxNoSystemsComponent }   from '../no-systems/no-systems.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
@@ -26,6 +27,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [

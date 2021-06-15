@@ -1,7 +1,7 @@
 <form #detachServerForm="ngForm" name="detachServerForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title"
-            [innerHTML]="'dialogs.titles.serversDetach'| translate: { title: serverName }"></h1>
+            [innerText]="'dialogs.titles.serversDetach' | translate: { title: serverName }"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">

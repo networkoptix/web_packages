@@ -2,10 +2,14 @@
 @use '../../../../styles/theme_variables' as *;
 @use 'app/src/styles/_bootstrap_utils' as bootstrap;
 
-.heading-link {
+.heading {
     @include typography.regular24dark9;
-    cursor: pointer;
     margin-bottom: 48px;
+}
+
+.heading-link {
+    @extend .heading;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }

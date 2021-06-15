@@ -792,7 +792,7 @@ export class MergeModalContent {
         }
 
         // HTML required for dropdown list
-        return `<span>${systemName}</span><span class="text-muted">${status}</span>`;
+        return `<span>${NxUtilsService.htmlToEntity(systemName)}</span><span class="text-muted">${status}</span>`;
     }
 
     checkMergeability(system) {

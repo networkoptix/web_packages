@@ -1,8 +1,8 @@
 *** Variables ***
 ${CAMERAS LINK}                              //nx-menu//a[@id="cameras"]
 ${EDITABLE TITLE}                            //h2[@id="editable-title"]
-${CAMERAS VIEW BUTTON}                       //h4//button[@id="view-camera"]
-${CAMERAS DETAILED INFO BUTTON}              //h4//button[@id="detailed-info"]
+${CAMERAS VIEW BUTTON}                       //nx-block//header//button[@id="view-camera"]
+${CAMERAS DETAILED INFO BUTTON}              //nx-block//header//button[@id="detailed-info"]
 ${ASPECT RATIO DROPDOWN}                     //button[@id="aspect-ratios"]
 ${ROTATION DROPDOWN}                         //button[@id="rotations"]
 ${ENABLE AUDIO CHECKBOX}                     //nx-section//nx-checkbox[@name="audioEnabled"]

@@ -15,8 +15,8 @@
                               [svgStyle]="{ 'width.px': iconSize.toString() }"></svg-icon>
                 </div>
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
-                     [innerHTML]="placeholderTitle"></h2>
-                <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message"></div>
+                     [innerText]="placeholderTitle"></h2>
+                <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message | safe: 'html'"></div>
                 <button *ngIf="showMainButton" class="btn btn-primary main-button mx-auto">
                     <a routerLink="/" translate>Go to Main Page</a>
                 </button>

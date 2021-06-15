@@ -15,6 +15,7 @@ import { NxSystemStorageComponent }         from './storage/server-storage-stand
 import { NxSystemAdvancedStorageComponent } from './storage-advanced/server-storage-adv.component';
 import { NxStorageSizeComponent }           from './storage-advanced/size/size.component';
 import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import { NxCloudStorageModule }             from '../cloud-storage/cloud-storage
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
         NxCloudStorageModule
     ],

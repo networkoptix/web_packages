@@ -18,6 +18,7 @@ import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {
@@ -110,6 +111,7 @@ const lazyRoutes: Routes = [
 @NgModule({
     imports: [
         DirectivesModule,
+        PipesModule,
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,

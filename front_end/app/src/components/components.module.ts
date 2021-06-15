@@ -60,6 +60,7 @@ import { NxImageComponent }                 from '@pages/health/table-components
 import { NxEditableSettingsHeading }        from './editable/settings-heading/editable-settings-heading.component';
 import { QuicklinkModule }                  from 'ngx-quicklink';
 import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
+import { PipesModule }                      from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -70,6 +71,7 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
         NgbToastModule,
         NgbModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
         QuicklinkModule
     ],

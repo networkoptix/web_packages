@@ -454,7 +454,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
         switch (store.mode) {
             case (MODE.NOT_IN_USE):
-                return this.modes[MODE_INDEX.NOT_IN_USE];
+                return this.modes.find(({ value }) => value === watcher?.value) || this.modes[MODE_INDEX.NOT_IN_USE];
             case (MODE.MAIN):
                 return this.modes[MODE_INDEX.MAIN];
             default:

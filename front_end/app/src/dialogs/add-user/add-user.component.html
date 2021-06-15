@@ -43,7 +43,7 @@
                     [selected]="user.role"
                     (onSelected)="setPermission($event)">
             </nx-permissions-select>
-            <span class="help-block" [innerHtml]="accessDescription"></span>
+            <span class="help-block" [innerText]="accessDescription"></span>
         </div>
     </div>
     <div class="modal-footer">

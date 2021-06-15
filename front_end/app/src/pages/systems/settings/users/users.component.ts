@@ -23,7 +23,6 @@ import { NxToastService }                       from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { WINDOW }                               from '@services/window-provider';
 import { environment }                          from '@environments/environment';
-import { NxContentBlockSectionComponent } from '../../../../components/content-block/section/section.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

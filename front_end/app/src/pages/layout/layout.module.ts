@@ -5,6 +5,7 @@ import { TranslateModule }       from '@ngx-translate/core';
 import { NxGridLayoutComponent } from './layout.component';
 import { ComponentsModule }      from '../../components/components.module';
 import { DirectivesModule }      from '../../directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 // const appRoutes: Routes = [
 //     { path: 'layout', component: NxGridLayoutComponent },
@@ -15,7 +16,8 @@ import { DirectivesModule }      from '../../directives/directives.module';
         CommonModule,
         TranslateModule,
         ComponentsModule,
-        DirectivesModule
+        DirectivesModule,
+        PipesModule
         // RouterModule.forChild(appRoutes)
     ],
     providers : [],

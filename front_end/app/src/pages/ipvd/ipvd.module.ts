@@ -15,6 +15,7 @@ import { CsvButtonComponent }   from './cam-components/csv-button/csv-button.com
 import { BoolIconComponent }    from './cam-components/bool-icon/bool-icon.component';
 import { IpvdSearchService }    from './ipvd-search.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: NxIpvdComponent }
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
         RouterModule.forChild(appRoutes),

@@ -55,7 +55,7 @@
                                 </svg-icon>
                                 <span class="ellipsis">{{cleanUrl(store.url)}}</span>
                             </td>
-                            <td *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode); else updatingMode" [ngClass]="{'px-0' : store.status === STATUS.IN_USE}" [style.width.px]="ddWidth">
+                            <td *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode); else updatingMode;context:{changed: checkIfChanged(store.storageId)}" [ngClass]="{'px-0' : store.status === STATUS.IN_USE}" [style.width.px]="ddWidth">
                                 <ng-template #notReindexing>
                                     <ng-container [ngSwitch]="store.status">
                                         <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >
@@ -91,13 +91,13 @@
                                 </ng-template>
                                 <div *ngIf="reindexingStorages.includes(store.mode) && store.isWritable else notReindexing" translate [style.margin-left.px]="16">Reindexing...</div>
                             </td>
-                            <ng-template #updatingMode>
+                            <ng-template #updatingMode let-changed="changed">
                                 <td [ngClass]="{'px-0' : [STATUS.IN_USE, STATUS.BEING_CHECKED].includes(store.status)}" [style.width.px]="ddWidth">
-                                    <div class="disabled-label changing" >
+                                    <div class="disabled-label" [ngClass]="{'changing': changed}">
                                         <ng-template #checking>
                                             <span translate>Checking...</span>
                                         </ng-template>
-                                        <span *ngIf="checkIfChanged(store.storageId); else checking" translate>Changing mode...</span>
+                                        <span *ngIf="changed; else checking" translate>Changing mode...</span>
                                     </div>
                                 </td>
                             </ng-template>
@@ -169,7 +169,7 @@
             <p translate>When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)</p>
             <button class="btn btn-default mt-3"
                 *ngIf="!reindexingMain; else reindexMainProgress"
-                [disabled]="modeReindexDisabled(storageModes.MAIN) || !doesModeExist(storageModes.MAIN)"
+                [disabled]="modeReindexDisabled(storageModes.MAIN)"
                 type="button"
                 [ngbTooltip]="tooltipContent"
                 (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"

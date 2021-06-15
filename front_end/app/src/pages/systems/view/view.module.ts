@@ -19,6 +19,7 @@ import VmsClientTimelineModule from './vms-client/submodules/timeline/timeline.m
 import VmsClientVmsModule from './vms-client/submodules/vms/vms.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DirectivesModule } from '../../../directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { DirectivesModule } from '../../../directives/directives.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
 
         VmsClientPlaybackModule,

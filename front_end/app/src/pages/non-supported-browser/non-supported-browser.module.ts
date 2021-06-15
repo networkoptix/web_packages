@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DirectivesModule }             from '@directives/directives.module';
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: 'browser', component: NonSupportedBrowserComponent }
@@ -13,6 +14,7 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers : [],

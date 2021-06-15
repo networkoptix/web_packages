@@ -11,6 +11,7 @@ import { ComponentsModule }               from '../../../../components/component
 import { NxSystemAdminComponent }         from './admin.component';
 import { NxSystemStandardAdminComponent } from './standard/standard.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot()
     ],
     providers: [

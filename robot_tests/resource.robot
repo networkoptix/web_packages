@@ -738,7 +738,6 @@ Set Checkbox Value
     [arguments]    ${CHECKBOX ELEMENT}    ${Desired Bool Value}
     ${Desired Bool Value}    Convert To Boolean    ${Desired Bool Value}    #input standardization
     ${id}    Get Element Attribute    ${CHECKBOX ELEMENT}    id
-    Log    ${id}
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Set Checkbox Value Keyword.'
     ${checked}    Get Checkbox Value    ${CHECKBOX ELEMENT}
     Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
@@ -1265,7 +1264,7 @@ Verify Horizontal Scrollbar Exists
     
 Delete All Text
     [Arguments]    ${input}
-    ${text} =    Get Element Attribute    ${input}    value
+    ${text} =    Get Element Attribute    ${input}    innertext
     ${length} =    Get Length    ${text}
     ${length} =    Evaluate    ${length} + 1
     Click Element    ${input}

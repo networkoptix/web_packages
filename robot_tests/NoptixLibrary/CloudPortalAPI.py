@@ -286,14 +286,13 @@ class CloudPortalAPI(object):
         return r.status_code
 
     @staticmethod
-    def camera_search(serverUrl):
-        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':'10.1.5.238:12312'}, verify=False)
+    def camera_search(serverUrl, cameraPort, camFile, user='mark', password='hamill'):
+        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':f'http://10.1.5.238:{cameraPort}/{camFile}.mjpeg', 'user':user, 'password': password}, verify=False)
         return r.json()['reply']['processUuid']
 
     @staticmethod
     def camera_status(serverUrl, uuid):
         r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'uuid':uuid}, verify=False)
-        logger.console(r.json())
         return r.json()
 
     @staticmethod
@@ -310,6 +309,16 @@ class CloudPortalAPI(object):
                     }
                 ]
             } 
+        logger.trace(body)
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        logger.trace(r.status_code)
+        return r.text
+
+    @staticmethod
+    def add_fake_camera(serverUrl, cameras, user="mark", password="hamill"):
+        logger.trace("cameras value")
+        logger.trace(cameras)
+        body= {"cameras":cameras, "user":user, "password":password}
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text

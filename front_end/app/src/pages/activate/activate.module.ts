@@ -8,6 +8,7 @@ import { ComponentsModule }              from '../../components/components.modul
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxActivateComponent }           from './activate.component';
 import { ManualAccessGuard }             from '@src/routeGuards/manualAccessGuard';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
 export class ParamResolver implements Resolve<any> {
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         FormsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes),
         TranslateModule
     ],

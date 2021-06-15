@@ -8,6 +8,7 @@ import { TranslateModule }            from '@ngx-translate/core';
 import { DirectivesModule }           from '../../../directives/directives.module';
 import { ComponentsModule }           from '../../../components/components.module';
 import { NxAccountPasswordComponent } from './password.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { NxAccountPasswordComponent } from './password.component';
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        DirectivesModule
+        DirectivesModule,
+        PipesModule
     ],
     providers      : [],
     declarations   : [

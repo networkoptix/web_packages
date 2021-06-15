@@ -19,6 +19,6 @@
           class="d-block mt-3">
     <header translate>What's New?</header>
     <nx-section>
-        <div [innerHtml]="plugin.versionDetails.whatsNew"></div>
+        <div [innerHtml]="plugin.versionDetails.whatsNew | safe: 'html'"></div>
     </nx-section>
 </nx-block>

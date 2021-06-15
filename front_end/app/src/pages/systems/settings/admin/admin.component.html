@@ -50,7 +50,7 @@
             <ng-template #notOwner>
                 <nx-section>
                     <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
-                        <span class="name" [innerHTML]="updateUserRole()"></span>
+                        <span class="name" [innerText]="updateUserRole()"></span>
                     </span>
                     <div class="mt-2" *ngIf="!CONFIG.isLocal || user?.isCloud">
                         <button [disabled]="settings.disconnectDisabled"
