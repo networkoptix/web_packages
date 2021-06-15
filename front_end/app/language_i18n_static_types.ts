@@ -109,6 +109,7 @@ export interface Authorize {
     setupConnectedText:         any;
     stayLoggedInHelpText:       any;
     termsAndConditionsHelpText: any;
+    copiedToClipboard:          any;
 }
 
 export interface CameraFilters {
@@ -1123,6 +1124,7 @@ const typeMap: any = {
         { json: "setupConnectedText", js: "setupConnectedText", typ: "any" },
         { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
         { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
+        { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

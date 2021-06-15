@@ -1,0 +1,29 @@
+<!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
+<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+    <form #activateAccountForm="ngForm">
+        <svg-icon nx-add-svg-src
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'success' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
+            [svgStyle]="{'width.px': 280, 'height.px': 120}"
+            [applyClass]="true"></svg-icon>
+        <h3 class="authorize-header my-4" translate>You are logged in!</h3>
+        <div class="content-message"><p translate>Here is your new backup code</p></div>
+        <div class="new-backup-code mt-3"
+            (click)="copyToClipboard(copiedTooltip)"
+            [ngbTooltip]="LANG.authorize.copiedToClipboard()"
+            triggers="manual"
+            placement="bottom"
+            #copiedTooltip="ngbTooltip"
+        >
+            <span class="mr-2">{{newBackupCode}}</span>
+            <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                [svgStyle]="{'width.px': 28, 'height.px': 28}"
+                [applyClass]="true"></svg-icon>
+        </div>
+    </form>
+    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+        <div class="d-flex justify-content-end w-100">
+            <button class="btn btn-primary process-button" type="submit" (click)="confirm()" translate>OK</button>
+        </div>
+    </footer>
+</main>

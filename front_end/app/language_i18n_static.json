@@ -113,7 +113,8 @@
         "connectedText": "System connected to %CLOUD_NAME%",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
-        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy"
+        "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
+        "copiedToClipboard": "Copied to clipboard"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",

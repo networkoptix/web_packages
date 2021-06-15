@@ -1,0 +1,21 @@
+@use '../../../styles/typography';
+@use '../../../styles/mixins';
+@use '../../../../styles/theme_variables' as *;
+
+main form {
+    align-items: center;
+}
+
+.new-backup-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 56px;
+    width: 100%;
+    padding: 0 30px;
+    font-size: $h2-font-size;
+    border-radius: 1px;
+
+    cursor: pointer;
+}

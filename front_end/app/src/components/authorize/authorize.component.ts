@@ -43,7 +43,10 @@ export enum AuthorizeState {
     confirm = 'confirmation',
     request = 'resetPasswordRequest',
     reset = 'resetPassword',
-    error = 'error'
+    error = 'error',
+    auth = 'authCode',
+    backup = 'backupCode',
+    newBackup = 'newBackupCode'
 };
 
 export enum ClientType {
@@ -118,8 +121,22 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     resetPassword: string;
     resetPasswordProcess: Process;
 
+    // connection error
     errorDialog$ = new BehaviorSubject<boolean>(false);
     errorDialogProcess: Process;
+
+    // authentication code
+    authCode: string;
+    checkAuthCodeProcess: Process;
+    authCodeErrorCode: string;
+
+    // backup code
+    backupCode: string;
+    checkBackupCodeProcess: Process;
+    backupCodeErrorCode: string;
+
+    // new backup code
+    newBackupCode: string;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
@@ -166,11 +183,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.viewType = this.initialData.view_type || 'web';
 
             this.windowLargeEnough = this.window.innerWidth > 560 && this.window.innerHeight > 720 && this.viewType === 'web';
-            this.windowSmallEnough = this.window.innerWidth < 355;
+            this.windowSmallEnough = this.window.innerWidth <= 355;
             fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
                 const { innerHeight, innerWidth } = event.target;
                 this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
-                this.windowSmallEnough = innerWidth < 355;
+                this.windowSmallEnough = innerWidth <= 355;
             });
 
             if (this.clientType === ClientType.loginCloud) {
@@ -196,6 +213,31 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if ([500, 503].includes(err?.status) || err.message.includes('timeout')) {
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
+        }
+    }
+
+    handleLoginSuccess = async (res) => {
+        this.errorDialog$.value && this.errorDialog$.next(false);
+        if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
+            this.initialData.redirect_url = res.link;
+            this.currentState = AuthorizeState.confirm;
+        } else if (res?.link.startsWith('?code=')) {
+            await this.cloudService.loginCode(res.link.slice(6));
+            defer(() => this.accountService.get())
+                .pipe(
+                    map(res => {
+                        if (!res) {
+                            throw Error('undefined response from accountService get');
+                        }
+                        return res;
+                    }),
+                    retryWhen(errors => errors.pipe(delay(500), take(10)))
+                )
+                .subscribe(() => {
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                });
+        } else {
+            this.redirect(res.link);
         }
     }
 
@@ -246,28 +288,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 ignoreError        : true,
                 timeoutMs
             },
-            async res => {
-                this.errorDialog$.value && this.errorDialog$.next(false);
-                if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
-                    this.initialData.redirect_url = res.link;
-                    this.currentState = AuthorizeState.confirm;
-                } else if (res?.link.startsWith('?code=')) {
-                    await this.cloudService.loginCode(res.link.slice(6));
-                    defer(() => this.accountService.get())
-                        .pipe(
-                            map(res => {
-                                if (!res) {
-                                    throw Error('undefined response from accountService get');
-                                }
-                                return res;
-                            }),
-                            retryWhen(errors => errors.pipe(delay(500), take(10)))
-                        )
-                        .subscribe(() => {
-                            this.router.navigate([this.CONFIG.redirect.authorised]);
-                        });
+            res => {
+                // not final code
+                if (res['2faRequired']) {
+                    this.currentState = AuthorizeState.auth;
                 } else {
-                    this.redirect(res.link);
+                    this.handleLoginSuccess(res);
                 }
             },
             err => {
@@ -347,6 +373,27 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });
+
+        this.checkAuthCodeProcess = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            { ignoreError: true, timeoutMs },
+            () => {
+                this.currentState = AuthorizeState.backup;
+            }
+        );
+
+        this.checkBackupCodeProcess = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            { ignoreError: true, timeoutMs },
+            () => {
+                this.newBackupCode = '2f4q sip7 rdcr';
+                this.currentState = AuthorizeState.newBackup;
+            }
+        );
     }
 
     login = () => {
