@@ -4,12 +4,11 @@
 
 <ng-template #capabilityBlock let-capability="capability">
     <div class="card capability-card" [routerLink]="capability.url">
-        <header [ngStyle]="{
-            minHeight: minHeaderHeight + 'px',
+        <header class="card-header" [ngStyle]="{
             backgroundColor: capability.icon.split(' ')[2] || '#35464f',
             backgroundImage: 'linear-gradient(to right, ' + (capability.icon.split(' ')[3] || '#35464f') + ' 25%, rgba(53, 70, 79, 0)), url(' + CONFIG.icons.backgrounds + capability.icon.split(' ')[1]
         }"
-        (resize)="setMinHeight($event)">
+        >
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + capability.icon.split(' ')[0]"></svg-icon>
             <div class="intro-line">{{capability.subtitle}}</div>
             <h3>{{capability.title}}</h3>
@@ -24,7 +23,7 @@
     <ng-template #noLinkHeader>
         <h2 class="heading-non-link" >{{capabilitiesNode.title}}</h2>
     </ng-template>
-    <div class="detail-blocks">
+    <div class="detail-blocks" nxMatchHeight [classToMatch]="'card-header'">
         <ng-container *ngFor="let capability of capabilitiesNode.nodes">
             <ng-container *ngTemplateOutlet="capabilityBlock;context{capability:capability}"></ng-container>
         </ng-container>

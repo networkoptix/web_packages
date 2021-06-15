@@ -18,13 +18,6 @@ export class NxCapabilitiesComponent {
 
     CONFIG: IConfig;
     errorManager: ErrorStateManager;
-    minHeaderHeight = 0;
-
-    setMinHeight({ height }) {
-        setTimeout(() => {
-            this.minHeaderHeight = Math.max(this.minHeaderHeight, height + 32);
-        }, 10);
-    }
 
     constructor(
         configService: NxConfigService,
@@ -54,12 +47,5 @@ export class NxCapabilitiesComponent {
             this.capabilitiesNode,
             capabilitiesConfig
         );
-        const resize$ = fromEvent(window, 'resize');
-        const orientation$ = fromEvent(window, 'orientationchange');
-        merge(resize$, orientation$).pipe(
-            untilDestroyed(this)
-        ).subscribe(_ => {
-            this.minHeaderHeight = 0;
-        });
     }
 };

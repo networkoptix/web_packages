@@ -14,6 +14,7 @@ import { NxAddSvgSrc }                from './add-data.directive';
 import { NxIntersectionObserver }     from './nx-intersection.directive';
 import { NxProjectedLinkHandler }     from './nx-projected-link-handler.directive';
 import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive';
+import { NxMatchHeightDirective } from './nx-match-height.directive';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive'
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
-        NxProjectedCodeBlock
+        NxProjectedCodeBlock,
+        NxMatchHeightDirective
     ],
     exports: [
         NxArrowNavDirective,
@@ -47,7 +49,8 @@ import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive'
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
-        NxProjectedCodeBlock
+        NxProjectedCodeBlock,
+        NxMatchHeightDirective
     ]
 })
 export class DirectivesModule {
