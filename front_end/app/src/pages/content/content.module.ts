@@ -8,6 +8,7 @@ import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 import { NxLandingComponent }   from '../landing/landing.component';
 import { NxContentComponent }   from './content.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: NxContentComponent },
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers    : [],

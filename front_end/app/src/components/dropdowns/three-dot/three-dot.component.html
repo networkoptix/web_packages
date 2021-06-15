@@ -7,7 +7,7 @@
                         [ngClass]="{ 'selected': _selected && _selected.name === item.name }"
                         [id]="item.id"
                        (click)="show = false; change(item)">
-                        <span [innerHTML]="item.name"></span>
+                        <span [innerText]="item.name"></span>
                     </a>
             </li>
         </ul>

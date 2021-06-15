@@ -22,6 +22,7 @@ import { NxSystemServersModule }     from './servers/servers.module';
 import { NxCamerasModule }           from './cameras/cameras.module';
 import { NxCloudStorageModule }      from './cloud-storage/cloud-storage.module';
 import { NxSettingsService }         from './settings.service';
+import { PipesModule }               from '@src/pipes/pipes.module';
 
 export const cloudSettingsRoutes: Routes = [
     // root path is handles by AJS for now
@@ -89,6 +90,7 @@ export const cloudSettingsRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        PipesModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,

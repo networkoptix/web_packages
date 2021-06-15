@@ -9,6 +9,7 @@ import { TranslateModule }          from '@ngx-translate/core';
 import { DirectivesModule }         from '../../../../directives/directives.module';
 import { ComponentsModule }         from '../../../../components/components.module';
 import { NxCloudStorageComponent }  from './cloud-storage.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import { NxCloudStorageComponent }  from './cloud-storage.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot()
     ],
     providers: [

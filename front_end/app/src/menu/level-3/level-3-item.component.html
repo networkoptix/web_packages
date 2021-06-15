@@ -14,14 +14,14 @@
                 [applyClass]="true"
                 class="menu-level-3-svg-icon"></svg-icon>
         <span class="menu-level-3-label user"
-              [innerHTML]="item.label"
+              [innerHTML]="item.label | safe: 'html'"
               [ngClass]="{
                 'indent': item.indent && !item.icon && !item.svgIcon,
                 'disabled': item.disabled
               }"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalText"
-              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"
+              [innerHTML]="('<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText) | safe: 'html'"
               [ngClass]="{
                 'disabled': item.disabled
               }"></span>

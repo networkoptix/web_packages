@@ -18,7 +18,7 @@
                                 (click)="toggleHeaderSort(header)">
 
                                 <div class="caption d-flex">
-                                    <div class="ellipsis" [innerHTML]="header"></div>
+                                    <div class="ellipsis" [innerText]="header"></div>
                                     <div [ngClass]="{'cam-table-show': !sortOrderASC}"
                                         [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'">
                                         <div class="sort-dir arrow-flip">

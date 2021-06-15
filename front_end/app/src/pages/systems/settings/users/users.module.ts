@@ -9,6 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DirectivesModule }       from '../../../../directives/directives.module';
 import { ComponentsModule }       from '../../../../components/components.module';
 import { NxSystemUsersComponent } from './users.component';
+import { PipesModule }            from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import { NxSystemUsersComponent } from './users.component';
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        PipesModule,
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
     ],

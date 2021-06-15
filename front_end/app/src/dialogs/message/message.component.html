@@ -53,7 +53,7 @@
                           name="message" type="text"
                           required nxFocusMe></textarea>
             </div>
-            <div *ngIf="data.disclaimer" class="form-group" [innerHTML]="data.disclaimer">
+            <div *ngIf="data.disclaimer" class="form-group" [innerHTML]="data.disclaimer | safe: 'html'">
             </div>
         </form>
     </div>

@@ -8,6 +8,7 @@ import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 import { PushComponent }        from './push-notifications.component';
 import { NxConfigService }      from '../../services/nx-config';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
@@ -25,6 +26,7 @@ export function initializeApp(CONFIG: NxConfigService) {
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         FormsModule,
         RouterModule.forChild(appRoutes)
     ],

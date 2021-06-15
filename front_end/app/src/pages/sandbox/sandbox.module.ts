@@ -31,6 +31,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         PipesModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes),
         NxGridLayoutModule,
         VmsClientModule,

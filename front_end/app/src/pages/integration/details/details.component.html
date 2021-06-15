@@ -14,7 +14,7 @@
                     <div *ngIf="plugin.information" class="title" id="info-block-name">{{plugin.information.name}}</div>
                     <div class="minor-text d-flex justify-content-between">
                         <div *ngIf="plugin.versionDetails" name="version" id="info-block-version"
-                             [innerHTML]="plugin.versionDetails.version">
+                             [innerText]="plugin.versionDetails.version">
                         </div>
                         <div *ngIf="plugin.lastModified" name="updateDate" id="info-block-last-modified">
                             <span translate>Updated</span>&nbsp;<span>{{plugin.lastModified}}</span>
@@ -144,7 +144,7 @@
                                             <label class="group-label">{{'integration.testedVersionsLabel'| translate: { vmsName: CONFIG.vmsName } }}</label>
                                         </div>
                                         <div class="d-flex">
-                                            <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull"></div>
+                                            <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull | safe: 'html'"></div>
                                             <svg-icon [src]="CONFIG.icons.dir + 'info.svg'"
                                                       [title]="'Integration likely compatible with latest version of %VMS_NAME%. Please confirm by testing and contact developer directly if you have questions.' | translate"
                                                       [svgStyle]="{'width.px': '20', 'height.px': '20', 'vertical-align': 'top'}"></svg-icon>
@@ -155,7 +155,7 @@
                                          *ngIf="plugin.requirementsAndCompatibility.additionalRequirements">
 
                                         <div><label class="group-label" translate>Additional Requirements</label></div>
-                                        <div [innerHTML]="plugin.requirementsAndCompatibility.additionalRequirements"></div>
+                                        <div [innerHTML]="plugin.requirementsAndCompatibility.additionalRequirements | safe: 'html'"></div>
                                     </div>
 
                                 </div>

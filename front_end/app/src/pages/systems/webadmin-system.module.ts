@@ -20,6 +20,7 @@ import {
 import { NxCamerasComponent }               from './settings/cameras/cameras.component';
 import { MenuModule }                       from '../../menu';
 import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 export const localSettingsRoutes: Routes = [
     {
@@ -85,6 +86,7 @@ export const localSettingsRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        PipesModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,

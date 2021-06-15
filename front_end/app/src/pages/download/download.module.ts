@@ -14,6 +14,7 @@ import { ComponentsModule }      from '../../components/components.module';
 import { DirectivesModule }      from '../../directives/directives.module';
 import { DownloadComponent }     from './download.component';
 import { NxConfigService }       from '../../services/nx-config';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
@@ -57,6 +58,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [

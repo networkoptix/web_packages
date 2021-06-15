@@ -9,6 +9,7 @@ import { ComponentsModule }              from '../../components/components.modul
 import { LandingModule }                 from '../landing/landing.module';
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxRegisterComponent }           from './register.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
 export class SuccessResolver implements Resolve<any> {
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
         FormsModule,
         LandingModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes),
         TranslateModule,
         InputTrimModule

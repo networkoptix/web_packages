@@ -95,7 +95,7 @@
                     nxFocusMe>
             <label
                 *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText"
+                [innerHTML]="machine.state.template.passwordErrorText | safe: 'html'"
                 class="error-label password-label-margin mb-0" for="adminPassword">
             </label>
         </div>
@@ -114,7 +114,7 @@
 </form>
 <form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
     <div class="modal-body">
-        <p [innerHtml]="machine.state.template.urlErrorText"></p>
+        <p [innerHTML]="machine.state.template.urlErrorText | safe: 'html'"></p>
     </div>
     <div class="modal-footer next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
@@ -161,7 +161,7 @@
         <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
                 primarySystem: primaryName,
                 secondarySystem: secondaryName
-            }"></p>
+        }"></p>
         <div *ngIf="tooManyServers">
             <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
             <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>

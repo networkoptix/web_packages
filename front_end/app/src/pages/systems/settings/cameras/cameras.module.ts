@@ -10,6 +10,7 @@ import { DirectivesModule }         from '../../../../directives/directives.modu
 import { ComponentsModule }         from '../../../../components/components.module';
 import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 import { NxCamerasComponent }       from './cameras.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { NxCamerasComponent }       from './cameras.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot()
     ],
     providers: [

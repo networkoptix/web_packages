@@ -8,6 +8,7 @@ import { ComponentsModule }              from '../../components/components.modul
 import { IntegrationsListModule }        from './list/list.module';
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxIntegrationsComponent }       from './integrations.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         FormsModule,
         IntegrationsListModule,
         RouterModule.forChild(appRoutes)

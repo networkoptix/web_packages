@@ -14,7 +14,7 @@
             <div class="intro-line">{{capability.subtitle}}</div>
             <h3>{{capability.title}}</h3>
         </header>
-        <div class="capability-detail" [innerHTML]="capability.asset.shortDescription">
+        <div class="capability-detail" [innerHTML]="capability.asset.shortDescription | safe: 'html'">
         </div>
     </div>
 </ng-template>

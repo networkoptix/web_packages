@@ -8,7 +8,7 @@ import { NxCloudApiService }      from '../../services/nx-cloud-api';
 
 @Component({
     selector  : 'landing-display-component',
-    template  : `<div [innerHTML]="compTemplate"></div>`,
+    template  : '<div [innerHTML]="compTemplate"></div>',
     styleUrls : ['landing-display.component.scss']
 })
 

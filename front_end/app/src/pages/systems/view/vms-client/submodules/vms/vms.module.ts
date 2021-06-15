@@ -14,6 +14,7 @@ import MediaServerList from './components/media-server-list/media-server-list.co
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,7 @@ import { DirectivesModule } from '@directives/directives.module';
         FormsModule,
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
-        DirectivesModule
+        PipesModule
     ],
     exports: [
         MediaServerList

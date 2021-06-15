@@ -20,14 +20,14 @@
                                     name="{{setting.key}}"
                                     [ngModel]="systemSettings[setting.key]">
                             </nx-checkbox>
-                            <div [innerHTML]="getDescription(setting.key)"></div>
+                            <div [innerText]="getDescription(setting.key)"></div>
                         </div>
                     </div>
 
                     <ng-template #otherInput>
                         <div class="col-12 row p-0 d-flex align-items-start">
                             <div class="col-12 col-md-4 pr-1 pl-3 m-0 d-flex flex-column  key-align text-right item">
-                                <div class="" [innerHTML]="getDescription(setting.key)"></div>
+                                <div class="" [innerHTML]="getDescription(setting.key) | safe: 'html'"></div>
                                 <div class=" text-muted break-long" *ngIf="LANG.settingsConfig[setting.key]">{{setting.key}}</div>
                             </div>
 
@@ -43,7 +43,7 @@
 
                                 <div class="help-block text-left"
                                      *ngIf="CONFIG.settingsConfig[setting.key]?.alert"
-                                     [innerHTML]="CONFIG.settingsConfig[setting.key]?.alert">
+                                     [innerHTML]="CONFIG.settingsConfig[setting.key]?.alert | safe: 'html'">
                                 </div>
                             </div>
                         </div>

@@ -68,6 +68,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         AngularSvgIconModule.forRoot(),
         NgxFileDropModule,
         PipesModule,

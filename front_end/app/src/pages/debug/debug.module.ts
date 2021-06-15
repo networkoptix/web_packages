@@ -8,6 +8,7 @@ import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
 import { NxDebugComponent }     from './debug.component';
 import { AuthGuard }            from '../../routeGuards';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
@@ -22,6 +23,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        PipesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers    : [],

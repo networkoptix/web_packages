@@ -1,5 +1,6 @@
 import { NgModule }         from '@angular/core';
 import { NxSafePipe }       from './nx-safe';
+import { NxUnsafePipe }     from './nx-unsafe';
 import { NxHealthDatePipe } from './health-date';
 
 @NgModule({
@@ -7,11 +8,13 @@ import { NxHealthDatePipe } from './health-date';
     ],
     declarations: [
         NxHealthDatePipe,
-        NxSafePipe
+        NxSafePipe,
+        NxUnsafePipe
     ],
     exports: [
         NxHealthDatePipe,
-        NxSafePipe
+        NxSafePipe,
+        NxUnsafePipe
     ],
     providers: [NxHealthDatePipe]
 })

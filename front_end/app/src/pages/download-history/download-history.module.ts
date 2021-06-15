@@ -9,6 +9,7 @@ import { ComponentsModule }                      from '../../components/componen
 import { DirectivesModule }                      from '../../directives/directives.module';
 import { ReleaseComponent }                      from './release/release.component';
 import { DownloadHistoryComponent }              from './download-history.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         DirectivesModule,
+        PipesModule,
         ComponentsModule,
         RouterModule.forChild(appRoutes)
     ],

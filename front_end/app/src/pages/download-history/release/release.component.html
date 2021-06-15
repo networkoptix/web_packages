@@ -7,7 +7,7 @@
 
 <div *ngIf="release.releaseNotes">
     <h4 translate>Release Notes</h4>
-    <div [innerHTML]="release.releaseNotes"></div>
+    <div [innerHTML]="release.releaseNotes | safe: 'html'"></div>
 </div>
 
 <h4 translate>In-Client Upgrade:</h4>

@@ -5,7 +5,7 @@
     <div class="about-heading">
         <h1>{{intro.title}}</h1>
         <ng-container *ngIf="intro.asset?.shortDescription">
-            <p [innerHTML]="intro.asset.shortDescription || ''"></p>
+            <p [innerHTML]="(intro.asset.shortDescription || '') | safe: 'html'"></p>
         </ng-container>
     </div>
 </ng-template>

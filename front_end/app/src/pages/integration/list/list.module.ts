@@ -7,12 +7,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule }            from '../../../components/components.module';
 import { DirectivesModule } from '../../../directives/directives.module';
 import { NxIntegrationsListComponent } from './list.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
         DirectivesModule,
+        PipesModule,
         NgbModule,
         TranslateModule,
         ComponentsModule

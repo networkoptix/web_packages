@@ -35,7 +35,7 @@
                 </div>
                 <div *ngIf="login_email.errors.not_activated" class="clearfix">
                     <div class="input-error  float-left"
-                         [innerHTML]="'errorCodes.accountNotActivatedAlternate' | translate: {cloudHost: CONFIG.cloudHost}"></div>
+                         [innerText]="'errorCodes.accountNotActivatedAlternate' | translate: {cloudHost: CONFIG.cloudHost}"></div>
                 </div>
             </ng-container>
         </div>

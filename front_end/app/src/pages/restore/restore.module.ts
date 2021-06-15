@@ -7,6 +7,7 @@ import { TranslateModule }               from '@ngx-translate/core';
 import { ComponentsModule }   from '../../components/components.module';
 import { DirectivesModule }   from '../../directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
 export class ParamResolver implements Resolve<any> {
@@ -54,7 +55,8 @@ const appRoutes: Routes = [
         FormsModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
-        DirectivesModule
+        DirectivesModule,
+        PipesModule
     ],
     providers: [
         ParamResolver,
