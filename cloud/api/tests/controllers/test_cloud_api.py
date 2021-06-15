@@ -1,37 +1,47 @@
+from typing import Callable, Optional
+from unittest import TestCase
+from unittest.mock import MagicMock
+from uuid import uuid4
+
+import pytest
+from rest_framework import status
+
 import api.controllers.cloud_api as cloud_api
 from api.controllers.cloud_api import *
 from api.helpers.exceptions import *
 from api.tests.utils import MockResponse
 
-import pytest
-from unittest import TestCase
+PatchedResponse = Callable[[Optional[dict]], MagicMock]
 
-from rest_framework import status
+
+def generate_args(num_args=4):
+    for _ in range(num_args):
+        yield str(uuid4())
 
 
 class TestAPIWrappers:
     @staticmethod
     def check_wrapper(wrapper, request_mock, include_json=True, include_params=True):
-        url = 'https://www.google.com'
-        params = {'param1': 'param1val', 'param2': 'param2Val'}
-        auth = HTTPBasicAuth('test_user', 'test_pass')
-        headers = {'header1': 'header1val', 'header2': 'header2Val'}
-        json_data = {'json1': 'json1Val', 'json2': 'json2Val'}
-        req_kwargs = {'url': url, 'auth': auth, 'headers': headers}
+        url, param_1, param_2, email, password, header_1, header_2, json_1, json_2 = generate_args(9)
+        params = {'param1': param_1, 'param2': param_2}
+        auth = {'email': email, 'password': password}
+        headers = {'header1': header_1, 'header2': header_2}
+        json_data = {'json1': json_1, 'json2': json_2}
+        req_kwargs = {'auth': auth, 'headers': headers}
         if include_json:
             req_kwargs['json'] = json_data
         if include_params:
             req_kwargs['params'] = params
 
         with TestCase().assertLogs() as log:
-            wrapper(**req_kwargs)
+            wrapper(url, **req_kwargs)
 
         args = request_mock.call_args[0]
         kwargs = request_mock.call_args[1]
 
         assert args[0] == url
         assert kwargs['headers'] == headers
-        assert kwargs['auth'] == auth
+        assert kwargs['auth'] == HTTPDigestAuth(auth['email'], auth['password'])
 
         if include_params:
             assert kwargs['params'].items() >= params.items()
@@ -58,111 +68,272 @@ class TestAPIWrappers:
 
 
 class TestSystemAPI:
-    user = 'system_user@test.com'
-    password = 'systemPass'
-    basic_auth = HTTPBasicAuth(user, password)
-    sample_data = {'d1': 'd1val', 'd2': 'd2Val', 'resultCode': ErrorCodes.ok.value}
-    system_id = 'dd11cd4f-c74b-4589-9457-d126502fdff6'
-    slave_system_id = 'e0a0d0c8-afe9-482a-9617-a80c760f1208'
-    system_name = 'A System'
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        request, user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(11)
+        self.request = request
+        self.user = user
+        self.password = password
+        self.auth = {'email': user, 'password': password}
+        self.sample_data = {d1_key: d1_val, d2_key: d2_val, 'resultCode': ErrorCodes.ok.value}
+        self.system_id = system_id
+        self.slave_system_id = slave_system_id
+        self.system_name = system_name
+        self.headers = headers
 
     @pytest.fixture
     def cloud_api_get_mock(self, mocker):
-        get_mock = mocker.patch.object(cloud_api, 'get_wrapper')
-        get_mock.return_value = MockResponse(json=self.sample_data)
-        return get_mock
+        return mocker.patch.object(cloud_api, 'get_wrapper', return_value=MockResponse(json=self.sample_data))
 
     @pytest.fixture
     def cloud_api_post_mock(self, mocker):
-        post_mock = mocker.patch.object(cloud_api, 'post_wrapper')
-        post_mock.return_value = MockResponse(json=self.sample_data)
-        return post_mock
+        return mocker.patch.object(cloud_api, 'post_wrapper', return_value=MockResponse(json=self.sample_data))
 
     def test_list(self, cloud_api_get_mock):
         # One customizatoin
-        system_list = System.list(self.user, self.password)
+        system_list = System.list(self.request, self.user, self.password, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/get', params={'customization': settings.CUSTOMIZATION}, auth=self.basic_auth
+            System.get_request_url(),
+            params={'customization': settings.CUSTOMIZATION},
+            auth=self.auth,
+            headers=self.headers
         )
         assert system_list == self.sample_data
 
         # Any customization
-        system_list = System.list(self.user, self.password, one_customization=False)
+        system_list = System.list(self.user, self.password, one_customization=False, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/get', params={}, auth=self.basic_auth
+            System.get_request_url(),
+            params={},
+            headers=self.headers,
+            auth=None
         )
         assert system_list == self.sample_data
 
     def test_get(self, cloud_api_get_mock):
-        system = System.get(self.user, self.password, self.system_id)
+        system = System.get(self.request, self.system_id, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/get', params={'systemId': self.system_id}, auth=self.basic_auth
+            System.get_request_url(),
+            params={'systemId': self.system_id},
+            headers=self.headers
         )
         assert system == self.sample_data
 
     def test_users(self, cloud_api_get_mock):
-        users = System.users(self.user, self.password, self.system_id)
+        users = System.users(self.request, self.system_id, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/getCloudUsers', params={'systemId': self.system_id}, auth=self.basic_auth
+            System.get_request_url('getCloudUsers'),
+            params={'systemId': self.system_id},
+            headers=self.headers
         )
         assert users == self.sample_data
 
     def test_share(self, cloud_api_post_mock):
-        share_email = 'share@share.com'
-        access_role = 'viewer'
-        share = System.share(self.user, self.password, self.system_id, share_email, access_role)
+        share_email, access_role = generate_args(2)
+        share = System.share(self.request, self.system_id, share_email, access_role, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/share',
+            System.get_request_url('share'),
             json={'systemId': self.system_id, 'accountEmail': share_email, 'accessRole': access_role},
-            auth=self.basic_auth
+            headers=self.headers
         )
         assert share == self.sample_data
 
     def test_get_nonce(self, cloud_api_get_mock):
-        nonce = System.get_nonce(self.user, self.password, self.system_id)
+        nonce = System.get_nonce(self.request, self.system_id, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/auth/getNonce', params={'systemId': self.system_id}, auth=self.basic_auth
+            System.get_request_url('getNonce'),
+            params={'systemId': self.system_id}, 
+            headers=self.headers
         )
         assert nonce == self.sample_data
 
     def test_rename(self, cloud_api_post_mock):
-        rename = System.rename(self.user, self.password, self.system_id, self.system_name)
+        rename = System.rename(self.request, self.system_id, self.system_name, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/rename', json={'systemId': self.system_id, 'name': self.system_name},
-            auth=self.basic_auth
+            System.get_request_url('rename'),
+            json={'systemId': self.system_id, 'name': self.system_name},
+            headers=self.headers
         )
         assert rename == self.sample_data
 
     def test_access_roles(self, cloud_api_get_mock):
-        roles = System.access_roles(self.user, self.password, self.system_id)
+        roles = System.access_roles(self.request, self.system_id, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/getAccessRoleList', params={'systemId': self.system_id},
-            auth=self.basic_auth
+            System.get_request_url('getAccessRoleList'),
+            params={'systemId': self.system_id},
+            headers=self.headers
         )
         assert roles == self.sample_data
 
     def test_unbind(self, cloud_api_post_mock):
-        unbind = System.unbind(self.user, self.password, self.system_id)
+        unbind = System.unbind(self.request, self.system_id, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/unbind', json={'systemId': self.system_id},
-            auth=self.basic_auth
+            System.get_request_url('unbind'),
+            json={'systemId': self.system_id},
+            headers=self.headers
         )
         assert unbind == self.sample_data
 
     def test_bind(self, cloud_api_post_mock):
-        bind = System.bind(self.user, self.password, self.system_name)
+        bind = System.bind(self.request, self.system_name, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
-            CLOUD_DB_URL + '/system/bind', json={'name': self.system_name, 'customization': settings.CUSTOMIZATION},
-            auth=self.basic_auth
+            System.get_request_url('bind'),
+            json={'name': self.system_name, 'customization': settings.CUSTOMIZATION},
+            headers=self.headers
         )
         assert bind == self.sample_data
 
     def test_merge(self, cloud_api_post_mock):
-        merge = System.merge(self.user, self.password, self.system_id, self.slave_system_id)
+        merge = System.merge(self.request, self.system_id, self.slave_system_id, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
-            CLOUD_DB_URL + f'/system/{self.system_id}/merged_systems/',
+            System.get_request_url('merged_systems/', self.system_id),
             json={'systemId': self.slave_system_id},
-            auth=self.basic_auth
+            headers=self.headers
         )
         assert merge == self.sample_data
 
+
+class TestStorageApi:
+    patch_get_with_response: PatchedResponse
+    patch_post_with_response: PatchedResponse
+    patch_put_with_response: PatchedResponse
+    patch_delete_with_response: PatchedResponse
+    
+    # Helper methods
+
+    @pytest.fixture(autouse=True)
+    def setup(self, mocker):
+        self.mock_data = generate_args(10)
+        def patch(method) -> PatchedResponse:
+            return lambda res_json=self.mock_data: mocker.patch.object(
+                cloud_api, f'{method}_wrapper', return_value=MockResponse(json=res_json))
+        
+        self.patch_get_with_response = patch('get')
+        self.patch_post_with_response = patch('post')
+        self.patch_put_with_response = patch('put')
+        self.patch_delete_with_response = patch('delete')
+
+    def mock_list_system_storages(self, mocker, storages):
+        return mocker.patch.object(
+            cloud_api.Storage, 'list_system_storages', return_value=[{'id': id} for id in storages])
+
+    # Storage Tests
+ 
+    def test_delete_handler(self):
+        mocked = self.patch_delete_with_response()
+        request, storage_id, headers = generate_args(3)
+
+        response = Storage._delete(request, storage_id, headers=headers)
+ 
+        mocked.assert_called_once_with(
+            Storage.get_request_url(storage_id), headers=headers)
+        assert response == self.mock_data
+
+    def test_merge_handler(self):
+        mocked = self.patch_put_with_response()
+        request, headers, storage_id, storage_id_secondary = generate_args()
+
+        response = Storage._merge(request, storage_id, storage_id_secondary, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(
+                storage_id,
+                Storage.MERGED_STORAGES_ENDPOINT),
+                headers=headers,
+                json={'slaveStorageId': storage_id_secondary})
+        assert response == self.mock_data
+
+    def test_move_handler(self):
+        mocked = self.patch_put_with_response()
+        request, headers, storage_id, system_id = generate_args()
+
+        response = Storage._move(request, system_id, storage_id, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(
+                storage_id, Storage.SYSTEMS_ENDPOINT),
+                headers=headers,
+                json={'id': system_id})
+        assert response == self.mock_data
+
+    def test_remove_from_system_handler(self):
+        mocked = self.patch_delete_with_response()
+        request, headers, storage_id, system_id = generate_args()
+        
+        response = Storage._remove_from_system(request, system_id, storage_id, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(storage_id, Storage.SYSTEM_ENDPOINT, system_id),
+            headers=headers)
+        assert response == self.mock_data
+
+    def test_create(self):
+        mocked = self.patch_put_with_response()
+        _, auth, system_id, storage_size = generate_args()
+        headers = {'auth': auth}
+ 
+        response = Storage.create(None, system_id, storage_size, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(use_storages_endpoint=True),
+                headers=headers,
+                json={'systems': [system_id], 'totalSpace': storage_size})
+        assert response == self.mock_data
+    
+    def test_delete_from_system(self, mocker):
+        request, auth, system_id, *storages = generate_args(4)
+        mocked_list_system_storages = self.mock_list_system_storages(mocker, storages)
+        mocked_remove_from_system_handler = mocker.patch.object(cloud_api.Storage, '_remove_from_system')
+        mocked_delete_handler = mocker.patch.object(cloud_api.Storage, '_delete')
+        Storage.delete_from_system(request, system_id)
+    
+        mocked_list_system_storages.assert_called_once_with(request, system_id)
+
+        for storage_id in storages:
+            mocked_remove_from_system_handler.assert_called_once_with(request, system_id, storage_id)
+            mocked_delete_handler.assert_called_once_with(request, storage_id)
+
+    def test_list_system_storages(self):
+        mocked = self.patch_get_with_response()
+        request, headers, system_id = generate_args(3)
+
+        response = Storage.list_system_storages(request, system_id, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(use_storages_endpoint=True),
+            params={'system-id': system_id},
+            headers=headers)
+        assert response == self.mock_data
+
+    def test_list_cameras(self):
+        mocked = self.patch_get_with_response()
+        request, storage_id, headers = generate_args(3)
+        response = Storage.list_cameras(request, storage_id, headers=headers)
+
+        mocked.assert_called_once_with(
+            Storage.get_request_url(storage_id, Storage.CAMERAS_ENDPOINT),
+            headers=headers)
+        assert response == self.mock_data
+    
+    def test_move(self, mocker):
+        request, headers, source_system_id, destination_system_id, *storages = generate_args(5)
+        mocked_list_system_storages = self.mock_list_system_storages(mocker, storages)
+        mocked_remove_from_system_handler = mocker.patch.object(cloud_api.Storage, '_remove_from_system')
+        mocked_merge_handler = mocker.patch.object(cloud_api.Storage, '_merge')
+        
+        response = Storage.move(request, destination_system_id, source_system_id)
+    
+        assert mocked_list_system_storages.call_count == 2
+        for storage_id in storages:
+            mocked_remove_from_system_handler.assert_called_once_with(request, source_system_id, storage_id)
+            mocked_merge_handler.assert_called_once_with(request, storage_id, storage_id)
+        assert response is None
+
+    def test_statistics(self):
+        mocked = self.patch_get_with_response()
+        request, headers, storage_id = generate_args(3)
+        response = Storage.statistics(request, storage_id, headers=headers)
+        mocked.assert_called_once_with(
+            Storage.get_request_url(storage_id, Storage.STATISTICS_ENDPOINT),
+            headers=headers)
+        assert response == self.mock_data

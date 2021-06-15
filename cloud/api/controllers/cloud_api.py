@@ -208,6 +208,16 @@ def ping():
 
 class System(object):
     @staticmethod
+    def get_request_url(endpoint=None, system_id=None):
+        system_id_segment = f'{system_id}/' if system_id else ''
+        if endpoint is None:
+            return f'{CLOUD_DB_URL}/system/get'
+        if endpoint == 'getNonce':
+            return f'{CLOUD_DB_URL}/auth/getNonce'
+        return f'{CLOUD_DB_URL}/system/{system_id_segment}{endpoint}'
+        
+ 
+    @staticmethod
     @validate_response
     @auto_refresh_token
     def list(request, email=None, password=None, one_customization=True, headers=None):
@@ -220,7 +230,7 @@ class System(object):
         if email and password:
             auth = {"email": email, "password": password}
 
-        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers, auth=auth)
+        return get_wrapper(System.get_request_url(), params=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -229,7 +239,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/get', params=params, headers=headers)
+        return get_wrapper(System.get_request_url(), params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -238,7 +248,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/getCloudUsers', params=params, headers=headers)
+        return get_wrapper(System.get_request_url('getCloudUsers'), params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -250,7 +260,7 @@ class System(object):
             'accountEmail': account_email,
             'accessRole': role
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/share', json=params, headers=headers)
+        return post_wrapper(System.get_request_url('share'), json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -259,7 +269,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/auth/getNonce', params=params, headers=headers)
+        return get_wrapper(System.get_request_url('getNonce'), params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -269,7 +279,7 @@ class System(object):
             'systemId': system_id,
             'name': system_name
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/rename', json=params, headers=headers)
+        return post_wrapper(System.get_request_url('rename'), json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -278,7 +288,7 @@ class System(object):
         params = {
             'systemId': system_id
         }
-        return get_wrapper(f'{CLOUD_DB_URL}/system/getAccessRoleList', params=params, headers=headers)
+        return get_wrapper(System.get_request_url('getAccessRoleList'), params=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -287,7 +297,7 @@ class System(object):
         params = {
             'systemId': system_id,
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/unbind', json=params, headers=headers)
+        return post_wrapper(System.get_request_url('unbind'), json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -298,7 +308,7 @@ class System(object):
             'name': name,
             'customization': customization
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/bind', json=params, headers=headers)
+        return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -307,7 +317,7 @@ class System(object):
         params = {
             'systemId': slave_system_id
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/system/{master_system_id}/merged_systems/', json=params, headers=headers)
+        return post_wrapper(System.get_request_url('merged_systems/', master_system_id), json=params, headers=headers)
 
 
 class Account(object):
@@ -487,11 +497,33 @@ class Storage(object):
         ]
     }
     """
+
+    # Endpoint constants
+
+    MERGED_STORAGES_ENDPOINT = 'merged-storages/'
+    SYSTEM_ENDPOINT = 'system'
+    SYSTEMS_ENDPOINT = 'systems/'
+    CAMERAS_ENDPOINT = 'cameras'
+    STATISTICS_ENDPOINT = 'statistics'
+
+    # Helpers
+    @staticmethod
+    def get_request_url(storage_id=None, endpoint=None, system_id=None, use_storages_endpoint=False):
+        main_segment = f"{CLOUD_STORAGES_URL if use_storages_endpoint else CLOUD_STORAGE_URL}/"
+
+        storage_segment = storage_id or ''
+
+        # trailing slash optionally included on en
+        endpoint_segment = f'/{endpoint}' if endpoint else ''
+        system_segment = f'/{system_id}' if system_id else ''
+        return f'{main_segment}{storage_segment}{endpoint_segment}{system_segment}'
+
+    # Handlers
     @staticmethod
     @validate_response
     @auto_refresh_token
     def _delete(request, storage_id, headers=None):
-        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}", headers=headers)
+        return delete_wrapper(Storage.get_request_url(storage_id), headers=headers)
 
     @staticmethod
     @validate_response
@@ -500,7 +532,7 @@ class Storage(object):
         body = {
             "slaveStorageId": slave_storage_id
         }
-        return put_wrapper(f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/", json=body, headers=headers)
+        return put_wrapper(Storage.get_request_url(master_storage_id, Storage.MERGED_STORAGES_ENDPOINT), json=body, headers=headers)
 
     @staticmethod
     @validate_response
@@ -509,13 +541,13 @@ class Storage(object):
         body = {
             "id": system_id
         }
-        return put_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/systems/", json=body, headers=headers)
+        return put_wrapper(Storage.get_request_url(storage_id, Storage.SYSTEMS_ENDPOINT), json=body, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def _remove_from_system(request, system_id, storage_id, headers=None):
-        return delete_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}", headers=headers)
+        return delete_wrapper(Storage.get_request_url(storage_id, Storage.SYSTEM_ENDPOINT, system_id), headers=headers)
 
     @staticmethod
     @validate_response
@@ -525,7 +557,7 @@ class Storage(object):
             "systems": [system_id],
             "totalSpace": storage_size
         }
-        return put_wrapper(f"{CLOUD_STORAGES_URL}/", json=body, headers=headers)
+        return put_wrapper(Storage.get_request_url(use_storages_endpoint=True), json=body, headers=headers)
 
     @staticmethod
     @validate_response
@@ -546,13 +578,13 @@ class Storage(object):
         params = {
             "system-id": system_id
         }
-        return get_wrapper(f"{CLOUD_STORAGES_URL}/", params=params, headers=headers)
+        return get_wrapper(Storage.get_request_url(use_storages_endpoint=True), params=params, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def list_cameras(request, storage_id, headers=None):
-        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/cameras", headers=headers)
+        return get_wrapper(Storage.get_request_url(storage_id, Storage.CAMERAS_ENDPOINT), headers=headers)
 
     @staticmethod
     @validate_response
@@ -567,7 +599,7 @@ class Storage(object):
         except APINotFoundException:
             destination_storages = []
 
-        if len(destination_storages) == 0:
+        if not destination_storages:
             for storage in source_storages:
                 storage_id = storage['id']
                 Storage._remove_from_system(request, source_system_id, storage_id)
@@ -585,7 +617,7 @@ class Storage(object):
     @validate_response
     @auto_refresh_token
     def statistics(request, storage_id, headers=None):
-        return get_wrapper(f"{CLOUD_STORAGE_URL}/{storage_id}/statistics", headers=headers)
+        return get_wrapper(Storage.get_request_url(storage_id, Storage.STATISTICS_ENDPOINT), headers=headers)
 
 
 class Auth(object):
