@@ -33,7 +33,7 @@ require('./scripts/vendor/protocolcheck');
         </div>
         <div class="outerContainer"
              *ngIf="appStateService.ready"
-            [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.heightWithRibbon : appStateService.heightWithoutRibbon }">
+            [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.appContainerHeight : appStateService.appContainerHeight }">
             <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground}" nxScrollHelper #mainContainer>
                 <router-outlet></router-outlet>
             </div>
