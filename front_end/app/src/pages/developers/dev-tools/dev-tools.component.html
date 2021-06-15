@@ -31,7 +31,10 @@
 <ng-container *ngIf="this.devToolsNode; else preloader">
     <ng-container *ngIf="!errorManager.hasErrors; else showError">
         <section *ngIf="title; else blocks" class="dev-tools">
-            <h2 class="heading-link" [routerLink]="devToolsNode.url">{{title}}</h2>
+           <h2 class="heading-link" *ngIf="devToolsNode.url; else nonLinkHeader"  [routerLink]="devToolsNode.url">{{title}}</h2>
+            <ng-template #nonLinkHeader>
+                <h2 class="heading">{{title}}</h2>
+            </ng-template>
             <ng-container *ngTemplateOutlet="blocks;context{noMargin:true}"></ng-container>
         </section>
     </ng-container>
