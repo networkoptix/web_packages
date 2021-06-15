@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <div class="player-and-controls-wrapper" [ngClass]="{'slim': !camera.hasArchive && !camera.isScheduleEnabled}">
+  <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">
     <div class="player-wrapper">
       <player *ngIf="camera && showPlayer() else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
