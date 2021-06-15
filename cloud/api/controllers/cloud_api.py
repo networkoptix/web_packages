@@ -134,9 +134,10 @@ class TempLogin:
 
     def __exit__(self):
         """Deletes the tokens"""
-        Auth.delete_token(self.refresh_token)
-        Auth.delete_token(self.access_token)
+        Auth.delete_token(self.tokens, self.refresh_token)
+        Auth.delete_token(self.tokens, self.access_token)
 
+    @property
     def tokens(self):
         """Returns the access and refresh tokens"""
         return {
@@ -218,8 +219,8 @@ class System(object):
         if endpoint == 'getNonce':
             return f'{CLOUD_DB_URL}/auth/getNonce'
         return f'{CLOUD_DB_URL}/system/{system_id_segment}{endpoint}'
-        
- 
+
+
     @staticmethod
     @validate_response
     @auto_refresh_token

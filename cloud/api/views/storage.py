@@ -62,7 +62,7 @@ def create(request):
 def delete(request):
     require_params(request, ['systemId', 'password'])
     with cloud_api.TempLogin(request.user.email, request.data.get('password')) as credentials:
-        cloud_api.Storage.delete_from_system(credentials, request.data.get('systemId'))
+        cloud_api.Storage.delete_from_system(credentials.tokens, request.data.get('systemId'))
     return api_success()
 
 
