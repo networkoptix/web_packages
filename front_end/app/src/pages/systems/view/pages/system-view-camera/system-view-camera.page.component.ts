@@ -334,6 +334,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
                 ar = await this._prepareArchiveRecords(ar);
                 this._log('got camera archive range', this.id, ar);
+                this.playback.save();
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
                     this._log('empty archive');
                     this.playback.restore(false);
@@ -524,7 +525,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 if (this.camera?.id !== s.selectedCamera.id) {
                     this.camera = s.selectedCamera;
                     this._updateAvailableTransportsAndResolutions();
-                    this._initSelectedCamera();
                 } else {
                     this.camera.name = s.selectedCamera.name;
                     this.camera.status = s.selectedCamera.status;
@@ -555,7 +555,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _initSelectedCamera () {
         this._log('_initSelectedCamera');
-        this.playback.stop();
         this.resetTransport();
         this.resetQuality();
 
@@ -573,7 +572,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
         }
 
-        if (this.camera?.isLive) {
+        if (this.playback.state.mode === PLAYBACK_MODE.LIVE) {
+            this.playback.stop();
             setTimeout(() => this.playback.playLive());
         }
     }
