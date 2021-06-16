@@ -10,6 +10,7 @@
     "serve-webadmin-ip": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.ip.json",
     "serve-webadmin-local": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.local.json",
     "serve-webadmin-demo": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.demo.json",
+    "serve-webadmin-nuke": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.alternative.json",
     "build": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
     "bundle-report": "npm run lang && ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
