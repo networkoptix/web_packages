@@ -33,9 +33,11 @@ Server Settings Suite Setup
     ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
     ${server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server 1 id}
 
-    ${server 2} =    Create Base System    servers2-${random}    owner=${user in charge}
+    ${server 2}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers2-${random}    owner=${user in charge}
+    ...    ELSE    Create Base System    servers2-${random}
     ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}    Server ${server 2}[id]
-    ${server 3} =    Create Base System    servers3-${random}    owner=${user in charge}
+    ${server 3}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers3-${random}    owner=${user in charge}
+    ...    ELSE    Create Base System    servers3-${random}
 
     Change server name via API    ${server auth}    server 1    ${server 1 id}    https://${QA BURBANK IP}:${port 1}
     Change server name via API    ${server 2}[local auth]    server 2    ${server 2 id}    https://${QA BURBANK IP}:${server 2}[port]
@@ -193,7 +195,6 @@ Server name can be changed
     [Tags]    C71000    threaded
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
-    Capture Page Screenshot
     Change System Name    server 1 name changed    save=True
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Reload Page
@@ -207,6 +208,7 @@ Server name can be changed
 Server name changed via API updates on cloud
     [Tags]    C70961    threaded
     Verify on Servers Page
+    Sleep    1
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     ${loc}=   Get Location
@@ -355,14 +357,14 @@ Change port
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1}[port]
 
 # Waiting to hear back from server team about proper error code
-Admin cannot change port via API
+Administrator cannot change port via API
     [Tags]    C70927    threaded
     Verify on Servers Page
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
     @{auth}=    Create List    ${admin}    ${password}
     ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1}[sysId].relay.vmsproxy.hdw.mx    7777    ${split[1]}
-    ...    ELSE    Change server port via API    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
+    ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
     Should Be True    ${status is correct}
 
@@ -380,8 +382,7 @@ Check status
     Click Button    ${CHECK STATUS BUTTON}
     Wait Until Element is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
-    Sleep    1
-    Wait Until Element Is Not Visible    ${OFFLINE BANNER}    95
+    Wait Until Element Is Not Visible    ${OFFLINE BANNER}    300
     ${results}    Execute Command    docker container stop ${server 2}[id]
     Close Connection
 
