@@ -159,11 +159,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             .pipe(filter((TaR) => TaR !== undefined))
             .subscribe((transportsAndResolutions: AvailableTransportsAndResolutions) => {
                 const videoTypes = {
-                    ogg  : 'video/ogg',
-                    mp4  : 'video/mp4',
-                    webm : 'video/webm',
-                    hls  : 'application/x-mpegURL',
-                    rtsp : 'video/webm'
+                    ogg   : 'video/ogg',
+                    mp4   : 'video/mp4',
+                    mjpeg : 'video/webm',
+                    webm  : 'video/webm',
+                    hls   : 'application/x-mpegURL',
+                    rtsp  : 'video/webm'
                 };
                 const video = this.document.createElement('video');
                 const isHlsSupported = Hls.isSupported();

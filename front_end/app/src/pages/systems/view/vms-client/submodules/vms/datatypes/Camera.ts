@@ -78,6 +78,7 @@ export class Camera implements ICamera {
             switch (t) {
                 case 'hls':
                 case 'webm':
+                case 'mjpeg':
                 case 'mp4':
                 case 'rtsp':
                     return true;
