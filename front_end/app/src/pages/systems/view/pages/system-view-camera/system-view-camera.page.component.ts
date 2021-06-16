@@ -546,6 +546,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && this.camera.hasArchive && this.canViewArchives;
     }
 
+    public get enableControls (): boolean {
+        return this.camera && !this.transportError && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
+    }
+
     showPlayer () {
         const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);

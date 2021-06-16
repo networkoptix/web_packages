@@ -113,8 +113,8 @@
         </div>
       </div>
       <div class="controls">
-        <playback-controls [enabled]="camera && !transportError && camera.isOnline && !camera.isUnauthorized"></playback-controls>
-        <zoom-controls *ngIf="canViewArchives"></zoom-controls>
+        <playback-controls [enabled]="enableControls"></playback-controls>
+        <zoom-controls *ngIf="camera.hasArchive && canViewArchives"></zoom-controls>
         <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
         <ng-template #noArchiveYet>
           <nx-pre-loader class="loading-archive-indicator" *ngIf="getRecordsInProgress else noArchive"></nx-pre-loader>
