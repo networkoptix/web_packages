@@ -12,6 +12,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService }           from '@services/nx-config';
 import { ILanguage, ILanguages }     from '@services/nx-cloud-api.types';
 import { LocalStorageService }       from 'ngx-webstorage';
+import { NxSessionService }          from '@services/session.service';
 
 @Directive()
 class BaseLanguageDropdown extends BaseDropdown {
@@ -38,7 +39,8 @@ class BaseLanguageDropdown extends BaseDropdown {
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
-        private localStorageService: LocalStorageService
+        private localStorageService: LocalStorageService,
+        private sessionService: NxSessionService
     ) {
         super(languageService, configService);
 
@@ -75,7 +77,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                  // this.translate.use(lang.replace('_', '-'));
                  */
                 if (this.CONFIG.isLocal) {
-                    this.languageService.currentLang = this.langCode;
+                    this.sessionService.language = this.langCode;
                     window.location.reload();
                 } else {
                     this.cloudApi

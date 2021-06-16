@@ -43,7 +43,10 @@ export class NxLanguageProviderService {
             this.translations = translations;
         });
         this.storageService.observe('language').subscribe(_ => {
-            this.window.location.reload();
+            // webadmin will handle the reload
+            if (!environment.isLocal) {
+                this.window.location.reload();
+            }
         });
 
         /** Breadcrumbs -- to avoid page reload on language change
@@ -121,6 +124,7 @@ export class NxLanguageProviderService {
             return;
         }
 
+        this.translate.currentLang = language;
         this.loadLanguage().then(translation => {
             this.setTranslations(language, translation);
             this.sessionService.language = language;

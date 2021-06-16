@@ -29,6 +29,18 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/static/lang_ru_RU/language_compiled.json": {
+    "target": "https://10.1.5.196:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_ru_RU/*": {
+    "target": "https://10.1.5.196:7001",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/lang_en_US/language_compiled.json": {
     "target": "https://localhost:9001",
     "pathRewrite": {
