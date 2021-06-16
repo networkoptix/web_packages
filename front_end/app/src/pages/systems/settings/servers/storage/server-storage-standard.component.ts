@@ -224,7 +224,7 @@ export class NxSystemStorageComponent implements OnInit {
                     this.changedModes = [];
                     this.updatingModes = [];
                     triggerUpdate().pipe(untilDestroyed(this)).subscribe(state => {
-                        this.currentStorageState.locations = state.locations.map((location) => {
+                        this.currentStorageState.locations = (state?.locations || []).map((location) => {
                             if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)) {
                                 location.status = STORAGE_STATUS.INACCESSIBLE;
                                 location.storageStatus = `${location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '')} | ${STORAGE_STATUS.INACCESSIBLE}`;
@@ -244,7 +244,7 @@ export class NxSystemStorageComponent implements OnInit {
             }),
             map(_ => {
                 const state = this.system.storageManager.storageState;
-                this.updatingModes = state.locations.filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId);
+                this.updatingModes = (state?.locations || []).filter(({ storageStatus }) => storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)).map(({ storageId }) => storageId);
                 for (const location of (this.currentStorageState?.locations || [])) {
                     if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED) && !this.updatingModes.includes(location.storageId)) {
                         location.storageStatus = location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '');
@@ -266,7 +266,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.resetWatchers = () => {
             this.isBackupOn.reset();
             this.backupState = this.isBackupOn.originalValue;
-            const storage = this.currentStorageState.locations;
+            const storage = this.currentStorageState?.locations || [];
             this.changedModes = [];
             modeWatchers.forEach(([id, watcher]) => {
                 watcher.reset();
