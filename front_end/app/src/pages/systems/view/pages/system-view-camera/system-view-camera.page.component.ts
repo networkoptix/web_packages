@@ -343,7 +343,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
                         const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
                         const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
-                        const showToLive = this.camera.isLive || this.camera.isUnauthorized;
+                        const showToLive = this.camera.isLive || this.camera.isScheduleEnabled || this.camera.hasArchive;
                         const now = Date.now();
                         const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
                         const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
