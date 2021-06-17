@@ -659,8 +659,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             : enabled);
     }
 
-    handleRecordingToggle(switchValue) {
-        if (!this.recording && this.recordingWatcher.originalValue ? this.availableLicenses < 0 : this.availableLicenses <= 0) {
+    handleRecordingToggle(switchValue: boolean) {
+        if ((!this.recording && !this.recordingWatcher.originalValue) ? this.availableLicenses <= 0 : this.availableLicenses < 0) {
             this.shakeHint = true;
             setTimeout(() => {
                 this.shakeHint = false;
