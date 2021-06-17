@@ -271,41 +271,45 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
                     const serverTimeInfos = await this.system.getServerTimes();
-                    serverTimeInfos.map(sti => {
-                        mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti;
-                    });
-                    const findCameraArchiveRanges = (cid) => {
-                        // (check archive presence mode)
-                        if (!this.system.userManager.permissions.viewArchives) {
-                            return Promise.resolve();
+                    serverTimeInfos.forEach(sti => {
+                        const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
+                        if (mediaServer) {
+                            mediaServer.timeInfo = sti;
                         }
-                        return this.system.getCameraRecords(cid, 0, now, now).then(response => {
-                            const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
-                            // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
-                            const extractChunk = chunks => {
-                                let longestDuration = 0;
-                                let earliestStart = Number.POSITIVE_INFINITY;
-                                chunks.forEach((chunk) => {
-                                    // 4.3 api response changed
-                                    const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
-                                    const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
-                                    if (start < earliestStart) {
-                                        earliestStart = start;
-                                    }
-                                    if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
-                                        longestDuration = duration;
-                                    }
-                                });
-                                const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
-                                return [earliestStart, end];
-                            };
-                            if (hasArchive) {
-                                const [start, end] = extractChunk(response.reply);
-                                archiveRanges[cid] = new SimpleTimeRange(start, end);
-                            }
-                        });
-                    };
-                    const processCameras = (c, ms) => {
+                    });
+                    // TODO: If no issues with this section being commented out remove it in 21.1
+                    // const findCameraArchiveRanges = (cid) => {
+                    //     // (check archive presence mode)
+                    //     if (!this.system.userManager.permissions.viewArchives) {
+                    //         return Promise.resolve();
+                    //     }
+                    //     return this.system.getCameraRecords(cid, 0, now, now).then(response => {
+                    //         const hasArchive = parseInt(response.error) ? false : (response.reply && response.reply.length);
+                    //         // this._log('check archive presence', cid, result, response, '|', response.reply, '|', response.reply.length)
+                    //         const extractChunk = chunks => {
+                    //             let longestDuration = 0;
+                    //             let earliestStart = Number.POSITIVE_INFINITY;
+                    //             chunks.forEach((chunk) => {
+                    //                 // 4.3 api response changed
+                    //                 const start = parseInt(chunk?.periods.length ? chunk.periods[0].startTimeMs : chunk.startTimeMs);
+                    //                 const duration = parseInt(chunk?.periods.length ? chunk.periods[0].durationMs : chunk.durationMs);
+                    //                 if (start < earliestStart) {
+                    //                     earliestStart = start;
+                    //                 }
+                    //                 if (longestDuration !== -1 && (duration === -1 || duration > longestDuration)) {
+                    //                     longestDuration = duration;
+                    //                 }
+                    //             });
+                    //             const end = (longestDuration === -1) ? now : (earliestStart + longestDuration);
+                    //             return [earliestStart, end];
+                    //         };
+                    //         if (hasArchive) {
+                    //             const [start, end] = extractChunk(response.reply);
+                    //             archiveRanges[cid] = new SimpleTimeRange(start, end);
+                    //         }
+                    //     });
+                    // };
+                    const processCameras = (c) => {
                         this.hasCameras = true;
                         const result = new Camera(
                             c.id,
@@ -315,8 +319,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             ms.status === 'Offline' ? 'Offline' : (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
                             c.scheduleEnabled,
                             c.disableDualStreaming,
-                            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                            archives[c.id] || [],
+                            new SimpleTimeRange(0, 0),
+                            [],
                             this.system?.getCameraThumbnailUrl(c.id),
                             (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
                             (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
@@ -324,11 +328,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         result.parseAdditionalParams(c.addParams);
                         return result;
                     };
-                    const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), []);
-                    const archiveRanges = {};
-                    const archives = {};
-                    const now = Date.now();
-                    await Promise.all(cameraIds.map(findCameraArchiveRanges));
+                    // TODO: If no issues with this section being commented out remove it in 21.1
+                    // const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), []);
+                    // const archiveRanges = {};
+                    // const archives = {};
+                    // const now = Date.now();
+                    // await Promise.all(cameraIds.map(findCameraArchiveRanges));
 
                     cachedMediaServers = mediaServers.map(ms => NxUtilsService.formatURL(({
                         id               : ms.id,
