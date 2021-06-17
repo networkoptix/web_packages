@@ -1,6 +1,11 @@
 <form #loginForm="ngForm" name="loginForm" novalidate
       [ngClass]="{'hide-errors': hideErrors}"
       (submit)="hideErrors = false">
+    <div class="logo-header">
+        <img [alt]="CONFIG.vmsName + ' logo'"
+            [src]="CONFIG.images.dir + 'welcome_page_logo@2x.png'"
+            [srcset]="CONFIG.images.dir + 'welcome_page_logo.png, ' + CONFIG.images.dir + 'welcome_page_logo@2x.png 2x'">
+        </div>
     <div class="modal-body">
         <div class="form-group">
             <label for="login_email" translate>Login</label>

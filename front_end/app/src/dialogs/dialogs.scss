@@ -69,7 +69,6 @@ nx-modal-wizard {
             @media screen and (max-height: $collapse-webadmin-width), (max-width: $collapse-webadmin-width) {
                 width: 100vw !important;
                 & > .modal-content {
-
                         height: 100vh !important;
                         width: 100vw !important;
                 }

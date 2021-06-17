@@ -193,7 +193,8 @@ $dropdown-link-active-color: $brand_core;
 
 $collapse-first-width  : 920px;
 $collapse-second-width : 768px;
-$collapse-webadmin-width: 440px;
+$collapse-webadmin-width: 576px;
+$collapse-webadmin-window-width: 440px;
 
 @mixin outline {
     box-shadow : 0 0 0 2px transparentize($brand_l2, 0.4) !important;
