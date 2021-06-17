@@ -497,7 +497,7 @@ export class NxSystemStorageComponent implements OnInit {
             store.usedForWriting = updateParams.usedForWriting;
             if (selected.value !== 'modeNotUsed') {
                 store.isBackup = updateParams.isBackup;
-                if (store.isBackup && !store.currentStorageState.onlineBackups) {
+                if (store.isBackup && store.currentStorageState.onlineBackups === 1) {
                     this.backupState ||= store.isBackup;
                 }
             }
