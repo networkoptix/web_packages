@@ -1583,7 +1583,9 @@ def file_saved(sender, created, signal, instance, **kwargs):
             instance.size = file.size
             instance.save()
 
-post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
+
+if not settings.TESTING:
+    post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
 
 @receiver(pre_delete, sender=AssetDsPair)
 def delete_asset_ds_reverse(sender, instance, **kwargs):

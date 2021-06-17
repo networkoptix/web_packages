@@ -1348,3 +1348,247 @@ class TestCustomClient:
     def test_created_on(self):
         created_on = self.client._meta.get_field('created_on')
         assert created_on.auto_now_add
+
+
+class TestContentVersionFields:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.version = baker.prepare('ContentVersion')
+
+    def test_customization(self):
+        customization = self.version._meta.get_field('customization')
+        assert customization.related_model == Customization
+        assert customization.default is None
+        assert customization.null
+
+    def test_asset(self):
+        asset = self.version._meta.get_field('asset')
+        assert asset.related_model == Asset
+        assert asset.default == 1
+
+    def test_created_date(self):
+        created_date = self.version._meta.get_field('created_date')
+        assert created_date.auto_now_add is True
+
+    def test_created_by(self, django_user_model):
+        created_by = self.version._meta.get_field('created_by')
+        assert created_by.related_model == django_user_model
+        assert created_by.null
+        assert created_by.blank
+        assert created_by.related_query_name() == 'created_contentversion'
+
+    def test_accepted_date(self):
+        accepted_date = self.version._meta.get_field('accepted_date')
+        assert accepted_date.null
+        assert accepted_date.blank
+
+    def test_accepted_by(self, django_user_model):
+        accepted_by = self.version._meta.get_field('accepted_by')
+        assert accepted_by.related_model == django_user_model
+        assert accepted_by.null
+        assert accepted_by.blank
+        assert accepted_by.related_query_name() == 'accepted_contentversion'
+
+
+class TestContentVersionMethods:
+    def test_str(self):
+        version = baker.prepare('ContentVersion')
+        version.id = 5
+        assert str(version) == '5'
+
+    @pytest.fixture()
+    def asset(self, default_customization, other_customization, asset_type_factory, superuser):
+        integration_type = asset_type_factory(AssetType.ASSET_TYPES.integration)
+        return baker.make('Asset', name='asset', asset_type=integration_type, customizations=[default_customization, other_customization])
+
+    def test_create_missing_reviews(self, asset, superuser, default_customization, other_customization):
+        customizations = [default_customization, other_customization]
+        version_oldest = baker.make('ContentVersion', asset=asset, created_by=superuser)
+        baker.make(
+            'AssetCustomizationReview', version=version_oldest,
+            customization=iter(customizations),
+            state=AssetCustomizationReview.REVIEW_STATES.accepted, _quantity=2
+        )
+
+        version_older = baker.make('ContentVersion', asset=asset, created_by=superuser)
+        baker.make(
+            'AssetCustomizationReview', version=version_older,
+            customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted
+        )
+        version_newest = baker.make('ContentVersion', asset=asset, created_by=superuser)
+        baker.make(
+            'AssetCustomizationReview', version=version_newest,
+            customization=iter(customizations),
+            state=AssetCustomizationReview.REVIEW_STATES.pending, _quantity=2
+        )
+
+        ContentVersion.create_missing_reviews(asset, version_newest, customization=other_customization)
+        missing_review = version_older.assetcustomizationreview_set.filter(customization=other_customization).first()
+        assert missing_review
+        assert missing_review.state == AssetCustomizationReview.REVIEW_STATES.pending
+        assert missing_review.version == version_older
+
+    def test_create_reviews(self, asset, superuser, default_customization, other_customization):
+        version = baker.make('ContentVersion', asset=asset, created_by=superuser)
+        version.create_reviews()
+        assert version.assetcustomizationreview_set.filter(customization=default_customization).exists()
+        assert version.assetcustomizationreview_set.filter(customization=other_customization).exists()
+
+    def test_state(self, mocker, django_user_model):
+        asset = baker.prepare('Asset', asset_type=None)
+        version = baker.prepare('ContentVersion', asset=asset, id=5, accepted_by=None)
+        assert version.state == 'in review'
+
+        version_id_mock = mocker.patch.object(type(asset), 'version_id', return_value=10)
+        version.accepted_by = baker.prepare(django_user_model)
+        assert version.state == 'old'
+
+        version_id_mock.return_value = 2
+        assert version.state == 'current'
+
+
+class TestExternalFile:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.file = baker.prepare('ExternalFile')
+
+    def test_file(self):
+        file = self.file._meta.get_field('file')
+        assert file.upload_to == rename_file
+        assert type(file.storage) is MediaStorage
+        assert file.max_length == 1000
+
+    def test_md5(self):
+        md5 = self.file._meta.get_field('md5')
+        assert md5.max_length == 32
+        assert not md5.blank
+        assert md5.unique
+
+    def test_size(self):
+        size = self.file._meta.get_field('size')
+        assert size.default == 0.0
+
+    def test_asset_ds_pair(self):
+        asset_ds_pair = self.file._meta.get_field('asset_ds_pair')
+        assert asset_ds_pair.related_model == AssetDsPair
+        assert asset_ds_pair.default is None
+        assert asset_ds_pair.blank
+
+    def test_str(self, mocker):
+        external_file = baker.prepare('ExternalFile')
+        external_file.file = mocker.MagicMock()
+        external_file.file.name = 'test'
+        assert str(external_file) == 'test'
+
+    @pytest.fixture()
+    def saved_ext_file(self, db, mocker):
+        return baker.make('ExternalFile')
+
+    @pytest.fixture()
+    def saved_asset(self, db, asset_type_factory):
+        return baker.make('Asset', asset_type=asset_type_factory(AssetType.ASSET_TYPES.integration), name='test')
+
+    def test_delete_no_args(self, saved_ext_file):
+        saved_ext_file.delete()
+        assert not ExternalFile.objects.filter(id=saved_ext_file.id).exists()
+
+    @pytest.fixture()
+    def ext_file_with_file(self, saved_asset, saved_ext_file, mocker):
+        self.pair = baker.make('AssetDsPair', asset=saved_asset, data_structure=baker.make('DataStructure', name='test_ds'))
+        saved_ext_file.asset_ds_pair.add(self.pair)
+        saved_ext_file.file = ContentFile(b'test_file', name='mock_file.txt')
+        mocker.patch('django.core.files.storage.Storage.save', return_value='test_ds')
+        saved_ext_file.save()
+        return saved_ext_file
+
+    def test_delete_one_pair(self, ext_file_with_file):
+        ext_file_with_file.delete(asset_ds_pair=self.pair)
+        assert not ExternalFile.objects.filter(id=ext_file_with_file.id).exists()
+
+    def test_delete_more_pairs(self, ext_file_with_file, saved_asset):
+        ext_file_with_file.asset_ds_pair.add(
+            baker.make('AssetDsPair', asset=saved_asset, data_structure=baker.make('DataStructure', name='test_ds2'))
+        )
+        ext_file_with_file.delete(asset_ds_pair=self.pair)
+        assert ExternalFile.objects.filter(id=ext_file_with_file.id).exists()
+
+
+class TestDataRecord:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.dr = baker.prepare('DataRecord')
+
+    def test_data_structure(self):
+        ds = self.dr._meta.get_field('data_structure')
+        assert ds.related_model == DataStructure
+
+    def test_asset(self):
+        asset = self.dr._meta.get_field('asset')
+        assert asset.related_model == Asset
+        assert asset.default is None
+        assert asset.null
+
+    def test_language(self):
+        language = self.dr._meta.get_field('language')
+        assert language.related_model == Language
+        assert language.null
+        assert language.blank
+
+    def test_customization(self):
+        cust = self.dr._meta.get_field('customization')
+        assert cust.related_model == Customization
+        assert cust.default is None
+        assert cust.blank
+        assert cust.null
+
+    def test_version(self):
+        version = self.dr._meta.get_field('version')
+        assert version.related_model == ContentVersion
+        assert version.null
+        assert version.blank
+
+    def test_created_date(self):
+        created_date = self.dr._meta.get_field('created_date')
+        assert created_date.auto_now_add
+
+    def test_created_by(self, django_user_model):
+        created_by = self.dr._meta.get_field('created_by')
+        assert created_by.related_model == django_user_model
+        assert created_by.null
+        assert created_by.blank
+        assert created_by.related_query_name() == 'created_datarecord'
+
+    def test_value(self):
+        value = self.dr._meta.get_field('value')
+        assert value.default == ''
+        assert value.blank
+
+    def test_external_file(self):
+        ext_file = self.dr._meta.get_field('external_file')
+        assert ext_file.related_model == ExternalFile
+        assert ext_file.default is None
+        assert ext_file.blank
+        assert ext_file.null
+
+    def test_str(self):
+        self.dr.value = 'test'
+        assert str(self.dr) == 'test'
+
+    def test_short_description(self):
+        self.dr.value = 'a' * 500
+        assert self.dr.short_description == 'a' * 99 + '…'
+
+    def test_context(self):
+        context = baker.prepare('Context')
+        self.dr.data_structure = baker.prepare('DataStructure', context=context)
+        assert self.dr.context == context
+
+    def test_get_data_structure_with_name(self):
+        self.dr.language = baker.prepare('Language', code='nx_US')
+        self.dr.data_structure = baker.prepare('DataStructure', name='test_ds', context=baker.prepare('Context', name='test_context'))
+        assert self.dr.get_data_structure_with_name == 'test_context-test_ds-nx_US'
+
+    def test_cast_value(self, mocker):
+        ds_cast_value_mock = mocker.patch.object(self.dr.data_structure, 'cast_value', return_value='test')
+        assert self.dr.cast_value == 'test'
+        ds_cast_value_mock.asset_called_with(self.dr.data_structure, self.dr.value)

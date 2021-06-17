@@ -19,7 +19,7 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
             read_structure_json()
         eng = Language.objects.get_or_create(name='English', code='en_US')[0]
         Customization.objects.get_or_create(name='default', default_language=eng)
-        portal_type = AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
+        portal_type = get_asset_type(AssetType.ASSET_TYPES.documentation)
         Asset.objects.get_or_create(name='Nx Cloud', asset_type=portal_type)
 
 
