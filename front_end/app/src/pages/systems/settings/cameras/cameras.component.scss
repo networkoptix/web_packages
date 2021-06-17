@@ -1,9 +1,9 @@
 @use "../../../../styles/typography";
 @use "../../../../styles/mixins";
-@use '../../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../../../styles/theme_variables" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .camera-settings-info {
     font-family: typography.$font-family-regular;
@@ -49,29 +49,25 @@
     }
 
     .header-top-bar {
-        width: 100%;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-
-        @include media-breakpoint-down(xs) {
-            display: block !important;
-            .camera-title {
-                display: flex;
-                margin-bottom: 8px;
-                .spacer {
-                    flex-grow: 1;
-                }
-            }
-            button#view-camera {
-                padding-left: 0 !important;
-            }
+        flex-direction : column;
+        align-items: flex-start;
+        
+        @include media-breakpoint-up(lg) {
+            flex-direction : row;
+            align-items    : center;
         }
+        
         .camera-button-div {
             display: flex;
             .camera-buttons {
                 @include mixins.details-buttons;
+    
+                @include media-breakpoint-down(lg) {
+                    &:first-of-type {
+                        padding-left : 0 !important;
+                    }
+                }
             }
         }
     }

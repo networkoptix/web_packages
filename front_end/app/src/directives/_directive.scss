@@ -1,4 +1,4 @@
-@use '../../styles/theme_variables' as *;
+@use "../../styles/theme_variables" as *;
 
 .editable-directive {
     &-initial {
@@ -9,6 +9,8 @@
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
+        border: 1px solid transparent; // avoid text jump
+        
         &:hover {
             background: $additional_light2;
             border-radius: 2px;
@@ -19,13 +21,13 @@
     &-edit {
         position: relative;
         border-radius: 2px;
-        padding: 2px 2px 2px 6px;
         background: $light1;
+        padding-left : 4px;
+        margin-left  : -4px;
         border: 1px solid $blue1;
         text-align: left !important;
         overflow: hidden;
         white-space: nowrap !important;
-        margin-left: -7px !important;
         outline: none;
     }
 
