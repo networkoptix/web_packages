@@ -278,6 +278,14 @@ def delete_user(request):
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Toggles 2fa for users account.")
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def toggle2fa(request):
+    return api_success(Account.toggle_2fa(request))
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={

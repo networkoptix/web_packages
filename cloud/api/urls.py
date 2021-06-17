@@ -3,7 +3,7 @@ __author__ = 'noptix'
 from django.conf.urls import url
 from django.conf import settings
 
-from api.views import account, common, robot, storage, systems, utils
+from api.views import two_fa, account, common, robot, storage, systems, utils
 from notifications.views import send
 
 urlpatterns = [
@@ -31,7 +31,13 @@ urlpatterns = [
     url(r'^account/checkCode$',          account.check_code_in_portal),
     url(r'^account/checkAuthCode$',      account.check_auth_code),
     url(r'^account/delete$',             account.delete_user),
+    url(r'^account/toggle2fa$',          account.toggle2fa),
     url(r'^account/?$',                  account.index),
+
+    url(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),
+    url(r'^2fa/backup$',       two_fa.BackupCode.as_view()),
+    url(r'^2fa/backup/codes$', two_fa.get_active_backup_codes),
+
 
     url(r'^storage/create',     storage.create),
     url(r'^storage/delete',     storage.delete),

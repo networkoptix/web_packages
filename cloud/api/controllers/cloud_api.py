@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
+CLOUD_2FA_URL = f"{CLOUD_DB_URL}/account/self/2fa"
 
 
 # Todo: Once cloud_db supports basic and digest switch to true.
@@ -100,7 +101,7 @@ def auto_refresh_token(func):
             res.raise_for_status()
             return res
         except requests.exceptions.HTTPError as e:
-            response_data = hasattr(res, "json") and res.json()
+            response_data = res.headers.get('content-type') == 'application/json' and res.json()
             if not refresh_token:
                 if response_data and response_data["resultCode"] in [ErrorCodes.bad_username.value,
                                                                      ErrorCodes.not_authorized.value,
@@ -480,6 +481,13 @@ class Account(object):
     def get(request, email=None, password=None, headers=None):
         return get_wrapper(f'{CLOUD_DB_URL}/account/get', headers=headers, auth={"email": email, "password": password})
 
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def toggle_2fa(request, headers=None):
+        email = request.user.email
+        return post_wrapper(f"{CLOUD_DB_URL}/account/{email}/settings/security", headers=headers)
+
 
 class Storage(object):
     """
@@ -740,3 +748,39 @@ class Auth(object):
             "redirect_uri": redirect_uri
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", data=params, headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def delete_backup_codes(request, codes=None, headers=None):
+        if not codes:
+            codes = ""
+        return delete_wrapper(f"{CLOUD_2FA_URL}/backup_codes/{codes}", headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def generate_2fa_key(request, headers=None):
+        return post_wrapper(f"{CLOUD_2FA_URL}/totp/key", headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def generate_backup_code(request, headers=None):
+        return post_wrapper(f"{CLOUD_2FA_URL}/backup_codes/", headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def get_active_backup_codes(request, headers=None):
+        return get_wrapper(f"{CLOUD_2FA_URL}/backup_codes/", headers=headers)
+
+    @staticmethod
+    @validate_response
+    def verify_2fa_code(temp_2fa_code, access_code):
+        return get_wrapper(f"{CLOUD_2FA_URL}/totp/key/{temp_2fa_code}", params={'code': access_code})
+
+    @staticmethod
+    @validate_response
+    def verify_backup_code(backup_code, access_code):
+        return get_wrapper(f"{CLOUD_2FA_URL}/backup_code/{backup_code}", params={'code': access_code})
