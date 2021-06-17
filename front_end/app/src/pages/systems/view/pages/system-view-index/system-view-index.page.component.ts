@@ -309,7 +309,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     //         }
                     //     });
                     // };
-                    const processCameras = (c) => {
+                    const processCameras = (c, ms) => {
                         this.hasCameras = true;
                         const result = new Camera(
                             c.id,
