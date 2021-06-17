@@ -20,7 +20,7 @@ export class NxAuthorizeNewBackupCodeComponent implements OnInit, OnDestroy {
 
     @Input() viewType: string;
     @Input() newBackupCode: string;
-    @Input() confirm: () => {};
+    @Input() confirm: (route?: string) => void;
 
     constructor(
         language: NxLanguageProviderService,

@@ -19,7 +19,7 @@ export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
 
     @Input() viewType: string;
     @Input() clientType: string;
-    @Input() confirm: () => {};
+    @Input() confirm: (route?: string) => void;
 
     constructor(
         language: NxLanguageProviderService,

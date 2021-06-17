@@ -154,7 +154,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private accountService: NxAccountService,
         private router: Router,
         private elem: ElementRef,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) public window: Window
         // private pageService: NxPageService,
         // private uriService: NxUriService,
         // private scrollMechanicsService: NxScrollMechanicsService
@@ -163,7 +163,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    setCurrentState(state: AuthorizeStateType) {
+    setCurrentState(state: string) {
         this.currentState = AuthorizeState[state];
     }
 
