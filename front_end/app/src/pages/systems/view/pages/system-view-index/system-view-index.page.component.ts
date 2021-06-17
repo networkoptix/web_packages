@@ -305,14 +305,14 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             }
                         });
                     };
-                    const processCameras = (c) => {
+                    const processCameras = (c, ms) => {
                         this.hasCameras = true;
                         const result = new Camera(
                             c.id,
                             c.preferredServerId,
                             c.name,
                             c.url,
-                            (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
+                            ms.status === 'Offline' ? 'Offline' : (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
                             c.scheduleEnabled,
                             c.disableDualStreaming,
                             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
@@ -335,7 +335,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         name             : ms.name,
                         networkAddresses : ms.networkAddresses,
                         status           : ms.status,
-                        cameras          : ms.cameras.map(processCameras)
+                        cameras          : ms.cameras.map((c: any) => processCameras(c, ms))
                     })));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);

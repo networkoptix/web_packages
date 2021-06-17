@@ -322,6 +322,18 @@ class CloudPortalAPI(object):
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text
+
+    #@staticmethod
+    #def add_camera(serverUrl, cameras):
+    #    body = {
+    #        "cameras":
+    #            [
+    #                cameras
+    #            ]
+    #        } 
+    #    logger.trace(body)
+    #    r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+    #    return r.text
     
     @staticmethod
     def turn_on_analytics(serverUrl):

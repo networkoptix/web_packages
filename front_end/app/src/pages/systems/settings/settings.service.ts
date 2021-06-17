@@ -21,7 +21,7 @@ export class NxSettingsService implements OnDestroy {
     }
 
     set system(system) {
-        system?.id !== this.system?.id && this.system?.stopPoll();
+        this.system && system?.id !== this.system?.id && this.system?.stopPoll();
         this.systemSubject.next(system);
     }
 

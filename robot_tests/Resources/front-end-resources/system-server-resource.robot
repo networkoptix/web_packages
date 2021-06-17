@@ -44,6 +44,7 @@ Select Server By Name
     [Arguments]    ${server name}
     Verify on Servers Page
     Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${server name}")]    120
+    Sleep    5
     Click Link    //nx-level-3-item/a//span[contains(text(),"${server name}")]/../..
     Verify on Servers Page
 
