@@ -1,6 +1,6 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../styles/mixins' as *;
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables" as *;
+@use "../../../../styles/mixins" as *;
 
 :host {
     .active {
@@ -46,16 +46,19 @@
     }
 
     .section-title {
-        @include ellipsis;
-        max-width   : calc(100% - 32px);
-        margin-left :32px;
-        height: 24px;
-        line-height: 22px;
-        @extend #link;
-
-        &.no-link:hover {
-            background : none !important;
-            cursor: default;
+        width: 100%;
+        
+        &-text {
+            @include ellipsis;
+            margin-left : 32px;
+            height      : 24px;
+            line-height : 22px;
+            @extend #link;
+        
+            &.no-link:hover {
+                background : none !important;
+                cursor     : default;
+            }
         }
     }
 

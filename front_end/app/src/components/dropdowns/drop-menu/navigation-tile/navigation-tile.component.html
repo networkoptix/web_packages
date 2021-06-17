@@ -1,19 +1,21 @@
 <div class="navigation-tile" [style.width.px]="width">
-    <div class="d-flex align-middle w-100">
+    <div class="d-flex align-middle mw-100">
         <svg-icon
                 class="section-title-icon"
                 *ngIf="node.icon"
                 [src]="iconsDir + node.icon"
                 [svgStyle]="{
-                    'width.px': 24,
-                    'height.px': 24,
+                    'width.px': '24',
+                    'height.px': '24',
                     'position': 'absolute',
-                    'top.px': 0,
-                    'left.px': 10,
+                    'top.px': '0',
+                    'left.px': '10',
                     'display': 'inline-block'}"></svg-icon>
-        <h5 class="section-title"
-            [ngClass]="{'no-link': node.url == ''}"
-            [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined">{{node.name}}</h5>
+        <div class="section-title">
+            <h5 class="section-title-text"
+                [ngClass]="{'no-link': node.url == ''}"
+                [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined">{{node.name}}</h5>
+        </div>
     </div>
 
     <ul *ngIf="node.nodes && node.nodes.length" class="list-unstyled nav-links-section">
@@ -36,9 +38,9 @@
                         *ngIf="link.new_window || link.icon"
                         [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
                         [svgStyle]="{
-                            'margin-top.px': -1,
-                            'width.px': 24,
-                            'height.px': 24,
+                            'margin-top.px': '-1',
+                            'width.px': '24',
+                            'height.px': '24',
                             'display': 'inline-block'}"></svg-icon>
             </li>
         </ng-container>
