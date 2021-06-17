@@ -373,6 +373,7 @@ export interface DialogsMessage {
     sent:                    any;
     subject:                 Subject;
     title:                   Title;
+    twoFactor:               TwoFactor;
 }
 
 export interface Placeholders {
@@ -393,6 +394,12 @@ export interface Title {
     ipvd_feedback_page:   any;
 }
 
+export interface TwoFactor {
+    required:    any;
+    configure:   any;
+    accountLink: any;
+}
+
 export interface RemoveSystem {
     action:  any;
     message: any;
@@ -403,14 +410,15 @@ export interface DialogsTitles {
     error:                  any;
     success:                any;
     changeAccount:          any;
+    changePasswordFor:      any;
     deleteUser:             any;
+    failedLoginTo:          any;
     loggedFromOtherAccount: any;
     noClientDetected:       any;
     removeUser:             any;
     serversDetach:          any;
     serversReset:           any;
     serversRestart:         any;
-    changePasswordFor:      any;
 }
 
 export interface Tooltips {
@@ -1365,6 +1373,7 @@ const typeMap: any = {
         { json: "sent", js: "sent", typ: "any" },
         { json: "subject", js: "subject", typ: r("Subject") },
         { json: "title", js: "title", typ: r("Title") },
+        { json: "twoFactor", js: "twoFactor", typ: r("TwoFactor") },
     ], false),
     "Placeholders": o([
         { json: "feedback", js: "feedback", typ: "any" },
@@ -1381,6 +1390,11 @@ const typeMap: any = {
         { json: "ipvd_feedback_device", js: "ipvd_feedback_device", typ: "any" },
         { json: "ipvd_feedback_page", js: "ipvd_feedback_page", typ: "any" },
     ], false),
+    "TwoFactor": o([
+        { json: "required", js: "required", typ: "any" },
+        { json: "configure", js: "configure", typ: "any" },
+        { json: "accountLink", js: "accountLink", typ: "any" },
+    ], false),
     "RemoveSystem": o([
         { json: "action", js: "action", typ: "any" },
         { json: "message", js: "message", typ: "any" },
@@ -1390,14 +1404,15 @@ const typeMap: any = {
         { json: "error", js: "error", typ: "any" },
         { json: "success", js: "success", typ: "any" },
         { json: "changeAccount", js: "changeAccount", typ: "any" },
+        { json: "changePasswordFor", js: "changePasswordFor", typ: "any" },
         { json: "deleteUser", js: "deleteUser", typ: "any" },
+        { json: "failedLoginTo", js: "failedLoginTo", typ: "any" },
         { json: "loggedFromOtherAccount", js: "loggedFromOtherAccount", typ: "any" },
         { json: "noClientDetected", js: "noClientDetected", typ: "any" },
         { json: "removeUser", js: "removeUser", typ: "any" },
         { json: "serversDetach", js: "serversDetach", typ: "any" },
         { json: "serversReset", js: "serversReset", typ: "any" },
         { json: "serversRestart", js: "serversRestart", typ: "any" },
-        { json: "changePasswordFor", js: "changePasswordFor", typ: "any" },
     ], false),
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },

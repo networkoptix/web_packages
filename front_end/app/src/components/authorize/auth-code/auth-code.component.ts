@@ -8,8 +8,9 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process }                   from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { fromEvent }                 from 'rxjs';
+import { debounceTime }              from 'rxjs/operators';
+import { AuthorizeStateType }        from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,7 +31,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @Input() checkAuthCodeProcess: Process;
     @Input() errorCode: string;
     @Input() window: any;
-    @Output() setCurrentState = new EventEmitter<string>();
+    @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendCode: any;
     @ViewChild('authCodeForm', { static: false }) authCodeForm: HTMLFormElement;

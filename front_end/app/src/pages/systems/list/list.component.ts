@@ -9,7 +9,7 @@ import { Subject, Subscription }     from 'rxjs';
 
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService, Account } from '../../../services/account.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxUriService }              from '../../../services/uri.service';
@@ -17,6 +17,7 @@ import { NxSystemsService }          from '../../../services/systems.service';
 import { NxHeaderService }           from '../../../services/nx-header.service';
 import { NxMenusService }            from '../../../services/menus.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -35,6 +36,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     openClient;
     systems;
     filteredSystems;
+    account: Account;
     endpoint: any = {};
     userEmail: string;
     searchChanged = new Subject();
@@ -51,6 +53,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         private language: NxLanguageProviderService,
+        private genericModal: NxModalGenericComponent,
         private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
@@ -72,6 +75,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.accountService.get()
             .then((account) => {
                 if (account) {
+                    this.account = account;
                     this.userEmail = account.email;
                     this.systemsService.getSystems(account.email);
                 }
@@ -156,14 +160,22 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     openSystem(system) {
-        this.updateEndpoint(system.id);
-        this.headerService.show$ = false;
-        this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
-            .then(() => {
-                const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-                this.menusService.updateActiveSystemMenu(activeSystem);
-            })
-            .catch(err => { console.error(err); });
+        if (this.needToConfigureTwoFactor(system)) {
+            const { dialogs: { message: { twoFactor }, titles: { failedLoginTo }} } = this.LANG;
+            this.genericModal.openConfirm(
+                `<p class="mb-0">${twoFactor.required()}</p><p>${twoFactor.configure()}&nbsp;<a href="/account/security">${twoFactor.accountLink()}</a>.</p>`,
+                NxLanguageProviderService.translate(failedLoginTo, { systemName: system.name }),
+                'OK');
+        } else {
+            this.updateEndpoint(system.id);
+            this.headerService.show$ = false;
+            this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
+                .then(() => {
+                    const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+                    this.menusService.updateActiveSystemMenu(activeSystem);
+                })
+                .catch(err => { console.error(err); });
+        }
     }
 
     canShowTag(system) {
@@ -171,7 +183,14 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     canShowButton(system) {
-        return this.LANG.system && system.stateOfHealth === this.CONFIG.system.status.online;
+        return this.LANG.system &&
+            system.stateOfHealth === this.CONFIG.system.status.online &&
+            !this.needToConfigureTwoFactor(system);
+    }
+
+    needToConfigureTwoFactor(system) {
+        return false;
+        // return system.twoFactorRequired && !this.account.twoFactorConfigured;
     }
 
     ngOnDestroy(): void {}

@@ -4,6 +4,7 @@ import { RouterModule, Routes }   from '@angular/router';
 import { FormsModule }            from '@angular/forms';
 import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
+import { AngularSvgIconModule }   from 'angular-svg-icon';
 
 import { DirectivesModule }       from '../../../directives/directives.module';
 import { ComponentsModule }       from '../../../components/components.module';
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        AngularSvgIconModule.forRoot()
     ],
     providers: [
     ],

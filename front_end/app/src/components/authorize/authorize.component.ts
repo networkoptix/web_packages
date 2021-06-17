@@ -34,7 +34,7 @@ interface AuthorizeParams {
     message?: 'passwordReset' | 'activated'
 };
 
-export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error'
+export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup' | 'newBackup'
 export enum AuthorizeState {
     email = 'email',
     password = 'password',

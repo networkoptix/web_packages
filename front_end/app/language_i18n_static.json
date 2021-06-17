@@ -352,6 +352,11 @@
                 "integration": "Get in touch with {companyName}",
                 "ipvd_feedback_device": "Feedback about {asset}",
                 "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "twoFactor": {
+                "required": "Two-factor authentication is required.",
+                "configure": "You can configure it in your",
+                "accountLink": "account settings"
             }
         },
         "removeSystem": {
@@ -363,14 +368,15 @@
             "error": "Error",
             "success": "Success",
             "changeAccount": "You are already logged in as {email}",
+            "changePasswordFor" : "Change Password for User \"{username}\"",
             "deleteUser": "Delete user?",
+            "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Install %VMS_NAME% to view your System",
             "removeUser": "Remove user?",
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor" : "Change Password for User \"{username}\""
+            "serversRestart": "Restart server \"{ title }\"?"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."

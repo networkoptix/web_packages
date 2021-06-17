@@ -56,4 +56,15 @@
         border-bottom:1px solid $common-border-color;*/
         margin-bottom  : 10px;
     }
+
+    .system-list-bottom-bar {
+        display: flex;
+        svg-icon {
+            margin-top: 24px;
+            margin-left: -3px;
+        }
+        .margin-system-list-status {
+            margin-left: 4px;
+        }
+    }
 //}
