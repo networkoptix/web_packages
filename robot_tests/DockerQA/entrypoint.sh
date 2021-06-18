@@ -4,7 +4,7 @@ mkdir -p /root/.config/nx_ini
 
 PORT=${PORT:-7001}
 VMS=${VMS:-"new"}
-CLOUD_HOST=${CLOUD_HOST:="cloud-test.hdw.mx"}
+CLOUD_HOST=${CLOUD_HOST:-"cloud-test.hdw.mx"}
 
 # Patch the server port
 if [[ $PORT -ne 7001 ]]
