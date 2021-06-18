@@ -355,8 +355,8 @@
         },
         "groups": {
             "android": {
-                "label": "アンドロイド",
-                "shortLabel": "アンドロイド"
+                "label": "Android",
+                "shortLabel": "Android"
             },
             "arm": {
                 "label": "ARM",
