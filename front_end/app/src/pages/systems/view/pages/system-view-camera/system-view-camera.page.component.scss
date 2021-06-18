@@ -248,15 +248,19 @@ $border-color: $light6;
           // transition: background-color .2s ease-in-out;
           line-height: 20px;
           font-size: 12px;
-          padding-left: 8px !important;
+          padding: 0 !important;
           margin-bottom: 0;
-          &:hover {
+
+          & > div {
+            padding: 0 8px !important;
+          }
+          &:hover > div {
             background-color: rgba($light16, .1);
           }
-          &.selected {
-            background-color: #39b2ef;
+          &.selected > div {
+            background-color: $brand_l1;
           }
-          &.disabled {
+          &.disabled > div {
             opacity: .2;
             background-color: transparent !important;
           }

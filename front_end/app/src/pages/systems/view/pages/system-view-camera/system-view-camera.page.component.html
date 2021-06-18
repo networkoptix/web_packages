@@ -48,11 +48,12 @@
     <div *ngIf="CONFIG.allowDebugMode" class="section transportSelection">
       <div class="caption">Transport</div>
       <div class="options" *ngIf="(transports$ | async)?.length else noTransportsAvailable">
-        <div *ngFor="let st of transports$ | async" class="option" [ngClass]="{ selected: (selectedTransport$ | async) === st }" (click)="selectedTransport = st">{{ st }}</div>
+        <div *ngFor="let st of transports$ | async" class="option" [ngClass]="{ selected: (selectedTransport$ | async) === st }"
+             (click)="selectedTransport = st"><div>{{ st }}</div></div>
       </div>
       <ng-template #noTransportsAvailable>
         <div class="options">
-          <div class="option disabled">N/A</div>
+          <div class="option disabled"><div>N/A</div></div>
         </div>
       </ng-template>
     </div>
@@ -61,11 +62,11 @@
       <div class="options" *ngIf="(visibleQualities$ | async)?.length else noQualitiesAvailable">
         <div *ngFor="let q of visibleQualities$ | async" class="option"
              [ngClass]="{ selected: (selectedQuality$ | async) === q.toLowerCase(), divider: (drawQualityDivider$ | async) === q.toLowerCase() }"
-             (click)="selectedQuality = q">{{ q }}</div>
+             (click)="selectedQuality = q"><div>{{ q }}</div></div>
       </div>
       <ng-template #noQualitiesAvailable>
         <div class="options">
-          <div class="option disabled">N/A</div>
+          <div class="option disabled"><div>N/A</div></div>
         </div>
       </ng-template>
     </div>
