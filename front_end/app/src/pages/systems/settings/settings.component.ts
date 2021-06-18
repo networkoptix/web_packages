@@ -637,7 +637,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        this.dialogs.notify(this.LANG.errorCodes.lostConnection({ systemName: this.system.info.name || this.LANG.errorCodes.thisSystem() }), 'warning');
+        const sysName = NxUtilsService.htmlToEntity(this.system.info.name || this.LANG.errorCodes.thisSystem());
+        this.dialogs.notify(this.LANG.errorCodes.lostConnection({ systemName: sysName }), 'warning');
 
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         this.mergeTargetSystem = undefined;
