@@ -1322,6 +1322,138 @@ class TestContextMethods:
         assert self.context.get_state(self.asset) == 'Rejected'
 
 
+class TestContributorAgreement:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.agm = baker.prepare('ContributorAgreement')
+
+    def test_accepted_date(self):
+        accepted_date = self.agm._meta.get_field('accepted_date')
+        assert accepted_date.auto_now_add
+
+    def test_accepted_agreement(self):
+        accepted_agreement = self.agm._meta.get_field('accepted_agreement')
+        assert accepted_agreement.related_model == AssetCustomizationReview
+
+    def test_user(self, django_user_model):
+        user = self.agm._meta.get_field('user')
+        assert user.related_model == django_user_model
+
+    def test_str(self, django_user_model):
+        user = baker.prepare(django_user_model)
+        agreement = baker.prepare('AssetCustomizationReview')
+        self.agm.accepted_agreement = agreement
+        self.agm.user = user
+        assert str(self.agm) == f'{agreement} - {user}'
+
+    def test_clean_agreement(self):
+        self.agm.accepted_agreement = baker.prepare(
+            'AssetCustomizationReview', version=baker.prepare(
+                'ContentVersion', asset=baker.prepare(
+                    'Asset', asset_type=baker.prepare('AssetType', type=AssetType.ASSET_TYPES.agreement)
+                )
+            )
+        )
+        self.agm.clean()
+
+    def test_clean_not_agreement(self):
+        self.agm.accepted_agreement = baker.prepare(
+            'AssetCustomizationReview', version=baker.prepare(
+                'ContentVersion', asset=baker.prepare(
+                    'Asset', asset_type=baker.prepare('AssetType', type=AssetType.ASSET_TYPES.integration)
+                )
+            )
+        )
+
+        with pytest.raises(ValidationError):
+            self.agm.clean()
+
+    def test_get_current(self, asset_type_factory, default_customization):
+        agreement_type = asset_type_factory(AssetType.ASSET_TYPES.agreement)
+        agreement = baker.make('Asset', asset_type=agreement_type, name='agree')
+        version = baker.make('ContentVersion', asset=agreement)
+        review = baker.make('AssetCustomizationReview', version=version, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        version2 = baker.make('ContentVersion', asset=agreement)
+        review2 = baker.make('AssetCustomizationReview', version=version2, customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        assert ContributorAgreement.get_current() == review2
+
+    def test_is_valid(self, mocker, db):
+        review = baker.prepare('AssetCustomizationReview')
+        mocker.patch.object(self.agm, 'get_current', return_value=review)
+        self.agm.accepted_agreement = review
+        assert self.agm.is_valid()
+
+
+class TestCustomization:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.cust = baker.prepare('Customization')
+
+    def test_beta_permission_map(self):
+        assert self.cust.BETA_PERMISSION_MAP == {
+            '%INTEGRATION_STORE_ENABLED%': 'access_integration_store',
+            '%DEVELOPERS_ENABLED%': 'access_developers'
+        }
+
+    def test_permissions(self):
+        assert self.cust._meta.permissions == (
+            ('access_customization', 'Can access customization'),
+            ('access_integration_store', 'Can access the integration store'),
+            ('access_developers', 'Can see Developers pages')
+        )
+
+    def test_name(self):
+        name = self.cust._meta.get_field('name')
+        assert name.max_length == 255
+        assert name.unique
+
+    def test_default_language(self):
+        default_language = self.cust._meta.get_field('default_language')
+        assert default_language.related_model == Language
+        assert default_language.related_query_name() == 'default_in_customization'
+
+    def test_langauges(self):
+        languages = self.cust._meta.get_field('languages')
+        assert languages.related_model == Language
+
+    def test_parent(self):
+        parent = self.cust._meta.get_field('parent')
+        assert parent.related_model == Customization
+        assert parent.default is None
+        assert parent.null
+        assert parent.blank
+        assert parent.related_query_name() == 'children_customizations'
+
+    def test_trust_parent(self):
+        trust_parent = self.cust._meta.get_field('trust_parent')
+        assert trust_parent.default is False
+
+    def test_str(self):
+        self.cust.name = 'test'
+        assert str(self.cust) == 'test'
+
+    def test_languages_list(self, db):
+        languages = baker.make('Language', code=seq('nx_'), _quantity=2)
+        cust = baker.make('Customization', languages=languages, name='cust1')
+        assert set(cust.languages_list) == {'nx_1', 'nx_2'}
+
+    def test_children_ids(self, db):
+        root_customization = baker.make('Customization', name='root')
+        l1_customizations = baker.make('Customization', parent=root_customization, name=seq('l1_'), _quantity=3)
+        l2_customizations = baker.make('Customization', parent=l1_customizations[0], name=seq('l2_'), _quantity=3)
+        baker.make('Customization', name='unrelated')
+        ids = {customization.id for customization in (*l1_customizations, *l2_customizations)}
+        assert set(root_customization.get_children_ids(root_customization)) == ids
+
+    def test_save(self, db, english_language):
+        customization = Customization(name='new_cust', default_language=english_language)
+        customization.save()
+        portal = Asset.objects.filter(customizations=customization).first()
+        assert portal
+        assert portal.asset_type.type == AssetType.ASSET_TYPES.cloud_portal
+        assert portal.name == 'Cloud portal - new_cust'
+
+
 class TestCustomClient:
     @pytest.fixture(autouse=True)
     def setup(self):
@@ -1411,7 +1543,6 @@ class TestContentVersionMethods:
         )
 
         version_older = baker.make('ContentVersion', asset=asset, created_by=superuser)
-        baker.make(
             'AssetCustomizationReview', version=version_older,
             customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted
         )
