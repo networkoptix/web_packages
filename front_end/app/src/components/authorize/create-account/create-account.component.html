@@ -21,7 +21,7 @@
     [ngStyle]="{ 'height': 'calc(100% - ' + createHeader.offsetHeight + 'px)' }">
     <form #createAccountForm="ngForm" class="form" [ngClass]="{'hide-errors': hideErrors}">
         <div class="create-row" *ngIf="!existingEmail">
-            <div class="email d-flex flex-column" [ngClass]="{ 'hasError': createAccountEmail.invalid && (createAccountEmail.dirty || createAccountEmail.touched) }">
+            <div class="email d-flex flex-column" [ngClass]="{ 'hasError': createAccountEmail.invalid && ((createAccountEmail.dirty && !createAccountEmail.errors?.pattern) || createAccountEmail.touched) }">
                 <label for="createEmail" translate>Email</label>
                 <nx-email-input
                     name="email"
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="create-row">
-            <div class="password" [ngClass]="{ 'hasError': createAccountPassword.invalid && (createAccountPassword.dirty || createAccountPassword.touched) }">
+            <div class="password" [ngClass]="{ 'hasError': !hideErrors || weakPassword }">
                 <label for="password" translate>Password</label>
                 <nx-password-input
                     name="createAccountPassword"
