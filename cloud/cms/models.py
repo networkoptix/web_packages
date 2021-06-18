@@ -47,6 +47,27 @@ class MenuCache(BaseCache):
 
 
 MENU_CACHE = MenuCache()
+PORTAL_MANAGER_PERMISSIONS = [
+    'access_customization',
+    'change_account',
+    'change_assetcustomizationreview',
+    'change_asset',
+    'edit_content',
+    'force_update',
+    'publish_version'
+]
+INTEGRATIONS_DEV_PERMISSIONS = [
+    'edit_content', 'change_asset', 'change_assetcustomizationreview']
+
+def get_name_factory(group_name):
+    return lambda asset: f'{group_name} - {asset.name} - {asset.id}'
+
+def portal_manager_group_name(asset):
+    return get_name_factory('Portal Manager')(asset)
+
+
+def integration_dev_group_name(asset):
+    return get_name_factory('Developer')(asset)
 
 
 def create_default_permission_group(asset):
@@ -55,11 +76,8 @@ def create_default_permission_group(asset):
 
     if asset.is_cloud_portal:
         group = Group.objects.create(
-            name=f'Portal Manager - {asset.name} - {asset.id}')
-        permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
-                                                              'change_assetcustomizationreview',
-                                                              'change_asset', 'edit_content',
-                                                              'force_update', 'publish_version'])
+            name=portal_manager_group_name(asset))
+        permissions = Permission.objects.filter(codename__in=PORTAL_MANAGER_PERMISSIONS)
 
         # Bind the Group to the following asset_types so that the portal managers can review them
         asset_types = AssetType.objects.filter(name="",
@@ -71,10 +89,9 @@ def create_default_permission_group(asset):
 
     else:
         group = Group.objects.create(
-            name=f'Developer - {asset.name} - {asset.id}')
+            name=integration_dev_group_name(asset))
         permissions = Permission.objects.filter(
-            codename__in=['edit_content', 'change_asset',
-                          'change_assetcustomizationreview']
+            codename__in=INTEGRATIONS_DEV_PERMISSIONS
         )
 
     group.permissions.set(permissions)
@@ -85,9 +102,9 @@ def create_default_permission_group(asset):
 
 def rename_permission_group(group, asset):
     if asset.is_cloud_portal:
-        group.name = f'Portal Manager - {asset.name} - {asset.id}'
+        group.name = portal_manager_group_name(asset)
     else:
-        group.name = f'Developer - {asset.name} - {asset.id}'
+        group.name = integration_dev_group_name(asset)
     group.save()
 
 

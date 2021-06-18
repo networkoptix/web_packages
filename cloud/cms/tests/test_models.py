@@ -1,14 +1,270 @@
+import pytest
 from collections import Counter
 
 from django.db.models import Count
+from model_bakery import baker, seq
 
 from django.test import TestCase
-from cms.controllers import filldata
+from django_mock_queries.query import MockSet
+
 from cms.models import *
 
-from django_mock_queries.query import MockSet
-from model_bakery import baker, seq
-import pytest
+
+class TestModelFunctions:
+    @pytest.fixture
+    def uses(self, account_factory, asset_factory, customization_factory, db):
+        def helper(menu=False, cloud_portal_asset=False, vms_asset=False, integration_asset=False, documentation_asset=False, customization=False, account=False):
+            create_asset = cloud_portal_asset or vms_asset or integration_asset or documentation_asset
+
+            if menu:
+                menu_name = str(uuid.uuid4())
+                self.menu =  baker.make(Menu, name=menu_name, depth=2, title=f'{menu_name} title', short_description=f'{menu_name} description')
+
+            if create_asset or account:
+                self.account = account_factory()
+
+            if create_asset or customization:
+                self.customization = customization_factory()
+
+            if cloud_portal_asset: 
+                self.cloud_portal_asset = Asset.objects.filter(
+                    customizations__name__in=[
+                        self.customization.name], asset_type__name="",
+                    asset_type__type=AssetType.ASSET_TYPES.cloud_portal
+                ).first() or next(
+                    asset_factory(account=self.account,
+                                asset_type=AssetType.ASSET_TYPES.cloud_portal,
+                                state=AssetCustomizationReview.REVIEW_STATES.accepted))
+            
+            if vms_asset:
+                self.vms_asset = Asset.objects.filter(
+                    customizations__name__in=[
+                        self.customization.name], asset_type__name="",
+                    asset_type__type=AssetType.ASSET_TYPES.vms
+                ).first() or next(
+                    asset_factory(account=self.account,
+                                asset_type=AssetType.ASSET_TYPES.vms,
+                                state=AssetCustomizationReview.REVIEW_STATES.accepted))
+
+            if integration_asset:
+                self.integration_asset = next(
+                    asset_factory(account=self.account,
+                                asset_type=AssetType.ASSET_TYPES.integration,
+                                state=AssetCustomizationReview.REVIEW_STATES.accepted))
+
+            if documentation_asset:
+                self.documentation_asset = next(
+                    asset_factory(account=self.account,
+                                asset_type=AssetType.ASSET_TYPES.documentation,
+                                state=AssetCustomizationReview.REVIEW_STATES.accepted))
+        
+        
+        return helper
+
+    # Permission group helpers
+
+    def create_group_with(self, asset):
+        Group.objects.all().delete()
+        return create_default_permission_group(asset)
+
+    def rename_group_with(self, asset):
+        group = self.create_group_with(asset)
+        group.name = 'Incorrect Name'
+        group.save()
+        rename_permission_group(group, asset)
+        return group
+
+    # Permission group tests
+
+    def test_create_default_permission_group_documentation(self, uses):
+        uses(documentation_asset=True)
+        group = self.create_group_with(self.documentation_asset)
+
+        assert group is None
+
+    def test_create_default_permission_group_cloud_portal(self, uses):
+        uses(cloud_portal_asset=True)
+ 
+        group = self.create_group_with(self.cloud_portal_asset)
+
+        expected_group_name = portal_manager_group_name(
+            self.cloud_portal_asset)
+        expected_permissions = Permission.objects.filter(
+            codename__in=PORTAL_MANAGER_PERMISSIONS)
+        actual_permissions = group.permissions.all()
+   
+        assert group.name == expected_group_name
+        assert all(
+            permission in actual_permissions for permission in expected_permissions)
+
+    def test_create_default_permission_group_integration(self, uses):
+        uses(integration_asset=True)
+
+        group = self.create_group_with(self.integration_asset)
+
+        expected_group_name = integration_dev_group_name(
+            self.integration_asset)
+        expected_permissions = Permission.objects.filter(
+            codename__in=INTEGRATIONS_DEV_PERMISSIONS)
+        actual_permissions = group.permissions.all()
+
+        assert group.name == expected_group_name
+        assert all(
+            permission in actual_permissions for permission in expected_permissions)
+
+    def test_rename_permission_group_cloud_portal(self, uses):
+        uses(cloud_portal_asset=True)
+        group = self.rename_group_with(self.cloud_portal_asset)
+
+        assert group.name == portal_manager_group_name(self.cloud_portal_asset)
+
+    def test_rename_permission_group_integration(self, uses):
+        uses(integration_asset=True)
+        group = self.rename_group_with(self.integration_asset)
+ 
+        assert group.name == integration_dev_group_name(self.integration_asset)
+
+    # Asset Test
+
+    def test_get_cloud_portal_asset(self, uses):
+        uses(cloud_portal_asset=True)
+
+        assert get_cloud_portal_asset(
+            self.customization.name).id == self.cloud_portal_asset.id
+
+    def test_get_vms_asset(self, uses):
+        uses(vms_asset=True)
+
+        assert get_vms_asset(self.customization.name).id ==self.vms_asset.id
+
+    def test_get_asset_by_revision(self, uses):
+        uses(documentation_asset=True)
+        test_asset = self.documentation_asset
+        content_version = self.documentation_asset.contentversion_set.last()
+
+        asset = get_asset_by_revision(content_version.id)
+
+        assert asset.id == test_asset.id
+
+    # Cache Test
+
+    def test_update_global_cache(self, uses, test_version=None):
+        uses(customization=True)
+        customization = self.customization.name
+        test_version = test_version or str(uuid.uuid4())
+    
+        update_global_cache(customization, test_version)
+
+        cached_version = caches['customization'].get(
+            f'global_version_{customization}')
+        assert cached_version == test_version
+
+    def test_check_update_cache(self, uses):
+        uses(customization=True)
+        test_version = str(uuid.uuid4())
+
+        self.test_update_global_cache(uses, test_version=test_version)
+
+        assert check_update_cache(self.customization.name, test_version)
+
+    def test_cloud_portal_customization_cache(self, uses):
+        uses(customization=True)
+        customization = self.customization.name
+        test_key = 'test_value'
+        test_value = str(uuid.uuid4())
+        caches['customization'].set(
+            f'customization_{customization}', {test_key: test_value})
+
+        data = cloud_portal_customization_cache(customization)
+
+        assert data['test_value'] == test_value
+        assert cloud_portal_customization_cache(
+            customization, value=test_key) == test_value
+        assert cloud_portal_customization_cache(
+            customization, value=test_key, force=True) is None
+
+    # Menu Cache Helpers
+
+    def cache_menu_with(self, menu_type=Menu.MENU_TYPES.docs_struct, nodes_count=3, base_url='', menu_url='', new_menu=False, menu_name=None):
+        MENU_CACHE.clear_cache()
+        customization = self.customization.name
+        menu_name = menu_name or str(uuid.uuid4())
+        menu = self.menu
+        if new_menu:
+            menu = baker.make(
+                Menu,name=menu_name, depth=2)
+        menu.type = menu_type
+        menu.title = self.menu.name = menu_name
+        menu.base_url = base_url
+        menu.url = menu_url
+        menu.save()
+        for node in range(nodes_count):
+            node = baker.make(MenuNode, name=f'{menu_name} - node {node}', enabled=[self.customization], available=[
+                       self.customization], authentication=MenuNode.AUTH_CHOICES.logged_in, parent_menu=menu)
+        MENU_CACHE[customization] = Menu.generate_menus(customization)
+        return customization, menu_name, menu_type, nodes_count
+
+    def map_menu_helper(self, menu_name, base_url, menu_url):
+        self.cache_menu_with(menu_name=menu_name, base_url=base_url, menu_url=menu_url, new_menu=True)
+        return lambda menu_map: menu_map.get(base_url, {}).get(menu_url, '') == menu_name
+
+    # Menu Cache Test
+    def test_cached_doc_menu_map(self, uses):
+        uses(customization=True, menu=True)
+        customization = self.customization.name
+        MENU_CACHE.clear_cache()
+        test_if_one_in_menu_map = self.map_menu_helper('menu-name-one', 'base-url-one', 'menu-url-one')
+        test_if_two_in_menu_map = self.map_menu_helper('menu-name-two', 'base-url-two', 'menu-url-two')
+    
+        menu_map = cached_doc_menu_map(customization, refresh=True)
+
+        assert test_if_one_in_menu_map(menu_map)
+        assert test_if_two_in_menu_map(menu_map)
+
+    def test_get_cached_menu(self, uses):
+        uses(account=True, customization=True, menu=True)
+        customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
+
+        cached_menus = get_cached_menu(
+            customization, user=self.account, menu_type=menu_type)
+
+        menu = cached_menus.get(menu_name, {})
+        assert menu.get('title', False) == menu_name
+        assert menu.get('type', False) == menu_type
+        assert len(menu.get('nodes', False)) == nodes_count
+
+    # External File Test
+    def test_slugify_lower(self):
+        slug = slugify('T$E%S@T', True)
+        assert slug == 't-e-s-t'
+
+    def test_rename_file(self, uses):
+        uses(integration_asset=True)
+        ds_name = 'ds-name'
+        file_name = 'file_name'
+        asset_name = slugify(self.integration_asset.name, True)
+        ds = baker.make(DataStructure, name=ds_name)
+        asset_ds_pair = baker.make(
+            AssetDsPair, data_structure=ds, asset=self.integration_asset)
+        external_file = baker.make(ExternalFile, asset_ds_pair=[asset_ds_pair])
+
+        renamed = rename_file(external_file, file_name)
+
+        assert renamed == f'{asset_name}/{ds_name}-{external_file.id}/{file_name}'
+
+    # Other Test
+
+    def test_slugify(self):
+        slug = slugify('T$E%S@T')
+        assert slug == 'T-E-S-T'
+
+    def test_get_integration_type(self, db):
+        integration_id = get_integration_type()
+
+        integration = AssetType.objects.only('id').filter(
+            type=AssetType.ASSET_TYPES.integration).first()
+        expected_integration_id = integration.id if integration else None
+        assert integration_id == expected_integration_id
 
 
 class FindActualValuesTestCase(TestCase):
