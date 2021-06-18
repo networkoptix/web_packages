@@ -14,6 +14,10 @@ from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Asset
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 
+AGREEMENT_NOT_FOUND = 'Agreement not found'
+PREVIEW_NOT_ALLOWED = 'Not allowed to view this preview'
+AGREEMENT_REVIEW_NOT_FOUND = "Agreement review not found."
+NO_REVIEW_PROVIDED = "No review id provided"
 
 state__query_param = openapi.Parameter(
     "state", openapi.IN_QUERY,
@@ -65,7 +69,7 @@ def get_agreement(request):
             and not request.user.is_superuser
             and agreement.created_by != request.user
         ):
-            raise APIForbiddenException(error_data={'id': agreement_id}, error_text='Not allowed to view this preview')
+            raise APIForbiddenException(error_data={'id': agreement_id}, error_text=PREVIEW_NOT_ALLOWED)
         if cached_agreement:
             return api_success(cached_agreement)
 
@@ -123,7 +127,7 @@ def get_agreement(request):
                 AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 
-    raise APINotFoundException(error_text='Agreement not found')
+    raise APINotFoundException(error_text=AGREEMENT_NOT_FOUND)
 
 
 review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
@@ -142,7 +146,7 @@ review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:
-        return api_success("No review id provided", status_code=status.HTTP_404_NOT_FOUND)
+        return api_success(NO_REVIEW_PROVIDED, status_code=status.HTTP_404_NOT_FOUND)
 
     agreement_review = AssetCustomizationReview.objects.filter(
         version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
@@ -153,4 +157,4 @@ def accept_agreement(request):
         ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
         return api_success()
     else:
-        return api_success("Agreement review not found.", status_code=status.HTTP_404_NOT_FOUND)
+        return api_success(AGREEMENT_REVIEW_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)

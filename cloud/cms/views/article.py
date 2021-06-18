@@ -22,6 +22,7 @@ url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
                                      description="Route in the url that points to the article.",
                                      type=openapi.TYPE_STRING)
 
+ARTICLE_NOT_FOUND = 'Article not found'
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an article based on params",
@@ -116,4 +117,4 @@ def get_article(request, url_param, **kwargs):
             ser.is_valid()
             return api_success(ser.data)
 
-    raise APINotFoundException(error_data={'url_param': url_param}, error_text='Article not found')
+    raise APINotFoundException(error_data={'url_param': url_param}, error_text=ARTICLE_NOT_FOUND)
