@@ -75,7 +75,7 @@ def auto_refresh_token(func):
         if hasattr(request, "session"):
             access_token = request.session.get("access_token")
             refresh_token = request.session.get("refresh_token")
-        elif request is dict:
+        elif type(request) is dict:
             access_token = request.get("access_token")
             refresh_token = request.get("refresh_token")
 
