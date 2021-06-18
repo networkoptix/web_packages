@@ -2,8 +2,11 @@
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
 <ng-template #intro let-intro="intro">
-    <div class="about-heading">
-        <h1>{{intro.title}}</h1>
+    <div class="about-heading">    
+        <h1 *ngIf="intro.url; else noLinkHeader" [routerLink]="intro.url" class="heading-link">{{intro.title}}</h1>
+        <ng-template #noLinkHeader>
+            <h1>{{intro.title}}</h1>
+        </ng-template>
         <ng-container *ngIf="intro.asset?.shortDescription">
             <p [innerHTML]="(intro.asset.shortDescription || '') | safe: 'html'"></p>
         </ng-container>
