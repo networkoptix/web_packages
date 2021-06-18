@@ -27,6 +27,7 @@ export class Camera implements ICamera {
 
     constructor(
         public readonly id: string,
+        public readonly parentServerId: string,
         public readonly preferredServerId: string,
         public readonly name: string,
         public readonly url: string,

@@ -410,7 +410,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _prepareArchiveRecords (ar) {
-        const serverTimes = (await this._getServerTimes()).reduce((reduced, server) => ({
+        const serverTimes = (
+            this.vms.serverTimes || (await this._getServerTimes())
+        ).reduce((reduced, server) => ({
             ...reduced,
             [server.serverId]: server.vmsTimeOffset
         }), {});

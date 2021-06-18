@@ -157,8 +157,9 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 this.timeMs = s.currentTime;
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'dd mmmm yyyy';
-                this.time = dateformat(this.timeMs + this.vms.timeZoneOffset, TIME_FORMAT);
-                this.date = dateformat(this.timeMs + this.vms.timeZoneOffset, DATE_FORMAT);
+                const tweakedT = this.vms.tweakT(this.timeMs)
+                this.time = dateformat(tweakedT, TIME_FORMAT);
+                this.date = dateformat(tweakedT, DATE_FORMAT);
 
                 // a hack to keep the indicator in place while timeline animates a jump over the gap between records
                 this.timeMs -= (this.timeline.targetScrollMs - this.timeline.visibleRange.start);

@@ -87,10 +87,8 @@ export class TimelineTopRulerCanvasRendererService {
 
     protected _getSerifTimes (interval: IrregularLengthInterval): Array<ms> {
         return interval ?
-            this.timeline.visibleRange.iterate(
-                interval, -this.vms.timeZoneOffset
-            ) : []
-        ;
+            this.timeline.visibleRange.iterate(interval, this.vms.timeZoneOffset)
+            : [];
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
@@ -159,16 +157,21 @@ export class TimelineTopRulerCanvasRendererService {
         const format = topRulerDateFormats[interval];
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const topString = dateformat(curTime + this.vms.timeZoneOffset, format.top);
+        const topString = dateformat(this.vms.tweakT(curTime), format.top);
         const x = Math.round((x0 + x1) / 2);
         const y = Math.round((y0 + y1) / 2);
-        ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
-        ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
-        ctx.fillText(topString, x, y, x1 - x0);
+
+        // ctx.fillText(topString, x, y, x1 - x0);
+        const MIN_WIDTH = 80
+        if (x1 - x0 > MIN_WIDTH * this.timeline.canvasGeometry.dpr) {
+            ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
+            ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
+            ctx.fillText(topString, x, y); // maxWidth: x1 - x0);
+        }
 
         if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
-            const serifString = dateformat(curTime + this.vms.timeZoneOffset, format.serif);
+            const serifString = dateformat(this.vms.tweakT(curTime), format.serif);
             ctx.fillStyle = `${drawingConfig.bottomLabel.baseColorHex}${percentageToHex(drawingConfig.bottomLabel.opacity)}`;
             ctx.font = `${drawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
             ctx.textBaseline = 'top';

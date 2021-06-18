@@ -59,9 +59,11 @@ export class TimelinePrimaryRulerCanvasRendererService {
     public render (ctx: CanvasRenderingContext2D, intervalToSkip: IrregularLengthInterval | false = false) {
         this._withContext(ctx, () => {
             const serifs = this._getSerifs().filter(s => s.weight > 0);
-            // console.log('PRIMARY SERIFS', serifs.map(s => s.weight))
             if (intervalToSkip) {
-                serifs.map(s => !isAlignedByIrregularInterval(s.time, intervalToSkip) && this._drawSerif(ctx, s));
+                serifs.map(s =>
+                    !isAlignedByIrregularInterval(this.vms.tweakT(s.time), intervalToSkip) &&
+                    this._drawSerif(ctx, s)
+                );
             } else {
                 serifs.map(s => this._drawSerif(ctx, s));
             }
@@ -104,14 +106,12 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
         if (this._haveIntervalsChanged(intervals)) {
             const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals);
-            // console.log('intervals changed', this._prevIntervals, intervals, intervalDiffDict)
             Object.keys(intervalDiffDict).map(k => {
                 const v = intervalDiffDict[k];
                 if (v.length) {
                     this._lastIntervalChanges[k] = Date.now();
                     // HERE animations happen
                     if (k in this._intervalWeightAnimations) {
-                        // this._intervalWeightAnimations[k].abort()
                         this._intervalWeightAnimations[k].set(v[1]);
                     } else {
                         this._intervalWeightAnimations[k] = new AnimatedFloat(v[0], ANIMATION_DURATION);
@@ -126,39 +126,26 @@ export class TimelinePrimaryRulerCanvasRendererService {
 
         const smallestInterval = intervals[0];
         const intervalsReversed = [...intervals].reverse();
-        return this.timeline.visibleRange.iterate(smallestInterval).map(time => {
+        return this.timeline.visibleRange.iterate(smallestInterval, this.vms.timeZoneOffset).map(time => {
             const weight = this._getIntervalWeight(time, intervalsReversed);
-            // const interval = intervals[~~weight - 1]
-            const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(time, i));
+            const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(this.vms.tweakT(time), i));
             const result = {
                 time,
                 weight,
                 interval
             };
-            // if (weight != ~~weight) console.log('GS', weight, result)
             return result;
         }).filter(s => s.interval);
     }
 
     protected _getIntervalWeight (time: ms, intervalsReversed: Array<IrregularLengthInterval>): int {
-        const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(time, i));
-        // console.log(interval, this._intervalWeightAnimations[interval], this._intervalWeightAnimations[interval].get())
+        const interval = intervalsReversed.find(i => isAlignedByIrregularInterval(this.vms.tweakT(time), i));
         const result = this._intervalWeightAnimations[interval]?.get() || 0;
-        // if (!this._intervalWeightAnimations[interval]) {
-        // console.warn('_getIntervalWeight', 'no animation for the interval', time, intervalsReversed, this._intervalWeightAnimations)
-        // }
-        // if (result != ~~result) console.log('GIW', result)
         return result;
-        // const result = MAX_WEIGHT - [...intervals].reverse().findIndex(i => isAlignedByIrregularInterval(time, i))
-        // return result <= MAX_WEIGHT ? result : 0
     }
 
     protected _drawSerif (ctx: CanvasRenderingContext2D, s: RulerSerif) {
-        // if (s.weight != ~~s.weight) {
-        //   console.log('Draw SW', s.weight, s.interval)
-        // }
         if (s.weight > MAX_WEIGHT || s.weight < MIN_WEIGHT) {
-            // console.warn('wrong weight', s)
             return;
         }
 
@@ -209,8 +196,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
-        const dateStr = dateformat(s.time + this.vms.timeZoneOffset, format);
-        // console.log(dateStr, s)
+        const dateStr = dateformat(this.vms.tweakT(s.time), format);
         ctx.font = `${fontSize}px ${fontFace}`;
         ctx.fillText(dateStr, x, y1 + 5);
     }

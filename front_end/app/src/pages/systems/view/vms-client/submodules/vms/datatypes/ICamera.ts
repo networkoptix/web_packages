@@ -92,6 +92,9 @@ export interface ICamera {
 
     isThereRecord (t: ms)
     getNextRecord (t: ms): ISimpleTimeRange
+
+    preferredServerId: string,
+    parentServerId: string,
 }
 
 export default ICamera;
