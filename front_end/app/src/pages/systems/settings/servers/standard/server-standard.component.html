@@ -8,7 +8,7 @@
                 id="server-offline"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
                 [line1]="'Server offline' | translate"
-                [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()">
             </nx-alert-block>
@@ -18,7 +18,7 @@
                 id="restarting"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
                 [line1]="'Restarting' | translate"
-                [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
                 (onAction)="checkStatus()">
             </nx-alert-block>
@@ -54,7 +54,7 @@
                             [routerLink]="fullInfoPath"
                             [queryParams]="{id: parsedServerId}">
                                 <span>
-                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
                                         [applyCss]="true"></svg-icon>
                                 </span>
                                 <span class="ml-1 header-button-span" translate>Detailed Info</span>

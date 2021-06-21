@@ -163,17 +163,17 @@ hr {
     background-color : theme_variables.$body-bg;
 }
 
-@mixin kill-glyphicon {
-    background-size  : 112px 80px;
-    background-image : url('/static/images/sprite_common.png') !important;
-    &:before {
-        content : none;
-    }
-
-    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/sprite_common@2x.png');
-    }
-}
+//@mixin kill-glyphicon {
+//    background-size  : 112px 80px;
+//    background-image : url('/static/images/sprite_common.png') !important;
+//    &:before {
+//        content : none;
+//    }
+//
+//    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+//        background-image : url('/static/images/sprite_common@2x.png');
+//    }
+//}
 
 select {
     position            : relative;

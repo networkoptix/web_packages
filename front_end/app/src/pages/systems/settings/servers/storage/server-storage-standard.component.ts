@@ -406,7 +406,7 @@ export class NxSystemStorageComponent implements OnInit {
     cleanUrl = NxUtilsService.cleanSmbUrl
 
     getIconSrc(store) {
-        return `${this.CONFIG.icons.dir}${store.updating || this.updatingModes.includes(store.storageId) || !store.storageType ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
+        return `${this.CONFIG.icons.dirTextButtons}${store.updating || this.updatingModes.includes(store.storageId) || !store.storageType ? 'loading.svg' : `storage_${store.storageType}.svg`}`;
     }
 
     doesModeExist = (mode: MODE) => {

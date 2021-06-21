@@ -367,12 +367,12 @@ export interface Bps {
 export interface Icons {
     default: string;
     platforms: Platform[];
-    devTools: string;
     backgrounds: string;
     dir: string;
     dirDevtools: string;
     dirButtons: string;
     dirTextButtons: string;
+    dirHeader: string;
     dirNonStandard: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;

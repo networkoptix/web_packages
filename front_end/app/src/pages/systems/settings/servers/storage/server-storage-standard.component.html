@@ -15,7 +15,7 @@
             <div *ngIf="canSeeDetailInfo && currentStorageState?.locations.length" class="buttons">
                 <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
                                   [applyClass]="true"></svg-icon>
                     </span>
                     <span class="ml-1 header-button-span" translate>Detailed Info</span>
@@ -67,7 +67,7 @@
                                                       [closeDelay]="100"
                                                       placement="top"
                                                       triggers="hover"
-                                                      [src]="CONFIG.icons.dirNonStandard + 'info.svg'">
+                                                      [src]="CONFIG.icons.dirTextButtons + 'info.svg'">
                                             </svg-icon>
                                         </div>
                                         <div *ngSwitchCase="STATUS.IN_USE" [style.minWidth.px]="ddWidth" [style.paddingLeft.px]="8" >

@@ -225,11 +225,12 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         Object.keys(this.healthService.manifest).forEach((asset) => {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
             if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
+                const svgName = asset === 'cameras' ? 'camera' : asset === 'systems' ? 'system' : asset;
                 menu.level1.push({
                     id    : asset,
                     label : this.healthService.manifest[asset].name,
                     path  : asset,
-                    svg   : asset
+                    svg   : svgName
                 });
             }
         });

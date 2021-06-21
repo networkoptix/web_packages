@@ -7,11 +7,11 @@
      [closeDelay]="100"
      triggers="hover">
 
-    <div class="total-label" [innerText]="totalSpace"></div>
+    <div class="total-label" [innerHTML]="totalSpace"></div>
     <div class="bar available"
         [ngClass]="{'full': inaccessible}"
         [style.width.%]="100"></div>
-    <div class="bar used" 
+    <div class="bar used"
         [ngClass]="{'hidden': inaccessible || !usedPercentage}"
         [style.width.%]="usedPercentage"></div>
     <div class="bar archive"

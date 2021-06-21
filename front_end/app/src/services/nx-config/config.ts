@@ -173,12 +173,12 @@ export const nxConfig: IConfig = {
             { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
             { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
         ],
-        devTools              : '/static/images/icons/dev_tools/',
         backgrounds           : '/static/images/icons/backgrounds/',
         dir                   : '/static/images/icons/standard/',
         dirDevtools           : '/static/images/icons/dev_tools/',
         dirButtons            : '/static/images/icons/buttons/',
         dirTextButtons        : '/static/images/icons/text_buttons/',
+        dirHeader             : '/static/images/icons/header/',
         dirNonStandard        : '/static/images/icons/',
         dirNonStandardView    : '/static/images/icons/view/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
@@ -273,7 +273,7 @@ export const nxConfig: IConfig = {
             baseUrl : environment.isLocal ? '/settings/' : '/systems/',
             admin   : {
                 id   : 'admin',
-                icon : 'systems',
+                icon : 'system',
                 path : ''
             },
             cloudStorage: {
@@ -287,7 +287,7 @@ export const nxConfig: IConfig = {
             },
             servers: {
                 id          : 'servers',
-                icon        : 'servers',
+                icon        : 'server',
                 path        : 'servers',
                 statusIcons : {
                     offline : 'device_offline',
@@ -296,7 +296,7 @@ export const nxConfig: IConfig = {
             },
             cameras: {
                 id          : 'cameras',
-                icon        : 'cameras',
+                icon        : 'camera',
                 path        : 'cameras',
                 statusIcons : {
                     archive      : 'camera_archive',

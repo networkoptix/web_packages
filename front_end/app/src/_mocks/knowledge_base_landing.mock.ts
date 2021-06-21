@@ -682,7 +682,7 @@ export const integrationsNode = {
                         canEdit      : null,
                         urlified     : '68-test-integration-20190701ab'
                     },
-                    icon      : 'systems.svg',
+                    icon      : 'system.svg',
                     newWindow : false
                 }
             ],
@@ -2270,7 +2270,7 @@ export const documentation = {
                             ],
                             next_item      : false,
                             new_window     : false,
-                            icon           : 'systems.svg',
+                            icon           : 'system.svg',
                             authentication : 'Both',
                             order          : 2,
                             name           : 'Test',
