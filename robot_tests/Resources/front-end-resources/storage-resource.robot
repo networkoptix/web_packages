@@ -1,5 +1,8 @@
 *** Keywords ***
 Storage Suite Setup
+    # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
+    ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
+    Set Suite Variable     ${value}    ${value}
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
     ${loglevel} =    Set Loglevel    INFO
@@ -113,7 +116,7 @@ Storage Suite Setup
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
 
     Add Analytics stub plugin   ${server 1['name']}
-    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    admin    admin    ${camera}    http://10.1.5.116:80/onvif/device_service    Digital Watchdog
+    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${camera manufacturer}
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
 
@@ -219,7 +222,7 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    4
+    FOR    ${n}    IN RANGE    5
         ${url} =    Set variable    ${storages dict[${n}]['url']}
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
@@ -234,7 +237,17 @@ Set Default Storage Config
         ...    Set To Dictionary    ${storages dict[${n}]}    isBackup    ${FALSE}
     END
     Save Storages via API    ${storages dict}    ${server url}
-
+    # Verify changes are correct
+    Sleep    2
+    ${storages string 1} =    Convert To String    ${storages dict}
+    ${storages} =    Get Storages via API    ${server url}
+    ${storages string 2} =    Convert To String    ${storages}
+    # ${storages string} =    Replace String    ${storages string}    '    "
+    # ${storages string} =    Replace String    ${storages string}    False    "False"
+    # ${storages string} =    Replace String    ${storages string}    True    "True"
+    # ${storages dict 2} =    Evaluate    json.loads("""${storages string}""")    json
+    Should Be Equal     ${storages string 1}     ${storages string 2}
+    
 Reset to Default Storage Config
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
@@ -255,18 +268,28 @@ Add Analytics stub plugin
 
 Check Analytics Data is Present
     [Arguments]    ${disk}    ${camera}    ${server name}    ${keep}=${FALSE}
-    ${date} =    Get Current Date
-    ${year} =    Get Substring    ${date}    0    4
-    ${month} =    Get Substring    ${date}    5    7
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command    test -f ${disk}-${random}/'HD Witness Media'/object_detection.sqlite && echo "exists"
-    Should Be Equal As Strings    ${results}    exists
-    ${results}    Execute Command    test -f ${disk}-${random}/'HD Witness Media'/archive/metadata/${camera}/${year}/${month}/analytics_detailed_data.bin && echo "exists"    #return_stdout=False    return_rc=True    output_during_execution=True
-    Run Keyword Unless    ${keep}    Should Be Equal As Strings    ${results}    exists
-    ${results}    Execute Command    test -f ${disk}-${random}/'HD Witness Media'/archive/metadata/${camera}/${year}/${month}/analytics_detailed_index.bin && echo "exists"     #return_stdout=False	return_rc=True    output_during_execution=True
-    Run Keyword Unless    ${keep}    Should Be Equal As Strings    ${results}    exists
-    Close Connection
+    # ${date} =    Get Current Date
+    # ${year} =    Get Substring    ${date}    0    4
+    # ${month} =    Get Substring    ${date}    5    7
+    Verify File Exists    ${disk}-${random}    object_detection.sqlite
+    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
+    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
+    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # Run Keyword If    '${IMAGE}' == '${IMAGE 4.1}'    Run Keywords
+    # ...    ${results 4.1} =   Execute Command    test -f ${disk}-${random}/'HD Witness Media'/object_detection.sqlite && echo "exists"    AND
+    # ...    Should Be Equal As Strings    ${results 4.1}    exists
+    # ...    ELSE    Run Keywords
+    # ...    ${results 4.3} =   Execute Command    test -f ${disk}-${random}/'HD Witness Media'/*/object_detection.sqlite && echo "exists"    AND
+    # ...    Should Be Equal As Strings    ${results 4.3}    exists
+    # ${results}    Execute Command    test -f ${disk}-${random}/'HD Witness Media'/archive/metadata/${camera}/${year}/${month}/analytics_detailed_data.bin && echo "exists"    #return_stdout=False    return_rc=True    output_during_execution=True
+    # Run Keyword Unless    ${keep}    Should Be Equal As Strings    ${results}    exists
+    # ${results}    Execute Command    test -f ${disk}-${random}/'HD Witness Media'/archive/metadata/${camera}/${year}/${month}/analytics_detailed_index.bin && echo "exists"     #return_stdout=False	return_rc=True    output_during_execution=True
+    # Run Keyword Unless    ${keep}    Should Be Equal As Strings    ${results}    exists
+    # Close Connection
 
 Wait For Analytics Move Dialog
     [Arguments]    ${disk}
@@ -375,10 +398,19 @@ Initialize Backup for User and System
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    Click Element    ${ARCHIVE BACKUP CHECK BOX}
-    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Click Element    ${SAVE BUTTON}
+    # Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Enable Archive Backup
+    # Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Click Element    ${SAVE BUTTON}
     Sleep    2
     ${backup initialized} =    Set Variable    ${TRUE} 
     Set Suite Variable    ${backup initialized}     ${backup initialized} 
     Log Out
+    
+Enable Archive Backup
+    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    ${status} =    Run Keyword And Return Status    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=5
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Run Keyword Unless    ${status}    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    Run Keyword and Continue on Failure    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=15
+    

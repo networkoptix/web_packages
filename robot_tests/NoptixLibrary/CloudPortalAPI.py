@@ -336,14 +336,16 @@ class CloudPortalAPI(object):
     #    return r.text
     
     @staticmethod
-    def turn_on_analytics(serverUrl):
+    def turn_on_analytics(serverUrl,value):
 #         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
 #         cameraDict = r.json()
 #         cameraID = cameraDict["id"]      
         body = [
                     {
                     "name": "userEnabledAnalyticsEngines",
-                    "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]", 
+                    #"value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]", 
+                    #"value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
+                    "value": value,
                     "resourceId": "{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"
                     }
                 ]

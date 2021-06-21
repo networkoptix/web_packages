@@ -65,6 +65,7 @@
     "MAIN"                                 :    "Main",
     "BACKUP"                               :    "Backup",
     "NOT IN USE"                           :    "Not in use",
+    "CHECKING"                             :    "Checking...",
 
     "CANNOT SAVE PASSWORD"                 :    "Cannot save password",
     "PASSWORD INCORRECT"                   :    "Current password is incorrect.",

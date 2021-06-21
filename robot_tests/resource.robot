@@ -166,7 +166,7 @@ Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
-    ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
     Reload Page
@@ -1060,13 +1060,14 @@ Create Base System
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
+    # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
-    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
 
     # If add users is true add local users.  Add cloud users if both are true.
-    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://10.1.5.238:${server}[port]
+    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${server}[port]
     ${cloud users}=   Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
@@ -1328,3 +1329,13 @@ Remove All Files
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
     Close Connection
+    
+Verify File Exists
+    [Arguments]    ${folder}    ${file}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    find ${folder} -name ${file}    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    Should Contain    ${results}    ${file}
+    
+    

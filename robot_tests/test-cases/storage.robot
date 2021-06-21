@@ -7,11 +7,16 @@ Suite Teardown    Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
+${QA BURBANK IP}     10.1.5.239
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
 ${storage string 2}    ${EMPTY}
-${camera}      00-0D-F1-20-B5-02
+${camera}      D8-D4-3C-60-F0-D3
+${camera url}    http://192.168.0.27/
+${camera manufacturer}    Sony
+${camera user}    admin
+${camera password}    QAbur777$
 ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
@@ -359,7 +364,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Wait Until Element is Visible     ${SAVE BUTTON}
     Click Button    ${SAVE BUTTON}
     Log    Step 4 - C81779
-    ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}
+    ${response} =    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}
     Log    ${response}
     Reload Page
     Log    C81754
@@ -645,78 +650,79 @@ Enable storage: Not in use -> Main
     ${files 2 disk2} =    Wait Until Files Are Recorded    disk2    100
     Should Be True    ${files 2 disk2} > 0
 
-Enable storage: Not in use -> Backup
-    [Tags]    C81544    mode
-    @{disabled} =    Create List    disk1    disk2    disk3
-    @{backups} =    Create List
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
+# Enable storage: Not in use -> Backup
+    # TEST CASE DISABLED DUE TO FUNCTIONALITY CHANGE IN 4.3
+    # [Tags]    C81544    mode
+    # @{disabled} =    Create List    disk1    disk2    disk3
+    # @{backups} =    Create List
+    # Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+    # Log    Step 1
+    # Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    # Wait Until Element is Visible    ${SERVERS LINK}
+    # Click Link    ${SERVERS LINK}
+    # Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
 
-    Log    Step 2
-    ${files disk0} =    Verify Recorded Video Files    disk0
-    ${files disk2} =    Verify Recorded Video Files    disk2
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    ${files 2 disk2} =    Verify Recorded Video Files    disk2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    Should Be True    ${files disk2} == ${files 2 disk2}
-    Log    Step 3
-    Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Log    Step 2
+    # ${files disk0} =    Verify Recorded Video Files    disk0
+    # ${files disk2} =    Verify Recorded Video Files    disk2
+    # ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
+    # ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    # Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    # Should Be True    ${files 2 disk0} > ${files disk0}
+    # Should Be True    ${files disk2} == ${files 2 disk2}
+    # Log    Step 3
+    # Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
+    # Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    # Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    # Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
-    Log    Step 4
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure     Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Log    Step 4
+    # Sleep    2
+    # Click Button    ${SAVE BUTTON}
+    # Run Keyword and Continue on Failure     Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
+    # Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
+    # Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    # Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
-    Log    Step 5
-    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
-    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    Element Should Not Be Visible    ${ARCHIVE BACKUP STREAMS MSG}
-    Element Should Not Be Visible    ${ARCHIVE BACKUP CLIENT MSG}
+    # Log    Step 5
+    # Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
+    # Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    # Element Should Not Be Visible    ${ARCHIVE BACKUP STREAMS MSG}
+    # Element Should Not Be Visible    ${ARCHIVE BACKUP CLIENT MSG}
 
-    Log    Step 6
-    ${files 3 disk2} =    Wait Until Files Are Recorded    disk2    25
-    Should Be True    ${files 3 disk2} == ${files disk2} or ${files 3 disk2} < ${files disk2}
+    # Log    Step 6
+    # ${files 3 disk2} =    Wait Until Files Are Recorded    disk2    25
+    # Should Be True    ${files 3 disk2} == ${files disk2} or ${files 3 disk2} < ${files disk2}
 
-    Log    Step 7
-    # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Reload Page
-    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    Click Element    ${ARCHIVE BACKUP CHECK BOX}
-    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Click Element    ${SAVE BUTTON}
-    ${backup initialized} =    Set Variable    ${TRUE} 
-    Set Suite Variable    ${backup initialized}     ${backup initialized} 
-    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Reload Page
-    Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
+    # Log    Step 7
+    # # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    # Reload Page
+    # Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
+    # Enable Archive Backup
+    # # Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # # Click Element    ${SAVE BUTTON}
+    # ${backup initialized} =    Set Variable    ${TRUE} 
+    # Set Suite Variable    ${backup initialized}     ${backup initialized} 
+    # Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    # Reload Page
+    # Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
 
-    ${files disk0} =     Wait Until Files Are Recorded    disk0    100
-    ${files 4 disk2} =    Verify Recorded Video Files    disk2
-    Sleep    60
-    ${files 5 disk2} =    Verify Recorded Video Files    disk2
-    Should Be True    ${files 5 disk2} == ${files 4 disk2}
+    # ${files disk0} =     Wait Until Files Are Recorded    disk0    100
+    # ${files 4 disk2} =    Verify Recorded Video Files    disk2
+    # Sleep    60
+    # ${files 5 disk2} =    Verify Recorded Video Files    disk2
+    # Should Be True    ${files 5 disk2} == ${files 4 disk2}
 
-    Log    Step 8
-    ${files disk0} =    Verify Recorded Video Files    disk0
-    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Reload Page
-    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    ${files 6 disk2} =    Wait Until Files Are Recorded    disk2    100
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    Should Be True    ${files 6 disk2} > ${files 5 disk2}
+    # Log    Step 8
+    # ${files disk0} =    Verify Recorded Video Files    disk0
+    # Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
+    # Reload Page
+    # Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
+    # ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
+    # ${files 6 disk2} =    Wait Until Files Are Recorded    disk2    100
+    # Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    # Should Be True    ${files 2 disk0} > ${files disk0}
+    # Should Be True    ${files 6 disk2} > ${files 5 disk2}
 
 Disable storage: Main -> Not in use
     [Tags]    C81545    mode
@@ -932,7 +938,7 @@ Disabling storage warnings - Backup storages
 
 Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
-    # This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
+    [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk1
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -974,7 +980,7 @@ Disabling storage warnings aren't shown - Main storages
 
 Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
-    # This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
+    [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3    disk1
     @{backups} =    Create List     disk2
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}   ${disabled}    ${backups}
@@ -1106,7 +1112,7 @@ Detailed Info button works system has multiple storages
     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
 Detailed Info button works (system has one storage)
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+    Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
@@ -1245,7 +1251,7 @@ Add external storage: invalid storage path
 
 Failed to add external storage: server is offline
     [Tags]    C81600    external
-    Log in to user and system    ${owner}     ${sysId2}
+    Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page
@@ -1472,8 +1478,8 @@ Delete Inaccessible storage
 Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
-    FOR    ${account}    IN    owner    admin        
-        Log in to user and system    ${${account}}     ${sysId0}
+    FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        
+        Log in to user and system    ${${account}}     ${server 1['cloud id']}
         Wait Until Element is Visible with Retry    ${SERVERS LINK}
         Click Link    ${SERVERS LINK}
         Verify on Servers Page
@@ -1481,8 +1487,8 @@ Backup settings block availability for owner, administrator and other users
         Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
         Log Out
     END
-    FOR    ${account}    IN    adv viewer    live viewer    viewer    custom
-        Log in to user and system    ${${account}}     ${sysId0}
+    FOR    ${account}    IN    ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][live viewer]    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][custom]
+        Log in to user and system    ${${account}}     ${server 1['cloud id']}
         Sleep     2
         Element Should Not Be Visible    ${SERVERS LINK}
         Log Out
