@@ -7,7 +7,7 @@ import estimateIrregularLengthIntervalPessimistically
     from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
 import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS';
 import { ms, px } from '../../../../../utils/type-aliases';
-import drawingConfig from './drawingConfigs/topRulerDrawingConfig';
+import drawingConfig from '../drawingConfigs/topRulerDrawingConfig';
 import cfg from '../../timeline.config';
 import topRulerDateFormats from './dateformats/top_ruler_date_formats';
 import percentageToHex from './utils/percentageToHex';
@@ -92,17 +92,9 @@ export class TimelineTopRulerCanvasRendererService {
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
-        const oldStrokeStyle = ctx.strokeStyle;
-        const oldFillStyle = ctx.fillStyle;
-        const oldTextAlign = ctx.textAlign;
-        const oldTextBaseline = ctx.textBaseline;
-        const oldFont = ctx.font;
+        ctx.save()
         actualDrawing();
-        ctx.strokeStyle = oldStrokeStyle;
-        ctx.fillStyle = oldFillStyle;
-        ctx.textAlign = oldTextAlign;
-        ctx.textBaseline = oldTextBaseline;
-        ctx.font = oldFont;
+        ctx.restore()
     }
 
     protected _drawSerif (

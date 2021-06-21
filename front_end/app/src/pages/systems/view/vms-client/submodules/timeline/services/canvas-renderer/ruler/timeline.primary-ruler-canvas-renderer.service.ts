@@ -12,7 +12,7 @@ import * as df from 'dateformat';
 import cfg from '../../timeline.config';
 import TimelineService from '../../timeline.service';
 import { ms, int, px } from '../../../../../utils/type-aliases';
-import primaryRulerSerifDrawingConfigs from './drawingConfigs/primaryRulerSerifDrawingConfigs';
+import primaryRulerSerifDrawingConfigs from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
 import primaryRulerDateFormats from './dateformats/primary_ruler_date_formats';
 
 import percentageToHex from './utils/percentageToHex';
@@ -71,17 +71,9 @@ export class TimelinePrimaryRulerCanvasRendererService {
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
-        const oldStrokeStyle = ctx.strokeStyle;
-        const oldFillStyle = ctx.fillStyle;
-        const oldTextAlign = ctx.textAlign;
-        const oldTextBaseline = ctx.textBaseline;
-        const oldFont = ctx.font;
+        ctx.save()
         actualDrawing();
-        ctx.strokeStyle = oldStrokeStyle;
-        ctx.fillStyle = oldFillStyle;
-        ctx.textAlign = oldTextAlign;
-        ctx.textBaseline = oldTextBaseline;
-        ctx.font = oldFont;
+        ctx.restore()
     }
 
     protected _getIntervals (): Array<IrregularLengthInterval> {

@@ -1,4 +1,5 @@
-const baseColorHex = '#49626f'; // '#889eab' // '#adbdc5'
+import colors from './colors'
+const baseColorHex = colors.dark15
 
 export const primaryRulerSerifDrawingConfigs = {
     0: {
