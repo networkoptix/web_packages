@@ -631,6 +631,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 transport = transports[0];
             }
         }
+        if (!transports.includes(transport)) {
+            transport = transports[0];
+        }
         this.selectedTransport = transport;
     }
 
