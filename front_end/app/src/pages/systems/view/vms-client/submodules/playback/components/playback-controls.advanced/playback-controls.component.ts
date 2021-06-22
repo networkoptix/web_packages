@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
     templateUrl : './playback-controls.component.html',
     styleUrls   : ['./playback-controls.component.scss']
 })
-export class PlaybackControlsComponent implements OnInit, OnDestroy {
+export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
     protected subscription: Subscription
     protected state: PlaybackState
 
@@ -69,4 +69,4 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
     }
 }
 
-export default PlaybackControlsComponent;
+export default PlaybackAdvControlsComponent;

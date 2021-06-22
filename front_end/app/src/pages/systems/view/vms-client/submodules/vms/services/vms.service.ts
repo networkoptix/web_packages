@@ -143,11 +143,11 @@ export class VideoManagementSystemService {
             return 0;
         }
         const preferredServerTime =
-            this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId)
-            this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId)
-            ||this.serverTimes[0]
-        const clientTZO = -(new Date()).getTimezoneOffset() * 60000
-        const serverTZO = preferredServerTime.timeZoneOffset
+            this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId) ||
+            this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
+            this.serverTimes[0];
+        const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
+        const serverTZO = preferredServerTime.timeZoneOffset;
         return serverTZO - clientTZO;
     }
     public tweakT (t: fairMs): tweakedMs {

@@ -1,11 +1,8 @@
 <div
-    class="playback-control-button"
+    class="playback-control-button {{ btnClass }}"
     [ngClass]="{
-        'enabled': enabled,
-        'play': btnClass === 'play' || (playback.livePaused$ | async),
-        'pause': btnClass === 'pause' && !(playback.livePaused$ | async)
+        'enabled': enabled
     }"
-    (click)="handleClick()"
->
+    (click)="handleClick()">
     <span class="glyph"></span>
 </div>

@@ -55,17 +55,12 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     }
 
     public onVmsSubjectChange (state: VmsState) {
-        this._updateEnabledDisabled()
+        this._updateEnabledDisabled();
     }
 
     protected _updateEnabledDisabled () {
         const vmsState = this.vms.subject.getValue();
-        if (vmsState.mode !== VMS_MODE.CAMERA_SELECTED) {
-            this.disabled = true;
-        } else {
-            this.disabled = !vmsState.selectedCamera.hasArchive;
-            this.disabled = !vmsState.selectedCamera?.hasArchive;
-        }
+        this.disabled = vmsState.mode !== VMS_MODE.CAMERA_SELECTED;
         this.canZoomIn = (!this.disabled && this.state?.zoom?.canZoomIn) || false;
         this.canZoomOut = (!this.disabled && this.state?.zoom?.canZoomOut) || false;
     }
