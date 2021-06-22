@@ -133,7 +133,7 @@ class TempLogin:
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, *args):
         """Deletes the tokens"""
         Auth.delete_token(self.tokens, self.refresh_token)
         Auth.delete_token(self.tokens, self.access_token)
