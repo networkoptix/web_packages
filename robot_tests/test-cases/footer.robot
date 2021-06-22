@@ -1,24 +1,68 @@
 *** Settings ***
 Library           ../NoptixLibrary/__init__.py
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
-Test Teardown     Restart
-Suite Teardown    Close All Browsers
+Suite Setup       Footer Suite Setup
+Test Setup        Footer Test Setup
+Test Teardown     Footer Test Teardown
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags    threaded
 
-*** Variables ***
-${email}           ${EMAIL OWNER}
-${password}        ${BASE PASSWORD}
-${url}             ${ENV}
-
 *** Keywords ***
-Restart
-    Close Browser
+Footer Suite Setup
+    ${url}=   Set Variable If
+    ...    '''${mode}'''=='''cloud'''    ${ENV}
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK SYSTEM IP}:7001
+    Set Suite Variable    ${url}
+
+Footer Test Setup
+    Skip If Irrelevant
     Open Browser and go to URL    ${url}
+    Run Keyword If   '''${mode}''' == '''webadmin'''    Log In If Needed    ${AUTO SYS AUTH}[0]    ${AUTO SYS AUTH}[1]
+
+Footer Test Teardown
+    Skip If Irrelevant
+    Delete All Cookies
+    Close Browser
 
 *** Test Cases ***
+"API documentation" link leads to proper page
+    [Tags]    Threaded    webadmin
+    Wait Until Element is Visible    ${FOOTER API DOCUMENTATION LINK}
+    Sleep    1
+    Click Link    ${FOOTER API DOCUMENTATION LINK}
+    Wait Until Number Of Tabs Are Open    2
+    Switch Window    NEW
+    Wait Until Location Contains   ${url}${REST API URL}
+
+"Download SDK" link leads to proper page
+    [Tags]    Threaded    webadmin
+    Wait Until Element is Visible    ${FOOTER DOWNLOAD SDK LINK}
+    Sleep    1
+    Click Link    ${FOOTER DOWNLOAD SDK LINK}
+    Wait Until Number Of Tabs Are Open    2
+    Switch Window    NEW
+    Wait Until Location Contains   ${ENV}${SDK URL}
+
+Support leads to the proper support site
+    [Tags]    C41544    Threaded    C30823    webadmin    cloud
+    Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
+    Sleep    1
+    Click Link    ${FOOTER SUPPORT LINK}
+    Wait Until Number Of Tabs Are Open    2
+    Switch Window    NEW
+    Wait Until Location Contains    ${SUPPORT URL}
+
+Copyright leads to the proper site
+    [Tags]    C41547    Threaded    webadmin    cloud
+    Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
+    Sleep    1
+    Click Link    ${FOOTER COPYRIGHT LINK}
+    Wait Until Number Of Tabs Are Open    2
+    Switch Window    NEW
+    Wait Until Location Is    ${COPYRIGHT URL}
+
 About page is correctly displayed
-    [tags]    C41541    Threaded    C30820    smoke
+    [Tags]    C41541    Threaded    C30820    cloud
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
@@ -37,28 +81,19 @@ About page is correctly displayed
     ...    ${THEME COLOR RGB}
 
 Integrations leads to the proper support site
-    [tags]    Threaded    C57508    smoke
+    [Tags]    Threaded    C57508    cloud
     Wait Until Element is Visible    ${FOOTER INTEGRATIONS LINK}
     Click Link    ${FOOTER INTEGRATIONS LINK}
     Wait Until Location Is    ${ENV}/integrations
 
 Supported devices leads to the proper page
-    [tags]    Threaded    C57509    smoke
+    [Tags]    Threaded    C57509    cloud
     Wait Until Element is Visible    ${FOOTER SUPPORTED DEVICES LINK}
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Is    ${ENV}/ipvd
 
-Support leads to the proper support site
-    [tags]    C41544    Threaded    C30823    smoke
-    Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
-    Sleep    1
-    Click Link    ${FOOTER SUPPORT LINK}
-    Wait Until Number Of Tabs Are Open    2
-    Switch Window    NEW
-    Wait Until Location Contains    ${SUPPORT URL}
-
 Terms leads to the proper EULA site
-    [tags]    C41545    Threaded    C30824    smoke
+    [Tags]    C41545    Threaded    C30824     cloud
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
     Click Link    ${FOOTER TERMS LINK}
@@ -67,19 +102,10 @@ Terms leads to the proper EULA site
     Wait Until Location Is    ${ENV}${TERMS URL}
 
 Privacy leads to the proper page
-    [tags]    C41546    Threaded    C34452    smoke
+    [Tags]    C41546    Threaded    C34452    cloud
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1
     Click Link    ${FOOTER PRIVACY LINK}
     Wait Until Number Of Tabs Are Open    2
     Switch Window    NEW
     Wait Until Location Is    ${PRIVACY POLICY URL HREF}
-
-Copyright leads to the proper site
-    [tags]    C41547    Threaded
-    Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
-    Sleep    1
-    Click Link    ${FOOTER COPYRIGHT LINK}
-    Wait Until Number Of Tabs Are Open    2
-    Switch Window    NEW
-    Wait Until Location Is    ${COPYRIGHT URL}

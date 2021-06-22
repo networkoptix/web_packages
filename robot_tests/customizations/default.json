@@ -13,6 +13,8 @@
     "ABOUT URL"                  :    "/content/about",
     "KNOWN LIMITATIONS URL"      :    "/content/faq",
     "TERMS URL"                  :    "/content/eula",
+    "REST API URL"               :    "/swagger-ui/index.html",
+    "SDK URL"                    :    "/download/sdk",
     "COPYRIGHT URL"              :    "https://www.networkoptix.com/",
     "COPYRIGHT SYMBOL"           :    "©",
     "COMPANY"                    :    "Network Optix",
