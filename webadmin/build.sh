@@ -35,6 +35,8 @@ customization_files=(
     'webadmin_config.js'
     'webadmin_logo.png'
     'description.json'
+    'welcome_page_logo.png'
+    'welcome_page_logo@2x.png'
 )
 
 # Prepend and append each filename with *
@@ -43,6 +45,7 @@ customization_files=("${customization_files[@]/%/*}")
 unzip -oj package.zip "${customization_files[@]}" -d front_end/app/customization
 
 mv front_end/app/customization/webadmin_logo.png front_end/app/images/logo.png
+mv front_end/app/customization/welcome_page_logo* front_end/app/images
 
 echo "Copy customization to setup wizard"
 [ ! -d front_end/inline-wizard/customization ] && mkdir -p front_end/inline-wizard/customization
