@@ -12,14 +12,14 @@ export const primaryRulerSerifDrawingConfigs = {
     },
     1: {
         baseColorHex,
-        heightRelative : 0.0705, // used to be .06
+        heightRelative : 0.05,
         opacity        : 0.3,
         label          : {
             fontSize: 0
         }
     },
     2: {
-        heightRelative : 0.0705, // used to be .06
+        heightRelative : 0.05,
         baseColorHex,
         opacity        : 0.6,
         label          : {
@@ -28,7 +28,7 @@ export const primaryRulerSerifDrawingConfigs = {
         }
     },
     3: {
-        heightRelative : 0.1294, // used to be .11
+        heightRelative : 0.1,
         baseColorHex,
         opacity        : 0.8,
         label          : {
@@ -36,7 +36,7 @@ export const primaryRulerSerifDrawingConfigs = {
         }
     },
     4: {
-        heightRelative : 0.2, // used to be .17
+        heightRelative : 0.16,
         baseColorHex,
         opacity        : 1.0,
         label          : {
