@@ -112,13 +112,13 @@ $brand_core: #2FA2DB;
       &.active {
         > svg {
           > .outer-circle {
-            stroke: $brand_core;
+            stroke: var(--brand-core);
           }
           > .i-body {
-            stroke: $brand_core;
+            stroke: var(--brand-core);
           }
           > .point-over-i {
-            fill: $brand_core;
+            fill: var(--brand-core);
           }
         }
       }

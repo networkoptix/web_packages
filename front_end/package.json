@@ -28,6 +28,7 @@
     "e2e": "ng e2e",
     "lint": "eslint app --ext .ts --ignore-pattern *types.ts --ignore-pattern nx-config --fix",
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
+    "buildSkins": "node buildSkins.js",
     "setSkin": "node setSkin.js --skin",
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",

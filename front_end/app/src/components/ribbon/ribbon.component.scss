@@ -3,10 +3,10 @@
 
 .ribbon {
     @include typography.regular13light1;
-    background-color : $brand_d1;
+    background-color : var(--brand-d1);
     line-height      : 1rem;
     //border-top       : 1px solid $brand_d2;
-    border-bottom    : 1px solid $brand_d2;
+    border-bottom    : 1px solid var(--brand-d2);
     padding          : .5rem 1rem;
     display          : flex;
     align-items      : center;

@@ -56,7 +56,7 @@
             &:active, &:focus, &.non-empty {
                 background-color : $light1 !important;
                 color            : $dark9 !important;
-                border           : 1px solid $brand_core !important;
+                border           : 1px solid var(--brand-core) !important;
             }
 
             &:hover:not(:active):not(:focus) {
@@ -119,7 +119,7 @@
 
     .drop-container {
         max-width: 992px;
-    
+
         @include media-breakpoint-down(sm) {
             flex-direction : column !important;
         }

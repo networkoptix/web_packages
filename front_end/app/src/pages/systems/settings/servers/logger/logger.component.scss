@@ -32,7 +32,7 @@
             }
 
             .online {
-                background-color : typography.$brand_core;
+                background-color : var(--brand-core);
             }
 
             .offline {

@@ -86,11 +86,11 @@
     }
 
     .fake-link {
-        color: $brand_core;
+        color: var(--brand-core);
         cursor: pointer;
         text-decoration: underline;
     }
-    
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -255,7 +255,7 @@
                 input {
                     color: $dark9;
                     &:focus {
-                        border: 1px solid $brand_core;
+                        border: 1px solid var(--brand-core);
                     }
                 }
 
@@ -301,7 +301,7 @@
                         box-shadow: inset 0 1px 0 0 $dark2;
                     }
                     &::selection {
-                        background-color: $brand_core;
+                        background-color: var(--brand-core);
                     }
 
                     // auto-complete in chrome creates background-color & color that cannot be overwritten
@@ -394,7 +394,7 @@
                         }
                     }
                 }
-    
+
                 &.footer-d {
                     border-top: 1px solid $dark6;
                     display: flex;
@@ -420,7 +420,7 @@
                         }
                     }
                 }
-    
+
                 &.footer-m {
                     border-top: 1px solid $dark4;
                     display: flex;

@@ -194,19 +194,19 @@ select {
 }
 
 .info-icon.active {
-    color : theme_variables.$brand_core !important;
+    color : var(--brand-core, theme_variables.$brand_core) !important;
 }
 
 .video-settings-button:hover,
 .webclient-panel .dropdown-menu > li > a:hover {
-    background-color : theme_variables.$brand_l2 !important;
+    background-color : var( --brand-l2, theme_variables.$brand_l2) !important;
 }
 
 .webclient-panel .dropdown-menu {
     box-shadow : none;
 
     & > li > a.active {
-        background-color : theme_variables.$brand_l1 !important;
+        background-color : var(--brand-l1) !important;
     }
 }
 

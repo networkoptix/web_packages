@@ -34,7 +34,7 @@
             }
 
             .online {
-                background-color : $brand_core;
+                background-color : var(--brand-core);
             }
 
             .offline {

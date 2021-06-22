@@ -53,7 +53,7 @@
     }
 
     tr:hover td {
-        background : transparentize(typography.$brand_core, 0.9);
+        background : var(--brand-core-t90);
     }
 }
 
@@ -88,7 +88,7 @@
             }
 
             .online {
-                background-color : typography.$brand_core;
+                background-color : var(--brand-core);
             }
 
             .offline {

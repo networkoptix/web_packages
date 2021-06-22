@@ -147,7 +147,7 @@
     @extend .large-body-text;
     flex: 3 0px;
     border-left: 2px solid;
-    border-color: $brand_core;
+    border-color: var(--brand-core);
     padding-left: 40px;
     margin-top: 12px;
 }

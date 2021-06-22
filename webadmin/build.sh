@@ -76,12 +76,33 @@ npm run build-webadmin
 mv dist static
 cp -R static/scripts/. static/
 
-# Build the inline wizard
+# Build skins
+npm run buildSkins
+
+# Build the inline wizard for each skin
 pushd inline-wizard
-npm install
-npm run build
-cp -r dist/* ../static
+    npm install
 popd
+echo "Iterate all skins"
+echo $PWD
+for dir in ../skins/*/
+do
+    dir=${dir%*/}
+    SKIN=${dir/..\/skins\//}
+    npm run setSkin $SKIN
+    pushd inline-wizard
+        npm run build
+        mkdir -p ../static/setup_$SKIN
+        cp -r dist/* ../static/setup_$SKIN
+
+        if [ "$SKIN" == "blue"]; then
+            cp -r dist/* ../static
+        fi
+    popd
+    if [ -n "$LOCAL_ENV" ]; then
+      break
+    fi
+done
 
 # Make translations
 echo "Create translations" >&2

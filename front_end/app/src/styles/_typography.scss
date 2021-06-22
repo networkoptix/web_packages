@@ -164,7 +164,7 @@ p {
 }
 
 @mixin regular14brand {
-    @include font-source($font-family-regular, $h5-font-size, $brand_core);
+    @include font-source($font-family-regular, $h5-font-size, var(--brand-core));
 }
 
 @mixin regular14dark9 {
