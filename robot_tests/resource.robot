@@ -1265,7 +1265,7 @@ Verify Horizontal Scrollbar Exists
     
 Delete All Text
     [Arguments]    ${input}
-    ${text} =    Get Element Attribute    ${input}    value
+    ${text} =    Get Element Attribute    ${input}    innertext
     ${length} =    Get Length    ${text}
     ${length} =    Evaluate    ${length} + 1
     Click Element    ${input}

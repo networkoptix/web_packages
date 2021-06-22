@@ -286,8 +286,8 @@ class CloudPortalAPI(object):
         return r.status_code
 
     @staticmethod
-    def camera_search(serverUrl, cameraPort, camFile, user='mark', password='hamill'):
-        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':f'http://10.1.5.238:{cameraPort}/{camFile}.mjpeg', 'user':user, 'password': password}, verify=False)
+    def camera_search(serverUrl, cameraPort, camFile, serverIp, user='mark', password='hamill'):
+        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':f'http://{serverIp}:{cameraPort}/{camFile}.mjpeg', 'user':user, 'password': password}, verify=False)
         return r.json()['reply']['processUuid']
 
     @staticmethod
@@ -324,16 +324,32 @@ class CloudPortalAPI(object):
         return r.text
 
     #@staticmethod
-    #def add_camera(serverUrl, cameras):
+    #def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
     #    body = {
+    #        "user": camuser,
+    #        "password": campassword,
     #        "cameras":
     #            [
-    #                cameras
+    #                {
+    #                "uniqueId": uniqueId,
+    #                "url": url,
+    #                "manufacturer": manufacturer
+    #                }
     #            ]
     #        } 
     #    logger.trace(body)
     #    r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+    #    logger.trace(r.status_code)
     #    return r.text
+
+    @staticmethod
+    def add_fake_camera(serverUrl, cameras, user="mark", password="hamill"):
+        logger.trace("cameras value")
+        logger.trace(cameras)
+        body= {"cameras":cameras, "user":"mark", "password":"hamill"}
+        logger.trace(body)
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        return r.text
     
     @staticmethod
     def turn_on_analytics(serverUrl,value):

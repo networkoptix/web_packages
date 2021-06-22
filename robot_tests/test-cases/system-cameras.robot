@@ -24,6 +24,7 @@ Camera Suite Setup
     ${system2}    Create Base System    cameras2-${random}    add users=${False}    owner=${owner}
     Set Suite Variable    ${system}    ${system}
     Set Suite Variable    ${system2}    ${system2}
+
     Log To Console    starting software cam offline
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
@@ -63,9 +64,6 @@ Camera Suite Setup
     Add Software Camera    ${system}[port]    ${camera port3}    online
     Sleep    30
     
-
-
-
     #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    192.168.0.27     manufacturer=Sony    #SNC-XM636
     #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-C7-C8-89    192.168.0.204    manufacturer=Sony    #SNC-DH210
     #Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    192.168.0.201    manufacturer=Sony    #SNC-CH120
@@ -74,6 +72,7 @@ Camera Suite Setup
     ${custom cameras}    Create And Add Custom Camera User Type and User
     Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
     Sleep    30
+    
     ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
     Set Suite Variable    ${no perm}    ${no perm}
     Set Suite Variable    ${custom cameras}    ${custom cameras}
