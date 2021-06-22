@@ -263,5 +263,6 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
             return errorCodes[errorCode];
         }
     }
-    return (lang.errorCodes[errorCode])(errorCode) || lang.errorCodes.unknownError();
+    const errorText = typeof lang.errorCodes[errorCode] === 'function' ? lang.errorCodes[errorCode]() : lang.errorCodes[errorCode];
+    return errorText || lang.errorCodes.unknownError();
 };
