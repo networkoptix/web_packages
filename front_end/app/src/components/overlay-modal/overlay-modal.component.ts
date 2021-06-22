@@ -5,6 +5,7 @@ import {
     Subject, BehaviorSubject, interval, empty, Subscription
 }                                          from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { LocalStorageService }             from 'ngx-webstorage';
 
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -54,13 +55,17 @@ export class NxOverlayModalComponent implements OnInit {
         public appState: NxAppStateService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
-        private router: Router
+        private router: Router,
+        private localStorage: LocalStorageService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit() {       
+        if (this.localStorage.retrieve('resetServer') === true) {
+            setTimeout(() => window.location.reload(), 2000);
+        }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async(state) => {
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
