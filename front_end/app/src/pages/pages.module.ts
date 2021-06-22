@@ -22,7 +22,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {
-        path         : 'api-tool',
+        path         : 'doc/developers/api-tool',
         loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {

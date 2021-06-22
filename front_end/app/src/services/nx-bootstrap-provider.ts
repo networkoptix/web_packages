@@ -191,5 +191,20 @@ export class NxBootstrapProvider {
             this.CONFIG.licenseTypes = data?.licenseTypes;
             this.CONFIG.dynamicMenus = data?.menus;
         }
+
+        // Temporary link to Swagger
+        // TODO: Add this to CMS in 21.1
+        // data && data.menus.header.nodes.push({
+        //     asset_type        : null,
+        //     authentication    : 'Both',
+        //     display_name      : 'API Tool',
+        //     icon              : '',
+        //     name              : 'API Tool',
+        //     new_window        : false,
+        //     next_item         : false,
+        //     order             : 9,
+        //     related_asset_ids : [],
+        //     url               : '/doc/developers/api-tool/'
+        // });
     }
 }

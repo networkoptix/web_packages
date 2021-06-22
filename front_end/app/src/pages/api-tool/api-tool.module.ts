@@ -3,12 +3,13 @@ import { CommonModule }         from '@angular/common';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
-import { ComponentsModule }     from '@components/components.module';
+import { ComponentsModule }     from '../../components/components.module';
 import { NxApiToolComponent }   from './api-tool.component';
-import { MenuModule }           from '@src/menu';
+import { MenuApiModule }        from './menu/menu.module';
+import { FormsModule }          from '@angular/forms';
 
 const appRoutes: Routes = [
-    { path: ':systemId/:serverId', component: NxApiToolComponent }
+    { path: '', component: NxApiToolComponent }
 ];
 
 @NgModule({
@@ -18,18 +19,20 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         RouterModule.forChild(appRoutes),
-        MenuModule
+        MenuApiModule,
+        FormsModule
     ],
-    providers: [],
-    declarations: [
-        NxApiToolComponent,
+    providers    : [],
+    declarations : [
+        NxApiToolComponent
     ],
-    bootstrap: [],
-    entryComponents: [
+    bootstrap       : [],
+    entryComponents : [
         NxApiToolComponent
     ],
     exports: [
-        NxApiToolComponent
+        NxApiToolComponent,
+        MenuApiModule
     ]
 })
 export class NxApiToolModule {
