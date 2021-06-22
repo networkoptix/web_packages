@@ -62,6 +62,7 @@
     "MAIN": "Hlavní",
     "BACKUP": "Záloha",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Kontrolování...",
     "CANNOT SAVE PASSWORD": "Heslo nelze uložit",
     "PASSWORD INCORRECT": "Aktuální heslo je nesprávné.",
     "TOO MANY ATTEMPTS TEXT": "Příliš mnoho pokusů. Zkuste to znovu za chvíli.",

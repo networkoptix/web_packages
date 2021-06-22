@@ -62,6 +62,7 @@
     "MAIN": "Elsődleges",
     "BACKUP": "Biztonsági mentés",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Ellenőrzés...",
     "CANNOT SAVE PASSWORD": "Jelszó mentése nem lehetséges",
     "PASSWORD INCORRECT": "A jelenlegi jelszó helytelen.",
     "TOO MANY ATTEMPTS TEXT": "Túl sok próbálkozás. Próbálkozzon újra egy perc múlva.",

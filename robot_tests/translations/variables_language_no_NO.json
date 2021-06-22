@@ -62,6 +62,7 @@
     "MAIN": "Hoved",
     "BACKUP": "Sikkerhetskopi",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Kontrollerer...",
     "CANNOT SAVE PASSWORD": "Kan ikke lagre passord",
     "PASSWORD INCORRECT": "Nåværende passord er feil.",
     "TOO MANY ATTEMPTS TEXT": "For mange forsøk. Prøv igjen om et minutt.",

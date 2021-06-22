@@ -62,6 +62,7 @@
     "MAIN": "メイン",
     "BACKUP": "バックアップ",
     "NOT IN USE": "不使用",
+    "CHECKING": "チェック中...",
     "CANNOT SAVE PASSWORD": "パスワードを保存できません",
     "PASSWORD INCORRECT": "パスワードが違います",
     "TOO MANY ATTEMPTS TEXT": "試行回数が多すぎます 暫くしてからもう一度お試しください",

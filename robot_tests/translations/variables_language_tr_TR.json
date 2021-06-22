@@ -62,6 +62,7 @@
     "MAIN": "Ana Menü",
     "BACKUP": "Yedekleme",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Kontrol Ediliyor...",
     "CANNOT SAVE PASSWORD": "Parola kaydedilemiyor",
     "PASSWORD INCORRECT": "Mevcut şifre hatalı.",
     "TOO MANY ATTEMPTS TEXT": "Çok fazla deneme yapıldı. Bir dakika sonra tekrar deneyiniz.",

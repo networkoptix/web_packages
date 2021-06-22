@@ -62,6 +62,7 @@
     "MAIN": "메인",
     "BACKUP": "백업",
     "NOT IN USE": "사용하지 않음",
+    "CHECKING": "확인...",
     "CANNOT SAVE PASSWORD": "패스워드를 저장할 수 없습니다.",
     "PASSWORD INCORRECT": "현재 패스워드가 잘못되었습니다.",
     "TOO MANY ATTEMPTS TEXT": "시도 횟수가 너무 많습니다. 1 분 후에 다시 시도하십시오.",

@@ -62,6 +62,7 @@
     "MAIN": "Principal",
     "BACKUP": "Còpia de seguretat",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Comprovant...",
     "CANNOT SAVE PASSWORD": "No es pot desar la contrasenya",
     "PASSWORD INCORRECT": "La contrasenya actual és incorrecta.",
     "TOO MANY ATTEMPTS TEXT": "S'han produït massa intents. Torneu-ho a provar d'aquí a un minut.",

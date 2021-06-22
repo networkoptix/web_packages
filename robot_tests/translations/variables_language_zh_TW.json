@@ -62,6 +62,7 @@
     "MAIN": "主要設定",
     "BACKUP": "備份",
     "NOT IN USE": "未使用",
+    "CHECKING": "檢查中...",
     "CANNOT SAVE PASSWORD": "無法儲存密碼",
     "PASSWORD INCORRECT": "目前密碼不正確.",
     "TOO MANY ATTEMPTS TEXT": "嘗試次數過多，請稍後再試。",

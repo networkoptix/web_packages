@@ -62,6 +62,7 @@
     "MAIN": "Ensisijainen",
     "BACKUP": "Varmuuskopio",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Tarkistetaan...",
     "CANNOT SAVE PASSWORD": "Salasanaa ei voida tallentaa",
     "PASSWORD INCORRECT": "Salasana on virheellinen.",
     "TOO MANY ATTEMPTS TEXT": "Liian monta yritystä. Yritä myöhemmin uudelleen.",
