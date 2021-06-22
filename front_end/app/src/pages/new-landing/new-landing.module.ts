@@ -8,18 +8,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DevelopersGuard } from '@guards/developersGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { NxLandingPageComponent } from './landing-page.component';
+import { NxContentContainerComponent } from './content-container/content-container';
 
 const appRoutes: Routes = [
-    // Container doesnt exist yet
-    // {
-    //     path        : '',
-    //     component   : NxContentLandingComponent,
-    //     canActivate : [DevelopersGuard, AuthGuard]
-    // }
+    {
+        path        : '',
+        component   : NxLandingPageComponent,
+        canActivate : [DevelopersGuard, AuthGuard]
+    }
 ];
 
 @NgModule({
-    declarations : [NxContentLandingBlockComponent],
+    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent],
     imports      : [
         CommonModule,
         DirectivesModule,

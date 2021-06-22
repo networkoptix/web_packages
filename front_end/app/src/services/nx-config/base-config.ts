@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // To parse this data:
 //
 //   import { Convert, BaseConfig } from "./file";
@@ -377,11 +378,14 @@ export interface Icons {
     dirNonStandardView: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
+    dirLandingIcons: string;
 }
 
 export interface Images {
     dir: string;
     dirDevelopers: string;
+    dirLanding: string;
+    dirLandingGraphic: string;
 }
 
 export interface Platform {

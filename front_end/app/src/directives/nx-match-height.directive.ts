@@ -18,7 +18,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
   resizeObservable$ = fromEvent(window, 'resize')
 
   constructor(private el: ElementRef) {
-      this.resizeObservable$.pipe(untilDestroyed(this), debounceTime(100)).subscribe(() => {
+      this.resizeObservable$.pipe(untilDestroyed(this), debounceTime(200)).subscribe(() => {
           this.matchHeight(this.el.nativeElement, this.classToMatch);
       });
   }

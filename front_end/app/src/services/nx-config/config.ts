@@ -31,9 +31,9 @@ export const nxConfig: IConfig = {
             strongClassesCount : 3
         }
     },
-    browserNotSupported: false,
-    defaultLanguage : 'en_US',
-    developers      : {
+    browserNotSupported : false,
+    defaultLanguage     : 'en_US',
+    developers          : {
         landing: {
             adminLink: '/admin/cms/menu/%ID%/change/'
         }
@@ -182,11 +182,14 @@ export const nxConfig: IConfig = {
         dirNonStandard        : '/static/images/icons/',
         dirNonStandardView    : '/static/images/icons/view/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
-        dirSectionPlaceholder : '/static/images/placeholders/section/'
+        dirSectionPlaceholder : '/static/images/placeholders/section/',
+        dirLandingIcons       : '/static/images/landing/block_icons/'
     },
     images: {
-        dir           : '/static/images/',
-        dirDevelopers : '/static/images/developers/'
+        dir               : '/static/images/',
+        dirDevelopers     : '/static/images/developers/',
+        dirLanding        : '/static/images/landing/',
+        dirLandingGraphic : '/static/images/landing/main_screen/'
     },
     integration: {
         adminLink            : '/admin/cms/asset/%ID%/pages/',
