@@ -112,7 +112,6 @@ Camera settings is available to owner admin and custom with permission
     Wait Until Element is Visible    ${CAMERAS LINK}    90
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    capture page screenshot
     Log Out
     
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]

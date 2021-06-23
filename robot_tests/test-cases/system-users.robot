@@ -698,17 +698,12 @@ Disable enable User correctly affects the User
     Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
 
     Log    Step 2
-    Capture Page Screenshot
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Sleep    1
-    Capture Page Screenshot
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
-    Capture Page Screenshot
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Capture Page Screenshot
     Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
-    Capture Page Screenshot
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
 
     Log    Step 3

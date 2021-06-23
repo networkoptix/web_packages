@@ -585,7 +585,6 @@ Change storage mode: Backup -> Main
     Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE ENABLED BACKUP}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Capture Page Screenshot
 
     Log    Step 5
     ${files 3 disk0} =     Wait Until Files Are Recorded    disk0    100

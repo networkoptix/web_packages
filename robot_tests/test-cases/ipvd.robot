@@ -315,7 +315,6 @@ Advanced search
     Click Element    ${IPVD ADV SEARCH BUTTON}
     Sleep    5
     Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgba(255, 255, 255, 1)
-    Capture Page Screenshot
     Verify IPVD Advanced Search is Open
 
     Log    Step 2
