@@ -19,6 +19,14 @@ Camera Suite Setup
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${random}=   Generate Random String
     #Create Base Cloud System    cameras${random}
+<<<<<<< HEAD
+    ${system}    Create Base System    cameras-${random}
+    Set Suite Variable    ${system}    ${system}
+    #Add Software Cameras    1    ${system}[port]
+    Add Camera    http://10.1.5.238:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    192.168.0.27    manufacturer=Sony
+    ${custom cameras}    Create And Add Custom Camera User Type and User
+    ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
+=======
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    cameras-${random}    owner=${owner}
     ${system2}    Create Base System    cameras2-${random}    add users=${False}    owner=${owner}
@@ -75,14 +83,23 @@ Camera Suite Setup
     
     ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
     Set Suite Variable    ${no perm}    ${no perm}
+>>>>>>> 65f25beda35075647a28b448acf59fe07c2c3334
     Set Suite Variable    ${custom cameras}    ${custom cameras}
     Open Browser and go to URL    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup
 
 Camera Suite Teardown
+<<<<<<< HEAD
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    Execute Command    docker container stop ${system}[id]
+    Execute Command    docker container rm ${system}[id]
+    Close Connection
+=======
     Delete Base System    ${system}
     Delete Base System    ${system2}
+>>>>>>> 65f25beda35075647a28b448acf59fe07c2c3334
     Close All Browsers
 
 Set Radio Value
@@ -151,7 +168,11 @@ Camera settings is not available to any viewers
 Camera settings is not available by direct link to any viewers
     [Tags]    C76255    threaded
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
+<<<<<<< HEAD
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://10.1.5.238:${system}[port]    SNC-XM636    id
+=======
     ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
+>>>>>>> 65f25beda35075647a28b448acf59fe07c2c3334
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
@@ -178,9 +199,15 @@ Camera settings is not available by direct link to any viewers
 
 Camera settings are not available by direct url to unauthorized user
     [Tags]    C79007    Threaded
+<<<<<<< HEAD
+    [Setup]    Log in    ${EMAIL NOPERM}    ${password}
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://    good cam    id
+    Go to    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/cameras/${camera id}
+=======
     [Setup]    Log in    ${no perm}    ${password}
     ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
+>>>>>>> 65f25beda35075647a28b448acf59fe07c2c3334
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
     FOR    ${x}   IN RANGE    4
