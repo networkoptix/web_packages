@@ -2231,3 +2231,14 @@ class LicenseType(models.Model):
         return [{"deactivationsAllowed" if k == 'deactivations_allowed' else k: v
                  for k, v in license.items()}
                 for license in license_types]
+
+
+class CustomClient(models.Model):
+    name = models.CharField(max_length=100)
+    last_modified = models.DateTimeField(auto_now=True)
+    base_vms = models.ForeignKey(
+        Asset, on_delete=models.CASCADE, limit_choices_to={'asset_type__type': AssetType.ASSET_TYPES.vms}
+    )
+    values = JSONField()
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)

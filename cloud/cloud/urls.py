@@ -60,6 +60,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui(), name='swagger'),
     url(r'^health/', health_check),
     url(r'^admin/login/', redirect_login),
     url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),

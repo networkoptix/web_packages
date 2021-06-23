@@ -14,6 +14,7 @@ from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScop
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -25,6 +26,7 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
+from cms.serializers import CustomClientSerializer
 from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure
 
 from ..controllers.documentation import DOC_CACHE
@@ -776,4 +778,18 @@ def prepare_asset_info_for_menu(request, menu_id):
 def get_asset_info_by_menu(request, menu_id):
     require_params(request, ('customization',))
     return api_success(prepare_asset_info_for_menu(request, menu_id))
+
+
+class CustomClientViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    serializer_class = CustomClientSerializer
+
+    def get_queryset(self):
+        return self.request.user.customclient_set.all()
+
+    def perform_create(self, serializer):
+        kwargs = {}
+        if settings.CUSTOMIZATION != 'meta':
+            kwargs['base_vms'] = get_vms_asset(settings.CUSTOMIZATION)
+        serializer.save(created_by=self.request.user, **kwargs)
 

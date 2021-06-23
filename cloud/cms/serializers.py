@@ -1,6 +1,7 @@
+from django.conf import settings
 from rest_framework import serializers
 
-from cms.models import Context, DataStructure, AssetType
+from cms.models import Context, DataStructure, AssetType, CustomClient
 
 
 class BaseCMSSerializer(serializers.ModelSerializer):
@@ -120,3 +121,17 @@ class MenuSerializer(serializers.Serializer):
 class ArticleSerializer(serializers.Serializer):
     title = serializers.CharField()
     body = serializers.CharField(allow_blank=True)
+
+
+class CustomClientSerializer(serializers.ModelSerializer):
+    created_by = serializers.SlugRelatedField(slug_field='email', read_only=True)
+    values = serializers.DictField(required=False, default={})
+
+    class Meta:
+        model = CustomClient
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if settings.CUSTOMIZATION != 'meta':
+            self.fields['base_vms'].read_only = True

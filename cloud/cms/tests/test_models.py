@@ -26,7 +26,7 @@ class TestModelFunctions:
             if create_asset or customization:
                 self.customization = customization_factory()
 
-            if cloud_portal_asset: 
+            if cloud_portal_asset:
                 self.cloud_portal_asset = Asset.objects.filter(
                     customizations__name__in=[
                         self.customization.name], asset_type__name="",
@@ -35,7 +35,7 @@ class TestModelFunctions:
                     asset_factory(account=self.account,
                                 asset_type=AssetType.ASSET_TYPES.cloud_portal,
                                 state=AssetCustomizationReview.REVIEW_STATES.accepted))
-            
+
             if vms_asset:
                 self.vms_asset = Asset.objects.filter(
                     customizations__name__in=[
@@ -57,8 +57,8 @@ class TestModelFunctions:
                     asset_factory(account=self.account,
                                 asset_type=AssetType.ASSET_TYPES.documentation,
                                 state=AssetCustomizationReview.REVIEW_STATES.accepted))
-        
-        
+
+
         return helper
 
     # Permission group helpers
@@ -84,7 +84,7 @@ class TestModelFunctions:
 
     def test_create_default_permission_group_cloud_portal(self, uses):
         uses(cloud_portal_asset=True)
- 
+
         group = self.create_group_with(self.cloud_portal_asset)
 
         expected_group_name = portal_manager_group_name(
@@ -92,7 +92,7 @@ class TestModelFunctions:
         expected_permissions = Permission.objects.filter(
             codename__in=PORTAL_MANAGER_PERMISSIONS)
         actual_permissions = group.permissions.all()
-   
+
         assert group.name == expected_group_name
         assert all(
             permission in actual_permissions for permission in expected_permissions)
@@ -121,7 +121,7 @@ class TestModelFunctions:
     def test_rename_permission_group_integration(self, uses):
         uses(integration_asset=True)
         group = self.rename_group_with(self.integration_asset)
- 
+
         assert group.name == integration_dev_group_name(self.integration_asset)
 
     # Asset Test
@@ -152,7 +152,7 @@ class TestModelFunctions:
         uses(customization=True)
         customization = self.customization.name
         test_version = test_version or str(uuid.uuid4())
-    
+
         update_global_cache(customization, test_version)
 
         cached_version = caches['customization'].get(
@@ -215,7 +215,7 @@ class TestModelFunctions:
         MENU_CACHE.clear_cache()
         test_if_one_in_menu_map = self.map_menu_helper('menu-name-one', 'base-url-one', 'menu-url-one')
         test_if_two_in_menu_map = self.map_menu_helper('menu-name-two', 'base-url-two', 'menu-url-two')
-    
+
         menu_map = cached_doc_menu_map(customization, refresh=True)
 
         assert test_if_one_in_menu_map(menu_map)
@@ -1322,6 +1322,29 @@ class TestContextMethods:
         assert self.context.get_state(self.asset) == 'Rejected'
 
 
+class TestCustomClient:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.client = baker.prepare('CustomClient', base_vms=None, values={'test': 'test'})
 
+    def test_name(self):
+        name = self.client._meta.get_field('name')
+        assert name.max_length == 100
+        assert name.blank
 
+    def test_last_modified(self):
+        last_modified = self.client._meta.get_field('last_modified')
+        assert last_modified.auto_now
 
+    def test_base_vms(self):
+        base_vms = self.client._meta.get_field('base_vms')
+        assert base_vms.related_model == Asset
+        assert base_vms.get_limit_choices_to() == {'asset_type__type': 1}
+
+    def test_created_by(self, django_user_model):
+        created_by = self.client._meta.get_field('created_by')
+        assert created_by.related_model == django_user_model
+
+    def test_created_on(self):
+        created_on = self.client._meta.get_field('created_on')
+        assert created_on.auto_now_add

@@ -1365,3 +1365,9 @@ admin.site.register(ZendeskArticleLabel, CMSAdmin)
 @admin.register(SpecialStructure)
 class SpecialStructAdmin(CMSAdmin):
     list_display = ('name',)
+
+
+@admin.register(CustomClient)
+class CustomClientAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['created_by']
+    readonly_fields = ['last_modified', 'created_on']

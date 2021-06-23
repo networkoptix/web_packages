@@ -238,3 +238,14 @@ export interface CheckEmailExists {
     active: boolean,
     emailExists: boolean
 }
+
+export interface CustomClient {
+    id?: number;
+    last_modified: string;
+    name: string;
+    created_on: string
+    created_by: string;
+    values: {
+        [field: string]: string
+    };
+}

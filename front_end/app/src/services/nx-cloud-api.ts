@@ -14,6 +14,7 @@ import { NxUriCacheService }        from './uri-cache.service';
 import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
+import {CustomClient} from "./nx-cloud-api.types";
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -90,6 +91,7 @@ export class NxCloudApiService {
     private currentAccount: Account;
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
+    public customClient: CustomClientAPI;
 
     constructor(
         private configService: NxConfigService,
@@ -110,6 +112,7 @@ export class NxCloudApiService {
                 }
             });
         });
+        this.customClient = new CustomClientAPI(this, this.CONFIG, this.http);
     }
 
     getLanguage() {
@@ -551,5 +554,46 @@ export class NxCloudApiService {
 
     getMenu(menuName: string) {
         return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
+    }
+}
+
+class CustomClientAPI {
+    private readonly apiBase: string;
+
+    constructor(private cloudAPI: NxCloudApiService,
+                private config: IConfig,
+                private http: HttpClient) {
+        this.apiBase = this.config.apiBase + '/custom_clients/';
+    }
+
+    create(name: string, values: {[field: string]: string} = {}) {
+        return this.http.post<CustomClient>(this.apiBase, { name, values });
+    }
+
+    retrieve(id) {
+        return this.http.get<CustomClient>(`${this.apiBase}${id}/`);
+    }
+
+    list() {
+        return this.http.get<CustomClient>(this.apiBase);
+    }
+
+    update(id, name, values) {
+        return this.http.put<CustomClient>(`${this.apiBase}${id}/`, { name, values });
+    }
+
+    partialUpdate(id, name?, values?) {
+        const data: any = {};
+        if (name !== undefined) {
+            data.name = name;
+        }
+        if (values !== undefined) {
+            data.values = values;
+        }
+        return this.http.patch<CustomClient>(`${this.apiBase}${id}/`, data);
+    }
+
+    destroy(id) {
+        return this.http.delete(`${this.apiBase}${id}/`);
     }
 }

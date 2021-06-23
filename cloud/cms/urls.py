@@ -1,10 +1,15 @@
 from django.conf.urls import url
-from django.urls import path
+from django.urls import path, include
 
 from cms.views import integration, article, agreement, asset, documentation, menu
 
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'custom_clients', asset.CustomClientViewSet, basename='custom_client')
 
 urlpatterns = [
+    path('', include(router.urls)),
     url(r'^integration/(?P<asset_id>.+?)/?$', integration.get_integration, name="get_integration"),
     url(r'^integrations$', integration.get_integrations, name="get_integrations"),
     path('integration_count', integration.get_integrations_count, name='integration_count'),
