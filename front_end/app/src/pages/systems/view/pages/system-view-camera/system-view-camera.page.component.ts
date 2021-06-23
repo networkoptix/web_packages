@@ -159,11 +159,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             .pipe(filter((TaR) => TaR !== undefined))
             .subscribe((transportsAndResolutions: AvailableTransportsAndResolutions) => {
                 const videoTypes = {
-                    ogg  : 'video/ogg',
-                    mp4  : 'video/mp4',
-                    webm : 'video/webm',
-                    hls  : 'application/x-mpegURL',
-                    rtsp : 'video/webm'
+                    ogg   : 'video/ogg',
+                    mp4   : 'video/mp4',
+                    mjpeg : 'video/webm',
+                    webm  : 'video/webm',
+                    hls   : 'application/x-mpegURL',
+                    rtsp  : 'video/webm'
                 };
                 const video = this.document.createElement('video');
                 const isHlsSupported = Hls.isSupported();
@@ -343,7 +344,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
                         const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
                         const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
-                        const showToLive = this.camera.isLive || this.camera.isUnauthorized;
+                        const showToLive = this.camera.isLive || this.camera.isScheduleEnabled || this.camera.hasArchive;
                         const now = Date.now();
                         const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
                         const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
@@ -409,7 +410,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _prepareArchiveRecords (ar) {
-        const serverTimes = (await this._getServerTimes()).reduce((reduced, server) => ({
+        const serverTimes = (
+            this.vms.serverTimes || (await this._getServerTimes())
+        ).reduce((reduced, server) => ({
             ...reduced,
             [server.serverId]: server.vmsTimeOffset
         }), {});
@@ -545,6 +548,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && this.camera.hasArchive && this.canViewArchives;
     }
 
+    public get enableControls (): boolean {
+        return this.camera && !this.transportError && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
+    }
+
     showPlayer () {
         const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
@@ -623,6 +630,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             } else {
                 transport = transports[0];
             }
+        }
+        if (!transports.includes(transport)) {
+            transport = transports[0];
         }
         this.selectedTransport = transport;
     }

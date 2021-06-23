@@ -29,3 +29,11 @@
         max-width: 752px;
     }
 }
+
+.heading-link {
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 0.06em;
+    }
+}

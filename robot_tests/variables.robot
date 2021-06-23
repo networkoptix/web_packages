@@ -243,6 +243,8 @@ ${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
 ${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
 ${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${COMPANY}")]
 ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}")]
+${FOOTER API DOCUMENTATION LINK}      //footer//a[contains(text(),"${API DOCUMENTATION TEXT}")]
+${FOOTER DOWNLOAD SDK LINK}           //footer//a[contains(text(),"${DOWNLOAD SDK TEXT}")]
 
 #Misc
 ${PAGE NOT FOUND}                     //h2[@name="404" and contains(text(),'${PAGE NOT FOUND TEXT}')]

@@ -62,6 +62,7 @@
     "MAIN": "ส่วนหลัก",
     "BACKUP": "การสำรองข้อมูล",
     "NOT IN USE": "Not in use",
+    "CHECKING": "กำลังตรวจสอบ...",
     "CANNOT SAVE PASSWORD": "ไม่สามารถบันทึกรหัสผ่านได้",
     "PASSWORD INCORRECT": "ต้องระบุรหัสผ่านปัจจุบัน.",
     "TOO MANY ATTEMPTS TEXT": "คุณพยายามเข้าระบบมากเกินไป กรุณารออีกสักพักแล้วเข้าใหม่",

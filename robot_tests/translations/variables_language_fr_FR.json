@@ -62,6 +62,7 @@
     "MAIN": "Principal",
     "BACKUP": "Sauvegarde",
     "NOT IN USE": "Non utilisé",
+    "CHECKING": "Vérification...",
     "CANNOT SAVE PASSWORD": "Impossible d'enregistrer le mot de passe",
     "PASSWORD INCORRECT": "Le mot de passe actuel est incorrect.",
     "TOO MANY ATTEMPTS TEXT": "Trop de tentatives. Réessayez dans une minute.",

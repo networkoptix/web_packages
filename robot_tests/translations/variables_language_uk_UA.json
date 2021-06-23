@@ -62,6 +62,7 @@
     "MAIN": "Основне",
     "BACKUP": "Резервне",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Перевірка...",
     "CANNOT SAVE PASSWORD": "Не вдається зберегти пароль",
     "PASSWORD INCORRECT": "Введений пароль невірний.",
     "TOO MANY ATTEMPTS TEXT": "Забагато спроб. Спробуйте пізніше.",

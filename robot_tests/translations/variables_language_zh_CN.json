@@ -62,6 +62,7 @@
     "MAIN": "主配置",
     "BACKUP": "备份",
     "NOT IN USE": "未使用",
+    "CHECKING": "检查中...",
     "CANNOT SAVE PASSWORD": "无法保存密码",
     "PASSWORD INCORRECT": "当前密码不正确.",
     "TOO MANY ATTEMPTS TEXT": "尝试次数过多，请稍后重试。",

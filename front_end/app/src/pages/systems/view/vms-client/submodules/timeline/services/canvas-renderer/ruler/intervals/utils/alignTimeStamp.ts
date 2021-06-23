@@ -16,8 +16,6 @@ export function alignTimeStamp (
         right : 'ceil'
     }[alignment]];
 
-    const tzoMs = date.getTimezoneOffset() * 60 * 1000;
-
     switch (d) {
 
         case 'month':
@@ -64,6 +62,7 @@ export function alignTimeStamp (
 
         default:
             d = <durationMs>d;
+            const tzoMs = date.getTimezoneOffset() * 60 * 1000;
             const result = (Math.floor((t - tzoMs) / d) + incIfRight) * d + tzoMs;
             return result;
     }

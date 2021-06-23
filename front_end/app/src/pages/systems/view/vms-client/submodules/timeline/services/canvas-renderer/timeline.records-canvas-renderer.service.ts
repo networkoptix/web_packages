@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-
 import TimelineService from '../timeline.service';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
-import { float, ms, px } from '../../../../utils/type-aliases';
-import { fileURLToPath } from 'url';
+import { float, ms } from '../../../../utils/type-aliases';
 import drawStripyBar from './stripy-bar/stripy-bar';
-import { pxPerSecond } from './stripy-bar/types';
 import getSlopeWidth from './stripy-bar/slope';
-
+import cfg from './drawingConfigs/recordsDrawingConfig'
 import stripeCfg from './stripy-bar/cfg';
 
 @Injectable({
@@ -20,19 +17,15 @@ export class TimelineRecordsCanvasRendererService {
     ) {
     }
 
-    protected cfg = {
-        BACKGROUND_FILL_STYLE   : '#ebeff1',
-        RECORD_FILL_STYLE       : '#4cbd27',
-        RECORDS_OFFSET_RELATIVE : 0.6,
-        RECORDS_HEIGHT_RELATIVE : 0.24,
-        MIN_RECORD_WIDTH_PX     : 2
+    protected get cfg () {
+        return cfg
     }
 
     public render (ctx: CanvasRenderingContext2D) {
-        const oldFill = ctx.fillStyle;
+        ctx.save()
         this._drawBackground(ctx);
         this._drawRecords(ctx);
-        ctx.fillStyle = oldFill;
+        ctx.restore()
     }
 
     protected _drawBackground (ctx: CanvasRenderingContext2D) {

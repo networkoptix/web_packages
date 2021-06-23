@@ -271,9 +271,14 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
                     const serverTimeInfos = await this.system.getServerTimes();
-                    serverTimeInfos.map(sti => {
-                        mediaServers.find(ms => ms.id === sti.serverId).timeInfo = sti;
+                    serverTimeInfos.forEach(sti => {
+                        const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
+                        if (mediaServer) {
+                            mediaServer.timeInfo = sti;
+                        }
                     });
+                    // TODO: If no issues with this section being commented out remove it in 21.1
+                    // issue with camera archive data not being loaded --> may refactor in 21.1
                     const findCameraArchiveRanges = (cid) => {
                         // (check archive presence mode)
                         if (!this.system.userManager.permissions.viewArchives) {
@@ -309,6 +314,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         this.hasCameras = true;
                         const result = new Camera(
                             c.id,
+                            c.parentId,
                             c.preferredServerId,
                             c.name,
                             c.url,
@@ -316,7 +322,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             c.scheduleEnabled,
                             c.disableDualStreaming,
                             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
-                            archives[c.id] || [],
+                            [],
                             this.system?.getCameraThumbnailUrl(c.id),
                             (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
                             (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
@@ -324,9 +330,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         result.parseAdditionalParams(c.addParams);
                         return result;
                     };
+                    // TODO: If no issues with this section being commented out remove it in 21.1
                     const cameraIds = mediaServers.reduce((acc, ms) => acc.concat(ms.cameras.map(c => c.id)), []);
                     const archiveRanges = {};
-                    const archives = {};
                     const now = Date.now();
                     await Promise.all(cameraIds.map(findCameraArchiveRanges));
 

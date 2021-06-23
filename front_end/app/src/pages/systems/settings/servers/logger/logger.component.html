@@ -13,7 +13,8 @@
                                [name]="log.key"
                                [items]="loggerOptions"
                                [(ngModel)]="systemLoggers[log.key]"
-                               [selected]="systemLoggers[log.key]">
+                               [selected]="systemLoggers[log.key]"
+                               [allowHTML]="true">
                     </nx-select>
                 </div>
             </div>

@@ -913,7 +913,7 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name;
+        this.primaryName = NxUtilsService.htmlToEntity(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
     }
 
     getSecondaryName() {
@@ -922,6 +922,6 @@ export class MergeModalContent {
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }
-        this.secondaryName = name;
+        this.secondaryName = NxUtilsService.htmlToEntity(name);
     }
 }

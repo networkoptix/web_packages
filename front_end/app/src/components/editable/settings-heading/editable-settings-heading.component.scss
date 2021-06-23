@@ -1,4 +1,4 @@
-@use '../../../../styles/theme_variables' as *;
+@use "../../../../styles/theme_variables" as *;
 
 :host {
     margin-right : auto;
@@ -24,6 +24,10 @@
 
         h2 {
             @extend .heading-style;
+            
+            &.editable-directive-edit {
+                text-overflow: initial;
+            }
         }
     }
 

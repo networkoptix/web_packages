@@ -10,7 +10,7 @@
     img {
         height: 80px;
     }
-    @media screen and (max-height: $collapse-webadmin-width), (max-width: $collapse-webadmin-width) {
+    @media screen and (max-height: $collapse-webadmin-window-width), (max-width: $collapse-webadmin-window-width) {
         height: 80px;
         img {
             height: 40px;

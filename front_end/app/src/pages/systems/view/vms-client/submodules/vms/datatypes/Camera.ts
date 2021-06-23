@@ -27,6 +27,7 @@ export class Camera implements ICamera {
 
     constructor(
         public readonly id: string,
+        public readonly parentServerId: string,
         public readonly preferredServerId: string,
         public readonly name: string,
         public readonly url: string,
@@ -78,6 +79,7 @@ export class Camera implements ICamera {
             switch (t) {
                 case 'hls':
                 case 'webm':
+                case 'mjpeg':
                 case 'mp4':
                 case 'rtsp':
                     return true;
@@ -115,7 +117,7 @@ export class Camera implements ICamera {
         }
 
         if (resolutions.length && transport !== 'hls') {
-            const primaryResolutionHeight = parseInt(resolutions[0].split('x')[1]);
+            const primaryResolutionHeight = parseInt((result.high || result.low).split('x')[1]);
             const defaultResolutions = {
                 1080 : '1920x1080',
                 720  : '1280x720',

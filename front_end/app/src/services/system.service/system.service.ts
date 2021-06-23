@@ -38,6 +38,10 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
+    getCurrentSystem() {
+        return this.system;
+    }
+
     createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;

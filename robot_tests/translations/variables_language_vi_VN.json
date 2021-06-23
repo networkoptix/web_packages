@@ -62,6 +62,7 @@
     "MAIN": "Chính",
     "BACKUP": "Sao lưu",
     "NOT IN USE": "Not in use",
+    "CHECKING": "Kiểm tra...",
     "CANNOT SAVE PASSWORD": "Không thể lưu mật khẩu",
     "PASSWORD INCORRECT": "Mật khẩu hiện tại không đúng.",
     "TOO MANY ATTEMPTS TEXT": "Quá nhiều lần thử. Vui lòng thử lại sau một phút.",

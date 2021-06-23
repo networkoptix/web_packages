@@ -95,7 +95,6 @@ Integration Store Search
     Log    Step 4
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]
     Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
-    Capture Page Screenshot
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
     ${current}=   Number of Integrations Should be Higher    ${current}
     Each Integration Tile Contains    vis    Vis

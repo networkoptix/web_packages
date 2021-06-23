@@ -83,10 +83,10 @@
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "6.6.3",
     "rxjs-compat": "6.6.3",
-    "swagger-ui": "3.36.0",
     "tslib": "2.0.3",
     "underscore": "^1.13.1",
     "video.js": "^7.12.1",
+    "swagger-ui": "3.40.0",
     "what-input": "5.2.10",
     "zone.js": "0.11.3"
   },

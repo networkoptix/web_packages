@@ -62,6 +62,7 @@
     "MAIN": "ראשי",
     "BACKUP": "גיבוי",
     "NOT IN USE": "Not in use",
+    "CHECKING": "בודק...",
     "CANNOT SAVE PASSWORD": "לא ניתן לשמור סיסמא",
     "PASSWORD INCORRECT": "הסיסמא הנוכחית אינה נכונה.",
     "TOO MANY ATTEMPTS TEXT": "יותר מדי ניסיונות. נסה שוב בעוד דקה.",

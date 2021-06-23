@@ -40,7 +40,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit {
     }
 
     videoErrorEventHandler = (event: any) => {
-        if (this.videoView?.nativeElement.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+        if (this.videoView && this.videoView.nativeElement.error && this.videoView.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
             // if 'webm' switch to 'hlc'
             this.playback.changeTransport('hls');
             return;

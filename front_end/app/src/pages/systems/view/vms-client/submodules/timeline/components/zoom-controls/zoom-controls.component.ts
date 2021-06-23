@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { float, int, ms } from '../../../../utils/type-aliases';
 import PlaybackService from '../../../playback/services/playback.service';
-import { CameraSelectedVmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
+import VmsState, { CameraSelectedVmsState, VMS_MODE } from '../../../vms/datatypes/VmsState';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 
@@ -15,6 +15,7 @@ type signType = int // -1 | 0 | 1
 })
 export class ZoomControlsComponent implements OnInit, OnDestroy {
     protected timelineSubscription: Subscription
+    protected vmsSubscription: Subscription
     protected state: TimelineServiceStatus
     public disabled: boolean = true
     public canZoomIn: boolean = false;
@@ -26,6 +27,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         public playback: PlaybackService
     ) {
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
+        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
     }
 
     protected _animationFrameRequestHandler: number
@@ -37,24 +39,30 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
     public ngOnInit (): void {
         this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
+        this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange);
         this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this));
     }
 
     public ngOnDestroy (): void {
         this.timelineSubscription.unsubscribe();
+        this.vmsSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
     public onTimelineSubjectChange (state: TimelineServiceStatus) {
         this.state = state;
+        this._updateEnabledDisabled()
+    }
+
+    public onVmsSubjectChange (state: VmsState) {
+        this._updateEnabledDisabled();
+    }
+
+    protected _updateEnabledDisabled () {
         const vmsState = this.vms.subject.getValue();
-        if (vmsState.mode !== VMS_MODE.CAMERA_SELECTED) {
-            this.disabled = true;
-        } else {
-            this.disabled = !vmsState.selectedCamera.hasArchive;
-        }
-        this.canZoomIn = !this.disabled && this.state?.zoom?.canZoomIn || false;
-        this.canZoomOut = !this.disabled && this.state?.zoom?.canZoomOut || false;
+        this.disabled = vmsState.mode !== VMS_MODE.CAMERA_SELECTED;
+        this.canZoomIn = (!this.disabled && this.state?.zoom?.canZoomIn) || false;
+        this.canZoomOut = (!this.disabled && this.state?.zoom?.canZoomOut) || false;
     }
 
     protected _zoomingSign: signType = 0

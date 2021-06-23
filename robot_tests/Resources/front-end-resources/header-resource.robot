@@ -117,7 +117,7 @@ Validate Navigation Grid Tile
     Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]
     FOR    ${page}    IN    @{tile pages}
         ${page title}=   Evaluate    $page['title'].strip()
-        Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../following-sibling::ul//a[contains(text(), "${page}[title]")]
+        Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul//a[contains(text(), "${page}[title]")]
     END
     Run Keyword If    $active_link    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../following-sibling::ul/li[contains(@class, "active")]//a[contains(text(), "${active link}")]
 

@@ -98,7 +98,7 @@ export class NxIntegrationsComponent implements OnInit {
         ).reduce((prev, paragraph) => `${prev}<p>${paragraph}</p>`, '');
 
         const integrationsConfig = this.errorManager.buildConfig(
-            ['title', 'url'],
+            ['title'],
             this.errorManager.buildConfig(
                 ['title'],
                 null,

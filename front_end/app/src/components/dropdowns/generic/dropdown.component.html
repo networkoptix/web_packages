@@ -9,7 +9,7 @@
         <div class="btn loading" *ngIf="stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
         </div>
-        <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHTML]="_selectedItem && _selectedItem.name"></span>
+        <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHTML]="allowHTML ? (_selectedItem && _selectedItem.name) : (_selectedItem && _selectedItem.name | unsafe)"></span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
         </div>
@@ -29,11 +29,11 @@
                     <a *ngIf="!item.disabled; else disabledItem" class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
                         [ngClass]="{ 'selected': _selectedItem && _selectedItem.value === item.value }"
                         (click)="show = false; change(item)">
-                        <span [innerHTML]="item.name"></span>
+                        <span [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
                     </a>
                     <ng-template #disabledItem>
                         <a class="dropdown-item inset disabled" (click)="show = false">
-                            <span class="disabled" [innerHTML]="item.name"></span>
+                            <span class="disabled" [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
                         </a>
                     </ng-template>
                 </ng-template>

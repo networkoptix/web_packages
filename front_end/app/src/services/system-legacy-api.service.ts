@@ -1268,7 +1268,7 @@ export class NxSystemAPI {
                 return url;
             default:
                 // Rtsp plays as webm but does not support transcoding.
-                if (transport === 'rtsp') {
+                if (['rtsp', 'mjpeg'].includes(transport)) {
                     transport = 'webm';
                 }
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;

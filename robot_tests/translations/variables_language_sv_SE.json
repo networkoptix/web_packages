@@ -62,6 +62,7 @@
     "MAIN": "Primär",
     "BACKUP": "Säkerhetskopia",
     "NOT IN USE": "Ej i bruk",
+    "CHECKING": "Kontrollerar...",
     "CANNOT SAVE PASSWORD": "Kan inte spara lösenord",
     "PASSWORD INCORRECT": "Nuvarande lösenord är inkorrekt.",
     "TOO MANY ATTEMPTS TEXT": "Alltför många försök. Försök igen om någon minut.",

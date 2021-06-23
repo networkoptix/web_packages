@@ -166,9 +166,7 @@ Reserved space dropdown menu functionality
     ${free space} =    Get Substring    ${free space}    0    1
     ${bytes} =    Get Text    ${RESERVED DROPDOWN SELECTED}
     Should Be Equal    '${free space}'     '${min}'
-    ${max plus} =    Evaluate    ${max} + 1
-    Clear Element Text     ${RESERVED SPACE INPUT}
-    sleep    1
+    ${max plus} =    Evaluate    ${max}1
     Input Text    ${RESERVED SPACE INPUT}    ${max plus}
     Click Element     ${STORAGE FREE SPACE VALUE}    #to shift focus
     Sleep    1
@@ -185,13 +183,14 @@ Reserved space dropdown menu functionality
     Click Button    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     ${bytes 2} =    Get Text    ${RESERVED DROPDOWN SELECTED}
-    ${times 1000} =    Evaluate    ${max} * 1000
-    ${divide 1000} =    Evaluate    ${max} / 1000
-    ${times 1000} =    Convert To String    ${times 1000}
-    ${divide 1000} =    Convert To String    ${divide 1000}
+    ${times 1024} =    Evaluate    round(${max} * 1024, 3)
+    ${divide 1024} =    Evaluate    round(${max} / 1024, 3)
+
+    ${times 1024} =    Convert To String    ${times 1024}
+    ${divide 1024} =    Convert To String    ${divide 1024}
     ${value} =    Get Element Attribute   ${RESERVED SPACE INPUT}    value
-    Run Keyword If    '${bytes 2}' == 'TB'   Should Be Equal    ${value}    ${times 1000}
-    ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1000}
+    Run Keyword If    '${bytes 2}' == 'TB'   Should Be Equal    ${value}    ${times 1024}
+    ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1024}
 
 Log settings functionality
     [Tags]    C76573    threaded
@@ -233,8 +232,7 @@ Advanced server settings for offline system
 
     Log    Step 2: make sure settings are back after the server is back online
     Start Docker Server    ${server['id']}
-    Reload Page
-    Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=90
+    Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=300
     Verify on Servers Page
     Go To    ${location}${ADVANCED SETTINGS}
     Wait Until Elements Are Visible

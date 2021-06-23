@@ -1,10 +1,10 @@
-import getSlopeWidth from './slope';
 import { deg, px, pxPerSecond, color } from './types';
+import colors from '../drawingConfigs/colors'
 
 export default {
     stripeWidth     : 8 as px,
     slope           : 45 as deg,
     speed           : 24 as pxPerSecond,
-    backgroundColor : '#EBEFF188' as color, // $light3 + opacity .5
-    stripeColor     : '#D7DFE388' as color // $light5 + opacity .5
+    backgroundColor : `${colors.light4}C0` as color,
+    stripeColor     : `${colors.light6}C0` as color,
 };

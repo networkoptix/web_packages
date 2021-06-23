@@ -62,6 +62,7 @@
     "MAIN": "Główny",
     "BACKUP": "Kopia zapasowa",
     "NOT IN USE": "Nie używane",
+    "CHECKING": "Sprawdzanie...",
     "CANNOT SAVE PASSWORD": "Nie można zapisać hasła",
     "PASSWORD INCORRECT": "Bieżące hasło jest nieprawidłowe.",
     "TOO MANY ATTEMPTS TEXT": "Zbyt wiele prób. Spróbuj ponownie za minutę.",

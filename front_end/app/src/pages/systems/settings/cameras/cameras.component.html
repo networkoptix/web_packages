@@ -36,22 +36,20 @@
             <nx-block header-style="extended">
                 <header>
                     <div class="header-top-bar mb-3">
-                        <div class="camera-title">
-                            <nx-editable-settings-heading
-                                    (editModeState)="editMode = $event"
-                                    [nameWatcher]="cameraNameWatcher"
-                                    [editEnabled]="system.userManager.permissions.isAdmin || system.userManager.permissions.editCameras"
-                            ></nx-editable-settings-heading>
-                            <span class="spacer"></span>
-                        </div>
-                        <div class="camera-button-div">
-                            <button *ngIf="!editMode" class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
+                        <nx-editable-settings-heading
+                                (editModeState)="editMode = $event"
+                                [nameWatcher]="cameraNameWatcher"
+                                [editEnabled]="system.userManager.permissions.isAdmin || system.userManager.permissions.editCameras"
+                        ></nx-editable-settings-heading>
+
+                        <div *ngIf="!editMode" class="camera-button-div">
+                            <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
                                 <span>
                                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'play.svg'" [applyClass]="true"></svg-icon>
                                 </span>
                                 <span class="ml-1" translate>View</span>
                             </button>
-                            <button *ngIf="canSeeInfo && !editMode" class="camera-buttons" id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                            <button *ngIf="canSeeInfo" class="camera-buttons" id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                                 <span>
                                     <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true"></svg-icon>
                                 </span>

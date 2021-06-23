@@ -127,14 +127,14 @@ Start Software Camera
 
 Add Software Camera
     [Arguments]    ${server port}    ${camera port}    ${file}
-    ${uuid}=    Camera Search    ${QA BURBANK IP}:${server port}    ${camera port}    ${file}
+    ${uuid}=    Camera Search    http://${QA BURBANK IP}:${server port}    ${camera port}    ${file}    ${QA BURBANK IP}
     Sleep    5
-    ${camera}=    Camera Status    ${QA BURBANK IP}:${server port}    ${uuid}
-    Add Fake Camera   ${QA BURBANK IP}:${server port}    ${camera}[reply][cameras]
+    ${camera}=    Camera Status    http://${QA BURBANK IP}:${server port}    ${uuid}
+    Add Fake Camera   http://${QA BURBANK IP}:${server port}    ${camera}[reply][cameras]
 
 Create And Add Custom Camera User Type and User
     ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
-    ${role id}=   Save User Role    ${system}[cloud auth]    h${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    ${role id}=   Save User Role    ${system}[cloud auth]    http://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
     #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
     Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}
     ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]

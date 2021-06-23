@@ -18,6 +18,7 @@ import { NxHeaderService }           from '../../../services/nx-header.service';
 import { NxMenusService }            from '../../../services/menus.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
+import { NxUtilsService }            from '../../../services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -52,6 +53,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
+        private utilsService: NxUtilsService,
         private language: NxLanguageProviderService,
         private genericModal: NxModalGenericComponent,
         private pageService: NxPageService,
@@ -86,6 +88,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             if (this.systems === undefined) {
                 return;
             }
+
+            this.systems.map((system) => {
+                // avoid html being interpreted
+                system.name = NxUtilsService.htmlToEntity(system.name);
+            });
 
             if (this.location.path().indexOf('/systems') === 0) {
                 if (this.systems.length === 1) {

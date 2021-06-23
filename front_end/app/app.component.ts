@@ -9,6 +9,7 @@ import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
 import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
 import { fromEvent }                               from 'rxjs';
+import { LocalStorageService }                     from 'ngx-webstorage';
 import { NxRibbonService }                         from '@components/ribbon';
 import { WINDOW }                                  from '@services/window-provider';
 import { NxApplyService }                          from '@services/apply.service';
@@ -70,6 +71,7 @@ export class AppComponent {
         private uriService: NxUriService,
         private pageService: NxPageService,
         private dialogsService: NxDialogsService,
+        private localStorageService: LocalStorageService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -135,9 +137,12 @@ export class AppComponent {
         } else if (bootstrapProvider.newSystem) {
             this.newSystem = true;
             this.CONFIG.newSystem = true;
+            this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;
         }
+        // in case user switches to a different system before setting up reset system again
+        this.localStorageService.store('resetServer', false);
 
         // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.

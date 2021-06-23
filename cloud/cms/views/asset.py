@@ -629,7 +629,7 @@ def download_package(request, asset_id):
             error_message = f"Asset does not have all required fields filled for version: {version_id}"
         return HttpResponseBadRequest(error_message)
 
-    if asset.is_cloud_portal:
+    if asset.is_cloud_portal or asset.is_vms:
         cache_key = get_package_cache_key(asset, preview, version_id)
         package_info = PACKAGES_CACHE.get(cache_key)
         if not package_info:

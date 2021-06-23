@@ -111,12 +111,10 @@ Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
     ...    ELSE    Log In Web Admin    ${user}    ${password}
-    Check Language Logged In    ${user}    ${password}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
-    # Check Language Logged In    ${email}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
@@ -128,7 +126,6 @@ Log In Cloud
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Validate Log In    ${email}    password=${password}
-
     Sleep    0.5
 
 Log In Web Admin
@@ -166,7 +163,7 @@ Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
-    ...    '''${mode}'''=='''webadmin'''    https://${QABURBANK IP}:${system}[port]
+    ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
     Go To    ${url}
     Log In    ${email}    ${password}    validate=${False}    button=${None}
     Reload Page
@@ -176,7 +173,7 @@ Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Check Language Logged In    ${email}    ${password}
+    Run Keyword If    '''${mode}''' == '''cloud'''    Check Language Logged In    ${email}    ${password}
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
@@ -948,7 +945,7 @@ Get Lang List
     
 Log In If Needed
     [Arguments]    ${email}    ${password}
-    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    ${status} =    Run Keyword and Return Status    Wait Until Element Is Visible    ${LOG IN MODAL}    timeout=3
     Run Keyword If    ${status}    Run Keywords
     ...    Log In    ${email}    ${password}    button=None    AND
     ...    Validate Log In    ${email}
@@ -1060,13 +1057,14 @@ Create Base System
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
+    # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
-    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://10.1.5.238:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
 
     # If add users is true add local users.  Add cloud users if both are true.
-    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://10.1.5.238:${server}[port]
+    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${server}[port]
     ${cloud users}=   Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
@@ -1264,7 +1262,7 @@ Verify Horizontal Scrollbar Exists
     
 Delete All Text
     [Arguments]    ${input}
-    ${text} =    Get Element Attribute    ${input}    value
+    ${text} =    Get Element Attribute    ${input}    innertext
     ${length} =    Get Length    ${text}
     ${length} =    Evaluate    ${length} + 1
     Click Element    ${input}
@@ -1328,3 +1326,13 @@ Remove All Files
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    rm ${dir name}/*   sudo=True    sudo_password=${QA BURBANK PASS}
     Close Connection
+    
+Verify File Exists
+    [Arguments]    ${folder}    ${file}
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${results}    Execute Command    find ${folder} -name ${file}    sudo=True    sudo_password=${QA BURBANK PASS}
+    Close Connection
+    Should Contain    ${results}    ${file}
+    
+    

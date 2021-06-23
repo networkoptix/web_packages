@@ -29,6 +29,8 @@
 
 	nx-menu {
 		max-height : 100%;
+
+
 	}
 }
 
@@ -46,6 +48,10 @@
 
 .swagger-ui body {
 	margin : 0
+}
+
+.swagger-ui .filter-container {
+	display: none;
 }
 
 .swagger-ui article, .swagger-ui aside, .swagger-ui footer, .swagger-ui header, .swagger-ui nav {
@@ -152,6 +158,10 @@
 	font-size   : 100%;
 	line-height : 1.15;
 	margin      : 0
+}
+
+.swagger-ui table tr:nth-child(even){
+	background-color: #fafbfc;
 }
 
 .swagger-ui input {

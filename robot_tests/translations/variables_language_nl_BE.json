@@ -62,6 +62,7 @@
     "MAIN": "Hoofd",
     "BACKUP": "Backup",
     "NOT IN USE": "Niet in gebruik",
+    "CHECKING": "Controleer...",
     "CANNOT SAVE PASSWORD": "Kan wachtwoord niet opslaan",
     "PASSWORD INCORRECT": "Dit wachtwoord is onjuist.",
     "TOO MANY ATTEMPTS TEXT": "Te veel pogingen. Probeer het over een minuut nog eens.",
