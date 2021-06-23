@@ -1291,7 +1291,7 @@ Add external storage: successful scenario with password
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.239/networkDisk
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
