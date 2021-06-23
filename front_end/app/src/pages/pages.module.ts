@@ -58,6 +58,10 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./developers/developers.module').then(m => m.NxDevelopersModule)
     },
     {
+        path         : 'developers',
+        loadChildren : () => import('./developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule)
+    },
+    {
         path         : 'systems/:systemId',
         loadChildren : () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
     },

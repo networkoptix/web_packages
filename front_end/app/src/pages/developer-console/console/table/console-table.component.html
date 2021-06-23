@@ -1,0 +1,58 @@
+<nx-block *ngIf="selectedManifest?.intro" header-style="slim">
+    <header>
+        {{selectedManifest.intro.title}}
+    </header>
+    <nx-section [innerHTML]="selectedManifest.intro.content | safe:'html'"></nx-section>
+</nx-block>
+
+<section *ngIf="selectedManifest?.structure" class="card mt-3">
+    <table cdk-table [dataSource]="selectedData">
+        <ng-container *ngFor="let field of selectedManifest.structure" [cdkColumnDef]="field.key">
+            <th cdk-header-cell *cdkHeaderCellDef>{{field.title}}</th>
+            <ng-container [ngSwitch]="field.type">
+                <ng-container *ngSwitchCase="CONFIG_TYPE.STATUS">
+                    <td cdk-cell *cdkCellDef="let element" [ngbTooltip]="field.meta?.tooltip" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        {{element[field.key]}}
+                    </td>
+                </ng-container>
+                <ng-container *ngSwitchCase="CONFIG_TYPE.COMMENTS">
+                    <td cdk-cell *cdkCellDef="let element" [ngbTooltip]="field.meta?.tooltip" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        {{element[field.key]}}
+                    </td>
+                </ng-container>
+                <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_LINK">
+                    <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        <ng-template #icon>
+                            <svg-icon nx-add-svg-src
+                            [src]="CONFIG.icons.dir + field.meta.icon"
+                            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+                            [applyClass]="true"
+                            [ngbTooltip]="field.meta?.tooltip"></svg-icon>
+                        </ng-template>
+                        <ng-template #externalLink>
+                            <a [href]="element[field.key]" target="_blank">
+                                <ng-container *ngTemplateOutlet="icon"></ng-container>
+                            </a>
+                        </ng-template>
+                        <a *ngIf="element[field.key].startsWith('/'); else externalLink" [routerLink]="base + '/' + sectionParam + '/' + element[field.key]">
+                            <ng-container *ngTemplateOutlet="icon"></ng-container>
+                        </a>
+                    </td>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')"> {{element[field.key]}} </td>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+        <thead>
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+        </thead>
+        <tbody>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+        </tbody>
+    </table>
+    <div *ngIf="!(selectedData.data$ | async).length" class="table-content-placeholder">
+        <nx-pre-loader></nx-pre-loader>
+    </div>
+    <button *ngFor="let action of selectedManifest.actions" [class]="'btn  min-w-120 mt-3 ml-auto btn-' + (action.type || 'primary')">{{action.title}}</button>
+</section>

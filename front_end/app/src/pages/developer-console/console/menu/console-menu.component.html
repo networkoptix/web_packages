@@ -1,0 +1,11 @@
+<ul>
+    <li *ngFor="let node of menu">
+        <a [routerLink]="[base, node.url]" routerLinkActive="active-section">
+        <svg-icon nx-add-svg-src
+            [src]="CONFIG.icons.dir + node.icon"
+            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+            [applyClass]="true"></svg-icon>
+        <span>{{node.title}}</span>
+        </a>
+    </li>
+</ul>
