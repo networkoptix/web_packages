@@ -361,6 +361,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 }
             }).then(() => {
                 this._initSelectedCamera();
+                this._log('polling started')
                 this.startPollingForNewlyRecordedChunks();
                 this.getRecordsInProgress = undefined;
             });
@@ -378,6 +379,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             const since = this.vms.selectedCamera.archiveRange.end;
             const now = Date.now();
             const cameraId = this.id;
+            this._log('requesting new records', since, now, cameraId, now - since)
             this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
                 ar = await this._prepareArchiveRecords(ar);
                 if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
@@ -386,17 +388,22 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     this._log('newly recorded', ar);
                     const prepared = ar.reply.map(r => {
                         // the server has a weird habit of sending strings instead of numbers every now and then
-                        const start = parseInt(r.startTimeMs);
+                        const start = Math.max(parseInt(r.startTimeMs), since);
                         const duration = parseInt(r.durationMs);
-                        return new SimpleTimeRange(
+                        const tr = new SimpleTimeRange(
                             start,
                             r.durationMs < 0
                                 ? now
                                 : start + duration
                         );
-                    });
+                        this._log('record candidate', r, start, duration, tr)
+                        return tr
+                    }).filter(tr => tr.duration > 0);
                     if (prepared.length > 0) {
+                        this._log('adding records', prepared)
                         this.vms.addRecordsToSelectedCamera(cameraId, prepared);
+                    } else {
+                        this._log('no records to add', prepared)
                     }
                 }
             });
