@@ -2,7 +2,7 @@ const sass = require('sass');
 const fs = require('fs');
 const path = require('path');
 
-const dest = path.resolve(__dirname, 'static/styles');
+const dest = path.resolve(__dirname, process.argv[2] || 'static/styles');
 const skinPath = path.resolve(__dirname, '../skins');
 
 const buildSkin = (color) => {

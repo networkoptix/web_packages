@@ -1,6 +1,36 @@
 #!/bin/bash
 set -e
 
+function build_frontend () {
+    echo "Building front_end"
+    echo "Build statics"
+    pushd ../front_end
+        npm run build
+        mkdir -p dist/skins
+        npm run buildSkins dist/skins
+        rm -rf dist/src
+        rm -rf dist/customization
+        # Save the repository info.
+        echo "Create version.txt"
+        if [ -e "$PORTAL_REPOSITORY/.git" ]; then
+            git -C "$PORTAL_REPOSITORY" log -n 1 > dist/version.txt
+            git -C "$PORTAL_REPOSITORY" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
+        else
+            echo "Neither git nor hg has been detected in $2" && exit 1
+        fi
+        cat dist/version.txt
+    popd
+}
+
+function move_fonts_and_help() {
+    echo "Move fonts and help - $SOURCE_DIR"
+    rm -rf $SOURCE_DIR/../common || true
+    mkdir -p $SOURCE_DIR/../common/static
+    mv ../front_end/dist/fonts $SOURCE_DIR/../common/static/fonts
+    cp -R ../help $SOURCE_DIR/../common/static/help
+
+    rm -rf ../front_end/dist/fonts || true
+}
 #DIR is the location of the cloud_portal build script in the repository
 #Can be called like this from with build_scripts "./build.sh"
 # or from cloud_portal "./build_scripts/build.sh"
@@ -46,29 +76,43 @@ popd
 pushd build_scripts
 
 TARGET_DIR="../cloud/static"
+SOURCE_DIR="$TARGET_DIR/_source"
+FRONT_END_DIST="../front_end/dist"
 
 echo "Clear $TARGET_DIR"
 rm -rf $TARGET_DIR
 echo "Create $TARGET_DIR"
-mkdir -p $TARGET_DIR
+mkdir -p $SOURCE_DIR
 
+
+echo "------------------------------------------------------------"
+build_frontend
+move_fonts_and_help
+echo "Building front_end finished"
 
 echo "Iterate all skins"
 for dir in ../skins/*/
 do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
+
+    echo "Move front_end to destination"
+    mkdir -p $SOURCE_DIR/$SKIN
+    mv $FRONT_END_DIST/skins/$SKIN.css $FRONT_END_DIST/styles/skin.css
+    rsync -a $FRONT_END_DIST/* $SOURCE_DIR/$SKIN/static --exclude="$FRONT_END_DIST/skins"
+    cp -R $SOURCE_DIR/$SKIN/static/scripts/. $SOURCE_DIR/$SKIN/static/
+
     ./build_skin.sh $SKIN $PORTAL_REPOSITORY
     if [ -n "$LOCAL_ENV" ]; then
       break
     fi
 done
 
-cp ../cloud/cloud/cloud_portal.yaml $TARGET_DIR/_source
+cp ../cloud/cloud/cloud_portal.yaml $SOURCE_DIR
 
 BAN_LIST="^nx\ |nxvms"
 echo "Checking files for mentions of nx with the following patterns: ${BAN_LIST}"
-branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif},{commonPasswordsList,downloads}.json} ${TARGET_DIR}/_source) || true
+branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif},{commonPasswordsList,downloads}.json} ${SOURCE_DIR}) || true
 if [[ -z ${branding} ]]
 then
     echo "No mentions were found"
