@@ -147,7 +147,7 @@ export class VideoManagementSystemService {
             this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
             this.serverTimes[0];
         const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
-        const serverTZO = preferredServerTime.timeZoneOffset;
+        const serverTZO = preferredServerTime?.timeZoneOffset || clientTZO;
         return serverTZO - clientTZO;
     }
     public tweakT (t: fairMs): tweakedMs {
