@@ -54,8 +54,8 @@ export class NxBootstrapProvider {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
                 this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
-                this.setLanguage(result[1]);
                 this.setSettings(result[0]);
+                this.setLanguage(result[1]);
 
                 if (result[2].reply) {
                     this.setLocalInfo(result[2].reply);
@@ -84,7 +84,24 @@ export class NxBootstrapProvider {
 
     setLanguage(data) {
         // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };
-        this.languageService.setTranslations(data.language, data);
+        const customStrings = {
+            '%CLOUD_NAME%'   : this.CONFIG.cloudName,
+            '%VMS_NAME%'     : this.CONFIG.vmsName,
+            '%SUPPORT_LINK%' : this.CONFIG.company.link,
+            '%COMPANY_NAME%' : this.CONFIG.company.name
+        };
+        const processLanguage = (language) => {
+            Object.entries(language).forEach(([key, phrase]) => {
+                if (typeof phrase === 'string') {
+                    language[key] = Object.entries(customStrings)
+                        .reduce((text: string, [rKey, rValue]) => text.replace(rKey, rValue), phrase);
+                } else if (typeof phrase !== 'number') {
+                    language[key] = processLanguage(phrase);
+                }
+            });
+            return language;
+        };
+        this.languageService.setTranslations(data.language, processLanguage(data));
         this.LANG = this.languageService.translations;
         this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
         this.pageService.pageTitle = this.LANG.pageTitles.default?.();
@@ -95,7 +112,8 @@ export class NxBootstrapProvider {
     setSettings(data) {
         if (this.CONFIG.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
-            this.CONFIG.dynamicMenus = data.dynamicMenus?.reduce((menu, { name, nodes }) => {
+            const { description, webadminConfig } = data;
+            this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
                     title       : name,
                     description : '',
@@ -103,18 +121,26 @@ export class NxBootstrapProvider {
                 };
                 return menu;
             }, {});
-
+            this.CONFIG.cloudName = description.cloudName;
+            this.CONFIG.vmsName = description.vmsName;
             this.CONFIG.company = {
-                copyrightYear : data.copyrightYear,
+                copyrightYear : description.copyrightYear,
                 links         : {
-                    website: data.companyLink
+                    website: description.contact.supportAddress
                 },
-                name: data.companyName
+                name: description.companyName
             };
-            this.CONFIG.defaultLanguage = data.defaultLanguage;
-            this.CONFIG.licenseTypes = data.licenseTypes;
-            this.CONFIG.trialLicenseKey = data.trialLicenseKey;
-            this.CONFIG.supportedLanguages = data.supportedLanguages;
+            this.CONFIG.defaultLanguage = description.defaultLanguage;
+            this.CONFIG.licenseTypes = webadminConfig.licenseTypes;
+            this.CONFIG.trialLicenseKey = description.desktop.trialLicenseKey;
+
+            let languages = [description.defaultLanguage];
+            if (description?.customLanguages?.length) {
+                languages = description.customLanguages;
+            } else if (webadminConfig?.supportedLanguages?.length) {
+                languages = webadminConfig.supportedLanguages;
+            }
+            this.CONFIG.supportedLanguages = languages;
         } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once

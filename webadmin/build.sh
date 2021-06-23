@@ -14,7 +14,6 @@ fi
 [ -e front_end ] && rm -rf front_end
 [ -e skins ] && rm -rf skins
 [ -e translations ] && rm -rf translations
-[ -e package.zip ] || { echo >&2 "Missing customization package.zip, if building locally move package.zip into build folder"; exit 1; }
 
 rsync -av --progress $SOURCE_DIR/../build_scripts .
 rsync -av --progress $SOURCE_DIR/../skins .
@@ -29,32 +28,10 @@ then
     pip install -r build_scripts/requirements.txt
 fi
 
-echo "Copy customization resources"
-customization_files=(
-    'webadmin_config.json'
-    'webadmin_config.js'
-    'webadmin_logo.png'
-    'description.json'
-)
-
-# Prepend and append each filename with *
-customization_files=("${customization_files[@]/#/*}")
-customization_files=("${customization_files[@]/%/*}")
-unzip -oj package.zip "${customization_files[@]}" -d front_end/app/customization
-
-mv front_end/app/customization/webadmin_logo.png front_end/app/images/logo.png
-
-echo "Copy customization to setup wizard"
-[ ! -d front_end/inline-wizard/customization ] && mkdir -p front_end/inline-wizard/customization
-cp -r front_end/app/customization/* front_end/inline-wizard/customization
-
 # Update sources.
 echo "Update sources" >&2
 
 pushd front_end
-
-echo "Copying language from description -> webadmin_config"
-python $SOURCE_DIR/add_lang_to_webadmin.py
 
 echo "Clean old directories" >&2
 [ -e node_modules ] && rm -rf node_modules
@@ -65,10 +42,6 @@ echo "Clean old directories" >&2
 # Install dependencies.
 echo "Install node dependencies" >&2
 npm install
-
-SKIN=$(python $SOURCE_DIR/get_skin.py)
-echo "Setting Skin to $SKIN"
-npm run setSkin $SKIN
 
 # Build webadmin.
 echo "Build webadmin" >&2
@@ -108,8 +81,6 @@ done
 echo "Create translations" >&2
 $SOURCE_DIR/localize.sh ..
 
-echo "Replacing static names in language_compiled.json"
-find . -name "language_compiled.json" | xargs python $SOURCE_DIR/replace_static.py
 
 # Save the repository info.
 echo "Create version.txt" >&2

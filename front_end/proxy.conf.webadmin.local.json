@@ -59,10 +59,7 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/language_compiled.json": {
-    "target": "https://localhost:9001",
-    "pathRewrite": {
-      "^/static/lang_en_US/": ""
-    },
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -74,7 +71,7 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/*": {
-    "target": "https://localhost:9001",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -83,12 +80,9 @@
     }
   },
   "/static/*": {
-    "target": "https://localhost:9001",
+    "target": "https://localhost:7001",
     "secure": false,
     "logLevel": "debug",
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/static/": ""
-    }
+    "changeOrigin": true
   }
 }

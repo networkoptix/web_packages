@@ -216,8 +216,10 @@ function build_webadmin_locally() {
     [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    cp webadmin/customize_package.sh $BUILD_DIR
     pushd $BUILD_DIR
-        . "$REPO/webadmin/build.sh"
+#         . "$REPO/webadmin/build.sh"
+        . ./customize_package.sh
     popd
 }
 
