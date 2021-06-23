@@ -12,6 +12,8 @@ customization_files=(
     'webadmin_config.js'
     'webadmin_logo.png'
     'description.json'
+    'welcome_page_logo.png'
+    'welcome_page_logo@2x.png'
 )
 
 # Prepend and append each filename with *
@@ -20,6 +22,7 @@ customization_files=("${customization_files[@]/%/*}")
 unzip -oj package.zip "${customization_files[@]}" -d static/customization
 mv static/customization/webadmin_logo.png static/images/logo.png
 mv static/customization/main_icon.ico static/images/favicon.ico
+mv static/customization/welcome_page_logo* static/images
 
 SKIN="blue"
 SKIN_PATTERN='\"skin\": \"([A-Za-z_]+)\"'
