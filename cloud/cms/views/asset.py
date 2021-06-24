@@ -11,7 +11,7 @@ from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -26,7 +26,7 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import CustomClientSerializer
+from cms.serializers import CustomClientSerializer, ContentManifestSerializer
 from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure
 
 from ..controllers.documentation import DOC_CACHE
@@ -793,3 +793,24 @@ class CustomClientViewSet(ModelViewSet):
             kwargs['base_vms'] = get_vms_asset(settings.CUSTOMIZATION)
         serializer.save(created_by=self.request.user, **kwargs)
 
+    @action(detail=False, serializer_class=ContentManifestSerializer)
+    def get_manifest(self, request):
+        fields = []
+        for field_name, field_props in list(filter(
+                lambda item: item[1].get('source', '') == 'custom',
+                AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
+        )):
+            fields.append({
+                'name': field_props.get('name', field_name),
+                'label': field_props.get('label', field_name),
+                'type': field_props.get('type', 'text'),
+                'metaOnly': field_props.get('metaOnly', False),
+                'description': field_props.get('description', ''),
+                'optional': field_props.get('optional', False)
+            })
+        contexts = [{
+            'name': 'information',
+            'label': 'Information',
+            'fields': fields
+        }]
+        return api_success({'manifest': {'contexts': contexts}})

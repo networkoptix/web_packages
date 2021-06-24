@@ -249,3 +249,24 @@ export interface CustomClient {
         [field: string]: string
     };
 }
+
+export interface FieldManifest {
+    name: string;
+    label: string;
+    description: string;
+    type: string;
+    metaOnly: boolean;
+    optional: boolean
+}
+
+export interface ContextManifest {
+    name: string;
+    label: string;
+    fields: [FieldManifest];
+}
+
+export interface ContentManifest {
+    manifest: {
+        contexts: [ContextManifest]
+    }
+}

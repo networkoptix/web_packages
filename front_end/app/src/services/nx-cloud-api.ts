@@ -14,7 +14,6 @@ import { NxUriCacheService }        from './uri-cache.service';
 import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
-import {CustomClient} from "./nx-cloud-api.types";
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -571,19 +570,19 @@ class CustomClientAPI {
     }
 
     create(name: string, values: {[field: string]: string} = {}) {
-        return this.http.post<CustomClient>(this.apiBase, { name, values });
+        return this.http.post<t.CustomClient>(this.apiBase, { name, values });
     }
 
     retrieve(id) {
-        return this.http.get<CustomClient>(`${this.apiBase}${id}/`);
+        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
     }
 
     list() {
-        return this.http.get<CustomClient>(this.apiBase);
+        return this.http.get<[t.CustomClient]>(this.apiBase);
     }
 
     update(id, name, values) {
-        return this.http.put<CustomClient>(`${this.apiBase}${id}/`, { name, values });
+        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
     }
 
     partialUpdate(id, name?, values?) {
@@ -594,10 +593,14 @@ class CustomClientAPI {
         if (values !== undefined) {
             data.values = values;
         }
-        return this.http.patch<CustomClient>(`${this.apiBase}${id}/`, data);
+        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
     }
 
     destroy(id) {
         return this.http.delete(`${this.apiBase}${id}/`);
+    }
+
+    getManifest() {
+        return this.http.get<t.ContentManifest>(`${this.apiBase}/get_manifest/`);
     }
 }

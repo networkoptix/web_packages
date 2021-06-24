@@ -445,6 +445,7 @@ class AssetType(models.Model):
     type = models.IntegerField(
         choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
     advanced = models.BooleanField(default=True)
+    custom_field_overrides = JSONField(blank=True, default={})
 
     def __str__(self):
         if self.name:
@@ -467,9 +468,22 @@ class AssetType(models.Model):
                 return index
         return 0
 
+    @classmethod
+    def get_custom_fields_by_type(cls, type):
+        fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
+        if fields is None:
+            asset_type = cls.get_model_by_type(type)
+            fields = asset_type.custom_field_overrides or dict()
+            cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
+        return fields
+
     def get_customizations(self, asset):
         return self.asset_set.exclude(id=asset.id).exclude(customizations=None).\
             values_list('customizations__name', flat=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'ASSET_TYPE-{self.type}-CUSTOM_FIELDS')
 
 
 class Asset(models.Model):

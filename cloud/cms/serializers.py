@@ -124,8 +124,17 @@ class ArticleSerializer(serializers.Serializer):
 
 
 class CustomClientSerializer(serializers.ModelSerializer):
+    class ValuesSerializer(serializers.Serializer):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field_name, field_props in list(filter(
+                    lambda item: item[1].get('source', '') == 'custom',
+                    AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
+            )):
+                self.fields[field_name] = serializers.CharField(required=False, label=field_props.get('label', field_name))
+
     created_by = serializers.SlugRelatedField(slug_field='email', read_only=True)
-    values = serializers.DictField(required=False, default={})
+    values = ValuesSerializer(required=False)
 
     class Meta:
         model = CustomClient
@@ -135,3 +144,20 @@ class CustomClientSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         if settings.CUSTOMIZATION != 'meta':
             self.fields['base_vms'].read_only = True
+
+
+class FieldeManifestSerialzier(serializers.Serializer):
+    name = serializers.CharField()
+    label = serializers.CharField()
+    type = serializers.CharField()
+    metaOnly = serializers.BooleanField()
+    description = serializers.CharField()
+    optional = serializers.BooleanField()
+
+
+class ContextManifestSerializer(serializers.Serializer):
+    fields = FieldeManifestSerialzier(many=True)
+
+
+class ContentManifestSerializer(serializers.Serializer):
+    contexts = ContextManifestSerializer(many=True)
