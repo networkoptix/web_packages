@@ -1,7 +1,8 @@
 #!/bin/bash
 IS_WEBADMIN=$1
 
-mkdir ./dist/styles;
+rm ./dist/styles/*.scss;
+[ -e ./dist/styles/native-theme ] && rm -rf ./dist/styles/native-theme
 # target only main style
 mv ./dist/*.css ./dist/styles;
 sed -i -e 's/href="static\/styles\./href="static\/styles\/styles\./g' dist/index.html;
