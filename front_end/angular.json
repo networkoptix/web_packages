@@ -28,6 +28,7 @@
               "app/customization",
               "app/images",
               "app/fonts",
+              "app/styles",
               "app/views",
               "app/scripts",
               "app/503.html",

@@ -17,6 +17,7 @@ front_end/app/images/favicon.ico
 front_end/app/images/logo.png
 front_end/app/images/logo_small.png
 front_end/app/styles/custom
+front_end/app/styles/*.css
 front_end/**/*.js.map
 front_end/app/src/**/*.js
 front_end/app/language_compiled.json

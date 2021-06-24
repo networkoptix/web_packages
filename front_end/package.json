@@ -30,6 +30,7 @@
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
     "buildSkins": "node buildSkins.js",
     "setSkin": "node setSkin.js --skin",
+    "setVarSkin": "node buildSkins.js ./app/styles",
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
     "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
