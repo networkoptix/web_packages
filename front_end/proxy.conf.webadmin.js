@@ -1,0 +1,67 @@
+const defaultCloud = 'https://cloud-test.hdw.mx';
+const proxyTargetConfig = {
+    brova: {
+        host  : 'http://brova.mykeenetic.ru:7001',
+        cloud : defaultCloud
+    },
+    demo: {
+        host  : 'http://demo.networkoptix.com:7001',
+        cloud : defaultCloud
+    },
+    local: {
+        host  : 'https://localhost:7001',
+        cloud : 'https://dev3.cloud.hdw.mx'
+    },
+    nuke: {
+        host  : 'https://10.1.5.210:7001',
+        cloud : defaultCloud
+    },
+    sofia: {
+        host  : 'https://10.1.5.196:7001',
+        cloud : defaultCloud
+    }
+};
+const useProxy = process.env.WEBADMIN_TARGET || 'local';
+const targets = proxyTargetConfig[useProxy];
+
+console.log(`Running ${useProxy} w/ targets : ${JSON.stringify(targets)}`);
+
+const PROXY_CONFIG = [
+    {
+        context: [
+            '/api',
+            '/ec2',
+            '/hls',
+            '/proxy',
+            '/rest',
+            '/static/customization',
+            '/static/lang_en_US',
+            '/static/images/logo.png',
+            '/swagger-ui',
+            '/web/api',
+            '/web/hls'
+        ],
+        target       : targets.host,
+        changeOrigin : true,
+        secure       : false
+    }, {
+        context: [
+            '/static'
+        ],
+        target       : 'https://localhost:9001',
+        changeOrigin : true,
+        secure       : false,
+        bypass       : function (req, res, proxyOptions) {
+            return req.url.replace('/static', '');
+        }
+    }, {
+        context: [
+            '/api/systems'
+        ],
+        target       : targets.cloud,
+        changeOrigin : true,
+        secure       : false
+    }
+];
+
+module.exports = PROXY_CONFIG;
