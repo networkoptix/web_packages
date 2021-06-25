@@ -39,6 +39,17 @@
                         </a>
                     </td>
                 </ng-container>
+                <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_MODAL">
+                    <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        <a (click)="handleModal(element[field.key])">
+                            <svg-icon nx-add-svg-src
+                                [src]="CONFIG.icons.dir + field.meta.icon"
+                                [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+                                [applyClass]="true"
+                                [ngbTooltip]="field.meta?.tooltip"></svg-icon>
+                        </a>
+                    </td>
+                </ng-container>
                 <ng-container *ngSwitchDefault>
                     <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')"> {{element[field.key]}} </td>
                 </ng-container>

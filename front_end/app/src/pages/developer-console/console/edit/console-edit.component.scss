@@ -1,0 +1,38 @@
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/typography';
+
+:host {
+    margin: 16px;
+    max-width: 624px;
+}
+
+header {
+    font-size: 15px !important;
+}
+
+section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    label {
+        @include typography.regular14dark10;
+    }
+
+    span {
+        @include typography.regular14light10;
+    }
+
+    input, div {
+        flex: 0 0 100%;
+    }
+
+    input {
+        margin: 2px 0 4px 0;
+    }
+
+    div {
+        @include typography.regular13light10;
+    }
+}

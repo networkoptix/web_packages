@@ -7,14 +7,15 @@ import { TranslateModule }               from '@ngx-translate/core';
 import { AngularSvgIconModule }          from 'angular-svg-icon';
 import { NgbModule }                     from '@ng-bootstrap/ng-bootstrap';
 
-import { ComponentsModule }           from '../../components/components.module';
-import { DirectivesModule }           from '../../directives/directives.module';
-import { PipesModule }                from '../../pipes/pipes.module';
-import { MenuModule }                 from '../../menu';
-import { DevelopersGuard }            from '../../routeGuards';
-import { NxDevConsoleComponent }      from './console/console.component';
-import { NxDevConsoleMenuComponent }  from './console/menu/console-menu.component';
-import { NxDevConsoleTableComponent } from './console/table/console-table.component';
+import { ComponentsModule }              from '../../components/components.module';
+import { DirectivesModule }              from '../../directives/directives.module';
+import { PipesModule }                   from '../../pipes/pipes.module';
+import { MenuModule }                    from '../../menu';
+import { ApplyGuard, DevelopersGuard }   from '../../routeGuards';
+import { NxDevConsoleComponent }         from './console/console.component';
+import { NxDevConsoleMenuComponent }     from './console/menu/console-menu.component';
+import { NxDevConsoleTableComponent }    from './console/table/console-table.component';
+import { NxDevConsoleEditComponent }     from './console/edit/console-edit.component';
 
 const appRoutes: Routes = [
     {
@@ -26,7 +27,27 @@ const appRoutes: Routes = [
     {
         path        : ':section',
         canActivate : [DevelopersGuard],
+        pathMatch   : 'full',
         component   : NxDevConsoleComponent
+    },
+    {
+        path        : ':section/:mode',
+        canActivate : [DevelopersGuard],
+        pathMatch   : 'full',
+        component   : NxDevConsoleComponent
+    },
+    {
+        path        : ':section/:mode/:id',
+        canActivate : [DevelopersGuard],
+        pathMatch   : 'full',
+        component   : NxDevConsoleComponent
+    },
+    {
+        path          : ':section/:mode/:id/:context',
+        canActivate   : [DevelopersGuard],
+        pathMatch     : 'full',
+        canDeactivate : [ApplyGuard],
+        component     : NxDevConsoleComponent
     }
 ];
 
@@ -48,7 +69,8 @@ const appRoutes: Routes = [
     declarations : [
         NxDevConsoleComponent,
         NxDevConsoleMenuComponent,
-        NxDevConsoleTableComponent
+        NxDevConsoleTableComponent,
+        NxDevConsoleEditComponent
     ],
     bootstrap : [],
     exports   : []

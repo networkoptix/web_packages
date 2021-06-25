@@ -30,3 +30,49 @@ li {
 a:not(.active-section):not(:active):hover {
     background: $additional_light3;
 }
+
+h3 {
+    @include typography.medium15dark9;
+    margin: 16px 16px 0 16px;
+    background: $light5;
+    padding: 0px;
+}
+
+.edit {
+    background: $light5;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    
+    a {
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .active-section, a:active {
+        background: $light16;
+        color: $light1 !important;
+    }
+
+    a:not(.active-section):not(:active):hover {
+        background: $light6;
+    }
+}
+
+.additional-link {
+    @include typography.regular14light;
+    cursor: pointer;
+    margin-left: 16px;
+    height: 32px;
+    &:hover {
+        color: $dark15 !important;
+
+        .st0 {
+            fill: $dark15;
+        }
+    }
+
+    .st0 {
+        fill: $light16;
+    }
+}

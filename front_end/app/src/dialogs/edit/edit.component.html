@@ -1,0 +1,34 @@
+<form>
+    <div class="modal-header">
+        <h1 class="modal-title">{{heading}}</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="close()">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <section *ngFor="let structure of structures">
+            <label>{{structure.title}}</label>
+            <ng-container [ngSwitch]="structure.type">
+                <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
+                    [selected]="structure.value"
+                    (onSelected)="structure.value = $event"
+                    [items]="structure.meta.options"
+                    ></nx-select>
+                <input *ngSwitchDefault
+                    [type]="structure.type"
+                    [name]="structure.key"
+                    [placeholder]="structure.placeholder || ''"
+                    [(ngModel)]="structure.value"
+                    class="form-control">
+            </ng-container>
+            <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+        </section>
+    </div>
+    <div class="modal-footer border-top-0">
+        <nx-process-button [process]="saveContext" [buttonText]="'Save' | translate"></nx-process-button>
+        <nx-cancel-button [process]="saveContext" [discardFn]="close"></nx-cancel-button>
+        <nx-process-button [process]="deleteContext" [buttonText]="'Delete' | translate" [svg]="{ src: 'delete', height: '24', color: 'light1' }"></nx-process-button>
+    </div>
+</form>

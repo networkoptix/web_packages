@@ -1,34 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input }         from '@angular/core';
 import { IConfig, NxConfigService } from '@services/nx-config';
+
+import { ConsoleMode }              from '../console.component';
 
 export interface ConsoleMenuNode {
     title: string,
     url: string,
-    icon: string
+    icon?: string
 }
-
-export const mockMenuContent: ConsoleMenuNode[] = [
-    {
-        title : 'Some Section',
-        url   : 'some-section-url',
-        icon  : 'menu.svg'
-    },
-    {
-        title : 'Another Section',
-        url   : 'another-section-url',
-        icon  : 'lock.svg'
-    },
-    {
-        title : 'Custom VMS Clients',
-        url   : 'custom-clients',
-        icon  : 'servers.svg'
-    },
-    {
-        title : 'Last Section',
-        url   : 'last-section-url',
-        icon  : 'users.svg'
-    }
-];
 
 @Component({
     selector    : 'console-menu',
@@ -36,13 +15,15 @@ export const mockMenuContent: ConsoleMenuNode[] = [
     styleUrls   : ['console-menu.component.scss']
 })
 export class NxDevConsoleMenuComponent {
-    CONFIG: IConfig
+    @Input() menu: ConsoleMenuNode[];
+    @Input() base: string;
+    @Input() type: ConsoleMode;
 
-    menu: ConsoleMenuNode[]
-    base = '/developers'
+    CONFIG: IConfig;
+
+    TYPES = ConsoleMode
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.config;
-        this.menu = mockMenuContent;
     }
 }

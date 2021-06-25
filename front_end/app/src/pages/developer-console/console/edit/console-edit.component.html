@@ -1,0 +1,22 @@
+<nx-block header-style="slim">
+    <header>
+        {{context.heading}}
+    </header>
+    <nx-section>
+        <form>
+            <section *ngFor="let structure of context.structures">
+                <label [for]="structure.key">{{structure.title}}</label>
+                <span *ngIf="structure.tag">{{structure.tag}}</span>
+                <input 
+                    [type]="structure.type"
+                    [name]="structure.key"
+                    [placeholder]="structure.placeholder || ''"
+                    [ngModel]="watchers[structure.key].value"
+                    (ngModelChange)="updateWatcher(structure.key, $event)"
+                    class="form-control">
+                <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+            </section>
+        </form>
+    </nx-section>
+</nx-block>
+<ng-container #applyContainer></ng-container>

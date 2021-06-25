@@ -34,11 +34,11 @@ td {
     height: 48px;
 }
 
-td > svg-icon {
+td svg-icon {
     cursor: pointer;
 }
 
-.type-icon_link {
+.type-icon_link, .type-icon_modal {
     width: 40px;
 }
 

@@ -46,6 +46,8 @@ import { NxBootstrapProvider }            from '@services/nx-bootstrap-provider'
 import { StorageManager }                 from '@services/system.service/system/storage-manager/storage-manager';
 
 import './../dialogs/dialogs.scss';
+import { EditModalContent } from './edit/edit.component';
+import { ModalContent } from '@pages/developer-console/console/table/console-table.component';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -247,6 +249,14 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddStorageModalContent, options, params);
+    }
+
+    edit(modalContent: ModalContent) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+        return this.createModal(EditModalContent, options, modalContent);
     }
 
     changeStorage(system: NxSystem) {

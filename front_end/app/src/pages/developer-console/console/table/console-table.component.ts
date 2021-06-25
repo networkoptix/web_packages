@@ -1,13 +1,16 @@
-import { DataSource } from '@angular/cdk/collections';
-import { Component, Input, SimpleChanges } from '@angular/core';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { DataSource }                       from '@angular/cdk/collections';
+import { Component, Input, SimpleChanges }  from '@angular/core';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig, NxConfigService }         from '@services/nx-config';
+import { BehaviorSubject, Observable }      from 'rxjs';
+import { DataStructure, DataStructureType } from '../edit/console-edit.component';
 
 enum ConfigType {
     TEXT='text',
     COMMENTS='comments',
     STATUS='status',
-    ICON_LINK='icon_link'
+    ICON_LINK='icon_link',
+    ICON_MODAL='icon_modal'
 }
 
 interface ColumnConfig {
@@ -31,7 +34,7 @@ interface ActionConfig {
     type?: ActionType,
 }
 
-interface ConsoleManifest {
+export interface ConsoleManifest {
     intro?: {
         title: string,
         content: string
@@ -40,7 +43,7 @@ interface ConsoleManifest {
     actions: ActionConfig[]
 }
 
-const customClientManifest: ConsoleManifest = {
+export const customClientManifest: ConsoleManifest = {
     // Temporary: Remove once connected to CMS
     intro: {
         title   : 'About',
@@ -73,8 +76,8 @@ const customClientManifest: ConsoleManifest = {
             }
         },
         {
-            type  : ConfigType.ICON_LINK,
-            key   : 'settingsLink',
+            type  : ConfigType.ICON_MODAL,
+            key   : 'settingsModal',
             title : '',
             meta  : {
                 icon    : 'lock.svg',
@@ -89,6 +92,54 @@ const customClientManifest: ConsoleManifest = {
     ]
 };
 
+export const mockManifest = {
+    'custom-clients': customClientManifest
+};
+
+export enum ModalType {
+    CLIENT_EDIT='client-edit'
+}
+
+export interface ModalContent {
+    id: number,
+    modal: ModalType,
+    heading: string,
+    structures: DataStructure[]
+}
+
+const vmsOptions = [
+    { name: 'NX Meta', value: 'nx-meta' },
+    { name: 'NX Witness', value: 'nx-witness' },
+    { name: 'Other VMS', value: 'other-vms' }
+];
+
+const modalContent = (index): ModalContent => ({
+    id         : index,
+    modal      : ModalType.CLIENT_EDIT,
+    heading    : 'Edit VMS Client',
+    structures : [
+        {
+            key         : 'internalName',
+            title       : 'Internal Name',
+            tag         : '%InternalName',
+            value       : `Custom VMS Client ${index}`,
+            type        : DataStructureType.TEXT,
+            placeholder : 'VMS Client Name',
+            description : 'Name is hidden from external users'
+        },
+        {
+            key   : 'baseVMS',
+            title : 'Based on',
+            tag   : '%BaseVMS',
+            value : vmsOptions[index % 3],
+            type  : DataStructureType.DROPDOWN,
+            meta  : {
+                options: vmsOptions
+            }
+        }
+    ]
+});
+
 const customClients = [...Array(7).keys()].map((_, index) => ({
     // Temporary: Remove once connected to CMS
     internalName  : `VMS Client ${index}`,
@@ -98,7 +149,7 @@ const customClients = [...Array(7).keys()].map((_, index) => ({
     comments      : [{ name: 'someone', value: 'some comment' }, { name: 'someone else', value: 'some other comment' }],
     status        : index % 3 ? 'accepted' : 'review',
     downloadLink  : 'https://cloud-test.hdw.mx/',
-    settingsLink  : `/edit/${index}`
+    settingsModal : modalContent(index)
 }));
 
 @Component({
@@ -120,12 +171,13 @@ export class NxDevConsoleTableComponent {
     selectedData: TableDataSource
     displayedColumns: string[]
 
-    constructor(configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        private dialogService: NxDialogsService
+    ) {
         this.CONFIG = configService.config;
-        this.manifests = {
-            // Temporary: Remove once connected to CMS
-            'custom-clients': customClientManifest
-        };
+        // Temporary: Remove once connected to CMS
+        this.manifests = mockManifest;
     }
 
     ngOnChanges({ sectionParam: { currentValue, previousValue, firstChange } }: SimpleChanges) {
@@ -136,6 +188,10 @@ export class NxDevConsoleTableComponent {
             // Temporary: Remove once connected to CMS
             this.selectedData = new TableDataSource(this.sectionParam === 'custom-clients' ? customClients : []);
         };
+    }
+
+    handleModal(modalContent) {
+        this.dialogService.edit(modalContent);
     }
 }
 
