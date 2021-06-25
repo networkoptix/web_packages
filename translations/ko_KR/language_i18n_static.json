@@ -98,7 +98,7 @@
         "account": {
             "created": {
                 "title": "계정 생성됨",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "활성화 링크가 포함된 확인 메시지가 {email} 으로 전송됩니다."
             },
             "activated": {
                 "title": "계정이 성공적으로 활성화되었습니다"
@@ -129,7 +129,7 @@
             "unauthorized": "인증이 필요합니다"
         },
         "chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
-        "login": "login",
+        "login": "로그인",
         "recordingSettingsWarning": "누락 된 녹화 설정을 업데이트하십시오.",
         "disableMotionWarning": "녹화 모드가 \"상시 녹화\"로 변경됩니다.",
         "recordingModes": {
@@ -149,7 +149,7 @@
         "inaccessibleFeatureMessage": "시스템이 오프라인 상태이므로 정보에 액세스 할 수 없습니다.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "검색",
-        "system": "system",
+        "system": "시스템",
         "systemHasNoCameras": "카메라가 없습니다.",
         "systemHasNoCamerasMessage": "시스템에 액세스 가능한 카메라가 없습니다. <br><br>몇 대의 카메라를 서버의 로컬 네트워크에 연결하여 검색 가능하게하거나 시스템 관리자에게 문의하여 액세스 수준을 변경하십시오.",
         "systemNewVersion": "시스템 업데이트",
@@ -230,7 +230,7 @@
             },
             "moveCloudStorage": {
                 "title": "클라우드 스토리지 이동",
-                "success": "Storage successfully moved",
+                "success": "스토리지가 성공적으로 이동되었습니다.",
                 "errorPrefix": "클라우드 스토리지 제거 오류",
                 "notFound": "저장 공간을 찾을 수 없습니다. 다른 사용자가 저장소를 이동하거나 삭제했을 수 있습니다.",
                 "status": {
@@ -250,14 +250,14 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordWrong": "관리자의 비밀번호가 잘못되었습니다.",
             "checking": "확인...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
             "differentOwners": "선택한 시스템과 현재 시스템이 모두 %CLOUD_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
             "duplicateServers": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "최신 빌드",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
@@ -734,7 +734,7 @@
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "cloud": "클라우드"
         }
     },
     "systemStatuses": {
