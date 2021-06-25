@@ -116,15 +116,15 @@ def authenticate(request):
     state = request.query_params.get("state")
 
     try:
-        code = Auth.get_code(email=request.query_params["email"],
-                             password=request.query_params["password"],
-                             client_id=request.query_params["client_id"],
-                             ip=ip,
-                             redirect_uri=redirect_uri)
+        res = Auth.get_code(email=request.query_params["email"],
+                            password=request.query_params["password"],
+                            client_id=request.query_params["client_id"],
+                            ip=ip,
+                            redirect_uri=redirect_uri)
     except APILogicException:
         raise APINotAuthorisedException("Invalid credentials", error_code=ErrorCodes.not_authorized)
 
-    return api_success({"link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}"})
+    return api_success({"link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(res.get('access_code'), state))}"})
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

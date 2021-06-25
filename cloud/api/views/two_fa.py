@@ -67,7 +67,7 @@ class BackupCode(APIView):
         """
         return api_success(Auth.generate_backup_code(request))
 
-    @method_decorator(swagger_auto_schema(query_serializer=BackupCodeSerializer))
+    @method_decorator(swagger_auto_schema(request_body=BackupCodeSerializer))
     def delete(self, request, *args, **kwargs):
         """
         Codes should be separated by “,“. If no codes specified, all codes will be deleted for the user.

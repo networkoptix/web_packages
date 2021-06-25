@@ -218,7 +218,7 @@ function build_webadmin_locally() {
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
     cp webadmin/customize_package.sh $BUILD_DIR
     pushd $BUILD_DIR
-#         . "$REPO/webadmin/build.sh"
+        . "$REPO/webadmin/build.sh"
         . ./customize_package.sh
     popd
 }
