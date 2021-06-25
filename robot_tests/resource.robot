@@ -980,8 +980,8 @@ Create Docker Server
     Run Keyword If    '4.3' not in $image   Set Local Variable   ${vms}    old
     ...    ELSE   Set Local Variable    ${vms}    new
     ${port}=   Get Random Available Port
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
