@@ -3,24 +3,22 @@
 <div *ngIf="system" class="row d-flex align-items-start auth-visible">
     <div class="col-12">
         <nx-block *ngIf="selectedUser" header-style="extended">
-            <header>
-                <div class="float-right d-flex user-status-switch-wrappper">
-                    <span *ngIf="!selectedUser.isEnabled && !editMode"
-                          class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
-                          translate>User disabled</span>
-                    <nx-switch *ngIf="systemAvailable && selectedUser.canBeEdited && !editMode"
+            <header class="header-users">
+                <div class="header-username" [ngClass]="{ 'mb-2': selectedUser.isCloud }">
+                    <h2 class="heading-style">{{ username }}</h2>
+                    <div class="user-status-switch-wrapper">
+                        <span *ngIf="!selectedUser.isEnabled && !editMode"
+                            class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
+                            translate>User disabled</span>
+                        <nx-switch *ngIf="systemAvailable && selectedUser.canBeEdited && !editMode"
                             [ngModel]="selectedUser.isEnabled"
                             (ngModelChange)="updateEnabled($event);"
                             componentId="user-active-status"
-                            [showWarning]="true"
-                    ></nx-switch>
+                            [showWarning]="true"></nx-switch>
+                    </div>
                 </div>
+                <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
 <!--                <div *ngIf="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">-->
-                <div>
-                    <h2 class="heading-style" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
-                        >{{ username }}</h2>
-                    <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
-                </div>
 <!--                <ng-template #editableTitle>-->
 <!--                    <div class="d-flex align-items-center">-->
 <!--                        <div class="header-title" [ngClass]="{'w-100': editMode}">-->

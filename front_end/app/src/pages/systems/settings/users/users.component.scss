@@ -7,12 +7,33 @@
     @include typography.regular13dark9;
 }
 
-.heading-style {
-    font-family: $font-family-medium;
-    line-height: 40px;
-    vertical-align: middle;
-    height: 40px;
-    font-size: 24px;
+.header-users {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .header-username {
+        display: flex;
+        align-items: center;
+        .heading-style {
+            font-family: $font-family-medium;
+            line-height: 40px;
+            height: 40px;
+            font-size: 24px;
+            display: block;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .user-status-switch-wrapper {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+            span {
+                white-space: nowrap;
+            }
+        }
+    }
 }
 
 .header-title {
@@ -66,8 +87,4 @@
 
 .edit-padding {
     padding-left: 6px !important;
-}
-
-.user-status-switch-wrappper {
-    padding-top: 10px;
 }
