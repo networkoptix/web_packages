@@ -303,7 +303,7 @@ export class NxCloudApiService {
         return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
     }
 
-    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string) {
+    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string) {
         let params = new HttpParams()
             .set('email', email)
             .set('password', password)
@@ -312,6 +312,10 @@ export class NxCloudApiService {
             .set('response_type', responseType);
         if (state) {
             params = params.set('state', state);
+        }
+
+        if (scope) {
+            params = params.set('scope', scope);
         }
 
         return this.http.get<any>('/oauth/authenticate', { params: params }).toPromise();

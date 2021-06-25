@@ -404,7 +404,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.client_id, // use for testing || 'cloud',
             this.initialData.redirect_url, // || 'http://localhost:9000/',
             this.initialData.response_type, // || 'code',
-            this.initialData.state
+            this.initialData.state,
+            this.initialData.scope
         );
     }
 

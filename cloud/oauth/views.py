@@ -114,13 +114,15 @@ def authenticate(request):
     ip = get_ip(request)
     redirect_uri = request.query_params["redirect_uri"]
     state = request.query_params.get("state")
+    scope = request.query_params.get("scope")
 
     try:
         res = Auth.get_code(email=request.query_params["email"],
                             password=request.query_params["password"],
                             client_id=request.query_params["client_id"],
                             ip=ip,
-                            redirect_uri=redirect_uri)
+                            redirect_uri=redirect_uri,
+                            scope=scope)
     except APILogicException:
         raise APINotAuthorisedException("Invalid credentials", error_code=ErrorCodes.not_authorized)
 
@@ -209,7 +211,8 @@ def token(request):
         state = get_param(request, 'state')
 
         if response_type == Auth.RESPONSE_TYPE.code:
-            code = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri)
+            scope = get_param(request, 'scope')
+            code = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri, scope=scope)
             return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
     elif response_type == Auth.RESPONSE_TYPE.token:

@@ -645,7 +645,7 @@ class Auth(object):
     @validate_response
     @lower_case_email
     def get_code(email="", password="", client_id=CLIENT_ID, grant_type=GRANT_TYPE.password,
-                 ip=None, redirect_uri="", refresh_token=None):
+                 ip=None, redirect_uri="", refresh_token=None, scope=""):
         headers = {
             "X-Forwarded-For": ip
         }
@@ -658,6 +658,9 @@ class Auth(object):
         if redirect_uri:
             params["redirect_uri"] = redirect_uri
 
+        if scope:
+            params["scope"] = scope
+
         if grant_type == Auth.GRANT_TYPE.password:
             params.update({
                 "username": email,
@@ -666,7 +669,7 @@ class Auth(object):
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             params["refresh_token"] = refresh_token
 
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", data=params, headers=headers)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -684,7 +687,7 @@ class Auth(object):
             "username": email,
             "password": password
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", data=params, headers=headers)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -697,7 +700,7 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "code": code
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", data=params, headers=headers)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -710,7 +713,7 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "refresh_token": refresh_token
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", data=params, headers=headers)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
     @validate_response
@@ -747,7 +750,7 @@ class Auth(object):
             "name": name,
             "redirect_uri": redirect_uri
         }
-        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", data=params, headers=headers)
+        return post_wrapper(f"{CLOUD_DB_URL}/oauth2/client/", json=params, headers=headers)
 
     @staticmethod
     @validate_response
