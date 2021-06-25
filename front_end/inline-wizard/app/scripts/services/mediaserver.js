@@ -403,7 +403,7 @@ angular.module('webInlineWizard')
             setupCloudSystem: function(systemName, cloudSystemID, cloudAuthKey, cloudAccountName, systemSettings) {
                 var config = {
                     name     : systemName,
-                    settings : stringifyValues(systemSettings),
+                    settings : systemSettings,
                     cloud: {
                         systemId : cloudSystemID,
                         authKey  : cloudAuthKey,
@@ -417,7 +417,7 @@ angular.module('webInlineWizard')
             setupLocalSystem: function(systemName, password, systemSettings) {
                 var config = {
                     name     : systemName,
-                    settings : stringifyValues(systemSettings),
+                    settings : systemSettings,
                     local    : {
                         password: password
                     }
