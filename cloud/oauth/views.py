@@ -15,6 +15,7 @@ from api.helpers.exceptions import (
 client_description = "A registered client_id"
 redirect_uri_description = "Where the endpoint should redirect to after authorization"
 response_type_description = "Valid options are code or token"
+scope_description = "Scope for the oauth token"
 
 access_token_param = openapi.Parameter('access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
 client_id_param = openapi.Parameter('client_id', openapi.IN_QUERY, required=True, description=client_description, type=openapi.TYPE_STRING)
@@ -23,6 +24,7 @@ grant_type_param = openapi.Parameter('grant_type', openapi.IN_QUERY, required=Tr
 password_param = openapi.Parameter('password', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
 redirect_uri_param = openapi.Parameter('redirect_uri', openapi.IN_QUERY, required=True, description=redirect_uri_description, type=openapi.TYPE_STRING)
 response_type_param = openapi.Parameter('response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
+scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True, description=scope_description, type=openapi.TYPE_STRING)
 
 access_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
@@ -34,6 +36,7 @@ name__body = openapi.Schema(description="The name of the application", type=open
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
 redirect_uri__body = openapi.Schema(description=redirect_uri_description, type=openapi.TYPE_STRING)
 response_type__body = openapi.Schema(description=response_type_description, type=openapi.TYPE_STRING)
+scope__body = openapi.Schema(description=scope_description, type=openapi.TYPE_STRING)
 token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
 
 successful_authenticate_response = openapi.Response(
@@ -174,7 +177,7 @@ def register_client(request):
 
 @swagger_auto_schema(methods=["GET"],  # auto_schema=None,
                      operation_description="Returns new access and refresh tokens.",
-                     manual_parameters=[client_id_param, email_param, grant_type_param, password_param, response_type_param],
+                     manual_parameters=[client_id_param, email_param, grant_type_param, password_param, response_type_param, scope_param],
                      responses={
                          200: successful_token_response
                      })
@@ -188,6 +191,7 @@ def register_client(request):
                              "grant_type": grant_type__body,
                              "password": password__body,
                              "response_type": response_type__body,
+                             "scope": scope__body
                          },
                          required=["grant_type", "response_type"],
                      ),
