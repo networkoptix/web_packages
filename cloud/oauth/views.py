@@ -218,7 +218,7 @@ def token(request):
             return api_success(Auth.get_access_token(get_param(request, "code"), ip=ip))
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             require_params(request, ("refresh_token",))
-            return api_success(Auth.get_refresh_token(get_param(request, ["refresh_token"]), ip=ip))
+            return api_success(Auth.get_refresh_token(get_param(request, "refresh_token"), ip=ip))
 
     raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 
