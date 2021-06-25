@@ -149,7 +149,7 @@ export class CloudConnectModalContent implements OnInit {
                 this.mediaServerApi.saveCloudSystemCredentials(result.id, result.authKey, result.ownerAccountEmail)
                     .then((result) => {
                         this.toast.notify(this.LANG.toastMessage.system.cloudConnect.success(), 'success');
-                        this.activeModal.close(result);
+                        this.activeModal.close(true);
                     })
                     .catch((error) => {
                         this.toast.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
