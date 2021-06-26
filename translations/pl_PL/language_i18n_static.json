@@ -260,7 +260,7 @@
             "latestBuild": "najnowsza kompilacja",
             "mergeConfirmation": "<p class=\"mb-0\">Zamierzasz złączyć systemy <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.</p><p>Ustawienia i nazwa zostaną pobrane z <strong>{primarySystem}</strong></p>",
             "mergeFailedTitle": "Łączenie systemów nie powiodło się",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Złączanie systemów {primaryName} i {secondaryName} zakończone",
             "mergeSystemsTitle": "Złącz bieżący system z",
             "noServerFound": "Nie znaleziono serwera",
             "newSystemDisplayName": "Nowy system",
