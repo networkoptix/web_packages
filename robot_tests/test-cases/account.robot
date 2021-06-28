@@ -19,13 +19,13 @@ Reset DB and Open New Browser On Failure
 #    Close Browser
 #    Reset user noperm first/last name
     Set Account Name    ${url}    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    Set Account Name    ${url}    ${viewer}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${url}    ${server 1}[cloud users][viewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     ${server auth}=   Create List    admin    ${BASE PASSWORD}
     # ${delete 2 id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port5[0]}    ${server auth} 
     # ${delete 1 id}=   Get Cloud System Id    https://${QA BURBANK IP}:${port4[0]}    ${server auth}
     @{auth}=    Create List    ${delete}    ${BASE PASSWORD}
-    Disconnect Server via API    ${server auth}   ${sysId3}    ${BASE PASSWORD}    ${EMAIL DELETE USER}
-    Disconnect Server via API    ${server auth}    ${sysId4}    ${BASE PASSWORD}    ${EMAIL DELETE USER}
+    Disconnect Server via API    ${server auth}   ${server 3}[cloud id]    ${BASE PASSWORD}    ${EMAIL DELETE USER}
+    Disconnect Server via API    ${server auth}    ${server 4}[cloud id]    ${BASE PASSWORD}    ${EMAIL DELETE USER}
 
 Verify Delete User Dialog
     Wait Until Elements are Visible
@@ -38,69 +38,34 @@ Verify Delete User Dialog
     ...    ${DELETE ACCOUNT HEADER}
 
 Account Suite Setup
-    FOR    ${account}    IN    no perm    delete    owner    viewer    adv viewer    live viewer    not owner    admin    custom
-        ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-        Set Suite Variable    ${${account}}          ${random email}
+    ${owner}=   Register and activate account with random email    mark    hamill    ${password}
+    ${no perm}=   Register and activate account with random email    mark    hamill    ${password}
+    Set Suite Variable    ${no perm}    ${no perm}
+    ${delete}=   Register and activate account with random email    mark    hamill    ${password}
+    Set Suite Variable    ${delete}    ${delete}
+    
+    ${random}=   Generate Random String
+
+    ${server 1}=   Create Base System    account1-${random}    owner=${owner}
+    ${server 2}=   Create Base System    account2-${random}    owner=${owner}
+    ${server 3}=   Create Base System    account3-${random}    owner=${owner}
+    ${server 4}=   Create Base System    account4-${random}    owner=${delete}
+    ${server 5}=   Create Base System    account5-${random}    owner=${delete}
+
+    FOR    ${i}    IN RANGE    1    6
+        Set Suite Variable    ${server ${i}}
     END
-
-    @{system names} =    Create List    
-    ...    ${AUTO TESTS}
-    ...    ${AUTO TESTS 2}
-    ...    Auto Tests 3
-    ...    sys delete 1
-    ...    sys delete 2
-
-    @{system owners} =    Create List    
-    ...    ${owner}
-    ...    ${owner}
-    ...    ${owner}
-    ...    ${delete}
-    ...    ${delete}
     
     ${owner email} =    Set Variable    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${owner}")]
-    Set Suite Variable    ${owner email}          ${owner email}
 
-    @{auth}=    Create List    ${owner}    ${password}
-    Set Suite Variable    ${auth}    ${auth}   
     Open Browser and go to URL    ${url}
     
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
-    Set Suite Variable     ${random}    ${random}
-    
-    @{server auth}=   Create List    admin    qweasd 123
-
-    FOR    ${n}    IN RANGE    5
-        ${server} =    Create Docker Server    account${n}-${random}
-        Set Suite Variable    ${port${n}}    ${server['port']}
-        Sleep     10
-        Setup Local System    https://${QA BURBANK IP}:${port${n}}    ${BASE PASSWORD}    ${system names[${n}]}
-        ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port${n}}    ${system names[${n}]}    ${system owners[${n}]}    ${BASE PASSWORD}
-        Set Suite Variable    ${sysId${n}}    ${sysId}
-    END
-    
-    ${SUITE AUTO TESTS USERS} =    Create Dictionary
-    ...    ${viewer}=viewer
-    ...    ${adv viewer}=advancedViewer
-    ...    ${live viewer}=liveViewer
-    ...    ${not owner}=viewer
-    ...    ${admin}=cloudAdmin
-    ...    ${custom}=custom
-
-    Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS} 
-    
-    FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
-        Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}
-    END
-    
 Account Suite Tear Down
-    Disconnect Server via API    ${auth}    ${sysId0}    ${password}    ${owner}
-    Disconnect Server via API    ${auth}    ${sysId1}    ${password}    ${owner}
-    Disconnect Server via API    ${auth}    ${sysId2}    ${password}    ${owner}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop account0-${random} account1-${random} account2-${random} account3-${random} account4-${random}       
-    ${results}    Execute Command    docker container rm account0-${random} account1-${random} account2-${random} account3-${random} account4-${random}       
-    Close Connection
+    Delete Base System    ${server 1}
+    Delete Base System    ${server 2}
+    Delete Base System    ${server 3}
+    Delete Base System    ${server 4}
+    Delete Base System    ${server 5}
     Close All Browsers
     
 *** Test Cases ***
@@ -138,10 +103,10 @@ Accessing the account page from a direct link while logged out asks for login, o
 Admin and Owner can access account settings by selecting themselves in users List
     [tags]    
     Go To    ${url}
-    Log In    ${owner}    ${password}
-    Go To    ${url}/systems/${sysId0}
+    Log In    ${server 1}[owner]    ${password}
+    Go To    ${url}/systems/${server 1}[cloud id]
     Go To Users List
-    Select User in Users List    ${owner}
+    Select User in Users List    ${server 1}[owner]
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON SYSTEM}
     Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
     Verify in Account Page
@@ -227,21 +192,21 @@ Last name is required
 Change first and last name shows in system
     [Tags]    C41573    C30655    
     Go To    ${url}/account
-    Log In    ${live viewer}    ${password}    button=None
+    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
-    Go To    ${url}/systems/${sysId0}
-    Log In    ${owner}    ${password}    button=None
+    Go To    ${url}/systems/${server 1}[cloud id]
+    Log In    ${server 1}[owner]    ${password}    button=None
     Go To Users List
-    Select User in Users List   ${live viewer}
+    Select User in Users List   ${server 1}[cloud users][liveViewer]
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
     Log Out
     Go To    ${url}/account
-    Log In    ${live viewer}    ${password}    button=None
+    Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -250,13 +215,13 @@ Change first and last name shows in system
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
 
     # Check that the user's name has changed in system via API
-    ${users}=   Get Users    ${AUTO SYS AUTH}    https://${QA BURBANK IP}:${port0} 
+    ${users}=   Get Users    ${AUTO SYS AUTH}    https://${QA BURBANK IP}:${server 1}[port] 
     FOR    ${user}    IN    @{users}
-        Run Keyword If    '${user}[email]'=='${live viewer}'    Run Keywords
+        Run Keyword If    '${user}[email]'=='${server 1}[cloud users][liveViewer]'    Run Keywords
         ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
         ...    AND     Exit For Loop
     END
-    Set Account Name    ${url}    ${live viewer}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${url}    ${server 1}[cloud users][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
 
 SPACE for first name is not valid
     [tags]    C41573    
@@ -314,6 +279,7 @@ Language is changeable on the account page
     [tags]    C41574    
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
+    Reload Page
     ${lang dict} =    Get Lang List
     @{LANGUAGES LIST} =    Get Dictionary Keys    ${lang dict}
     FOR    ${lang}    IN    @{LANGUAGES LIST}
@@ -427,6 +393,8 @@ Language change is new default
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    validate=False    button=None
+    Sleep    5
+    Reload Page
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
     Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${ja_JP account info}']
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
@@ -441,7 +409,7 @@ Should open account page in anonymous state
 User who owns a system cannot remove themselves
     [tags]    C69855        delete_account
     Go To    ${url}/account
-    Log In    ${owner}    ${password}    button=None
+    Log In    ${server 1}[owner]    ${password}    button=None
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
@@ -450,13 +418,13 @@ User who owns a system cannot remove themselves
 Delete account button is enabled
     [tags]    C69854        delete account
     Go To    ${url}/account
-    Log In    ${admin}    ${password}    button=None
+    Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None
     Verify in Account Page
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
     Log Out
     Go To    ${url}/account
-    Log In    ${viewer}    ${password}    button=None
+    Log In    ${server 1}[cloud users][viewer]    ${password}    button=None
     Verify in Account Page
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
@@ -466,21 +434,21 @@ Delete account button becomes enabled
     # Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port3}    Delete User 1    ${delete}    ${BASE PASSWORD}
     # Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port4}    Delete User 2    ${delete}    ${BASE PASSWORD}
     Go To    ${url}/account
-    Log In    ${delete}    ${password}    button=None
+    Log In    ${server 4}[owner]    ${password}    button=None
     Verify in Account Page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    @{auth}=   Create List    admin    ${BASE PASSWORD}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${port3}    ${auth}
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port]    ${server 5}[cloud auth]
     Reload page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${port4}    ${auth}
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port]    ${server 4}[cloud auth]
+    Sleep    20
     Reload page
     Wait Until Element Is Visible    ${DELETE ACCOUNT BUTTON}
-    Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
+    Wait Until Element Is Enabled    ${DELETE ACCOUNT BUTTON}
 
 Account Deletion is cancelled
     [tags]    C69858    C69857        delete_account
@@ -547,9 +515,9 @@ User can delete their own account
 After account deletion user is deleted from all systems that were shared with this user
     [tags]    C69862        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Share    ${auth}    ${sysId0}    ${ACCESS ROLES}[admin]    ${random email}
-    Share    ${auth}    ${sysId1}    ${ACCESS ROLES}[viewer]    ${random email}
-    Share    ${auth}    ${sysId2}    ${ACCESS ROLES}[custom]    ${random email}
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}
+    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}
 
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -561,18 +529,18 @@ After account deletion user is deleted from all systems that were shared with th
     Validate Log Out
     Log In    ${random email}    ${password}   validate=${False}
     Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${owner}    ${password}    button=None
-    Go To   ${url}/systems/${sysId0}
+    Log In    ${server 1}[owner]    ${password}    button=None
+    Go To   ${url}/systems/${server 1}[cloud id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
-    Go To   ${url}/systems/${sysId1}
+    Go To   ${url}/systems/${server 2}[cloud id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
-    Go To   ${url}/systems/${sysId2}
+    Go To   ${url}/systems/${server 3}[cloud id]
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
@@ -598,5 +566,5 @@ After account deletion user can create account with the same email again
 
 Deletion attempt when Delete Account button is disabled (via API)
     [tags]    C76389        delete_account
-    Delete Account    ${ENV}    ${owner}    ${password}
-    Log In    ${owner}    ${password}
+    Delete Account    ${ENV}    ${server 1}[owner]    ${password}
+    Log In    ${server 1}[owner]    ${password}
