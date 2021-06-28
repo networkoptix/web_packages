@@ -101,28 +101,37 @@ def set_params_for_redirect(code, state):
     return params
 
 
-@swagger_auto_schema(method="GET",  # auto_schema=None,
-                     operation_description="Get an authorization code using email and password",
-                     manual_parameters=[client_id_param, email_param, password_param, redirect_uri_param, response_type_param],
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Request an authorization code using email and password",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "client_id": client_id__body,
+                             "email": email__body,
+                             "password": password__body,
+                             "redirect_uri": redirect_uri__body,
+                             "response_type": response_type__body
+                         },
+                         required=[]),
                      responses={
                          200: successful_authenticate_response
                      })
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes((AllowAny, ))
 def authenticate(request):
     require_params(request, ("client_id", "email", "password", "redirect_uri", "response_type"))
-    if request.query_params["response_type"] != Auth.RESPONSE_TYPE.code:
+    if get_param(request, "response_type") != Auth.RESPONSE_TYPE.code:
         raise APIRequestException("Invalid value for response_type. It must be code.")
 
     ip = get_ip(request)
-    redirect_uri = request.query_params["redirect_uri"]
-    state = request.query_params.get("state")
-    scope = request.query_params.get("scope")
+    redirect_uri = get_param(request, "redirect_uri")
+    state = get_param(request, "state")
+    scope = get_param(request, "scope")
 
     try:
-        res = Auth.get_code(email=request.query_params["email"],
-                            password=request.query_params["password"],
-                            client_id=request.query_params["client_id"],
+        res = Auth.get_code(email=get_param(request, "email"),
+                            password=get_param(request, "password"),
+                            client_id=get_param(request, "client_id"),
                             ip=ip,
                             redirect_uri=redirect_uri,
                             scope=scope)
