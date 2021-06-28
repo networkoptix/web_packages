@@ -126,7 +126,7 @@ def get_auth(request, system_id):
     realm = settings.CLOUD_CONNECT['password_realm']
     cred = cloud_api.Account.create_temporary_credentials(request,
                                                           expiration_period=0,
-                                                          auto_prolongation_enabled=0,
+                                                          auto_prolongation_enabled=False,
                                                           prolongation_period=0)
     login = cred['login']
     password = cred['password']

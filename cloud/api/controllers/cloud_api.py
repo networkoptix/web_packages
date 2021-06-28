@@ -415,7 +415,7 @@ class Account(object):
     @auto_refresh_token
     def create_temporary_credentials(request,
                                      credential_type=None, expiration_period=None,
-                                     auto_prolongation_enabled=None, prolongation_period=None,
+                                     auto_prolongation_enabled=False, prolongation_period=None,
                                      headers=None):
         params = {}
         if credential_type:
