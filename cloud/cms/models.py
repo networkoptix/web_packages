@@ -2115,8 +2115,6 @@ class MenuNode(models.Model):
                         asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
                         asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
 
-                    if asset_title:
-                        asset_title = cloud_portal_asset.replace_global_values(asset_title, global_contexts_dict)
                     if not title and asset_title:
                         title = asset_title
                         node_structure['name'] = title
@@ -2128,7 +2126,12 @@ class MenuNode(models.Model):
                     node_structure['urlified'] = url or None
 
                 if 'name' not in node_structure:
-                    node_structure['name'] = cloud_portal_asset.replace_global_values(title, global_contexts_dict) or 'Untitled'
+                    node_structure['name'] = title or 'Untitled'
+                    # Raw string for translation
+                    node_structure['name_raw'] = node_structure['name']
+
+                if node_structure['name'] != 'untitled':
+                    node_structure['name'] = cloud_portal_asset.replace_global_values(node_structure['name'], global_contexts_dict)
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:

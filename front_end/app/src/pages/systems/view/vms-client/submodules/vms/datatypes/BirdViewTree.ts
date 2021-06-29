@@ -110,6 +110,10 @@ export class BirdViewTree {
         return treeRecords;
     }
 
+    public setNewlyRecorded(ar) {
+        this._newlyRecorded = [...ar]
+    }
+
     public appendNewlyRecorded(ar) {
         this._newlyRecorded.push(...ar);
     }

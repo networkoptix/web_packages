@@ -18,6 +18,8 @@ export type IRecord = ISimpleTimeRange
 
 export class SimpleTimeRange {
     constructor(
+        // public start: ms,
+        // public end: ms
         public readonly start: ms,
         public readonly end: ms
     ) {

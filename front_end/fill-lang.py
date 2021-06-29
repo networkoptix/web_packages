@@ -25,7 +25,7 @@ def parse_menus(nodes, parsed_menu=None):
         string = node.get('display_name', node['name'])
         parsed_menu[string] = string
         if 'nodes' in node:
-            parse_menus(node['nodes'])
+            parse_menus(node['nodes'], parsed_menu)
     return parsed_menu
 
 

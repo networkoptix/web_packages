@@ -44,7 +44,8 @@ export class MenuNode {
         public related_asset_ids = [],
         public next_item = false,
         public urlified = '',
-        public subtitle = ''
+        public subtitle = '',
+        public name_raw = ''
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;
@@ -174,8 +175,20 @@ export class NxMenusService implements OnDestroy {
         if (!node) {
             return;
         }
-        const display_name = lang ? this.translate.instant(node.display_name || node.name) : node.display_name || node.name;
-        const name = lang ? this.translate.instant(node.name) : node.name;
+        let display_name = node.display_name || node.name;
+        let name = node.name;
+
+        if (lang) {
+            const translatedRaw = this.translate.instant(node.name_raw);
+            if (translatedRaw !== node.name_raw) {
+                name = translatedRaw;
+                display_name = translatedRaw;
+            } else {
+                display_name = this.translate.instant(display_name);
+                name = this.translate.instant(node.name);
+            }
+        }
+
         const nodes = node.nodes?.map(this.translateNode(lang, [...breadcrumbs, node])) || [];
         return { ...node, display_name, name, nodes, breadcrumbs };
     }

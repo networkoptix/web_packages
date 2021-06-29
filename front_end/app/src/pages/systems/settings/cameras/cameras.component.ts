@@ -412,7 +412,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         if (!this.system.isOnline || !this.system.isAvailable) {
                             this.showPreloader = false;
                             this.alertsLoaded = true;
-                            this.noCameras = this.system.cameras && this.system.cameras.length === 0;
+                            this.noCameras = this.system.cameraManager.cameras && this.system.cameraManager.cameras.length === 0;
                             this.canSeeInfo = false;
                         } else {
                             this.canSeeInfo = this.system.canViewInfo();
@@ -433,12 +433,17 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 if (this.cameraSubscription) {
                     this.cameraSubscription.unsubscribe();
                 }
+                let prevCameras = [];
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        distinctUntilChanged(),
+                        filter(res => {
+                            const isEqual = NxUtilsService.isEqual(prevCameras, res.cameraManager.cameras);
+                            prevCameras = [...res.cameraManager.cameras];
+                            return !isEqual;
+                        }),
                         map((system: NxSystem) => {
-                            if (!system.cameras) {
+                            if (!system.cameraManager.cameras) {
                                 throw system;
                             }
                         }),
@@ -446,14 +451,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.cameras && this.system.cameras.length) {
+                            if (this.system && this.system.cameraManager.cameras && this.system.cameraManager.cameras.length) {
                                 this.system.serverManager.initSystemMediaServers().catch((_) => {});
                             }
                             if (!this.applyService.locked) {
                                 this.setCamera();
                             }
                         }
-                        this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
+                        this.noCameras = this.system && this.system.cameraManager.cameras && this.system.cameraManager.cameras.length === 0;
                         if (this.noCameras) {
                             this.showPreloader = false;
                         }
@@ -599,7 +604,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     return of(err);
                 })
             ).toPromise().finally(() => {
-                const selectedCamera = this.system.cameras.find(({ id }) => id === this.selectedCamera.id);
+                const selectedCamera = this.system.cameraManager.cameras.find(({ id }) => id === this.selectedCamera.id);
                 this.selectedCamera = selectedCamera;
                 this.showUnauthorized = selectedCamera.status === 'Unauthorized';
                 this.reload$.next(this.reload$.value + 1);
@@ -751,13 +756,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
 
         let cameraIndex: number;
-        if (this.system && this.system.cameras) {
-            cameraIndex = this.system.cameras.findIndex(camera => camera?.id === `{${this.parsedCameraId}}`);
+        if (this.system && this.system.cameraManager.cameras) {
+            const { cameras } = this.system.cameraManager;
+            cameraIndex = cameras.findIndex(camera => camera?.id === `{${this.parsedCameraId}}`);
             this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.userManager.permissions.editCameras;
             if (this.system.show404) {
                 return;
             }
-            if (!this.system.cameras.length) {
+            if (!cameras.length) {
                 this.showPreloader = false;
                 return;
             }
@@ -766,7 +772,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 cameraIndex = 0;
                 const systemId = this.system.id;
                 const urlSystem = systemId ? `/${systemId}` : '';
-                this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
+                this.parsedCameraId = cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
                 this.uriService
                     .updateURI(this.uriService.getSystemSettingsRoute({ systemId: this.system.id, cameraId: this.parsedCameraId }))
                     .catch(error => {
@@ -775,7 +781,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }
             this.cameraViewPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.VIEW }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
-            this.selectedCamera = this.system.cameras[cameraIndex];
+            this.selectedCamera = cameras[cameraIndex];
             const { vendor, model, url, parentName } = this.selectedCamera;
             const deviceColumn = [
                 new InfoBlockSection([
