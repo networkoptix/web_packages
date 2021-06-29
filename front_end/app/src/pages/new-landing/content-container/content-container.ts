@@ -136,7 +136,7 @@ export class NxContentContainerComponent {
     constructor() {}
 
     determineBlockType(type: 'small' | 'wide') {
-        if (this.screenWidth > (769)) {
+        if (this.screenWidth > 769) {
             return type;
         }
         return 'adaptive';

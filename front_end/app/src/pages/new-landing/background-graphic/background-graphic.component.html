@@ -1,0 +1,10 @@
+<ng-container *ngFor="let layer of layers">
+    <div class="svg-layer"  [ngStyle]="{'width': svgProperties.defaultWidth + 'px', 'height':svgProperties.defaultHeight + 'px', 'transform': 'scale('+ layer.scale +')'}">
+        <svg-icon 
+            [src]="CONFIG.images.dirLandingGraphic + layer.path"
+            [applyClass]="true">
+        </svg-icon>
+    </div>
+</ng-container>
+
+

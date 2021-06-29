@@ -24,6 +24,8 @@
     font-family: $font-family-medium;
     color: $dark9;
     font-size: 44px;
+    position: relative;
+    z-index: 2;
 }
 
 @mixin flex-grid {

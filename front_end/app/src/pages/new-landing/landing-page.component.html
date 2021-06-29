@@ -1,8 +1,6 @@
-
-<!-- These dont exist yet -->
-<!-- <div class="intro-section">
-    <nx-background-graphic></nx-background-graphic>
-    <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text>
+<div class="intro-section">
+    <nx-background-graphic [scrollPosition]="scrollPosition"></nx-background-graphic>
+    <!-- <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text> -->
 </div>
-<nx-learn-more-button [screenHeight]="screenSize$.value.height"></nx-learn-more-button> -->
-<nx-content-container [screenWidth]="screenSize.width"></nx-content-container>
+<!-- <nx-learn-more-button [screenHeight]="screenSize$.value.height"></nx-learn-more-button> -->
+<nx-content-container  [screenWidth]="(screenSize$ | async)?.width"></nx-content-container>

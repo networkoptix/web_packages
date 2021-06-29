@@ -3,7 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxAccountService } from '@services/account.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 @UntilDestroy({})
 @Component({
@@ -15,11 +16,13 @@ export class NxLandingPageComponent implements OnInit {
     // Will get data from somewhere
     // @Input() data = ''
     loginState: boolean;
-    screenSize: {width: number, height: number}
+    scrollPosition: number
+    screenSize$: Observable<{ width: number, height: number }>
 
     constructor(private sessionService: NxSessionService, private accountService: NxAccountService, scrollMechanics: NxScrollMechanicsService) {
-        scrollMechanics.windowSizeSubject.pipe(debounceTime(80), untilDestroyed(this)).subscribe((size) => {
-            this.screenSize = size;
+        this.screenSize$ = scrollMechanics.windowSizeSubject.pipe(startWith({ width: 0, height: 0 }), debounceTime(60), untilDestroyed(this));
+        scrollMechanics.windowScrollSubject.pipe(debounceTime(25), untilDestroyed(this)).subscribe((value) => {
+            this.scrollPosition = value;
         });
     }
 
