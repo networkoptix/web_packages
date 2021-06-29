@@ -8,12 +8,13 @@ from datetime import datetime
 from distutils.util import strtobool
 from util.base_cache import BaseCache
 
+from redis.exceptions import ConnectionError
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.deletion import Collector
 from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
-from django.db.utils import ProgrammingError
+from django.db.utils import ProgrammingError, OperationalError
 from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -470,12 +471,15 @@ class AssetType(models.Model):
 
     @classmethod
     def get_custom_fields_by_type(cls, type):
-        fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
-        if fields is None:
-            asset_type = cls.get_model_by_type(type)
-            fields = asset_type.custom_field_overrides or dict()
-            cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
-        return fields
+        try:
+            fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
+            if fields is None:
+                asset_type = cls.get_model_by_type(type)
+                fields = asset_type.custom_field_overrides or dict()
+                cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
+            return fields
+        except (ConnectionError, OperationalError):
+            return {}
 
     def get_customizations(self, asset):
         return self.asset_set.exclude(id=asset.id).exclude(customizations=None).\
