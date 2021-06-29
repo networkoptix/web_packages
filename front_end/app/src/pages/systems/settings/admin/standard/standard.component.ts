@@ -226,7 +226,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         const sw = this.settingsWatchers;
         if (this.selectedTimeUnit.value === this.hours) {
             sw.sessionLimitMinutes.value = newTimeValue * 60;
-        } else if (newTimeValue % 60 === 0) {
+        } else if (newTimeValue && newTimeValue % 60 === 0) {
             sw.sessionLimitMinutes.value = newTimeValue;
             newTimeValue /= 60;
             this.timeValue = newTimeValue;
