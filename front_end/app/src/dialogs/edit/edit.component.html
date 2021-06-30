@@ -8,27 +8,42 @@
         </button>
     </div>
     <div class="modal-body">
-        <section *ngFor="let structure of structures">
-            <label>{{structure.title}}</label>
+        <section *ngIf="!id">
+            <label>{{nameStructure.label}}</label>
+            <input
+                [type]="nameStructure.type"
+                [name]="nameStructure.name"
+                [placeholder]="nameStructure.placeholder || ''"
+                [(ngModel)]="name"
+                class="form-control">
+            <div *ngIf="nameStructure.description" [innerHTML]="nameStructure.description"></div>
+        </section>
+        <section *ngFor="let structure of manifest.fields">
+            <label>{{structure.label}}</label>
             <ng-container [ngSwitch]="structure.type">
-                <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
-                    [selected]="structure.value"
-                    (onSelected)="structure.value = $event"
+                <!-- Need to figure out how we're going to handle dropdowns from CMS -->
+                <!-- <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
+                    [selected]="values[structure.name]"
+                    (onSelected)="values[structure.name] = $event"
                     [items]="structure.meta.options"
-                    ></nx-select>
+                    ></nx-select> -->
                 <input *ngSwitchDefault
                     [type]="structure.type"
-                    [name]="structure.key"
+                    [name]="structure.name"
+                    (input)="clearError(structure.name)"
                     [placeholder]="structure.placeholder || ''"
-                    [(ngModel)]="structure.value"
+                    [(ngModel)]="values[structure.name]"
                     class="form-control">
             </ng-container>
             <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+            <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
+                <span *ngFor="let error of errors" class="input-error">{{error}}</span>
+            </div>
         </section>
     </div>
     <div class="modal-footer border-top-0">
-        <nx-process-button [process]="saveContext" [buttonText]="'Save' | translate"></nx-process-button>
-        <nx-cancel-button [process]="saveContext" [discardFn]="close"></nx-cancel-button>
-        <nx-process-button [process]="deleteContext" [buttonText]="'Delete' | translate" [svg]="{ src: 'delete', height: '24', color: 'light1' }"></nx-process-button>
+        <nx-process-button [process]="id ? saveContext : createContext" [buttonText]="'Save' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
+        <nx-cancel-button [process]="id ? saveContext : createContext" [discardFn]="close"></nx-cancel-button>
+        <nx-process-button *ngIf="id" [process]="deleteContext" [buttonText]="'Delete' | translate" [svg]="{ src: 'delete', height: '24', color: 'light1' }"></nx-process-button>
     </div>
 </form>

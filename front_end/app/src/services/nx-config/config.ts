@@ -1,5 +1,6 @@
 import { IConfig } from './config-types';
 import { environment } from '@environments/environment';
+import { ConfigType, ModalType } from '@pages/developer-console/console/table/console-table.component';
 
 export const nxConfig: IConfig = {
     alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -249,6 +250,57 @@ export const nxConfig: IConfig = {
         description: ''
     },
     maintenanceTimeout : 60 * 1000,
+    manifest           : {
+        'custom-clients': {
+            intro: {
+                // TODO: Remove once we decide how this will be provided from the CMS.
+                title   : 'About',
+                content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
+            },
+            contexts: [
+                {
+                    type  : ConfigType.TEXT,
+                    name  : 'name',
+                    label : 'Internal Name',
+                    meta  : {
+                        styles: 'font-italic'
+                    }
+                },
+                {
+                    type  : ConfigType.DATE,
+                    name  : 'last_modified',
+                    label : 'Last Modified',
+                    meta  : {
+                        styles: 'expanded-width'
+                    }
+                },
+                {
+                    type  : ConfigType.ICON_LINK,
+                    name  : 'downloadLink',
+                    label : '',
+                    meta  : {
+                        icon    : 'eye.svg',
+                        tooltip : 'Download'
+                    }
+                },
+                {
+                    type  : ConfigType.ICON_MODAL,
+                    name  : 'settingsModal',
+                    label : '',
+                    meta  : {
+                        icon    : 'lock.svg',
+                        tooltip : 'Settings'
+                    }
+                }
+            ],
+            actions: [
+                {
+                    title : 'Create',
+                    modal : ModalType.CLIENT_CREATE
+                }
+            ]
+        }
+    },
     maxServers         : 100, // The maximum amount of server that can be in a system
     meta               : {
         viewport: {

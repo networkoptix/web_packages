@@ -18,6 +18,7 @@ export class NxDevConsoleMenuComponent {
     @Input() menu: ConsoleMenuNode[];
     @Input() base: string;
     @Input() type: ConsoleMode;
+    @Input() sectionParam: string;
 
     CONFIG: IConfig;
 

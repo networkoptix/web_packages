@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface ILanguage{
     language: string;
     name: string;
@@ -256,17 +257,18 @@ export interface FieldManifest {
     description: string;
     type: string;
     metaOnly: boolean;
-    optional: boolean
+    optional: boolean;
+    placeholder?: string;
 }
 
 export interface ContextManifest {
     name: string;
     label: string;
-    fields: [FieldManifest];
+    fields: FieldManifest[];
 }
 
 export interface ContentManifest {
     manifest: {
-        contexts: [ContextManifest]
+        contexts: ContextManifest[]
     }
 }

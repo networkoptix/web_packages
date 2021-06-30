@@ -23,6 +23,7 @@ export interface LanguageI18NStaticTypes {
     cameraFilters:         CameraFilters;
     clientProtocol:        any;
     common:                Common;
+    devConsole:            DevConsole;
     dialogs:               Dialogs;
     downloads:             Downloads;
     errorCodes:            { [key: string]: any };
@@ -230,6 +231,10 @@ export interface VoiceCommands {
     search:                 any;
     "stop listening":       any;
     view:                   any;
+}
+
+export interface DevConsole {
+    create: any;
 }
 
 export interface Dialogs {
@@ -1050,6 +1055,7 @@ const typeMap: any = {
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
         { json: "clientProtocol", js: "clientProtocol", typ: "any" },
         { json: "common", js: "common", typ: r("Common") },
+        { json: "devConsole", js: "devConsole", typ: r("DevConsole") },
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
         { json: "errorCodes", js: "errorCodes", typ: m("") },
@@ -1243,6 +1249,9 @@ const typeMap: any = {
         { json: "search", js: "search", typ: "any" },
         { json: "stop listening", js: "stop listening", typ: "any" },
         { json: "view", js: "view", typ: "any" },
+    ], false),
+    "DevConsole": o([
+        { json: "create", js: "create", typ: "any" },
     ], false),
     "Dialogs": o([
         { json: "addUser", js: "addUser", typ: r("AddUser") },

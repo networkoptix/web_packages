@@ -1,23 +1,26 @@
-import { DataSource }                       from '@angular/cdk/collections';
-import { Component, Input, SimpleChanges }  from '@angular/core';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { IConfig, NxConfigService }         from '@services/nx-config';
-import { BehaviorSubject, Observable }      from 'rxjs';
-import { DataStructure, DataStructureType } from '../edit/console-edit.component';
+import { DataSource }                                 from '@angular/cdk/collections';
+import { Component, Input, SimpleChanges }            from '@angular/core';
+import { NxDialogsService }                           from '@dialogs/dialogs.service';
+import { TranslateService } from '@ngx-translate/core';
+import { NxCloudApiService }                          from '@services/nx-cloud-api';
+import { ContextManifest }                            from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService }                   from '@services/nx-config';
+import { BehaviorSubject, forkJoin, Observable }      from 'rxjs';
 
-enum ConfigType {
+export enum ConfigType {
     TEXT='text',
+    DATE='date',
     COMMENTS='comments',
     STATUS='status',
     ICON_LINK='icon_link',
     ICON_MODAL='icon_modal'
 }
 
-interface ColumnConfig {
+export interface ColumnConfig {
     type: ConfigType,
-    key: string,
-    title: string,
-    meta?: {[key: string]:  any}
+    name: string,
+    label: string,
+    meta?: Record<string, any>
 }
 
 enum ActionType {
@@ -31,6 +34,7 @@ enum ActionType {
 
 interface ActionConfig {
     title: string,
+    modal: ModalType
     type?: ActionType,
 }
 
@@ -39,118 +43,63 @@ export interface ConsoleManifest {
         title: string,
         content: string
     },
-    structure: ColumnConfig[],
+    contexts: ColumnConfig[],
     actions: ActionConfig[]
 }
 
-export const customClientManifest: ConsoleManifest = {
-    // Temporary: Remove once connected to CMS
-    intro: {
-        title   : 'About',
-        content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
-    },
-    structure: [
-        {
-            type  : ConfigType.TEXT,
-            key   : 'internalName',
-            title : 'Internal Name',
-            meta  : {
-                styles: 'font-italic'
-            }
-        },
-        {
-            type  : ConfigType.TEXT,
-            key   : 'lastModified',
-            title : 'Last Modified',
-            meta  : {
-                styles: 'expanded-width'
-            }
-        },
-        {
-            type  : ConfigType.ICON_LINK,
-            key   : 'downloadLink',
-            title : '',
-            meta  : {
-                icon    : 'eye.svg',
-                tooltip : 'Download'
-            }
-        },
-        {
-            type  : ConfigType.ICON_MODAL,
-            key   : 'settingsModal',
-            title : '',
-            meta  : {
-                icon    : 'lock.svg',
-                tooltip : 'Settings'
-            }
-        }
-    ],
-    actions: [
-        {
-            title: 'Create'
-        }
-    ]
-};
-
-export const mockManifest = {
-    'custom-clients': customClientManifest
-};
-
 export enum ModalType {
-    CLIENT_EDIT='client-edit'
+    CLIENT_EDIT='client-edit',
+    CLIENT_CREATE='client-create'
 }
 
 export interface ModalContent {
-    id: number,
+    id?: number,
     modal: ModalType,
-    heading: string,
-    structures: DataStructure[]
+    heading?: string,
+    values?: Record<string, any>
 }
 
-const vmsOptions = [
-    { name: 'NX Meta', value: 'nx-meta' },
-    { name: 'NX Witness', value: 'nx-witness' },
-    { name: 'Other VMS', value: 'other-vms' }
-];
+export class ListSerializer<Initial, Serialized> {
+    #serializer: (data: Initial[]) => Serialized[]
+    manifest;
+    data: Serialized[] = []
 
-const modalContent = (index): ModalContent => ({
-    id         : index,
-    modal      : ModalType.CLIENT_EDIT,
-    heading    : 'Edit VMS Client',
-    structures : [
-        {
-            key         : 'internalName',
-            title       : 'Internal Name',
-            tag         : '%InternalName',
-            value       : `Custom VMS Client ${index}`,
-            type        : DataStructureType.TEXT,
-            placeholder : 'VMS Client Name',
-            description : 'Name is hidden from external users'
-        },
-        {
-            key   : 'baseVMS',
-            title : 'Based on',
-            tag   : '%BaseVMS',
-            value : vmsOptions[index % 3],
-            type  : DataStructureType.DROPDOWN,
-            meta  : {
-                options: vmsOptions
-            }
+    constructor(route: string, manifest: ContextManifest, initialData?: Initial[]) {
+        this.manifest = manifest;
+        switch (route) {
+            case 'custom-clients':
+                this.#serializer = this.#customClientsSerializer;
+                break;
+            default:
+                this.#serializer = (data: unknown) => data as Serialized[];
         }
-    ]
-});
+        if (initialData) {
+            this.data = this.#serializer(initialData);
+        }
+    }
 
-const customClients = [...Array(7).keys()].map((_, index) => ({
-    // Temporary: Remove once connected to CMS
-    internalName  : `VMS Client ${index}`,
-    version       : `1.${index}`,
-    lastModified  : '1/1/2021',
-    customization : `Customization #${index}`,
-    comments      : [{ name: 'someone', value: 'some comment' }, { name: 'someone else', value: 'some other comment' }],
-    status        : index % 3 ? 'accepted' : 'review',
-    downloadLink  : 'https://cloud-test.hdw.mx/',
-    settingsModal : modalContent(index)
-}));
+    update(data) {
+        this.data = this.#serializer(data);
+    }
+
+    #customClientsSerializer = (data) => {
+        const createDownloadLink = (item) => `/todo/create/download/link/${item.id}`;
+        const createModalValues = ({ id, values }) => ({
+            modal    : ModalType.CLIENT_EDIT,
+            heading  : this.manifest.label,
+            manifest : this.manifest,
+            values,
+            id
+        });
+
+        return data.map(
+            item => ({
+                ...item,
+                downloadLink  : createDownloadLink(item),
+                settingsModal : createModalValues(item)
+            }));
+    }
+}
 
 @Component({
     selector    : 'console-table',
@@ -163,47 +112,56 @@ export class NxDevConsoleTableComponent {
     CONFIG: IConfig
     CONFIG_TYPE = ConfigType
     base = '/developers'
-    manifests: {
-        [key: string]: ConsoleManifest;
-    }
 
     selectedManifest: ConsoleManifest;
-    selectedData: TableDataSource
-    displayedColumns: string[]
+    selectedData: TableDataSource;
+    displayedColumns: string[];
+    manifest: any;
 
     constructor(
         configService: NxConfigService,
-        private dialogService: NxDialogsService
+        private dialogService: NxDialogsService,
+        private cloudApi: NxCloudApiService,
+        private translate: TranslateService
     ) {
         this.CONFIG = configService.config;
-        // Temporary: Remove once connected to CMS
-        this.manifests = mockManifest;
     }
 
-    ngOnChanges({ sectionParam: { currentValue, previousValue, firstChange } }: SimpleChanges) {
+    async ngOnChanges({ sectionParam: { currentValue, previousValue, firstChange } }: SimpleChanges) {
         if (firstChange || currentValue !== previousValue) {
-            this.selectedManifest = this.manifests[this.sectionParam];
-            this.displayedColumns = (this.selectedManifest?.structure || []).map(({ key }) => key);
-
-            // Temporary: Remove once connected to CMS
-            this.selectedData = new TableDataSource(this.sectionParam === 'custom-clients' ? customClients : []);
+            this.selectedData = this.displayedColumns = this.selectedManifest = null;
+            forkJoin({
+                list     : this.cloudApi.getSubAPI(this.sectionParam).list(),
+                manifest : this.cloudApi.getSubAPI(this.sectionParam).getManifest()
+            }).subscribe(({ list, manifest: { manifest : { contexts } } }) => {
+                this.selectedManifest = this.CONFIG.manifest[this.sectionParam];
+                this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
+                this.manifest = contexts[0];
+                this.selectedData = new TableDataSource(new ListSerializer(this.sectionParam, this.manifest, list).data);
+            });
         };
     }
 
-    handleModal(modalContent) {
-        this.dialogService.edit(modalContent);
+    updateData() {
+        this.cloudApi.getSubAPI(this.sectionParam).list().subscribe(list => {
+            this.selectedData.data$.next(new ListSerializer(this.sectionParam, this.manifest, list).data);
+        });
+    }
+
+    async handleModal(modalContent?) {
+        const action = await this.dialogService.edit(modalContent || { modal: ModalType.CLIENT_CREATE, manifest: this.manifest, heading: this.translate.instant('devConsole.create') });
+        if (action) {
+            this.updateData();
+        }
     }
 }
 
 class TableDataSource extends DataSource<any> {
-    data$: BehaviorSubject<any[]>
+    data$: BehaviorSubject<any[]> = new BehaviorSubject([])
 
     constructor(data) {
         super();
-        this.data$ = new BehaviorSubject([]);
-
-        // Temporary: Remove once connected to CMS
-        setTimeout(() => this.data$.next(data), 5000);
+        this.data$.next(data);
     }
 
     connect(): Observable<any[]> {

@@ -25,7 +25,7 @@
 
 <ul [class]="type">
     <li *ngFor="let node of menu">
-        <a [routerLink]="[base, node.url]" routerLinkActive="active-section">
+        <a [routerLink]="base + '/' + node.url" [ngClass]="{'active-section': node.url === sectionParam}">
             <ng-container *ngTemplateOutlet="icon; context{icon: node.icon}"></ng-container>
             <span>{{node.title}}</span>
         </a>

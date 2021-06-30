@@ -4,7 +4,7 @@ import {
 }                                   from '@angular/common/http';
 import { Router }                   from '@angular/router';
 import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
-import { EMPTY, of, from }          from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject }          from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -112,6 +112,18 @@ export class NxCloudApiService {
             });
         });
         this.customClient = new CustomClientAPI(this, this.CONFIG, this.http);
+    }
+
+    getSubAPI(route) {
+        switch (route) {
+            case 'custom-clients':
+                return this.customClient;
+            default:
+                return {
+                    list        : () => new BehaviorSubject([]),
+                    getManifest : () => new BehaviorSubject({ manifest: { contexts: {} } })
+                };
+        }
     }
 
     getLanguage() {
@@ -569,23 +581,23 @@ class CustomClientAPI {
         this.apiBase = this.config.apiBase + '/custom_clients/';
     }
 
-    create(name: string, values: {[field: string]: string} = {}) {
+    create = (name: string, values: Record<string, string> = {}) => {
         return this.http.post<t.CustomClient>(this.apiBase, { name, values });
     }
 
-    retrieve(id) {
+    retrieve = (id) => {
         return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
     }
 
-    list() {
-        return this.http.get<[t.CustomClient]>(this.apiBase);
+    list = () => {
+        return this.http.get<t.CustomClient[]>(this.apiBase);
     }
 
-    update(id, name, values) {
+    update = (id, name, values) => {
         return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
     }
 
-    partialUpdate(id, name?, values?) {
+    partialUpdate = (id, name?, values?) => {
         const data: any = {};
         if (name !== undefined) {
             data.name = name;
@@ -596,11 +608,11 @@ class CustomClientAPI {
         return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
     }
 
-    destroy(id) {
+    destroy = (id) => {
         return this.http.delete(`${this.apiBase}${id}/`);
     }
 
-    getManifest() {
-        return this.http.get<t.ContentManifest>(`${this.apiBase}/get_manifest/`);
+    getManifest = () => {
+        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
     }
 }

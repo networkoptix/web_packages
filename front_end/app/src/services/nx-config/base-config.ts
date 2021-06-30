@@ -8,6 +8,7 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+import { ConsoleManifest } from '@pages/developer-console/console/table/console-table.component';
 import { MenuNode } from '../menus.service';
 
 export interface BaseConfig {
@@ -38,6 +39,7 @@ export interface BaseConfig {
     landing: Landing;
     layout: Layout;
     maintenanceTimeout: number;
+    manifest: Record<string, ConsoleManifest>
     maxServers: number;
     meta: Meta;
     menus: Menus;

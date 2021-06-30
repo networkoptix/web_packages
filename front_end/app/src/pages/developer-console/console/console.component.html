@@ -1,4 +1,4 @@
-<console-menu [menu]="menu" [base]="base" [type]="selectedMode"></console-menu>
+<console-menu [menu]="menu" [base]="base" [type]="selectedMode" [sectionParam]="sectionParam"></console-menu>
 <ng-container [ngSwitch]="selectedMode">
     <console-edit *ngSwitchCase="CONSOLE_MODE.EDIT"></console-edit>
     <console-table *ngSwitchDefault [sectionParam]="sectionParam"></console-table>
