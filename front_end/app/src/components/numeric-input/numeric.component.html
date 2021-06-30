@@ -13,5 +13,5 @@
     [(ngModel)]="_value"
     (paste)="onPaste($event)"
     (change)="valueChanged($event)"
-    (keyup)="setValue()"
+    (keyup)="setValue($event)"
     (keydown)="checkValue($event)"/>

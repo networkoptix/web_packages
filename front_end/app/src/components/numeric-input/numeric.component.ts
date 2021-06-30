@@ -125,8 +125,11 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         return true;
     }
 
-    setValue() {
+    setValue(event?) {
         if (this._value === null || this._value >= this.min && this._value <= this.max) {
+            if (event) {
+                event.target.value = this._value;
+            }
             this._previousValue = this._value;
             this.onTouchedCallback();
             this.onChangeCallback(this._value);
