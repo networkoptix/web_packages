@@ -352,7 +352,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
             this.usersPromise = undefined;
             // this.systemInfo = undefined;
-            this.subscriberCount--;
+            this.subscriberCount = 0;
         }
     }
 
