@@ -60,6 +60,7 @@ import { NxImageComponent }                 from '@pages/health/table-components
 import { NxEditableSettingsHeading }        from './editable/settings-heading/editable-settings-heading.component';
 import { QuicklinkModule }                  from 'ngx-quicklink';
 import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
+import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
 import { PipesModule }                      from '@src/pipes/pipes.module';
 
 @NgModule({
@@ -127,7 +128,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading
+        NxEditableSettingsHeading,
+        NxPaginatorComponent
     ],
     providers: [
         NxProcessButtonComponent,
@@ -165,7 +167,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading
+        NxEditableSettingsHeading,
+        NxPaginatorComponent
     ],
     exports: [
         QuicklinkModule,
@@ -219,7 +222,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading
+        NxEditableSettingsHeading,
+        NxPaginatorComponent
     ]
 })
 export class ComponentsModule {

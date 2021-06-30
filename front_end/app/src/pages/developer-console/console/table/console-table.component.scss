@@ -15,6 +15,10 @@ nx-section {
     padding: 16px;
 }
 
+nx-search {
+    margin-bottom: 16px;
+}
+
 section.card {
     padding: 16px;
 }
@@ -23,7 +27,7 @@ table, td, .table-content-placeholder {
     border: 1px solid $light4;
 }
 
-th {
+th, .search-header {
     @include typography.bold13dark9;
     height: 28px;
     background: $light3;
@@ -48,8 +52,33 @@ td svg-icon {
 }
 
 .table-content-placeholder {
-    height: 192px;
+    min-height: 192px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.create-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & button {
+        margin-top: 16px;
+    }
+}
+
+.no-results {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 66px;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    border: 1px solid $light4;
+    & button {
+        margin-top: 16px;
+    }
 }

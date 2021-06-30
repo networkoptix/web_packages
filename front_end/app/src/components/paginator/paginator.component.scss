@@ -1,0 +1,28 @@
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/typography';
+:host {
+    display: flex;
+}
+
+a.btn.btn-default {
+    @include typography.regular13nocolor;
+    color: $light16 !important;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    box-shadow: none !important;
+
+    &:not(:first-of-type) {
+        margin-left: 6px;
+    }
+
+    &.active-page, &.active-page:hover {
+        background: $light16 !important;
+        color: $light1 !important;
+    }
+
+    .disabled {
+        cursor: not-allowed;
+    }
+    
+}

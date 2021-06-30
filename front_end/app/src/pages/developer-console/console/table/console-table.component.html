@@ -7,8 +7,17 @@
     <nx-section [innerHTML]="selectedManifest.intro.content | safe:'html'"></nx-section>
 </nx-block>
 
-<section *ngIf="selectedManifest?.contexts" class="card mt-3">
-    <table cdk-table [dataSource]="selectedData">
+<section *ngIf="selectedManifest?.contexts" class="card mt-3 position-relative">
+    <nx-search *ngIf="selectedManifest.searchable"
+        [ngModel]="this.selectedData.search$ | async"
+        (ngModelChange)="updateSearchParam($event)"
+        layout="search"
+        instant></nx-search>
+    <div *ngIf="selectedData.noSearchMatches$ | async" class="no-results" [style.width.px]="noResultsWidth" [style.height.px]="noResultsHeight">
+        <h3 translate>No matching results found</h3>
+        <button (click)="updateSearchParam({query: ''})" translate>Reset Search</button>
+    </div>
+    <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="(selectedManifest.perPage - (selectedData.data$ | async).length) * 48">
         <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
             <th cdk-header-cell *cdkHeaderCellDef>{{field.label}}</th>
             <ng-container [ngSwitch]="field.type">
@@ -56,7 +65,7 @@
                     <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')"> {{element[field.name] | date: 'shortDate'}} </td>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
-                    <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')"> {{element[field.name]}} </td>
+                    <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')" [innerHTML]="element[field.name] | highlight: (selectedData.search$ | async)"></td>
                 </ng-container>
             </ng-container>
         </ng-container>
@@ -67,8 +76,15 @@
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
         </tbody>
     </table>
-    <div *ngIf="!(selectedData.data$ | async).length" class="table-content-placeholder">
-        <nx-pre-loader></nx-pre-loader>
+    <div *ngIf="!(selectedData.data$ | async)?.length" class="table-content-placeholder" [style.height.px]="48 * selectedManifest.perPage">
+        <ng-template #createPlaceholder>
+            <div class="create-placeholder">
+                <h3 translate>You don't have any Custom VMS Clients yet. Add your first one!</h3>
+                <button (click)="handleModal()" translate>Create Custom VMS Client</button>
+            </div>
+        </ng-template>
+        <nx-pre-loader *ngIf="!dataLoaded; else createPlaceholder"></nx-pre-loader>
     </div>
+    <nx-paginator [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
     <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 ml-auto btn-' + (action.type || 'primary')">{{action.title}}</button>
 </section>

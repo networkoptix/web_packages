@@ -257,7 +257,11 @@ export const nxConfig: IConfig = {
                 title   : 'About',
                 content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
             },
-            contexts: [
+            perPage           : 4,
+            pagesToShow       : 4,
+            searchable        : true,
+            excludeFromSearch : ['last_modified', 'downloadLink', 'settingsModal'],
+            contexts          : [
                 {
                     type  : ConfigType.TEXT,
                     name  : 'name',
