@@ -226,7 +226,7 @@
     "Please select FPS.": "FPSを選択してください。",
     "Please select recording mode.": "録画モードを選択してください。",
     "Please select recording quality": "録画の画質を選択してください",
-    "Popularity": "知名度",
+    "Popularity": "使用率",
     "Port": "ポート",
     "Port is busy": "ポートがビジー状態です",
     "Press \"Connect System to %CLOUD_NAME%\"": "「システムを %CLOUD_NAME% に接続」を押します",
