@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Systems Page Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
 Suite Teardown    Systems Page Suite Teardown
-Force Tags        system
+Force Tags        system    cloud
 
 *** Test Cases ***
 System tiles represent actual information
@@ -19,14 +19,14 @@ System tiles represent actual information
 
 Should show the no systems connected message when you have no systems
     [Tags]    C41866    threaded
-    Log In    ${email noperm}    ${base password}
+    Log In    ${no sys user}    ${base password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Validate Header Button Text    0
 
 Should show the system page instead of all systems when user only has one
     [Tags]    C41878    threaded
     Log In    ${extra system}[owner]    ${base password}
-    Wait until Location Is    ${ENV}/systems/${extra system}[id]
+    Wait until Location Is    ${ENV}/systems/${extra system}[cloud id]
     Validate Header Button Text    ${extra system}[name]    systems=False
 
 Should open system page when clicked on system
@@ -113,7 +113,7 @@ Should update owner name in systems list, if it's changed
 
 Search should only be visible with 9 or more systems
     [Tags]    C41890
-    Disconnect from account    ${ENV}    ${system}[owner]    ${base password}    ${extra system}[id]
+    Disconnect from account    ${ENV}    ${system}[owner]    ${base password}    ${extra system}[cloud id]
     Log In    ${system}[owner]    ${base password}
     Go To    ${ENV}/systems
     Validate on Systems Page    search=False

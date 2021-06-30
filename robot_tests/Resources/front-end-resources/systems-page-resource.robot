@@ -1,42 +1,38 @@
 *** Keywords ***
-Check Systems Text
-    [Arguments]    ${user}
-    Sleep    1
-    Log Out
-    Log In    ${user}    ${password}
-    Wait Until Page Contains Element    ${AUTO TESTS USER}
-    Element Text Should Be    ${AUTO TESTS USER}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Wait Until Element Is Not Visible    //h2[.='${YOUR SYSTEM TEXT}']
-
 Systems Page Suite Setup
-    Create Base Cloud System
-    ${TMP USERS}=   Create List
-    Set Suite Variable    ${TMP USERS}
-    ${another owner}=   Register and activate account with random email    Another    Owner    ${base password}
-    Append To List    ${TMP USERS}    ${another owner}
+    ${rand str}=   Generate Random String
+    ${owner}=   Register and activate account with random email    Main    Owner    ${base password}
+    ${system}=   Create Base System    systems_page_main_${rand str}   add users=True    owner=${owner}
+    Set Suite Variable    ${system}
 
-    ${extra system}=   Setup Docker System    cloud email=${another owner}
-    Sleep    5
+    ${another owner}=   Register and activate account with random email    Another    Owner    ${base password}
+    ${extra system}=   Create Base System    systems_page_extra_${rand str}   add users=False    owner=${another owner}
+    Set Suite Variable    ${extra system}
+
     ${tmp auth}=   Create List    ${another owner}    ${base password}
-    Share    ${tmp auth}    ${extra system}[id]    viewer    ${system}[owner]
+    Share    ${tmp auth}    ${extra system}[cloud id]    viewer    ${system}[owner]
     Set Suite Variable    ${extra system}
 
     ${offline systems}=   Create List
     FOR    ${i}    IN RANGE    7
-        ${s}=   Setup Docker System    cloud email=${system}[owner]
+        ${s}=   Create Base System    systems_page_offline_${rand str}_${i}    add users=False    owner=${system}[owner]
         Append To List    ${offline systems}    ${s}
-        Delete Docker Server    ${s}[cont]
+        Sleep    5
+        Delete Docker Server    ${s}[id]
     END
     Set Suite Variable    ${offline systems}
+
+    ${no sys user}=   Register and activate account with random email    NoSystems    User    ${base password}
+    Set Suite Variable    ${no sys user}
     Sleep    30
+
     Open browser and go to URL    ${ENV}
 
 Systems Page Suite Teardown
-    Delete Base Cloud System
-    FOR    ${sys}    IN    @{offline systems}    ${extra system}
-        Delete Docker Server    ${sys}[cont]
+    FOR    ${sys}    IN    @{offline systems}    ${system}    ${extra system}
+        Delete Base System    ${sys}
     END
-    # Remove Temporary Users
+    Delete Account    ${ENV}    ${no sys user}    ${base password}
     Close All Browsers
 
 Validate on Systems Page
