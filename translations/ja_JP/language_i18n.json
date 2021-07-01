@@ -30,7 +30,7 @@
     "All results": "全ての結果",
     "All settings for this server will be reverted to factory default settings, and it will be detached from this system into a new one.": "このサーバーのすべての設定は工場出荷時のデフォルト設定に戻り、このシステムから切り離されて新しいものに切り替えられます。",
     "Allow only secure connections": "安全な接続のみを許可する",
-    "Allow system to optimize camera settings": "カメラ設定の最適化有効",
+    "Allow system to optimize camera settings": "カメラ設定の最適化をシステムに許可する",
     "Analytics DB Storage": "分析DBストレージ",
     "Analytics Event": "解析イベント",
     "Analytics Events": "分析イベント",
