@@ -34,6 +34,8 @@ $header-collapsing-width-1 : 1px;
     border-radius : 0;
     border-bottom : 1px solid $light4;
     padding-right : 1rem !important;
+    position: relative;
+    z-index: 5;
 
     &.navbar-default {
         background-color : #fff;

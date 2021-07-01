@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxAccountService } from '@services/account.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
 @UntilDestroy({})
@@ -18,11 +18,24 @@ export class NxLandingPageComponent implements OnInit {
     loginState: boolean;
     scrollPosition: number
     screenSize$: Observable<{ width: number, height: number }>
+    introAnimationFinished = false;
+    maskFinishedLoading = false;
+    // Not used yet, but will be used to trigger start of intro animation
+    backgroundGraphicFinishedLoading = false;
+
+    scrollBreakPoints = {
+        maskMaxSize    : 815,
+        renderGraphics : 1000
+    }
 
     constructor(private sessionService: NxSessionService, private accountService: NxAccountService, scrollMechanics: NxScrollMechanicsService) {
         this.screenSize$ = scrollMechanics.windowSizeSubject.pipe(startWith({ width: 0, height: 0 }), debounceTime(60), untilDestroyed(this));
-        scrollMechanics.windowScrollSubject.pipe(debounceTime(25), untilDestroyed(this)).subscribe((value) => {
-            this.scrollPosition = value;
+        scrollMechanics.windowScrollSubject.pipe(debounceTime(10), untilDestroyed(this)).subscribe((value) => {
+            if (value > this.scrollBreakPoints.renderGraphics) {
+                this.scrollPosition = this.scrollBreakPoints.renderGraphics;
+            } else {
+                this.scrollPosition = value;
+            }
         });
     }
 

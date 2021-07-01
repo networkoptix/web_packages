@@ -1,12 +1,23 @@
-.svg-layer {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top:  -1140px;
-    margin-left: -1960px;
-    z-index: -2 !important;
+@use '../../../styles/typography';
+@use '../../../styles/mixins';
+
+// This prevents the svgs from overlapping with the scroll bar
+.root-container {
+    width: 100%;
+    height: 800vh;
+    position: absolute;
+    clip: rect(0, auto, auto, 0);
 }
 
-svg-layer svg {
-   overflow: hidden;
+.svg-wrapper {
+    position: fixed;
+    z-index: -2;
+    top: 50%;
+    left: 50%;
+    margin-top: -600px;
+    margin-left: -1000px;
+}
+
+.svg-layer {
+    position: absolute;
 }

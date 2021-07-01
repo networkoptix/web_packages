@@ -11,6 +11,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { NxLandingPageComponent } from './landing-page.component';
 import { NxContentContainerComponent } from './content-container/content-container';
 import { NxBackgroundGraphicComponent } from './background-graphic/background-graphic.component';
+import { NxMaskComponent } from './mask/mask.component';
 
 const appRoutes: Routes = [
     {
@@ -21,7 +22,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent],
+    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent],
     imports      : [
         CommonModule,
         DirectivesModule,
