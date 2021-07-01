@@ -1,11 +1,20 @@
 import json
 from celery import shared_task, current_task
+from celery.exceptions import Ignore
 from django.core.exceptions import PermissionDenied
 
 from cms.controllers import filldata, generate_structure, structure, structure_to_html
 from api.models import Account
-from cms.models import Asset, Menu, PackagesCache, UserGroupsToAssetPermissions
+from cms.models import Asset, Menu, PackagesCache, UserGroupsToAssetPermissions, CustomClient
 from celery.result import AsyncResult
+
+PACKAGE_CACHE = PackagesCache()
+
+
+class TaskErrors(Exception):
+    def __init__(self, errors):
+        self.errors = errors
+        super().__init__(errors)
 
 
 def get_package_cache_key(asset: Asset, preview=None, version_id=None, structure_format=None):
@@ -22,7 +31,7 @@ def make_package(asset_id, preview, version_id):
     def update_progress(current, total):
         current_task.update_state(state='PROGRESS',
             meta={'current': current, 'total': total})
-    PACKAGE_CACHE = PackagesCache()
+
     asset = Asset.objects.get(id=asset_id)
     cache_key = get_package_cache_key(asset, preview, version_id)
 
@@ -30,10 +39,35 @@ def make_package(asset_id, preview, version_id):
     PACKAGE_CACHE[cache_key] = {"file": zip_package, "is_ready": True}
 
 
+def get_custom_client_package_key(custom_pk, download_id):
+    return f'custom-client-{custom_pk}-{download_id}'
+
+
+@shared_task
+def make_custom_client(custom_client_id, download_id):
+    def update_progress(current, total):
+        current_task.update_state(state='PROGRESS',
+                                  meta={'current': current, 'total': total})
+
+    custom_client = CustomClient.objects.get(id=custom_client_id)
+    cache_key = get_custom_client_package_key(custom_client_id, download_id)
+
+    custom_data, errors = filldata.calculate_custom_client_data(custom_client)
+    if errors:
+        current_task.update_state(
+            state='ERROR', meta={'errors': errors}
+        )
+        raise TaskErrors(errors)
+    zip_package = filldata.get_zip_package(
+        asset=custom_client.base_vms, preview=False, update_progress_cb=update_progress,
+        custom=True, custom_data=custom_data
+    )
+    PACKAGE_CACHE[cache_key] = {"file": zip_package, "is_ready": True, 'task_id': str(current_task.request.id)}
+
+
 @shared_task
 def make_structure(user_id, output_format='json', use_actual_values=True, asset_type=None, asset_id=None):
     from cms.views.asset import prepare_asset_exports
-    PACKAGE_CACHE = PackagesCache()
 
     def update_progress(current, total):
         current_task.update_state(state='PROGRESS',
@@ -71,8 +105,7 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
 
 @shared_task
 def async_import_assets_from_json(json_cache_id, user_id, publish=False):
-    DOWNLOAD_CACHE = PackagesCache()
-    assets_list = DOWNLOAD_CACHE.get(json_cache_id)
+    assets_list = PACKAGE_CACHE.get(json_cache_id)
     user = Account.objects.get(pk=user_id)
     current = 0
     total = len(assets_list)
@@ -90,7 +123,6 @@ def async_import_assets_from_json(json_cache_id, user_id, publish=False):
 
 @shared_task
 def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False):
-    PACKAGE_CACHE = PackagesCache()
     menu_dict = PACKAGE_CACHE[cache_key]
     menu = Menu.objects.get(name=menu_name)
     user = Account.objects.get(email=user_email)
@@ -110,7 +142,6 @@ def async_menu_export(menu_name):
         current_task.update_state(state='PROGRESS',
             meta={'current': current, 'total': total})
     def update_complete(file_name, content):
-        DOWNLOAD_CACHE = PackagesCache()
-        DOWNLOAD_CACHE[async_menu_export.request.id] = {"file": content, "file_name": file_name, "is_ready": True}
+        PACKAGE_CACHE[async_menu_export.request.id] = {"file": content, "file_name": file_name, "is_ready": True}
 
     MenuAdmin.generate_export(menu_name, complete_cb=update_complete, update_progress_cb=update_progress)

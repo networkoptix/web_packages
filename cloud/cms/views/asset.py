@@ -7,17 +7,20 @@ from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from celery.result import AsyncResult
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema, no_body
 from queue import SimpleQueue
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
@@ -26,8 +29,10 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import CustomClientSerializer, ContentManifestSerializer
-from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure
+from cms.serializers import CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
+    CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
+from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure, \
+    make_custom_client, get_custom_client_package_key, TaskErrors
 
 from ..controllers.documentation import DOC_CACHE
 from ..views.integration import INTEGRATION_CACHE
@@ -785,7 +790,10 @@ class CustomClientViewSet(ModelViewSet):
     serializer_class = CustomClientSerializer
 
     def get_queryset(self):
-        return self.request.user.customclient_set.all()
+        if self.request.user.is_superuser:
+            return CustomClient.objects.all()
+        else:
+            return self.request.user.customclient_set.all()
 
     def perform_create(self, serializer):
         kwargs = {}
@@ -812,7 +820,6 @@ class CustomClientViewSet(ModelViewSet):
             'label': 'Information',
             'fields': fields
         }]
-
         vmsList = [{'name': vms.name, 'value': vms.id} for vms in Asset.objects.filter(
             asset_type=AssetType.ASSET_TYPES.vms, customizations__name__in=request.user.customizations) if UserGroupsToAssetPermissions.check_permission(request.user, vms)]
         customization_vms = get_vms_asset()
@@ -826,3 +833,39 @@ class CustomClientViewSet(ModelViewSet):
             }
         }
         return api_success({'manifest': {'contexts': contexts, 'settings': settings}})
+
+    @swagger_auto_schema(method='post', request_body=no_body, responses={200: GenerateCustomClientSerializer()})
+    @action(detail=True, methods=['post'])
+    def generate_package(self, request, pk=None):
+        download_id = uuid.uuid4()
+        task_id = make_custom_client.apply_async(args=[pk, download_id])
+        cache_key = get_custom_client_package_key(pk, download_id)
+        PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False, "task_id": str(task_id)}
+        return api_success({'downloadId': download_id})
+
+    def get_download_package(self, request, pk):
+        serializer = PackageDownloadIdSerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        download_id = serializer.validated_data['downloadId']
+
+        return PACKAGES_CACHE.get(get_custom_client_package_key(pk, download_id))
+
+    @swagger_auto_schema(query_serializer=PackageDownloadIdSerializer())
+    @action(detail=True, serializer_class=CheckPackageCustomClientSerializer)
+    def check_package(self, request, pk=None):
+        package = self.get_download_package(request, pk)
+        if not package:
+            raise APINotFoundException('Package not available')
+        task = AsyncResult(package.get('task_id'))
+        serializer = CheckPackageCustomClientSerializer(task)
+        return api_success(serializer.data)
+
+    @swagger_auto_schema(query_serializer=PackageDownloadIdSerializer())
+    @action(detail=True)
+    def download_package(self, request, pk=None):
+        package = self.get_download_package(request, pk)
+        if not package:
+            raise APINotFoundException('Package not available')
+        custom_client = self.get_object()
+        file_name = slugify(f'{custom_client.name}-package-{datetime.now()}') + '.zip'
+        return response_attachment(package['file'], file_name, 'application/zip', attachment=True)

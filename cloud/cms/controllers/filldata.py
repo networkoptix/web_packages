@@ -103,25 +103,28 @@ def process_global_contexts(asset, content, version_id, preview, global_contexts
     return content
 
 
-def replace_in(collection, key, value):
+def replace_in(collection, key, value='', delete=False):
     # Here we process json files
 
     if type(collection) is dict:
-        elements = collection.items()
+        elements = list(collection.items())
     elif type(collection) is list:
-        elements = enumerate(collection)
+        elements = reversed(list(enumerate(collection)))
     else:
         raise ValueError(f"Cannot iterate through {type(collection)}")
 
     for index, item in elements:
         item_type = type(item)
         if item_type in [dict, list]:
-            replace_in(item, key, value)
+            replace_in(item, key, value, delete=delete)
         elif item_type is str:
             # special case if json value contains only the value - we don't treat it as a string,
             # we replace the whole thing
             if item == key:
-                collection[index] = value
+                if delete:
+                    del collection[index]
+                else:
+                    collection[index] = value
             elif key in item:
                 collection[index] = item.replace(key, str(value))
 
@@ -142,16 +145,25 @@ def process_data_structure(content, tag, data_structure_type, content_value):
 
 
 def process_context_structure(asset, context, content, language,
-                              version_id, preview, force_global_files, context_dict=None):
+                              version_id, preview, force_global_files, context_dict=None,
+                              custom=False, custom_data=None):
     values = DataStructure.find_actual_values(
         context.datastructure_set.all(), asset=asset, language=language, version_id=version_id, draft=preview
     )
     values = {ds.id: val for ds, val in values.items()}
+    field_overrides = context.asset_type.custom_field_overrides
+    exclude = field_overrides.get('exclude', [])
 
     for datastructure in context.datastructure_set.all():
         # noinspection PyBroadException
         try:
-            if context_dict and datastructure.name in context_dict:
+            if custom and datastructure.name in exclude:
+                replace_in(content, datastructure.name, delete=True)
+                continue
+
+            if datastructure.name in custom_data:
+                content_value = custom_data[datastructure.name]
+            elif context_dict and datastructure.name in context_dict:
                 if language:
                     content_value = context_dict.get(
                         f'{datastructure.name}__{language.code}', context_dict[datastructure.name]
@@ -200,7 +212,7 @@ def save_content(filename, content):
 
 
 def process_context(asset, context, language, skin,
-                    preview, version_id, global_contexts, global_contexts_dict=None):
+                    preview, version_id, global_contexts, global_contexts_dict=None, custom=False, custom_data=None):
     context_template_text = context.template_for_language(language, asset.default_language, skin)
 
     # check if the file is language JSON
@@ -214,7 +226,7 @@ def process_context(asset, context, language, skin,
         context_template_text = ''
     # if context is global - process it
     content = process_context_structure(asset, context, context_template_text,
-                                        language, version_id, preview, context.is_global)
+                                        language, version_id, preview, context.is_global, custom=custom, custom_data=custom_data)
     if not context.is_global:  # if current context is global - do not apply other contexts
         content = process_global_contexts(asset, content, version_id, preview,
                                           global_contexts, global_contexts_dict, language=language)
@@ -489,13 +501,13 @@ def thread_context(context, asset, changed_languages, skin, preview, version_id,
 
 
 def zip_context(zip_file, asset, context, language_code,
-                preview, version_id, global_contexts, add_root):
+                preview, version_id, global_contexts, add_root, custom=False, custom_data=None):
     default_language = asset.default_language
     language = Language.by_code(language_code, default_language)
     root_dir = asset.asset_root
     skin = asset.read_global_value('%SKIN%')
     if context.template_for_language(language, default_language, skin):  # if we have template - save context to file
-        data = process_context(asset, context, language, skin, preview, version_id, global_contexts)
+        data = process_context(asset, context, language, skin, preview, version_id, global_contexts, custom=custom, custom_data=custom_data)
         name = context.file_path.replace("{{language}}", language_code) if language_code else context.file_path
         if add_root:
             name = os.path.join(root_dir, name)
@@ -524,7 +536,8 @@ def zip_context(zip_file, asset, context, language_code,
                 return True
 
 
-def get_zip_package(asset, preview=True, version_id=None, add_root=True, update_progress_cb=None):
+def get_zip_package(asset, preview=True, version_id=None, add_root=True, update_progress_cb=None, custom=False,
+                    custom_data=None):
     zip_data = BytesIO()
     zip_file = zipfile.ZipFile(zip_data, "a", zipfile.ZIP_DEFLATED, False)
 
@@ -535,15 +548,15 @@ def get_zip_package(asset, preview=True, version_id=None, add_root=True, update_
     for index, context in enumerate(contexts):
         if update_progress_cb:
             update_progress_cb(index, len(contexts))
-            
+
         errors = False
         if context.translatable:
             for language_code in languages:
                 errors = zip_context(zip_file, asset, context, language_code,
-                                     preview, version_id, global_contexts, add_root)
+                                     preview, version_id, global_contexts, add_root, custom=custom, custom_data=custom_data)
         else:
             errors = zip_context(zip_file, asset, context, None,
-                                 preview, version_id, global_contexts, add_root)
+                                 preview, version_id, global_contexts, add_root, custom=custom, custom_data=custom_data)
         if errors:
             zip_file.close()
             raise APIInternalException(f'Error generating package. Some files are missing. Stopped at {context.name}',
@@ -567,3 +580,39 @@ def save_b64_to_file(value, filename, storage_location):
 
     with open(file_name, 'wb') as f:
         f.write(image_png)
+
+
+def calculate_custom_client_data(custom_client):
+    field_overrides = custom_client.base_vms.asset_type.custom_field_overrides
+    fields = field_overrides.get('fields', {})
+    client_values = custom_client.values or {}
+    custom_data = {}
+    errors = []
+    cloud_host_vms_asset = None  # need to implement host_to_vms_asset()
+    for name, field in fields.items():
+        source = field.get('source', '')
+        meta_only = field.get('metaOnly', False)
+        if meta_only or source == 'cloudHost' and settings.CUSTOMIZATION != 'meta':
+            continue
+
+        if source in ['custom', 'field']:
+            if source == 'field':
+                source_field = field.get('sourceField')
+                if source_field is None:
+                    errors.append({'message': f'Field {name} with source="field" missing key "sourceField"'})
+                    continue
+            else:
+                source_field = name
+
+            value = client_values.get(source_field, None)
+            if value not in [None, '']:
+                custom_data[name] = value
+            elif not field.get('optional', False):
+                errors.append({'message': f'Missing required custom field {source_field}'})
+
+        elif source == 'constant':
+            custom_data[name] = field.get('value')
+
+    return custom_data, errors
+
+

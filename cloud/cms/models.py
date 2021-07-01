@@ -475,7 +475,7 @@ class AssetType(models.Model):
             fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
             if fields is None:
                 asset_type = cls.get_model_by_type(type)
-                fields = asset_type.custom_field_overrides or dict()
+                fields = (asset_type.custom_field_overrides or dict()).get('fields', {})
                 cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
             return fields
         except (ConnectionError, OperationalError):

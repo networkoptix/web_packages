@@ -127,14 +127,28 @@ class CustomClientSerializer(serializers.ModelSerializer):
     class ValuesSerializer(serializers.Serializer):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            for field_name, field_props in list(filter(
-                    lambda item: item[1].get('source', '') == 'custom',
-                    AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
-            )):
-                self.fields[field_name] = serializers.CharField(required=False, label=field_props.get('label', field_name))
+            self.custom_values = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
+            self.custom_values = {
+                key: value for key, value in self.custom_values.items()
+                if self.custom_values[key].get('source', '') == 'custom' and not (
+                    self.custom_values[key].get('metaOnly', False) and settings.CUSTOMIZATION != 'meta')
+            }
+            for field_name, field_props in self.custom_values.items():
+                optional = field_props.get('optional', False)
+                self.fields[field_name] = serializers.CharField(
+                    required=not optional, allow_blank=optional, label=field_props.get('label', field_name)
+                )
+                # Needed to handle "." in variable names being split
+                self.fields[field_name].source_attrs = [field_name]
+
+        def validate(self, data):
+            for key in self.custom_values:
+                if key not in data:
+                    data[key] = self.parent.instance.values.get(key, '')
+            return data
 
     created_by = serializers.SlugRelatedField(slug_field='email', read_only=True)
-    values = ValuesSerializer(required=False)
+    values = ValuesSerializer(required=False, partial=True)
 
     class Meta:
         model = CustomClient
@@ -161,3 +175,35 @@ class ContextManifestSerializer(serializers.Serializer):
 
 class ContentManifestSerializer(serializers.Serializer):
     contexts = ContextManifestSerializer(many=True)
+
+
+class GenerateCustomClientSerializer(serializers.Serializer):
+    downloadId = serializers.UUIDField(read_only=True)
+
+
+class CheckPackageCustomClientSerializer(serializers.Serializer):
+    state = serializers.CharField(read_only=True)
+    message = serializers.CharField(read_only=True, required=False)
+    errors = serializers.CharField(read_only=True, required=False)
+    current = serializers.CharField(read_only=True, required=False)
+    total = serializers.CharField(read_only=True, required=False)
+
+    def to_representation(self, instance):
+        from cms.tasks import TaskErrors
+
+        if instance.ready():
+            if instance.successful():
+                return {'state': 'ready'}
+            else:
+                if type(instance.result) == TaskErrors:
+                    return {'state': 'failed', 'message': 'Failed to generate package', 'errors': instance.result.errors}
+                else:
+                    return {'state': 'failed', 'message': 'Unknown error occured while generating package'}
+        else:
+            current = instance.result.get('current', 0)
+            total = instance.result.get('total', 0)
+            return {'state': 'pending', 'current': current, 'total': total}
+
+
+class PackageDownloadIdSerializer(serializers.Serializer):
+    downloadId = serializers.UUIDField()
