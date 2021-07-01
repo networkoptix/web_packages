@@ -15,6 +15,8 @@ const MARGIN = 5;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
 
+const MAIN_MOUSE_BUTTON = 0;
+
 @Component({
     selector    : 'time-under-mouse',
     templateUrl : './time-under-mouse.component.html',
@@ -67,6 +69,11 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
                 const tweakedT = this.vms.tweakT(s.timeUnderMouse)
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
+                if (s.pressed) {
+                    this.self.nativeElement.classList.add('pressed');
+                } else {
+                    this.self.nativeElement.classList.remove('pressed');
+                }
             } catch (e) {
                 // console.error(e, s)
             }
@@ -117,16 +124,6 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             result -= offset;
         }
         return result;
-    }
-
-    @HostListener('document:mousedown')
-    onMouseDown () {
-        this.self.nativeElement.classList.add('pressed');
-    }
-
-    @HostListener('document:mouseup')
-    onMouseUp () {
-        this.self.nativeElement.classList.remove('pressed');
     }
 }
 

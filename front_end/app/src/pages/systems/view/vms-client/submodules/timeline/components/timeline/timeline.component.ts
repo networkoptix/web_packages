@@ -136,6 +136,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         // console.log('mouse down', e.screenX)
         this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
         this._mouseNotReleasedYet = true;
+        this.timeUnderMouse.handleMouseDown()
     }
 
     public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
@@ -165,6 +166,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
+        this.timeUnderMouse.handleMouseUp()
     }
 
     @HostListener('document:mouseup')
