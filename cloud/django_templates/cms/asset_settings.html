@@ -17,10 +17,10 @@
 <div>
     <h3>Download package for asset</h3>
     <p><a href="{% url 'download_package' asset.id %}"
-          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}
+          {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}
     >Download package (zip)</a></p>
     <p><a href="{% url 'download_package' asset.id %}?draft"
-          {% if asset.is_cloud_portal %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}
+          {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}
     >Download package draft (zip)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}'})" download>Download structure (json)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}?output_format=html" onclick="event.preventDefault(); pollStructure({assetId:'{{ asset.id }}', outputFormat: 'html'})" download>Download structure (html)</a></p>

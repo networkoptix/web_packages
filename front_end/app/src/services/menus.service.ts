@@ -179,8 +179,11 @@ export class NxMenusService implements OnDestroy {
         let name = node.name;
 
         if (lang) {
-            const translatedRaw = this.translate.instant(node.name_raw || node.name);
-            if (translatedRaw !== node.name_raw) {
+            let translatedRaw = '';
+            if (node.name_raw || node.name) {
+                translatedRaw = this.translate.instant(node.name_raw || node.name);
+            }
+            if (translatedRaw && translatedRaw !== node.name_raw) {
                 name = translatedRaw;
                 display_name = translatedRaw;
             } else {
