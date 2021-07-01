@@ -168,12 +168,12 @@ Storage Suite Teardown
     FOR    ${n}    IN RANGE    5
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
-    Remove Directory    networkDisk/*
-    Remove All Files    networkDisk/*
+    Remove Directory    networkdisk/*
+    Remove All Files    networkdisk/*
     # Open Connection    ${QA BURBANK IP}
     # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # ${results}    Execute Command     rm -r networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
-    # ${results}    Execute Command     rm networkDisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    # ${results}    Execute Command     rm -r networkdisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
+    # ${results}    Execute Command     rm networkdisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
     # Close Connection
 
     # FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}
@@ -322,7 +322,7 @@ Wait Until Analytics Data Exists
 
 Verify Recorded Video Files
     [Arguments]    ${disk}
-    ${disk} =    Set Variable If    '${disk}' == 'networkDisk'    networkDisk    ${disk}-${random}
+    ${disk} =    Set Variable If    '${disk}' == 'networkdisk'    networkdisk    ${disk}-${random}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    find ${disk} -iname "*mkv" -printf "%f "

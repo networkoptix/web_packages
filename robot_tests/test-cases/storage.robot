@@ -21,6 +21,7 @@ ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
 @{disk size}    160000    40000    40000    12000    12000
+${networkdisk}    //10.1.5.239/networkdisk
 
 *** Keywords ***
 Restart
@@ -1193,7 +1194,7 @@ Add external storage: Wrong login or password
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Input Text      ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
+    Input Text      ${AS MODAL URL INPUT}     ${networkdisk}
     Input Text      ${AS MODAL LOGIN INPUT}      incorrect
     Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1260,7 +1261,7 @@ Failed to add external storage: server is offline
     Verify Add Storage Dialog
     Stop Server    storage2-${random}
     Sleep    60
-    Press Keys     ${AS MODAL URL INPUT}     //10.1.5.238/networkDisk
+    Press Keys     ${AS MODAL URL INPUT}     ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1290,7 +1291,7 @@ Add external storage: successful scenario with password
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.239/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.239/networkdisk
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1310,13 +1311,13 @@ Add external storage: successful scenario with password
     ...    ${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
-    Wait Until Files Are Recorded    networkDisk    100
+    Wait Until Files Are Recorded    networkdisk    100
     Log To Console    C81599 ....... | PASS |
 
     Log    path is already added to this server
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1328,17 +1329,17 @@ Add external storage: successful scenario with password
     Log To Console    C81587 ....... | PASS |
 
     Log    Add external storage: path is already added to another server - Cancel, Close, Back
-    ${server2} =    Get Server Id    https://${QA BURBANK IP}:${port2}    ${server auth}
-    Merge Systems    ${auth}    ${sysId0}    ${sysId2}
+    # ${server2} =    Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}
+    Merge Systems    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${server 3['cloud id']}
     Sleep    90
-    Go To    ${ENV}/systems/${sysId0}/servers/${server2}
+    Go To    ${ENV}/systems/${server 1['cloud id']}/servers/${server 3['id']}
     #Reload Page
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1361,7 +1362,7 @@ Add external storage: successful scenario with password
 
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1384,7 +1385,7 @@ Add external storage: successful scenario with password
 
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
@@ -1407,7 +1408,7 @@ Add external storage: successful scenario with password
     Log    Add external storage: path is already added to another server - Add Storage
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
-    Press Keys      ${AS MODAL URL INPUT}        //10.1.5.238/networkDisk
+    Press Keys      ${AS MODAL URL INPUT}        ${networkdisk}
     Press Keys      ${AS MODAL LOGIN INPUT}      qaburbank
     Press Keys      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
     Click Button    ${AS MODAL SUBMIT BUTTON}
