@@ -35,7 +35,7 @@ require('./scripts/vendor/protocolcheck');
         <div class="outerContainer"
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.appContainerHeight : appStateService.appContainerHeight }">
-            <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground}" nxScrollHelper #mainContainer>
+            <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground, 'full-screen': appStateService.authorizing}" nxScrollHelper #mainContainer>
                 <router-outlet></router-outlet>
             </div>
         </div>
@@ -83,7 +83,8 @@ export class AppComponent {
                 this.appStateService.authorizing =
                     ev.url.includes('authorize') ||
                     ev.url.includes('activate') ||
-                    ev.url.includes('restore_password');
+                    ev.url.includes('restore_password') ||
+                    ev.url.includes('oauth-redirect');
             });
 
         /* No real need to update often unless some browser have major upgrade

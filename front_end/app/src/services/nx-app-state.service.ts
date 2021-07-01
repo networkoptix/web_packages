@@ -65,6 +65,7 @@ export class NxAppStateService {
     }
 
     set authorizing(authorize: boolean) {
+        this.appContainerHeight = authorize ? '100%' : 'calc(100% - 81px)';
         this.authorizeSubject.next(authorize);
     }
 

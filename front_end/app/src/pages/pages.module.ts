@@ -14,6 +14,7 @@ import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
+import { NxOAuthRedirectModule }     from './oauth-redirect/oauth-redirect.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
@@ -105,6 +106,10 @@ const lazyRoutes: Routes = [
     {
         path         : '404',
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
+    },
+    {
+        path         : 'oauth-redirect',
+        loadChildren : () => import ('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
     },
     {
         path         : '**',

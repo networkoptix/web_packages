@@ -315,21 +315,16 @@ export class NxCloudApiService {
     }
 
     authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string) {
-        let params = new HttpParams()
-            .set('email', email)
-            .set('password', password)
-            .set('client_id', clientId)
-            .set('redirect_uri', redirectUrl)
-            .set('response_type', responseType);
-        if (state) {
-            params = params.set('state', state);
+        const body: any = {
+            email, password,
+            client_id: clientId,
+            redirect_uri: redirectUrl,
+            response_type: responseType
         }
+        state && (body.state = state);
+        scope && (body.scope = scope);
 
-        if (scope) {
-            params = params.set('scope', scope);
-        }
-
-        return this.http.get<any>('/oauth/authenticate', { params: params }).toPromise();
+        return this.http.post<any>('/oauth/authenticate', body).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)

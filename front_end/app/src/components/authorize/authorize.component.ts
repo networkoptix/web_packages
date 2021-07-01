@@ -6,6 +6,7 @@ import {
 }                                     from '@angular/core';
 import { ActivatedRoute, Router }     from '@angular/router';
 import { UntilDestroy }               from '@ngneat/until-destroy';
+import { LocalStorageService }        from 'ngx-webstorage';
 import { BehaviorSubject, defer, fromEvent } from 'rxjs';
 import { debounceTime, retryWhen, delay, take, map }   from 'rxjs/operators';
 
@@ -20,8 +21,9 @@ import { Account, NxAccountService } from '@services/account.service';
 import { NxUriService }              from '@services/uri.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxPageService }             from '@services/page.service';
+import { environment } from '@environments/environment';
 
-interface AuthorizeParams {
+export interface AuthorizeParams {
     response_type: string,
     client_id: string,
     redirect_url: string,
@@ -154,6 +156,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private accountService: NxAccountService,
         private router: Router,
         private elem: ElementRef,
+        private localStorageService: LocalStorageService,
         @Inject(WINDOW) public window: Window
         // private pageService: NxPageService,
         // private uriService: NxUriService,
@@ -179,7 +182,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.route.queryParams.subscribe(async(params: any) => {
             this.initialData = NxUtilsService.deepCopy(params);
-            this.clientType = ClientType[this.initialData.client_type || 'loginCloud'];
+            const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
+            this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
 
             this.windowLargeEnough = this.window.innerWidth > 560 && this.window.innerHeight > 720 && this.viewType === 'web';
@@ -196,7 +200,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.initialData.response_type = 'code';
             }
 
-            if (action === 'reset_password') {
+            if (action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (action === 'activate') {
                 await this.cloudService.activate(this.codeFromRoute).catch(err => console.error(err));
@@ -216,13 +220,27 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
-    handleLoginSuccess = async (res) => {
+    handleLoginSuccess = async (res: { link: string }) => {
+        let code: string;
+        if (res?.link.startsWith('http')) {
+            const url = new URL(res.link);
+            code = new URLSearchParams(url.search).get('code');
+        } else if (res?.link.startsWith('?code=')) {
+            code = new URLSearchParams(res.link).get('code');
+        } else {
+            // TODO: handle other cases in the future
+        }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
+        if (this.initialData.redirect_url === 'oauth-redirect') {
+            const { client_id, client_type, view_type } = this.initialData;
+            this.router.navigate(['oauth-redirect'], {
+                queryParams: { code, client_id, client_type, view_type }}
+            );
+        } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
             this.initialData.redirect_url = res.link;
             this.currentState = AuthorizeState.confirm;
-        } else if (res?.link.startsWith('?code=')) {
-            await this.cloudService.loginCode(res.link.slice(6));
+        } else if (res?.link.includes('?code=')) {
+            await this.cloudService.loginCode(code);
             defer(() => this.accountService.get())
                 .pipe(
                     map(res => {
