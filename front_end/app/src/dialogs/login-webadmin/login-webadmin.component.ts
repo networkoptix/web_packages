@@ -106,6 +106,12 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit() {
+        const url = new URL(this.document.location.href.replace('#/', ''));
+        const params = new URLSearchParams(url.search);
+        const code = params.get('code');
+        if (code) {
+            this.oauthLogin(code);
+        }
         // remove leftover cookie
         this.cookieService.delete('x-runtime-guid');
         // Check the url queryParams for next. if it exists set next equal to it.
@@ -185,6 +191,26 @@ export class LoginWebadminModalContent implements OnInit {
             }
         }, (error) => {
             console.error(error);
+        });
+    }
+
+    redirectOauthLogin() {
+        const { href } = this.window.location;
+        const params = new URLSearchParams({
+            client_type   : 'loginWebadmin',
+            view_type     : 'web',
+            redirect_url  : href,
+            client_id     : 'webadmin',
+            response_type : 'code',
+            grant_type    : 'password',
+            scope         : `cloudSystemId=${this.CONFIG.cloudSystemId}`
+        });
+        this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+    }
+
+    oauthLogin(code: string) {
+        this.account.mediaServerApi.loginOauth(code).subscribe(() => {
+            this.window.location.href = this.window.location.origin;
         });
     }
 }

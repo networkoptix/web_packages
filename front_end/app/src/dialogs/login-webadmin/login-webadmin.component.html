@@ -54,5 +54,7 @@
             [form]="loginForm"
             [process]="login">
         </nx-process-button>
+            <a *ngIf="CONFIG.cloudSystemId" class="text-muted oauth-login"
+               (click)="redirectOauthLogin()">Login to cloud</a>
     </div>
 </form>

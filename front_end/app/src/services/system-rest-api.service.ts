@@ -1,10 +1,10 @@
 import { environment } from '@environments/environment';
 import { Injector } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location }             from '@angular/common';
 import { CookieService }        from 'ngx-cookie-service';
 import { from, of, throwError } from 'rxjs';
-import { mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
+import { catchError, mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 
 import { NxHealthService }      from '../pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
@@ -15,6 +15,7 @@ import { NxUriCacheService }    from './uri-cache.service';
 import * as t                   from './system-api.types';
 import { NxAccountService }     from '@services/account.service';
 import { NxDialogsService }     from '@dialogs/dialogs.service';
+import { NxStorageService }     from '@services/storage.service';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -31,6 +32,7 @@ import { NxDialogsService }     from '@dialogs/dialogs.service';
 export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
     private readonly token = 'X-Runtime-Guid';
+    private readonly refreshToken = 'refreshToken';
     private readonly oldToken = 'Unable to process owner\'s REST API request: session should not be older than 10m';
     private injector: Injector;
 
@@ -130,6 +132,69 @@ export class NxSystemRestAPI extends NxSystemAPI {
             .pipe(switchMap(() => this.post('/rest/v1/system/reset')));
     }
 
+    private getTokens() {
+        const storageService = this.injector.get(NxStorageService);
+        const refreshToken = storageService.refreshToken;
+        const accessToken = this.cookieService.get(this.token);
+        return { accessToken, refreshToken };
+    }
+
+    private setTokens(tokens) {
+        const storageService = this.injector.get(NxStorageService);
+        this.cookieService.set(this.token, tokens.access_token);
+        storageService.refreshToken = tokens.refresh_token;
+    }
+
+    private clearTokens() {
+        const storageService = this.injector.get(NxStorageService);
+        this.cookieService.delete(this.token);
+        storageService.clear = this.refreshToken;
+    }
+
+    protected retryHandler(request) {
+        return request.pipe(
+            mergeMap(
+                (
+                    error: { status: number; resultCode: string },
+                    attempt: number
+                ) => {
+                    if (attempt === 0) {
+                        const storageService = this.injector.get(NxStorageService);
+                        const refreshToken = storageService.refreshToken;
+
+                        if (!refreshToken && (
+                            error.status === 401 ||
+                            error.status === 403 ||
+                            error.resultCode === 'forbidden')
+                        ) {
+                            return from(this.unauthorizedCallback(error));
+                        } else if (error.status === 503) {
+                            // Repeat the request once again for 503 error
+                            return of('');
+                        } else if (refreshToken) {
+                            const params = {
+                                grant_type    : 'refresh_token',
+                                response_type : 'token',
+                                refresh_token : refreshToken
+                            };
+                            return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params).pipe(
+                                catchError((error) => {
+                                    this.clearTokens();
+                                    return throwError(error);
+                                }),
+                                switchMap((res) => {
+                                    this.setTokens(res);
+                                    return of('');
+                                })
+                            );
+                        }
+                    }
+                    return throwError(error);
+                }
+            )
+        );
+    }
+
     protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
@@ -159,6 +224,36 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 }
             })
         );
+    }
+
+    protected post<ResponseType = any>(url: string, data?: any, paramsToAdd = {}, customTimeout = 8000) {
+        let headers = new HttpHeaders();
+        let params = new HttpParams();
+        const fullUrl = `${this.urlBase}${url}`;
+        data = data || {};
+
+        Object.keys(paramsToAdd).forEach((key) => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
+        if (!environment.isLocal && this.authGet) {
+            params = params.append('auth', this.authPost);
+        }
+
+        if (this.serverId) {
+            headers = headers.set(this.token, this.serverId);
+        }
+
+        if (environment.isLocal) {
+            headers = headers.set('Authorization', `Bearer ${this.cookieService.get(this.token)}`);
+        }
+
+        return this.http
+            .post<ResponseType>(fullUrl, data, { params, headers })
+            .pipe(
+                retryWhen((request) => this.retryHandler(request)),
+                timeout(customTimeout)
+            );
     }
 
     public getCurrentUser(forceReload?: boolean) {
@@ -212,6 +307,32 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     this.cookieService.set(this.token, res.token);
                 }
             }));
+    }
+
+    loginOauth(code: string) {
+        const params = {
+            code,
+            grant_type    : 'authorization_code',
+            response_type : 'token'
+        };
+        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
+            .pipe(tap((tokens) => {
+                this.setTokens(tokens);
+            }));
+    }
+
+    logout() {
+        const { accessToken, refreshToken } = this.getTokens();
+        if (this.CONFIG.cloudSystemId && refreshToken) {
+            return this.post(`${this.CONFIG.cloudHost}/oauth/revoke/`, { token: refreshToken }).pipe(
+                switchMap(() => this.post(`${this.CONFIG.cloudHost}/oauth/revoke/`, { token: accessToken })),
+                tap(() => {
+                    this.clearTokens();
+                })
+            ).toPromise();
+        }
+        this.clearTokens();
+        return this.post(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {

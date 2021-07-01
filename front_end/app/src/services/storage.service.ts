@@ -76,4 +76,12 @@ export class NxStorageService {
     set restoreProcess(restoreProcess: any) {
         this.storage.store('restoreProcess', restoreProcess);
     }
+
+    get refreshToken(): string {
+        return this.storage.retrieve('refreshToken') || undefined;
+    }
+
+    set refreshToken(token) {
+        this.storage.store('refreshToken', token);
+    }
 }
