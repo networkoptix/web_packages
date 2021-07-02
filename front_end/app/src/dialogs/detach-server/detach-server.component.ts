@@ -1,11 +1,11 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
-import { NxProcessService, Process } from '../../services/process.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxToastService }            from '../toast.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-detach-server-content',
@@ -35,33 +35,30 @@ export class DetachServerModalContent {
     }
 
     ngOnInit() {
+        const options = {
+            classname : this.CONFIG.toast.warning,
+            autohide  : true,
+            delay     : this.CONFIG.alertTimeout
+        };
         this.detachServer = this.processService
             .createProcess(() => {
-                const options = {
-                    classname : this.CONFIG.toast.warning,
-                    autohide  : true,
-                    delay     : this.CONFIG.alertTimeout
-                };
                 return this.system.detachFromSystem(this.serverId, this.password).toPromise()
-                    .then(res => {
-                        if (Number(res.error)) {
-                            this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
-                            return res;
-                        }
-                        this.system.currentServerNotBusy = true;
-                        this.activeModal.close('success');
-                        options.classname = this.CONFIG.toast.success;
-                        this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
-                        window.location.reload();
-                        // may need to remove & update system eventually
-                        // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
-                        // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
-                        // return this.system.update().subscribe()
-                    })
-                    .catch(() => {
-                        this.system.currentServerNotBusy = true;
-                        this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
-                    });
+            }, {
+                ignoreError: true
+            })
+            .then(() => {
+                this.system.currentServerNotBusy = true;
+                this.activeModal.close('success');
+                options.classname = this.CONFIG.toast.success;
+                this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
+                window.location.reload();
+                // may need to remove & update system eventually
+                // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
+                // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
+                // return this.system.update().subscribe()
+            }, () => {
+                this.system.currentServerNotBusy = true;
+                this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
             });
     }
 
