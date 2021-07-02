@@ -203,7 +203,7 @@ export class LoginWebadminModalContent implements OnInit {
             client_id     : 'webadmin',
             response_type : 'code',
             grant_type    : 'password',
-            scope         : `cloudSystemId=${this.CONFIG.cloudSystemId}`
+            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${this.CONFIG.cloudSystemId}`
         });
         this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }

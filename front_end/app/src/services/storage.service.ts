@@ -77,6 +77,14 @@ export class NxStorageService {
         this.storage.store('restoreProcess', restoreProcess);
     }
 
+    get cloudAccessToken(): string {
+        return this.storage.retrieve('cloudAccessToken') || undefined;
+    }
+
+    set cloudAccessToken(token) {
+        this.storage.store('cloudAccessToken', token);
+    }
+
     get refreshToken(): string {
         return this.storage.retrieve('refreshToken') || undefined;
     }

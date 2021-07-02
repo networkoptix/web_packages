@@ -31,6 +31,7 @@ import { NxStorageService }     from '@services/storage.service';
  */
 export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
+    private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'X-Runtime-Guid';
     private readonly refreshToken = 'refreshToken';
     private readonly oldToken = 'Unable to process owner\'s REST API request: session should not be older than 10m';
@@ -132,22 +133,42 @@ export class NxSystemRestAPI extends NxSystemAPI {
             .pipe(switchMap(() => this.post('/rest/v1/system/reset')));
     }
 
+    private refreshTokens(refreshToken, isSystem) {
+        const params: any = {
+            grant_type    : 'refresh_token',
+            response_type : 'token',
+            refresh_token : refreshToken
+        };
+
+        if (isSystem) {
+            params.scope = `cloudSystemId=${this.CONFIG.cloudSystemId}`;
+        }
+
+        return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params);
+    }
+
     private getTokens() {
         const storageService = this.injector.get(NxStorageService);
         const refreshToken = storageService.refreshToken;
         const accessToken = this.cookieService.get(this.token);
-        return { accessToken, refreshToken };
+        const cloudAccessToken = storageService.cloudAccessToken;
+        return { accessToken, cloudAccessToken, refreshToken };
     }
 
-    private setTokens(tokens) {
+    private setTokens(tokens, isSystem) {
         const storageService = this.injector.get(NxStorageService);
-        this.cookieService.set(this.token, tokens.access_token);
+        if (isSystem) {
+            this.cookieService.set(this.token, tokens.access_token);
+        } else {
+            storageService.cloudAccessToken = tokens.access_token;
+        }
         storageService.refreshToken = tokens.refresh_token;
     }
 
     private clearTokens() {
         const storageService = this.injector.get(NxStorageService);
         this.cookieService.delete(this.token);
+        storageService.clear = this.cloudToken;
         storageService.clear = this.refreshToken;
     }
 
@@ -172,18 +193,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             // Repeat the request once again for 503 error
                             return of('');
                         } else if (refreshToken) {
-                            const params = {
-                                grant_type    : 'refresh_token',
-                                response_type : 'token',
-                                refresh_token : refreshToken
-                            };
-                            return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params).pipe(
+                            return this.refreshTokens(refreshToken, true).pipe(
                                 catchError((error) => {
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
                                 switchMap((res) => {
-                                    this.setTokens(res);
+                                    this.setTokens(res, true);
                                     return of('');
                                 })
                             );
@@ -316,16 +332,22 @@ export class NxSystemRestAPI extends NxSystemAPI {
             response_type : 'token'
         };
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
-            .pipe(tap((tokens) => {
-                this.setTokens(tokens);
-            }));
+            .pipe(
+                switchMap((tokens) => {
+                    this.setTokens(tokens, false);
+                    // @ts-ignore
+                    return this.refreshTokens(tokens.refresh_token, true);
+                }),
+                tap((systemTokens) => {
+                    this.setTokens(systemTokens, true);
+                })
+            );
     }
 
     logout() {
-        const { accessToken, refreshToken } = this.getTokens();
+        const { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
         if (this.CONFIG.cloudSystemId && refreshToken) {
-            return this.post(`${this.CONFIG.cloudHost}/oauth/revoke/`, { token: refreshToken }).pipe(
-                switchMap(() => this.post(`${this.CONFIG.cloudHost}/oauth/revoke/`, { token: accessToken })),
+            return this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken }).pipe(
                 tap(() => {
                     this.clearTokens();
                 })
