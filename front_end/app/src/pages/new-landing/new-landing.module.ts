@@ -12,6 +12,7 @@ import { NxLandingPageComponent } from './landing-page.component';
 import { NxContentContainerComponent } from './content-container/content-container';
 import { NxBackgroundGraphicComponent } from './background-graphic/background-graphic.component';
 import { NxMaskComponent } from './mask/mask.component';
+import { NxLearnMoreComponent } from './learn-more/learn-more.component';
 
 const appRoutes: Routes = [
     {
@@ -22,7 +23,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent],
+    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent, NxLearnMoreComponent],
     imports      : [
         CommonModule,
         DirectivesModule,

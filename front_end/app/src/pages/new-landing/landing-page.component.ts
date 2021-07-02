@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxAccountService } from '@services/account.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
 import { Observable } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
+import { NxContentContainerComponent } from './content-container/content-container';
 
 @UntilDestroy({})
 @Component({
@@ -15,6 +16,7 @@ import { debounceTime, startWith } from 'rxjs/operators';
 export class NxLandingPageComponent implements OnInit {
     // Will get data from somewhere
     // @Input() data = ''
+    @ViewChild(NxContentContainerComponent) contentComponent: NxContentContainerComponent;
     loginState: boolean;
     scrollPosition: number
     screenSize$: Observable<{ width: number, height: number }>

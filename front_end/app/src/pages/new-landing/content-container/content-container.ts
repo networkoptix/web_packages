@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 interface blockData {
     title: string;
@@ -23,6 +23,7 @@ interface dataInput {
 })
 export class NxContentContainerComponent {
     @Input() screenWidth: number
+    @ViewChild('content') contentStartRef: ElementRef
     // Dummy Data
     @Input() data: dataInput = {
         header1          : 'Expand Your Setup',

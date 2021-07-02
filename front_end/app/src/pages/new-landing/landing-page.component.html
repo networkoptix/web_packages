@@ -14,5 +14,5 @@
     </ng-container>
       <!-- <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text> -->
 </div>
-<!-- <nx-learn-more-button [screenHeight]="screenSize$.value.height"></nx-learn-more-button> -->
+<nx-learn-more [scrollPosition]="scrollPosition" [screenHeight]="(screenSize$ | async)?.height" [contentStartRef]="contentComponent?.contentStartRef"></nx-learn-more>
 <nx-content-container  [screenWidth]="(screenSize$ | async)?.width"></nx-content-container>
