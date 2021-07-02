@@ -114,14 +114,14 @@ def set_params_for_redirect(code, state):
                              "redirect_uri": redirect_uri__body,
                              "response_type": response_type__body
                          },
-                         required=[]),
+                         required=["client_id", "email", "password", "response_type"]),
                      responses={
                          200: successful_authenticate_response
                      })
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
 def authenticate(request):
-    require_params(request, ("client_id", "email", "password", "redirect_uri", "response_type"))
+    require_params(request, ("client_id", "email", "password", "response_type"))
     if get_param(request, "response_type") != Auth.RESPONSE_TYPE.code:
         raise APIRequestException("Invalid value for response_type. It must be code.")
 
