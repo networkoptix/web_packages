@@ -249,7 +249,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             });
         };
 
-        let cachedMediaServers;
+        let processingMediaServers = false;
+        let cachedMediaServers = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -262,14 +263,45 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
 
+        const mediaServerChanged = (mediaServers) => {
+            if (mediaServers.length !== cachedMediaServers.length) {
+                return true;
+            } else {
+                return mediaServers.some((server) => {
+                    const matchServer = cachedMediaServers.find((_server) => _server.id === server.id);
+                    if (!matchServer) {
+                        return true;
+                    } else {
+                        if (server.cameras.length !== matchServer.cameras.length) {
+                            return true;
+                        } else {
+                            return server.cameras.some((camera) => {
+                                const matchCamera = matchServer.cameras.find((_camera) => _camera.id === camera.id);
+
+                                return (!matchCamera ||
+                                        camera.name !== matchCamera.name ||
+                                        camera.status !== matchCamera.status && !(camera.status === 'Online' && matchCamera.status === 'Live') ||  // remapped param "status"
+                                        camera.scheduleEnabled !== matchCamera.isScheduleEnabled); // remapped param "scheduleEnabled"
+                            });
+                        }
+                    }
+                });
+            }
+        };
+
         createSystem().then(() => {
             timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
-                    if (!this.system) {
+                    if (!this.system || processingMediaServers) {
                         return;
                     }
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
+
+                    if (!mediaServerChanged(mediaServers)) {
+                        return;
+                    }
+                    processingMediaServers = true;
                     const serverTimeInfos = await this.system.getServerTimes();
                     serverTimeInfos.forEach(sti => {
                         const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
@@ -345,6 +377,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     })));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
+                    processingMediaServers = false;
+
                     firstLoad.next();
                 });
         }).catch(e => {

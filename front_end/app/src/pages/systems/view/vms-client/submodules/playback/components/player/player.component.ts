@@ -35,12 +35,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @HostListener('window:resize', ['$event'])
     protected _updateTransformExpr () {
-        const rotateDeg = this.vms.selectedCamera?.rotation || 0
-        const boundingRect = this.self.nativeElement.getBoundingClientRect()
-        const scale = Math.abs(rotateDeg) === 90
+        const rotateDeg = this.vms.selectedCamera?.rotation || 0;
+        const boundingRect = this.self.nativeElement.getBoundingClientRect();
+        const scale = (Math.abs(rotateDeg) === 90 || Math.abs(rotateDeg) === 270)
             ?  boundingRect.height / boundingRect.width
-            : 1.0
-        this.transformExpr = `rotate(${rotateDeg}deg) scale(${scale})`
+            : 1.0;
+        this.transformExpr = `rotate(${rotateDeg}deg) scale(${scale})`;
     }
 
     public get useNativePlayer () {
