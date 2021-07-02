@@ -29,12 +29,14 @@ scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True, descri
 access_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
 client_id__body = openapi.Schema(description=client_description, type=openapi.TYPE_STRING)
+client_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 description__body = openapi.Schema(description="Who is the client and what is it for.", type=openapi.TYPE_STRING)
 grant_type__body = openapi.Schema(description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
 email__body = openapi.Schema(type=openapi.TYPE_STRING)
 name__body = openapi.Schema(description="The name of the application", type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
 redirect_uri__body = openapi.Schema(description=redirect_uri_description, type=openapi.TYPE_STRING)
+refresh_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 response_type__body = openapi.Schema(description=response_type_description, type=openapi.TYPE_STRING)
 scope__body = openapi.Schema(description=scope_description, type=openapi.TYPE_STRING)
 token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
@@ -165,6 +167,47 @@ def authenticate_with_session(request):
     return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
 
+@swagger_auto_schema(methods=["POST"],  # auto_schema=None,
+                     operation_description="Logout for tokens w/ system specific scopes.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "accessToken": access_token__body,
+                             "cloudAccessToken": client_token__body,
+                             "refreshToken": refresh_token__body
+                         },
+                     required=["accessToken", "cloudAccessToken", "refreshToken"]))
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def logout(request):
+    require_params(request, ("accessToken", "cloudAccessToken", "refreshToken"))
+    request.session["access_token"] = request.data["cloudAccessToken"]
+    request.session["refresh_token"] = request.data["refreshToken"]
+
+    # If this fails that means the refresh and cloud access token expired.
+    # If one or the other is valid logout should work.
+    try:
+        Auth.delete_token(request, request.data["accessToken"])
+    except (APILogicException, APINotAuthorisedException):
+        raise APINotAuthorisedException("Invalid cloud access and refresh token", ErrorCodes.not_authorized)
+
+    # At this point the access_token is valid and the refresh might be valid
+    try:
+        Auth.delete_token(request, request.session["refresh_token"])
+    # Handles the 404 error when the refresh token is gone, and 401 if the access_token is invalid
+    except (APILogicException, APINotAuthorisedException):
+        pass
+
+    # At this point it doesn't matter if the call fails since the refresh token is dead.
+    try:
+        Auth.delete_token(request, request.session["access_token"])
+    # Handles the rare case where the access token expires after killing the refresh
+    except (APILogicException, APINotAuthorisedException):
+        pass
+
+    return api_success("Successfully logged out.")
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Register 3rd party client apps",
                      request_body=openapi.Schema(
@@ -213,6 +256,7 @@ def token(request):
     require_params(request, ("grant_type", "response_type",))
     grant_type = get_param(request, "grant_type")
     response_type = get_param(request, "response_type")
+    scope = get_param(request, 'scope')
     ip = get_ip(request)
 
     if grant_type == Auth.GRANT_TYPE.password:
@@ -224,7 +268,6 @@ def token(request):
         state = get_param(request, 'state')
 
         if response_type == Auth.RESPONSE_TYPE.code:
-            scope = get_param(request, 'scope')
             code = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri, scope=scope)
             return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
@@ -234,7 +277,7 @@ def token(request):
             return api_success(Auth.get_access_token(get_param(request, "code"), ip=ip))
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             require_params(request, ("refresh_token",))
-            return api_success(Auth.get_refresh_token(get_param(request, "refresh_token"), ip=ip))
+            return api_success(Auth.get_refresh_token(get_param(request, "refresh_token"), ip=ip, scope=scope))
 
     raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 

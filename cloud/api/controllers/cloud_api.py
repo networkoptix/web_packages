@@ -106,7 +106,8 @@ def auto_refresh_token(func):
                 if response_data and response_data["resultCode"] in [ErrorCodes.bad_username.value,
                                                                      ErrorCodes.not_authorized.value,
                                                                      ErrorCodes.not_found.value,
-                                                                     ErrorCodes.account_not_activated.value]:
+                                                                     ErrorCodes.account_not_activated.value,
+                                                                     ErrorCodes.forbidden.value]:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
@@ -704,7 +705,7 @@ class Auth(object):
 
     @staticmethod
     @validate_response
-    def get_refresh_token(refresh_token, ip=None):
+    def get_refresh_token(refresh_token, ip=None, scope=None):
         headers = {
             "X-Forwarded-For": ip
         }
@@ -713,6 +714,9 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "refresh_token": refresh_token
         }
+        if scope:
+            params["scope"] = scope
+
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
