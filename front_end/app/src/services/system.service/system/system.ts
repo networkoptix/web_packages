@@ -1,8 +1,8 @@
 import {
     BehaviorSubject, of, Subscription,
-    Observable, from, Subject
-}                               from 'rxjs';
-import { flatMap, takeUntil }   from 'rxjs/operators';
+    Observable, from
+}                                from 'rxjs';
+import { flatMap, tap }          from 'rxjs/operators';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -437,7 +437,6 @@ export class NxSystem extends System {
     authPromise: Promise<any>;
 
     ensureSystemAuth(force?) {
-
         if (this.CONFIG.isLocal) {
             return Promise.resolve();
         }
@@ -467,7 +466,6 @@ export class NxSystem extends System {
     }
 
     public getResourceTypes(force: boolean = false) {
-
         if (this.resourceTypes && !force) {
             return Promise.resolve(this.resourceTypes);
         }
@@ -481,7 +479,6 @@ export class NxSystem extends System {
     }
 
     public getMediaServersAndCameras(force: boolean = false): any {
-
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
         }
@@ -517,7 +514,6 @@ export class NxSystem extends System {
         let cs = apiReply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resourceTypes => {
-
             const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
 
             cs = cs.filter(
@@ -545,7 +541,7 @@ export class NxSystem extends System {
     }
 
     public getPlaybackUrl (cameraId, transport, resolution, position) {
-        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position)
+        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
@@ -571,7 +567,7 @@ export class NxSystem extends System {
                             timeZoneOffset : parseInt(i.timeZoneOffset)
                         }));
                         // console.log('getServerTimes', now, r.reply, sanitized)
-                        return sanitized
+                        return sanitized;
                     });
             });
     }
@@ -856,7 +852,10 @@ export class NxSystem extends System {
     restartServer(serverId: string) {
         this.currentServerNotBusy = false;
         return this.serverManager.restartServer(serverId)
-            .catch(err => Promise.reject(err));
+            .catch(err => {
+                this.currentServerNotBusy = true;
+                return Promise.reject(err);
+            });
     }
 
     /**
@@ -864,7 +863,11 @@ export class NxSystem extends System {
      */
     detachFromSystem(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.detachFromSystem(serverId, currentPassword);
+        return this.serverManager.detachFromSystem(serverId, currentPassword).pipe(
+            tap(() => {}, () => {
+                this.currentServerNotBusy = true;
+            })
+        );
     }
 
     /**
@@ -879,7 +882,11 @@ export class NxSystem extends System {
      */
     restoreFactorySettings(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.restoreFactorySettings(serverId, currentPassword);
+        return this.serverManager.restoreFactorySettings(serverId, currentPassword).pipe(
+            tap(() => {}, () => {
+                this.currentServerNotBusy = true;
+            })
+        );
     }
 
     /**
