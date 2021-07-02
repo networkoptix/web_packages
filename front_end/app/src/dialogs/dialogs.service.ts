@@ -196,6 +196,7 @@ export class NxDialogsService {
             }
             Object.assign(options, {
                 centered      : true,
+                keyboard      : false,
                 backdropClass : 'webadmin-backdrop',
                 windowClass   : 'webadmin-window'
             });
