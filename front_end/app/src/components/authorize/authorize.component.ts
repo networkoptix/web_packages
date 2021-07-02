@@ -239,7 +239,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
             this.initialData.redirect_url = res.link;
             this.currentState = AuthorizeState.confirm;
-        } else if (res?.link.includes('?code=')) {
+        } else if (res?.link.startsWith('?code=') || res.link.includes(this.window.location.origin)) {
             await this.cloudService.loginCode(code);
             defer(() => this.accountService.get())
                 .pipe(
