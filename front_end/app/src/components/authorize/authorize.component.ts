@@ -223,7 +223,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     handleLoginSuccess = async (res: { link: string }) => {
         let code: string;
         if (res?.link.startsWith('http')) {
-            const url = new URL(res.link);
+            const url = new URL(res.link.replace('/#', ''));
             code = new URLSearchParams(url.search).get('code');
         } else if (res?.link.startsWith('?code=')) {
             code = new URLSearchParams(res.link).get('code');
