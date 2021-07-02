@@ -4,7 +4,7 @@
 @use 'bootstrap_utils' as bootstrap;
 
 nx-block {
-	.user-email,
+	.username,
 	.system-name {
 		font-family : variables.$font-family-medium;
 	}

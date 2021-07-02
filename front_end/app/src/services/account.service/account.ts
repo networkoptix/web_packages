@@ -9,6 +9,7 @@ export class Account {
     email: string;
     // eslint-disable-next-line camelcase
     first_name: string;
+    name: string;
     id: string;
     // eslint-disable-next-line camelcase
     last_name: string;
@@ -26,6 +27,7 @@ export class Account {
         this.email = email;
         const [first, ...rest] = (fullName || name || '').split(' ');
         this.id = id;
+        this.name = name;
         this.first_name = first;
         this.last_name = (rest || ['']).reverse()[0];
         this.permissions = (permissions || '').split('|');
