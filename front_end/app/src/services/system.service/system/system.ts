@@ -240,7 +240,7 @@ export class NxSystem extends System {
 
         if (this.CONFIG.isLocal) {
             return this.mediaserver.getSystemSettings()
-                .then(res => {
+                .then((res: any) => {
                     let parsedSettings: any = {};
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
@@ -269,8 +269,8 @@ export class NxSystem extends System {
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                })
-                .catch(err => console.error('getInfoAndPermissions: ', err))
+                }, (err) => console.error('getSystemSettings: ', err)) // catch api error
+                .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
                 .finally(() => {
                     return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
                 });
