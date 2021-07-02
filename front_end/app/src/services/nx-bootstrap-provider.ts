@@ -79,7 +79,7 @@ export class NxBootstrapProvider {
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
-        this.CONFIG.system.name = data.name;
+        this.CONFIG.system.name = data.systemName || data.name;
     }
 
     setLanguage(data) {
