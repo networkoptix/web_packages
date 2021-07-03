@@ -16,6 +16,8 @@ import * as t                   from './system-api.types';
 import { NxAccountService }     from '@services/account.service';
 import { NxDialogsService }     from '@dialogs/dialogs.service';
 import { NxStorageService }     from '@services/storage.service';
+import { WINDOW }               from '@services/window-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -94,6 +96,20 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private loginAsCurrentUser(password?: string) {
         const remember = !!this.cookieService.get(this.token);
+        if (this.cookieService.get(this.token).includes('nxcdb')) {
+            const LANG = this.injector.get(NxLanguageProviderService).translations;
+            const { action, message, title } = LANG.dialogs?.renewOauth;
+            return from(
+                this.injector.get(NxDialogsService).confirm(message?.(), title?.(), action?.())
+            ).pipe(
+                switchMap((res) => {
+                    if (!res) {
+                        return of(false);
+                    }
+                    return from(this.logout().then(() => this.redirectOauth()));
+                })
+            );
+        }
         if (!password) {
             const accountService: NxAccountService = this.injector.get(NxAccountService);
             return from(
@@ -344,6 +360,21 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
+    redirectOauth() {
+        const window = this.injector.get(WINDOW);
+        const { href } = window.location;
+        const params = new URLSearchParams({
+            client_type   : 'loginWebadmin',
+            view_type     : 'web',
+            redirect_url  : href,
+            client_id     : 'webadmin',
+            response_type : 'code',
+            grant_type    : 'password',
+            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${this.CONFIG.cloudSystemId}`
+        });
+        window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+    }
+
     logout() {
         const { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
         if (this.CONFIG.cloudSystemId && refreshToken) {
@@ -381,18 +412,24 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
-        return from(this.getCurrentUser(true)).pipe(
-            switchMap((user) => {
-                const currentUserName = user?.username || user?.name;
-                let login = of({ token: '' });
-                if (dryRun && password) {
-                    const data = { userName: currentUserName, password, remember: false };
-                    login = this.postProxy('http', remoteServerId, 'rest/v1/login/sessions', data);
-                } else if (password) {
-                    login = this.loginToken(currentUserName, password, false);
-                }
-                return login;
-            }),
+        let login: any = of({ token: '' });
+        const userName = 'admin';
+        if (dryRun && password) {
+            const data = { userName, password, remember: false };
+            if (!remoteServerId) {
+                login = this.http.get(`${remoteEndpoint}/api/moduleInformation`).pipe(
+                    tap(({ reply }: any) => {
+                        remoteServerId = reply.id.replace(/{|}/g, '');
+                    })
+                );
+            }
+            login = login.pipe(() => {
+                return this.postProxy('http', remoteServerId, 'rest/v1/login/sessions', data);
+            });
+        } else if (password) {
+            login = this.loginToken(userName, password, false);
+        }
+        return login.pipe(
             switchMap((res: any) => {
                 remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
                 const remoteSessionToken = dryRun ? '' : res.token;

@@ -367,6 +367,11 @@
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
         },
+        "renewOauth": {
+            "action": "Login",
+            "message": "Session is too old. Please login and try again",
+            "title": "Renew login session"
+        },
         "titles": {
             "error": "Error",
             "success": "Success",

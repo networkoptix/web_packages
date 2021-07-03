@@ -35,7 +35,7 @@ const PROXY_CONFIG = [
             '/proxy',
             '/rest',
             '/static/customization',
-            '/static/lang_en_US',
+            '/static/lang_ru_RU',
             '/static/images/logo.png',
             '/swagger-ui',
             '/web/api',
@@ -46,12 +46,16 @@ const PROXY_CONFIG = [
         secure       : false
     }, {
         context: [
+            '/static/lang_en_US',
             '/static'
         ],
         target       : 'https://localhost:9001',
         changeOrigin : true,
         secure       : false,
         bypass       : function (req, res, proxyOptions) {
+            if (req.url.includes('/static/lang_en_US')) {
+                return req.url.replace('/static/lang_en_US', '');
+            }
             return req.url.replace('/static', '');
         }
     }, {

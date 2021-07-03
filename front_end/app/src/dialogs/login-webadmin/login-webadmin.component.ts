@@ -195,17 +195,7 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     redirectOauthLogin() {
-        const { href } = this.window.location;
-        const params = new URLSearchParams({
-            client_type   : 'loginWebadmin',
-            view_type     : 'web',
-            redirect_url  : href,
-            client_id     : 'webadmin',
-            response_type : 'code',
-            grant_type    : 'password',
-            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${this.CONFIG.cloudSystemId}`
-        });
-        this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+        this.account.mediaServerApi.redirectOauth();
     }
 
     oauthLogin(code: string) {
