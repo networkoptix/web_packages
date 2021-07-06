@@ -25,7 +25,6 @@ import { NxSettingsService }         from './settings.service';
 import { PipesModule }               from '@src/pipes/pipes.module';
 
 export const cloudSettingsRoutes: Routes = [
-    // root path is handles by AJS for now
     {
         path        : '',
         component   : NxSystemSettingsComponent,
@@ -51,12 +50,14 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path          : 'servers',
                 component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard]
+                canDeactivate : [ApplyGuard],
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'servers/:serverId',
                 component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard]
+                canDeactivate : [ApplyGuard],
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'cameras',
