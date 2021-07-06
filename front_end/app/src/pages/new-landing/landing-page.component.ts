@@ -17,7 +17,7 @@ export class NxLandingPageComponent implements OnInit {
     // Will get data from somewhere
     // @Input() data = ''
     @ViewChild(NxContentContainerComponent) contentComponent: NxContentContainerComponent;
-    loginState: boolean;
+    loginState: boolean | null = null;
     scrollPosition: number
     screenSize$: Observable<{ width: number, height: number }>
     introAnimationFinished = false;
@@ -42,14 +42,18 @@ export class NxLandingPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.sessionService.loginStateSubject.pipe(untilDestroyed(this))
-            .subscribe(() => {
+        this.sessionService.loginStateSubject
+            .pipe(untilDestroyed(this)).subscribe(() => {
                 this.accountService
                     .get()
                     .then(account => {
                         if (account) {
                             this.loginState = true;
+                        } else {
+                            this.loginState = false;
                         }
+                    }).catch(() => {
+                        this.loginState = false;
                     });
             });
     }

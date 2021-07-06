@@ -1,0 +1,99 @@
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/typography';
+@use '../../../styles/mixins';
+
+.root-container {
+    left: 50%;
+    text-align: center;
+    width: 600px;
+    height: 380px;
+    color: $dark9;
+    z-index: -1;
+}
+
+.root-container-absolute {
+    @extend .root-container;
+    position: absolute;
+    margin-left: -296px;
+
+     // Safari positions.
+     top: 915px;
+}
+
+.root-container-fixed {
+    @extend .root-container;
+    position: fixed;
+    margin-left: -300px;
+    margin-top: -200px;
+    top: 50%;
+}
+
+
+.cloud-header {
+    font-family: $font-family-medium;
+    color: $dark9;
+    font-size: 64px;
+    line-height: 72px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+}
+
+.cloud-sub-header {
+    animation-delay: 100ms;
+    font-family: $font-family-regular;
+    font-size: 16px;
+    color: $dark9;
+    line-height: 24px;
+    width: 420px;
+    inline-size: 300px;
+    margin: auto;
+}
+
+.cloud-icon {
+    margin-bottom: -180px;
+    width: 250px;
+    stroke: $brand_core;
+}
+
+
+.svg-container {
+    margin: auto;
+    width: 240px;
+    height: 140px;
+    margin-bottom: 36px;
+}
+
+.button-container {
+    text-align: center;
+    z-index: 4 !important;
+}
+
+.button-container-fixed {
+    @extend .button-container;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -80px;
+    margin-top: 125px;
+}
+
+.button-container-absolute {
+    @extend .button-container;
+    position: absolute;
+    top: 1240px;
+    left: 50%;
+    margin-left: -76px;
+}
+
+
+.create-button {
+    animation-delay: 200ms;
+    height: 40px !important;
+    border-radius: 4px !important;
+    font-size: 16px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    margin-top: 50px;
+}
+

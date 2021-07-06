@@ -12,7 +12,7 @@
             [maskMaxSizeScrollPosition]="scrollBreakPoints.maskMaxSize"
         ></nx-mask>
     </ng-container>
-      <!-- <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text> -->
+    <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text>
 </div>
 <nx-learn-more [scrollPosition]="scrollPosition" [screenHeight]="(screenSize$ | async)?.height" [contentStartRef]="contentComponent?.contentStartRef"></nx-learn-more>
 <nx-content-container  [screenWidth]="(screenSize$ | async)?.width"></nx-content-container>

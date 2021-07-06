@@ -99,10 +99,10 @@ const lazyRoutes: Routes = [
         path         : 'agreement',
         loadChildren : () => import('./content/content.module').then(m => m.ContentModule)
     },
-    // {
-    //     path         : 'new_landing',
-    //     loadChildren : () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule)
-    // },
+    {
+        path         : 'new_landing',
+        loadChildren : () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule)
+    },
     {
         path         : '404',
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)

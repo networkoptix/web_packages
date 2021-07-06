@@ -13,17 +13,18 @@ import { NxContentContainerComponent } from './content-container/content-contain
 import { NxBackgroundGraphicComponent } from './background-graphic/background-graphic.component';
 import { NxMaskComponent } from './mask/mask.component';
 import { NxLearnMoreComponent } from './learn-more/learn-more.component';
+import { NxIntroTextComponent } from './intro-text/intro-text.component';
 
 const appRoutes: Routes = [
     {
-        path        : '',
-        component   : NxLandingPageComponent,
-        canActivate : [DevelopersGuard, AuthGuard]
+        path      : '',
+        component : NxLandingPageComponent
+        // canActivate : [DevelopersGuard, AuthGuard]
     }
 ];
 
 @NgModule({
-    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent, NxLearnMoreComponent],
+    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent, NxLearnMoreComponent, NxIntroTextComponent],
     imports      : [
         CommonModule,
         DirectivesModule,

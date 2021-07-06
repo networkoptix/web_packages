@@ -1,0 +1,20 @@
+<!-- Hidden elements used to calculate position -->
+<div class="root-container-fixed" #rootFixed [style.visibility]="'hidden'"></div>
+<div class="root-container-absolute" #rootAbsolute [style.visibility]="'hidden'"></div>
+
+
+<div [ngClass]="'root-container-' + cloudShowing">
+    <div class="svg-container">
+        <svg-icon nx-add-svg-src 
+            [src]="CONFIG.images.dirLanding + 'cloud_icon.svg'"
+            [applyClass]="true"
+            class="cloud-icon">
+        </svg-icon>
+    </div>
+    <div class="cloud-header">{{ CONFIG.cloudName }}</div>
+    <div class="cloud-sub-header" translate>A simple way to connect to, manage and expand any %VMS_NAME% System.</div>
+</div>
+<div [ngClass]="'button-container-' + cloudShowing">
+    <button #createButton class="btn btn-primary create-button" *ngIf="!isLoggedIn" type="button" [routerLink]="'/register'" translate
+    >Create Account</button>
+</div>
