@@ -129,8 +129,8 @@
     </nx-section>
 </nx-block>
 
-<!-- Need to find out what to do here -->
-<nx-block *ngIf="!loading && (forceShowBackupBlock || currentStorageState?.onlineBackups)" type="mb-3" header-style="fixed">
+<!-- Disable block if 4.3 system, updated implementation for that version pending -->
+<nx-block *ngIf="!this.system.useRest && !loading && (forceShowBackupBlock || currentStorageState?.onlineBackups)" type="mb-3" header-style="fixed">
     <header>
         <div class="header-top-bar">
             <nx-switch
