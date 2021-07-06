@@ -417,36 +417,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _prepareArchiveRecords (ar) {
-        const serverTimes = (
-            this.vms.serverTimes || (await this._getServerTimes())
-        ).reduce((reduced, server) => ({
-            ...reduced,
-            [server.serverId]: server.vmsTimeOffset
-        }), {});
-
-        const offsetsByServer = this.system.mediaservers.reduce((
-            reduced, { id, addParams, timeInfo = {} }: any
-        ) => ({
-            ...reduced,
-            [id]: parseInt(
-                timeInfo?.timeZoneOffset ??
-                (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
-                serverTimes[id]
-            ) - serverTimes[id]
-        }), {});
-
-        const timezoneAdjusted = [];
-        ar.reply.forEach(({ guid, periods }) => {
-            const cleanId = NxUtilsService.cleanId(guid);
-            periods.forEach(period => {
-                timezoneAdjusted.push({
-                    ...period,
-                    startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
-                });
-            });
-        });
-        ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
-        return ar;
+        // this method here is kinda legacy
+        // TODO: refactor
+        await this._getServerTimes()
+        if (ar.reply.length) {
+            ar.reply = ar.reply[0].periods
+        }
+        return ar
     }
 
     public ngAfterViewInit () {
