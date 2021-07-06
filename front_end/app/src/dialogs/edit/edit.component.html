@@ -8,42 +8,34 @@
         </button>
     </div>
     <div class="modal-body">
-        <section *ngIf="!id">
-            <label>{{nameStructure.label}}</label>
-            <input
-                [type]="nameStructure.type"
-                [name]="nameStructure.name"
-                [placeholder]="nameStructure.placeholder || ''"
-                [(ngModel)]="name"
-                class="form-control">
-            <div *ngIf="nameStructure.description" [innerHTML]="nameStructure.description"></div>
-        </section>
-        <section *ngFor="let structure of manifest.fields">
-            <label>{{structure.label}}</label>
-            <ng-container [ngSwitch]="structure.type">
-                <!-- Need to figure out how we're going to handle dropdowns from CMS -->
-                <!-- <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
-                    [selected]="values[structure.name]"
-                    (onSelected)="values[structure.name] = $event"
-                    [items]="structure.meta.options"
-                    ></nx-select> -->
-                <input *ngSwitchDefault
-                    [type]="structure.type"
-                    [name]="structure.name"
-                    (input)="clearError(structure.name)"
-                    [placeholder]="structure.placeholder || ''"
-                    [(ngModel)]="values[structure.name]"
-                    class="form-control">
-            </ng-container>
-            <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
-            <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
-                <span *ngFor="let error of errors" class="input-error">{{error}}</span>
-            </div>
-        </section>
+        <ng-container *ngFor="let structure of manifest.fields">
+            <section *ngIf="!structure?.hidden">
+                <label>{{structure.label}}</label>
+                <ng-container [ngSwitch]="structure.type">
+                    <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
+                        [selected]="dropdownLookup[structure.name]?.selected"
+                        (onSelected)="updateDropdown(structure.name, $event)"
+                        [items]="dropdownLookup[structure.name]?.options"
+                        [stillLoading]="!dropdownLookup[structure.name]?.options"
+                        ></nx-select>
+                    <input *ngSwitchDefault
+                        [type]="structure.type"
+                        [name]="structure.name"
+                        (input)="clearError(structure.name)"
+                        [placeholder]="structure?.placeholder || ''"
+                        [(ngModel)]="values[structure.name]"
+                        class="form-control">
+                </ng-container>
+                <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+                <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
+                    <span *ngFor="let error of errors" class="input-error">{{error}}</span>
+                </div>
+            </section>
+        </ng-container>
     </div>
     <div class="modal-footer border-top-0">
-        <nx-process-button [process]="id ? saveContext : createContext" [buttonText]="'Save' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
-        <nx-cancel-button [process]="id ? saveContext : createContext" [discardFn]="close"></nx-cancel-button>
-        <nx-process-button *ngIf="id" [process]="deleteContext" [buttonText]="'Delete' | translate" [svg]="{ src: 'delete', height: '24', color: 'light1' }"></nx-process-button>
+        <nx-process-button [process]="values?.id ? saveContext : createContext" [buttonText]="'Save' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
+        <nx-cancel-button [process]="values?.id ? saveContext : createContext" [discardFn]="close"></nx-cancel-button>
+        <nx-process-button *ngIf="values?.id" [process]="deleteContext" [buttonText]="'Delete' | translate" [svg]="{ src: 'delete', height: '24', color: 'light1' }"></nx-process-button>
     </div>
 </form>

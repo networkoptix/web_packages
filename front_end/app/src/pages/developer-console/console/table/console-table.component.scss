@@ -42,6 +42,20 @@ td svg-icon {
     cursor: pointer;
 }
 
+tr.data-row {
+    &:hover {
+        background: transparentize($brand_core, 0.9);
+    }
+
+    &:active {
+        & * {
+            color: $light1 !important;
+            fill: $light1 !important;
+        }
+        background: $light16;
+    }
+}
+
 .type-icon_link, .type-icon_modal {
     width: 40px;
 }

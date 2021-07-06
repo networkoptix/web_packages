@@ -1,6 +1,6 @@
-import { IConfig } from './config-types';
-import { environment } from '@environments/environment';
-import { ConfigType, ModalType } from '@pages/developer-console/console/table/console-table.component';
+import { IConfig }                               from './config-types';
+import { environment }                           from '@environments/environment';
+import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
 
 export const nxConfig: IConfig = {
     alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -251,12 +251,16 @@ export const nxConfig: IConfig = {
     },
     maintenanceTimeout : 60 * 1000,
     manifest           : {
-        'custom-clients': {
-            intro: {
-                // TODO: Remove once we decide how this will be provided from the CMS.
-                title   : 'About',
-                content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
-            },
+        [ConsoleSection.CUSTOM_CLIENTS]: {
+            // intro: {
+            //     // TODO: Remove once we decide how this will be provided from the CMS.
+            //     title   : 'About',
+            //     content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
+            // },
+            sort              : 0,
+            title             : 'Custom VMS Clients',
+            url               : 'custom-clients',
+            icon              : 'servers.svg',
             perPage           : 4,
             pagesToShow       : 4,
             searchable        : true,
@@ -297,6 +301,23 @@ export const nxConfig: IConfig = {
                     }
                 }
             ],
+            editManifest: {
+                label  : 'Edit',
+                fields : [
+                    {
+                        type        : ConfigType.TEXT,
+                        name        : 'name',
+                        label       : 'Internal Name',
+                        placeholder : 'Custom VMS Client Name',
+                        description : 'Name is hidden from external users'
+                    },
+                    {
+                        type  : ConfigType.DROPDOWN,
+                        name  : 'base_vms',
+                        label : 'Based on'
+                    }
+                ]
+            },
             actions: [
                 {
                     title : 'Create',
@@ -305,8 +326,8 @@ export const nxConfig: IConfig = {
             ]
         }
     },
-    maxServers         : 100, // The maximum amount of server that can be in a system
-    meta               : {
+    maxServers : 100, // The maximum amount of server that can be in a system
+    meta       : {
         viewport: {
             default       : 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
             desktopLayout : 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'

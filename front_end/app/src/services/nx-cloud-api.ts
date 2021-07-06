@@ -14,6 +14,8 @@ import { NxUriCacheService }        from './uri-cache.service';
 import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
+import { ConsoleSection }           from '@pages/developer-console/console/table/console-table.component';
+import { AboutAsset } from '@pages/developers/about/about.component';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -114,14 +116,15 @@ export class NxCloudApiService {
         this.customClient = new CustomClientAPI(this, this.CONFIG, this.http);
     }
 
-    getSubAPI(route) {
+    getSubAPI(route: ConsoleSection) {
         switch (route) {
             case 'custom-clients':
                 return this.customClient;
             default:
                 return {
-                    list        : () => new BehaviorSubject([]),
-                    getManifest : () => new BehaviorSubject({ manifest: { contexts: {} } })
+                    list        : (...args) => new BehaviorSubject([]),
+                    getManifest : () => new BehaviorSubject({ manifest: { contexts: {} } }),
+                    retrieve    : (id) => new BehaviorSubject({})
                 };
         }
     }
@@ -535,6 +538,11 @@ export class NxCloudApiService {
         }));
     }
 
+    getDocAsset(assetId) {
+        const route = `${this.CONFIG.apiBase}/documentation/${assetId}`;
+        return this.http.get<t.DocAsset>(route).pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
+    }
+
     findArticleKB(assetId) {
         return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
             if (error.status === 404) {
@@ -592,14 +600,11 @@ class CustomClientAPI {
         return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
     }
 
-    partialUpdate = (id, name?, values?) => {
-        const data: any = {};
+    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
         if (name !== undefined) {
             data.name = name;
         }
-        if (values !== undefined) {
-            data.values = values;
-        }
+        data.values = { ...(data.values || {}), ...values };
         return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
     }
 

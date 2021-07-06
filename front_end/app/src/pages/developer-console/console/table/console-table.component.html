@@ -1,10 +1,10 @@
 <nx-pre-loader *ngIf="!selectedManifest"></nx-pre-loader>
 
-<nx-block *ngIf="selectedManifest?.intro" header-style="slim">
+<nx-block *ngIf="docAsset.title && docAsset.blocks.length" header-style="slim">
     <header>
-        {{selectedManifest.intro.title}}
+        {{docAsset.title}}
     </header>
-    <nx-section [innerHTML]="selectedManifest.intro.content | safe:'html'"></nx-section>
+    <nx-section *ngFor="let block of docAsset.blocks" [innerHTML]="block.contentHTML| safe:'html'"></nx-section>
 </nx-block>
 
 <section *ngIf="selectedManifest?.contexts" class="card mt-3 position-relative">
@@ -62,10 +62,15 @@
                     </td>
                 </ng-container>
                 <ng-container *ngSwitchCase="CONFIG_TYPE.DATE">
-                    <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')"> {{element[field.name] | date: 'shortDate'}} </td>
+                    <td cdk-cell *cdkCellDef="let element"
+                        [class]="'type-default ' + (field.meta?.styles || '')"
+                        [routerLink]="[CONSOLE_MODE.EDIT, element.id]">{{element[field.name] | date: 'shortDate'}}</td>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
-                    <td cdk-cell *cdkCellDef="let element" [class]="'type-default ' + (field.meta?.styles || '')" [innerHTML]="element[field.name] | highlight: (selectedData.search$ | async)"></td>
+                    <td cdk-cell *cdkCellDef="let element"
+                        [class]="'type-default ' + (field.meta?.styles || '')"
+                        [innerHTML]="element[field.name] | highlight: (selectedData.search$ | async)"
+                        [routerLink]="[CONSOLE_MODE.EDIT, element.id]"></td>
                 </ng-container>
             </ng-container>
         </ng-container>
@@ -73,7 +78,7 @@
             <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
         </thead>
         <tbody>
-            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
         </tbody>
     </table>
     <div *ngIf="!(selectedData.data$ | async)?.length" class="table-content-placeholder" [style.height.px]="48 * selectedManifest.perPage">
@@ -85,6 +90,8 @@
         </ng-template>
         <nx-pre-loader *ngIf="!dataLoaded; else createPlaceholder"></nx-pre-loader>
     </div>
-    <nx-paginator [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
-    <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 ml-auto btn-' + (action.type || 'primary')">{{action.title}}</button>
+    <div class="d-flex justify-content-between">
+        <nx-paginator [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
+        <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 ml-auto btn-' + (action.type || 'primary')">{{action.title}}</button>
+    </div>
 </section>

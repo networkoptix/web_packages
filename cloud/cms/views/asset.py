@@ -795,22 +795,34 @@ class CustomClientViewSet(ModelViewSet):
 
     @action(detail=False, serializer_class=ContentManifestSerializer)
     def get_manifest(self, request):
-        fields = []
-        for field_name, field_props in list(filter(
-                lambda item: item[1].get('source', '') == 'custom',
-                AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
-        )):
-            fields.append({
+        fields = [{
                 'name': field_props.get('name', field_name),
                 'label': field_props.get('label', field_name),
                 'type': field_props.get('type', 'text'),
                 'metaOnly': field_props.get('metaOnly', False),
                 'description': field_props.get('description', ''),
                 'optional': field_props.get('optional', False)
-            })
+            } for field_name, field_props in list(filter(
+                lambda item: item[1].get('source', '') == 'custom',
+                AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
+        ))]
+
         contexts = [{
             'name': 'information',
             'label': 'Information',
             'fields': fields
         }]
-        return api_success({'manifest': {'contexts': contexts}})
+
+        vmsList = [{'name': vms.name, 'value': vms.id} for vms in Asset.objects.filter(
+            asset_type=AssetType.ASSET_TYPES.vms, customizations__name__in=request.user.customizations) if UserGroupsToAssetPermissions.check_permission(request.user, vms)]
+        customization_vms = get_vms_asset()
+
+        if (customization_vms.name not in vms['name'] for vms in vmsList):
+            vmsList = [{'name': customization_vms.name, 'value': customization_vms.id}, *vmsList]
+
+        settings = {
+            'base_vms': {
+                'options': vmsList
+            }
+        }
+        return api_success({'manifest': {'contexts': contexts, 'settings': settings}})

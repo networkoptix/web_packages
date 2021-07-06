@@ -20,7 +20,7 @@ section {
         @include typography.regular14dark10;
     }
 
-    span {
+    span:not(.input-error) {
         @include typography.regular14light10;
     }
 

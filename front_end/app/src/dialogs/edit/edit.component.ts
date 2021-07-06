@@ -7,10 +7,12 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { ModalContent, ModalType }   from '@pages/developer-console/console/table/console-table.component';
-import { DataStructureType }         from '@pages/developer-console/console/edit/console-edit.component';
-import { ContextManifest }           from '@services/nx-cloud-api.types';
+import {
+    ConfigType, ModalContent, ModalManifest, ModalType
+}                                    from '@pages/developer-console/console/table/console-table.component';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
+import { ContentSettings }           from '@services/nx-cloud-api.types';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {
@@ -27,22 +29,27 @@ export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     styleUrls   : ['edit.component.scss']
 })
 export class EditModalContent implements ModalContent {
-    @Input() id: number;
     @Input() heading: string;
     @Input() modal: ModalType;
     @Input() values: Record<string, any>;
-    @Input() manifest: ContextManifest;
+    @Input() manifest: ModalManifest;
+    @Input() settings: ContentSettings;
 
-    STRUCTURE_TYPE = DataStructureType
+    STRUCTURE_TYPE = ConfigType
     errors: Record<string, string[]> = {};
     processDisabled = false;
     name = '';
-    nameStructure;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     createContext: Process;
     saveContext: Process;
     deleteContext: Process;
+    dropdownLookup: {
+        [key: string]: {
+            selected : DropdownItem,
+            options  : DropdownItem[]
+        }
+    } = {}
 
     constructor(
         configService: NxConfigService,
@@ -57,7 +64,6 @@ export class EditModalContent implements ModalContent {
     }
 
     ngOnInit() {
-        this.nameStructure = manifestLookupByType(this.CONFIG, this.modal).contexts[0];
         if (!this.values) {
             this.values = this.manifest.fields.reduce((values, { name }) => ({ ...values, [name]: '' }), {});
         } else {
@@ -68,16 +74,34 @@ export class EditModalContent implements ModalContent {
                 [ModalType.CLIENT_EDIT]: {
                     create : ['customClient', 'create'],
                     save   : ['customClient', 'partialUpdate'],
-                    delete : ['customClient', 'destroy']
+                    delete : ['customClient', 'destroy'],
+                    getVMS : ['customClient', 'getVMS']
                 },
                 [ModalType.CLIENT_CREATE]: {
                     create : ['customClient', 'create'],
                     save   : ['customClient', 'partialUpdate'],
-                    delete : ['customClient', 'destroy']
+                    delete : ['customClient', 'destroy'],
+                    getVMS : ['customClient', 'getVMS']
                 }
             })[this.modal][action];
             return this.cloudApi[subAPI][method];
         };
+
+        for (const { name, type } of this.manifest.fields) {
+            if (type === ConfigType.DROPDOWN) {
+                const { options = [], hidden = false } = this.settings?.[name] || {};
+                const currentValue = this.values[name];
+                const selected = options.find(({ value }) => value === currentValue) || options[0];
+                this.dropdownLookup[name] = {
+                    selected,
+                    options
+                };
+                const field = this.manifest.fields.find(({ name: fieldName }) => fieldName === name);
+                if (field) {
+                    field.hidden = hidden || !options.length;
+                }
+            }
+        }
 
         const options = {
             classname : this.CONFIG.toast.success,
@@ -85,32 +109,32 @@ export class EditModalContent implements ModalContent {
             delay     : this.CONFIG.alertTimeout
         };
 
-        this.createContext = this.processService.createProcess(() => getMethod('create')(this.name, this.values),
-            {},
+        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name, this.values),
+            { ignoreError: true },
             _ => {
                 // Need spec for saving message
                 this.toastService.show('Custom Client Created', options);
-                this.close({ id: this.id, action: 'create' });
+                this.close({ id: this.values.id, action: 'create' });
             }, err => { console.error(err); });
 
-        this.saveContext = this.processService.createProcess(() => getMethod('save')(this.id, undefined, this.values),
+        this.saveContext = this.processService.createProcess(() => getMethod('save')(this.values.id, this.values.name, this.values),
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
                 this.toastService.show('Custom Client Saved', options);
-                this.close({ id: this.id, action: 'save' });
+                this.close({ id: this.values.id, action: 'save' });
             },
             ({ values: errors }) => {
                 this.errors = errors;
                 this.processDisabled = true;
             });
 
-        this.deleteContext = this.processService.createProcess(() => getMethod('delete')(this.id),
+        this.deleteContext = this.processService.createProcess(() => getMethod('delete')(this.values.id),
             {},
             _ => {
                 // Need spec for saving deleting message
                 this.toastService.show('Custom Client Deleted', options);
-                this.close({ id: this.id, action: 'delete' });
+                this.close({ id: this.values.id, action: 'delete' });
             }, err => { console.error(err); });
     }
 
@@ -123,5 +147,9 @@ export class EditModalContent implements ModalContent {
             delete this.errors[field];
         }
         this.processDisabled = !!Object.keys(this.errors).length;
+    }
+
+    updateDropdown = (fieldName: string, item: DropdownItem) => {
+        this.values[fieldName] = item.value;
     }
 }

@@ -1,3 +1,5 @@
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
+
 /* eslint-disable camelcase */
 export interface ILanguage{
     language: string;
@@ -264,11 +266,34 @@ export interface FieldManifest {
 export interface ContextManifest {
     name: string;
     label: string;
+    icon?: string;
     fields: FieldManifest[];
+}
+
+export interface ContentSettings {
+    [key: string]: {
+        hidden?: boolean,
+        label?: string,
+        options?: DropdownItem[]
+    }
 }
 
 export interface ContentManifest {
     manifest: {
         contexts: ContextManifest[]
-    }
+    },
+    settings?: ContentSettings
+}
+
+export interface DocBlock {
+    content: string,
+    contentHTML: string,
+    type: string;
+}
+
+export interface DocAsset {
+    id: number,
+    shortDescription: string,
+    title: string,
+    blocks: DocBlock[]
 }

@@ -1,14 +1,19 @@
 import { DataSource }                                 from '@angular/cdk/collections';
 import { Component, Input, SimpleChanges }            from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router }                     from '@angular/router';
 import { NxDialogsService }                           from '@dialogs/dialogs.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
-import { NxCloudApiService }                          from '@services/nx-cloud-api';
-import { ContextManifest }                            from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService }                   from '@services/nx-config';
-import { BehaviorSubject, combineLatest, forkJoin, Observable }      from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
+import { TranslateService }                           from '@ngx-translate/core';
+import { map, switchMap }                                        from 'rxjs/operators';
+
+import { NxCloudApiService }                                 from '@services/nx-cloud-api';
+import { ContentManifest, ContentSettings, ContextManifest, DocAsset } from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService }                          from '@services/nx-config';
+import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
+import { ConsoleMode }                                       from '../console.component';
+import { DataStructureMeta }                                 from '../edit/console-edit.component';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxMenusService } from '@services/menus.service';
 
 export enum ConfigType {
     TEXT='text',
@@ -16,14 +21,18 @@ export enum ConfigType {
     COMMENTS='comments',
     STATUS='status',
     ICON_LINK='icon_link',
-    ICON_MODAL='icon_modal'
+    ICON_MODAL='icon_modal',
+    DROPDOWN='dropdown'
 }
 
 export interface ColumnConfig {
     type: ConfigType,
     name: string,
     label: string,
-    meta?: Record<string, any>
+    description?: string,
+    placeholder?: string,
+    hidden?: boolean,
+    meta?: DataStructureMeta
 }
 
 enum ActionType {
@@ -41,16 +50,26 @@ interface ActionConfig {
     type?: ActionType,
 }
 
+export interface ModalManifest {
+    label: string,
+    fields: ColumnConfig[]
+}
+
 export interface ConsoleManifest {
-    intro?: {
-        title: string,
-        content: string
-    },
+    // intro?: {
+    //     title: string,
+    //     content: string
+    // },
+    sort: number,
+    title: string,
+    url: string,
+    icon: string
     perPage: number,
     pagesToShow: number,
     searchable: boolean,
     excludeFromSearch: string[],
     contexts: ColumnConfig[],
+    editManifest: ModalManifest,
     actions: ActionConfig[]
 }
 
@@ -66,12 +85,21 @@ export interface ModalContent {
     values?: Record<string, any>
 }
 
+export enum ConsoleSection {
+    CUSTOM_CLIENTS='custom-clients'
+}
+
 export class ListSerializer<Initial, Serialized> {
     #serializer: (data: Initial[]) => Serialized[]
     manifest;
     data: Serialized[] = []
 
-    constructor(route: string, manifest: ContextManifest, initialData?: Initial[]) {
+    constructor(
+        route: string,
+        manifest: ContextManifest,
+        initialData?: Initial[],
+        private contentSettings?: ContentSettings
+    ) {
         this.manifest = manifest;
         switch (route) {
             case 'custom-clients':
@@ -80,7 +108,7 @@ export class ListSerializer<Initial, Serialized> {
             default:
                 this.#serializer = (data: unknown) => data as Serialized[];
         }
-        if (initialData) {
+        if (initialData?.length) {
             this.data = this.#serializer(initialData);
         }
     }
@@ -91,12 +119,12 @@ export class ListSerializer<Initial, Serialized> {
 
     #customClientsSerializer = (data) => {
         const createDownloadLink = (item) => `/todo/create/download/link/${item.id}`;
-        const createModalValues = ({ id, values }) => ({
+        const createModalValues = ({ values: _, ...values }) => ({
             modal    : ModalType.CLIENT_EDIT,
             heading  : this.manifest.label,
             manifest : this.manifest,
-            values,
-            id
+            settings : this.contentSettings || {},
+            values
         });
 
         return data.map(
@@ -115,10 +143,11 @@ export class ListSerializer<Initial, Serialized> {
     styleUrls   : ['console-table.component.scss']
 })
 export class NxDevConsoleTableComponent {
-    @Input() sectionParam: string;
+    @Input() sectionParam: ConsoleSection;
 
     CONFIG: IConfig;
     CONFIG_TYPE = ConfigType;
+    CONSOLE_MODE = ConsoleMode;
     base = '/developers';
     noResultsHeight = 0;
     noResultsWidth = 0;
@@ -128,6 +157,8 @@ export class NxDevConsoleTableComponent {
     selectedData: TableDataSource;
     displayedColumns: string[];
     manifest: any;
+    contentManifest: ContentManifest;
+    docAsset: DocAsset;
 
     constructor(
         configService: NxConfigService,
@@ -135,7 +166,9 @@ export class NxDevConsoleTableComponent {
         private router: Router,
         private dialogService: NxDialogsService,
         private cloudApi: NxCloudApiService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private headerService: NxHeaderService,
+        private menusService: NxMenusService
     ) {
         this.CONFIG = configService.config;
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
@@ -146,16 +179,22 @@ export class NxDevConsoleTableComponent {
             this.selectedData = this.displayedColumns = this.selectedManifest = null;
             this.dataLoaded = false;
 
-            forkJoin({
-                list     : this.cloudApi.getSubAPI(this.sectionParam).list(),
-                manifest : this.cloudApi.getSubAPI(this.sectionParam).getManifest()
-            }).subscribe(({ list, manifest: { manifest : { contexts } } }) => {
+            combineLatest([
+                this.cloudApi.getSubAPI(this.sectionParam).list(),
+                this.cloudApi.getSubAPI(this.sectionParam).getManifest(),
+                this.menusService.getMenu('header').pipe(
+                    map(({ nodes }) => this.headerService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
+                    switchMap(assetId => assetId ? this.cloudApi.getDocAsset(assetId) : Promise.resolve(null as DocAsset))
+                )
+            ]).subscribe(([list, contentManifest, docAsset]) => {
+                this.contentManifest = contentManifest as ContentManifest;
+                this.docAsset = docAsset;
                 this.selectedManifest = this.CONFIG.manifest[this.sectionParam];
                 this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
-                this.manifest = contexts[0];
+                this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '' } = this.route.snapshot.queryParams;
                 this.selectedData = new TableDataSource(
-                    new ListSerializer(this.sectionParam, this.manifest, list).data,
+                    new ListSerializer(this.sectionParam, this.manifest, list, this.contentManifest.settings).data,
                     this.selectedManifest.perPage,
                     parseInt(page),
                     search,
@@ -184,7 +223,7 @@ export class NxDevConsoleTableComponent {
 
     updateData() {
         this.cloudApi.getSubAPI(this.sectionParam).list().subscribe(list => {
-            this.selectedData.updateBaseData(new ListSerializer(this.sectionParam, this.manifest, list).data);
+            this.selectedData.updateBaseData(new ListSerializer(this.sectionParam, this.manifest, list, this.contentManifest.settings).data);
         });
     }
 
@@ -193,7 +232,13 @@ export class NxDevConsoleTableComponent {
     }
 
     async handleModal(modalContent?) {
-        const action = await this.dialogService.edit(modalContent || { modal: ModalType.CLIENT_CREATE, manifest: this.manifest, heading: this.translate.instant('devConsole.create') });
+        const action = await this.dialogService.edit(
+            modalContent || {
+                modal    : ModalType.CLIENT_CREATE,
+                manifest : this.manifest,
+                heading  : this.translate.instant('devConsole.create'),
+                settings : this.contentManifest.settings
+            });
         if (action) {
             this.updateData();
         }

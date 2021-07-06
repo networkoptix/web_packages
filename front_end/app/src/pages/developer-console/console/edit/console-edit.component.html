@@ -1,20 +1,27 @@
-<nx-block header-style="slim">
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+
+<nx-block *ngIf="context && values; else preloader" header-style="slim">
     <header>
-        {{context.heading}}
+        {{context.label}}
     </header>
     <nx-section>
         <form>
-            <section *ngFor="let structure of context.structures">
-                <label [for]="structure.key">{{structure.title}}</label>
-                <span *ngIf="structure.tag">{{structure.tag}}</span>
+            <section *ngFor="let structure of context.fields">
+                <label [for]="structure.name">{{structure.label}}</label>
+                <span *ngIf="structure.label">{{structure.name}}</span>
                 <input 
                     [type]="structure.type"
-                    [name]="structure.key"
+                    [name]="structure.name"
                     [placeholder]="structure.placeholder || ''"
-                    [ngModel]="watchers[structure.key].value"
-                    (ngModelChange)="updateWatcher(structure.key, $event)"
+                    [ngModel]="watchers[structure.name].value"
+                    (ngModelChange)="updateWatcher(structure.name, $event)"
                     class="form-control">
                 <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+                <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
+                    <span *ngFor="let error of errors" class="input-error">{{error}}</span>
+                </div>
             </section>
         </form>
     </nx-section>

@@ -21,8 +21,23 @@ a.btn.btn-default {
         color: $light1 !important;
     }
 
-    .disabled {
+    &.page-num-btn {
+        width: 32px;
+    }
+
+    &.disabled {
+        position: relative;
         cursor: not-allowed;
+        background: transparent !important;
+        &:after {
+            content: "";
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            border: 1px solid $light10;
+        }
     }
     
 }

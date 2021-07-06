@@ -20,7 +20,7 @@ export class NxProcessCancelButtonComponent {
     @Input() showDiscard = false;
 
     handleClick() {
-        if (this.process.processing) {
+        if (this.process?.processing) {
             this.process.cancel();
             return this.cancelFn?.();
         } else {

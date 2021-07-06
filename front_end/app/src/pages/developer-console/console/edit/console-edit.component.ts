@@ -1,16 +1,26 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
-import { NxToastService } from '@dialogs/toast.service';
-import { NxApplyService, Watcher } from '@services/apply.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxProcessService, Process } from '@services/process.service';
+import { Component, Input, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { ActivatedRoute, Router }                                       from '@angular/router';
+import { Observable }                                                   from 'rxjs';
+
+import { NxToastService }               from '@dialogs/toast.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NxApplyService, Watcher }      from '@services/apply.service';
+import { NxCloudApiService }            from '@services/nx-cloud-api';
+import { ContextManifest }              from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService }     from '@services/nx-config';
+import { NxProcessService, Process }    from '@services/process.service';
+import { ConsoleSection }               from '../table/console-table.component';
 
 export enum DataStructureType {
     TEXT='text',
     DROPDOWN='dropdown'
 }
 
-interface DataStructureMeta {
-    options: { name: any, value: any }[]
+export interface DataStructureMeta {
+    options?: { name: any, value: any }[],
+    icon?: string,
+    tooltip?: string,
+    styles? : string
 }
 
 export interface DataStructure<Value = any> {
@@ -66,54 +76,108 @@ const mockContext: ContextStruct = {
     structures : mockStructures
 };
 
+@UntilDestroy()
 @Component({
     selector    : 'console-edit',
     templateUrl : 'console-edit.component.html',
     styleUrls   : ['console-edit.component.scss']
 })
 export class NxDevConsoleEditComponent {
+    @Input() contextList: ContextManifest[] = [];
+    @Input() values: Record<any, any>;
     @ViewChild('applyContainer', { read: ViewContainerRef }) applyContainer;
 
     CONFIG: IConfig;
     saveContext: Process;
-    context: ContextStruct
-    watchers: {[key: string]: Watcher<any, NxDevConsoleEditComponent>} = {}
+    context: ContextManifest;
+    errors: Record<string, string[]> = {};
+    watchers: {[key: string]: Watcher<any, NxDevConsoleEditComponent>} = {};
 
     constructor(
         configService: NxConfigService,
+        private route: ActivatedRoute,
+        private router: Router,
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        private cloudApi: NxCloudApiService
     ) {
-        this.context = mockContext;
         this.CONFIG = configService.config;
-        this.context.structures.forEach(({ key, value }) => {
-            this.watchers[key] = new Watcher(value, this);
-        });
     }
 
     ngOnInit() {
-        this.saveContext = this.processService.createProcess(() => {
-            // TODO: Replace process with saving to CMS once endpoint is ready
-            return new Promise(resolve => setTimeout(resolve, 2500));
-        }, {}, result => {
-            const options = {
-                classname : this.CONFIG.toast.success,
-                autohide  : true,
-                delay     : this.CONFIG.alertTimeout
-            };
-            this.toastService.show('Context Saved', options);
-        }, err => { console.error(err); });
+        const getMethod = (action: string) => {
+            const [subAPI, method] = ({
+                [ConsoleSection.CUSTOM_CLIENTS]: {
+                    save: ['customClient', 'partialUpdate']
+                }
+            })[this.route.snapshot.params.section][action];
+            return this.cloudApi[subAPI][method];
+        };
+        this.saveContext = this.processService.createProcess(
+            () => getMethod('save')(this.values.id, this.values.name, this.values, this.getValues()),
+            { ignoreError: true },
+            ({ values }) => {
+                Object.entries(values).forEach(([key, value]) => {
+                    this.watchers[key].originalValue = value;
+                });
+                const options = {
+                    classname : this.CONFIG.toast.success,
+                    autohide  : true,
+                    delay     : this.CONFIG.alertTimeout
+                };
+
+                this.toastService.show('Context Saved', options);
+            },
+            ({ values: errors }) => {
+                this.errors = errors;
+            }
+        );
     }
 
-    ngAfterViewInit() {
+    ngOnChanges({ contextList: { currentValue, previousValue, firstChange } }: SimpleChanges) {
+        if (firstChange || currentValue !== previousValue) {
+            this.watchers = {};
+            if (this.values) {
+                this.addWatchers();
+            } else {
+                const { section, id, context } = this.route.snapshot.params;
+                if (!this.contextList.length) {
+                    return;
+                }
+                const foundContext = this.contextList.find(({ name }) => name === context);
+                this.context = foundContext || this.contextList[0];
+                if (!foundContext) {
+                    this.router.navigateByUrl(`${context ? this.router.url.split(`/${context}`)[0] : this.router.url}/${this.context.name}`,  { replaceUrl: true });
+                }
+                (this.cloudApi.getSubAPI(section).retrieve(id) as Observable<any>).pipe(
+                    untilDestroyed(this)
+                ).subscribe(values => {
+                    if (values) {
+                        this.values = values;
+                        this.addWatchers();
+                    } else {
+                        // Navigate up a level
+                    }
+                });
+            }
+        }
+    }
+
+    addWatchers = () => this.context?.fields.forEach(({ name }) => {
+        this.watchers[name] = new Watcher(this.values.values[name], this);
+
         this.applyService.initPageWatcher(
             this.applyContainer,
             this.saveContext,
             this.reset,
             Object.values(this.watchers)
         );
-    }
+    });
+
+    getValues = () => Object.entries(
+        this.watchers
+    ).reduce((values, [key, watcher]) => ({ ...values, [key]: watcher.value }),{})
 
     reset = () => {
         for (const key in this.watchers) {
@@ -123,5 +187,6 @@ export class NxDevConsoleEditComponent {
 
     updateWatcher(key, value) {
         this.watchers[key].value = value;
+        this.errors = {};
     }
 }
