@@ -485,9 +485,12 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def toggle_2fa(request, headers=None):
-        email = request.user.email
-        return post_wrapper(f"{CLOUD_DB_URL}/account/{email}/settings/security", headers=headers)
+    def toggle_2fa(request, password, tfa_enabled, headers=None):
+        data = {
+            "password": password,
+            "account2faEnabled": tfa_enabled
+        }
+        return put_wrapper(f"{CLOUD_DB_URL}/account/self/settings/security", json=data, headers=headers)
 
 
 class Storage(object):

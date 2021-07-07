@@ -278,11 +278,20 @@ def delete_user(request):
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="Toggles 2fa for users account.")
+                     operation_description="Toggles 2fa for users account.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "password": password__body
+                         },
+                         required=["password"]
+                     ))
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def toggle2fa(request):
-    return api_success(Account.toggle_2fa(request))
+    require_params(request, ("password",))
+    account = Account.get(request)
+    return api_success(Account.toggle_2fa(request, request.data.get("password"), not account.get('account2faEnabled')))
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
