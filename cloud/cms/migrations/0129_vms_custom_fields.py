@@ -4,26 +4,44 @@ from cms.models import AssetType
 from django.db import migrations
 
 fields = {
-    '%companyName%': {
-        'label': 'Company Name',
-        'type': 'text',
-        'source': 'custom',
-        'description': 'Developer name that users will see on About page of the client.'
+    'fields': {
+        '%companyName%': {
+            'label': 'Company Name',
+            'type': 'text',
+            'source': 'custom',
+            'description': 'Developer name that users will see on About page of the client.'
+        },
+        '%customOpenSourceLibrariesUrl%': {
+            'label': 'Custom url for the open source libraries',
+            'type': 'text',
+            'source': 'custom',
+            'description': '',
+            'optional': True
+        },
+        '%contact.companyUrl%': {
+            'label': 'Company Web Page',
+            'type': 'text',
+            'source': 'custom',
+            'description': 'URL that users will see on About page of the client.'
+        },
+        '%contact.supportAddress%': {'label': 'Support address', 'type': 'text', 'source': 'custom'},
+        '%desktop.clientAutoUpdates%': {'source': 'constant', 'value': False},
+        '%desktop.customClient%': {'source': 'constant', 'value': True},
+        '%advanced.useMetaVersion%': {'source': 'constant', 'value': False},
+        '%advanced.disableCodeSigning%': {'source': 'constant', 'value': True},
+        '%contact.systemWebPages.homePage%': {'source': 'field', 'sourceField': '%contact.companyUrl%'},
+        'portalUrl': {'metaOnly': True, 'type': 'text', 'label': 'Cloud Portal URL', 'source': 'custom'}
     },
-    '%customOpenSourceLibrariesUrl%': {
-        'label': 'Custom url for the open source libraries',
-        'type': 'text',
-        'source': 'custom',
-        'description': '',
-        'optional': True
-    },
-    '%contact.companyUrl%': {
-        'label': 'Company Web Page',
-        'type': 'text',
-        'source': 'custom',
-        'description': 'URL that users will see on About page of the client.'
-    },
-    '%contact.supportAddress%': {'label': 'Support address', 'type': 'text', 'source': 'custom'}
+    'exclude': ['%contact.systemWebPages.supportPage%', '%desktop.supportsHanwha%', '%desktop.supportsVmax%',
+                '%desktop.windows.serverUpgradeCode%', '%desktop.windows.serverBundleUpgradeCode%',
+                '%desktop.windows.fullBundleUpgradeCode%', '%mobile.enabled%', '%mobile.compatibleUriProtocols%',
+                '%mobile.displayName%', '%mobile.compatibleCustomizations%', '%mobile.android.packageName%',
+                '%mobile.android.storepass%', '%mobile.android.alias%', '%mobile.android.keypass%',
+                '%mobile.android.baiduApiKey%', '%mobile.android.compatibilityPackage%', '%mobile.ios.bundleName%',
+                '%mobile.ios.bundleIdentifier%', '%mobile.ios.groupIdentifier%', '%mobile.ios.signIdentity%',
+                '%mobile.ios.compatibilityPackage%', '%paxton.enabled%', '%paxton.libraryName%', '%paxton.productId%',
+                '%paxton.productUpgradeCode%', '%paxton.bundleUpgradeCode%', '%advanced.customWindowsInstallPath%',
+                '%advanced.customMediaserverServiceName%', '%advanced.customMediaserverApplicationName%']
 }
 
 
