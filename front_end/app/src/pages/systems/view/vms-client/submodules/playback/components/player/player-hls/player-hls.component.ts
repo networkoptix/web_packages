@@ -50,8 +50,9 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     videoErrorEventHandler = (event: any) => {
-        if (this.videoView && this.videoView.nativeElement.error && this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
-            this.http.get(event.target.src)
+        const sourceUrl = this.state.mode !== PLAYBACK_MODE.STOPPED && this.state?.sourceUrl;
+        if (sourceUrl && this.videoView?.nativeElement && this.videoView.nativeElement.error?.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+            this.http.get(sourceUrl)
                 .subscribe((response: any) => {
                     switch (response.error) {
                         case '4':

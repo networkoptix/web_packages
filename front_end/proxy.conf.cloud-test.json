@@ -29,6 +29,18 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/web/ec2/*": {
+    "target": "https://cloud-test.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/media/*": {
+    "target": "https://cloud-test.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/503.html": {
     "target": "https://cloud-test.hdw.mx",
     "secure": false,
