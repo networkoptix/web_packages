@@ -74,29 +74,32 @@ export class NxSystemService {
     }
 
     createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
-        if (this.system !== undefined) {
-            return this.system;
+        if (this.system === undefined) {
+            this.system = new NxSystem(
+                this.CONFIG,
+                this.LANG,
+                this.cloudApi,
+                this.systemApiService,
+                this.pollService,
+                this.systemsService,
+                this.ribbonService,
+                this.router,
+                userEmail,
+                '',
+                '',
+                userId,
+                this.appState
+            );
+            this.system.mediaserver = mediaServer;
+            this.system.canMerge = true;
+            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
+            this.system.update();
         }
-        this.system = new NxSystem(
-            this.CONFIG,
-            this.LANG,
-            this.cloudApi,
-            this.systemApiService,
-            this.pollService,
-            this.systemsService,
-            this.ribbonService,
-            this.router,
-            userEmail,
-            '',
-            '',
-            userId,
-            this.appState
-        );
-        this.system.mediaserver = mediaServer;
-        this.system.canMerge = true;
-        this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
-        this.system.update();
-        this.system.startPoll();
+
+        if (this.system.subscriberCount === 0) {
+            this.system.startPoll();
+        }
+
         if (!this.systemsService.systems) {
             this.systemsService.systems = [<any> this.system];
         }
