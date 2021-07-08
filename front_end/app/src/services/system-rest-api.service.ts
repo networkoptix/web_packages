@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location }             from '@angular/common';
 import { CookieService }        from 'ngx-cookie-service';
 import { from, of, throwError } from 'rxjs';
-import { catchError, mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 
 import { NxHealthService }      from '../pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
@@ -69,7 +69,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         this.injector = injector;
     }
 
-    private handleOldToken(request) {
+    private get dialogService() {
+        return this.injector.get(NxDialogsService);
+    }
+
+    private get storageService() {
+        return this.injector.get(NxStorageService);
+    }
+
+    private handleOldToken(request, allSystems?: boolean) {
         return request.pipe(
             mergeMap(
                 (
@@ -83,7 +91,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             error.resultCode === 'forbidden' ||
                             error.errorString === this.oldToken
                         ) {
-                            return this.loginAsCurrentUser();
+                            return this.reauthenticate(allSystems);
                         } else if (error.status === 503) {
                             // Repeat the request once again for 503 error
                             return of('');
@@ -94,38 +102,29 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ));
     }
 
-    private loginAsCurrentUser(password?: string) {
-        const remember = !!this.cookieService.get(this.token);
-        if (this.cookieService.get(this.token).includes('nxcdb')) {
-            const LANG = this.injector.get(NxLanguageProviderService).translations;
-            const { action, message, title } = LANG.dialogs?.renewOauth;
-            return from(
-                this.injector.get(NxDialogsService).confirm(message?.(), title?.(), action?.())
-            ).pipe(
-                switchMap((res) => {
-                    if (!res) {
-                        return of(false);
-                    }
-                    return from(this.logout().then(() => this.redirectOauth()));
-                })
-            );
-        }
-        if (!password) {
-            const accountService: NxAccountService = this.injector.get(NxAccountService);
-            return from(
-                this.injector.get(NxDialogsService)
-                    .login(accountService, false, false, false, true)
-            );
-        }
-        return from(this.getCurrentUser())
-            .pipe(switchMap((res) => {
-                const username = res?.username || res?.name;
-                return this.loginToken(username, password, remember);
-            }));
+    private reauthenticate(allSystems?: boolean) {
+        const dialogService = this.dialogService;
+        const LANG = this.injector.get(NxLanguageProviderService).translations;
+        const { action, message, title } = LANG.dialogs?.renewAuth;
+        return from(
+            this.dialogService.confirm(message?.(), title?.(), action?.()).then((res) => {
+                if (!res) {
+                    return Promise.resolve(false);
+                }
+
+                if (this.cookieService.get(this.token).includes('nxcdb')) {
+                    return this.logout().then(() => this.redirectOauth(allSystems));
+                }
+
+                const accountService: NxAccountService = this.injector.get(NxAccountService);
+                return this.logout()
+                    .then(() => dialogService.login(accountService, false, false, false, true));
+            })
+        );
     }
 
-    protected postProxy(protocol, serverId, requestUrl, data) {
-        return this.post(`/proxy/${protocol}/${serverId}/${requestUrl}`, data);
+    protected postProxy(protocol, serverAddress, requestUrl, data) {
+        return this.post(`/proxy/${protocol}/${serverAddress}/${requestUrl}`, data);
     }
 
     private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
@@ -145,26 +144,27 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     private resetServer(password?: string) {
-        return this.loginAsCurrentUser(password)
-            .pipe(switchMap(() => this.post('/rest/v1/system/reset')));
+        return this.post('/rest/v1/system/reset').pipe(
+            retryWhen((request) => this.handleOldToken(request))
+        );
     }
 
-    private refreshTokens(refreshToken, isSystem) {
+    private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string) {
         const params: any = {
             grant_type    : 'refresh_token',
             response_type : 'token',
             refresh_token : refreshToken
         };
 
-        if (isSystem) {
-            params.scope = `cloudSystemId=${this.CONFIG.cloudSystemId}`;
+        if (isSystem || remoteSystemId) {
+            params.scope = `cloudSystemId=${remoteSystemId ?? this.CONFIG.cloudSystemId}`;
         }
 
         return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params);
     }
 
     private getTokens() {
-        const storageService = this.injector.get(NxStorageService);
+        const storageService = this.storageService;
         const refreshToken = storageService.refreshToken;
         const accessToken = this.cookieService.get(this.token);
         const cloudAccessToken = storageService.cloudAccessToken;
@@ -172,7 +172,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     private setTokens(tokens, isSystem) {
-        const storageService = this.injector.get(NxStorageService);
+        const storageService = this.storageService;
         if (isSystem) {
             this.cookieService.set(this.token, tokens.access_token);
         } else {
@@ -182,7 +182,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     private clearTokens() {
-        const storageService = this.injector.get(NxStorageService);
+        const storageService = this.storageService;
         this.cookieService.delete(this.token);
         storageService.clear = this.cloudToken;
         storageService.clear = this.refreshToken;
@@ -196,7 +196,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     attempt: number
                 ) => {
                     if (attempt === 0) {
-                        const storageService = this.injector.get(NxStorageService);
+                        const storageService = this.storageService;
                         const refreshToken = storageService.refreshToken;
 
                         if (!refreshToken && (
@@ -360,7 +360,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
-    redirectOauth() {
+    redirectOauth(allSystems?: boolean) {
         const window = this.injector.get(WINDOW);
         const { href } = window.location;
         const params = new URLSearchParams({
@@ -370,7 +370,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             client_id     : 'webadmin',
             response_type : 'code',
             grant_type    : 'password',
-            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${this.CONFIG.cloudSystemId}`
+            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
         });
         window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
@@ -385,7 +385,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ).toPromise();
         }
         this.clearTokens();
-        return this.post(`/rest/v1/login/sessions/${accessToken}`).toPromise();
+        return this.http.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {
@@ -406,33 +406,40 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
-        return this.loginAsCurrentUser(currentPassword)
-            .pipe(switchMap(() => this.post('/rest/v1/system/cloudUnbind', { password: currentPassword })))
-            .toPromise();
+        return this.post('/rest/v1/system/cloudUnbind', { password: currentPassword }).pipe(
+            retryWhen((request) => this.handleOldToken(request))
+        ).toPromise();
     }
 
     mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
-        let login: any = of({ token: '' });
-        const userName = 'admin';
-        if (dryRun && password) {
-            const data = { userName, password, remember: false };
-            if (!remoteServerId) {
-                login = this.http.get(`${remoteEndpoint}/api/moduleInformation`).pipe(
-                    tap(({ reply }: any) => {
-                        remoteServerId = reply.id.replace(/{|}/g, '');
-                    })
-                );
-            }
-            login = login.pipe(() => {
-                return this.postProxy('http', remoteServerId, 'rest/v1/login/sessions', data);
-            });
-        } else if (password) {
-            login = this.loginToken(userName, password, false);
-        }
-        return login.pipe(
+        remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
+        return this.http.get(`//${remoteEndpoint}/rest/v1/system/info`).pipe(
+            // Gets the remoteServerID and checks if the remote system is connected to cloud.
+            switchMap((data : any) => {
+                if (!remoteServerId) {
+                    remoteServerId = data.localId.replace(/{|}/g, '');
+                }
+                return of({ token: '', cloudId: data.cloudId ?? '' });
+            }),
+            // Adds the remoteToken to the merge request.
+            switchMap((info: any) => {
+                if (!dryRun) {
+                    const refreshToken = this.storageService.refreshToken;
+                    // Using oauth and target system is connected to cloud.
+                    if (info.cloudId && refreshToken) {
+                        // Request for a cloud token that has the targetSystem scope.
+                        return this.refreshTokens(refreshToken, true, info.cloudId)
+                            .pipe(map((res: any) => ({ token: res.access_token })));
+                    } else if (password) {
+                        const data = { username: 'admin', password, remember: false };
+                        return this.postProxy('https', remoteEndpoint, 'rest/v1/login/sessions', data);
+                    }
+                }
+                return of(info);
+            }),
+            // Executes the merge request
             switchMap((res: any) => {
-                remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
-                const remoteSessionToken = dryRun ? '' : res.token;
+                const remoteSessionToken = res.token ?? '';
                 const data = {
                     remoteServerId,
                     takeRemoteSettings,

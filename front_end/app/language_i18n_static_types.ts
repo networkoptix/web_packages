@@ -245,7 +245,7 @@ export interface Dialogs {
     merge:         DialogsMerge;
     message:       DialogsMessage;
     removeSystem:  RemoveSystem;
-    renewOauth:    RemoveSystem;
+    renewAuth:     RemoveSystem;
     titles:        DialogsTitles;
     tooltips:      Tooltips;
 }
@@ -1262,7 +1262,7 @@ const typeMap: any = {
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
-        { json: "renewOauth", js: "renewOauth", typ: r("RemoveSystem") },
+        { json: "renewAuth", js: "renewAuth", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
     ], false),
