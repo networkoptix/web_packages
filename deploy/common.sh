@@ -1,4 +1,4 @@
-MODULES=(cloud_db cloud_portal cloud_portal_nginx connection_mediator traffic_relay)
+MODULES=(cloud_portal cloud_portal_nginx)
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-"009544449203.dkr.ecr.us-east-1.amazonaws.com"}
 
 case $(uname -s) in
@@ -74,6 +74,8 @@ function pushns()
 
 function push()
 {
+    local branch="$(git branch --show-current)"
+
     echo "Pushing $MODULE:$VERSION to the registry"
     [ -z "$REPOSITORY_PATH" ] && REPOSITORY_PATH=/cloud
 
@@ -81,11 +83,13 @@ function push()
     docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:$VERSION
     docker push $REPOSITORY/$MODULE:$VERSION
 
-    docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:latest
-    docker push $REPOSITORY/$MODULE:latest
+    docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:"${branch}"
+    docker push $REPOSITORY/$MODULE:"${branch}"
 
-    if [ -z "$NO_LOCAL_REGISTRY_PUSH" ]; then
-      pushns
+    if [ -n "${DOCKER_IMAGE_CI_TAG}" ]
+    then
+        docker tag $MODULE:$VERSION $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
+        docker push $REPOSITORY/$MODULE:"${DOCKER_IMAGE_CI_TAG}"
     fi
 }
 

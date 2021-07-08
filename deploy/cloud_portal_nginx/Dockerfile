@@ -1,6 +1,6 @@
 FROM nginx:1.14.0-alpine
 
-RUN apk add --no-cache apache2-utils tini
+RUN apk add --no-cache apache2-utils tini curl jq netcat-openbsd
 
 COPY nginx.conf.template /etc/nginx/conf.d/nginx.conf.template
 COPY run_nginx.sh /run_nginx.sh
