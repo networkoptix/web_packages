@@ -331,6 +331,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
         if (!this.system.userManager.permissions.viewArchives) {
             this.getRecordsInProgress = undefined;
+            this._initSelectedCamera();
+            this.playback.restore(false);
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
                 ar = await this._prepareArchiveRecords(ar);

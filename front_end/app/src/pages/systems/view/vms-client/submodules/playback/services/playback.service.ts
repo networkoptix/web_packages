@@ -179,7 +179,7 @@ export class PlaybackService implements OnDestroy {
                 this._warn('PAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                if (this.vms.selectedCamera.isRecording) {
+                if (this.vms.selectedCamera.isRecording && this.vms.selectedCamera.hasArchive) {
                     this._log('camera is recording, transition to archive playback')
                     this.playArchive(Date.now(), true);
                 } else {
