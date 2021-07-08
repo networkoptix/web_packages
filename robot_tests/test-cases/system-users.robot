@@ -18,7 +18,7 @@ ${mode}    cloud
 Reset
     Close All Browsers
     Run Keyword If    '''${mode}'''=='''cloud'''    Open Browser and go to URL    ${url}
-    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${system['port']}
+    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 
 
@@ -297,17 +297,17 @@ Admin and owner cannot edit self and other users via share
         Share To    ${server 1['cloud users']}[custom]               ${VIEWER TEXT}         fail    system=${server 1['name']}
         
         #Local users
-        #Share To    admin    ${CUSTOM TEXT}          fail    system=${system['name']}
+        #Share To    admin    ${CUSTOM TEXT}          fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['cloudAdmin']}    ${LIVE VIEWER TEXT}     fail    system=${system['name']}
+        #Share To    ${server 1}[local users][cloudAdmin][login]    ${LIVE VIEWER TEXT}     fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['viewer']}    ${ADV VIEWER TEXT}     fail    system=${system['name']}
+        #Share To    ${local users['viewer']}    ${ADV VIEWER TEXT}     fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['advancedViewer']}    ${CUSTOM TEXT}     fail    system=${system['name']}
+        #Share To    ${local users['advancedViewer']}    ${CUSTOM TEXT}     fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['liveViewer']}    ${CUSTOM TEXT}    fail    system=${system['name']}
+        #Share To    ${local users['liveViewer']}    ${CUSTOM TEXT}    fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['custom']}    ${VIEWER TEXT}    fail    system=${system['name']}
+        #Share To    ${local users['custom']}    ${VIEWER TEXT}    fail    system=${server 1['name']}
         #Click Button    ${ADD USER CANCEL}
         Log Out
     END
@@ -326,7 +326,7 @@ Admin and owner cannot edit self and other users via share
 Admin cannot delete or edit other admins or owner
     [Tags]    C41905    web_admin
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
-    ...    ELSE    Create List    ${server 1['cloud users']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin]
+    ...    ELSE    Create List    ${server 1['cloud users']}[cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
         Append To List    ${TMP USERS}    ${random email}
@@ -350,7 +350,7 @@ Admin cannot delete or edit other admins or owner
 Administrator cannot invite another administrator
     [Tags]    C41905    web_admin
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
-    ...    ELSE    Create List     ${server 1['cloud users']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin]
+    ...    ELSE    Create List     ${server 1['cloud users']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -373,22 +373,22 @@ Administrator cannot invite another administrator
 Edit permission works
     [Tags]    C41900    C30657    C47041    web_admin
     ${random email}=   Get Random Email    ${BASE EMAIL}
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${server 1['owner']}    admin    ${users['cloudAdmin']}    ${local users['cloudAdmin']}
-    Share    ${cloud auth}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
     
     # Check that the user's role is added correctly in vms
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        ${users}=   Get Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        ${users}=   Get Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     
         Edit User Permissions In Systems    ${random email}    ${VIEWER TEXT}
         Check User Permissions    ${random email}    ${VIEWER TEXT}
     
         # Check that the user's role has changed in vms
-        ${users}=   Get Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        ${users}=   Get Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     
         Edit User Permissions In Systems    ${random email}    ${LIVE VIEWER TEXT}
         Check User Permissions    ${random email}    ${LIVE VIEWER TEXT}
@@ -398,11 +398,11 @@ Edit permission works
 
 Delete user works
     [Tags]    email    C41903    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${server 1['owner']}    admin    ${users['cloudAdmin']}    ${local users['cloudAdmin']}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-        Share    ${cloud auth}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
         #Sleep    10
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -428,11 +428,11 @@ Share with registered user works and sends him notification
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
     Append to List    ${TMP USERS}    ${random email}
-    Verify In System    ${system['name']}
+    Verify In System    ${server 1['name']}
     ${random email}    Register and activate account with random email    mark     hamil    ${password}
     Share To    ${random email}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
-    ${role}=   Get Cloud User Role    ${cloud auth}    ${random email}    ${server 1['cloud id']}
+    ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     Sleep    10
 
@@ -445,7 +445,7 @@ Share with registered user works and sends him notification
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    ${system['name']}
+    ...    ${server 1['name']}
     # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
     # Check Email Subject
     # ...    ${emailID}
@@ -466,13 +466,13 @@ Share with registered user works and sends him notification
     Delete Email    ${emailID}
     Close Mailbox
 
-    ${role}=   Get Cloud User Role  ${cloud auth}    ${random email}    ${server 1['cloud id']}
+    ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 Share with registered user gives user access to system
     [Tags]    email    C41888
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
-    Share    ${cloud auth}    ${server 1['cloud id']}    viewer    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}
     Log in to user and system    ${random email}    ${server 1['cloud id']}
     Go to System Administration
 
@@ -490,10 +490,10 @@ Share with unregistered user - brings them to registration page with code with c
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
     Share To    ${random email}    Administrator
-    ${role}=   Get Cloud User Role  ${cloud auth}    ${random email}    ${server 1['cloud id']}
+    ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${url}    ${cloud auth}    ${random email}    system_invite
+    ${code}=   Get Code From Email    ${url}    ${server 1['cloud auth']}    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
@@ -542,7 +542,7 @@ Share with unregistered user - brings them to registration page with code with c
     # New user gets logged in right away
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SYSTEM NAME}
-    Element Text Should Be    ${SYSTEM NAME}    ${system['name']}
+    Element Text Should Be    ${SYSTEM NAME}    ${server 1['name']}
     Log    Step 7 skipped thick client login
     Log    Step 8
     Log Out
@@ -566,8 +566,8 @@ Share System with the same user twice
     Log in    ${user}    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
     Go to Users List
-    Share To    ${users['cloudAdmin']}    ${ADV VIEWER TEXT}    fail    system=${system['name']}
-    Run Keyword And Expect Error    *    Wait For Email    recipient=${users['cloudAdmin']}    timeout=30
+    Share To    ${server 1}[cloud users][cloudAdmin]    ${ADV VIEWER TEXT}    fail    system=${server 1['name']}
+    Run Keyword And Expect Error    *    Wait For Email    recipient=${server 1}[cloud users][cloudAdmin]    timeout=30
     Close Mailbox
 
 Check share email for registered user
@@ -590,14 +590,14 @@ Check share email for registered user
     Delete email    ${email}
 
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${cloud auth}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
-    ${role}=   Get Cloud User Role  ${cloud auth}    ${random email}    ${server 1['cloud id']}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
-    ...    ${system['name']}
+    ...    ${server 1['name']}
     ${email}    Wait For Email    recipient=${random email}    timeout=120
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
@@ -627,12 +627,12 @@ Users should be able to disconnect themselves from cloud
     FOR    ${role}    IN    @{roles}
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
         Append To List    ${TMP USERS}    ${random email}
-        #Save User    ${local auth}    https://${QA BURBANK IP}:${system['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
-        Share     ${cloud auth}    ${server 1['cloud id']}    ${role}    ${random email}
+        #Save User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
+        Share     ${server 1['cloud auth']}    ${server 1['cloud id']}    ${role}    ${random email}
         Sleep    5
         Log In    ${random email}    ${password}
         Wait until element is visible    ${SYSTEM NAME}    300
-        Disconnect from my account    ${system['name']}
+        Disconnect from my account    ${server 1['name']}
         Log Out
         Sleep    5
     END
@@ -640,27 +640,27 @@ Users should be able to disconnect themselves from cloud
 
 User with client custom settings has access to system
     [Tags]    web_admin
-    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${system['port']}    ${local auth}
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${server 1['owner']}    admin    ${users['cloudAdmin']}    ${local users['cloudAdmin']}
+    @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${server 1}[local auth]
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
-        &{client custom permissions}=   Get Client Custom Permissions    ${custom roles}
+        &{client custom permissions}=   Get Custom Permissions    ${custom roles}
 
     
-        ${users}    Get Users    ${local auth}    https://${QA BURBANK IP}:${system['port']} 
-        ${user id}=   Get Cloud User Id By Email    ${cloud auth}    ${client custom}    ${server 1['cloud id']}
+        ${users}    Get Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']} 
+        ${user id}=   Get Cloud User Id By Email    ${server 1['cloud auth']}    ${client custom}    ${server 1['cloud id']}
         Save User Existing
-        ...    ${local auth}
-        ...    https://${QA BURBANK IP}:${system['port']}
+        ...    ${server 1}[local auth]
+        ...    https://${QA BURBANK IP}:${server 1['port']}
         ...    ${client custom}
         ...    ${client custom permissions["permissions"]}
         ...    ${client custom}
         ...    ${client custom permissions["id"]}
         ...    ${user id}
     
-        Verify In System    ${system['name']}
+        Verify In System    ${server 1['name']}
         Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
         Log Out
     END
@@ -695,7 +695,7 @@ Disable enable User correctly affects the User
     Log in    ${user}    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
     Log    Step 1
-    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
+    Check User Permissions    ${server 1}[cloud users][viewer]    ${VIEWER TEXT}
 
     Log    Step 2
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
@@ -703,12 +703,12 @@ Disable enable User correctly affects the User
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
+    Check User Permissions    ${server 1}[cloud users][viewer]    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
 
     Log    Step 3
     Log Out
-    Log In   ${users['viewer']}    ${BASE PASSWORD}
+    Log In   ${server 1}[cloud users][viewer]    ${BASE PASSWORD}
     Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
     # ELSE     WRONG LOGIN OR PASSWORD SHOULD BE DETECTED
     Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
@@ -716,32 +716,32 @@ Disable enable User correctly affects the User
     Log    Step 4
     Log In    ${server 1['owner']}    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
-    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
+    Check User Permissions    ${server 1}[cloud users][viewer]    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Check User Permissions    ${users['viewer']}    ${VIEWER TEXT}
+    Check User Permissions    ${server 1}[cloud users][viewer]    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
 
     Log    Step 5
     Log Out
-    Log In    ${users['viewer']}    ${password}
+    Log In    ${server 1}[cloud users][viewer]    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
     Run Keyword If    '''${mode}'''=='''cloud'''    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     # ELSE     WRONG LOGIN OR PASSWORD SHOULD BE DETECTED
         
 Administrator can add, disable and enable Viewer
     [Tags]    C63391    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    admin    ${local users['cloudAdmin']}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    admin    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${BASE PASSWORD}
         Log    Steps 1 & 2
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Share To    ${random email}   ${VIEWER TEXT}    system=${system['name']}
+        Share To    ${random email}   ${VIEWER TEXT}    system=${server 1['name']}
         Select user in Users List    ${random email}
     
         Log    Step 3
@@ -770,7 +770,7 @@ Administrator can add, disable and enable Viewer
     
         Log    Step 6
         Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
-        Log In    ${users['cloudAdmin']}    ${password}
+        Log In    ${server 1}[cloud users][cloudAdmin]    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Check User Permissions    ${random email}    ${VIEWER TEXT}
         Set Checkbox Value   ${DISABLE USER SWITCH}    true
@@ -787,7 +787,7 @@ Administrator can add, disable and enable Viewer
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
         Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[@class="name" and contains(text(),'${VIEWER TEXT}')]
-        Exit For Loop If    '''${user}'''=='''${local users['cloudAdmin']}'''    
+        Exit For Loop If    '''${user}'''=='''${server 1}[local users][cloudAdmin][login]'''    
         Log Out
     END
 
@@ -797,7 +797,7 @@ Administrator can add, disable and enable Viewer
 #    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
 #    ...    ELSE    Create List    admin    ${server 1['owner']}
 #    FOR    ${user}    IN    @{list}
-#        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+#        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
 #        Log In    ${user}    ${password}
 #        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
 #        Go to Users List
@@ -805,7 +805,7 @@ Administrator can add, disable and enable Viewer
 #        Verify In Local Users UI    ${local users}    ${server 1['owner']}
 #        @{new locals} =    Create List
 #        Change All Local Users Login
-#        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+#        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
 #        Exit For Loop If    '''${user}'''=='''admin'''    
 #        Log Out
 #    END
@@ -816,14 +816,14 @@ Cloud Owner Can Change Local User Full Name
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
         Set Test Variable    ${new locals}    ${new locals}
         Change All Local Users Full Name
-        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
@@ -835,14 +835,14 @@ Cloud Owner Can Change Local User Email
 
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
         Set Test Variable    ${new locals}    ${new locals}
         Change All Local Users Email
-        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
@@ -854,14 +854,14 @@ Cloud Owner Can Change Local User Permissions
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
         Set Test Variable    ${new locals}    ${new locals}
         Change All Local User Permissions
-        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
@@ -874,11 +874,11 @@ Cloud Owner Can Change Local User Password
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
         Log    Change password for ${user}
         Change ALl Local User Password
         Exit For Loop If    '''${user}'''=='''admin'''    
@@ -890,24 +890,24 @@ Cloud owner can change local users' information
      @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        ${new locals} =    Modify Local Users via Cloud UI    ${local users}    ${server 1['owner']}
-        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}
+        ${new locals} =    Modify Local Users via Cloud UI    ${server 1}[local users]    ${server 1['owner']}
+        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
 
 Cloud administrator cannot change local administrator's or owner's information
     [Tags]    local_user    C76240    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${users['cloudAdmin']}    ${local users['cloudAdmin']}
-    @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
+    @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     Log    Step 1
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -916,7 +916,7 @@ Cloud administrator cannot change local administrator's or owner's information
         Log    Step 2
         Wait Until Element is Visible    //span[text()="admin"]
         Click Element    //span[text()="admin"]
-        Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${system['cloudAdmin']}    
+        Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${server 1}[cloud users][cloudAdmin]    
         Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
@@ -926,17 +926,17 @@ Local User Removed on Server is Removed From UI
     [Tags]    local_user    web_admin
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
-    @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{list}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
-        @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
+        @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${user to delete} =    Set Variable    Local+viewer
-        ${user id}=   Get Local User Id By Name    ${local auth}    https://${QA BURBANK IP}:${system['port']}    Local+viewer
-        Remove User    ${local auth}    https://${QA BURBANK IP}:${system['port']}    ${user id}
+        ${user id}=   Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+viewer
+        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${user id}
         Reload Page
         Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
         Page Should Not Contain    //span[text()="${user to delete}"]
@@ -949,12 +949,12 @@ Verify Local Users Deleted On Server
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
-        Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+        Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1}[local users]    ${server 1['owner']}
         Delete All Local Users    //span[contains(text(),"ocal+")]
         ${deleted user} =    Set Variable    Local
         User Should Not Exist    ${deleted user}
@@ -965,13 +965,13 @@ Verify Local Users Deleted On Server
 
 Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${server 1['owner']}    ${users['cloudAdmin']}    ${local users['cloudAdmin']}    admin
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
         @{locals}=   Get Local Users
-        Delete All Local Users via API    ${local auth}    https://${QA BURBANK IP}:${system['port']}    ${locals}
+        Delete All Local Users via API    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${locals}
         Log    Step 1
-        @{new local users}=   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{new local users}=   Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -1002,8 +1002,8 @@ Unsaved changes are not sent to the server
     ...    ELSE    Create List    ${server 1['owner']}    admin
     Log    Preconditions
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
-        @{locals} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
+        @{locals} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -1025,7 +1025,7 @@ Unsaved changes are not sent to the server
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL} 
         
         Log    Step 3
-        @{check info} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{check info} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Lists Should Be Equal     ${check info}    ${locals}  
         
         Log    Step 4
@@ -1040,7 +1040,7 @@ Unsaved changes are not sent to the server
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
 	    
 	    Log    Step 5
-	    @{check info} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${system['port']}
+	    @{check info} =    Get Users     ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Lists Should Be Equal     ${check info}    ${locals}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
@@ -1051,8 +1051,8 @@ Unsaved changes are not sent to the server
 #    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
 #    ...    ELSE    Create List    ${server 1['owner']}    admin
 #    FOR    ${user}    IN    @{list}
-#        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
-#        @{locals} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+#        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
+#        @{locals} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
 #                
 #        Log    Step 1
 #        Log In    ${user}    ${password}
@@ -1074,7 +1074,7 @@ Unsaved changes are not sent to the server
 #        Element Style Should Be    ${LOCAL USER LOGIN}     border-color    ${ERROR COLOR}
 #        
 #        Log    Step 3
-#        @{check info} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+#        @{check info} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
 #        Lists Should Be Equal     ${check info}    ${locals}
 #    
 #        Log    Step 4
@@ -1082,7 +1082,7 @@ Unsaved changes are not sent to the server
 #        Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
 #        
 #        Log    Step 5
-#        @{check info} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+#        @{check info} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
 #        Lists Should Be Equal     ${check info}    ${locals} 
 #        Exit For Loop If    '''${user}'''=='''admin'''    
 #        Log Out
@@ -1093,7 +1093,7 @@ Local User name field can be left blank
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -1108,7 +1108,7 @@ Local User name field can be left blank
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         
         Log    Step 3
-        @{check info}=    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{check info}=    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${full name}=   Check User Full Name is None    local+advancedviewer    ${check info}
     
         Should Be Equal    ${full name}    ${None}   
@@ -1121,12 +1121,12 @@ Local User email field can be left blank
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${server 1['owner']}
+        Verify In Local Users UI    ${server 1['local users']}    ${server 1['owner']}
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
@@ -1136,7 +1136,7 @@ Local User email field can be left blank
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         
         Log    Step 3
-        @{check info} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{check info} =    Get Users     ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
         Check User Email is None    local+advancedviewer    ${check info}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
@@ -1144,45 +1144,45 @@ Local User email field can be left blank
 
 User list is available for owner and administrator
     [Tags]    C76233    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${server 1['owner']}    ${users['cloudAdmin']}    ${local users['cloudAdmin']}    admin
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]
+    ...    ELSE    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${user}
+        Verify In Local Users UI    ${server 1['local users']}     ${user}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
 
 User list is not available for advanced viewer & lower
     [Tags]    C76462    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['viewer']}    ${users['liveViewer']}    ${users['advancedViewer']}    ${users['custom']}
-    ...    ELSE    Create List    ${users['viewer']}    ${users['liveViewer']}    ${users['advancedViewer']}    ${users['custom']}    ${local users['viewer']}    ${local users['liveViewer']}    ${local users['advancedViewer']}    ${local users['custom']}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][liveViewer]   ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][custom]
+    ...    ELSE    Create List    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][liveViewer]   ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][custom]    ${server 1}[local users][viewer][login]    ${server 1}[local users][liveViewer][login]    ${server 1}[local users][advancedViewer][login]    ${server 1}[local users][custom][login]
     FOR    ${user}    IN    @{list}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
-        Verify In System    ${system['name']}    editable=${False}
+        Verify In System    ${server 1['name']}    editable=${False}
         Sleep    5
         Element Should Not Be visible    ${USERS LIST LINK} 
-        Exit For Loop If    '''${user}'''=='''${local users['custom']}'''    
+        Exit For Loop If    '''${user}'''=='''${server 1}[local users][custom]'''    
         Log Out
     END
 
 Cloud Administrator Can Delete Local User(positive)
     [Tags]    C76524    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${local users['cloudAdmin']}    ${users['cloudAdmin']}    
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${users['cloudAdmin']}
+        Verify In Local Users UI    ${server 1['local users']}    ${server 1}[cloud users][cloudAdmin]
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 2
         Click Button    ${LOCAL USER DELETE BUTTON}
@@ -1192,20 +1192,20 @@ Cloud Administrator Can Delete Local User(positive)
         Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
         Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
         Log    Step 4
-        @{current users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{current users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${deleted user} =    Set Variable    Local+advancedViewer
         Verify User is Deleted on Server    Local+advancedViewer    ${current users}
-        Exit For Loop If    '''${user}'''=='''${users['cloudAdmin']}'''    
+        Exit For Loop If    '''${user}'''=='''${server 1}[cloud users][cloudAdmin]'''    
         Log Out
     END
         
 Administrator can change local user's login permissions, name and email (positive)
     [Tags]    C76526    C76525    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${local users['cloudAdmin']}    ${users['cloudAdmin']}    
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
         @{new locals} =    Create List
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
@@ -1216,22 +1216,22 @@ Administrator can change local user's login permissions, name and email (positiv
         ${new local} =    Modify All Local User Info    advancedViewer    ${user}    
         Append To List    ${new locals}    ${new local}
         Log    Step 4
-        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${system['port']}    local user=ocal+advancedviewer    
-        Exit For Loop If    '''${user}'''=='''${users['cloudAdmin']}'''    
+        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}    local user=ocal+advancedviewer    
+        Exit For Loop If    '''${user}'''=='''${server 1}[cloud users][cloudAdmin]'''    
         Log Out
     END
 
 Cloud administrator can enable/disable any viewer local user (positive)
     [Tags]    C76527    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${local users['cloudAdmin']}    ${users['cloudAdmin']}    
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Log    Step 1
         Go to Users List
-        Verify In Local Users UI    ${local users}    ${users['cloudAdmin']}
+        Verify In Local Users UI    ${local users}    ${server 1}[cloud users][cloudAdmin]
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 2   
         Set Checkbox Value   ${DISABLE USER SWITCH}    false
@@ -1246,7 +1246,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 4
         ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{current users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
         Should Be True   ${state} == ${False}
         Log    Step 5
@@ -1257,19 +1257,19 @@ Cloud administrator can enable/disable any viewer local user (positive)
         Page Should Not Contain Element   ${USER DISABLED MSG}
         Log    Step 6
         ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+        @{current users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
         ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
         Should Be True    ${state} == ${True}
-        Exit For Loop If    '''${user}'''=='''${users['cloudAdmin']}'''    
+        Exit For Loop If    '''${user}'''=='''${server 1}[cloud users][cloudAdmin]'''    
         Log Out
     END
 
 Cloud administrator can change local user password (positive)
     [Tags]    C76530    local_user    web_admin
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
-    ...    ELSE    Create List    ${local users['cloudAdmin']}    ${users['cloudAdmin']}    
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -1292,12 +1292,12 @@ Cloud administrator can change local user password (positive)
         
         Log    Step 4
         @{old auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
         
         Log    Step 5
         @{new auth} =    Create List    local+advancedviewer     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
-        Exit For Loop If    '''${user}'''=='''${users['cloudAdmin']}'''    
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
+        Exit For Loop If    '''${user}'''=='''${server 1}[cloud users][cloudAdmin]'''    
         Log Out
     END
 
@@ -1306,18 +1306,18 @@ Changes made in thick client appear on cloud portal
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system['port']}
+        @{local users} =    Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${server 1['port']}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
-        ${id}    Get Local User Id By Name    ${local auth}    https://${QA BURBANK IP}:${system['port']}    Local+advancedViewer
+        ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+advancedViewer
         Log    Step 1 - 3
         Go to Users List
         Verify In Local Users UI    ${local users}    ${server 1['owner']}
         Click Element    //span[text()="Local+advancedViewer"]
         Log    Step 4
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[advancedViewer]    
         ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1328,8 +1328,8 @@ Changes made in thick client appear on cloud portal
         Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=45
         Log    Step 5
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[advancedViewer]    
         ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1340,8 +1340,8 @@ Changes made in thick client appear on cloud portal
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
         Log    Step 6
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
         ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1352,8 +1352,8 @@ Changes made in thick client appear on cloud portal
         Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
         ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1365,8 +1365,8 @@ Changes made in thick client appear on cloud portal
         Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 8
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+advancedViewer   
         ...    ${permissions}[viewer]    
         ...    noptixautoqa+local_apichanged@gmail.com    
@@ -1376,13 +1376,13 @@ Changes made in thick client appear on cloud portal
         ...    is cloud=${False}
         Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 9
-        Remove User    ${local auth}    https://${QA BURBANK IP}:${system['port']}    ${id}
+        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
         Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
         
         Log    Step 10
         Save User    
-        ...    ${local auth}    
-        ...    https://${QA BURBANK IP}:${system['port']}    
+        ...    ${server 1}[local auth]    
+        ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+newApiUser   
         ...    ${permissions}[advancedViewer]    
         ...    noptixautoqa+local_advancedViewer@gmail.com    
@@ -1409,8 +1409,8 @@ Changes made in thick client appear on cloud portal
         Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]    
         
         Log    Clean up
-        ${id}    Get Local User Id By Name    ${local auth}    https://${QA BURBANK IP}:${system['port']}    Local+newApiUser
-        Remove User    ${local auth}    https://${QA BURBANK IP}:${system['port']}    ${id}
+        ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+newApiUser
+        Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
         Exit For Loop If    '''${user}'''=='''admin'''    
         Log Out
     END
@@ -1420,26 +1420,26 @@ Local user list is not available for offline system
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     Log    Preconditions
-    @{local users} =   Reset Local Users    ${server auth}    https://${QA BURBANK IP}:${system 2['port']}
-    ${results}    Execute Command    docker container stop ${system 2['cont']}
+    @{local users} =   Reset Local Users    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}
+    ${results}    Execute Command    docker container stop ${server 2['name']}
     Log In    ${server 1['owner']}    ${password}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${system 2['id']}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 2['cloud id']}
     Go To Users List
     FOR    ${user}    IN    @{local users}
         Element Should Not Be Visible    //span[text()="local+${user}"]
     END    
     Log    Step 2   
-    ${results}    Execute Command    docker container start ${system 2['cont']}
+    ${results}    Execute Command    docker container start ${server 2['name']}
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Visible   //span[text()="Local+${user}"]    125
     END   
     Log    Step 3
-    ${results}    Execute Command    docker container stop ${system 2['cont']}
+    ${results}    Execute Command    docker container stop ${server 2['name']}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    125
     Reload Page   
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Not Visible   //span[text()="local+${user}"]
     END   
     Log    Clean up
-    ${results}    Execute Command    docker container start ${system 2['cont']}
+    ${results}    Execute Command    docker container start ${server 2['name']}
     Close Connection

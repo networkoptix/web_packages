@@ -548,7 +548,7 @@ Disconnect from my account
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    ${alert}=   Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
+    ${alert}=   Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
     Check For Alert Dismissable    ${alert}    timeout=300
 
 Failure Tasks
@@ -845,11 +845,19 @@ Get Key from Value
     END
 
 Create Local Users via API
-    [Arguments]    ${auth}    ${server}    ${local users}    ${password}
-    FOR    ${user}    IN    @{local users}
+    [Arguments]    ${auth}    ${server}    ${locals}    ${password}
+    &{local users} =    Create Dictionary
+    &{advancedViewer} =    Create Dictionary
+    &{cloudAdmin} =    Create Dictionary
+    &{custom} =    Create Dictionary
+    &{liveViewer} =    Create Dictionary
+    &{viewer} =    Create Dictionary
+    FOR    ${user}    IN    @{locals}
         Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+        Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
+        Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
-    [return]    @{local users}
+    [return]    ${local users}
 
 Delete All Local Users
     [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
@@ -1064,8 +1072,9 @@ Create Base System
     ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
 
     # If add users is true add local users.  Add cloud users if both are true.
-    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${server}[port]
-    ${cloud users}=   Run Keyword If    $add_users and $owner   Register and Activate Generic Users
+    @{local users}=    Get Dictionary Keys    ${role names}
+    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${BASE PASSWORD}
+    ${cloud users}=    Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
     # Add local auth to dict

@@ -139,7 +139,7 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${users['cloudAdmin']}' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
+	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -149,12 +149,12 @@ Verify In Local Users UI
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
         log    ${email}
         log    ${user}
-        log    ${users['cloudAdmin']}
-	    Run Keyword If    '${email}' == '${system['owner']}'
+        # log    ${users['cloudAdmin']}
+	    Run Keyword If    '${email}' == '${server 1['owner']}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+	    ...    ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == '${local users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+        ...    ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
         ...    ELSE IF    '${email}' == 'admin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
@@ -313,7 +313,7 @@ Get Custom Permissions
     END
 
 Change All Local Users Login
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -332,7 +332,7 @@ Change All Local Users Login
     END
 
 Change All Local Users Full Name
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -348,7 +348,7 @@ Change All Local Users Full Name
     END
 
 Change All Local Users Email
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -363,13 +363,13 @@ Change All Local Users Email
     END
 
 Change All Local User Permissions
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new permission} =    Change Permission Level for Local User    ${user}    ${system['owner']}
+        ${new permission} =    Change Permission Level for Local User    ${user}    ${server 1['owner']}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -382,7 +382,7 @@ Change All Local User Permissions
     END
 
 Change All Local User Password
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Log    Change password for ${user}
@@ -396,13 +396,13 @@ Change All Local User Password
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
         @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
     END
 
 Change All Local User Info
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Go to Users List
@@ -410,8 +410,8 @@ Change All Local User Info
         Wait Until Element Is Visible    ${LOCAL USER NAME}
 	    ${user role} =    Get Text    //span[contains(text(),"Local+${user}")]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
-	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
-        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
         ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
     END
@@ -428,7 +428,7 @@ Get Local User Id By Name
 
 User Should Not Exist
     [Arguments]    ${deleted user}
-    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
     END
@@ -436,7 +436,7 @@ User Should Not Exist
 Get Local Users
     [Arguments]
     ${locals}=   Create List
-    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
