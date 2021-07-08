@@ -7,6 +7,7 @@ import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLandingService } from '@pages/new-landing/landing.service';
 
 @Component({
     selector    : 'landing-component',
@@ -34,7 +35,8 @@ export class NxLandingComponent implements OnInit {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
-                private router: Router
+                private router: Router,
+                landingService: NxLandingService
     ) {
         this.setupDefaults(configService);
     }

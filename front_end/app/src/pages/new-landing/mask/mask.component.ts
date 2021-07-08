@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
+import { NxLandingService } from '../landing.service';
 
 @Component({
     selector    : 'nx-mask',
@@ -8,11 +9,8 @@ import { Platform } from '@angular/cdk/platform';
     styleUrls   : ['./mask.component.scss']
 })
 export class NxMaskComponent implements OnChanges, AfterViewInit {
-    @Input() scrollPosition: number;
-    @Input() introAnimationFinished = false;
+    @Input() scrollPosition = 820;
     @Input() graphicLoaded: boolean;
-    @Input() maskMaxSizeScrollPosition: number;
-    @Output() isFinishedLoading = new EventEmitter<boolean>();
     componentInitialized = false;
     scale =  2;
     isSafari: boolean;
@@ -24,7 +22,7 @@ export class NxMaskComponent implements OnChanges, AfterViewInit {
 
     CONFIG: IConfig
 
-    constructor(configService: NxConfigService, platform: Platform) {
+    constructor(configService: NxConfigService, platform: Platform, public landingService: NxLandingService) {
         this.CONFIG = configService.getConfig();
         this.isSafari = platform.SAFARI;
     }
@@ -35,21 +33,20 @@ export class NxMaskComponent implements OnChanges, AfterViewInit {
 
     ngOnChanges() {
         // if (this.introAnimationFinished && this.scrollPosition < this.maskMaxSizeScrollPosition) {
-        if (this.scrollPosition < this.maskMaxSizeScrollPosition) {
+        if (this.scrollPosition < this.landingService.scrollBreakpoints.maskMaxSize) {
             this.scale = this.getMaskScale(this.scrollPosition);
         } else {
-            this.scale = this.getMaskScale(this.maskMaxSizeScrollPosition);
+            this.scale = this.getMaskScale(this.landingService.scrollBreakpoints.maskMaxSize);
         }
     }
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.isFinishedLoading.emit(true);
-            this.componentInitialized = true;
+            this.landingService.maskFinishedLoading$.next(true);
         }, 0);
     }
 
     ngOnDestroy() {
-        this.isFinishedLoading.emit(false);
+        this.landingService.maskFinishedLoading$.next(false);
     }
 }

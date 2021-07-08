@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { NxLandingService } from '../landing.service';
 
 interface blockData {
     title: string;
@@ -22,8 +23,8 @@ interface dataInput {
     styleUrls   : ['./content-container.component.scss']
 })
 export class NxContentContainerComponent {
-    @Input() screenWidth: number
     @ViewChild('content') contentStartRef: ElementRef
+    @Input() screenWidth: number;
     // Dummy Data
     @Input() data: dataInput = {
         header1          : 'Expand Your Setup',
@@ -134,12 +135,18 @@ export class NxContentContainerComponent {
         ]
     }
 
-    constructor() {}
+    constructor(public landingService: NxLandingService) {
+
+    }
 
     determineBlockType(type: 'small' | 'wide') {
         if (this.screenWidth > 769) {
             return type;
         }
         return 'adaptive';
+    }
+
+    ngAfterViewInit() {
+        this.landingService.contentStartRef = this.contentStartRef;
     }
 }

@@ -103,7 +103,7 @@
 
 .header-border-small {
     border-bottom: 2px solid;
-    border-color: $brand-core;
+    border-color: var(--brand-core);
     margin-top: 16px;
     width: 56px;
     margin-bottom: 16px;
@@ -136,7 +136,7 @@
 
 .body-border-adaptive {
     border-top: 2px solid;
-    border-color: $brand-core;
+    border-color: var(--brand-core);
     margin-bottom: 24px;
     width: 56px;
     margin-top: 0px;

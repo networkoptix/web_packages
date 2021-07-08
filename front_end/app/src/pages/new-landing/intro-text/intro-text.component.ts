@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, ElementRef, Inject, Input, OnChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 import { WINDOW }   from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -7,17 +7,14 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, filter, startWith } from 'rxjs/operators';
-
-@UntilDestroy({})
+import { filter, startWith } from 'rxjs/operators';
+@UntilDestroy()
 @Component({
     selector    : 'nx-intro-text',
     templateUrl : './intro-text.component.html',
     styleUrls   : ['./intro-text.component.scss']
 })
-export class NxIntroTextComponent implements OnChanges {
-  @Input() isLoggedIn = false;
-  @Input() scrollPosition = 0;
+export class NxIntroTextComponent implements AfterViewChecked {
   // createAccountButton Ref not used yet, used to change the color of the header later
   @ViewChild('createAccountButton') createAccountRef: ElementRef<HTMLElement>;
   @ViewChild('rootFixed') rootFixedRef: ElementRef;
@@ -30,7 +27,9 @@ export class NxIntroTextComponent implements OnChanges {
   LANG: LanguageI18NStaticTypes;
 
   constructor(languageService :NxLanguageProviderService, configService: NxConfigService,
-      scrollMechanics: NxScrollMechanicsService, @Inject(DOCUMENT) private document: Document, @Inject(WINDOW) private window: Window) {
+      scrollMechanics: NxScrollMechanicsService,
+      @Inject(DOCUMENT) private document: Document,
+      @Inject(WINDOW) private window: Window) {
       this.CONFIG = configService.getConfig();
       this.LANG = languageService.translations;
       // real-time scroll calculation for less jittery transition of the element from position:fixed to position:absolute
@@ -51,7 +50,7 @@ export class NxIntroTextComponent implements OnChanges {
       return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
   }
 
-  ngOnChanges() {
+  ngAfterViewChecked() {
       // There are two copies of the intro-text component in the html, this determines which one will be showing
       // This is neccessary to seamlessly transition between fixed and absolute positioning
       if (!this.elementObserver$ && this.rootFixedRef && this.rootAbsoluteRef) {

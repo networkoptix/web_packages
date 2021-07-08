@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
+import { NxLandingService } from '../landing.service';
 
 interface layer {
     scale : number
@@ -12,12 +13,9 @@ interface layer {
     templateUrl : './background-graphic.component.html',
     styleUrls   : ['./background-graphic.component.scss']
 })
-export class NxBackgroundGraphicComponent implements OnChanges, AfterViewInit {
+export class NxBackgroundGraphicComponent implements AfterViewInit {
+  @Input() scrollPosition: number
   CONFIG: IConfig;
-  @Input() scrollPosition = 0;
-  @Input() introAnimationFinished = false;
-  @Input() maskMaxSizeScrollPosition: number;
-  @Output() isFinishedLoading = new EventEmitter<boolean>();
   componentInitialized = false;
   isSafari: boolean;
   layers: layer[] = [];
@@ -34,7 +32,7 @@ export class NxBackgroundGraphicComponent implements OnChanges, AfterViewInit {
       layerDistanceCoefficient : 0.00005
   }
 
-  constructor(configService: NxConfigService, platform: Platform) {
+  constructor(configService: NxConfigService, platform: Platform, public landingService: NxLandingService) {
       this.CONFIG = configService.getConfig();
       for (const graphic of this.graphicPaths) {
           this.layers.push({
@@ -68,19 +66,15 @@ export class NxBackgroundGraphicComponent implements OnChanges, AfterViewInit {
        }
    }
 
-   ngOnChanges() {
-       // Intro Animation doesnt exist yet
-       //    if (this.introAnimationFinished && this.scrollPosition < this.maskMaxSizeScrollPosition) {
-       if (this.scrollPosition < this.maskMaxSizeScrollPosition) {
-           this.recalculateScale();
-       }
-   }
-
    ngAfterViewInit() {
        setTimeout(() => {
            // Component initialized is used to prevent svg from flickering into existence on initial render
            this.componentInitialized = true;
-           this.isFinishedLoading.emit(true);
+           this.landingService.backgroundGraphicFinishedLoading$.next(true);
        }, 0);
+   }
+
+   ngOnChanges() {
+       this.recalculateScale();
    }
 }

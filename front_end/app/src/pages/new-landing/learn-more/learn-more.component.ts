@@ -1,21 +1,24 @@
 import { Component, ElementRef, Input, OnChanges, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NxLandingService } from '../landing.service';
+
+@UntilDestroy()
 @Component({
     selector    : 'nx-learn-more',
     templateUrl : './learn-more.component.html',
     styleUrls   : ['./learn-more.component.scss']
 })
-export class NxLearnMoreComponent implements OnInit, OnChanges {
-    @Input() screenHeight: number
+export class NxLearnMoreComponent {
     @Input() scrollPosition: number
-    @Input() contentStartRef: ElementRef;
-    visible = true
+    @Input() screenHeight: number
 
+    visible = true
     isVisibleBreakpoints = {
         scrollPosition : 91,
         screenHeight   : 690
     }
 
-    constructor() {}
+    constructor(public landingService: NxLandingService) {}
 
     ngOnInit(): void {
         this.visible = this.renderLearnMore();
@@ -27,8 +30,8 @@ export class NxLearnMoreComponent implements OnInit, OnChanges {
     }
 
     onClick() {
-        if (this.contentStartRef) {
-            this.contentStartRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        if (this.landingService.contentStartRef) {
+            this.landingService.contentStartRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
         }
     }
 

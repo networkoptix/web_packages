@@ -1,18 +1,17 @@
 <div class="intro-section">
-    <ng-container *ngIf="scrollPosition < scrollBreakPoints.renderGraphics">
-        <nx-background-graphic
-             (isFinishedLoading)="backgroundGraphicFinishedLoading = $event" 
-             [scrollPosition]="scrollPosition"
-             [maskMaxSizeScrollPosition]="scrollBreakPoints.maskMaxSize"
-             *ngIf="maskFinishedLoading"     
-        ></nx-background-graphic>
-        <nx-mask 
-            (isFinishedLoading)="maskFinishedLoading = $event"
-            [scrollPosition]="scrollPosition"
-            [maskMaxSizeScrollPosition]="scrollBreakPoints.maskMaxSize"
-        ></nx-mask>
+    <ng-container *ngIf="(landingService.scrollPosition$ | async) < landingService.scrollBreakpoints.showGraphics">
+        <nx-background-graphic 
+            *ngIf="(landingService.maskFinishedLoading$ | async)" 
+            [scrollPosition]="(landingService.scrollPosition$ | async)">
+        </nx-background-graphic>
+        <nx-mask [scrollPosition]="(landingService.scrollPosition$ | async)"></nx-mask>
     </ng-container>
-    <nx-intro-text [isLoggedIn]="loginState"></nx-intro-text>
+    <nx-intro-text></nx-intro-text>
 </div>
-<nx-learn-more [scrollPosition]="scrollPosition" [screenHeight]="(screenSize$ | async)?.height" [contentStartRef]="contentComponent?.contentStartRef"></nx-learn-more>
-<nx-content-container  [screenWidth]="(screenSize$ | async)?.width"></nx-content-container>
+<nx-learn-more 
+    [scrollPosition]="(landingService.scrollPosition$ | async)" 
+    [screenHeight]="(landingService.screenSize$ | async)?.height">
+</nx-learn-more>
+<nx-content-container 
+    [screenWidth]="(landingService.screenSize$ | async)?.width">
+</nx-content-container>

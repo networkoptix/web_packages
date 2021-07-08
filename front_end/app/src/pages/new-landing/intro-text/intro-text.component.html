@@ -15,6 +15,6 @@
     <div class="cloud-sub-header" translate>A simple way to connect to, manage and expand any %VMS_NAME% System.</div>
 </div>
 <div [ngClass]="'button-container-' + cloudShowing">
-    <button #createButton class="btn btn-primary create-button" *ngIf="!isLoggedIn" type="button" [routerLink]="'/register'" translate
+    <button #createButton class="btn btn-primary create-button auth-hidden" type="button" [routerLink]="'/register'" translate
     >Create Account</button>
 </div>
