@@ -1,6 +1,6 @@
 <nx-pre-loader *ngIf="!selectedManifest"></nx-pre-loader>
 
-<nx-block *ngIf="docAsset.title && docAsset.blocks.length" header-style="slim">
+<nx-block *ngIf="docAsset?.title && docAsset?.blocks.length" header-style="slim">
     <header>
         {{docAsset.title}}
     </header>

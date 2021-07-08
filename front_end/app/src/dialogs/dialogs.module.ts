@@ -1,4 +1,5 @@
 import { NgModule }                    from '@angular/core';
+import { NgbModule }                   from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule }                from '@angular/common';
 import {
     FormsModule, ReactiveFormsModule
@@ -44,7 +45,9 @@ import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.
 import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { RemoveSystemModalContent }       from './remove-system/remove-system.component';
 import { EditModalContent }               from './edit/edit.component';
+import { DownloadAsyncModalContent }      from './download-async/download-async.component';
 import { NxDialogsService }               from './dialogs.service';
+
 
 @NgModule({
     imports: [
@@ -56,6 +59,7 @@ import { NxDialogsService }               from './dialogs.service';
         ComponentsModule,
         DirectivesModule,
         RouterModule,
+        NgbModule,
         AngularSvgIconModule.forRoot(),
         PipesModule
     ],
@@ -87,7 +91,8 @@ import { NxDialogsService }               from './dialogs.service';
         ResetBackupModalContent,
         AddStorageModalContent,
         RemoveSystemModalContent,
-        EditModalContent
+        EditModalContent,
+        DownloadAsyncModalContent
     ],
     providers: [
         NxDialogsService,

@@ -15,7 +15,7 @@ import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 import { ConsoleSection }           from '@pages/developer-console/console/table/console-table.component';
-import { AboutAsset } from '@pages/developers/about/about.component';
+import { PackageStatus }            from '@dialogs/download-async/download-async.component';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -575,12 +575,14 @@ export class NxCloudApiService {
     }
 }
 
-class CustomClientAPI {
+export class CustomClientAPI {
     private readonly apiBase: string;
 
-    constructor(private cloudAPI: NxCloudApiService,
-                private config: IConfig,
-                private http: HttpClient) {
+    constructor(
+        private cloudAPI: NxCloudApiService,
+        private config: IConfig,
+        private http: HttpClient
+    ) {
         this.apiBase = this.config.apiBase + '/custom_clients/';
     }
 
@@ -615,4 +617,14 @@ class CustomClientAPI {
     getManifest = () => {
         return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
     }
+
+    generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
+        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
+    }
+
+    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
+        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
+    }
+
+    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`
 }

@@ -283,8 +283,8 @@ export const nxConfig: IConfig = {
                     }
                 },
                 {
-                    type  : ConfigType.ICON_LINK,
-                    name  : 'downloadLink',
+                    type  : ConfigType.ICON_MODAL,
+                    name  : 'downloadModal',
                     label : '',
                     meta  : {
                         icon    : 'eye.svg',
@@ -315,6 +315,35 @@ export const nxConfig: IConfig = {
                         type  : ConfigType.DROPDOWN,
                         name  : 'base_vms',
                         label : 'Based on'
+                    }
+                ]
+            },
+            downloadManifest: {
+                label  : 'Download Package',
+                fields : [
+                    {
+                        // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                        // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                        type        : ConfigType.TEXT,
+                        name        : 'preparing',
+                        label       : 'Preparing to Build',
+                        description : 'Starting Custom Client build.'
+                    },
+                    {
+                        // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                        // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                        type        : ConfigType.TEXT,
+                        name        : 'generating',
+                        label       : 'Generating Custom Client',
+                        description : 'Custom Client is being built'
+                    },
+                    {
+                        // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                        // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                        type        : ConfigType.TEXT,
+                        name        : 'ready',
+                        label       : 'Custom Client Ready',
+                        description : 'Custom Client is ready to download'
                     }
                 ]
             },

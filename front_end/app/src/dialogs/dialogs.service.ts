@@ -31,23 +31,24 @@ import { ResetServerModalContent }             from './reset-server/reset-server
 import { DeleteCloudUserModalContent }         from './delete-cloud-user/delete-cloud-user.component';
 import { ChangePasswordModalContent }          from './change-password/change-password.component';
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
-import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
-import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
-import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
-import { WizardModalContent }             from './wizard/wizard.component';
-import { CloudConnectModalContent }       from './cloud-connect/cloud-connect.component';
-import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
-import { AddStorageModalContent }         from './add-storage/add-storage.component';
-import { ChangeStorageModalContent }      from './change-storage/change-storage.component';
-import { NxAccountService }               from '@services/account.service';
-import { BaseAccount }                    from '@services/account.service/base';
-import { CloudAccount }                   from '@services/account.service/cloud';
-import { NxBootstrapProvider }            from '@services/nx-bootstrap-provider';
-import { StorageManager }                 from '@services/system.service/system/storage-manager/storage-manager';
+import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
+import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
+import { WizardModalContent }                  from './wizard/wizard.component';
+import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
+import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
+import { AddStorageModalContent }              from './add-storage/add-storage.component';
+import { ChangeStorageModalContent }           from './change-storage/change-storage.component';
+import { NxAccountService }                    from '@services/account.service';
+import { BaseAccount }                         from '@services/account.service/base';
+import { CloudAccount }                        from '@services/account.service/cloud';
+import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
+import { EditModalContent }                    from './edit/edit.component';
+import { ModalContent }                        from '@pages/developer-console/console/table/console-table.component';
+import { DownloadAsyncModalContent }           from './download-async/download-async.component';
+import { StorageManager }                      from '@services/system.service/system/storage-manager/storage-manager';
 
 import './../dialogs/dialogs.scss';
-import { EditModalContent } from './edit/edit.component';
-import { ModalContent } from '@pages/developer-console/console/table/console-table.component';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -258,6 +259,14 @@ export class NxDialogsService {
             backdrop    : 'static'
         };
         return this.createModal(EditModalContent, options, modalContent);
+    }
+
+    downloadAsync(modalContent: ModalContent) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+        return this.createModal(DownloadAsyncModalContent, options, modalContent);
     }
 
     changeStorage(system: NxSystem) {

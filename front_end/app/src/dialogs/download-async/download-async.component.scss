@@ -1,0 +1,11 @@
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/typography';
+
+ngb-progressbar {
+    display: block;
+    margin-top: 16px;
+}
+
+::ng-deep ngb-progressbar .progress {
+    font-size: 13px;
+}

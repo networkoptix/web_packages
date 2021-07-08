@@ -15,7 +15,9 @@ import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire';
 import { AngularFireMessagingModule }          from '@angular/fire/messaging';
 import { LayoutModule }                        from '@angular/cdk/layout';
 import { InputTrimModule }                     from 'ng2-trim-directive';
-import { NgbToast, NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+import {
+    NgbToast, NgbModal, NgbProgressbar
+}                                              from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                         from 'ngx-order-pipe';
 import { DeviceDetectorModule }                from 'ngx-device-detector';
 import { TranslateCompiler, TranslateModule }  from '@ngx-translate/core';
@@ -98,6 +100,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     providers: [
         NgbToast,
         NgbModal,
+        NgbProgressbar,
         Location,
         Title,
         CookieService,

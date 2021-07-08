@@ -70,12 +70,14 @@ export interface ConsoleManifest {
     excludeFromSearch: string[],
     contexts: ColumnConfig[],
     editManifest: ModalManifest,
+    downloadManifest: ModalManifest,
     actions: ActionConfig[]
 }
 
 export enum ModalType {
     CLIENT_EDIT='client-edit',
-    CLIENT_CREATE='client-create'
+    CLIENT_CREATE='client-create',
+    CLIENT_DOWNLOAD='client-download'
 }
 
 export interface ModalContent {
@@ -91,16 +93,18 @@ export enum ConsoleSection {
 
 export class ListSerializer<Initial, Serialized> {
     #serializer: (data: Initial[]) => Serialized[]
-    manifest;
+    editManifest: ModalManifest;
+    downloadManifest: ModalManifest;
     data: Serialized[] = []
 
     constructor(
         route: string,
-        manifest: ContextManifest,
+        manifest: ConsoleManifest,
         initialData?: Initial[],
         private contentSettings?: ContentSettings
     ) {
-        this.manifest = manifest;
+        this.editManifest = manifest.editManifest;
+        this.downloadManifest = manifest.downloadManifest;
         switch (route) {
             case 'custom-clients':
                 this.#serializer = this.#customClientsSerializer;
@@ -118,11 +122,17 @@ export class ListSerializer<Initial, Serialized> {
     }
 
     #customClientsSerializer = (data) => {
-        const createDownloadLink = (item) => `/todo/create/download/link/${item.id}`;
-        const createModalValues = ({ values: _, ...values }) => ({
+        const createDownloadModalValues = ({ values: _, ...values }) => ({
+            modal    : ModalType.CLIENT_DOWNLOAD,
+            heading  : this.downloadManifest.label,
+            manifest : this.downloadManifest,
+            settings : this.contentSettings || {},
+            values
+        });
+        const createSettingsModalValues = ({ values: _, ...values }) => ({
             modal    : ModalType.CLIENT_EDIT,
-            heading  : this.manifest.label,
-            manifest : this.manifest,
+            heading  : this.editManifest.label,
+            manifest : this.editManifest,
             settings : this.contentSettings || {},
             values
         });
@@ -130,8 +140,8 @@ export class ListSerializer<Initial, Serialized> {
         return data.map(
             item => ({
                 ...item,
-                downloadLink  : createDownloadLink(item),
-                settingsModal : createModalValues(item)
+                downloadModal : createDownloadModalValues(item),
+                settingsModal : createSettingsModalValues(item)
             }));
     }
 }
@@ -194,7 +204,7 @@ export class NxDevConsoleTableComponent {
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '' } = this.route.snapshot.queryParams;
                 this.selectedData = new TableDataSource(
-                    new ListSerializer(this.sectionParam, this.manifest, list, this.contentManifest.settings).data,
+                    new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.settings).data,
                     this.selectedManifest.perPage,
                     parseInt(page),
                     search,
@@ -232,13 +242,20 @@ export class NxDevConsoleTableComponent {
     }
 
     async handleModal(modalContent?) {
-        const action = await this.dialogService.edit(
-            modalContent || {
-                modal    : ModalType.CLIENT_CREATE,
-                manifest : this.manifest,
-                heading  : this.translate.instant('devConsole.create'),
-                settings : this.contentManifest.settings
-            });
+        const createClientModalContent = {
+            modal    : ModalType.CLIENT_CREATE,
+            manifest : this.manifest,
+            heading  : this.translate.instant('devConsole.create'),
+            settings : this.contentManifest.settings
+        };
+
+        const actions = (modal) => ({
+            [ModalType.CLIENT_CREATE]   : () => this.dialogService.edit(createClientModalContent),
+            [ModalType.CLIENT_EDIT]     : () => this.dialogService.edit(modalContent),
+            [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
+        })[modal || ModalType.CLIENT_CREATE]();
+
+        const action = await actions(modalContent?.modal);
         if (action) {
             this.updateData();
         }
