@@ -3,10 +3,10 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#2B383F;}
+	.st0-fullscreen{fill:#2B383F;}
 </style>
-<path class="st0" d="M10,6V4H4v6h2V7.4l2.8,2.8l1.4-1.4L7.4,6H10z"/>
-<path class="st0" d="M18,16.6l-2.8-2.8l-1.4,1.4l2.8,2.8H14v2h6v-6h-2V16.6z"/>
-<path class="st0" d="M14,4v2h2.6l-2.8,2.8l1.4,1.4L18,7.4V10h2V4H14z"/>
-<path class="st0" d="M8.8,13.8L6,16.6V14H4v6h6v-2H7.4l2.8-2.8L8.8,13.8z"/>
+<path class="st0-fullscreen" d="M10,6V4H4v6h2V7.4l2.8,2.8l1.4-1.4L7.4,6H10z"/>
+<path class="st0-fullscreen" d="M18,16.6l-2.8-2.8l-1.4,1.4l2.8,2.8H14v2h6v-6h-2V16.6z"/>
+<path class="st0-fullscreen" d="M14,4v2h2.6l-2.8,2.8l1.4,1.4L18,7.4V10h2V4H14z"/>
+<path class="st0-fullscreen" d="M8.8,13.8L6,16.6V14H4v6h6v-2H7.4l2.8-2.8L8.8,13.8z"/>
 </svg>

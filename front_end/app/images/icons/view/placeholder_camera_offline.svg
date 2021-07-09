@@ -3,9 +3,9 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 96 96" style="enable-background:new 0 0 96 96;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#A5B7C0;}
+	.st0-placeholder-camera-offline{fill:#A5B7C0;}
 </style>
-<path class="st0" d="M50.1,48l37.9-37.9c0.6-0.6,0.6-1.5,0-2.1s-1.5-0.6-2.1,0L48,45.9L10.1,7.9c-0.6-0.6-1.5-0.6-2.1,0
+<path class="st0-placeholder-camera-offline" d="M50.1,48l37.9-37.9c0.6-0.6,0.6-1.5,0-2.1s-1.5-0.6-2.1,0L48,45.9L10.1,7.9c-0.6-0.6-1.5-0.6-2.1,0
 	s-0.6,1.5,0,2.1L45.9,48L7.9,85.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4L48,50.1l37.9,37.9
 	c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L50.1,48z"/>
 </svg>
