@@ -271,8 +271,8 @@ $border-color: $light6;
           background-color: $light16; // #698796
           opacity: .2;
           height: 1px;
-          width: 100%;
-          margin: 8px 0;
+          width: calc(100% - 16px);
+          margin: 8px;
         }
         &.qualitySelection > .option {
           text-transform: capitalize;

@@ -248,13 +248,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         qualities = qualities || {};
         const qualityKeys = Object.keys(qualities);
         this.visibleQualities$.next(qualityKeys.map((quality) => this.qualityToVerbose(quality)) || []);
-        if (qualityKeys.includes('low') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
-            this.drawQualityDivider$.next('low');
-        } else if (qualityKeys.includes('high') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
-            this.drawQualityDivider$.next('high');
-        } else {
-            this.drawQualityDivider$.next('');
+        const lowIndex = qualityKeys.includes('low');
+        const highIndex = qualityKeys.includes('high');
+
+        let divider = '';
+        // If high and low with other options draw the divider after low.
+        if (lowIndex && highIndex && qualityKeys.length > 2) {
+            divider = 'low';
+        // If high or low with at least 2 option draw for high or low depending on which exists.
+        } else if (lowIndex !== highIndex && qualityKeys.length > 1) {
+            divider = lowIndex ? 'low' : 'high';
         }
+        this.drawQualityDivider$.next(divider);
         this.qualities$.next(qualities);
     }
 
