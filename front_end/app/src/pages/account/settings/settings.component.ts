@@ -2,7 +2,7 @@ import {
     Component, OnInit,
     AfterViewInit, ViewChild,
     ViewContainerRef, OnDestroy,
-    ViewChildren, QueryList
+    ViewChildren, QueryList, Inject
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NgForm }                    from '@angular/forms';
@@ -23,6 +23,7 @@ import { NxMenuService }             from '@src/menu';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { NxSessionService }          from '@services/session.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -68,7 +69,8 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private applyService: NxApplyService,
-        private pageService: NxPageService
+        private pageService: NxPageService,
+        @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -96,7 +98,15 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                             });
                     });
                 }
-                return lang.then(() => this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>);
+                return lang.then(() => {
+                    if (this.storageService.langChanged) {
+                        // language is already changed ...
+                        // stop process and reload - 'successMessage' will appear after the reload
+                        this.save.cancel();
+                        this.window.location.reload();
+                    }
+                    return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
+                });
             }).finally(() => {
                 this.watchers.langCode.originalValue = this.watchers.langCode.value = this.langCode;
                 this.accountService.get(true);
