@@ -2,6 +2,7 @@
 from cms.views.celery import download_result
 from util.helpers import get_admin_url
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
@@ -28,7 +29,7 @@ from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
-from cms.permissions import IsSuperuser
+from cms.permissions import IsSuperuser, CanUseCustomClients
 from cms.serializers import CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
     CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
 from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure, \
@@ -786,7 +787,7 @@ def get_asset_info_by_menu(request, menu_id):
 
 
 class CustomClientViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticatedOrTokenHasScope, CanUseCustomClients]
     serializer_class = CustomClientSerializer
 
     def get_queryset(self):
@@ -820,19 +821,19 @@ class CustomClientViewSet(ModelViewSet):
             'label': 'Information',
             'fields': fields
         }]
-        vmsList = [{'name': vms.name, 'value': vms.id} for vms in Asset.objects.filter(
-            asset_type=AssetType.ASSET_TYPES.vms, customizations__name__in=request.user.customizations) if UserGroupsToAssetPermissions.check_permission(request.user, vms)]
-        customization_vms = get_vms_asset()
 
-        if (customization_vms.name not in vms['name'] for vms in vmsList):
-            vmsList = [{'name': customization_vms.name, 'value': customization_vms.id}, *vmsList]
+        show_vms_list = settings.CUSTOMIZATION == 'meta'
+        vms_list = [{'name': vms.name, 'value': vms.id} for vms in
+                    request.user.custom_client_vms_assets] if show_vms_list else []
 
-        settings = {
+        settings_dict = {
             'base_vms': {
-                'options': vmsList
+                'label': 'Based on',
+                'hidden': not show_vms_list,
+                'options': vms_list
             }
         }
-        return api_success({'manifest': {'contexts': contexts, 'settings': settings}})
+        return api_success({'manifest': {'contexts': contexts, 'settings': settings_dict}})
 
     @swagger_auto_schema(method='post', request_body=no_body, responses={200: GenerateCustomClientSerializer()})
     @action(detail=True, methods=['post'])

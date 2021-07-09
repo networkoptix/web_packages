@@ -212,6 +212,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_store_enabled': integration_store_enabled,
                 'landing_description': landing_description,
                 'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
+                'public_custom_clients': asset.read_global_value('%PUBLIC_CUSTOM_CLIENTS%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
                 'show_all_betas': asset.read_global_value("%SHOW_ALL_BETAS%"),
@@ -1229,6 +1230,21 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.\
             check_permission(user, get_cloud_portal_asset(
                 customization), permission)
+
+    @staticmethod
+    def get_customizations_with_permission(user, permission):
+        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+        if user.is_superuser or Group.objects.filter(
+            options__all_assets=True, usergroupstoassettype__asset_type=AssetType.ASSET_TYPES.cloud_portal, user=user,
+            permissions__codename=codename
+        ).exists():
+            return Customization.objects.filter(asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,)
+        else:
+            return Customization.objects.filter(
+                asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
+                asset__usergroupstoassetpermissions__group__permissions__codename=codename,
+                asset__usergroupstoassetpermissions__group__user=user
+            )
 
     @staticmethod
     def check_customization_access(user, customization=settings.CUSTOMIZATION):

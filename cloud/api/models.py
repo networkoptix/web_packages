@@ -112,7 +112,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         permissions = (
             ("can_view_release", "Can view releases and patches"),
             ("invite_users", "Invite users"),
-            ("ignore_exceptions", "Downgrades log level of exceptions to INFO")
+            ("ignore_exceptions", "Downgrades log level of exceptions to INFO"),
+            ("custom_clients", "Can create/edit and download custom clients")
         )
 
     objects = AccountManager()
@@ -216,6 +217,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
             if UserGroupsToAssetPermissions.check_permission(self, asset, permission):
                 assets.append(asset.id)
         return assets
+
+    @property
+    def custom_client_vms_assets(self):
+        return Asset.objects.filter(
+            asset_type__type=AssetType.ASSET_TYPES.vms,
+            customizations__in=UserGroupsToAssetPermissions.get_customizations_with_permission(self, 'custom_clients')
+        )
 
     @property
     def is_portal_manager(self):

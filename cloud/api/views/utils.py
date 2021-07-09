@@ -51,6 +51,7 @@ def get_settings_from_cache():
         'copyrightYear': customization_cache.get('copyright_year', ''),
         'companyName': customization_cache.get('company_name', ''),
         'companyLink': customization_cache.get('company_link', ''),
+        'customClientsEnabled': customization_cache.get('public_custom_clients', False),
         'developersEnabled': customization_cache.get('developers_enabled', False),
         'feedbackEnabled': customization_cache.get('feedback_enabled', False),
         'integrationFilterItems': customization_cache.get('integration_filter_items', []),
@@ -384,6 +385,10 @@ def get_settings(request):
             UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'cms.access_developers'):
         settings_object['developersEnabled'] = True
+    if not settings_object.get('customClientsEnabled', False) and \
+            UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
+        settings_object['customClientsEnabled'] = True
     return Response(settings_object)
 
 

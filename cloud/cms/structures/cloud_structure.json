@@ -645,6 +645,16 @@
             "fieldset": "Downloads"
           },
           {
+            "label": "Public Custom Clients",
+            "name": "%PUBLIC_CUSTOM_CLIENTS%",
+            "value": false,
+            "description": "Allows all users to view the Custom Clients page. If unchecked users must have a special permission to view the Custom Clients page.",
+            "advanced": true,
+            "optional": true,
+            "type": "check_box",
+            "fieldset": "Open Source"
+          },
+          {
             "label": "Show All Betas",
             "name": "%SHOW_ALL_BETAS%",
             "value": false,

@@ -473,7 +473,8 @@ export const nxConfig: IConfig = {
         publicReleases            : false,
         cloudStorageEnabled       : false,
         cloudStorageSize          : 0,
-        healthMonitorCacheTimeout : 60
+        healthMonitorCacheTimeout : 60,
+        customClientsEnabled      : false
     },
     cloudName     : '',
     cloudHost     : '',

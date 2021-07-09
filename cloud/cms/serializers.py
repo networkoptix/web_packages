@@ -156,8 +156,11 @@ class CustomClientSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if settings.CUSTOMIZATION != 'meta':
+        self.request = kwargs.get('request', None)
+        if settings.CUSTOMIZATION != 'meta' or not self.context.get('request', None):
             self.fields['base_vms'].read_only = True
+        else:
+            self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets
 
 
 class FieldeManifestSerialzier(serializers.Serializer):

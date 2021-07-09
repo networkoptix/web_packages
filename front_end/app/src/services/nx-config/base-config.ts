@@ -199,6 +199,7 @@ export interface CloudCapabilities {
     publicReleases: boolean;
     cloudStorageEnabled: boolean;
     cloudStorageSize: number;
+    customClientsEnabled: boolean;
 }
 
 export interface Company {
