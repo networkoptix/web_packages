@@ -35,8 +35,7 @@ export class NxLandingComponent implements OnInit {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
-                private router: Router,
-                landingService: NxLandingService
+                private router: Router
     ) {
         this.setupDefaults(configService);
     }

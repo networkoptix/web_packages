@@ -66,9 +66,8 @@ export class EditModalContent implements ModalContent {
     ngOnInit() {
         if (!this.values) {
             this.values = this.manifest.fields.reduce((values, { name }) => ({ ...values, [name]: '' }), {});
-        } else {
-            this.values = { ...this.values };
         }
+
         const getMethod = (action: string) => {
             const [subAPI, method] = ({
                 [ModalType.CLIENT_EDIT]: {
@@ -109,7 +108,7 @@ export class EditModalContent implements ModalContent {
             delay     : this.CONFIG.alertTimeout
         };
 
-        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name, this.values),
+        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name),
             { ignoreError: true },
             _ => {
                 // Need spec for saving message

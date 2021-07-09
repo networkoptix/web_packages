@@ -587,7 +587,7 @@ export class CustomClientAPI {
     }
 
     create = (name: string, values: Record<string, string> = {}) => {
-        return this.http.post<t.CustomClient>(this.apiBase, { name, values });
+        return this.http.post<t.CustomClient>(this.apiBase, Object.entries(values).length ? { name, values } : { name });
     }
 
     retrieve = (id) => {
