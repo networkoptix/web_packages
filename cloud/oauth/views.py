@@ -18,11 +18,13 @@ response_type_description = "Valid options are code or token"
 scope_description = "Scope for the oauth token"
 
 access_token_param = openapi.Parameter('access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+authorization_code_param = openapi.Parameter('code', openapi.IN_QUERY, type=openapi.TYPE_STRING)
 client_id_param = openapi.Parameter('client_id', openapi.IN_QUERY, required=True, description=client_description, type=openapi.TYPE_STRING)
 email_param = openapi.Parameter('email', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
 grant_type_param = openapi.Parameter('grant_type', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
 password_param = openapi.Parameter('password', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
 redirect_uri_param = openapi.Parameter('redirect_uri', openapi.IN_QUERY, required=True, description=redirect_uri_description, type=openapi.TYPE_STRING)
+refresh_token_param = openapi.Parameter('refresh_token', openapi.IN_QUERY, description=response_type_description, type=openapi.TYPE_STRING)
 response_type_param = openapi.Parameter('response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
 scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True, description=scope_description, type=openapi.TYPE_STRING)
 
@@ -229,7 +231,7 @@ def register_client(request):
 
 @swagger_auto_schema(methods=["GET"],  # auto_schema=None,
                      operation_description="Returns new access and refresh tokens.",
-                     manual_parameters=[client_id_param, email_param, grant_type_param, password_param, response_type_param, scope_param],
+                     manual_parameters=[client_id_param, authorization_code_param, email_param, grant_type_param, password_param, refresh_token_param, response_type_param, scope_param],
                      responses={
                          200: successful_token_response
                      })
@@ -239,13 +241,14 @@ def register_client(request):
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "client_id": client_id__body,
+                             "code": authorization_code__body,
                              "email": email__body,
                              "grant_type": grant_type__body,
                              "password": password__body,
+                             "refresh_token": refresh_token__body,
                              "response_type": response_type__body,
                              "scope": scope__body
-                         },
-                         required=["grant_type", "response_type"],
+                         }
                      ),
                      responses={
                          200: successful_token_response
@@ -253,9 +256,21 @@ def register_client(request):
 @api_view(["GET", "POST"])
 @permission_classes((AllowAny, ))
 def token(request):
-    require_params(request, ("grant_type", "response_type",))
+    code = get_param(request, "code")
+    refresh_token = get_param(request, "refresh_token")
+    if not code and not refresh_token:
+        require_params(request, ("grant_type", "response_type",))
+
     grant_type = get_param(request, "grant_type")
-    response_type = get_param(request, "response_type")
+    if not grant_type:
+        if code:
+            grant_type = Auth.GRANT_TYPE.authorization_code
+
+        if refresh_token:
+            grant_type = Auth.GRANT_TYPE.refresh_token
+
+    response_type = get_param(request, "response_type") or Auth.RESPONSE_TYPE.token
+
     scope = get_param(request, 'scope')
     ip = get_ip(request)
 
@@ -274,10 +289,10 @@ def token(request):
     elif response_type == Auth.RESPONSE_TYPE.token:
         if grant_type == Auth.GRANT_TYPE.authorization_code:
             require_params(request, ("code",))
-            return api_success(Auth.get_access_token(get_param(request, "code"), ip=ip))
+            return api_success(Auth.get_access_token(code, ip=ip))
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             require_params(request, ("refresh_token",))
-            return api_success(Auth.get_refresh_token(get_param(request, "refresh_token"), ip=ip, scope=scope))
+            return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))
 
     raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 
