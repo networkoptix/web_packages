@@ -50,6 +50,7 @@ export class NxSystem extends System {
     storageManager: StorageManager
 
     private _subscribersCount = new BehaviorSubject<number>(0);
+    private attempts = 0; // used to limit consecutive api call attempts
 
     activeSubscription: Subscription;
     show404 = false;
@@ -483,25 +484,22 @@ export class NxSystem extends System {
             return Promise.resolve(this.mediaservers);
         }
 
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getMediaServersAndCameras().toPromise()
-        ).then(
-            // @ts-ignore
-            response => {
-                // @ts-ignore
-                if ((response.error && response.error !== '0') || !response.reply) {
-                    console.error('error getting mediaservers and cameras');
-                    return response;
-                }
-                // @ts-ignore
-                return this._setMediaServersAndCameras(response.reply);
-            }
-        ).catch(
-            response => {
-                console.error('getMediaServersAndCameras failure', response);
-                return [];
-            }
-        );
+        return this.ensureSystemAuth()
+            .then(
+                () => this.mediaserver
+                    .getMediaServersAndCameras().toPromise()
+                    .then(
+                        // @ts-ignore
+                        response => {
+                            if ((response.error && response.error !== '0') || !response.reply) {
+                                console.error('error getting mediaservers and cameras');
+                                return response;
+                            }
+                            return this._setMediaServersAndCameras(response.reply);
+                        }, err => {
+                            console.error('getMediaServersAndCameras failure', err);
+                            return [];
+                        }));
     }
 
     protected _setMediaServersAndCameras(apiReply) {
@@ -555,20 +553,28 @@ export class NxSystem extends System {
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
             () => {
-                return this.mediaserver.getServerTimes().toPromise().then(
-                    r => {
-                        const now = Date.now();
-                        // @ts-ignore
-                        const sanitized = r.reply.map(i => ({
-                            vmsTime        : parseInt(i.vmsTime),
-                            vmsTimeOffset  : now - parseInt(i.vmsTime),
-                            osTimeOffset   : now - parseInt(i.osTime),
-                            serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                            timeZoneOffset : parseInt(i.timeZoneOffset)
-                        }));
-                        // console.log('getServerTimes', now, r.reply, sanitized)
-                        return sanitized;
-                    });
+                return this.mediaserver.getServerTimes().toPromise()
+                    .then(
+                        r => {
+                            this.attempts = 0;
+                            const now = Date.now();
+                            // @ts-ignore
+                            return r.reply.map(i => ({
+                                vmsTime        : parseInt(i.vmsTime),
+                                vmsTimeOffset  : now - parseInt(i.vmsTime),
+                                osTimeOffset   : now - parseInt(i.osTime),
+                                serverId       : i.serverId.slice(1, i.serverId.length - 1),
+                                timeZoneOffset : parseInt(i.timeZoneOffset)
+                            }));
+                        }, (err) => {
+                            if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
+                                this.attempts++;
+                                return this.getServerTimes();
+                            }
+
+                            this.attempts = 0;
+                            return Promise.reject(err);
+                        });
             });
     }
 

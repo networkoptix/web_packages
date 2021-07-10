@@ -114,6 +114,7 @@ export interface Common {
     systemServerError:          any;
     systemServerErrorMessage:   any;
     systemUnreachable:          any;
+    systemUnresponsive:         any;
     unknown:                    any;
     vendor:                     any;
     model:                      any;
@@ -1091,6 +1092,7 @@ const typeMap: any = {
         { json: "systemServerError", js: "systemServerError", typ: "any" },
         { json: "systemServerErrorMessage", js: "systemServerErrorMessage", typ: "any" },
         { json: "systemUnreachable", js: "systemUnreachable", typ: "any" },
+        { json: "systemUnresponsive", js: "systemUnresponsive", typ: "any" },
         { json: "unknown", js: "unknown", typ: "any" },
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "model", js: "model", typ: "any" },

@@ -22,6 +22,10 @@ import { UntilDestroy, untilDestroyed }          from '@ngneat/until-destroy';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { NxUtilsService }                        from '@services/utils.service';
 import sidebarLayout                             from '../sidebarLayout.cfg';
+import { NxToastService }                        from '../../../../../dialogs/toast.service';
+import { NxDialogsService }                      from '../../../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
 
 @UntilDestroy()
 @Component({
@@ -45,6 +49,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public systems: NxSystem[];
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
     showElementsInFSM: boolean;
@@ -112,6 +117,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         protected router: Router,
         protected route: ActivatedRoute,
@@ -121,9 +127,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
-        private utilsService: NxUtilsService
+        private utilsService: NxUtilsService,
+        private dialogs: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this._onRouteChange = this._onRouteChange.bind(this);
         this._onUxStateChange = this._onUxStateChange.bind(this);
@@ -222,6 +230,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.setSystemSubscription();
     }
 
+    private async _getServerTimes() {
+        let res;
+        try {
+            res = await this.system.getServerTimes();
+        } catch (err) {
+            if (err.name === 'TimeoutError') {
+                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
+            }
+        }
+        this.vms.serverTimes = res ?? [];
+        return this.vms.serverTimes;
+    }
+
     protected _initSystem () {
         this._log('initSystem entered');
         this.vms.reset();
@@ -289,6 +310,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
         };
 
+
         createSystem().then(() => {
             timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
@@ -301,8 +323,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     if (!mediaServerChanged(mediaServers)) {
                         return;
                     }
+
                     processingMediaServers = true;
-                    const serverTimeInfos = await this.system.getServerTimes();
+                    const serverTimeInfos = await this._getServerTimes();
                     serverTimeInfos.forEach(sti => {
                         const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
                         if (mediaServer) {
@@ -339,6 +362,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             if (hasArchive) {
                                 const [start, end] = extractChunk(response.reply);
                                 archiveRanges[cid] = new SimpleTimeRange(start, end);
+                            }
+                        }, err => {
+                            if (err.name === 'TimeoutError') {
+                                archiveRanges[cid] = new SimpleTimeRange(0, 0);
+                            } else {
+                                this._log(err);
                             }
                         });
                     };

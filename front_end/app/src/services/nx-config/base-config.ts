@@ -15,6 +15,8 @@ export interface BaseConfig {
     viewsDir?: string;
     previewPath?: string;
     alertTimeout: number;
+    extendedRequestTimeout: number;
+    apiRequestAttempts: number;
     animations: Animations;
     apiBase: string;
     cameraCredentialUpdateTimeout: number;

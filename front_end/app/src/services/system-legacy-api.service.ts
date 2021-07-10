@@ -666,7 +666,7 @@ export class NxSystemAPI {
 
     /* Server settings */
     public getServerTimes() {
-        return this.get<t.SystemTime>('/ec2/getTimeOfServers');
+        return this.get<t.SystemTime>('/ec2/getTimeOfServers', '', {}, this.CONFIG.extendedRequestTimeout);
     }
 
     protected getSystemTime() {
@@ -1176,7 +1176,7 @@ export class NxSystemAPI {
         // RecordedTimePeriods
         return this.get(
             `/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`,
-            params
+            params, {}, this.CONFIG.extendedRequestTimeout
         );
     }
 

@@ -21,17 +21,18 @@ import FpsMeterService                            from '@services/fps-meter.serv
 import WebClientUxService, { WebclientUxState }   from '../../services/webclient-ux.service';
 import { NxConfigService, IConfig }               from '../../../../../services/nx-config';
 import { CameraQualityStorageService }            from '../../services/cameraQualityStorage.service';
-import { CameraTransportStorageService }          from '../../services/cameraTransportStorage.service';
-import sidebarLayout                              from '../sidebarLayout.cfg';
-import { NxUtilsService }                         from '@services/utils.service';
-import fullscreen                                 from './fullscreen';
-import { LoggerDecorator }              from '../../vms-client/utils';
-import PlaybackState, { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }            from 'rxjs/operators';
-import { UntilDestroy }                           from '@ngneat/until-destroy';
-import { NxLanguageProviderService }              from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }                from '../../../../../../language_i18n_static_types';
-import Hls from 'hls.js';
+import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
+import sidebarLayout                     from '../sidebarLayout.cfg';
+import { NxUtilsService }                from '@services/utils.service';
+import fullscreen                        from './fullscreen';
+import { LoggerDecorator }               from '../../vms-client/utils';
+import PlaybackState, { PLAYBACK_MODE }  from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }             from 'rxjs/operators';
+import { UntilDestroy }                  from '@ngneat/until-destroy';
+import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
+import Hls                               from 'hls.js';
+import { NxDialogsService }              from '../../../../../dialogs/dialogs.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -99,6 +100,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected systemService: NxSystemService,
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
+        private dialogs: NxDialogsService,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
@@ -418,8 +420,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected async _getServerTimes () {
-        // TODO: caching?
-        this.vms.serverTimes = await this.system.getServerTimes();
+        let res;
+        try {
+            res = await this.system.getServerTimes();
+        } catch (err) {
+            if (err.name === 'TimeoutError') {
+                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
+            }
+        }
+        this.vms.serverTimes = res ?? [];
         return this.vms.serverTimes;
     }
 
