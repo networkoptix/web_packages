@@ -476,8 +476,8 @@
         "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
         "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
         "networkConnection": "Verbindung zu %CLOUD_NAME% kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
-        "archiveEncrypted": "ARCHIV<br>ENTSCHLÜSSELT",
-        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort<br>einzugeben, um dieses Archiv zu entschlüsseln."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",

@@ -476,8 +476,8 @@
         "licenseTimeout": "연결 시간이 초과되어 라이선스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
         "licenseServerError": "라이선스를 활성화하지 못 했습니다. 라이선스 서버가 응답하지 않았습니다. 다시 시도하시거나 지원 부서에 문의하십시오.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "접근 제어",

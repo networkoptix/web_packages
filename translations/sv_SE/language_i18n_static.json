@@ -476,8 +476,8 @@
         "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning.",
-        "archiveEncrypted": "ARKIV<br>KRYPTERAD",
-        "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet<br>för att dekryptera detta arkiv."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",

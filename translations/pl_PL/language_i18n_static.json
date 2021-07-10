@@ -204,7 +204,7 @@
             "title": "Magazyn w chmurze",
             "enableStorage": "Włącz magazyn w chmurze",
             "otherSystem": "Inny system...",
-            "initial": "Oferujemy {{compCapacity}} dodatkowej przestrzeni, abyś mógł rozpocząć pracę w chmurze.",
+            "initial": "Oferujemy {compCapacity} dodatkowej przestrzeni, abyś mógł rozpocząć pracę w chmurze.",
             "available": "Miejsce przechowywania w chmurze jest dostępne dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą klienta {vmsName}.",
             "camera": "kamera",
             "cameras": "kamery",
@@ -476,8 +476,8 @@
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
-        "archiveEncrypted": "ARCHIWUM<br>ZASZYFROWANE",
-        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła do szyfrowania,<br> aby odszyfrować to archiwum."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",

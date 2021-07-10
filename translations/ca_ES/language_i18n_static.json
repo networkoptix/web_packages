@@ -476,8 +476,8 @@
         "licenseTimeout": "No s'ha pogut activar la llicència perquè s'ha esgotat el temps d'espera per a la connexió. Assegureu-vos que el servidor està connectat i torneu-ho a intentar.",
         "licenseServerError": "No s'ha pogut activar la llicència. El servidor de llicències no ha respost. Torneu-ho a intentar o poseu-vos en contacte amb el servei de suport.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Control d'accés",

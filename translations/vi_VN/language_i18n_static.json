@@ -476,8 +476,8 @@
         "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
         "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",

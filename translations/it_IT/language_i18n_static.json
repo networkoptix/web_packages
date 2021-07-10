@@ -476,8 +476,8 @@
         "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
         "licenseServerError": "Impossibile attivare la licenza. Il server delle licenze non risponde. Riprova o contatta l'assistenza.",
         "networkConnection": "Impossibile connettersi a %CLOUD_NAME%, controlla la connessione di rete.",
-        "archiveEncrypted": "ARCHIVIO<br>CRITTOGRAFATO",
-        "archiveEncryptedMessage": "Chiedere all'amministratore di sistema di immettere la password di crittografia<br>per decifrare questo archivio."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Controllo accesso",
