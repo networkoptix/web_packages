@@ -161,6 +161,7 @@
         "systemServerError": "Error intern del servidor",
         "systemServerErrorMessage": "S'ha produït un error, torneu a intentar-ho més tard. Si el problema continua, poseu-vos en contacte amb l'equip de suport.",
         "systemUnreachable": "NO ES POT ACCEDIR AL SISTEMA",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Desconegut",
         "vendor": "Proveïdor",
         "model": "Model",

@@ -161,6 +161,7 @@
         "systemServerError": "인터넷 서버 오류",
         "systemServerErrorMessage": "오류가 발생했습니다. 잠시 후 다시 시도 해주세요. 문제가 계속되면 지원 팀에 문의하십시오.",
         "systemUnreachable": "시스템이 연결이 않됩니다",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "알 수 없음",
         "vendor": "제조사:",
         "model": "모델",

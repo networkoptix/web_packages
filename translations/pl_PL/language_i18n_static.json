@@ -161,6 +161,7 @@
         "systemServerError": "Wewnętrzny błąd serwera",
         "systemServerErrorMessage": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
         "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Nieznany",
         "vendor": "Producent",
         "model": "Model",

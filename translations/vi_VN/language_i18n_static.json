@@ -161,6 +161,7 @@
         "systemServerError": "Lỗi nội bộ máy chủ",
         "systemServerErrorMessage": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Không xác định",
         "vendor": "Nhà cung cấp",
         "model": "Kiểu mẫu",

@@ -161,6 +161,7 @@
         "systemServerError": "Yerel sunucu hatası",
         "systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
         "systemUnreachable": "SİSTEM KULLANILAMAZ",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Belirtilmemiş",
         "vendor": "Üretici",
         "model": "Model",

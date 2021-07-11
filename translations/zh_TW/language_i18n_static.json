@@ -161,6 +161,7 @@
         "systemServerError": "內部伺服器錯誤",
         "systemServerErrorMessage": "發生錯誤，請稍後重試。如果問題仍然發生，請聯繫您的支援團隊。",
         "systemUnreachable": "系統無法連接",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "未知",
         "vendor": "供應商",
         "model": "型號",

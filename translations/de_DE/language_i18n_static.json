@@ -161,6 +161,7 @@
         "systemServerError": "Interner Serverfehler",
         "systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Unbekannt",
         "vendor": "Hersteller",
         "model": "Modell",

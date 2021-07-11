@@ -161,6 +161,7 @@
         "systemServerError": "内部サーバーエラー",
         "systemServerErrorMessage": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "systemUnreachable": "システムにアクセスできません",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "未知の値",
         "vendor": "ベンダー",
         "model": "モデル",

@@ -161,6 +161,7 @@
         "systemServerError": "Sisäinen palvelinvirhe",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Tuntematon",
         "vendor": "Toimittaja",
         "model": "Malli",

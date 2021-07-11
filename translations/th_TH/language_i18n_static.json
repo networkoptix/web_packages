@@ -161,6 +161,7 @@
         "systemServerError": "ข้อผิดพลาดภายในเซิร์ฟเวอร์",
         "systemServerErrorMessage": "มีข้อผิดพลาดเกิดขึ้นโปรดลองอีกครั้ง. หากปัญหายังคงมีอยู่โปรดติดต่อทีมสนับสนุนของคุณ",
         "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "ม่รู้จัก",
         "vendor": "ผู้ติดต่อ:",
         "model": "รุ่น",

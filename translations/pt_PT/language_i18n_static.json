@@ -161,6 +161,7 @@
         "systemServerError": "Erro interno do servidor",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Desconhecido",
         "vendor": "Fabricante",
         "model": "Modelo",

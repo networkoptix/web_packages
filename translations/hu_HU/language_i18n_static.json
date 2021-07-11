@@ -161,6 +161,7 @@
         "systemServerError": "Belső Szerverhiba",
         "systemServerErrorMessage": "Hiba történt. Próbálja újra később. Ha a probléma továbbra is fennáll, kérjük, forduljon a támogatási csoporthoz.",
         "systemUnreachable": "A rendszer nem elérhető",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Ismeretlen",
         "vendor": "Gyártó",
         "model": "Modell",

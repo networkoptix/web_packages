@@ -161,6 +161,7 @@
         "systemServerError": "Internt serverfel",
         "systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Okänd",
         "vendor": "Leverantör",
         "model": "Modell",

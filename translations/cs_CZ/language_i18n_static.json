@@ -161,6 +161,7 @@
         "systemServerError": "Interní chyba serveru",
         "systemServerErrorMessage": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Neznámý",
         "vendor": "Výrobce",
         "model": "Model",

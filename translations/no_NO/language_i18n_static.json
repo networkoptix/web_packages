@@ -161,6 +161,7 @@
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Ukjent",
         "vendor": "Leverandør",
         "model": "Modell",

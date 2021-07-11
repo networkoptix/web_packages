@@ -161,6 +161,7 @@
         "systemServerError": "Error de servidor interno",
         "systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Uesconocido",
         "vendor": "Fabricante",
         "model": "Modelo",

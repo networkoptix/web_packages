@@ -161,6 +161,7 @@
         "systemServerError": "Внутрішня помилка сервера",
         "systemServerErrorMessage": "Сталася помилка, повторіть спробу пізніше. Якщо проблема залишиться, будь ласка, зв'яжіться з вашою командою підтримки.",
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Невідомо",
         "vendor": "Виробник",
         "model": "Модель",

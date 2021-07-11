@@ -161,6 +161,7 @@
         "systemServerError": "خطأ داخلي بالخادم",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "النظام غير قابل للوصول",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Unknown",
         "vendor": "Vendor",
         "model": "Model",

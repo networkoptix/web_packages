@@ -161,6 +161,7 @@
         "systemServerError": "שגיאת שרת פנימית",
         "systemServerErrorMessage": "אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
         "systemUnreachable": "אי אפשר להגיע למערכת",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "לא ידוע",
         "vendor": "ספק",
         "model": "מודל",
