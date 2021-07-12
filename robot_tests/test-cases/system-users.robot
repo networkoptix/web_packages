@@ -41,7 +41,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Sleep    1
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
     ${SYSTEM DELETED FROM ACCOUNT}    Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${server 1['name']}
-    Check For Alert Dismissable     ${SYSTEM DELETED FROM ACCOUNT}
+    Check For Alert     ${SYSTEM DELETED FROM ACCOUNT}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Log Out
 
@@ -117,7 +117,7 @@ Owner / Admin can unlink offline System from Cloud / Account
     Close Connection
     # Set To Dictionary    ${system 2}    port=${port info[1]}
     ${sysId2}=   Connect System to Cloud    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${server 1['owner']}    ${BASE PASSWORD}
-    Set To Dictionary    ${system 2}    cloud id=${sysId2}
+    Set To Dictionary    ${server 2}    cloud id=${sysId2}
 
 
 Should display same user data as user provided during registration
@@ -154,7 +154,7 @@ Should display same user data as shown in user account
     Sleep    1
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
     ${SYSTEM DELETED FROM ACCOUNT}    Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${server 1['name']}
-    Check For Alert Dismissable     ${SYSTEM DELETED FROM ACCOUNT}
+    Check For Alert     ${SYSTEM DELETED FROM ACCOUNT}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Log Out
 
@@ -476,7 +476,7 @@ Share with registered user gives user access to system
     Log in to user and system    ${random email}    ${server 1['cloud id']}
     Go to System Administration
 
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner    
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${TEST FIRST NAME} ${TEST LAST NAME}   
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${server 1['owner']}")]    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
     Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
     Element Should Not Be Visible    ${RENAME SYSTEM}
@@ -509,9 +509,9 @@ Share with unregistered user - brings them to registration page with code with c
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
-    Should Contain    ${email text}    System Owner
+    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
    
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}     System Owner
+    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
     Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     Log    Step 3-4
@@ -646,7 +646,7 @@ User with client custom settings has access to system
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
-        &{client custom permissions}=   Get Custom Permissions    ${custom roles}
+        &{client custom permissions}=   Get Custom Permissions    ${custom roles}    Client Custom
 
     
         ${users}    Get Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']} 

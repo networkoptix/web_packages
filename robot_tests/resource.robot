@@ -549,7 +549,7 @@ Disconnect from my account
     Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
     ${alert}=   Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
-    Check For Alert Dismissable    ${alert}    timeout=300
+    Check For Alert    ${alert}    timeout=300
 
 Failure Tasks
     [timeout]    5 minutes
