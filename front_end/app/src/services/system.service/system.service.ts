@@ -42,9 +42,10 @@ export class NxSystemService {
         return this.system;
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;
+        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve).getModuleInfo().toPromise();
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
         } else {
@@ -64,9 +65,7 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
-        system.serverManager.getModuleInfo().toPromise().then(({ reply: { version } }) => {
-            system.setApiVersion(version || NxSystemRestAPI.supportedVersion);
-        });
+        system.setApiVersion(version);
         if (!skipPoll) {
             system.startPoll();
         }

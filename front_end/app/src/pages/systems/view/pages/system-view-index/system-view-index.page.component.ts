@@ -248,7 +248,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.vms.reset();
 
         const createSystem = () => {
-            return this.accountService.get().then(account => {
+            return this.accountService.get().then(async(account) => {
                 if (!account) {
                     this._warn('accountService returned no account');
                     return Promise.reject();
@@ -262,7 +262,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 // _initSystem is called on systems subscription
                 if (this.systems.filter(s => s.id === this.systemId).length) {
-                    this.system = this.systemService.createSystem(account.email, this.systemId);
+                    this.system = await this.systemService.createSystem(account.email, this.systemId);
                     return Promise.resolve();
                 }
 

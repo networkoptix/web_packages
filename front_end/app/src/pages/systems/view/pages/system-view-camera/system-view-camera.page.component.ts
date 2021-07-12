@@ -196,7 +196,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.selectedQuality$.next(this.selectedQuality);
             }
         });
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(async(account) => {
             if (!account) {
                 this._warn('accountService returned no account');
                 return Promise.reject();
@@ -205,7 +205,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                 this._log('local system created', this.system);
             } else {
-                this.system = this.systemService.createSystem(account.email, this.vms.systemId);
+                this.system = await this.systemService.createSystem(account.email, this.vms.systemId);
             }
             this._getRecords();
         });

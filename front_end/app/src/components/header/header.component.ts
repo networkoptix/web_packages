@@ -487,13 +487,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.CONFIG.isLocal) {
             this.accountService
                 .get()
-                .then(account => {
+                .then(async(account) => {
                     if (account) {
                         this.user = account;
                         if (this.headerService.activeSystem) {
                             if (!this.system || this.system.id !== this.systemId) {
                                 this.stopActiveSubscription();
-                                this.system = this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
+                                this.system = await this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
 
                                 this.system.getInfoAndPermissions(false)
                                     .then(system => {

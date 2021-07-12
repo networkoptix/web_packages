@@ -56,7 +56,7 @@ export class SystemGuard implements CanActivate {
 
         return systemId && currentRoute && this.accountService
             .get()
-            .then(account => {
+            .then(async(account) => {
                 if (account) {
                     if (environment.isLocal) {
                         this.system = this.settingsService.system;
@@ -76,7 +76,7 @@ export class SystemGuard implements CanActivate {
                             }
                         });
                     } else {
-                        this.system = this.systemService.createSystem(account.email, systemId, undefined, true);
+                        this.system = await this.systemService.createSystem(account.email, systemId, undefined, true);
                         return this.system.getInfoAndPermissions()
                             .then(checkPermissions)
                             .catch(() => {

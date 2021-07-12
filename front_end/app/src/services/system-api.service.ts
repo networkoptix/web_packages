@@ -55,7 +55,7 @@ export class NxSystemAPIService {
     createConnection(user: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params?: IParams) => any,
+        unauthorizedCallback: (...params: any) => any,
         useRest = false
     ) {
         // const sysServe = `${systemId}+${serverId}`;

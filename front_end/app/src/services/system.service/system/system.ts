@@ -152,7 +152,7 @@ export class NxSystem extends System {
         }
     }
 
-    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+    async initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
         this.id = systemId || serverId;
         this.isAvailable = false;
         this.isOnline = false;
@@ -196,7 +196,7 @@ export class NxSystem extends System {
         this.storageManager = new StorageManager(this);
     }
 
-    updateSystemAuth(force?: boolean) {
+    updateSystemAuth(force = true) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
@@ -320,7 +320,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = this.updateSystemAuth().then(() => {
+            this.infoPromise = this.updateSystemAuth(false).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });

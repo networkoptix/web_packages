@@ -294,7 +294,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
-                            .subscribe((systems) => {
+                            .subscribe(async(systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
                                     return;
@@ -302,7 +302,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 if (this.systemId === this.system?.id) {
                                     return;
                                 }
-                                this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                                this.system = await this.systemService.createSystem(this.account.email, this.systemId);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
                                     this.systemNoAccess = true;

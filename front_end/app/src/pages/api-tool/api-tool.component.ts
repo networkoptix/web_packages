@@ -110,7 +110,7 @@ export class NxApiToolComponent implements OnInit {
         }
     }
 
-    getSystem() {
+    async getSystem() {
         this.systemsDropdown = this.systems.map(system => {
             const sysName = (system.stateOfHealth !== 'online') ? system.name + ' - Offline' : system.name;
             return { value: system.id, name: sysName };
@@ -119,9 +119,9 @@ export class NxApiToolComponent implements OnInit {
 
         if (!this.system) {
             // get first online
-            this.systems.some((system) => {
+            await this.systems.some(async(system) => {
                 if (system.stateOfHealth === 'online') {
-                    this.system = this.systemService.createSystem('', system.id, '');
+                    this.system = await this.systemService.createSystem('', system.id, '');
                 }
                 return system.stateOfHealth === 'online';
             });
@@ -141,8 +141,8 @@ export class NxApiToolComponent implements OnInit {
 
     }
 
-    onSystemChange(system) {
-        this.system = this.systemService.createSystem('', system.value, '');
+    async onSystemChange(system) {
+        this.system = await this.systemService.createSystem('', system.value, '');
         this.selectedSystem = { value: system.value, name: system.name };
 
         this.getServersInfo();

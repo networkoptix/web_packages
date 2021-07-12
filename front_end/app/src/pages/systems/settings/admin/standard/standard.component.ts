@@ -72,14 +72,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 value   : this.hours,
                 name    : this.LANG.system.settings.sessionLimitDuration.hours(),
                 id      : 1,
-                max     : 600,
+                max     : 720,
                 default : 24
             },
             minutes: {
                 value : this.minutes,
                 name  : this.LANG.system.settings.sessionLimitDuration.minutes(),
                 id    : 2,
-                max   : 600
+                max   : 720
             }
         };
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
@@ -215,13 +215,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.previousInputValue = this.timeValue;
     }
 
-    validationCheckForInput() {
-        if (this.timeValue > this.currentMaxTimeUnit) {
-            this.timeValue = this.previousInputValue;
-            this.updateLimitSessionValue(this.timeValue);
-        }
-    }
-
     updateLimitSessionValue(newTimeValue) {
         const sw = this.settingsWatchers;
         if (this.selectedTimeUnit.value === this.hours) {
@@ -236,7 +229,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         } else {
             sw.sessionLimitMinutes.value = newTimeValue;
         }
-        this.timeValue = newTimeValue;
+        if (newTimeValue || !this.system.useRest) {
+            this.timeValue = newTimeValue;
+        }
     }
 
     // handles showing default value on open and clearing to 0 on close
