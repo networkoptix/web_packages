@@ -83,6 +83,7 @@ Open Change Password Dialog
 
 Test Passwords Invalid
     [Arguments]    ${old pw}    ${new pw}
+    Sleep    0.5
     Reload Page
     Wait Until Elements Are Visible
     ...    ${CURRENT PASSWORD INPUT}
@@ -92,12 +93,15 @@ Test Passwords Invalid
     Run Keyword Unless    '${new pw}' == '${EMPTY}'    Check Password Badge    ${new pw}    ${CHANGE PASSWORD BUTTON}
     Run Keyword Unless  '${old pw}' == '${EMPTY}' and '${new pw}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
     Run Keyword If    '${new pw}' == '${BASE PASSWORD}'    Click Button    ${CHANGE PASSWORD BUTTON}
-    ...    ELSE    Click Element    //h4
+    ...    ELSE    Click Element    ${PASSWORD HEADLINE}
     Run Keyword Unless    "${old pw}" == "${BASE PASSWORD}" or "${old pw}" == "${7char password}"
     ...    Check Old Password Outline
     Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    
     ...    Check New Password Outline and Error Message    ${new pw}    ${CHANGE PASSWORD BUTTON}    ${NEW PASSWORD INPUT}     newPassword
     Run Keyword If    "${old pw}" == "${7char password}"    Check Old Password Alert
+    ${status} =   Run Keyword and Return Status    Should Contain Any    ${TEST NAME}    Good    Fair
+    Run Keyword If    ${status}    Wait Until Element is Not Visible    ${CHANGE PASSWORD BUTTON}
+
     
 Restart
     Close Browser

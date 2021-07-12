@@ -7,7 +7,7 @@ Change Password Form Validation
     Run Keyword Unless    '${new password}' == '${EMPTY}'    Check Password Badge    ${new password}    ${CHANGE PASSWORD BUTTON}
     Run Keyword Unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
     Run Keyword If    '${new password}' == '${BASE PASSWORD}'    Click Button    ${CHANGE PASSWORD BUTTON}
-    ...    ELSE    Click Element    //h4
+    ...    ELSE    Click Element    ${PASSWORD HEADLINE}
 
 Check Old Password Outline
 #    Wait Until Element Is Visible
@@ -18,6 +18,6 @@ Check Old Password Outline
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert
-    Check For Alert    ${CANNOT SAVE PASSWORD}${SPACE}${PASSWORD INCORRECT}
+    Check For Alert    ${CANNOT SAVE PASSWORD}:${SPACE}${PASSWORD INCORRECT}
 
 
