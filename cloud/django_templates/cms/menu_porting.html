@@ -146,8 +146,8 @@
                     const downloadButton = document.getElementById('download-button')
                     if (downloadButton) {
                         downloadButton.href = downloadUrl
+                        window.open(downloadUrl)
                     }
-                    window.open(downloadUrl)
                 } else {
                     console.error(status)
                 }

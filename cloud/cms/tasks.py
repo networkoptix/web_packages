@@ -79,7 +79,7 @@ def async_import_assets_from_json(json_cache_id, user_id, publish=False):
     def update_progress(error = None):
         nonlocal current
         task = async_import_assets_from_json.AsyncResult(async_import_assets_from_json.request.id)
-        errors = task.result.get('errors', []) if task.result else []
+        errors = task.result.get('errors', []) if task.result is not None else []
         if error:
             errors.append(error)
         current += 1
@@ -96,7 +96,7 @@ def async_menu_import(cache_key, menu_name, user_email, accept_reviews=False):
     user = Account.objects.get(email=user_email)
     def update_progress(current, total, error = None):
         task = async_menu_import.AsyncResult(async_menu_import.request.id)
-        errors = task.result.get('errors', []) if task.result else []
+        errors = task.result.get('errors', []) if task.result is not None else []
         if error:
             errors.append(error)
         current_task.update_state(state='PROGRESS',
