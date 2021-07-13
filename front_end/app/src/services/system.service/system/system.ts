@@ -360,20 +360,21 @@ export class NxSystem extends System {
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
-                .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
+                .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.getUsers(true))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                    this.isAvailable = false;
+                    if (error?.offline) {
+                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                        this.isAvailable = false;
+                    }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
                 .finally(() => {
                     // TODO: re-do ribbonService to handle multiple pages better
-                    // watch out: HM stopsPoll on navigate, but not on refresh
                     const { url } = this.router;
                     if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
                         this.ribbonService.hide();

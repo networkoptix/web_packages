@@ -276,7 +276,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
         firstLoad.pipe(take(1)).subscribe(() => {
             this._log(`system ${this.system.id} view initialized`, this.hasCameras);
-            this._setInitializationState(true, false);
+            this._setInitializationState(true, !this.system.isOnline);
             if (!this.route.snapshot.children.length) {
                 this._tryToRedirectToCamera();
             }
@@ -310,17 +310,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
         };
 
-
         createSystem().then(() => {
-            timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
+            timer(0, VideoManagementSystemService.statusRefreshInterval)
+                .pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
                     if (!this.system || processingMediaServers) {
                         return;
                     }
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
-
-                    if (!mediaServerChanged(mediaServers)) {
+                    if (this.initialized && !mediaServerChanged(mediaServers)) {
                         return;
                     }
 
