@@ -350,7 +350,7 @@ export class NxSystemStorageComponent implements OnInit {
             await this.system.updateOrGetSystemSettings({
                 backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
             }).toPromise();
-            await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
+            await Promise.all(this.system.serverManager.servers.map(({ id }) => this.system.serverManager.setServerUserSettings(id, { backupType: 'BackupRealTime' })));
             await this.system.serverManager.initSystemMediaServers();
             const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
                 if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
