@@ -1,5 +1,4 @@
-import { Component, Input, Inject, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { DOCUMENT }                 from '@angular/common';
+import { Component, Input, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 
 import { NxUtilsService } from '../../../../services/utils.service';

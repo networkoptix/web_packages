@@ -3,7 +3,7 @@
 </ng-template>
 
 <ng-template #stepBlock let-block="block" let-step="step">
-    <div class="detail-wrapper">
+    <div class="detail-wrapper card-type-4">
         <div class="detail-block" [routerLink]="block.url"
              (mouseenter)="block.currentIcon = block.aniIcon"
              (mouseleave)="block.currentIcon = block.icon">
@@ -24,7 +24,7 @@
         <h2 class="get-started-heading">{{steps.title}}</h2>
     </ng-template>
     <section class="get-started-section">
-        <div class="get-started-blocks">
+        <div class="get-started-blocks card-grid">
             <ng-container *ngFor="let block of steps.nodes;let index=index">
                 <ng-container *ngTemplateOutlet="stepBlock;context{block:block, step:index + 1}"></ng-container>
             </ng-container>

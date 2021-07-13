@@ -31,41 +31,30 @@
     @include bootstrap.media-breakpoint-down(xs) {
         margin-bottom: 24px;
     }
-
     .get-started-blocks {
-        flex-grow: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
         padding: 40px 16px 0 16px;
-        max-width: 100%;
+        padding-top: 40px;
+        width: 100%;
+        max-width: 1440px;
         @include bootstrap.media-breakpoint-down(xs) {
             padding-top: 36px !important;
         }
 
-        @include bootstrap.media-breakpoint-down(md) {
-            max-width: 500px;
-            padding: 0 auto;
-        }
     }
 }
 
 .detail-wrapper {
-    flex: 1 0 232px;
-    max-width: 376px;
-    display: flex;
     margin-bottom: 14px;
     justify-content: center;
     min-height: 246px;
     @include bootstrap.media-breakpoint-down(xs) {
         min-height: 0 !important;
+        flex: 0 1 99% !important;      
     }
 }
 
 .detail-block {
     position: relative;
-    width: 200px;
     display: flex;
     flex-direction: column;
     @include bootstrap.media-breakpoint-down(xs) {
