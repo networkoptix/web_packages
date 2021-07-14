@@ -147,11 +147,21 @@ export class ErrorStateManager {
         if (assetConfig && !assetStructure) {
             errors.asset = 'Asset are missing but are required for this section';
         }
+        if (assetConfig && assetStructure) {
+            const assetErrors = Object.keys(assetConfig).reduce((
+                errors, key
+            ) => !assetStructure[key]
+                ? { ...errors, [key]: `Value for the "${key}" field is missing and is required to for this section.` }
+                : errors,
+                {} as ErrorStateStructure);
+            if (Object.keys(assetErrors).length > 0) {
+                errors.asset = assetErrors;
+            }
+        }
 
         if (Object.entries(errors).length) {
             errors.name = node.title;
         }
-
         return errors;
     }
 }

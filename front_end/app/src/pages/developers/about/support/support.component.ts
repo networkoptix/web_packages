@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewEncapsulation, Inject} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 import { AboutNode } from '../about.component';
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
