@@ -1,9 +1,17 @@
 :host {
-  display: block;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 
+  > video {
+    height: 100%;
+    width: 100%;
+  }
 
 }
+
 
 div#nx-vjs-player {
   height     : 100%;

@@ -5,8 +5,11 @@ import {
     OnDestroy,
     ElementRef,
     ViewChild,
+    Input,
     Output,
-    EventEmitter
+    EventEmitter,
+    OnChanges,
+    HostListener
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import PlaybackService from '../../../services/playback.service';
@@ -22,9 +25,11 @@ import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.se
     styleUrls   : ['./player-hls.component.scss']
 })
 @LoggerDecorator('HLS PLAYER ::', true)
-export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     _log: Function
     _warn: Function
+
+    @Input() rotation: number;
 
     @ViewChild('video') videoView: ElementRef;
     @ViewChild('videoSource') videoSourceView: ElementRef;
@@ -81,6 +86,27 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
+
+        this._handleRotation()
+    }
+
+    public ngOnChanges (): void {
+        this._handleRotation()
+    }
+
+    @HostListener('window:resize', ['$event'])
+    protected _handleRotation () {
+        if (!this.videoView) {
+            return
+        }
+        if (Math.abs(this.rotation % 180) === 90) {
+            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`
+            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`
+        } else {
+            this.videoView.nativeElement.style.width = "100%"
+            this.videoView.nativeElement.style.transform =
+                this.rotation ? `rotate(${this.rotation}deg)` : ""
+        }
     }
 
     public ngOnDestroy (): void {

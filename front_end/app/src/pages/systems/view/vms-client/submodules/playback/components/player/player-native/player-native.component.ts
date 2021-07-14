@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
 import { HttpClient }                                                                               from '@angular/common/http';
 import PlaybackService from '../../../services/playback.service';
 import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
@@ -14,9 +14,11 @@ import { NxUtilsService } from '@services/utils.service';
     styleUrls   : ['./player-native.component.scss']
 })
 @LoggerDecorator('NATIVE PLAYER ::', true)
-export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     _log: Function;
     _warn: Function;
+
+    @Input() rotation: number;
 
     @Output() bufferingChange = new EventEmitter<boolean>();
 
@@ -79,6 +81,26 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
+        this._handleRotation()
+    }
+
+    public ngOnChanges (): void {
+        this._handleRotation()
+    }
+
+    @HostListener('window:resize', ['$event'])
+    protected _handleRotation () {
+        if (!this.videoView) {
+            return
+        }
+        if (Math.abs(this.rotation % 180) === 90) {
+            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`
+            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`
+        } else {
+            this.videoView.nativeElement.style.width = "100%"
+            this.videoView.nativeElement.style.transform =
+                this.rotation ? `rotate(${this.rotation}deg)` : ""
+        }
     }
 
     public ngOnDestroy (): void {
