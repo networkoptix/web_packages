@@ -193,6 +193,10 @@ export class VideoManagementSystemService {
             this._warn('attempt to select camera while VMS is not initialized yet');
             return;
         }
+        if (this._state.mediaServers.length === 0) {
+            this._warn('Attempt to select camera with no mediaservers');
+            return;
+        }
         this._state = createCameraSelectedState(this._state, cameraId);
         if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
             this.selectedCamera = this._state.selectedCamera;

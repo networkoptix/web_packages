@@ -858,8 +858,11 @@ export class NxSystemAPI {
                 return {
                     licenses : reply['ec2/getLicenses'],
                     hwids    :
-                        reply['ec2/getHardwareIdsOfServers'].reply[0]
-                            .hardwareIds
+                        reply['ec2/getHardwareIdsOfServers'].reply
+                            .reduce((ids: any[], { hardwareIds }) => {
+                                ids.push(...hardwareIds);
+                                return ids;
+                            }, [])
                 };
             })
         );

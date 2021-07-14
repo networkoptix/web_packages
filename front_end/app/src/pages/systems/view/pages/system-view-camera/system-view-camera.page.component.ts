@@ -415,6 +415,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         this._log('no records to add', prepared)
                     }
                 }
+            }, () => {
+                this._log('failed to fetch camera records');
             });
         });
     }

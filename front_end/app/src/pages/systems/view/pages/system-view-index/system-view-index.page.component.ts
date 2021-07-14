@@ -290,7 +290,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             } else {
                 return mediaServers.some((server) => {
                     const matchServer = cachedMediaServers.find((_server) => _server.id === server.id);
-                    if (!matchServer) {
+                    if (!matchServer || server.status !== matchServer.status) {
                         return true;
                     } else {
                         if (server.cameras.length !== matchServer.cameras.length) {
@@ -300,7 +300,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                 const matchCamera = matchServer.cameras.find((_camera) => _camera.id === camera.id);
 
                                 return (!matchCamera ||
-                                        camera.name !== matchCamera.name ||
+                                        camera.name !== matchCamera.name.replace(/&lt;/g, '<').replace(/&gt;/g, '>') ||
                                         camera.status !== matchCamera.status && !(camera.status === 'Online' && matchCamera.status === 'Live') ||  // remapped param "status"
                                         camera.scheduleEnabled !== matchCamera.isScheduleEnabled); // remapped param "scheduleEnabled"
                             });
@@ -317,9 +317,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     if (!this.system || processingMediaServers) {
                         return;
                     }
-
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
-                    if (this.initialized && !mediaServerChanged(mediaServers)) {
+                    // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
+                    if (this.initialized && !mediaServerChanged(mediaServers) || mediaServers.length === 0) {
                         return;
                     }
 
