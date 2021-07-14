@@ -335,7 +335,7 @@
             "removeUser": "Usunąć użytkownika?",
             "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
             "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
-            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?",
+            "serversRestart": "Restart serwera \"{ title }\"?",
             "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
         },
         "tooltips": {
