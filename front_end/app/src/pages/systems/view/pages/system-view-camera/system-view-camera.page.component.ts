@@ -146,7 +146,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
             if (this.ux.state.isFullScreen !== !!fse) {
                 this.ux.isFullScreen = !!fse;
-                this.self.nativeElement.classList.remove('is-full-screen');
+                this.$self.classList.remove('is-full-screen');
             }
         };
 
@@ -476,24 +476,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         } else {
             this.$self.classList.remove('sidebar-shown');
         }
-
-        // don't try going fullscreen until the document is ready
-        if (document.readyState !== 'complete') {
-            this._log('not ready');
-            return;
-        }
-
-        setTimeout(() => {
-            if (s.isFullScreen && !fullscreen.getElement()) {
-                this._log('+');
-                fullscreen.request(this.self.nativeElement.parentElement);
-                this.self.nativeElement.classList.add('is-full-screen');
-            } else if (!s.isFullScreen && !!fullscreen.getElement()) {
-                this._log('-');
-                fullscreen.exit();
-                this.self.nativeElement.classList.remove('is-full-screen');
-            }
-        });
     }
 
     protected _onRouteChange (params) {
@@ -553,10 +535,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     showPlayer () {
-        const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
+        this.status = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
 
-        this.status = currentStatus;
         return this.status;
     }
 
@@ -588,14 +569,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public toggleFullScreen ($event?) {
         this._log('toggleFullScreen');
         $event?.stopPropagation();
-        // this.ux.isFullScreen = !fullscreen.getElement()
-        const canRequestFullscreen = fullscreen.request(this.self.nativeElement.parentElement);
-        if (!canRequestFullscreen) {
-            this.ux.alternateFullScreen$.next(!this.ux.alternateFullScreen$.value);
-            // Resets the alternateFullScreen to allow opening once fullscreen is closed
-            this.ux.alternateFullScreen$.next(false);
+
+        if (fullscreen.getElement() == null) { // if browser is currently not in full screen
+            fullscreen.request().call(this.$self.parentElement);
+            setTimeout(() => {
+                this.$self.classList.add('is-full-screen');
+            }, 250);
+        } else {
+            fullscreen.exit().call(document);
+            setTimeout(() => {
+                this.$self.classList.remove('is-full-screen');
+            }, 250);
         }
-        this.ux.isFullScreen = canRequestFullscreen && !fullscreen.getElement();
+        // isFullScreen is updated by onFSC on document events
     }
 
     public stopSettingsClickPropagation ($event) {

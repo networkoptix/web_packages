@@ -17,11 +17,7 @@ const webClientUxInitialState = {
     providedIn: 'root'
 })
 export class WebClientUxService {
-    alternateFullScreen$ = new BehaviorSubject(false)
-
-    constructor(
-    ) {
-    }
+    constructor() {}
 
     protected _subject = new BehaviorSubject<WebclientUxState>({ ...webClientUxInitialState })
 

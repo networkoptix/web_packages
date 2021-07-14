@@ -92,21 +92,12 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
         // });
 
         this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
-
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.ux.alternateFullScreen$.subscribe(fullscreen => {
-            if (!fullscreen) return;
-            try {
-                this.videoView.nativeElement.webkitEnterFullscreen();
-            } catch (e) {
-                console.error(e);
-            }
-        });
-        this._handleRotation()
+        this._handleRotation();
     }
 
     public ngOnChanges (): void {
-        this._handleRotation()
+        this._handleRotation();
     }
 
     @HostListener('window:resize', ['$event'])
