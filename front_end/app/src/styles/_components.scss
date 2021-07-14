@@ -76,6 +76,13 @@
     flex: 0 1 22%;
 }
 
+.card-type-3 {
+    @include bootstrap.media-breakpoint-up(sm){
+        flex: 0 1 33% !important;
+    }
+    flex: 0 1 100%;
+}
+
 .jumbotron {
     padding : 80px 0 0 0;
 

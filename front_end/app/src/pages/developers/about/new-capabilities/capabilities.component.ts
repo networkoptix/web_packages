@@ -1,0 +1,45 @@
+import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { ErrorStateManager } from '../error-state/error-state-manager';
+import { AboutNode } from '../about.component';
+import { WINDOW } from '@services/window-provider';
+
+@Component({
+    selector    : 'nx-new-capabilities',
+    templateUrl : './capabilities.component.html',
+    styleUrls   : ['./capabilities.component.scss']
+})
+export class NxNewCapabilitiesComponent implements OnInit, AfterViewInit {
+    @Input() devCapabilitiesNode: AboutNode;
+
+    errorManager: ErrorStateManager;
+    CONFIG: IConfig;
+    svg = {
+        width  : '72',
+        height : '76'
+    }
+
+    checkHeight = false;
+
+    constructor(configService: NxConfigService,  @Inject(WINDOW) private window: Window) {
+        this.CONFIG = configService.config;
+        this.errorManager = new ErrorStateManager(this.window);
+    }
+
+    ngOnInit(): void {
+        const capabilitiesConfig = this.errorManager.buildConfig(
+            ['displayName', 'icon', 'title', 'nodes'],
+            this.errorManager.buildConfig(
+                ['title', 'displayName', 'asset', 'icon'],
+                null)
+        );
+        this.errorManager.checkAboutNode(
+            this.devCapabilitiesNode,
+            capabilitiesConfig
+        );
+    }
+
+    ngAfterViewInit(): void {
+        this.checkHeight = true;
+    }
+}

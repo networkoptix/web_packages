@@ -11,7 +11,7 @@ import { debounceTime } from 'rxjs/operators';
 export class NxMatchHeightDirective implements AfterViewInit {
   @Input() classToMatch: string;
   @Input() parentToMatch: string;
-  @Input() shouldExectute: boolean;
+  @Input('shouldExecuteMatchHeight') shouldExectute: boolean;
   parentEl: HTMLElement
 
   resizeObservable$ = fromEvent(window, 'resize')
@@ -24,7 +24,7 @@ export class NxMatchHeightDirective implements AfterViewInit {
       if (this.shouldExectute) {
           this.parentEl = this.el.nativeElement.closest('.' + this.parentToMatch);
           this.matchHeight(this.parentEl, this.classToMatch);
-          this.resizeObservable$.pipe(untilDestroyed(this), debounceTime(100)).subscribe(() => {
+          this.resizeObservable$.pipe(untilDestroyed(this), debounceTime(40)).subscribe(() => {
               this.matchHeight(this.parentEl, this.classToMatch);
           });
       }

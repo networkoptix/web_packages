@@ -13,7 +13,7 @@
             <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
             <svg-icon *ngIf="tool.icon" nx-add-svg-src [src]="CONFIG.icons.dirDevtools + tool.icon"></svg-icon>
         </header>
-        <div class="tool-detail" nxMatchHeight [classToMatch]="'tool-detail'" [parentToMatch]="'detail-blocks'" [shouldExectute]="last">
+        <div class="tool-detail" nxMatchHeight [classToMatch]="'tool-detail'" [parentToMatch]="'detail-blocks'"  [shouldExecuteMatchHeight]="last">
             <h3>{{tool.title}}</h3>
             <p>{{tool.asset?.shortDescription}}</p>
         </div>

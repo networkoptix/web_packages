@@ -20,12 +20,13 @@ import {
 import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule }             from '@src/pipes/pipes.module';
 import { DevelopersGuard } from '../../../routeGuards';
+import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.component';
 
 const appRoutes: Routes = [
     {
-        path      : ':name',
-        component : NxAboutComponent,
-        canActivate: [DevelopersGuard]
+        path        : ':name',
+        component   : NxAboutComponent,
+        canActivate : [DevelopersGuard]
     }
 ];
 
@@ -41,7 +42,7 @@ const appRoutes: Routes = [
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxCapabilitiesComponent,
         NxSupportedTechComponent,
@@ -50,11 +51,11 @@ const appRoutes: Routes = [
         NxIntegrationsComponent,
         NxSupportComponent,
         NxAboutComponent,
-        NxErrorStateComponent
-
+        NxErrorStateComponent,
+        NxNewCapabilitiesComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxCapabilitiesComponent,
         NxSupportedTechComponent,
         NxDevToolsComponent,
