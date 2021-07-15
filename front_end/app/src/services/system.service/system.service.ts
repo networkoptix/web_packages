@@ -45,7 +45,9 @@ export class NxSystemService {
     async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;
-        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve).getModuleInfo().toPromise();
+        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
+            .getModuleInfo().toPromise()
+            .catch(() => { return { reply: { version: 0 }}});
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
         } else {
