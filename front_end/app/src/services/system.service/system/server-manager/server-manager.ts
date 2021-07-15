@@ -25,6 +25,10 @@ export class ServerManager {
     ) {}
 
     initSystemMediaServers() {
+        if (this.mediaserverConnections && this.servers.every(({ id }) => id in this.mediaserverConnections)) {
+            return Promise.resolve(this.mediaserverConnections);
+        }
+
         if (this.servers.length) {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 const unauthorizedCallback = environment.isLocal

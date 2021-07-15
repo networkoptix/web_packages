@@ -1,8 +1,8 @@
 import {
     BehaviorSubject, of, Subscription,
     Observable, from
-}                                from 'rxjs';
-import { flatMap, tap }          from 'rxjs/operators';
+}                                       from 'rxjs';
+import { filter, flatMap, map, take, tap }   from 'rxjs/operators';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -60,7 +60,8 @@ export class NxSystem extends System {
     currentBusyServerIds = new Set();
 
     /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
-    #apiVersion = 0;
+    #apiVersion = new BehaviorSubject(0);
+    apiVersionResolved$ = this.#apiVersion.pipe(filter(version => !!version), take(1))
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -71,11 +72,11 @@ export class NxSystem extends System {
 
     /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
     setApiVersion(version: string | number) {
-        this.#apiVersion = typeof version === 'string' ? parseFloat(version) : version;
+        this.#apiVersion.next(typeof version === 'string' ? parseFloat(version) : version);
     }
 
     get useRest() {
-        return this.#apiVersion >= NxSystemRestAPI.supportedVersion;
+        return this.#apiVersion.value >= NxSystemRestAPI.supportedVersion;
     }
 
     get subscriberCount() {
@@ -87,7 +88,7 @@ export class NxSystem extends System {
     }
 
     get isAvailable() {
-        return this._isAvailable;
+        return this._isAvailable && !!this.#apiVersion.value;
     }
 
     set isAvailable(value) {
@@ -162,18 +163,20 @@ export class NxSystem extends System {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-        this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
-            /* Unauthorised request handler
-             Some options here:
-             - Access was revoked
-             - System was disconnected from cloud\Password was changed
-             - Nonce expired
-             We try to update nonce and auth on the server again
-             Other cases are not distinguishable
-             */
-            return this.updateSystemAuth(true);
-        },
-        this.useRest);
+        if (!this.mediaserver) {
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
+                /* Unauthorised request handler
+                 Some options here:
+                 - Access was revoked
+                 - System was disconnected from cloud\Password was changed
+                 - Nonce expired
+                 We try to update nonce and auth on the server again
+                 Other cases are not distinguishable
+                 */
+                return this.updateSystemAuth(true);
+            },
+            this.useRest);
+        }
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
