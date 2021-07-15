@@ -531,7 +531,7 @@ if LOCAL_ENVIRONMENT:
 SNS_CLIENT = {
     'service_name': 'sns',
     'config': Config(
-        region_name=os.getenv('AWS_REGION', 'us-east-1')
+        region_name=os.getenv('SNS_REGION', 'us-east-1')
     )
 }
 # Uncomment if trying to use SNS from local env with credentials different from ~/.aws/credentials
