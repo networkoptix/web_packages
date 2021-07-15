@@ -207,7 +207,7 @@ Handles two tabs, updates second tab state if logout is done on first
     # isn't created fast enough and Get Window Handles only gets 1 item.
     Sleep    2
     ${tabs}    Get Window Handles
-    Select Window    ${tabs}[1]
+    Switch Window    ${tabs}[1]
     Set Window Size    1920    1080
     Location Should Be    ${url}/content/eula
     Go To    ${url}
@@ -216,7 +216,7 @@ Handles two tabs, updates second tab state if logout is done on first
     # load slowly and doesn't redirect correctly after login.
     Sleep    5
     Log In    ${login user}    ${password}
-    Select Window    ${tabs}[0]
+    Switch Window    ${tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
     Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
@@ -226,7 +226,7 @@ Handles two tabs, updates second tab state if logout is done on first
     Validate Log In    ${login user}
     Log Out
     ${tabs}    Get Window Handles
-    Select Window    ${tabs}[1]
+    Switch Window    ${tabs}[1]
     Location Should Be    ${url}/systems
     Reload Page
     Wait Until Element is Visible    ${LOG IN MODAL}
