@@ -4,6 +4,7 @@ import { WINDOW }   from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IConfig, NxConfigService } from '@services/nx-config';
+import { Platform } from '@angular/cdk/platform';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { Observable, Subscription } from 'rxjs';
@@ -28,6 +29,7 @@ export class NxIntroTextComponent implements AfterViewChecked {
 
   constructor(languageService :NxLanguageProviderService, configService: NxConfigService,
       scrollMechanics: NxScrollMechanicsService,
+      public platform: Platform,
       @Inject(DOCUMENT) private document: Document,
       @Inject(WINDOW) private window: Window) {
       this.CONFIG = configService.getConfig();

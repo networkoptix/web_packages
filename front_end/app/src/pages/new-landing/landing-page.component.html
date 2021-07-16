@@ -6,7 +6,7 @@
         </nx-background-graphic>
         <nx-mask [scrollPosition]="(landingService.scrollPosition$ | async)"></nx-mask>
     </ng-container>
-    <nx-intro-text></nx-intro-text>
+    <nx-intro-text *ngIf="(landingService.backgroundGraphicFinishedLoading$ | async)"></nx-intro-text>
 </div>
 <nx-learn-more 
     [scrollPosition]="(landingService.scrollPosition$ | async)" 

@@ -50,7 +50,7 @@
                 *ngIf="url"
                  nx-add-svg-src 
                 [class]="'arrow-svg'"
-                [src]="CONFIG.images.dirLanding + (type === 'small'?'arrow_small':'arrow_large.svg')"
+                [src]="CONFIG.images.dirLanding + (type === 'small'?'arrow_small.svg':'arrow_large.svg')"
                 [svgStyle]="type === 'small'?{'width.px': svgSizes.arrowSmall.width, 'height.px': svgSizes.arrowSmall.height}:
                                              {'width.px': svgSizes.arrowLarge.width, 'height.px': svgSizes.arrowLarge.height}"
                 [applyClass]="true">

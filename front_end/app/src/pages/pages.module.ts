@@ -109,7 +109,7 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'oauth-redirect',
-        loadChildren : () => import ('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
+        loadChildren : () => import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
     },
     {
         path         : '**',

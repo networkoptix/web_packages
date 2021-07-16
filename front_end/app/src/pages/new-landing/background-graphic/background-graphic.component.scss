@@ -21,3 +21,18 @@
 .svg-layer {
     position: absolute;
 }
+
+
+.intro-animation-graphic {
+    animation: zoom-out-graphic 1500ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+    animation-delay: 300ms;
+}
+
+@keyframes zoom-out-graphic {
+    from {
+        transform: scale(1.4)
+    }
+    to {
+        transform: scale(1);
+    }
+}

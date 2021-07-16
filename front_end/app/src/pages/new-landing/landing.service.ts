@@ -1,7 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, startWith, take } from 'rxjs/operators';
+import { Platform } from '@angular/cdk/platform';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @UntilDestroy()
 @Injectable()
@@ -9,6 +10,10 @@ export class NxLandingService {
     screenSize$: Observable<{ width:number, height: number }>
     scrollPosition$: Observable<number>;
     introAnimationFinished$ = new BehaviorSubject<boolean>(false);
+    // First maskFinishedLoading$ emits which triggers the backgroundGraphic to start loading
+    // This is done so that on the initial render the backgroundGraphic svgs dont flicker into view before the mask loads and covers them.
+    // Then, backgroundGraphicFinishedLoading$ triggers the intro animation to start on all the elements.
+    // This is done so that all the intro animations start at the same time when all the components are ready.
     maskFinishedLoading$ = new BehaviorSubject<boolean>(false);
     backgroundGraphicFinishedLoading$ = new BehaviorSubject<boolean>(false);
     contentStartRef: ElementRef;
@@ -17,8 +22,22 @@ export class NxLandingService {
         maskMaxSize  : 815
     }
 
-    constructor(scrollMechanics: NxScrollMechanicsService) {
+    animationDuration = 1800;
+
+    constructor(scrollMechanics: NxScrollMechanicsService, platform: Platform) {
+        let scrollDebounce = 10;
+        if (platform.FIREFOX) {
+            // small bandaid for firefox... i dont think its enough
+            scrollDebounce = 20;
+        }
         this.screenSize$ = scrollMechanics.windowSizeSubject.pipe(debounceTime(40), untilDestroyed(this),  shareReplay(1));
-        this.scrollPosition$ = scrollMechanics.windowScrollSubject.pipe(debounceTime(10), startWith(0), untilDestroyed(this), map(value => value < this.scrollBreakpoints.showGraphics ? value : this.scrollBreakpoints.showGraphics), shareReplay(1));
+        this.scrollPosition$ = scrollMechanics.windowScrollSubject.pipe(debounceTime(scrollDebounce), startWith(0), untilDestroyed(this), map(value => value < this.scrollBreakpoints.showGraphics ? value : this.scrollBreakpoints.showGraphics), shareReplay(1));
+        this.backgroundGraphicFinishedLoading$.pipe(take(2), untilDestroyed(this)).subscribe((value) => {
+            if (value) {
+                setTimeout(() => {
+                    this.introAnimationFinished$.next(true);
+                }, this.animationDuration);
+            }
+        });
     }
 }

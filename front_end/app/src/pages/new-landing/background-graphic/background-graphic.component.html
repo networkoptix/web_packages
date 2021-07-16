@@ -5,6 +5,7 @@
                 <div class="svg-layer"
                     [ngStyle]="{'width': svgProperties.defaultWidth + 'px', 'height':svgProperties.defaultHeight + 'px', 
                                 'transform': 'scale('+ layer.scale +')', 'transition': isSafari?'transform 120ms':null}"
+                    [ngClass]="[(landingService.introAnimationFinished$ | async) === false && (landingService.backgroundGraphicFinishedLoading$ | async)? 'intro-animation-graphic': '']"
                 >
                     <svg-icon 
                         [src]="CONFIG.images.dirLandingGraphic + layer.path"

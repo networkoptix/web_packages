@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, SimpleChanges } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
 import { NxLandingService } from '../landing.service';
@@ -74,7 +74,9 @@ export class NxBackgroundGraphicComponent implements AfterViewInit {
        }, 0);
    }
 
-   ngOnChanges() {
-       this.recalculateScale();
+   ngOnChanges(changes: SimpleChanges) {
+       if (changes.scrollPosition.currentValue !== changes.scrollPosition.previousValue) {
+           this.recalculateScale();
+       }
    }
 }

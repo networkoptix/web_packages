@@ -28,3 +28,18 @@
     fill: $body-bg;
     z-index: -2 !important;
 }
+
+.intro-animation {
+    animation: zoom-out 1500ms cubic-bezier(0.33, 1, 0.68, 1);
+    animation-delay: 300ms;
+    transform: scale(2.0);
+}
+
+@keyframes zoom-out {
+    from {
+        transform: scale(2.0);
+    }
+    to {
+        transform: scale(.15);
+    }
+}

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
 import { NxLandingService } from '../landing.service';
@@ -10,7 +10,6 @@ import { NxLandingService } from '../landing.service';
 })
 export class NxMaskComponent implements OnChanges, AfterViewInit {
     @Input() scrollPosition = 820;
-    @Input() graphicLoaded: boolean;
     componentInitialized = false;
     scale =  2;
     isSafari: boolean;
@@ -31,12 +30,21 @@ export class NxMaskComponent implements OnChanges, AfterViewInit {
         return ((150 / (1 - (scrollPosition * this.calculationProperties.scrollSpeedCoefficient * this.calculationProperties.maskCoefficient))) / 150) * 0.166;
     }
 
-    ngOnChanges() {
-        // if (this.introAnimationFinished && this.scrollPosition < this.maskMaxSizeScrollPosition) {
-        if (this.scrollPosition < this.landingService.scrollBreakpoints.maskMaxSize) {
-            this.scale = this.getMaskScale(this.scrollPosition);
-        } else {
-            this.scale = this.getMaskScale(this.landingService.scrollBreakpoints.maskMaxSize);
+    ngOnInit() {
+        // 1200 ms is an arbitrary number, it just matters that the scale is changed before the intro animation is finished
+        // otherwise angular will re-check the scale and apply the initial max size to it again when it should be small
+        if (!this.landingService.introAnimationFinished$.value) {
+            setTimeout(() => { this.scale = 0.15; }, 1200);
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.landingService.introAnimationFinished$.value && changes.scrollPosition.previousValue !== changes.scrollPosition.currentValue) {
+            if (this.scrollPosition < this.landingService.scrollBreakpoints.maskMaxSize) {
+                this.scale = this.getMaskScale(this.scrollPosition);
+            } else {
+                this.scale = this.getMaskScale(this.landingService.scrollBreakpoints.maskMaxSize);
+            }
         }
     }
 
