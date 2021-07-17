@@ -16,7 +16,7 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     ModuleInformationReply, NormalResponse
 }                                     from '@services/system-api.types';
-import {NxAppStateService}            from "@services/nx-app-state.service";
+import { NxAppStateService }          from '@services/nx-app-state.service';
 import { environment }                from '@environments/environment';
 
 @Component({

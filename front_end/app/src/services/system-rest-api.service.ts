@@ -33,6 +33,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
  */
 export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
+    public readonly requiresPassword: boolean = false;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'X-Runtime-Guid';
     private readonly refreshToken = 'refreshToken';
@@ -77,19 +78,23 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.injector.get(NxStorageService);
     }
 
+    private get isSessionOauth() {
+        return this.cookieService.get(this.token).includes('nxcdb');
+    }
+
     private handleOldToken(request, allSystems?: boolean) {
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string, errorString: string },
+                    error: { error: any, status: number; resultCode: string, errorString: string },
                     attempt: number
                 ) => {
                     if (attempt === 0) {
                         if (
-                            error.status === 401 ||
+                            (error.status === 401 ||
                             error.status === 403 ||
-                            error.resultCode === 'forbidden' ||
-                            error.errorString === this.oldToken
+                            error.resultCode === 'forbidden') &&
+                            (error.errorString || error.error.errorString) === this.oldToken
                         ) {
                             return this.reauthenticate(allSystems);
                         } else if (error.status === 503) {
@@ -112,7 +117,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     return Promise.resolve(false);
                 }
 
-                if (this.cookieService.get(this.token).includes('nxcdb')) {
+                if (this.isSessionOauth) {
                     return this.logout().then(() => this.redirectOauth(allSystems));
                 }
 
@@ -143,8 +148,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
-    private resetServer(password?: string) {
-        return this.post('/rest/v1/system/reset').pipe(
+    private resetServer(password?: string, serverId?: string) {
+        return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`).pipe(
             retryWhen((request) => this.handleOldToken(request))
         );
     }
@@ -401,8 +406,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/api/systemSettings', { systemName }).toPromise().catch();
     }
 
-    detachFromSystem(currentPassword?: string) {
-        return this.resetServer(currentPassword);
+    detachFromSystem(currentPassword?: string, serverId?: string) {
+        return this.resetServer(currentPassword, serverId);
     }
 
     disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
@@ -423,7 +428,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }),
             // Adds the remoteToken to the merge request.
             switchMap((info: any) => {
-                if (!dryRun) {
+                if (!dryRun || (password && !this.isSessionOauth)) {
                     const refreshToken = this.storageService.refreshToken;
                     // Using oauth and target system is connected to cloud.
                     if (info.cloudId && refreshToken) {
@@ -453,12 +458,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
             }),
-            retryWhen((request) => this.handleOldToken(request))
+            retryWhen((request) => this.handleOldToken(request, this.isSessionOauth))
         );
     }
 
-    restoreFactorySettings(password?: string) {
-        return this.resetServer(password);
+    restoreFactorySettings(password?: string, serverId?: string) {
+        return this.resetServer(password, serverId);
     }
 
     saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {

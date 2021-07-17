@@ -1,11 +1,12 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
-import { NxProcessService, Process } from '../../services/process.service';
+import { NxProcessService, Process } from '@services/process.service';
 import { NxToastService }            from '../toast.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSystem }                  from '@services/system.service';
 
 @Component({
     selector    : 'nx-modal-detach-server-content',
@@ -13,7 +14,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class DetachServerModalContent {
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() serverName: string;
     @Input() serverId;
     @Input() closable;

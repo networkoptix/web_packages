@@ -56,6 +56,7 @@ export class MergeModalContent {
     primaryName: string;
     secondaryName: string;
     systemUrls = {};
+    private remotePassword: string;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -398,6 +399,14 @@ export class MergeModalContent {
                         if (err.message === 'Timeout has occurred') {
                             err.message = this.noServerFound;
                         }
+                        // Handling for rest errors.
+                        if (err.errorString) {
+                            if (err.errorString.includes('Merge error. Both systems have same server')) {
+                                err.message = this.duplicateServers;
+                            } else if (err.errorString.includes('Cannot merge systems bound to the cloud')) {
+                                err.message = 'targetSystemBoundToCloud';
+                            }
+                        }
                         const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
                         this.updateShow(
                             this.targetSystem.systemName || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
@@ -430,6 +439,7 @@ export class MergeModalContent {
                     return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true, this.machine.state.template.passwordValue).toPromise()
                         .then(res => {
                             if (!res.error || res.error === '0') {
+                                this.remotePassword = this.machine.state.template.passwordValue;
                                 this.machine.transition(this.confirmMerge);
                                 const { history } = this.machine;
                                 if (history[history.length - 1] === this.serverUrlErrors) {
@@ -470,8 +480,12 @@ export class MergeModalContent {
 
         this.mergingProcess = this.processService
             .createProcess(() => {
-                const password = this.machine.state.template.passwordValue;
-                if (!password) {
+                let password = this.machine.state.template.passwordValue;
+
+                if (this.CONFIG.isLocal) {
+                    password = this.remotePassword;
+                }
+                if (!password && !this.CONFIG.isLocal) {
                     // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
@@ -891,6 +905,7 @@ export class MergeModalContent {
     }
 
     close(data?) {
+        this.remotePassword = undefined;
         this.clearTemplate();
         this.activeModal.close(data);
     }

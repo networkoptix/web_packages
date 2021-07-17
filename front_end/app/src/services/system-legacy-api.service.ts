@@ -52,6 +52,7 @@ export class NxSystemAPI {
     protected authPlay: string;
 
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+    public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;
     protected http: HttpClient;
@@ -803,7 +804,7 @@ export class NxSystemAPI {
         }).toPromise();
     }
 
-    restartServer() {
+    restartServer(serverId?: string) {
         return this.post<t.RestartServer>('/api/restart')
             .toPromise()
             .catch((err) => Promise.reject(err));
@@ -815,7 +816,7 @@ export class NxSystemAPI {
         );
     }
 
-    detachFromSystem(currentPassword: string) {
+    detachFromSystem(currentPassword: string, serverId?: string) {
         return this.post<t.NormalResponse<any>>('/api/detachFromSystem', {
             currentPassword
         });
@@ -826,7 +827,7 @@ export class NxSystemAPI {
         return this.post('/ec2/removeResource', { id });
     }
 
-    restoreFactorySettings(currentPassword: string) {
+    restoreFactorySettings(currentPassword: string, serverId?: string) {
         return this.post('/api/restoreState', { currentPassword });
     }
 

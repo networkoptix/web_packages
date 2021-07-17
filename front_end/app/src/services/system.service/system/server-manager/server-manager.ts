@@ -156,12 +156,12 @@ export class ServerManager {
     }
 
     restartServer(serverId: string) {
-        return this.mediaserverConnections[serverId].restartServer()
+        return this.mediaserverConnections[serverId].restartServer(serverId)
             .catch(err => Promise.reject(err));
     }
 
     detachFromSystem(serverId: string, currentPassword: string) {
-        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
+        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword, serverId);
     }
 
     removeMediaserver(anotherServerId: string, serverIdToRemove: string) {
@@ -169,7 +169,7 @@ export class ServerManager {
     }
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
-        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
+        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword, serverId);
     }
 
     /**

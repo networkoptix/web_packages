@@ -6,7 +6,6 @@ import { NonSupportedBrowserModule } from './non-supported-browser/non-supported
 import { NxAccountModule }           from './account/account.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { Nx500Module }               from './500/500.module';
-import { Nx503Module }               from './503/503.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
@@ -54,7 +53,6 @@ const lazyRoutes: Routes = [
         NxAccountModule,
         NxDebugModule,
         Nx500Module,
-        Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation         : true,
             scrollPositionRestoration : 'enabled',
@@ -74,7 +72,6 @@ const lazyRoutes: Routes = [
         Angular2CsvModule,
         NxDebugModule,
         Nx500Module,
-        Nx503Module,
         RouterModule
     ]
 })

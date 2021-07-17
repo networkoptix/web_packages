@@ -127,11 +127,13 @@ export class AppComponent {
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
         if (!bootstrapProvider.loaded) {
-            this.router.navigate(['/503'])
-                .catch((error) => console.error(error))
-                .finally(() => {
-                    this.appStateService.ready = true;
-                });
+            if (!this.CONFIG.isLocal) {
+                this.router.navigate(['/503'])
+                    .catch((error) => console.error(error))
+                    .finally(() => {
+                        this.appStateService.ready = true;
+                    });
+            }
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
             return;

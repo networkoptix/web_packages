@@ -355,6 +355,7 @@ export interface DialogsMerge {
     systemVersionOld:           any;
     systemVersionNew:           any;
     systemVersionsNotMatch:     any;
+    targetSystemBoundToCloud:   any;
     urlEmpty:                   any;
     urlNotValid:                any;
     unknownError:               any;
@@ -1362,6 +1363,7 @@ const typeMap: any = {
         { json: "systemVersionOld", js: "systemVersionOld", typ: "any" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "any" },
         { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "any" },
+        { json: "targetSystemBoundToCloud", js: "targetSystemBoundToCloud", typ: "any" },
         { json: "urlEmpty", js: "urlEmpty", typ: "any" },
         { json: "urlNotValid", js: "urlNotValid", typ: "any" },
         { json: "unknownError", js: "unknownError", typ: "any" },

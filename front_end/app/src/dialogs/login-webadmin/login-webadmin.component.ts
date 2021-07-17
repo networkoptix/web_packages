@@ -200,7 +200,8 @@ export class LoginWebadminModalContent implements OnInit {
 
     oauthLogin(code: string) {
         this.account.mediaServerApi.loginOauth(code).subscribe(() => {
-            this.window.location.href = this.window.location.origin;
+            this.window.location.href = this.window.location.href.split('?')[0];
+            this.window.location.reload();
         });
     }
 }

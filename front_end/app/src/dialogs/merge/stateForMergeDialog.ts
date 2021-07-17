@@ -73,6 +73,7 @@ export const State: {
             systemsIncompatible        : '',
             systemVersionOld           : '',
             systemVersionNew           : '',
+            targetSystemBoundToCloud   : '',
             unknownError               : '',
             urlEmpty                   : '',
             urlNotValid                : ''

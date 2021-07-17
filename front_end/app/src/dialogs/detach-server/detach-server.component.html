@@ -16,17 +16,19 @@
                 <br>
                 <span translate>Cloud users will not be transferred to the new system.</span>
                 <br><br>
-                <span><ng-container translate>Enter password for your account to continue</ng-container>.</span>
+                <span *ngIf="system.mediaserver.requiresPassword"><ng-container translate>Enter password for your account to continue</ng-container>.</span>
             </div>
-            <input class="form-control"
-                   [(ngModel)]="password"
-                   id="password"
-                   name="password" type="password"
-                   required nxFocusMe>
-            <p class="help-block"
-               *ngIf="!detachServerForm.controls['password']?.valid && detachServerForm.controls['password']?.touched">
-                    <span class="input-error" translate>Password is required</span>
-            </p>
+            <ng-container *ngIf="system.mediaserver.requiresPassword">
+                <input class="form-control"
+                       [(ngModel)]="password"
+                       id="password"
+                       name="password" type="password"
+                       required nxFocusMe>
+                <p class="help-block"
+                   *ngIf="!detachServerForm.controls['password']?.valid && detachServerForm.controls['password']?.touched">
+                        <span class="input-error" translate>Password is required</span>
+                </p>
+            </ng-container>
         </div>
     </div>
     <div class="modal-footer">
