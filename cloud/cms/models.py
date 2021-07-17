@@ -199,6 +199,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'config': {
                 'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
+                'alexa_integration_enabled': asset.read_global_value("%ALEXA_INTEGRATION_ENABLED%"),
                 'cloud_storage_enabled': asset.read_global_value("%CLOUD_STORAGE_ENABLED%"),
                 'cloud_storage_size': asset.read_global_value('%CLOUD_STORAGE_SIZE%'),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),

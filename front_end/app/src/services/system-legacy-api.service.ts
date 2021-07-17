@@ -1343,4 +1343,17 @@ export class NxSystemAPI {
     renameSystem(_, systemName: string) {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
+
+    getEventRules() {
+        return this.get<t.EventRule[]>('/ec2/getEventRules');
+    }
+
+    saveEventRule(eventRule: t.EventRule) {
+        return this.post('/ec2/saveEventRule', eventRule);
+    }
+
+    /**
+     * Alias removeResource which is used for deleting event rules.
+     */
+    removeEventRule = this.removeResource
 }

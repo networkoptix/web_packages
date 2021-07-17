@@ -162,7 +162,7 @@ export class NxBootstrapProvider {
                 name: companyName
             };
 
-            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled } = data;
+            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false } = data;
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
@@ -171,7 +171,8 @@ export class NxBootstrapProvider {
                 publicReleases,
                 cloudStorageEnabled,
                 cloudStorageSize,
-                customClientsEnabled
+                customClientsEnabled,
+                alexaIntegrationEnabled
             };
 
             const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;

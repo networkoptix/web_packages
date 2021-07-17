@@ -200,6 +200,7 @@ export interface CloudCapabilities {
     cloudStorageEnabled: boolean;
     cloudStorageSize: number;
     customClientsEnabled: boolean;
+    alexaIntegrationEnabled: boolean;
 }
 
 export interface Company {

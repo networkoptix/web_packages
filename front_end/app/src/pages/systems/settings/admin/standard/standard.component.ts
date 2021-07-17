@@ -1,7 +1,9 @@
 import {
     Component, OnInit, Input,
     ViewChild, ElementRef, OnChanges, SimpleChanges
-}                                    from '@angular/core';
+}                                           from '@angular/core';
+import {  map, switchMap }                  from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -10,7 +12,24 @@ import { NxSystem }                  from '../../../../../services/system.servic
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxMenuService }             from '../../../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { delayInitial } from '@services/utils.service';
 
+class AlexaSettings {
+    static CUSTOM_PROPERTY_ENDPOINT = 'alexa'
+
+    constructor(
+        public enabled = false,
+        public selectedSystem: string = null,
+        public accountLinked = false
+    ) {}
+
+    static clean = (selectedSystem) => (input) => new AlexaSettings(input.enabled || false, input.selectedSystem || selectedSystem, input.accountLinked || false)
+
+    static cleanObservable = (selectedSystem) => map(AlexaSettings.clean(selectedSystem), AlexaSettings.clean(selectedSystem))
+}
+
+@UntilDestroy()
 @Component({
     selector    : 'nx-system-standard-admin-component',
     templateUrl : 'standard.component.html',
@@ -34,6 +53,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     setWarningMessageThroughApplyService;
     timeUnitTracker;
     selectElement;
+    alexaSettings: AlexaSettings;
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
@@ -60,7 +80,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
+        private cloudApi: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -86,6 +107,15 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
         this.initApplyService();
+
+        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
+            delayInitial(this.cloudApi.getCustomAccountProperty(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT)).pipe(
+                AlexaSettings.cleanObservable(this.system.id),
+                untilDestroyed(this)
+            ).subscribe(settings => {
+                this.alexaSettings = settings;
+            });
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -250,5 +280,30 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             this.timeValue = 0;
             this.settingsWatchers.sessionLimitMinutes.value = 0;
         }
+    }
+
+    // Alexa Methods
+    #updateAlexa = (settings: AlexaSettings) => this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
+        this.cloudApi.saveCustomAccountProperty(settings, AlexaSettings.CUSTOM_PROPERTY_ENDPOINT)
+    ).pipe(
+        switchMap(settings => this.system.updateAlexaRules(settings.enabled)),
+        untilDestroyed(this)
+    ).subscribe(_ => {
+        this.alexaSettings = settings;
+    });
+
+    toggleAlexaEnabled = () => {
+        const { enabled, selectedSystem, accountLinked = false } = this.alexaSettings;
+        this.alexaSettings = null;
+        this.#updateAlexa({ enabled: !enabled, accountLinked, selectedSystem: enabled ? this.system.id : selectedSystem });
+    }
+
+    toggleSystemSelected = () => {
+        if (this.alexaSettings.selectedSystem === this.system.id) {
+            return;
+        }
+        const { enabled, accountLinked = false } = this.alexaSettings;
+        this.alexaSettings = null;
+        this.#updateAlexa({ enabled, accountLinked, selectedSystem: this.system.id });
     }
 }

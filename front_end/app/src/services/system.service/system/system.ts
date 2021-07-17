@@ -1,8 +1,9 @@
 import {
     BehaviorSubject, of, Subscription,
-    Observable, from, Subject
+    Observable, from
 }                               from 'rxjs';
-import { flatMap, takeUntil }   from 'rxjs/operators';
+import { flatMap, switchMap }   from 'rxjs/operators';
+import { v4 as uuid }           from 'uuid';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -15,7 +16,9 @@ import { NxSystemsService, NxSystemWithUserInfo }   from '../../systems.service'
 import { NxSystemAPIService, NxSystemAPI }          from '../../system-api.service';
 import { NxPollService }                            from '../../poll.service';
 import { NxAppStateService }                        from '../../nx-app-state.service';
-import { SystemConfigSettings }                     from '../../system-api.types';
+import {
+    EventRule, EventTypes, RawRule, SystemConfigSettings
+}                                                   from '../../system-api.types';
 import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
 import { trimIDs as trimIds }                       from '../../../utils/api_response_cleaners';
 import { NxRibbonService }                          from '@components/ribbon';
@@ -437,7 +440,6 @@ export class NxSystem extends System {
     authPromise: Promise<any>;
 
     ensureSystemAuth(force?) {
-
         if (this.CONFIG.isLocal) {
             return Promise.resolve();
         }
@@ -467,7 +469,6 @@ export class NxSystem extends System {
     }
 
     public getResourceTypes(force: boolean = false) {
-
         if (this.resourceTypes && !force) {
             return Promise.resolve(this.resourceTypes);
         }
@@ -481,7 +482,6 @@ export class NxSystem extends System {
     }
 
     public getMediaServersAndCameras(force: boolean = false): any {
-
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
         }
@@ -517,7 +517,6 @@ export class NxSystem extends System {
         let cs = apiReply['ec2/getCamerasEx'];
 
         return this.getResourceTypes().then(resourceTypes => {
-
             const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
 
             cs = cs.filter(
@@ -545,7 +544,7 @@ export class NxSystem extends System {
     }
 
     public getPlaybackUrl (cameraId, transport, resolution, position) {
-        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position)
+        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }
 
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
@@ -571,10 +570,175 @@ export class NxSystem extends System {
                             timeZoneOffset : parseInt(i.timeZoneOffset)
                         }));
                         // console.log('getServerTimes', now, r.reply, sanitized)
-                        return sanitized
+                        return sanitized;
                     });
             });
     }
+
+    /**
+     * Alexa event rule handlers
+     */
+
+    /**
+     * Handles rules that need to be added/removed when enabling/disabling Alexa
+     */
+    updateAlexaRules(enabled = true) {
+        return this.mediaserver.getEventRules().pipe(
+            switchMap(existingRules => (enabled ? this.#addAlexaRules : this.#removeAlexaRules)(
+                existingRules,
+                this.userManager.currentUser,
+                `"Alexa layout command for ${this.userManager.currentUser.email}"`,
+                `"Alexa command for ${this.userManager.currentUser.email}"`
+            ))
+        );
+    }
+
+    #addAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+        const showAlarmRule = NxSystem.createRule(
+            {
+                eventCondition: NxSystem.getEventCondition(
+                    alarmResourceName
+                )(),
+                actionType   : 'showOnAlarmLayoutAction',
+                eventType    : EventTypes.USER_DEFINED,
+                actionParams : NxSystem.getActionParams([user.id, user.id], true)
+            },
+            existingRules
+        );
+
+        const doCommandRule = NxSystem.createRule(
+            {
+                eventCondition : NxSystem.getEventCondition(doCommandResourceName)(),
+                actionType     : 'showPopupAction',
+                eventType      : EventTypes.USER_DEFINED,
+                actionParams   : NxSystem.getActionParams([user.id, user.id], true)
+            },
+            existingRules
+        );
+        return Promise.all([
+            showAlarmRule, doCommandRule
+        ].map(rule => this.mediaserver.saveEventRule(rule).toPromise()));
+    }
+
+    #removeAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+        const toRemove = existingRules.filter(({
+            eventCondition
+        }) => [
+            alarmResourceName,
+            doCommandResourceName
+        ].some(resourceName => {
+            const condition = JSON.parse(eventCondition) || {};
+
+            return condition.resourceName === resourceName;
+        }));
+
+        return Promise.all(toRemove.map(({
+            id
+        }) => this.mediaserver.removeEventRule(id).toPromise()));
+    }
+
+    /**
+     * Event Helpers
+     */
+
+    static getActionParams = (
+        [actionResourceId, ...additionalResources]: string[],
+        useSource = false
+    ) => ({
+        allUsers         : false,
+        authType         : 'authBasicAndDigest',
+        durationMs       : 600000,
+        forced           : true,
+        fps              : 30,
+        needConfirmation : false,
+        playToClient     : true,
+        recordAfter      : 5,
+        recordBeforeMs   : 5000,
+        requestType      : '',
+        streamQuality    : 'highest',
+        useSource,
+        actionResourceId,
+        additionalResources
+    })
+
+    static getEventCondition = (
+        resourceName: string,
+        noDescription = false
+    ) => (...valuesToParse: string[]) => {
+        const lookupGroupAliases = (groupName: string) => {
+            const aliases = {
+                all               : ['everyone'],
+                Administrator     : ['admin', 'admins'],
+                'Advanced Viewer' : ['advanced'],
+                Viewer            : ['viewers'],
+                'Live Viewer'     : ['live viewers']
+            };
+            return [groupName, ...(aliases[groupName] || [])];
+        };
+        const toCondition = (value: string) => {
+            const cleaned = value.replace('Alexa ', '').toLowerCase();
+            const split = cleaned.split(' ');
+            return split.length === 1 ? cleaned : `"${cleaned}" ${split.join(' ')}`;
+        };
+        const condition = valuesToParse
+            .reduce((values, cur) => [...values, ...lookupGroupAliases(cur)], [])
+            .reduce(
+                (conditions, condition) =>
+                    `${conditions} ${toCondition(condition)}`,
+                ''
+            );
+
+        return {
+            caption            : condition,
+            description        : noDescription ? '' : condition,
+            eventTimestampUsec : '0',
+            eventType          : 'undefinedEvent',
+            metadata           : {
+                allUsers : false,
+                level    : '0'
+            },
+            omitDbLogging : false,
+            reasonCode    : 'none',
+            resourceName
+        };
+    }
+
+    static baseRule = {
+        system            : false,
+        schedule          : '',
+        eventState        : 'Undefined',
+        disabled          : false,
+        aggregationPeriod : 0
+    }
+
+    static getRuleId = (
+        caption: string,
+        actionType: string,
+        existingRules: EventRule[]
+    ) => {
+        const existingRulesTuples = existingRules.map(
+            ({ eventCondition, actionType, id }): [string, string, string] => [
+                JSON.parse(eventCondition).caption || '',
+                actionType,
+                id
+            ]
+        );
+        const existingRule = existingRulesTuples.find(
+            ([cap, action]) => cap === caption && action === actionType
+        );
+        return existingRule?.[2] || `{${uuid()}}`;
+    }
+
+    static createRule = (
+        { actionParams, eventCondition, ...rule }: RawRule,
+        existingRules: EventRule[]
+    ): EventRule => ({
+        id             : NxSystem.getRuleId(eventCondition.caption, rule.actionType, existingRules),
+        ...NxSystem.baseRule,
+        ...rule,
+        actionParams   : JSON.stringify(actionParams),
+        eventCondition : JSON.stringify(eventCondition)
+    })
 
     /**
      * Methods and properties below need to be refactored and moved to respective manager classes.
