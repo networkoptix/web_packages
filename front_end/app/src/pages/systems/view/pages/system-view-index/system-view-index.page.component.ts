@@ -385,7 +385,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             [],
                             this.system?.getCameraThumbnailUrl(c.id),
                             (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
-                            (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
+                            (t?: ms, width = 128, height = 128) => this.system?.getCameraThumbnailUrl(c.id, width, height, t)
                         );
                         result.parseAdditionalParams(c.addParams);
                         return result;
