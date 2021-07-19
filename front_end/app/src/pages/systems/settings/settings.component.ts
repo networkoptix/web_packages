@@ -583,7 +583,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         disabled        : server.status.toLowerCase() === 'offline'
                     });
                 });
-                serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0].id)}`;
+                serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0]?.id || '')}`;
             }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
