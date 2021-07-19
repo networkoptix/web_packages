@@ -30,7 +30,7 @@ export class NxGetStartedComponent implements OnChanges {
         const getStartedConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(
-                ['icon', 'title', 'subtitle'],
+                ['icon', 'title'],
                 null,
                 this.errorManager.buildConfig(
                     ['title']

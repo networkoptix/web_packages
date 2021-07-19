@@ -32,8 +32,7 @@
         margin-bottom: 24px;
     }
     .get-started-blocks {
-        padding: 40px 16px 0 16px;
-        padding-top: 40px;
+        padding: 50px 16px 0 16px;
         width: 100%;
         max-width: 1440px;
         @include bootstrap.media-breakpoint-down(xs) {
@@ -59,6 +58,7 @@
     flex-direction: column;
     @include bootstrap.media-breakpoint-down(xs) {
         width: 100% !important;
+        margin-top: -3px;
     }
 
     &:hover {
@@ -74,29 +74,12 @@
         }
     }
 
-    .step {
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-family: $font-family-bold;
-        font-weight: 900;
-        font-size: 40px;
-        line-height: 40px;
-        @include bootstrap.media-breakpoint-down(xs) {
-            left: 16px;
-            top: 50% !important;
-            transform: translateY(-50%);
-        }
-    }
 
     .step-image {
         position: relative;
         display: flex;
         justify-content: center;
         flex: 1 1 100%;
-        @include bootstrap.media-breakpoint-down(xs) {
-            display: none !important;
-        }
 
         img {
             transition: all ease-out 0.25s;
@@ -108,7 +91,7 @@
             content: "";
             position: absolute;
             top: 85px;
-            width: 95%;
+            width: 85%;
             height: 100px;
             background: radial-gradient(ellipse farthest-corner at center center,
                     #c1c7cb 0,
@@ -122,6 +105,9 @@
                     #fefefe 70%,
                     #ffffff 75%);
             transition: all ease-out 0.25s;
+            @include bootstrap.media-breakpoint-down(xs) {
+                width: 55% !important;
+            }
         }
     }
 
@@ -132,18 +118,16 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
+        margin-top: 35px;
+        margin-bottom: 39px;
         @include bootstrap.media-breakpoint-down(xs) {
-            align-items: flex-start !important;
-            margin-left: 72px !important;
+            margin-top: 13px;
         }
 
         & > h3 {
-            @include typography.medium20dark9;
+            width: 170px;
+            @include typography.medium18dark9;
             margin-bottom: 2px;
-        }
-
-        & > span {
-            @include typography.regular14brand;
         }
     }
 }

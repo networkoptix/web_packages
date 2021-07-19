@@ -7,13 +7,11 @@
         <div class="detail-block" [routerLink]="block.url"
              (mouseenter)="block.currentIcon = block.aniIcon"
              (mouseleave)="block.currentIcon = block.icon">
-            <div class="step">{{step}}</div>
             <div class="step-image" [id]="'step-image-' + step">
                 <img [src]="CONFIG.images.dirDevelopers + block.currentIcon">
             </div>
             <div class="step-text">
                 <h3>{{block.title}}</h3>
-                <span>{{block.subtitle}}</span>
             </div>
         </div>
     </div>
