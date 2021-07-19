@@ -150,11 +150,19 @@ class CloudPortalAPI(object):
             return 'Cannot find cloudAccountName key'
 
     def subscribe_push_notification(self, env, email, password, token, name):
-        authAscii = email+":"+password
-        authAscii = authAscii.encode('ascii')
-        auth = b"Basic "+base64.b64encode(authAscii)
+        auth_ascii = f'{email}:{password}'
+        auth_ascii = auth_ascii.encode('ascii')
+        auth = b"Basic " + base64.b64encode(auth_ascii)
         headers = {'Authorization': auth}
-        r = requests.put(f'{env}/api/notifications/subscriptions/{token}', headers=headers, json={'type': 'notification','systems': ['all'],'deviceInfo': {'name': name, 'os':'web'}})
+        r = requests.put(
+            f'{env}/api/notifications/subscriptions/{token}', headers=headers,
+            json={
+                'type': 'notification',
+                'systems': ['all'],
+                'deviceInfo': {'name': name, 'os': 'web'},
+                'provider': 'firebase'
+            }
+        )
         return r.json()
 
     def get_new_FCM_token(self, key, auth, body):
@@ -308,7 +316,7 @@ class CloudPortalAPI(object):
                     "manufacturer": manufacturer
                     }
                 ]
-            } 
+            }
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         logger.trace(r.status_code)
@@ -336,7 +344,7 @@ class CloudPortalAPI(object):
     #                "manufacturer": manufacturer
     #                }
     #            ]
-    #        } 
+    #        }
     #    logger.trace(body)
     #    r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
     #    logger.trace(r.status_code)
@@ -350,22 +358,21 @@ class CloudPortalAPI(object):
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return r.text
-    
+
     @staticmethod
     def turn_on_analytics(serverUrl,value):
 #         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
 #         cameraDict = r.json()
-#         cameraID = cameraDict["id"]      
+#         cameraID = cameraDict["id"]
         body = [
                     {
                     "name": "userEnabledAnalyticsEngines",
-                    #"value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]", 
+                    #"value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]",
                     #"value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
                     "value": value,
                     "resourceId": "{d6de2b74-9c74-2dad-8bc0-f1e10ba7b6b2}"
                     }
                 ]
-            
+
         p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         return p.text
-        
