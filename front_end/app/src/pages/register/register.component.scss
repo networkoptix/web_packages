@@ -1,14 +1,5 @@
 @use '../../../styles/theme_variables' as *;
 
-.status-wrapper {
-    position: relative;
-    margin-top: $navbar-height;
-    height: 45vh;
-    @media screen and (max-width: 740px) {
-        height: 55vh;
-    }
-}
-
 .login-button {
     margin-top: 40px !important;
 }

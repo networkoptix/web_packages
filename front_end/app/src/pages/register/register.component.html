@@ -1,16 +1,16 @@
 <ng-container *ngIf="registerSuccess">
-    <div class="status-wrapper" *ngIf="!activated">
-        <nx-page-placeholder type="ACCOUNT_CREATED"
+    <div class="w-100 h-100" *ngIf="!activated">
+        <nx-page-placeholder type="ACCOUNT_CREATED" withFooter
             [message]="'common.account.created.message' | translate: { email: accountInfo.email || accountService.email }">
         </nx-page-placeholder>
     </div>
-    <div class="status-wrapper" *ngIf="activated">
-        <nx-page-placeholder type="ACCOUNT_ACTIVATED">
+    <div class="w-100 h-100" *ngIf="activated">
+        <nx-page-placeholder type="ACCOUNT_ACTIVATED" withFooter>
             <button class="btn btn-primary login-button mx-auto" (click)="login()" translate>Log In</button>
         </nx-page-placeholder>
     </div>
 </ng-container>
-<div class="container auth-hidden">
+<div *ngIf="!registerSuccess" class="container auth-hidden">
     <div *ngIf="!registerSuccess && fromClient" style="max-width: 991px;" class="m-auto">
         <div class="jumbotron">
             <landing-display-component></landing-display-component>
