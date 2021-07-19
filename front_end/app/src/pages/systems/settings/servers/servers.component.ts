@@ -91,7 +91,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     this.isOffline = !system.isOnline;
                     this.settingsService.footerSubject.next(true);
                     if (system && (!this.system || !this.CONFIG.isLocal)) {
-                        await system?.apiVersionResolved$.toPromise();
+                        if (system.isOnline || system.isAvailable) {
+                            await system?.apiVersionResolved$.toPromise();
+                        }
                         this.system = system;
                         (
                             this.CONFIG.isLocal
