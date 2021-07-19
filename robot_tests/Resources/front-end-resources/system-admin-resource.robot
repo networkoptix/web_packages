@@ -16,7 +16,7 @@ System Admin Suite Setup
     Open browser and go to URL    ${ENV}
 
 System Admin Suite Teardown
-    Delete Base Cloud System
+    Delete Base System    ${system}
     Run Keyword If    '''${mode}'''=='''webadmin'''    Delete Docker Server    ${local system}[id]
     Close All Browsers
     Run Keyword And Ignore Error    Delete Docker Server    ${4.0 cont}

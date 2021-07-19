@@ -133,7 +133,6 @@ Log In Web Admin
     Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     Input Text    //input[@id="login_email"]    ${login}
     Input Text    //input[@id="login_password"]    ${password}
-    #Sleep    5
     Click Button    //button[@type="submit"]
 
 
@@ -160,13 +159,12 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Log in to system
-    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
     Go To    ${url}
-    Log In    ${email}    ${password}    validate=${False}    button=${None}
-    Reload Page
+    Log In    ${email}    ${password}    validate=${validate}    button=${None}
 
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
@@ -528,8 +526,8 @@ Check For Alert Dismissable
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
-    Run Keyword If    ${editable}    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
-        ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
+    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
+    ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration
@@ -1070,7 +1068,6 @@ Create Base System
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
     ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
-
     # If add users is true add local users.  Add cloud users if both are true.
     @{local users}=    Get Dictionary Keys    ${role names}
     ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${BASE PASSWORD}
