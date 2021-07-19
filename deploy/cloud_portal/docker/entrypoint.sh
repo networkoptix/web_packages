@@ -109,6 +109,7 @@ do
                 done
 
             fi
+            python manage.py update_host
             python manage.py filldata
             python manage.py filldata --preview=True &
 

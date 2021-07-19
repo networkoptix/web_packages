@@ -66,6 +66,9 @@ CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
 
+META_CUSTOMIZATION = 'metavms'
+META = CUSTOMIZATION == META_CUSTOMIZATION
+
 if LOCAL_ENVIRONMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
     STATICFILES_DIRS = (

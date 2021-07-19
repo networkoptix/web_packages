@@ -792,15 +792,19 @@ class CustomClientViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return CustomClient.objects.all()
+            return CustomClient.objects.filter(created_customization__name=settings.CUSTOMIZATION)
         else:
-            return self.request.user.customclient_set.all()
+            return self.request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
 
     def perform_create(self, serializer):
         kwargs = {}
-        if settings.CUSTOMIZATION != 'meta':
+        if not settings.META:
             kwargs['base_vms'] = get_vms_asset(settings.CUSTOMIZATION)
-        serializer.save(created_by=self.request.user, **kwargs)
+        serializer.save(
+            created_by=self.request.user,
+            created_customization=Customization.objects.filter(name=settings.CUSTOMIZATION).first(),
+            **kwargs
+        )
 
     @action(detail=False, serializer_class=ContentManifestSerializer)
     def get_manifest(self, request):
@@ -812,7 +816,8 @@ class CustomClientViewSet(ModelViewSet):
                 'description': field_props.get('description', ''),
                 'optional': field_props.get('optional', False)
             } for field_name, field_props in list(filter(
-                lambda item: item[1].get('source', '') == 'custom',
+                lambda item: item[1].get('source', '') == 'custom' and not (
+                    item[1].get('metaOnly', False) and not settings.META),
                 AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms).items()
         ))]
 
@@ -822,7 +827,7 @@ class CustomClientViewSet(ModelViewSet):
             'fields': fields
         }]
 
-        show_vms_list = settings.CUSTOMIZATION == 'meta'
+        show_vms_list = settings.META
         vms_list = [{'name': vms.name, 'value': vms.id} for vms in
                     request.user.custom_client_vms_assets] if show_vms_list else []
 
@@ -838,9 +843,11 @@ class CustomClientViewSet(ModelViewSet):
     @swagger_auto_schema(method='post', request_body=no_body, responses={200: GenerateCustomClientSerializer()})
     @action(detail=True, methods=['post'])
     def generate_package(self, request, pk=None):
+        # Get object to make sure it exists and user has access
+        custom_client = self.get_object()
         download_id = uuid.uuid4()
-        task_id = make_custom_client.apply_async(args=[pk, download_id])
-        cache_key = get_custom_client_package_key(pk, download_id)
+        task_id = make_custom_client.apply_async(args=[custom_client.pk, download_id])
+        cache_key = get_custom_client_package_key(custom_client.pk, download_id)
         PACKAGES_CACHE[cache_key] = {"file": None, "is_ready": False, "task_id": str(task_id)}
         return api_success({'downloadId': download_id})
 
@@ -854,7 +861,9 @@ class CustomClientViewSet(ModelViewSet):
     @swagger_auto_schema(query_serializer=PackageDownloadIdSerializer())
     @action(detail=True, serializer_class=CheckPackageCustomClientSerializer)
     def check_package(self, request, pk=None):
-        package = self.get_download_package(request, pk)
+        # Get object to make sure it exists and user has access
+        custom_client = self.get_object()
+        package = self.get_download_package(request, custom_client.pk)
         if not package:
             raise APINotFoundException('Package not available')
         task = AsyncResult(package.get('task_id'))
@@ -864,9 +873,9 @@ class CustomClientViewSet(ModelViewSet):
     @swagger_auto_schema(query_serializer=PackageDownloadIdSerializer())
     @action(detail=True)
     def download_package(self, request, pk=None):
-        package = self.get_download_package(request, pk)
+        custom_client = self.get_object()
+        package = self.get_download_package(request, custom_client.pk)
         if not package:
             raise APINotFoundException('Package not available')
-        custom_client = self.get_object()
         file_name = slugify(f'{custom_client.name}-package-{datetime.now()}') + '.zip'
         return response_attachment(package['file'], file_name, 'application/zip', attachment=True)

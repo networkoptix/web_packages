@@ -1,7 +1,9 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from cms.models import Context, DataStructure, AssetType, CustomClient
+from cms.models import Context, DataStructure, AssetType, CustomClient, Customization
+
+import re
 
 
 class BaseCMSSerializer(serializers.ModelSerializer):
@@ -124,40 +126,61 @@ class ArticleSerializer(serializers.Serializer):
 
 
 class CustomClientSerializer(serializers.ModelSerializer):
+
     class ValuesSerializer(serializers.Serializer):
+        cloud_host_regex = re.compile(r'(?:https?://)?([\da-z.~_-]+\.[a-z.]{2,6})*')
+
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.custom_values = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
-            self.custom_values = {
-                key: value for key, value in self.custom_values.items()
-                if self.custom_values[key].get('source', '') == 'custom' and not (
-                    self.custom_values[key].get('metaOnly', False) and settings.CUSTOMIZATION != 'meta')
+            self.custom_fields = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
+            self.custom_fields = {
+                key: value for key, value in self.custom_fields.items()
+                if self.custom_fields[key].get('source', '') == 'custom' and not (
+                    self.custom_fields[key].get('metaOnly', False) and not settings.META)
             }
-            for field_name, field_props in self.custom_values.items():
+            for field_name, field_props in self.custom_fields.items():
                 optional = field_props.get('optional', False)
-                self.fields[field_name] = serializers.CharField(
-                    required=not optional, allow_blank=optional, label=field_props.get('label', field_name)
-                )
+                if field_props.get('regex', ''):
+                    field = serializers.RegexField(
+                        required=not optional, allow_blank=optional, label=field_props.get('label', field_name),
+                        regex=field_props['regex']
+                    )
+                else:
+                    field = serializers.CharField(
+                        required=not optional, allow_blank=optional, label=field_props.get('label', field_name)
+                    )
+
+                self.fields[field_name] = field
                 # Needed to handle "." in variable names being split
                 self.fields[field_name].source_attrs = [field_name]
 
+        def validate_portalUrl(self, value):
+            match = self.cloud_host_regex.search(value)
+            if not match or not Customization.objects.filter(host=match.group(1)).exists():
+                raise serializers.ValidationError('Portal URL not valid')
+            return match.group(1)
+
         def validate(self, data):
-            for key in self.custom_values:
-                if key not in data:
-                    data[key] = self.parent.instance.values.get(key, '')
+            if self.parent and self.parent.instance:
+                for key in self.custom_fields:
+                    if key not in data:
+                        data[key] = self.parent.instance.values.get(key, '')
             return data
+
+        def to_representation(self, instance):
+            return instance
 
     created_by = serializers.SlugRelatedField(slug_field='email', read_only=True)
     values = ValuesSerializer(required=False, partial=True)
 
     class Meta:
         model = CustomClient
-        fields = '__all__'
+        exclude = ['created_customization']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.request = kwargs.get('request', None)
-        if settings.CUSTOMIZATION != 'meta' or not self.context.get('request', None):
+        if not settings.META or not self.context.get('request', None):
             self.fields['base_vms'].read_only = True
         else:
             self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets

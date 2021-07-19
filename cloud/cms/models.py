@@ -386,6 +386,7 @@ class Customization(models.Model):
         Language, related_name='default_in_%(class)s', on_delete=models.CASCADE)
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
+    host = models.CharField(blank=True, max_length=255)
 
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
@@ -2279,6 +2280,7 @@ class CustomClient(models.Model):
     base_vms = models.ForeignKey(
         Asset, on_delete=models.CASCADE, limit_choices_to={'asset_type__type': AssetType.ASSET_TYPES.vms}
     )
-    values = JSONField()
+    values = JSONField(default={})
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
+    created_customization = models.ForeignKey(Customization, null=True, on_delete=models.CASCADE)

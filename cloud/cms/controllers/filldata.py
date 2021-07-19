@@ -7,6 +7,7 @@ import zipfile
 import distutils.dir_util
 import errno
 import traceback
+from typing import Union, Tuple, Dict, List
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 
@@ -582,17 +583,25 @@ def save_b64_to_file(value, filename, storage_location):
         f.write(image_png)
 
 
-def calculate_custom_client_data(custom_client):
+def host_to_vms_asset(host: str) -> Union[Asset, None]:
+    if host:
+        customization: Customization = Customization.objects.filter(host=host).first()
+        if customization:
+            return get_vms_asset(customization=customization.name)
+
+
+def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, List]:
     field_overrides = custom_client.base_vms.asset_type.custom_field_overrides
     fields = field_overrides.get('fields', {})
+    cloud_host_fields = field_overrides.get('cloudHostFields', [])
     client_values = custom_client.values or {}
     custom_data = {}
     errors = []
-    cloud_host_vms_asset = None  # need to implement host_to_vms_asset()
+
     for name, field in fields.items():
         source = field.get('source', '')
         meta_only = field.get('metaOnly', False)
-        if meta_only or source == 'cloudHost' and settings.CUSTOMIZATION != 'meta':
+        if meta_only and custom_client.created_customization.name != settings.META_CUSTOMIZATION:
             continue
 
         if source in ['custom', 'field']:
@@ -612,6 +621,20 @@ def calculate_custom_client_data(custom_client):
 
         elif source == 'constant':
             custom_data[name] = field.get('value')
+
+    if custom_client.created_customization.name == settings.META_CUSTOMIZATION:
+        portal_url = client_values.get('portalUrl', '')
+        if not portal_url:
+            errors.append({'message': f'Missing required field portalUrl'})
+        cloud_host_vms_asset = host_to_vms_asset(portal_url)
+        if not cloud_host_vms_asset:
+            errors.append({'message': f'Invalid portalUrl'})
+        else:
+            for host_field in cloud_host_fields:
+                if host_field not in custom_data:
+                    ds: Union[DataStructure, None] = DataStructure.objects.filter(context__asset_type=custom_client.base_vms.asset_type, name=host_field).first()
+                    if ds:
+                        custom_data[host_field] = ds.find_actual_value(cloud_host_vms_asset)
 
     return custom_data, errors
 
