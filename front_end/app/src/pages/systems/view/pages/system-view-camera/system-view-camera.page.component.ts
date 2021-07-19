@@ -524,6 +524,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     this.camera.status = s.selectedCamera.status;
                     this.camera.isScheduleEnabled = s.selectedCamera.isScheduleEnabled;
                 }
+
+                if (this.camera.isLive) {
+                    this.playback.playLive();
+                }
         }
     }
 
