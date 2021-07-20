@@ -439,11 +439,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     protected async _prepareArchiveRecords (ar) {
         // this method here is kinda legacy
         // TODO: refactor
-        await this._getServerTimes()
+        await this._getServerTimes();
         if (ar.reply.length) {
-            ar.reply = ar.reply[0].periods
+            ar.reply = ar.reply
+                .reduce((records, { periods }) => {
+                    records.splice(-1, 0, ...periods);
+                    return records;
+                }, [])
+                .sort((a, b) => a.startTimeMs - b.startTimeMs);
         }
-        return ar
+        return ar;
     }
 
     public ngAfterViewInit () {
