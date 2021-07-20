@@ -28,7 +28,11 @@
     <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
         <li>
             <span>
-                <a routerLink="/register" class="btn btn-primary" [ngClass]="{'small-button': showSmall}">
+                <a routerLink="/register" class="btn" 
+                    [ngClass]="[
+                        showSmall?'small-button' : '',
+                        true?'btn-' + (headerService.createAccountButtonType$ | async) : ''
+                ]">
                     <span *ngIf="showSmall" class="glyphicon glyphicon-create-user"></span>
                     <span *ngIf="!showSmall" class="btn-caption text-nowrap" translate>Create Account</span>
                 </a>

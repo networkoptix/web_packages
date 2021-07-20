@@ -11,6 +11,7 @@ enum systemRoutes {
     HEALTH='health'
 }
 
+type createButtonType = 'default' | 'primary'
 interface MenuNodeNavProps {
     url: string;
     // eslint-disable-next-line camelcase
@@ -27,6 +28,7 @@ export class NxHeaderService {
     private unsub$ = new Subject();
     public nodes: MenuNode[] = [];
     public currentLocation$ = new BehaviorSubject<any>({})
+    public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary')
 
     set currentLocation(value) {
         this.currentLocation$.next(value);
@@ -34,6 +36,14 @@ export class NxHeaderService {
 
     get currentLocation() {
         return this.currentLocation$.value;
+    }
+
+    set createAccountButtonType(value: createButtonType) {
+        this.createAccountButtonType$.next(value);
+    }
+
+    get createAccountButtonType() {
+        return this.createAccountButtonType$.value;
     }
 
     // Only to communicate with AJS

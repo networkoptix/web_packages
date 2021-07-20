@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { WINDOW }   from '@services/window-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -8,27 +8,32 @@ import { Platform } from '@angular/cdk/platform';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { Observable, Subscription } from 'rxjs';
-import { filter, startWith } from 'rxjs/operators';
+import { debounceTime, filter, startWith } from 'rxjs/operators';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxAccountService } from '@services/account.service';
+import { IntersectionStatus } from '@directives/nx-intersection.directive';
 @UntilDestroy()
 @Component({
     selector    : 'nx-intro-text',
     templateUrl : './intro-text.component.html',
     styleUrls   : ['./intro-text.component.scss']
 })
-export class NxIntroTextComponent implements AfterViewChecked {
+export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
   // createAccountButton Ref not used yet, used to change the color of the header later
-  @ViewChild('createAccountButton') createAccountRef: ElementRef<HTMLElement>;
+  @ViewChild('createButton') createButtonRef: ElementRef<HTMLElement>;
   @ViewChild('rootFixed') rootFixedRef: ElementRef;
   @ViewChild('rootAbsolute') rootAbsoluteRef: ElementRef;
   realTimeScroll$: Observable<number>;
   elementObserver$: Subscription;
   cloudShowing: 'fixed' | 'absolute' = 'fixed';
+  isLoggedIn: null | boolean = null;
 
   CONFIG: IConfig
   LANG: LanguageI18NStaticTypes;
 
   constructor(languageService :NxLanguageProviderService, configService: NxConfigService,
       scrollMechanics: NxScrollMechanicsService,
+      public headerService: NxHeaderService,
       public platform: Platform,
       @Inject(DOCUMENT) private document: Document,
       @Inject(WINDOW) private window: Window) {
@@ -45,6 +50,23 @@ export class NxIntroTextComponent implements AfterViewChecked {
       return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
   }
 
+  logItem(info: any) {
+      console.log(info);
+  }
+
+  changeHeaderButton = (visbility: IntersectionStatus) => {
+      if (visbility === 'Visible') {
+          if (this.headerService.createAccountButtonType === 'primary') {
+              this.headerService.createAccountButtonType = 'default';
+          }
+      }
+      if (visbility === 'NotVisible') {
+          if (this.headerService.createAccountButtonType === 'default') {
+              this.headerService.createAccountButtonType = 'primary';
+          }
+      }
+  }
+
   getElementPosition(elm: HTMLElement) {
       const rect = elm.getBoundingClientRect();
       const scrollLeft = this.window.pageXOffset || this.document.documentElement.scrollLeft;
@@ -52,9 +74,14 @@ export class NxIntroTextComponent implements AfterViewChecked {
       return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
   }
 
+  ngOnDestroy() {
+      if (this.headerService.createAccountButtonType === 'default') {
+          this.headerService.createAccountButtonType = 'primary';
+      }
+  }
+
   ngAfterViewChecked() {
-      // There are two copies of the intro-text component in the html, this determines which one will be showing
-      // This is neccessary to seamlessly transition between fixed and absolute positioning
+      // There are two hidden components in the html which determine if the intro-text component is using position:absolute or position:fixed
       if (!this.elementObserver$ && this.rootFixedRef && this.rootAbsoluteRef) {
           this.elementObserver$ = this.realTimeScroll$.pipe(untilDestroyed(this), filter(value => value < 1000)).subscribe(
               () => {
