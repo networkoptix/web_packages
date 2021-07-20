@@ -677,6 +677,11 @@
         },
         "successRename": "บันทึกชื่อเซิร์ฟเวอร์แล้ว"
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

@@ -677,6 +677,11 @@
         },
         "successRename": "服务器名称已保存。"
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

@@ -677,6 +677,11 @@
         },
         "successRename": "Nome del server salvato."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connesso",
         "not_connected": "Non connesso",

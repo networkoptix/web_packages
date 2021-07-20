@@ -677,6 +677,11 @@
         },
         "successRename": "S'ha desat el nom del servidor."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

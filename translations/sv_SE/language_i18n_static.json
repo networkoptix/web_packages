@@ -677,6 +677,11 @@
         },
         "successRename": "Servernamn sparat."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Ansluten",
         "not_connected": "Inte ansluten",

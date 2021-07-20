@@ -677,6 +677,11 @@
         },
         "successRename": "서버 이름이 저장됨"
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

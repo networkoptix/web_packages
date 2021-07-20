@@ -677,6 +677,11 @@
         },
         "successRename": "サーバー名を保存しました。"
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "接続済み",
         "not_connected": "未接続",

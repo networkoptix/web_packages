@@ -677,6 +677,11 @@
         },
         "successRename": "伺服器名稱已儲存."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",

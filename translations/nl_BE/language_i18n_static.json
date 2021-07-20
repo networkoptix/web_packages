@@ -677,6 +677,11 @@
         },
         "successRename": "Servernaam opgeslagen."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Verbonden",
         "not_connected": "Niet verbonden",

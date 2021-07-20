@@ -677,6 +677,11 @@
         },
         "successRename": "Sunucu adı kaydedildi."
     },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
+    },
     "system": {
         "connected": "Connected",
         "not_connected": "Not connected",
