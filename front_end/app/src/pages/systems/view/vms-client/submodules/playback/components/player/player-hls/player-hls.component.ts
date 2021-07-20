@@ -56,7 +56,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     videoErrorEventHandler = (event: any) => {
         const sourceUrl = this.state.mode !== PLAYBACK_MODE.STOPPED && this.state?.sourceUrl;
-        if (sourceUrl && this.videoView?.nativeElement && this.videoView.nativeElement.error?.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        if (sourceUrl && this.videoView?.nativeElement) {
             this.http.get(sourceUrl)
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -175,7 +175,11 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                             fatalErrorTimer = setTimeout(() => {
                                 console.error('HLS error, cannot recover');
                                 fatalErrorTimer = undefined;
-                                this.playback.setError(data.response?.text || '');
+                                if (data?.response === undefined) {
+                                    this.videoErrorEventHandler(data);
+                                } else {
+                                    this.playback.setError(data.response?.text || '');
+                                }
                             }, 30 * 1000);
                             // TODO: try to switch to WEBM or another alternative stream here
                             switch (data.type) {

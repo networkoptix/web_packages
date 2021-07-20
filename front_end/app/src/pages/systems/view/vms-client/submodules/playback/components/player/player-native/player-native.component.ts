@@ -47,7 +47,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     videoErrorEventHandler = (event: any) => {
-        if (this.videoView && this.videoView.nativeElement.error && this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        if (this.videoView && this.videoView.nativeElement.error) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
