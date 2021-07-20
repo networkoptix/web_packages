@@ -26,6 +26,7 @@ import { NxToastService }                        from '../../../../../dialogs/to
 import { NxDialogsService }                      from '../../../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
+import { NxRibbonService }                       from '../../../../../components/ribbon';
 
 @UntilDestroy()
 @Component({
@@ -128,7 +129,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
         private utilsService: NxUtilsService,
-        private dialogs: NxDialogsService
+        private dialogs: NxDialogsService,
+        private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -262,7 +264,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 // _initSystem is called on systems subscription
                 if (this.systems.filter(s => s.id === this.systemId).length) {
+                    this._setInitializationState(false, false);
+                    this.ribbonService.hide();
+
                     this.system = await this.systemService.createSystem(account.email, this.systemId);
+                    await this.system.update();
+
                     return Promise.resolve();
                 }
 
@@ -317,6 +324,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     if (!this.system || processingMediaServers) {
                         return;
                     }
+
+                    if (!this.system.isOnline) {
+                        this._setInitializationState(true, true);
+                        return;
+                    }
+
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
                     // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
                     if (this.initialized && !mediaServerChanged(mediaServers) || mediaServers.length === 0) {
