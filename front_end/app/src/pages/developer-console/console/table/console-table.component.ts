@@ -163,6 +163,7 @@ export class NxDevConsoleTableComponent {
     noResultsHeight = 0;
     noResultsWidth = 0;
     dataLoaded = false;
+    update$ = new BehaviorSubject(null);
 
     selectedManifest: ConsoleManifest;
     selectedData: TableDataSource;
@@ -191,7 +192,7 @@ export class NxDevConsoleTableComponent {
             this.dataLoaded = false;
 
             combineLatest([
-                this.cloudApi.getSubAPI(this.sectionParam).list(),
+                this.update$.pipe(switchMap(this.cloudApi.getSubAPI(this.sectionParam).list)),
                 this.cloudApi.getSubAPI(this.sectionParam).getManifest(),
                 this.menusService.getMenu('header').pipe(
                     map(({ nodes }) => this.headerService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
@@ -233,9 +234,7 @@ export class NxDevConsoleTableComponent {
     }
 
     updateData() {
-        this.cloudApi.getSubAPI(this.sectionParam).list().subscribe(list => {
-            this.selectedData.updateBaseData(new ListSerializer(this.sectionParam, this.manifest, list, this.contentManifest.settings).data);
-        });
+        this.update$.next('update');
     }
 
     updatePageState = ({ page, search }) => {

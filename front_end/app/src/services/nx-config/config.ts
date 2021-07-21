@@ -302,7 +302,7 @@ export const nxConfig: IConfig = {
                 }
             ],
             editManifest: {
-                label  : 'Edit',
+                label  : 'Edit Custom Client',
                 fields : [
                     {
                         type        : ConfigType.TEXT,
