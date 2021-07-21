@@ -1,4 +1,4 @@
-<div [ngClass]="{ 'placeholder-wrapper' : type == '' }" name="placeholder">
+<div [ngClass]="{ 'placeholder-wrapper' : type == '' }" name="placeholder" [style.minHeight.px]="minHeight">
     <div class="placeholder has-preloader" [ngClass]="type">
         <div class="placeholder-content" [ngClass]="type">
             <div class="placeholder-preloader">

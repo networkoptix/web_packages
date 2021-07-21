@@ -25,6 +25,7 @@
             "aot": true,
             "buildOptimizer": true,
             "assets": [
+              { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" },
               "app/customization",
               "app/images",
               "app/fonts",

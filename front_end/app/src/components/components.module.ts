@@ -5,6 +5,7 @@ import { RouterModule }                       from '@angular/router';
 import { FormsModule }                        from '@angular/forms';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
+import { EditorModule, TINYMCE_SCRIPT_SRC }   from '@tinymce/tinymce-angular'
 import { DirectivesModule }                   from '@directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
@@ -61,6 +62,7 @@ import { NxEditableSettingsHeading }        from './editable/settings-heading/ed
 import { QuicklinkModule }                  from 'ngx-quicklink';
 import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
 import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
+import { NxHTMLComponent }                  from '@components/html-input/html-input.component';
 import { PipesModule }                      from '@src/pipes/pipes.module';
 
 @NgModule({
@@ -74,7 +76,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         DirectivesModule,
         PipesModule,
         AngularSvgIconModule.forRoot(),
-        QuicklinkModule
+        QuicklinkModule,
+        EditorModule
     ],
     declarations: [
         NxThreeDotDropdown,
@@ -129,9 +132,11 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxLeftMenuComponent,
         NxImageComponent,
         NxEditableSettingsHeading,
-        NxPaginatorComponent
+        NxPaginatorComponent,
+        NxHTMLComponent
     ],
     providers: [
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
@@ -168,7 +173,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxLeftMenuComponent,
         NxImageComponent,
         NxEditableSettingsHeading,
-        NxPaginatorComponent
+        NxPaginatorComponent,
+        NxHTMLComponent
     ],
     exports: [
         QuicklinkModule,
@@ -223,7 +229,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxLeftMenuComponent,
         NxImageComponent,
         NxEditableSettingsHeading,
-        NxPaginatorComponent
+        NxPaginatorComponent,
+        NxHTMLComponent
     ]
 })
 export class ComponentsModule {

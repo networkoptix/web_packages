@@ -17,6 +17,7 @@ import { NxMenusService } from '@services/menus.service';
 
 export enum ConfigType {
     TEXT='text',
+    HTML='html',
     DATE='date',
     COMMENTS='comments',
     STATUS='status',

@@ -9,7 +9,7 @@ import { NxCloudApiService }            from '@services/nx-cloud-api';
 import { ContextManifest }              from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }     from '@services/nx-config';
 import { NxProcessService, Process }    from '@services/process.service';
-import { ConsoleSection }               from '../table/console-table.component';
+import { ConfigType, ConsoleSection }   from '../table/console-table.component';
 
 export enum DataStructureType {
     TEXT='text',
@@ -87,6 +87,7 @@ export class NxDevConsoleEditComponent {
     @Input() values: Record<any, any>;
     @ViewChild('applyContainer', { read: ViewContainerRef }) applyContainer;
 
+    INPUT_TYPE = ConfigType;
     CONFIG: IConfig;
     saveContext: Process;
     context: ContextManifest;

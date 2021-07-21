@@ -18,6 +18,9 @@
                         [items]="dropdownLookup[structure.name]?.options"
                         [stillLoading]="!dropdownLookup[structure.name]?.options"
                         ></nx-select>
+                    <nx-html *ngSwitchCase="STRUCTURE_TYPE.HTML"
+                        [name]="structure.name"
+                        [(ngModel)]="values[structure.name]"></nx-html>
                     <input *ngSwitchDefault
                         [type]="structure.type"
                         [name]="structure.name"

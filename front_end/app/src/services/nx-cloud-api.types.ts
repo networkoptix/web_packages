@@ -1,4 +1,5 @@
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
+import { ConfigType }   from '@pages/developer-console/console/table/console-table.component';
 
 /* eslint-disable camelcase */
 export interface ILanguage{
@@ -257,7 +258,7 @@ export interface FieldManifest {
     name: string;
     label: string;
     description: string;
-    type: string;
+    type: ConfigType;
     metaOnly: boolean;
     optional: boolean;
     placeholder?: string;

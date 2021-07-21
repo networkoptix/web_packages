@@ -11,13 +11,19 @@
             <section *ngFor="let structure of context.fields">
                 <label [for]="structure.name">{{structure.label}}</label>
                 <span *ngIf="structure.label">{{structure.name}}</span>
-                <input 
-                    [type]="structure.type"
-                    [name]="structure.name"
-                    [placeholder]="structure.placeholder || ''"
-                    [ngModel]="watchers[structure.name].value"
-                    (ngModelChange)="updateWatcher(structure.name, $event)"
-                    class="form-control">
+                <ng-container [ngSwitch]="structure.type">
+                    <nx-html *ngSwitchCase="INPUT_TYPE.HTML"
+                        [name]="structure.name"
+                        [ngModel]="watchers[structure.name].value"
+                        (ngModelChange)="updateWatcher(structure.name, $event)"></nx-html>
+                    <input *ngSwitchDefault
+                        [type]="structure.type"
+                        [name]="structure.name"
+                        [placeholder]="structure.placeholder || ''"
+                        [ngModel]="watchers[structure.name].value"
+                        (ngModelChange)="updateWatcher(structure.name, $event)"
+                        class="form-control">
+                </ng-container>
                 <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
                 <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
                     <span *ngFor="let error of errors" class="input-error">{{error}}</span>

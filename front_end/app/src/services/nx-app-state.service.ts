@@ -9,13 +9,13 @@ export class NxAppStateService {
     readySubject = new BehaviorSubject(false);
     authorizeSubject = new BehaviorSubject(false);
     ribbonSubject = new BehaviorSubject(false);
-    headerContainerHeight = new BehaviorSubject(81);
+    headerContainerHeight = new BehaviorSubject(48);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject(undefined);
     manualAccessSubject$ = new BehaviorSubject(false);
-    appContainerHeight = 'calc(100% - 81px)';
+    appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 
     constructor() {
@@ -66,6 +66,7 @@ export class NxAppStateService {
 
     set authorizing(authorize: boolean) {
         this.appContainerHeight = authorize ? '100%' : 'calc(100% - 81px)';
+        this.headerContainerHeight.next(authorize ? 81 : 48);
         this.authorizeSubject.next(authorize);
     }
 
