@@ -108,6 +108,8 @@ ${SYSTEMS TILE}                       //div[contains(@class,'system-button')]
 ${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL NOT OWNER}')]
 ${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
 ${USER IN SYSTEM}                     //nx-level-3-item//span[contains(@class,'user') and contains(text(),'%user%')]
+${NOPTIXAUTOQA SYSTEM ID}             a994749e-02a1-41c4-8ba4-ce3c4f91a40d
+${NOPTIXAUTOQA SYSTEM NAME}           ${SYSTEMS TILE}//h2[text()='d37113eeb066']
 
 ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
 &{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin    custom=custom
