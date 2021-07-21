@@ -203,7 +203,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     public onVideoEnded (e: MediaStreamEvent) {
         this._log('video ended');
-        this.playback.stop();
+        // Used to attempt jumping to live.
+        this.playback.restore(this.playback.canPlayArchive(-1));
     }
 }
 

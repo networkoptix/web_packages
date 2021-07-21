@@ -175,7 +175,7 @@ export class PlaybackService implements OnDestroy {
             t,
             this._state.quality,
             this._state.transport,
-            this.vms.selectedCamera.getPosterUrl(t, width, height)
+            this.vms.selectedCamera.getPosterUrl(this.vms.selectedCamera.isThereRecord(t) ? t : undefined, width, height)
         );
         this._state.paused = paused;
         this._log('archive playback initiated', t, paused, this._state.quality, this._state.currentTime, this._state.sourceUrl);
@@ -207,7 +207,7 @@ export class PlaybackService implements OnDestroy {
                 this._warn('PAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                if (this.vms.selectedCamera.isRecording && this.vms.selectedCamera.hasArchive) {
+                if (this.vms.selectedCamera.isRecording || this.vms.selectedCamera.hasArchive) {
                     this._log('camera is recording, transition to archive playback')
                     this.playArchive(Date.now(), true);
                 } else {
