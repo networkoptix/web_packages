@@ -678,9 +678,9 @@
         "successRename": "Nombre del servidor guardado."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Vista",
+        "Settings": "Ajustes",
+        "Information": "Información"
     },
     "system": {
         "connected": "Conectado",
