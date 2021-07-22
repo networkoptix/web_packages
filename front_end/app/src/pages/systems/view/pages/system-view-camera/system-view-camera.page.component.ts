@@ -46,6 +46,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     _warn: Function
 
     private readonly isMobile: boolean;
+    private readonly isChrome: boolean;
     public id: string
     public camera: ICamera
     public system: NxSystem
@@ -108,7 +109,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.isMobile = this.isMobile = utilsService.isMobile() || utilsService.isTablet();
+        this.isMobile = utilsService.isMobile() || utilsService.isTablet();
+        this.isChrome = utilsService.isChrome();
     }
 
     public handleControlsTogglingEarClick () {
@@ -610,20 +612,27 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetTransport () {
-        const transports = this.transports;
-        let transport = this.cameraTransportStorage.get(this.id);
-        if (!transport) {
-            if (transports.includes('hls')) {
-                transport = 'hls';
-            } else if (transports.includes('webm')) {
-                transport = 'webm';
-            } else {
-                transport = transports[0];
+        let transport;
+
+        if (this.isChrome && this.isMobile) {
+            transport = 'webm'; /// force mobile chrome to webm as it's more reliable
+        } else {
+            transport = this.cameraTransportStorage.get(this.id);
+            if (!transport) {
+                if (this.transports.includes('hls')) {
+                    transport = 'hls';
+                } else if (this.transports.includes('webm')) {
+                    transport = 'webm';
+                } else {
+                    transport = this.transports[0];
+                }
             }
         }
-        if (!transports.includes(transport)) {
-            transport = transports[0];
+
+        if (!this.transports.includes(transport)) {
+            transport = this.transports[0];
         }
+
         this.selectedTransport = transport;
     }
 

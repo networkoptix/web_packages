@@ -182,6 +182,10 @@ export class NxUtilsService {
         return this.deviceService.isMobile();
     }
 
+    public isChrome() {
+        return this.deviceService.browser === 'Chrome';
+    }
+
     /**
      * Return IPv4 address or IPv6 address if none
      */
