@@ -42,8 +42,12 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
         PACKAGE_CACHE[make_structure.request.id] = {"file": content, "file_name": file_name, "is_ready": True}
 
     data = []
-    assets = list(Asset.objects.filter(asset_type__type=asset_type) if asset_type else Asset.objects.filter(id=asset_id))
+    assets = list(Asset.objects.filter(asset_type__type=asset_type) if asset_type is not None else Asset.objects.filter(id=asset_id))
     total = len(assets)
+    if not total:
+        current_task.update_state(state='FAILED', meta={'current': 0, 'total': total, 'errors': ['No Assets to export']})
+        return
+
     user = Account.objects.get(pk=user_id)
 
     update_progress(0, total)
@@ -61,9 +65,7 @@ def make_structure(user_id, output_format='json', use_actual_values=True, asset_
         data.append(asset_dict)
     update_progress(total, total)
     single_html_asset = not asset_type and output_format == "html"
-    file_name = f"{data[0]['name']}-structure.{output_format}"
-    if asset_type:
-        file_name = f"{assets[0].asset_type}-all-structures.json"
+    file_name = f"{assets[0].asset_type}-all-structures.json" if asset_type is not None else f"{data[0]['name']}-structure.{output_format}"
 
     content = structure_to_html.process_structure_json(data[0]) if single_html_asset else json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
     update_complete(file_name.replace(" ", "_"), content)
