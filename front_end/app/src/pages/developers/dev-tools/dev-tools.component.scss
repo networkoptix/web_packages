@@ -31,6 +31,7 @@
 
 .detail-blocks {
     gap: 16px;
+    width: 100%;
     @include bootstrap.media-breakpoint-down(xs) {
        gap: 8px;
     }
