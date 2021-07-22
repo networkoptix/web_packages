@@ -94,7 +94,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             if (previousValue === undefined && currentValue) {
                 this.cleanUpWatchers(currentValue);
             }
-            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue) && !firstChange && !this.applyService.locked) {
+            if ((JSON.stringify(previousValue) !== JSON.stringify(currentValue) || !this.settingsWatchersSet) && !firstChange && !this.applyService.locked) {
                 this.setWatcherValues(currentValue);
             }
         }

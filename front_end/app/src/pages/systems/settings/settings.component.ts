@@ -439,7 +439,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     async updateMenu(system: NxSystem) {
-        if (system.isOnline || system.isAvailable) {
+        if (system.isOnline && system.isAvailable) {
             await system.apiVersionResolved$.toPromise();
         }
         this.systemNoAccess = false;

@@ -2,7 +2,7 @@ import {
     BehaviorSubject, of, Subscription,
     Observable, from
 }                                       from 'rxjs';
-import { filter, flatMap, map, take, tap }   from 'rxjs/operators';
+import { filter, flatMap, take, tap }   from 'rxjs/operators';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -58,6 +58,9 @@ export class NxSystem extends System {
     mediaserver: NxSystemAPI | NxSystemRestAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
+    systemIdInit: string;
+    serverIdInit: string;
+    userIdInit: string;
 
     /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
     #apiVersion = new BehaviorSubject(0);
@@ -154,6 +157,9 @@ export class NxSystem extends System {
     }
 
     async initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+        this.systemIdInit = systemId;
+        this.serverIdInit = serverId;
+        this.userIdInit = userId;
         this.id = systemId || serverId;
         this.isAvailable = false;
         this.isOnline = false;
@@ -166,20 +172,19 @@ export class NxSystem extends System {
         if (!this.mediaserver) {
             this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
                 /* Unauthorised request handler
-                 Some options here:
-                 - Access was revoked
-                 - System was disconnected from cloud\Password was changed
-                 - Nonce expired
-                 We try to update nonce and auth on the server again
-                 Other cases are not distinguishable
-                 */
+                Some options here:
+                - Access was revoked
+                - System was disconnected from cloud\Password was changed
+                - Nonce expired
+                We try to update nonce and auth on the server again
+                Other cases are not distinguishable
+                */
                 return this.updateSystemAuth(true);
             },
             this.useRest);
         }
         // Handling promise to satisfy the linter.
-        this.updateSystemAuth(true).then(() => {
-        });
+        this.updateSystemAuth(true).then(() => {});
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -197,6 +202,14 @@ export class NxSystem extends System {
         );
 
         this.storageManager = new StorageManager(this);
+    }
+
+    checkRestCompatibility() {
+        if (this.#apiVersion.value === 0 && this.cameraManager.moduleInfo.version) {
+            this.setApiVersion(this.cameraManager.moduleInfo.version);
+            this.initSystem(this.currentUserEmail, this.systemIdInit, this.serverIdInit, this.userIdInit);
+        }
+        return Promise.resolve();
     }
 
     updateSystemAuth(force = true) {
@@ -364,6 +377,7 @@ export class NxSystem extends System {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
+                .then(() => this.checkRestCompatibility())
                 .then(() => this.getUsers(true))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
