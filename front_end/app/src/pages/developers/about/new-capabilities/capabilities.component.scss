@@ -102,5 +102,13 @@
 
     & > .card-icon {
         margin-top: -40px;
+
+        & .brand-path {
+            fill: $brand-core;
+        }
+
+        & .brand-path-O {
+            stroke: $brand-core;
+        }
     }
 }
