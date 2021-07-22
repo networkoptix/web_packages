@@ -28,7 +28,7 @@ export class NxContentLandingBlockComponent {
         },
         arrowSmall: {
             width  : '40',
-            height : '40'
+            height : '24'
         }
     }
 

@@ -1,6 +1,76 @@
 @use '../../styles/theme_variables' as *;
 
+.content-block-wide{
+    @extend .content-block;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 28px 40px 40px 28px;
+    margin-bottom: 21px;
+    &  .header {
+        flex: 2 0px;
+        min-width: 320px;
+        & .title {
+            @extend .header-title;
+            @extend .large-header-text;
+            margin-left: 92px;
+            margin-top: 12px;
+            padding-right: 32px;
+        }
+    }
+    & .body {  
+            @extend .body-shared;
+            @extend .large-body-text;
+            flex: 3 0px;
+            & > p {
+                margin-top: 12px;
+                border-left: 2px solid;
+                border-color: var(--brand-core);
+                padding-left: 40px;
+            }
+    }
+}
 
+.content-block-adaptive {
+    @extend .content-block;
+    padding: 28px 40px 40px 28px;
+    & .header {
+        margin-top: 0px;
+        & .title {
+            @extend .header-title;
+            @extend .large-header-text;
+            margin-left: 92px;
+            margin-top: 12px;
+            padding-bottom: 12px;
+        }
+    }
+    & .body {
+        @extend .body-shared;
+        @extend .large-body-text;
+        margin-left: 92px;
+    }
+}
+
+.content-block-small {
+    @extend .content-block;
+    padding: 24px 28px 40px 24px;
+    min-height: 270px;
+    & .header {
+        margin-top: 0px;
+        & .title {
+            @extend .header-title;
+            @extend .small-header-text;
+            margin-top: 42px;
+            margin-left: 4px;
+            padding-top: 12px;
+        }
+    }
+    & .body {
+        @extend .body-shared;
+        @extend .small-body-text;
+        margin-top: 8px;
+        margin-left: 4px;
+    }
+}
 
 .content-block {
     background-color: $light1;
@@ -16,39 +86,9 @@
 }
 
 .content-block:hover .arrow-svg {
-    margin-left: 2px;
-}
-
-.content-block-wide {
-    @extend .content-block;
-    display: flex;
-    flex-flow: row wrap;
-    padding: 28px 40px 40px 28px;
-    margin-bottom: 40px;
-}
-
-.content-block-small {
-    @extend .content-block;
-    padding: 24px 28px 40px 24px;
-    min-height: 270px;
-}
-
-.content-block-adaptive {
-    @extend .content-block;
-    padding: 28px 40px 40px 28px;
-}
-
-.header-wide {
-    flex: 2 0px;
-    min-width: 320px;
-}
-
-.header-small {
-    margin-top: 0px;
-}
-
-.header-adaptive {
-    margin-top: 0px;
+    margin-left: 4px;
+    // This margin-right is applied during the arrow animation on hover so that the arrow does not wrap from getting the extra margin-left.
+    margin-right: -5px;
 }
 
 .svg-large {
@@ -78,45 +118,29 @@
     line-height: 24px;
 }
 
-.header-title-wide {
-    @extend .header-title;
-    @extend .large-header-text;
-    margin-left: 92px;
-    margin-top: 12px;
-    padding-right: 32px;
-}
-
-.header-title-adaptive {
-    @extend .header-title;
-    @extend .large-header-text;
-    margin-left: 92px;
-    margin-top: 12px;
-    padding-bottom: 12px;
-}
-
-.header-title-small {
-    @extend .header-title;
-    @extend .small-header-text;
-    margin-top: 72px;
-    margin-left: 4px;
-}
-
 .header-border-small {
     border-bottom: 2px solid;
     border-color: var(--brand-core);
-    margin-top: 16px;
+    margin-top: 18px;
     width: 56px;
-    margin-bottom: 16px;
-    margin-left: 4px
+    margin-bottom: 8px;
+    margin-left: 2px;
 }
 
 
 .arrow-svg {
-    transition: margin-left 160ms cubic-bezier(0.33, 1, 0.68, 1);
-    margin-left: -2px;
+    transition: margin 160ms cubic-bezier(0.33, 1, 0.68, 1);
+    // This is an in-line svg so it has negative margins on top and bottom so that when it wraps it does not push the text around.
+    margin: -23px 0px -20px 0px;
+    display: inline-block;
+    position: relative;
 }
 
-.body {
+.title-text {
+    text-align: justify!important;
+}
+
+.body-shared {
     font-family: $font-family-regular;
     color: $dark9;
     white-space: pre-wrap;
@@ -137,32 +161,9 @@
 .body-border-adaptive {
     border-top: 2px solid;
     border-color: var(--brand-core);
-    margin-bottom: 24px;
+    margin-bottom: 19px;
     width: 56px;
-    margin-top: 0px;
-}
-
-.body-wide {
-    @extend .body;
-    @extend .large-body-text;
-    flex: 3 0px;
-    border-left: 2px solid;
-    border-color: var(--brand-core);
-    padding-left: 40px;
-    margin-top: 12px;
-}
-
-.body-adaptive {
-    @extend .body;
-    @extend .large-body-text;
-    margin-left: 92px;
-}
-
-.body-small {
-    @extend .body;
-    @extend .small-body-text;
-    margin-top: 8px;
-    margin-left: 4px;
+    margin-top: 6px;
 }
 
 a:link {

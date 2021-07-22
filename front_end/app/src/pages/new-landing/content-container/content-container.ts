@@ -31,8 +31,8 @@ export class NxContentContainerComponent {
         header2          : 'Additional Features',
         firstSectionData : [
             {
-                title        : 'Viewing live and archive video',
-                content      : 's with the same credentials.\n \nUsers can see the list of all accessible systems on one screen.',
+                title        : 'Connect to your systems from anywhere',
+                content      : 'Login to your Nx Witness System from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
                 url          : 'https://youtube.com',
                 externalLink : true,
                 svg          : 'camera'
@@ -44,7 +44,7 @@ export class NxContentContainerComponent {
                 svg     : 'knowledgebase'
             },
             {
-                title   : 'Browser access to the system',
+                title   : 'Access the system in the browser',
                 content : 'Access the main system capabilities in the browser.\nView live and recorded videos, set up storage drives, activate licenses, enable recordings,\n\naccess system settings and view health report using the browser.',
                 url     : '',
                 svg     : 'desktop'

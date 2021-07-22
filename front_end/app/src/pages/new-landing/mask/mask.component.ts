@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
 import { NxLandingService } from '../landing.service';
@@ -8,7 +8,7 @@ import { NxLandingService } from '../landing.service';
     templateUrl : './mask.component.html',
     styleUrls   : ['./mask.component.scss']
 })
-export class NxMaskComponent implements OnChanges, AfterViewInit {
+export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() scrollPosition = 820;
     componentInitialized = false;
     scale =  2;

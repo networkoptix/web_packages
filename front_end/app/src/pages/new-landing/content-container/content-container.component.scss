@@ -19,13 +19,20 @@
     text-align: center;
     margin: auto;
     display: block;
-    margin-bottom: 40px;
+    margin-bottom: 15px;
     margin-top: 80px;
     font-family: $font-family-medium;
     color: $dark9;
     font-size: 44px;
     position: relative;
     z-index: 2;
+}
+
+.card-grid-header {
+    @extend .header;
+    @media screen and (min-width:770px){
+        margin-bottom: 25px;
+    }
 }
 
 @mixin flex-grid {
@@ -37,12 +44,14 @@
 }
 
 .card-grid {
+    // margin-top: 25px;
     @media screen and (min-width: 770px){
         @include flex-grid;
     }
 }
 
 .card-grid-two-cards {
+    margin-top: 25px;
     @media screen and (min-width: 993px){
         @include flex-grid;
     }

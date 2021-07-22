@@ -28,7 +28,7 @@ export class NxLandingService {
         let scrollDebounce = 10;
         if (platform.FIREFOX) {
             // small bandaid for firefox... i dont think its enough
-            scrollDebounce = 20;
+            scrollDebounce = 14;
         }
         this.screenSize$ = scrollMechanics.windowSizeSubject.pipe(debounceTime(40), untilDestroyed(this),  shareReplay(1));
         this.scrollPosition$ = scrollMechanics.windowScrollSubject.pipe(debounceTime(scrollDebounce), startWith(0), untilDestroyed(this), map(value => value < this.scrollBreakpoints.showGraphics ? value : this.scrollBreakpoints.showGraphics), shareReplay(1));

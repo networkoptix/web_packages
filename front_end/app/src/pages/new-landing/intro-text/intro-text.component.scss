@@ -29,7 +29,7 @@
 .root-container-absolute {
     @extend .root-container;
     @extend .position-absolute-element;
-    top: 915px;
+    top: 895px;
 }
 
 .root-container-fixed {
@@ -101,7 +101,7 @@
 .button-container-absolute {
     @extend .position-absolute-element;
     @extend .button-container;
-    top: 1240px;
+    top: 1220px;
 }
 
 

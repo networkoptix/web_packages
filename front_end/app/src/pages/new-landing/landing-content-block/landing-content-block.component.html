@@ -16,19 +16,13 @@
 
 
 <ng-template #contentBlock >
-    <div class="card"  
+<div class="card"  
     [ngClass]="{
         'content-block-wide': type==='wide', 
         'content-block-small': type==='small', 
         'content-block-adaptive': type==='adaptive' 
-    }"
-    >
-    <div
-        [ngClass]="{
-            'header-wide': type==='wide',
-            'header-adaptive': type === 'adaptive',
-            'header-small': type === 'small'
-        }">
+    }">
+    <div class="header">
         <svg-icon nx-add-svg-src 
             [ngClass]="{
                 'svg-large': type === 'wide' || 'adaptive',
@@ -38,18 +32,13 @@
             [svgStyle]="{'width.px': svgSizes.mainSvg.width, 'height.px': svgSizes.mainSvg.height}"
             [applyClass]="true">
         </svg-icon>
-        <div 
-            [ngClass]="{
-                'header-title-wide': type === 'wide',
-                'header-title-adaptive': type === 'adaptive',
-                'header-title-small': type === 'small'
-            }"> 
+        <div class="title">
             <div *ngIf="type === 'small'" class="header-border-small"></div>
-            {{ title }}
+            <span class="title-text">{{ title }}</span>
             <svg-icon 
                 *ngIf="url"
                  nx-add-svg-src 
-                [class]="'arrow-svg'"
+                 class="arrow-svg"
                 [src]="CONFIG.images.dirLanding + (type === 'small'?'arrow_small.svg':'arrow_large.svg')"
                 [svgStyle]="type === 'small'?{'width.px': svgSizes.arrowSmall.width, 'height.px': svgSizes.arrowSmall.height}:
                                              {'width.px': svgSizes.arrowLarge.width, 'height.px': svgSizes.arrowLarge.height}"
@@ -57,13 +46,9 @@
             </svg-icon>
         </div>
     </div>
-    <div 
-        [ngClass]="{
-            'body-wide': type === 'wide',
-            'body-adaptive': type === 'adaptive',
-            'body-small': type === 'small'
-        }">
-        <div *ngIf="type == 'adaptive'" class="body-border-adaptive"></div>{{ content }}
+    <div class="body">
+        <div *ngIf="type == 'adaptive'" class="body-border-adaptive"></div>
+        <p>{{ content }}</p>
     </div>
 </div>
 </ng-template>

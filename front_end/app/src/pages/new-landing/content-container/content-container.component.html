@@ -24,7 +24,7 @@
             [ngTemplateOutlet]="card" 
             [ngTemplateOutletContext]="{block: block, type: 'wide'}">
         </ng-container>
-        <div class="header">{{ data.header2 }}</div>
+        <div class="card-grid-header">{{ data.header2 }}</div>
         <div nxMatchHeight [classToMatch]="'card-item'" [ngClass]="data.cardData.length !== 2?'card-grid':'card-grid-two-cards'">
             <ng-container 
                 *ngFor="let block of data.cardData" 
