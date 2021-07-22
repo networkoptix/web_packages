@@ -48,7 +48,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public ngOnInit (): void {
         this._stateSubscription = this.timeline.subject.subscribe(this._onTimelineStatusChange);
         this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+            requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     public onAnimationFrame (): void {
@@ -60,8 +60,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+        setTimeout(() => {
+            this._animationFrameRequestHandler =
+                requestAnimationFrame(() => this.onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public ngOnDestroy (): void {

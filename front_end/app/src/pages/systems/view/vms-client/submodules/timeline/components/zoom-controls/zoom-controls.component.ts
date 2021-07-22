@@ -34,13 +34,15 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
     public onAnimationFrame (): void {
         this.performZoomingStep();
-        this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this));
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public ngOnInit (): void {
         this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
         this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange);
-        this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this));
+        this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     public ngOnDestroy (): void {

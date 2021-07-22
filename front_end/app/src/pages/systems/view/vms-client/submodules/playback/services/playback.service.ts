@@ -70,15 +70,16 @@ export class PlaybackService implements OnDestroy {
         protected timeline: TimelineService
     ) {
         this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+            requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     protected _animationFrameRequestHandler: number
 
     public onAnimationFrame (): void {
         this.handleAnimationFrame();
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public ngOnDestroy (): void {

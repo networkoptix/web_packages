@@ -525,8 +525,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.timelineExtendToNow.extendToNow();
         }
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(() => this._onAnimationFrame());
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this._onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public get showTimeline (): boolean {
