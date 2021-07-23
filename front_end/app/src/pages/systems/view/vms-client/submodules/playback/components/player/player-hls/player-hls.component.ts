@@ -141,7 +141,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         // @ts-ignore
         const sourceUrl = this.state?.sourceUrl || '';
         // @ts-ignore
-        const posterUrl = this.state?.posterUrl || null;
+        const posterUrl = `${this.state?.posterUrl}&rotate=0` || null;
 
         this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
 

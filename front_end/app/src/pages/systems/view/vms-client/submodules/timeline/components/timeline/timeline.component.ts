@@ -5,9 +5,10 @@ import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.s
 import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
 import TimelineSelectionService from '../../services/timeline.selection.service';
 import PlaybackService from '../../../playback/services/playback.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 const CANVAS_SELECTION_HEIGHT = 50;
 const MOUSE_MINIMAL_MOVE_PX = 2;
@@ -25,6 +26,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _state: TimelineServiceStatus
     protected _stateSubscription: Subscription
+    private updateCanvas = new Subject();
+    private unsub$ = new Subject();
 
     constructor(
         public timeline: TimelineService,
@@ -39,7 +42,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _onTimelineStatusChange (s: TimelineServiceStatus) {
         if (s.canvasGeometryUpdateRequested) {
-            this._updateCanvasGeometry();
+            this.updateCanvas.next();
         }
     }
 
@@ -52,8 +55,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public onAnimationFrame (): void {
-        this._updateCanvasGeometry(); // actually shouldn't happen that often
-
         const ctx = (this.canvasView.nativeElement as HTMLCanvasElement).getContext('2d');
         // console.log('render #', times_rendered)
         this.canvasRenderer.render(ctx);
@@ -67,6 +68,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy (): void {
+        this.unsub$.next();
         this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
@@ -74,14 +76,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public ngAfterViewInit (): void {
         window.addEventListener(
             'resize',
-            this._updateCanvasGeometry.bind(this)
+            () => this.updateCanvas.next()
         );
 
-        window.matchMedia('screen and (min-resolution: 2dppx)').addListener(
-            this._updateCanvasGeometry.bind(this)
-        );
-
-        setTimeout(this._updateCanvasGeometry.bind(this), 0);
+        setTimeout(() => this.updateCanvas.next());
+        this.updateCanvas.pipe(
+            debounceTime(50),
+            takeUntil(this.unsub$)
+        ).subscribe(() => this._updateCanvasGeometry());
     }
 
     protected _updateCanvasGeometry (): void {
