@@ -295,6 +295,16 @@ def toggle2fa(request):
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="If true then the user has accepted the cookie policy and the cookie banner will not appear.",
+                     responses={"200": "Ok"})
+@api_view(['POST'])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def review_cookie(request):
+    request.user.cookie_reviewed = True
+    request.user.save()
+    return api_success()
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
