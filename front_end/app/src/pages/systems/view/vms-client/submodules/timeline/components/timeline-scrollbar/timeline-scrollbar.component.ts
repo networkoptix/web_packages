@@ -69,7 +69,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
             });
         });
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this._animationFrameRequestHandler = requestAnimationFrame(this.onAnimationFrame.bind(this));
+        this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
         setTimeout(() => this.onResize(), 0);
     }
 
@@ -248,8 +248,9 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
 
     public onAnimationFrame (): void {
         this.scrollbarRelative.updateIfMouseIsDown();
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     @HostListener('window:resize', ['$event'])

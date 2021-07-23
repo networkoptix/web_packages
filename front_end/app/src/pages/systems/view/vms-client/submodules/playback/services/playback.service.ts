@@ -39,20 +39,47 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
+    protected extractDimensions(): number[] {
+        let { quality, transport } = this._state;
+
+        let height = null;
+        let width = null;
+        if (quality) {
+            // If its hls we need to find another transport w/ a similar quality
+            if (transport === 'hls') {
+                const transportsAndResolutions = this.vms.selectedCamera.availableTransportsAndResolutions;
+                const transports = Object.keys(transportsAndResolutions);
+                if (transports.length > 1) {
+                    const parsedQuality = quality === 'hi' ? 'high' : 'low';
+                    const nonHlsTransport = transports.find((_transport) => _transport !== 'hls' && parsedQuality in transportsAndResolutions[_transport]);
+                    if (nonHlsTransport) {
+                        quality = transportsAndResolutions[nonHlsTransport][parsedQuality];
+                    }
+                }
+            }
+            // If quality is missing x then there were no other transports w/ the same quality.
+            if (quality.includes('x')) {
+                [width, height] = quality.split('x');
+            }
+        }
+        return [parseInt(width), parseInt(height)];
+    }
+
     constructor(
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService
     ) {
         this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+            requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     protected _animationFrameRequestHandler: number
 
     public onAnimationFrame (): void {
         this.handleAnimationFrame();
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(this.onAnimationFrame.bind(this));
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public ngOnDestroy (): void {
@@ -114,11 +141,12 @@ export class PlaybackService implements OnDestroy {
         if (!this.canPlayLive) {
             return;
         }
+        const [width, height] = this.extractDimensions();
         this._state = createInitialLiveState(
             this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality),
             this._state.quality,
             this._state.transport,
-            this.vms.selectedCamera.getPosterUrl()
+            this.vms.selectedCamera.getPosterUrl(undefined, width, height)
         );
         this._log('started live', this._state.quality, this._state.currentTime, this._state.sourceUrl);
         this._emit();
@@ -142,12 +170,13 @@ export class PlaybackService implements OnDestroy {
                 return this.playLive()
             }
         }
+        const [width, height] = this.extractDimensions();
         this._state = createInitialArchiveState(
             this.vms.selectedCamera.getVideoUrl(this._state.transport, this._state.quality, t),
             t,
             this._state.quality,
             this._state.transport,
-            this.vms.selectedCamera.getPosterUrl(t)
+            this.vms.selectedCamera.getPosterUrl(this.vms.selectedCamera.isThereRecord(t) ? t : undefined, width, height)
         );
         this._state.paused = paused;
         this._log('archive playback initiated', t, paused, this._state.quality, this._state.currentTime, this._state.sourceUrl);
@@ -179,7 +208,7 @@ export class PlaybackService implements OnDestroy {
                 this._warn('PAUSE request while playback mode is STOPPED');
                 break;
             case PLAYBACK_MODE.LIVE:
-                if (this.vms.selectedCamera.isRecording) {
+                if (this.vms.selectedCamera.isRecording || this.vms.selectedCamera.hasArchive) {
                     this._log('camera is recording, transition to archive playback')
                     this.playArchive(Date.now(), true);
                 } else {

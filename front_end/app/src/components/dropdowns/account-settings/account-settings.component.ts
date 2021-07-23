@@ -27,7 +27,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     accountSubscription: SubscriptionLike;
     widthSubscription: SubscriptionLike;
 
-    settings: Pick<Account, 'email' | 'is_staff' | 'is_superuser'> = {
+    settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser'> = {
+        name         : '',
         email        : '',
         is_staff     : false,
         is_superuser : false
@@ -46,12 +47,14 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
-                        email        : account.email || account.first_name,
+                        name         : account.name,
+                        email        : account.email,
                         is_staff     : account.is_staff,
                         is_superuser : account.is_superuser
                     };
                 } else {
                     this.settings = {
+                        name         : '',
                         email        : '',
                         is_staff     : false,
                         is_superuser : false

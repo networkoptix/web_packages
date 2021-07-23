@@ -3,9 +3,11 @@ import { environment } from '@environments/environment';
 
 export function setupConfig(): IConfig {
     return {
-        alertTimeout                 : 3 * 1000, // Alerts are shown for 3 seconds,
-        pollingTimeout               : 30 * 1000,
-        animations                   : {
+        alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
+        pollingTimeout         : 30 * 1000,
+        extendedRequestTimeout : 15 * 1000,
+
+        animations             : {
             carouselImage: {
                 enter: '0.25s ease-in',
                 leave: '0.25s ease-out'

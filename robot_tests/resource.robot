@@ -133,7 +133,6 @@ Log In Web Admin
     Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     Input Text    //input[@id="login_email"]    ${login}
     Input Text    //input[@id="login_password"]    ${password}
-    #Sleep    5
     Click Button    //button[@type="submit"]
 
 
@@ -160,13 +159,12 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Log in to system
-    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
     Go To    ${url}
-    Log In    ${email}    ${password}    validate=${False}    button=${None}
-    Reload Page
+    Log In    ${email}    ${password}    validate=${validate}    button=${None}
 
 Validate Log In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
@@ -528,8 +526,8 @@ Check For Alert Dismissable
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
-    Run Keyword If    ${editable}    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
-        ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
+    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
+    ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration
@@ -548,8 +546,8 @@ Disconnect from my account
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    ${alert}=   Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
-    Check For Alert Dismissable    ${alert}    timeout=300
+    ${alert}=   Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${system name}
+    Check For Alert    ${alert}    timeout=300
 
 Failure Tasks
     [timeout]    5 minutes
@@ -845,11 +843,19 @@ Get Key from Value
     END
 
 Create Local Users via API
-    [Arguments]    ${auth}    ${server}    ${local users}    ${password}
-    FOR    ${user}    IN    @{local users}
+    [Arguments]    ${auth}    ${server}    ${locals}    ${password}
+    &{local users} =    Create Dictionary
+    &{advancedViewer} =    Create Dictionary
+    &{cloudAdmin} =    Create Dictionary
+    &{custom} =    Create Dictionary
+    &{liveViewer} =    Create Dictionary
+    &{viewer} =    Create Dictionary
+    FOR    ${user}    IN    @{locals}
         Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+        Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
+        Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
-    [return]    @{local users}
+    [return]    ${local users}
 
 Delete All Local Users
     [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
@@ -1062,10 +1068,10 @@ Create Base System
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
     ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
-
     # If add users is true add local users.  Add cloud users if both are true.
-    ${local users}=   Run Keyword If    $add_users    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${server}[port]
-    ${cloud users}=   Run Keyword If    $add_users and $owner   Register and Activate Generic Users
+    @{local users}=    Get Dictionary Keys    ${role names}
+    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${BASE PASSWORD}
+    ${cloud users}=    Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
     # Add local auth to dict

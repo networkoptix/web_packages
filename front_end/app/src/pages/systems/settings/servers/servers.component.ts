@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angula
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject }               from 'rxjs';
 import {
-    delay, filter, map, retryWhen, skip, switchMap, takeUntil
+    delay, filter, map, retryWhen, switchMap
 }                                        from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
@@ -18,7 +18,7 @@ import { NxUriService }                  from '../../../../services/uri.service'
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxProcessService }              from '../../../../services/process.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'nx-server-component',
     templateUrl : 'servers.component.html',
@@ -32,8 +32,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     serverIdFromParams;
     selectedServer;
     serverId$ = new BehaviorSubject('')
-
-    routeParamsSubscription: Subscription;
 
     advanced: boolean;
     params: Params;
@@ -62,36 +60,40 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.routeParamsSubscription = this.route
-            .params
-            .subscribe(routeParams => {
-                if (routeParams.serverId) {
-                    this.params = this.route.snapshot.queryParams;
-                    this.advanced = (this.params.advanced !== undefined);
+        this.route.params.pipe(
+            untilDestroyed(this)
+        ).subscribe(({ serverId }) => {
+            if (!serverId) {
+                return;
+            }
+            this.params = this.route.snapshot.queryParams;
+            this.advanced = (this.params.advanced !== undefined);
 
-                    this.serverIdFromParams = routeParams.serverId
-                        .replace('%7B', '{')
-                        .replace('%7D', '}');
+            this.serverIdFromParams = serverId
+                .replace('%7B', '{')
+                .replace('%7D', '}');
 
-                    if (this.serverIdFromParams.indexOf('?') > -1) {
-                        this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
-                    }
+            if (this.serverIdFromParams.indexOf('?') > -1) {
+                this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
+            }
 
-                    this.menuService.detail = this.serverIdFromParams;
+            this.menuService.detail = this.serverIdFromParams;
 
-                    this.setServer(true);
-                }
-            });
+            this.setServer(true);
+        });
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 
         this.settingsService.systemSubject
             .pipe(
                 filter(data => data !== undefined),
-                switchMap((system) => {
+                switchMap(async(system) => {
                     this.isOffline = !system.isOnline;
                     this.settingsService.footerSubject.next(true);
                     if (system && (!this.system || !this.CONFIG.isLocal)) {
+                        if (system.isOnline && system.isAvailable) {
+                            await system?.apiVersionResolved$.toPromise();
+                        }
                         this.system = system;
                         (
                             this.CONFIG.isLocal
@@ -113,12 +115,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             }
                         });
                     }
-                    return this.system.infoSubject;
+                    return this.system.infoSubject.value;
                 }),
                 map(system => {
-                    if (!system.servers || system.servers.length === 0) {
+                    if (!system.serverManager.servers || system.serverManager.servers.length === 0) {
                         throw system;
                     }
+                    return system;
                 }),
                 retryWhen(err => err.pipe(delay(1000))),
                 untilDestroyed(this)
@@ -160,13 +163,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         if (this.system && this.system.servers && this.system.servers.length > 0) {
             let server;
             if (this.serverIdFromParams) {
-                server = this.system.servers.find((server: any) => {
+                server = this.system.serverManager.servers.find((server: any) => {
                     return server.id === `{${this.serverIdFromParams}}`;
                 });
             }
             if (typeof server === 'undefined') {
-                if (this.system.servers.length > 0 || this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
-                    server = this.system.servers[0];
+                if (this.system.serverManager.servers.length > 0 || this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
+                    server = this.system.serverManager.servers[0];
                     const id = NxUtilsService.cleanId(server.id);
                     let path = this.CONFIG.menus.systemSettings.baseUrl;
                     path += (this.CONFIG.isLocal) ? '' : `${this.system.id}`;
@@ -192,11 +195,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.serverId$.next(this.selectedServer.id);
             }
             this.system.storageManager.serverId = this.selectedServer.id;
-            // if (this.system.storageManager.serverId !== this.selectedServer.id) {
-            //     this.system.storageManager.serverId = this.selectedServer.id;
-            // } else {
-            //     this.system.storageManager.update();
-            // }
         }
     }
 }

@@ -40,10 +40,10 @@ The logo takes you to the systems page when logged in
     [Tags]    C41540
     Open Browser and go to URL    ${url}/register
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Go To    ${url}/${AUTO_TESTS SYSTEM ID}
+    Go To    ${url}/${NOPTIXAUTOQA SYSTEM ID}
     Wait Until Element Is Visible    ${HEADER ICON LINK}
     Click Link    ${HEADER ICON LINK}
-    Wait Until Element Is Visible    ${AUTO TESTS TITLE}
+    Wait Until Element Is Visible    ${NOPTIXAUTOQA SYSTEM NAME}
     Location Should Be    ${url}/systems
 
 Language can be changed on landing page

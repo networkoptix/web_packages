@@ -20,7 +20,7 @@ $(document).ready(function() {
         if (previewUrlList) {
             const previewFrame = document.getElementsByClassName('previewFrame')[0] || document.getElementById('content-preview')
             const customPreviewFromQueryParam = new URLSearchParams(window.location.search).get('customPreview')
-            if (customPreviewFromQueryParam) {
+            if (previewFrame && customPreviewFromQueryParam) {
                 previewFrame.src = customPreviewFromQueryParam
             }
             const previewWrapper = previewFrame.parentNode

@@ -20,34 +20,36 @@
     align-items: center;
     flex-direction: column;
     margin: 96px auto 0 auto;
+    max-width: 1440px;
     padding: 0 16px;
-    max-width: 1200px;
     color: $dark10;
     @include bootstrap.media-breakpoint-down(xs) {
         margin-top: 36px !important;
+        padding: 0 21px;
     }
 }
 
 .detail-blocks {
-    margin-right: -16px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    @include bootstrap.media-breakpoint-down(xs) {
+       gap: 8px;
+    }
 }
 
 .tool-card {
-    height: 242px;
-    flex: 1 0 20%;
-    min-width: 275px;
-    margin: 0 16px 16px 0;
     cursor: pointer;
-
+    min-height: 242px;
     & > header {
         background: $additional_light1;
         padding: 16px 0 18px 16px;
         & > svg-icon > svg {
             height: 48px;
         }
+    }
+
+    @include bootstrap.media-breakpoint-down(xs) {
+        flex: 0 1 100% !important;
     }
 }
 

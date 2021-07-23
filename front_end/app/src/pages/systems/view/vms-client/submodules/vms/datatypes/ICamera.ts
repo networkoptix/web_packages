@@ -82,7 +82,7 @@ export interface ICamera {
     thumbnailUrl: string,
 
     getVideoUrl: (transport: string, quality: string, t?: ms) => string,
-    getPosterUrl(t?: ms),
+    getPosterUrl(t?: ms, width?: number, height?: number),
     getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
     setRecords(range: ISimpleTimeRange, records: CameraArchive)
 

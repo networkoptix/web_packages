@@ -5,12 +5,14 @@ export function LoggerDecorator (prefix: string = '', disable: boolean = false) 
         return class extends constructor {
             protected _log (...args: any[]) {
                 if (isDevMode() && !disable) {
+                    // eslint-disable-next-line no-useless-call
                     console.log.apply(console, [prefix, ...arguments]);
                 }
             }
 
             protected _warn (...args: any[]) {
                 if (isDevMode() && !disable) {
+                    // eslint-disable-next-line no-useless-call
                     console.warn.apply(console, [prefix, ...arguments]);
                 }
             }

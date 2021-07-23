@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Health Monitor Setup
-Test Setup        Common Restart Logout    ${url}
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+Suite Setup       Health Monitor Suite Setup
+Test Setup        Health Monitor Test Setup
+Test Teardown     Health Monitor Test Teardown
 Suite Teardown    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 
@@ -11,21 +11,39 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
-Health Monitor Setup
-    Open Browser and go to URL    ${url}
-    #system(name,port,cont,owner,id) 
-    #local auth, cloud auth, server url, 
-    #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
-    Create Base Cloud System    image=32750
-    
-    #name, port, id
-    ${system 2}=   Setup Docker Server    image=32750
-    Set Suite Variable    ${system 2}    ${system 2}
-    Setup Local System    https://${QA BURBANK IP}:${system 2['port']}    ${password}    HMserver2
-    ${system 2['cloud id']}=   Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${system 2['port']}    HMserver2    ${system['owner']}    ${password}
-    Set Suite Variable    ${system 2['cloud id']}    ${system 2['cloud id']}
-    Sleep    30
-    Stop Docker Server    ${system 2['id']}
+Health Monitor Suite Setup
+    ${owner}=   Register and activate account with random email    mark    hamill    ${password}
+    ${random}=   Generate Random String
+    ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
+    ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
+    Set Suite Variable    ${server 1}    ${server 1}
+    Set Suite Variable    ${server 2}    ${server 2}
+    Stop Docker Server    ${server 2}[id]
+    Open Browser and go to URL    ${ENV}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[owner]
+    ...    ELSE   Set Suite Variable     ${user in charge}    admin
+
+Health Monitor Test Setup
+    [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
+    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
+
+Cloud Test Setup
+    [Arguments]    ${server}    ${user}    ${verify}
+    Log in to system    ${server}    ${user}    validate=${True}
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+
+Web Admin Test Setup
+    [Arguments]    ${server}    ${user}    ${verify}
+    Skip If Irrelevant
+    Log in to system    ${server}    ${user}    validate=${True}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    2
+
+Health Monitor Test Teardown
+    ${status}=   Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword and Return Status    Validate Log Out
+    ...    ELSE    Run Keyword and Return Status    Validate Log Out Web Admin
+    Run Keyword Unless    ${status}    Log Out
 
 Open New Browser On Failure
     Close Browser
@@ -101,59 +119,49 @@ Check Details Panel Alerts
 
 Health Monitor Suite Teardown
     Close All Browsers
-    Disconnect Server via API    ${local auth}    ${system['id']}    ${password}    ${system['owner']}
-    Disconnect Server via API    ${local auth}    ${system 2['id']}    ${password}    ${system['owner']}
-    Stop Docker Server    ${system['id']}
-    Stop Docker Server    ${system 2['id']}
-    Delete Docker Server    ${system['id']}
-    Delete Docker Server    ${system 2['id']}
-
+    Delete Base System    ${server 1}
+    Delete Base System    ${server 2}
 
 *** Test Cases ***
-Owner Has Access to Health Monitoring
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
+Owner/admin Has Access to Health Monitoring
+    [Tags]    cloud    webadmin
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Admin Has Access to Health Monitoring
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${users['cloudAdmin']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][cloudAdmin]
+    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][1]
+    Sleep    1
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
 Going to Health Monitor when System is Offline Shows Offline Message
-    Log In    ${system['owner']}    ${password}
-    Go To    ${url}/systems/${system 2['cloud id']}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud
+    [Setup]    Health Monitor Test Setup    server=${server 2}    verify=${False}
+    Sleep    5
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible    ${HM SYSTEM OFFLINE}    ${HM SYSTEM CANNOT BE ACCESSED}
 
 Json Upload Works
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
-
-
     # More elements need to be added here when JSON files are finalized like system name and stuff
     #Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
 
 Json Upload Works on Offline System
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud
+    [Setup]    Health Monitor Test Setup    server=${server 2}
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Upload Json    one-page
-
 
     # More elements need to be added here when JSON files are finalized like system name and stuff
     Validate Uploaded Alerts Page
@@ -161,48 +169,44 @@ Json Upload Works on Offline System
 
 
 Advanced Viewer Does Not Have Access To Health Monitor
-    # Advanced Viewer
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${users['advancedViewer']}    ${password}    button=None
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    [Tags]    cloud    webadmin
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][advancedViewer]
+    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][0]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${users['viewer']}    ${password}    button=None
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    [Tags]    cloud    webadmin
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][viewer]
+    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][4]   
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 Live Viewer Does Not Have Access To Health Monitor
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${users['liveViewer']}    ${password}    button=None
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    [Tags]    cloud    webadmin
+    [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][liveViewer]
+    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][3]   
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
 No Alerts Message Shows When There Are No Alerts
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
+    [Tags]    cloud    webadmin
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    no-alerts
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Can Close Out of Json Imported Mode
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
@@ -214,10 +218,8 @@ Can Close Out of Json Imported Mode
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
 Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-of-each
@@ -228,11 +230,8 @@ Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header 
     Count All Alerts and Validate Totals Shown
 
 Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
-    [Tags]    C69785
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    C69785    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-page
@@ -245,12 +244,11 @@ Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
     Should Not Be Equal As Integers    ${pages}    1
     Count All Alerts and Validate Totals Shown
+    Set Window Size    1920    1080
 
 Hardware Types with Only One Item Should Show Tiles and not Show Tables
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    solo-hardware
@@ -286,10 +284,8 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     Page Should Not Contain Element    ${HM TABLE}
 
 Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
-    Go To    ${url}/systems/${system['id']}
-    Log In    ${system['owner']}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    [Tags]    cloud    webadmin
+    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
     Upload Json    one-of-each
@@ -304,21 +300,16 @@ Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     Click Link    ${HM SERVERS PAGE LINK}
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
 
     Click Link    ${HM CAMERAS PAGE LINK}
-    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
+    sleep    5
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
 
     Click Link    ${HM INTERFACES PAGE LINK}
-    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
 
     Click Link    ${HM STORAGES PAGE LINK}
-    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}

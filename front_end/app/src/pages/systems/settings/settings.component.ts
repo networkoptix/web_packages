@@ -294,7 +294,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
-                            .subscribe((systems) => {
+                            .subscribe(async(systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
                                     return;
@@ -302,7 +302,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 if (this.systemId === this.system?.id) {
                                     return;
                                 }
-                                this.system = this.systemService.createSystem(this.account.email, this.systemId);
+                                this.system = await this.systemService.createSystem(this.account.email, this.systemId);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
                                     this.systemNoAccess = true;
@@ -339,7 +339,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             this.system.mediaserver.getAggregateHealthReport().subscribe();
                                         }
 
-                                        this.updateMenu();
+                                        this.updateMenu(this.system);
                                     });
 
                                 if (this.connectionSubscription) {
@@ -370,7 +370,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.systemInfoSubscription = this.system.infoSubject.subscribe(() => {
                             this.systemReady();
                             this.updateAlert();
-                            this.updateMenu();
+                            this.updateMenu(this.system);
                         });
                     }
                 }
@@ -438,7 +438,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    updateMenu() {
+    async updateMenu(system: NxSystem) {
+        if (system.isOnline && system.isAvailable) {
+            await system.apiVersionResolved$.toPromise();
+        }
         this.systemNoAccess = false;
 
         this.content.system = this.system;
@@ -582,6 +585,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         disabled        : server.status.toLowerCase() === 'offline'
                     });
                 });
+                serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0]?.id || '')}`;
             }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);

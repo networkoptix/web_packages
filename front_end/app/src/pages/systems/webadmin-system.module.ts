@@ -36,7 +36,8 @@ export const localSettingsRoutes: Routes = [
             {
                 path          : 'advanced',
                 component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                canDeactivate : [ApplyGuard],
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'users',
@@ -53,12 +54,14 @@ export const localSettingsRoutes: Routes = [
             {
                 path          : 'servers',
                 component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard]
+                canDeactivate : [ApplyGuard],
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'servers/:serverId',
                 component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard]
+                canDeactivate : [ApplyGuard],
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'cameras',

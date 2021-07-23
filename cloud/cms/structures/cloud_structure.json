@@ -535,6 +535,15 @@
             "value": true,
             "description": "Tls for smtp server",
             "advanced": true
+          },
+          {
+            "label": "SMTP Disabled",
+            "name": "%SMTP_DISABLED%",
+            "type": "check_box",
+            "value": false,
+            "description": "Notifies that emails are disabled for this customization. Important! this does not disable emails by itself and is only an indicator. To disable emails make some of the smtp credentials invalid.",
+            "advanced": true,
+            "optional": true
           }
         ]
       },

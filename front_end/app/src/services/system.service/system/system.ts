@@ -1,9 +1,9 @@
 import {
     BehaviorSubject, of, Subscription,
     Observable, from
-}                               from 'rxjs';
-import { flatMap, switchMap }   from 'rxjs/operators';
-import { v4 as uuid }           from 'uuid';
+}                                       from 'rxjs';
+import { filter, flatMap, switchMap, take, tap }   from 'rxjs/operators';
+import { v4 as uuid }                   from 'uuid';
 
 import { ServerManager }    from './server-manager/server-manager';
 import { UserManager }      from './user-manager/user-manager';
@@ -53,6 +53,7 @@ export class NxSystem extends System {
     storageManager: StorageManager
 
     private _subscribersCount = new BehaviorSubject<number>(0);
+    private attempts = 0; // used to limit consecutive api call attempts
 
     activeSubscription: Subscription;
     show404 = false;
@@ -60,9 +61,13 @@ export class NxSystem extends System {
     mediaserver: NxSystemAPI | NxSystemRestAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
+    systemIdInit: string;
+    serverIdInit: string;
+    userIdInit: string;
 
     /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
-    #apiVersion = 0;
+    #apiVersion = new BehaviorSubject(0);
+    apiVersionResolved$ = this.#apiVersion.pipe(filter(version => !!version), take(1))
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -73,11 +78,11 @@ export class NxSystem extends System {
 
     /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
     setApiVersion(version: string | number) {
-        this.#apiVersion = typeof version === 'string' ? parseFloat(version) : version;
+        this.#apiVersion.next(typeof version === 'string' ? parseFloat(version) : version);
     }
 
     get useRest() {
-        return this.#apiVersion >= NxSystemRestAPI.supportedVersion;
+        return this.#apiVersion.value >= NxSystemRestAPI.supportedVersion;
     }
 
     get subscriberCount() {
@@ -89,7 +94,7 @@ export class NxSystem extends System {
     }
 
     get isAvailable() {
-        return this._isAvailable;
+        return this._isAvailable && !!this.#apiVersion.value;
     }
 
     set isAvailable(value) {
@@ -154,7 +159,10 @@ export class NxSystem extends System {
         }
     }
 
-    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+    async initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+        this.systemIdInit = systemId;
+        this.serverIdInit = serverId;
+        this.userIdInit = userId;
         this.id = systemId || serverId;
         this.isAvailable = false;
         this.isOnline = false;
@@ -164,21 +172,22 @@ export class NxSystem extends System {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-        this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
-            /* Unauthorised request handler
-             Some options here:
-             - Access was revoked
-             - System was disconnected from cloud\Password was changed
-             - Nonce expired
-             We try to update nonce and auth on the server again
-             Other cases are not distinguishable
-             */
-            return this.updateSystemAuth(true);
-        },
-        this.useRest);
+        if (!this.mediaserver) {
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
+                /* Unauthorised request handler
+                Some options here:
+                - Access was revoked
+                - System was disconnected from cloud\Password was changed
+                - Nonce expired
+                We try to update nonce and auth on the server again
+                Other cases are not distinguishable
+                */
+                return this.updateSystemAuth(true);
+            },
+            this.useRest);
+        }
         // Handling promise to satisfy the linter.
-        this.updateSystemAuth(true).then(() => {
-        });
+        this.updateSystemAuth(true).then(() => {});
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -198,7 +207,15 @@ export class NxSystem extends System {
         this.storageManager = new StorageManager(this);
     }
 
-    updateSystemAuth(force?: boolean) {
+    checkRestCompatibility() {
+        if (this.#apiVersion.value === 0 && this.cameraManager.moduleInfo.version) {
+            this.setApiVersion(this.cameraManager.moduleInfo.version);
+            this.initSystem(this.currentUserEmail, this.systemIdInit, this.serverIdInit, this.userIdInit);
+        }
+        return Promise.resolve();
+    }
+
+    updateSystemAuth(force = true) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
@@ -243,7 +260,7 @@ export class NxSystem extends System {
 
         if (this.CONFIG.isLocal) {
             return this.mediaserver.getSystemSettings()
-                .then(res => {
+                .then((res: any) => {
                     let parsedSettings: any = {};
                     if (Object.keys(res).length) {
                         parsedSettings = parseSettings(res);
@@ -272,8 +289,8 @@ export class NxSystem extends System {
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                })
-                .catch(err => console.error('getInfoAndPermissions: ', err))
+                }, (err) => console.error('getSystemSettings: ', err)) // catch api error
+                .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
                 .finally(() => {
                     return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
                 });
@@ -322,7 +339,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = this.updateSystemAuth().then(() => {
+            this.infoPromise = this.updateSystemAuth(false).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });
@@ -355,27 +372,29 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
             this.usersPromise = undefined;
             // this.systemInfo = undefined;
-            this.subscriberCount--;
+            this.subscriberCount = 0;
         }
     }
 
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
-                .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject())
+                .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
+                .then(() => this.checkRestCompatibility())
                 .then(() => this.getUsers(true))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                    this.isAvailable = false;
+                    if (error?.offline) {
+                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                        this.isAvailable = false;
+                    }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
                 .finally(() => {
                     // TODO: re-do ribbonService to handle multiple pages better
-                    // watch out: HM stopsPoll on navigate, but not on refresh
                     const { url } = this.router;
                     if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
                         this.ribbonService.hide();
@@ -486,25 +505,22 @@ export class NxSystem extends System {
             return Promise.resolve(this.mediaservers);
         }
 
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getMediaServersAndCameras().toPromise()
-        ).then(
-            // @ts-ignore
-            response => {
-                // @ts-ignore
-                if ((response.error && response.error !== '0') || !response.reply) {
-                    console.error('error getting mediaservers and cameras');
-                    return response;
-                }
-                // @ts-ignore
-                return this._setMediaServersAndCameras(response.reply);
-            }
-        ).catch(
-            response => {
-                console.error('getMediaServersAndCameras failure', response);
-                return [];
-            }
-        );
+        return this.ensureSystemAuth()
+            .then(
+                () => this.mediaserver
+                    .getMediaServersAndCameras().toPromise()
+                    .then(
+                        // @ts-ignore
+                        response => {
+                            if ((response.error && response.error !== '0') || !response.reply) {
+                                console.error('error getting mediaservers and cameras');
+                                return response;
+                            }
+                            return this._setMediaServersAndCameras(response.reply);
+                        }, err => {
+                            console.error('getMediaServersAndCameras failure', err);
+                            return [];
+                        }));
     }
 
     protected _setMediaServersAndCameras(apiReply) {
@@ -558,20 +574,28 @@ export class NxSystem extends System {
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {
         return this.ensureSystemAuth().then(
             () => {
-                return this.mediaserver.getServerTimes().toPromise().then(
-                    r => {
-                        const now = Date.now();
-                        // @ts-ignore
-                        const sanitized = r.reply.map(i => ({
-                            vmsTime        : parseInt(i.vmsTime),
-                            vmsTimeOffset  : now - parseInt(i.vmsTime),
-                            osTimeOffset   : now - parseInt(i.osTime),
-                            serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                            timeZoneOffset : parseInt(i.timeZoneOffset)
-                        }));
-                        // console.log('getServerTimes', now, r.reply, sanitized)
-                        return sanitized;
-                    });
+                return this.mediaserver.getServerTimes().toPromise()
+                    .then(
+                        r => {
+                            this.attempts = 0;
+                            const now = Date.now();
+                            // @ts-ignore
+                            return r.reply.map(i => ({
+                                vmsTime        : parseInt(i.vmsTime),
+                                vmsTimeOffset  : now - parseInt(i.vmsTime),
+                                osTimeOffset   : now - parseInt(i.osTime),
+                                serverId       : i.serverId.slice(1, i.serverId.length - 1),
+                                timeZoneOffset : parseInt(i.timeZoneOffset)
+                            }));
+                        }, (err) => {
+                            if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
+                                this.attempts++;
+                                return this.getServerTimes();
+                            }
+
+                            this.attempts = 0;
+                            return Promise.reject(err);
+                        });
             });
     }
 
@@ -1020,7 +1044,10 @@ export class NxSystem extends System {
     restartServer(serverId: string) {
         this.currentServerNotBusy = false;
         return this.serverManager.restartServer(serverId)
-            .catch(err => Promise.reject(err));
+            .catch(err => {
+                this.currentServerNotBusy = true;
+                return Promise.reject(err);
+            });
     }
 
     /**
@@ -1028,7 +1055,11 @@ export class NxSystem extends System {
      */
     detachFromSystem(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.detachFromSystem(serverId, currentPassword);
+        return this.serverManager.detachFromSystem(serverId, currentPassword).pipe(
+            tap(() => {}, () => {
+                this.currentServerNotBusy = true;
+            })
+        );
     }
 
     /**
@@ -1043,7 +1074,11 @@ export class NxSystem extends System {
      */
     restoreFactorySettings(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.restoreFactorySettings(serverId, currentPassword);
+        return this.serverManager.restoreFactorySettings(serverId, currentPassword).pipe(
+            tap(() => {}, () => {
+                this.currentServerNotBusy = true;
+            })
+        );
     }
 
     /**

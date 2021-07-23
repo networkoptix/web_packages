@@ -34,12 +34,12 @@ export class MenuNode {
     constructor(
         public name = '',
         public url: string,
+        public display_name = name,
+        currentRoute = false,
         icon = '',
         public nodes?: MenuNode[],
         public authentication: Auth = Auth.BOTH,
-        public display_name = name,
         public new_window = false,
-        currentRoute = false,
         public asset_id = null,
         public related_asset_ids = [],
         public next_item = false,
@@ -226,7 +226,6 @@ export class NxMenusService implements OnDestroy {
         if (!activeSystem) {
             return;
         }
-        const { endpoint: { view = false, settings = false, information = false } } = this;
         // TODO: unify system's name location once we remove promises
         let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.name;
         if (!name) {
@@ -239,32 +238,36 @@ export class NxMenusService implements OnDestroy {
 
         const viewNode = new MenuNode(
             'View',
-            this.getUrl(activeSystem.id, { view: true })
+            this.getUrl(activeSystem.id, { view: true }),
+            this.LANG?.serverTabTitles.View(),
+            this.endpoint.view || false
         );
-        viewNode.currentRoute = view;
         const settingsNode = new MenuNode(
             'Settings',
-            this.getUrl(activeSystem.id, { settings: true })
+            this.getUrl(activeSystem.id, { settings: true }),
+            this.LANG?.serverTabTitles.Settings(),
+            this.endpoint.settings || false
         );
-        settingsNode.currentRoute = settings;
 
         const nodes = [viewNode, settingsNode];
         if (hasAdminAccess) {
             const informationNode = new MenuNode(
                 'Information',
-                this.getUrl(activeSystem.id, { information: true })
+                this.getUrl(activeSystem.id, { information: true }),
+                this.LANG?.serverTabTitles.Information(),
+                this.endpoint.information || false
             );
-            informationNode.currentRoute = information;
             nodes.push(informationNode);
         }
 
         const activeSystemMenu = new MenuNode(
             name,
             this.getUrl(activeSystem.id, { settings: true }),
+            name,
+            false,
             icon,
             nodes,
-            Auth.LOGGED_IN,
-            name
+            Auth.LOGGED_IN
         );
 
         this.currentSystemNode$.next(activeSystemMenu);

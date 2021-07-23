@@ -16,7 +16,7 @@ IPVD Page loads while Logged in
     Go To IPVD Page
 
 IPVD landing page actions
-    [Tags]    C48791
+    [Tags]    C48791    CLOUD-7598
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
     Validate on IPVD Page
@@ -35,7 +35,7 @@ IPVD landing page actions
     ${vendor}=  Set variable    Axis
     Click Element    ${IPVD MANUFACTURERS PANE}//a[contains(text(), '${vendor}')]
     Wait Until Element Is Visible    ${IPVD TABLE}
-    Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
+    Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
     Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
     
@@ -49,7 +49,7 @@ IPVD landing page actions
     Log    Step 4 - Validate filtering by device type
     Click Element    ${IPVD DEVICES PANE}//a[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
     Sleep    5
-    Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]
+    Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
     Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[3]
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    Encoder
@@ -283,7 +283,7 @@ Text search
     ...    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
 
 Text in Search Input is kept after clicking X on Applied Features filter indicator
-    [Tags]    C49362    IPVD
+    [Tags]    C49362    CLOUD-7598
     Log    Step 1
     Go To IPVD Page
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
@@ -300,7 +300,7 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Sleep    .5
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
-    Should be Equal As Strings
+    Run keyword and continue on failure    Should be Equal As Strings
     ...    ${numberOfFiltersApplied}
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
     ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value

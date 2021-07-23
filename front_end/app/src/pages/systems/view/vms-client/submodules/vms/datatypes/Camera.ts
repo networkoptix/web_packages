@@ -124,8 +124,8 @@ export class Camera implements ICamera {
                 480  : '854x480',
                 360  : '640x360'
             };
-            Object.keys(defaultResolutions).sort(() => -1).forEach((yResolution) => {
-                if (primaryResolutionHeight >= parseInt(yResolution)) {
+            [1080, 720, 480, 360].forEach((yResolution) => {
+                if (primaryResolutionHeight >= yResolution) {
                     result[`${yResolution}p`] = defaultResolutions[yResolution];
                 }
             });

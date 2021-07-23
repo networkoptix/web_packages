@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Setup
-Suite Teardown    
+Suite Teardown    Users Suite Teardown
 Test Template     Test Passwords Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Force Tags        form    Threaded
@@ -88,12 +88,12 @@ Good 4 QWE123!@#                             ${upper number symbol password}
 Test Passwords Invalid
     [Tags]    local user
     [Arguments]    ${new pw}
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${users['cloudAdmin']}
+    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${system['owner']}    admin
     @{new locals} =    Create List
-    @{local users} =    Reset Local Users    ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{local users} =    Reset Local Users    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}
     ${user} =    Set Variable    cloudAdmin
-    Log in To User and System    ${users['cloudAdmin']}    ${system['id']}
+    Log in To User and System    ${server 1['cloud users']}[cloudAdmin]    ${server 1['cloud id']}
     Go to Users List
     Log    Change password for ${user}
     Wait Until Element is Visible    //span[text()="Local+${user}"]

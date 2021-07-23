@@ -161,6 +161,7 @@
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Ukjent",
         "vendor": "Leverandør",
         "model": "Modell",
@@ -476,8 +477,8 @@
         "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Adgangskontroll",
@@ -675,6 +676,11 @@
             "restarting": "restarter..."
         },
         "successRename": "Servernavn lagret."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",

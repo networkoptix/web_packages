@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, ElementRef } from '@angular/core';
 import PlaybackService from '../../services/playback.service';
 import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '../../../../../../../../../language_i18n_static_types';
 import { NxUtilsService } from '@services/utils.service';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
+import VmsState from '../../../vms/datatypes/VmsState';
 
 @Component({
     selector    : 'player',
@@ -24,6 +25,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() videoDblClick = new EventEmitter<boolean>();
 
     protected playbackSubscription: Subscription;
+    protected vmsSubscription: Subscription;
     public transport: PlaybackTransport;
 
     public showOverlay: boolean = false;
@@ -31,17 +33,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public errorPlayback: boolean = false;
     public errorPlaybackDescription: string;
 
-    public transformExpr
-
-    @HostListener('window:resize', ['$event'])
-    protected _updateTransformExpr () {
-        const rotateDeg = this.vms.selectedCamera?.rotation || 0
-        const boundingRect = this.self.nativeElement.getBoundingClientRect()
-        const scale = Math.abs(rotateDeg) === 90
-            ?  boundingRect.height / boundingRect.width
-            : 1.0
-        this.transformExpr = `rotate(${rotateDeg}deg) scale(${scale})`
-    }
+    public rotateDeg: number = 0
 
     public get useNativePlayer () {
         const isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
@@ -73,19 +65,22 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     ) {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
+        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
     }
 
     public ngOnInit (): void {
         this.onPlaybackSubjectChange(this.playback.state);
-        this._updateTransformExpr()
+        this.onVmsSubjectChange(this.vms.state);
     }
 
     public ngAfterViewInit (): void {
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
+        this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange);
     }
 
     public ngOnDestroy (): void {
         this.playbackSubscription.unsubscribe();
+        this.vmsSubscription.unsubscribe();
     }
 
     public onPlaybackSubjectChange (s: PlaybackState | ArchivePlaybackState) {
@@ -99,6 +94,10 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.errorEncryption = (<ArchivePlaybackState> s).encrypted;
         this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
+    }
+
+    public onVmsSubjectChange (s: VmsState) {
+        this.rotateDeg = this.vms.selectedCamera?.rotation || 0;
     }
 
     public onBufferingChange (s: boolean) {

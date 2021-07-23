@@ -323,7 +323,10 @@ class PushNotification(models.Model):
     @staticmethod
     def generate_provider_specific_messages(title, body, payload, options, data_payload):
         apns_message = {
-            'aps': {'alert': {'title': title, 'body': body}, **options},
+            'aps': {
+                'alert': {'title': title, 'body': body},
+                **{key.replace('_', '-'): val for key, val in options.items()}
+            },
             **payload
         }
         return {

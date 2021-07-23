@@ -161,6 +161,7 @@
         "systemServerError": "Lỗi nội bộ máy chủ",
         "systemServerErrorMessage": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Không xác định",
         "vendor": "Nhà cung cấp",
         "model": "Kiểu mẫu",
@@ -476,8 +477,8 @@
         "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
         "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",
@@ -675,6 +676,11 @@
             "restarting": "đang khởi động lại..."
         },
         "successRename": "Tên máy chủ được lưu."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",

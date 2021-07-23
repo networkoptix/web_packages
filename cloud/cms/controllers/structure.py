@@ -519,13 +519,16 @@ def generate_kb_path_from_var(article_dict, asset):
     param_name = article_dict['param_name']
     if param_name and not param_name.startswith('-'):
         param_name = '-' + param_name
+    existing = asset, False
+    asset, created = existing if str(asset.uuid) == uuid else Asset.objects.get_or_create(uuid=uuid)
+    doc_asset_type = AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
 
-    asset, created = asset, False if asset.uuid == uuid else Asset.objects.get_or_create(
-        uuid=uuid, asset_type=AssetType.get_model_by_type(AssetType.ASSET_TYPES.documentation)
-    )
     if created:
         asset.name = name
+        asset.asset_type = doc_asset_type
         asset.save()
+    elif asset.asset_type != doc_asset_type:
+        raise ValueError(f'Asset already exists with asset type {asset.asset_type} but is being used as a doc link which requires asset type {doc_asset_type}')
 
     return f'{base_path}/{kb_path}/{asset.id}{param_name}'
 
@@ -576,6 +579,8 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         asset_obj = Asset.objects.filter(uuid=asset_dict['uuid']).first()
         if not asset_obj:
             asset_obj = Asset.objects.create(name=asset_dict['name'], uuid=asset_dict['uuid'], asset_type=asset_type)
+        elif not asset_obj.last_modified:
+            asset_obj.asset_type = asset_type
         elif increment_progress and str(asset_obj.asset_type) != str(asset_type):
             increment_progress(
                 f'Failed to import <b>"{asset_dict["name"]}"</b>, asset already exist as type <b>"{asset_obj.asset_type}"</b> but is being imported as <b>"{asset_type}"</b>')

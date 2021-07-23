@@ -16,6 +16,7 @@
 
 <ng-template #player>
     <div
+        *ngIf="showOverlay"
         class="overlay"
         [ngClass]="{ 'active': showOverlay }"
         (click)="onClick($event)"
@@ -26,21 +27,21 @@
     <player-native
         *ngIf="useNativePlayer"
         (bufferingChange)="onBufferingChange($event)"
-        [style.transform]="transformExpr"
+        [rotation]="rotateDeg"
     >
     </player-native>
 
     <player-js
         *ngIf="useJsPlayer"
         (bufferingChange)="onBufferingChange($event)"
-        [style.transform]="transformExpr"
+        [rotation]="rotateDeg"
     >
     </player-js>
 
     <player-hls
         *ngIf="useHlsPlayer"
+        [rotation]="rotateDeg"
         (bufferingChange)="onBufferingChange($event)"
-        [style.transform]="transformExpr"
     >
     </player-hls>
 </ng-template>

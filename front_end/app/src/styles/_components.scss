@@ -1,6 +1,7 @@
 @use '../../styles/theme_variables' as *;
 @use '../styles/typography';
 @use '../../src/components/content-block/content-block.component';
+@use 'app/src/styles/_bootstrap_utils' as bootstrap;
 
 .section-placeholder {
     position: relative;
@@ -60,6 +61,26 @@
     table {
         margin : 0;
     }
+}
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card-type-4 {
+    @include bootstrap.media-breakpoint-down(sm){
+        flex: 0 1 45% !important;
+    }
+    flex: 0 1 22%;
+}
+
+.card-type-3 {
+    @include bootstrap.media-breakpoint-up(sm){
+        flex: 0 1 33% !important;
+    }
+    flex: 0 1 100%;
 }
 
 .jumbotron {

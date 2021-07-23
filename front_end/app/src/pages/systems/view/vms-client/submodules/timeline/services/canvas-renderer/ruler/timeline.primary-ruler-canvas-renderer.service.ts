@@ -180,17 +180,19 @@ export class TimelinePrimaryRulerCanvasRendererService {
         const fontSize: px = Math.round(relativeFontSize * this.timeline.canvasGeometry.dpr);
         const format: string = primaryRulerDateFormats[s.interval];
 
-        const labelLowerOpacity = lowerLabelCfg.opacity || lowerOpacity;
-        const labelUpperOpacity = upperLabelCfg.opacity || upperOpacity;
-        const labelOpacity = labelLowerOpacity + (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight);
+        if (fontSize) {
+            const labelLowerOpacity = lowerLabelCfg.opacity || lowerOpacity;
+            const labelUpperOpacity = upperLabelCfg.opacity || upperOpacity;
+            const labelOpacity = labelLowerOpacity + (labelUpperOpacity - labelLowerOpacity) * (s.weight - lowerWeight);
 
-        ctx.fillStyle = `${color}${percentageToHex(labelOpacity)}`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
-        const dateStr = dateformat(this.vms.tweakT(s.time), format);
-        ctx.font = `${fontSize}px ${fontFace}`;
-        ctx.fillText(dateStr, x, y1 + 5);
+            ctx.fillStyle = `${color}${percentageToHex(labelOpacity)}`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
+            const dateStr = dateformat(this.vms.tweakT(s.time), format);
+            ctx.font = `${fontSize}px ${fontFace}`;
+            ctx.fillText(dateStr, x, y1 + 5);
+        }
     }
 }
 

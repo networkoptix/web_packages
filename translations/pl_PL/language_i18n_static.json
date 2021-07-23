@@ -161,6 +161,7 @@
         "systemServerError": "Wewnętrzny błąd serwera",
         "systemServerErrorMessage": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
         "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
+        "systemUnresponsive": "System wydaje się nie odpowiadać. Proszę odświeżyć stronę.",
         "unknown": "Nieznany",
         "vendor": "Producent",
         "model": "Model",
@@ -204,7 +205,7 @@
             "title": "Magazyn w chmurze",
             "enableStorage": "Włącz magazyn w chmurze",
             "otherSystem": "Inny system...",
-            "initial": "Oferujemy {{compCapacity}} dodatkowej przestrzeni, abyś mógł rozpocząć pracę w chmurze.",
+            "initial": "Oferujemy {compCapacity} dodatkowej przestrzeni, abyś mógł rozpocząć pracę w chmurze.",
             "available": "Miejsce przechowywania w chmurze jest dostępne dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą klienta {vmsName}.",
             "camera": "kamera",
             "cameras": "kamery",
@@ -334,7 +335,7 @@
             "removeUser": "Usunąć użytkownika?",
             "serversDetach": "Odłączyć serwer \"{ title }\" od bieżącego systemu?",
             "serversReset": "Przywrócić serwer \"{ title }\" do ustawień domyślnych?",
-            "serversRestart": "Uruchomić ponownie serwer \"{ title }\"?",
+            "serversRestart": "Restart serwera \"{ title }\"?",
             "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\""
         },
         "tooltips": {
@@ -476,8 +477,8 @@
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
-        "archiveEncrypted": "ARCHIWUM<br>ZASZYFROWANE",
-        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła do szyfrowania,<br> aby odszyfrować to archiwum."
+        "archiveEncrypted": "ARCHIWUM\nZASZYFROWANE",
+        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -675,6 +676,11 @@
             "restarting": "restartowanie..."
         },
         "successRename": "Nazwa serwera została zapisana."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Połączony",

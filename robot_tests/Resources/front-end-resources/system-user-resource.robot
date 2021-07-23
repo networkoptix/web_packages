@@ -4,26 +4,34 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Users Suite Setup
+    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    Set Suite Variable     ${random}    ${random}
     #system(name,port,cont,owner,id) 
     #local auth, cloud auth, server url, 
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
-    Create Base Cloud System    image=${IMAGE}
-    Save User Role    ${local auth}    https://${QA BURBANK IP}:${system ['port']}    Client Custom    NoGlobalPermissions
+    ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
+    #Create Base Cloud System    image=${IMAGE}
+    ${server 1} =    Create Base System    user0-${random}    owner=${owner}
+    Set Suite Variable    ${server 1}    ${server 1}
+    
+    Save User Role    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
     ${client custom}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${client custom}     ${client custom}
         
-    ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
-    Set Suite Variable    ${system 2}    &{system 2}
+    ${server 2} =    Create Base System    user1-${random}    owner=${owner}
+    Set Suite Variable    ${server 2}    ${server 2}
+    # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
+    # Set Suite Variable    ${system 2}    &{system 2}
 
     Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     ...    ELSE    Web Admin Suite Setup
 
 Web Admin Suite Setup
-    Open Browser and go to URL    https://${QA BURBANK IP}:${system['port']}
+    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Suite Setup
     Open Browser and go to URL    ${url}
-    Log in to user and system    ${system['owner']}    ${system['id']}
+    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}     65
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
@@ -41,13 +49,15 @@ Users Test Tear Down
     Run keyword unless    ${status}    Log Out
 
 Users Teardown
-    Disconnect Server via API    ${cloud auth}    ${system['id']}      ${password}    ${system['owner']}
-    Disconnect Server via API    ${cloud auth}    ${system 2['id']}    ${password}    ${system['owner']}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
-    ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
-    #Remove Temporary Users
+    # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
+    # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${system['owner']}
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
+    # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
+    # Remove Temporary Users
+    Delete Base System    ${server 1}
+    Delete Base System    ${server 2}
     Close All Browsers
 
 Remove Temporary Users
@@ -129,7 +139,7 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${users['cloudAdmin']}' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
+	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -139,12 +149,12 @@ Verify In Local Users UI
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
         log    ${email}
         log    ${user}
-        log    ${users['cloudAdmin']}
-	    Run Keyword If    '${email}' == '${system['owner']}'
+        # log    ${users['cloudAdmin']}
+	    Run Keyword If    '${email}' == '${server 1['owner']}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+	    ...    ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == '${local users['cloudAdmin']}' and '${user}' != 'cloudAdmin'
+        ...    ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
         ...    ELSE IF    '${email}' == 'admin'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
@@ -303,7 +313,7 @@ Get Custom Permissions
     END
 
 Change All Local Users Login
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -322,7 +332,7 @@ Change All Local Users Login
     END
 
 Change All Local Users Full Name
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -338,7 +348,7 @@ Change All Local Users Full Name
     END
 
 Change All Local Users Email
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
@@ -353,13 +363,13 @@ Change All Local Users Email
     END
 
 Change All Local User Permissions
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Click Element    //span[text()="Local+${user}"]
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-        ${new permission} =    Change Permission Level for Local User    ${user}    ${system['owner']}
+        ${new permission} =    Change Permission Level for Local User    ${user}    ${server 1['owner']}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -372,7 +382,7 @@ Change All Local User Permissions
     END
 
 Change All Local User Password
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Log    Change password for ${user}
@@ -386,13 +396,13 @@ Change All Local User Password
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
         @{old auth} =    Create List    local+${user}     ${BASE PASSWORD}
-        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${system['port']}
+        Run Keyword and Expect Error    *    Get Cameras    ${old auth}    https://${QA BURBANK IP}:${server 1['port']}
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
-        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${system['port']}
+        ${response} =    Get Cameras    ${new auth}    https://${QA BURBANK IP}:${server 1['port']}
     END
 
 Change All Local User Info
-    &{local users limited}=    Create Dictionary    &{local users}
+    &{local users limited}=    Create Dictionary    &{server 1}[local users]
     Pop From Dictionary    ${local users limited}    cloudAdmin
     FOR    ${user}    IN    @{local users limited}
         Go to Users List
@@ -400,8 +410,8 @@ Change All Local User Info
         Wait Until Element Is Visible    ${LOCAL USER NAME}
 	    ${user role} =    Get Text    //span[contains(text(),"Local+${user}")]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
-	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
-        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${users['cloudAdmin']}
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
+        ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
         ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
     END
@@ -418,7 +428,7 @@ Get Local User Id By Name
 
 User Should Not Exist
     [Arguments]    ${deleted user}
-    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${user}    IN    @{users}
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
     END
@@ -426,7 +436,7 @@ User Should Not Exist
 Get Local Users
     [Arguments]
     ${locals}=   Create List
-    @{users} =    Get Users     ${local auth}    https://${QA BURBANK IP}:${system['port']}
+    @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}

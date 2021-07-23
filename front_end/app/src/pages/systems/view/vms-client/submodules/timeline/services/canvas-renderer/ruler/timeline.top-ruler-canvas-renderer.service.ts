@@ -155,7 +155,7 @@ export class TimelineTopRulerCanvasRendererService {
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
 
         // ctx.fillText(topString, x, y, x1 - x0);
-        const MIN_WIDTH = 80
+        const MIN_WIDTH = 100
         if (x1 - x0 > MIN_WIDTH * this.timeline.canvasGeometry.dpr) {
             ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
             ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;

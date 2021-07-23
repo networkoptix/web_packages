@@ -19,6 +19,7 @@
                 <ng-container *ngTemplateOutlet="intro;context:{intro:section.node}"></ng-container>
             </ng-container>
             <nx-capabilities *ngSwitchCase="aboutCases.CAPABILITIES" [capabilitiesNode]="section.node"></nx-capabilities>
+            <nx-new-capabilities  *ngSwitchCase="aboutCases.DEV_CAPABILITIES"  [devCapabilitiesNode]="section.node"></nx-new-capabilities>
             <nx-get-started *ngSwitchCase="aboutCases.GET_STARTED" [getStartedNode]="section.node"></nx-get-started>
             <nx-dev-tools *ngSwitchCase="aboutCases.DEV_TOOLS"
                 [devToolsNode]="section.node"

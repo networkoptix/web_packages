@@ -72,9 +72,6 @@ export class NxSystemStorageComponent implements OnInit {
     beingUpdated = [];
     cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
-    // Used for checking if changing backup should use updated APIs
-    legacySystem = true;
-
     stopReindex$ = new Subject<TARGET_STORAGE>();
     currentStorageState: CurrentStorageState;
     dropdownOffset$ = new BehaviorSubject(0);
@@ -292,17 +289,19 @@ export class NxSystemStorageComponent implements OnInit {
             this.isBackupOn.originalValue = this.backupState = !backup;
             this.isBackupOn.value = backup;
         };
-        const updateBackup = () => this.isBackupOn.originalValue === this.backupState
-            ? Promise.resolve('backupToggleNotUpdated')
-            : this.backupState
-                ? this.setDefaultBackupSettings().catch(err => {
-                    console.error(err);
-                    handleFailedBackupChange('StartFail');
-                })
-                : this.turnOffBackup().catch(err => {
-                    console.error(err);
-                    handleFailedBackupChange('StopFail');
-                });
+        const updateBackup = () => this.system.useRest
+            ? Promise.resolve() // Skip updating any settings for 4.3 since the backup implementation is pending for that version
+            : this.isBackupOn.originalValue === this.backupState
+                ? Promise.resolve('backupToggleNotUpdated')
+                : this.backupState
+                    ? this.setDefaultBackupSettings().catch(err => {
+                        console.error(err);
+                        handleFailedBackupChange('StartFail');
+                    })
+                    : this.turnOffBackup().catch(err => {
+                        console.error(err);
+                        handleFailedBackupChange('StopFail');
+                    });
 
         if (modeWatchers.length) {
             this.saveSettings = this.processService.createProcess(() => {
@@ -351,7 +350,11 @@ export class NxSystemStorageComponent implements OnInit {
             await this.system.updateOrGetSystemSettings({
                 backupNewCamerasByDefault: true, backupQualities: 'CameraBackupLowQuality'
             }).toPromise();
-            await this.system.setServerUserSettings(this.serverId, { backupType: 'BackupRealTime' });
+            await Promise.all(this.system.serverManager.servers.map(({ id, backupType }) => {
+                if (backupType !== 'BackupManual' || id === this.serverId) {
+                    return this.system.serverManager.setServerUserSettings(id, { backupType: 'BackupRealTime' });
+                }
+            }));
             await this.system.serverManager.initSystemMediaServers();
             const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
                 if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
@@ -599,6 +602,10 @@ export class NxSystemStorageComponent implements OnInit {
     }
 
     set backupState(value) {
+        if (this.system.useRest) {
+            // Skip changing backup state for 4.3 systems, implementation pending for that version
+            return;
+        }
         this.backupState$.next(value);
         this.isBackupOn.value = value;
     }

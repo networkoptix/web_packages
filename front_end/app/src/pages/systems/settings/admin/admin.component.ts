@@ -96,7 +96,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     private updateSettings(forceMergeState?: boolean) {
         this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         this.settings = {
-            disconnectDisabled : this.merging,
+            disconnectDisabled : this.merging || !this.system.userManager.isOwner(this.system.userManager.currentUser) ,
             renameDisabled     : this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master'
         };
     }

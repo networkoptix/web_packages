@@ -184,11 +184,11 @@ Should open Privacy Policy in a new page
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 Should suggest user to create new account, if he was logged in and goes to registration link
-    Log In    ${EMAIL VIEWER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Wait Until Elements Are Visible    ${SYSTEMS DROPDOWN}    ${ACCOUNT DROPDOWN}    ${SYSTEMS SEARCH INPUT}    ${SYSTEMS TILE}
+    Wait Until Elements Are Visible    ${SYSTEMS DROPDOWN}    ${ACCOUNT DROPDOWN}    ${SYSTEMS TILE}    #${SYSTEMS SEARCH INPUT}
     Location Should Be    ${url}/systems
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
@@ -270,22 +270,22 @@ Check registration email links, colors, cloud name, and user name
 
 Check automatic logout when registering new account while logged in
     [tags]    C63393
-    Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
+    Log In    ${EMAIL OWNER}     ${BASE PASSWORD}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
-    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL OWNER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER} 
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
-    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL VIEWER}
+    Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL OWNER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER} 
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER} 
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Validate Log Out
     Wait Until Location Is    ${ENV}/register

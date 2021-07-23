@@ -43,6 +43,7 @@ export interface LanguageI18NStaticTypes {
     ribbon:                Ribbon;
     search:                Search;
     servers:               Servers;
+    serverTabTitles:       ServerTabTitles;
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
@@ -152,6 +153,7 @@ export interface Common {
     systemServerError:          any;
     systemServerErrorMessage:   any;
     systemUnreachable:          any;
+    systemUnresponsive:         any;
     unknown:                    any;
     vendor:                     any;
     model:                      any;
@@ -736,6 +738,12 @@ export interface Search {
     vendors:           any;
 }
 
+export interface ServerTabTitles {
+    View:        any;
+    Settings:    any;
+    Information: any;
+}
+
 export interface Servers {
     analyticsDataPolicyError: any;
     autoRefresh:              any;
@@ -1077,6 +1085,7 @@ const typeMap: any = {
         { json: "ribbon", js: "ribbon", typ: r("Ribbon") },
         { json: "search", js: "search", typ: r("Search") },
         { json: "servers", js: "servers", typ: r("Servers") },
+        { json: "serverTabTitles", js: "serverTabTitles", typ: r("ServerTabTitles") },
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
@@ -1180,6 +1189,7 @@ const typeMap: any = {
         { json: "systemServerError", js: "systemServerError", typ: "any" },
         { json: "systemServerErrorMessage", js: "systemServerErrorMessage", typ: "any" },
         { json: "systemUnreachable", js: "systemUnreachable", typ: "any" },
+        { json: "systemUnresponsive", js: "systemUnresponsive", typ: "any" },
         { json: "unknown", js: "unknown", typ: "any" },
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "model", js: "model", typ: "any" },
@@ -1702,6 +1712,11 @@ const typeMap: any = {
         { json: "selected", js: "selected", typ: "any" },
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "vendors", js: "vendors", typ: "any" },
+    ], false),
+    "ServerTabTitles": o([
+        { json: "View", js: "View", typ: "any" },
+        { json: "Settings", js: "Settings", typ: "any" },
+        { json: "Information", js: "Information", typ: "any" },
     ], false),
     "Servers": o([
         { json: "analyticsDataPolicyError", js: "analyticsDataPolicyError", typ: "any" },

@@ -22,6 +22,11 @@ import { UntilDestroy, untilDestroyed }          from '@ngneat/until-destroy';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { NxUtilsService }                        from '@services/utils.service';
 import sidebarLayout                             from '../sidebarLayout.cfg';
+import { NxToastService }                        from '../../../../../dialogs/toast.service';
+import { NxDialogsService }                      from '../../../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
+import { NxRibbonService }                       from '../../../../../components/ribbon';
 
 @UntilDestroy()
 @Component({
@@ -45,6 +50,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public systems: NxSystem[];
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
     showElementsInFSM: boolean;
@@ -112,6 +118,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         protected router: Router,
         protected route: ActivatedRoute,
@@ -121,9 +128,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
-        private utilsService: NxUtilsService
+        private utilsService: NxUtilsService,
+        private dialogs: NxDialogsService,
+        private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this._onRouteChange = this._onRouteChange.bind(this);
         this._onUxStateChange = this._onUxStateChange.bind(this);
@@ -222,12 +232,25 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.setSystemSubscription();
     }
 
+    private async _getServerTimes() {
+        let res;
+        try {
+            res = await this.system.getServerTimes();
+        } catch (err) {
+            if (err.name === 'TimeoutError') {
+                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
+            }
+        }
+        this.vms.serverTimes = res ?? [];
+        return this.vms.serverTimes;
+    }
+
     protected _initSystem () {
         this._log('initSystem entered');
         this.vms.reset();
 
         const createSystem = () => {
-            return this.accountService.get().then(account => {
+            return this.accountService.get().then(async(account) => {
                 if (!account) {
                     this._warn('accountService returned no account');
                     return Promise.reject();
@@ -241,7 +264,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 // _initSystem is called on systems subscription
                 if (this.systems.filter(s => s.id === this.systemId).length) {
-                    this.system = this.systemService.createSystem(account.email, this.systemId);
+                    this._setInitializationState(false, false);
+                    this.ribbonService.hide();
+
+                    this.system = await this.systemService.createSystem(account.email, this.systemId);
+                    await this.system.update();
+
                     return Promise.resolve();
                 }
 
@@ -249,12 +277,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             });
         };
 
-        let cachedMediaServers;
+        let processingMediaServers = false;
+        let cachedMediaServers = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
             this._log(`system ${this.system.id} view initialized`, this.hasCameras);
-            this._setInitializationState(true, false);
+            this._setInitializationState(true, !this.system.isOnline);
             if (!this.route.snapshot.children.length) {
                 this._tryToRedirectToCamera();
             }
@@ -262,15 +291,53 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
 
+        const mediaServerChanged = (mediaServers) => {
+            if (mediaServers.length !== cachedMediaServers.length) {
+                return true;
+            } else {
+                return mediaServers.some((server) => {
+                    const matchServer = cachedMediaServers.find((_server) => _server.id === server.id);
+                    if (!matchServer || server.status !== matchServer.status) {
+                        return true;
+                    } else {
+                        if (server.cameras.length !== matchServer.cameras.length) {
+                            return true;
+                        } else {
+                            return server.cameras.some((camera) => {
+                                const matchCamera = matchServer.cameras.find((_camera) => _camera.id === camera.id);
+
+                                return (!matchCamera ||
+                                        camera.name !== matchCamera.name.replace(/&lt;/g, '<').replace(/&gt;/g, '>') ||
+                                        camera.status !== matchCamera.status && !(camera.status === 'Online' && matchCamera.status === 'Live') ||  // remapped param "status"
+                                        camera.scheduleEnabled !== matchCamera.isScheduleEnabled); // remapped param "scheduleEnabled"
+                            });
+                        }
+                    }
+                });
+            }
+        };
+
         createSystem().then(() => {
-            timer(0, VideoManagementSystemService.statusRefreshInterval).pipe(takeUntil(this.cancelPoll$))
+            timer(0, VideoManagementSystemService.statusRefreshInterval)
+                .pipe(takeUntil(this.cancelPoll$))
                 .subscribe(async () => {
-                    if (!this.system) {
+                    if (!this.system || processingMediaServers) {
+                        return;
+                    }
+
+                    if (!this.system.isOnline) {
+                        this._setInitializationState(true, true);
                         return;
                     }
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
-                    const serverTimeInfos = await this.system.getServerTimes();
+                    // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
+                    if (this.initialized && !mediaServerChanged(mediaServers) || mediaServers.length === 0) {
+                        return;
+                    }
+
+                    processingMediaServers = true;
+                    const serverTimeInfos = await this._getServerTimes();
                     serverTimeInfos.forEach(sti => {
                         const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
                         if (mediaServer) {
@@ -308,6 +375,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                 const [start, end] = extractChunk(response.reply);
                                 archiveRanges[cid] = new SimpleTimeRange(start, end);
                             }
+                        }, err => {
+                            if (err.name === 'TimeoutError') {
+                                archiveRanges[cid] = new SimpleTimeRange(0, 0);
+                            } else {
+                                this._log(err);
+                            }
                         });
                     };
                     const processCameras = (c, ms) => {
@@ -325,7 +398,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             [],
                             this.system?.getCameraThumbnailUrl(c.id),
                             (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
-                            (t?: ms) => this.system?.getCameraThumbnailUrl(c.id, 128, 128, t)
+                            (t?: ms, width = 128, height = 128) => this.system?.getCameraThumbnailUrl(c.id, width, height, t)
                         );
                         result.parseAdditionalParams(c.addParams);
                         return result;
@@ -345,6 +418,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     })));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
+                    processingMediaServers = false;
+
                     firstLoad.next();
                 });
         }).catch(e => {

@@ -235,7 +235,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled,
-                'reviews_enabled': asset.read_global_value('%REVIEWS_ENABLED%')
+                'reviews_enabled': asset.read_global_value('%REVIEWS_ENABLED%'),
+                'smtp_disabled': asset.read_global_value("%SMTP_DISABLED%")
             }
         }
         customization_cache.set(f'customization_{customization_name}', data)

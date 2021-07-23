@@ -34,9 +34,14 @@ visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 def get_cloud_capabilities_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'cloud_capabilities')
-    return {
+    capabilities = {
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False)
     }
+
+    if smtp_disabled := customization_cache.get('smtp_disabled'):
+        capabilities['smtpDisabled'] = smtp_disabled
+
+    return capabilities
 
 
 def get_settings_from_cache():

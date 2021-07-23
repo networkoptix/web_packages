@@ -161,6 +161,7 @@
         "systemServerError": "Error de servidor interno",
         "systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
+        "systemUnresponsive": "El sistema parece no responder. Por favor recarga la página.",
         "unknown": "Uesconocido",
         "vendor": "Fabricante",
         "model": "Modelo",
@@ -335,7 +336,7 @@
             "serversDetach": "¿Separar el servidor \"{ title }\" del sistema actual?",
             "serversReset": "¿Restablecer el servidor \"{ title }\" a los valores predeterminados?",
             "serversRestart": "¿Reiniciar el servidor \"{ title }\"?",
-            "changePasswordFor": "Change Password for User \"{username}\""
+            "changePasswordFor": "Cambiar la contraseña del usuario \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos los sistemas de los que es dueño del portal %CLOUD_NAME% para eliminar su cuenta."
@@ -476,8 +477,8 @@
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
         "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red.",
-        "archiveEncrypted": "ARCHIVO<br>ENCRIPTADO",
-        "archiveEncryptedMessage": "Pídale al administrador del sistema que ingrese la<br>para descifrar este archivo."
+        "archiveEncrypted": "ARCHIVO ENCRIPTADO",
+        "archiveEncryptedMessage": "Solicite al administrador del sistema que introduzca la contraseña de cifrado para descifrar este archivo."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -675,6 +676,11 @@
             "restarting": "reiniciando..."
         },
         "successRename": "Nombre del servidor guardado."
+    },
+    "serverTabTitles": {
+        "View": "Vista",
+        "Settings": "Ajustes",
+        "Information": "Información"
     },
     "system": {
         "connected": "Conectado",

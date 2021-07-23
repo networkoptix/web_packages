@@ -21,17 +21,18 @@ import FpsMeterService                            from '@services/fps-meter.serv
 import WebClientUxService, { WebclientUxState }   from '../../services/webclient-ux.service';
 import { NxConfigService, IConfig }               from '../../../../../services/nx-config';
 import { CameraQualityStorageService }            from '../../services/cameraQualityStorage.service';
-import { CameraTransportStorageService }          from '../../services/cameraTransportStorage.service';
-import sidebarLayout                              from '../sidebarLayout.cfg';
-import { NxUtilsService }                         from '@services/utils.service';
-import fullscreen                                 from './fullscreen';
-import { LoggerDecorator }              from '../../vms-client/utils';
-import PlaybackState, { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }            from 'rxjs/operators';
-import { UntilDestroy }                           from '@ngneat/until-destroy';
-import { NxLanguageProviderService }              from '../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }                from '../../../../../../language_i18n_static_types';
-import Hls from 'hls.js';
+import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
+import sidebarLayout                     from '../sidebarLayout.cfg';
+import { NxUtilsService }                from '@services/utils.service';
+import fullscreen                        from './fullscreen';
+import { LoggerDecorator }               from '../../vms-client/utils';
+import PlaybackState, { PLAYBACK_MODE }  from '../../vms-client/submodules/playback/datatypes/PlaybackState';
+import { filter, takeUntil }             from 'rxjs/operators';
+import { UntilDestroy }                  from '@ngneat/until-destroy';
+import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
+import Hls                               from 'hls.js';
+import { NxDialogsService }              from '../../../../../dialogs/dialogs.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,6 +46,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     _warn: Function
 
     private readonly isMobile: boolean;
+    private readonly isChrome: boolean;
     public id: string
     public camera: ICamera
     public system: NxSystem
@@ -99,6 +101,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected systemService: NxSystemService,
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
+        private dialogs: NxDialogsService,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
@@ -106,7 +109,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.isMobile = this.isMobile = utilsService.isMobile() || utilsService.isTablet();
+        this.isMobile = utilsService.isMobile() || utilsService.isTablet();
+        this.isChrome = utilsService.isChrome();
     }
 
     public handleControlsTogglingEarClick () {
@@ -144,7 +148,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
             if (this.ux.state.isFullScreen !== !!fse) {
                 this.ux.isFullScreen = !!fse;
-                this.self.nativeElement.classList.remove('is-full-screen');
+                this.$self.classList.remove('is-full-screen');
             }
         };
 
@@ -194,7 +198,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.selectedQuality$.next(this.selectedQuality);
             }
         });
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(async(account) => {
             if (!account) {
                 this._warn('accountService returned no account');
                 return Promise.reject();
@@ -203,7 +207,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                 this._log('local system created', this.system);
             } else {
-                this.system = this.systemService.createSystem(account.email, this.vms.systemId);
+                this.system = await this.systemService.createSystem(account.email, this.vms.systemId);
             }
             this._getRecords();
         });
@@ -248,13 +252,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         qualities = qualities || {};
         const qualityKeys = Object.keys(qualities);
         this.visibleQualities$.next(qualityKeys.map((quality) => this.qualityToVerbose(quality)) || []);
-        if (qualityKeys.includes('low') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
-            this.drawQualityDivider$.next('low');
-        } else if (qualityKeys.includes('high') && qualityKeys.indexOf('low') < qualityKeys.length - 1) {
-            this.drawQualityDivider$.next('high');
-        } else {
-            this.drawQualityDivider$.next('');
+        const lowIndex = qualityKeys.includes('low');
+        const highIndex = qualityKeys.includes('high');
+
+        let divider = '';
+        // If high and low with other options draw the divider after low.
+        if (lowIndex && highIndex && qualityKeys.length > 2) {
+            divider = 'low';
+        // If high or low with at least 2 option draw for high or low depending on which exists.
+        } else if (lowIndex !== highIndex && qualityKeys.length > 1) {
+            divider = lowIndex ? 'low' : 'high';
         }
+        this.drawQualityDivider$.next(divider);
         this.qualities$.next(qualities);
     }
 
@@ -331,6 +340,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
         if (!this.system.userManager.permissions.viewArchives) {
             this.getRecordsInProgress = undefined;
+            this._initSelectedCamera();
+            this.playback.restore(false);
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
                 ar = await this._prepareArchiveRecords(ar);
@@ -406,46 +417,37 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         this._log('no records to add', prepared)
                     }
                 }
+            }, () => {
+                this._log('failed to fetch camera records');
             });
         });
     }
 
     protected async _getServerTimes () {
-        // TODO: caching?
-        this.vms.serverTimes = await this.system.getServerTimes();
+        let res;
+        try {
+            res = await this.system.getServerTimes();
+        } catch (err) {
+            if (err.name === 'TimeoutError') {
+                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
+            }
+        }
+        this.vms.serverTimes = res ?? [];
         return this.vms.serverTimes;
     }
 
     protected async _prepareArchiveRecords (ar) {
-        const serverTimes = (
-            this.vms.serverTimes || (await this._getServerTimes())
-        ).reduce((reduced, server) => ({
-            ...reduced,
-            [server.serverId]: server.vmsTimeOffset
-        }), {});
-
-        const offsetsByServer = this.system.mediaservers.reduce((
-            reduced, { id, addParams, timeInfo = {} }: any
-        ) => ({
-            ...reduced,
-            [id]: parseInt(
-                timeInfo?.timeZoneOffset ??
-                (<any[]>addParams).find(({ name }) => name === 'timezoneUtcOffset')?.value ??
-                serverTimes[id]
-            ) - serverTimes[id]
-        }), {});
-
-        const timezoneAdjusted = [];
-        ar.reply.forEach(({ guid, periods }) => {
-            const cleanId = NxUtilsService.cleanId(guid);
-            periods.forEach(period => {
-                timezoneAdjusted.push({
-                    ...period,
-                    startTimeMs: parseInt(period.startTimeMs) - offsetsByServer[cleanId]
-                });
-            });
-        });
-        ar.reply = timezoneAdjusted.sort((a, b) => a.startTimeMs - b.startTimeMs);
+        // this method here is kinda legacy
+        // TODO: refactor
+        await this._getServerTimes();
+        if (ar.reply.length) {
+            ar.reply = ar.reply
+                .reduce((records, { periods }) => {
+                    records.splice(-1, 0, ...periods);
+                    return records;
+                }, [])
+                .sort((a, b) => a.startTimeMs - b.startTimeMs);
+        }
         return ar;
     }
 
@@ -483,24 +485,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         } else {
             this.$self.classList.remove('sidebar-shown');
         }
-
-        // don't try going fullscreen until the document is ready
-        if (document.readyState !== 'complete') {
-            this._log('not ready');
-            return;
-        }
-
-        setTimeout(() => {
-            if (s.isFullScreen && !fullscreen.getElement()) {
-                this._log('+');
-                fullscreen.request(this.self.nativeElement.parentElement);
-                this.self.nativeElement.classList.add('is-full-screen');
-            } else if (!s.isFullScreen && !!fullscreen.getElement()) {
-                this._log('-');
-                fullscreen.exit();
-                this.self.nativeElement.classList.remove('is-full-screen');
-            }
-        });
     }
 
     protected _onRouteChange (params) {
@@ -538,6 +522,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 } else {
                     this.camera.name = s.selectedCamera.name;
                     this.camera.status = s.selectedCamera.status;
+                    this.camera.isScheduleEnabled = s.selectedCamera.isScheduleEnabled;
+                }
+
+                if (this.camera.isLive) {
+                    this.playback.playLive();
                 }
         }
     }
@@ -547,8 +536,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.timelineExtendToNow.extendToNow();
         }
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(() => this._onAnimationFrame());
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this._onAnimationFrame());
+        }, this.timeline.renderFps);
     }
 
     public get showTimeline (): boolean {
@@ -560,10 +550,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     showPlayer () {
-        const currentStatus = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
+        this.status = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
             this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
 
-        this.status = currentStatus;
         return this.status;
     }
 
@@ -595,14 +584,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public toggleFullScreen ($event?) {
         this._log('toggleFullScreen');
         $event?.stopPropagation();
-        // this.ux.isFullScreen = !fullscreen.getElement()
-        const canRequestFullscreen = fullscreen.request(this.self.nativeElement.parentElement);
-        if (!canRequestFullscreen) {
-            this.ux.alternateFullScreen$.next(!this.ux.alternateFullScreen$.value);
-            // Resets the alternateFullScreen to allow opening once fullscreen is closed
-            this.ux.alternateFullScreen$.next(false);
+
+        if (fullscreen.getElement() == null) { // if browser is currently not in full screen
+            fullscreen.request().call(this.$self.parentElement);
+            setTimeout(() => {
+                this.$self.classList.add('is-full-screen');
+            }, 250);
+        } else {
+            fullscreen.exit().call(document);
+            setTimeout(() => {
+                this.$self.classList.remove('is-full-screen');
+            }, 250);
         }
-        this.ux.isFullScreen = canRequestFullscreen && !fullscreen.getElement();
+        // isFullScreen is updated by onFSC on document events
     }
 
     public stopSettingsClickPropagation ($event) {
@@ -627,20 +621,27 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetTransport () {
-        const transports = this.transports;
-        let transport = this.cameraTransportStorage.get(this.id);
-        if (!transport) {
-            if (transports.includes('hls')) {
-                transport = 'hls';
-            } else if (transports.includes('webm')) {
-                transport = 'webm';
-            } else {
-                transport = transports[0];
+        let transport;
+
+        if (this.isChrome && this.isMobile) {
+            transport = 'webm'; /// force mobile chrome to webm as it's more reliable
+        } else {
+            transport = this.cameraTransportStorage.get(this.id);
+            if (!transport) {
+                if (this.transports.includes('hls')) {
+                    transport = 'hls';
+                } else if (this.transports.includes('webm')) {
+                    transport = 'webm';
+                } else {
+                    transport = this.transports[0];
+                }
             }
         }
-        if (!transports.includes(transport)) {
-            transport = transports[0];
+
+        if (!this.transports.includes(transport)) {
+            transport = this.transports[0];
         }
+
         this.selectedTransport = transport;
     }
 

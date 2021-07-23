@@ -161,6 +161,7 @@
         "systemServerError": "Interní chyba serveru",
         "systemServerErrorMessage": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "Neznámý",
         "vendor": "Výrobce",
         "model": "Model",
@@ -476,8 +477,8 @@
         "licenseTimeout": "Nepodařilo se aktivovat licenci z důvodu vypršení časového limitu připojení. Ujistěte se, že je server online a zkuste to znovu.",
         "licenseServerError": "Aktivace licence se nezdařila. Licenční server neodpověděl. Zkuste to prosím znovu nebo kontaktujte podporu.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "Kontrola Přístupu",
@@ -675,6 +676,11 @@
             "restarting": "restartování..."
         },
         "successRename": "Název serveru byl uložen."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",

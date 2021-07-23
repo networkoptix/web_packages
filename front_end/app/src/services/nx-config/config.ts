@@ -3,9 +3,11 @@ import { environment }                           from '@environments/environment
 import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
 
 export const nxConfig: IConfig = {
-    alertTimeout   : 3 * 1000, // Alerts are shown for 3 seconds,
-    pollingTimeout : 30 * 1000,
-    animations     : {
+    alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
+    pollingTimeout         : 30 * 1000,
+    extendedRequestTimeout : 15 * 1000,
+    apiRequestAttempts     : 4,    // combined with extendedRequestTimeout this mean we'll give up after 1 min
+    animations             : {
         carouselImage: {
             enter : '0.25s ease-in',
             leave : '0.25s ease-out'
@@ -184,6 +186,7 @@ export const nxConfig: IConfig = {
         dirNonStandardView    : '/static/images/icons/view/',
         dirPagePlaceholder    : '/static/images/placeholders/page/',
         dirSectionPlaceholder : '/static/images/placeholders/section/',
+        dirDevCapabilities    : '/static/images/icons/dev_capabilities/',
         dirLandingIcons       : '/static/images/landing/block_icons/'
     },
     images: {

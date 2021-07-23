@@ -161,6 +161,7 @@
         "systemServerError": "Interner Serverfehler",
         "systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
+        "systemUnresponsive": "System scheint nicht zu reagieren. Bitte laden Sie die Seite neu.",
         "unknown": "Unbekannt",
         "vendor": "Hersteller",
         "model": "Modell",
@@ -476,8 +477,8 @@
         "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
         "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
         "networkConnection": "Verbindung zu %CLOUD_NAME% kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
-        "archiveEncrypted": "ARCHIV<br>ENTSCHLÜSSELT",
-        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort<br>einzugeben, um dieses Archiv zu entschlüsseln."
+        "archiveEncrypted": "ARCHIV\nVERSCHLÜSSELT",
+        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort\neinzugeben, um dieses Archiv zu entschlüsseln."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -675,6 +676,11 @@
             "restarting": "neustarten..."
         },
         "successRename": "Servername gespeichert."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Verbunden",

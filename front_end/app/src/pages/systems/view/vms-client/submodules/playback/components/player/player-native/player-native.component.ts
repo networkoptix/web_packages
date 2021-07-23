@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
 import { HttpClient }                                                                               from '@angular/common/http';
 import PlaybackService from '../../../services/playback.service';
 import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
@@ -14,9 +14,11 @@ import { NxUtilsService } from '@services/utils.service';
     styleUrls   : ['./player-native.component.scss']
 })
 @LoggerDecorator('NATIVE PLAYER ::', true)
-export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
     _log: Function;
     _warn: Function;
+
+    @Input() rotation: number;
 
     @Output() bufferingChange = new EventEmitter<boolean>();
 
@@ -45,7 +47,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     videoErrorEventHandler = (event: any) => {
-        if (this.videoView && this.videoView.nativeElement.error && this.videoView.nativeElement.error.code !== MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        if (this.videoView && this.videoView.nativeElement.error) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -65,20 +67,37 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 });
         }
+
+        if (this.videoView?.nativeElement.error?.message === 'PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED') {
+            this.playback.pause();
+            this.playback.unpause();
+            this._log('PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED ->');
+        }
     }
 
     public ngAfterViewInit (): void {
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.ux.alternateFullScreen$.subscribe(fullscreen => {
-            if (!fullscreen) return;
-            try {
-                this.videoView.nativeElement.webkitEnterFullscreen();
-            } catch (e) {
-                console.error(e);
-            }
-        });
-
         this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
+        this._handleRotation();
+    }
+
+    public ngOnChanges (): void {
+        this._handleRotation();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    protected _handleRotation () {
+        if (!this.videoView) {
+            return;
+        }
+        if (Math.abs(this.rotation % 180) === 90) {
+            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
+            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`;
+        } else {
+            this.videoView.nativeElement.style.width = '100%';
+            this.videoView.nativeElement.style.transform =
+                this.rotation ? `rotate(${this.rotation}deg)` : '';
+        }
     }
 
     public ngOnDestroy (): void {
@@ -122,7 +141,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
         // @ts-ignore
         const sourceUrl = this.state?.sourceUrl || '';
         // @ts-ignore
-        const posterUrl = this.state?.posterUrl || null;
+        const posterUrl = `${this.state?.posterUrl}&rotate=0` || null;
 
         this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
 
@@ -190,7 +209,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onVideoEnded (e: MediaStreamEvent) {
         this._log('video ended');
-        this.playback.stop();
+        // Used to attempt jumping to live.
+        this.playback.restore(this.playback.canPlayArchive(-1));
     }
 }
 

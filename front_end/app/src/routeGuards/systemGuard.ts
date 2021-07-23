@@ -34,7 +34,7 @@ export class SystemGuard implements CanActivate {
             return true;
         }
 
-        const routesChecked = ['users', 'cloud-storage', 'health', 'licenses'];
+        const routesChecked = ['users', 'cloud-storage', 'health', 'licenses', 'servers', 'advanced'];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
@@ -45,7 +45,9 @@ export class SystemGuard implements CanActivate {
                 users           : system.userManager.permissions.editUsers,
                 'cloud-storage' : system.canUserViewCloudStorage(),
                 health          : system.canViewInfo(),
-                licenses        : system.isAdmin || system.isOwner
+                licenses        : system.isAdmin || system.isOwner,
+                advanced        : system.isAdmin || system.isOwner,
+                servers         : system.isAdmin || system.isOwner
             };
             return canViewChecks[currentRoute] || this.router.navigate(
                 [environment.isLocal ? '/settings/' : `/systems/${systemId}`]
@@ -54,7 +56,7 @@ export class SystemGuard implements CanActivate {
 
         return systemId && currentRoute && this.accountService
             .get()
-            .then(account => {
+            .then(async(account) => {
                 if (account) {
                     if (environment.isLocal) {
                         this.system = this.settingsService.system;
@@ -74,7 +76,7 @@ export class SystemGuard implements CanActivate {
                             }
                         });
                     } else {
-                        this.system = this.systemService.createSystem(account.email, systemId, undefined, true);
+                        this.system = await this.systemService.createSystem(account.email, systemId, undefined, true);
                         return this.system.getInfoAndPermissions()
                             .then(checkPermissions)
                             .catch(() => {

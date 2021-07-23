@@ -42,9 +42,12 @@ export class NxSystemService {
         return this.system;
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;
+        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
+            .getModuleInfo().toPromise()
+            .catch(() => { return { reply: { version: 0 }}});
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
         } else {
@@ -64,9 +67,7 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
-        system.serverManager.getModuleInfo().toPromise().then(({ reply: { version } }) => {
-            system.setApiVersion(version || NxSystemRestAPI.supportedVersion);
-        });
+        system.setApiVersion(version);
         if (!skipPoll) {
             system.startPoll();
         }
@@ -74,29 +75,32 @@ export class NxSystemService {
     }
 
     createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
-        if (this.system !== undefined) {
-            return this.system;
+        if (this.system === undefined) {
+            this.system = new NxSystem(
+                this.CONFIG,
+                this.LANG,
+                this.cloudApi,
+                this.systemApiService,
+                this.pollService,
+                this.systemsService,
+                this.ribbonService,
+                this.router,
+                userEmail,
+                '',
+                '',
+                userId,
+                this.appState
+            );
+            this.system.mediaserver = mediaServer;
+            this.system.canMerge = true;
+            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
+            this.system.update();
         }
-        this.system = new NxSystem(
-            this.CONFIG,
-            this.LANG,
-            this.cloudApi,
-            this.systemApiService,
-            this.pollService,
-            this.systemsService,
-            this.ribbonService,
-            this.router,
-            userEmail,
-            '',
-            '',
-            userId,
-            this.appState
-        );
-        this.system.mediaserver = mediaServer;
-        this.system.canMerge = true;
-        this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
-        this.system.update();
-        this.system.startPoll();
+
+        if (this.system.subscriberCount === 0) {
+            this.system.startPoll();
+        }
+
         if (!this.systemsService.systems) {
             this.systemsService.systems = [<any> this.system];
         }

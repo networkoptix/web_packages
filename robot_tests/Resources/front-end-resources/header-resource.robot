@@ -1,6 +1,8 @@
 *** Keywords ***
 # Setups & Teardowns
 Header Suite Setup
+    Open Browser and go to URL    ${ENV}
+
     ${zero systems owner}=   Register and activate account with random email    No    Systems    ${BASE PASSWORD}
     Set Suite Variable    ${zero systems owner}
     Sleep    0.5
@@ -13,27 +15,14 @@ Header Suite Setup
         Append To List    ${HEADER TMP USERS}    ${user}
     END
 
-#    ${main system}=   Setup Docker System    cloud email=${one system owner}
     ${rand}=   Generate Random String
     ${main system}=   Create Base System    header_main_system_${rand}    owner=${one system owner}
     Set Suite Variable    ${main system}
-#    ${auth}=   Create List    ${one system owner}    ${BASE PASSWORD}
-#    Set Suite Variable    ${auth}
-#    ${main system users}=   Create List
-#
-#    FOR    ${role}    IN    viewer    liveViewer    advancedViewer    custom
-#        ${user}=   Register and activate account with random email    User    ${role}    ${BASE PASSWORD}
-#        Sleep    2
-#        Share    ${auth}    ${main system}[cloud id]    ${role}    ${user}
-#        Append To List    ${HEADER TMP USERS}    ${user}
-#        Append To List    ${main system users}    ${user}
-#    END
-#    Set Suite Variable    ${main system users}
 
+    Run Keyword If   '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin mode: suite setup finished
     ${offline systems}=   Create List
     ${rand}=   Generate Random String
     FOR    ${i}    IN RANGE    1    17
-#        ${system}=   Setup Docker System    cloud email=${many systems owner}
         ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=False
         Sleep    2
         Append To List    ${offline systems}    ${system}
@@ -41,28 +30,24 @@ Header Suite Setup
     END
     Set Suite Variable    ${offline systems}
 
-    Open Browser and go to URL    ${ENV}
-
 Header Suite Teardown
-    # Disconnect all systems from cloud
-    Disconnect    ${ENV}    ${one system owner}    ${base password}    ${main system}[cloud id]
-    FOR    ${system}    IN    @{offline systems}
-        Run keyword and ignore error    Disconnect    ${ENV}    ${many systems owner}    ${base password}    ${system}[cloud id]
-    END
-
-    # Delete all related accounts
-    FOR    ${user}    IN    @{HEADER TMP USERS}
-        ${systems}=  Get Account Systems    ${ENV}    ${user}    ${base password}
-        Run keyword and ignore error    Delete Account    ${ENV}    ${user}    ${base password}
-    END
-
-    Delete Docker Server    ${main system}[name]
     Close All Browsers
+    Delete Base System    ${main system}
+    Run Keyword If   '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin mode tests complete
+    FOR    ${system}    IN    @{offline systems}
+        Delete Base System    ${system}
+    END
 
 Header Test Setup
+    Skip If Irrelevant
     Set Window Size    1920    1080
-    Common Restart Logout    ${ENV}
 
+Header Test Teardown
+    Skip If Irrelevant
+    Close Modal If There
+    Reload Page
+    ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}    timeout=5
+    Run Keyword If    ${logged in}    Log Out
 
 # Header
 Validate Header Button Text
@@ -107,10 +92,10 @@ Get systems names from Systems grid
 Validate System Navigation Tile
     [Arguments]    ${system name}    ${active link}=${None}
     Wait until elements are visible
-    ...    //h5[text()="${system name}"]/..//following-sibling::ul//a[contains(text(), "${VIEW}")]
-    ...    //h5[text()="${system name}"]/../following-sibling::ul//a[contains(text(), "${SETTINGS TEXT}")]
-    ...    //h5[text()="${system name}"]/../following-sibling::ul//a[contains(text(), "${INFORMATION TEXT}")]
-    Run keyword if    $active_link    Wait until element is visible    //h5[text()="${system name}"]/../following-sibling::ul/li[contains(@class, "active")]/a[contains(text(), "${active link}")]
+    ...    //h5[text()="${system name}"]/../..//following-sibling::ul//a[contains(text(), "${VIEW}")]
+    ...    //h5[text()="${system name}"]/../../following-sibling::ul//a[contains(text(), "${SETTINGS TEXT}")]
+    ...    //h5[text()="${system name}"]/../../following-sibling::ul//a[contains(text(), "${INFORMATION TEXT}")]
+    Run keyword if    $active_link    Wait until element is visible    //h5[text()="${system name}"]/../../following-sibling::ul/li[contains(@class, "active")]/a[contains(text(), "${active link}")]
 
 Validate Navigation Grid Tile
     [Arguments]    ${tile header}    ${tile pages}    ${active link}=${None}
@@ -119,12 +104,12 @@ Validate Navigation Grid Tile
         ${page title}=   Evaluate    $page['title'].strip()
         Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul//a[contains(text(), "${page}[title]")]
     END
-    Run Keyword If    $active_link    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../following-sibling::ul/li[contains(@class, "active")]//a[contains(text(), "${active link}")]
+    Run Keyword If    $active_link    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul/li[contains(@class, "active")]//a[contains(text(), "${active link}")]
 
 Get External Links Names
     [Arguments]    ${section title}
     ${links names}=   Create List
-    ${links}=   Get WebElements    ${DROPDOWN NAVIGATION TILE}//h5[contains(text(), "${section title}")]/../following-sibling::ul//a[@target="_blank"]
+    ${links}=   Get WebElements    ${DROPDOWN NAVIGATION TILE}//h5[contains(text(), "${section title}")]/../../following-sibling::ul//a[@target="_blank"]
     FOR    ${link}    IN    @{links}
         ${text}=   Get Text    ${link}
         ${text}=   Strip String    ${text}

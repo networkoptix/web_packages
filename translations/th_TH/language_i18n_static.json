@@ -161,6 +161,7 @@
         "systemServerError": "ข้อผิดพลาดภายในเซิร์ฟเวอร์",
         "systemServerErrorMessage": "มีข้อผิดพลาดเกิดขึ้นโปรดลองอีกครั้ง. หากปัญหายังคงมีอยู่โปรดติดต่อทีมสนับสนุนของคุณ",
         "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "ม่รู้จัก",
         "vendor": "ผู้ติดต่อ:",
         "model": "รุ่น",
@@ -476,8 +477,8 @@
         "licenseTimeout": "ไม่สามารถเปิดใช้งานใบอนุญาตเนื่องจากการหมดเวลาการเชื่อมต่อ โปรดตรวจสอบว่าเซิร์ฟเวอร์ออนไลน์และลองอีกครั้ง",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",
@@ -675,6 +676,11 @@
             "restarting": "กำลังรีสตาร์ท"
         },
         "successRename": "บันทึกชื่อเซิร์ฟเวอร์แล้ว"
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",

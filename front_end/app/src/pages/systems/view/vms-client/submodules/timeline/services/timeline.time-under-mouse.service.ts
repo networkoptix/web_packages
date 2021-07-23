@@ -9,6 +9,7 @@ export interface TimelineTimeUnderMouseServiceStatus {
     isMouseInside: boolean,
     timeUnderMouse: ms,
     offsetX: px,
+    pressed: boolean,
 }
 
 @Injectable({
@@ -18,6 +19,7 @@ export class TimelineTimeUnderMouseService {
     protected _isMouseInside: boolean = false
     protected _timeUnderMouse: ms = -1
     protected _offsetX: px = -1
+    protected _pressed: boolean = false
 
     protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>()
 
@@ -25,7 +27,8 @@ export class TimelineTimeUnderMouseService {
         this._subject.next({
             isMouseInside  : this._isMouseInside,
             timeUnderMouse : this._timeUnderMouse,
-            offsetX        : this._offsetX
+            offsetX        : this._offsetX,
+            pressed        : this._pressed,
         });
     }
 
@@ -45,9 +48,27 @@ export class TimelineTimeUnderMouseService {
         return this._offsetX;
     }
 
+    public get pressed () {
+        return this._pressed;
+    }
+
     constructor(
         protected timeline: TimelineService
     ) {
+    }
+
+    public handleMouseDown () {
+        if (!this._pressed) {
+            this._pressed = true
+            this._emit()
+        }
+    }
+
+    public handleMouseUp () {
+        if (this._pressed) {
+            this._pressed = false
+            this._emit()
+        }
     }
 
     public handleMouseMove (e: MouseEvent|TouchEvent) {

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Component, Input, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
@@ -17,6 +18,7 @@ import { filter } from 'rxjs/operators';
 export enum AboutTemplates {
     INTRO='intro',
     CAPABILITIES='capabilities',
+    DEV_CAPABILITIES='devCapabilities',
     SUPPORTED_TECH='supportedTech',
     GET_STARTED='getStarted',
     DEV_TOOLS='devTools',
@@ -117,8 +119,8 @@ export class NxAboutComponent {
             ).subscribe(account => {
                 if (this.account !== account) {
                     const url = this.router.url;
-                    this.router.navigateByUrl('/', { skipLocationChange : true }).then(_ => {
-                        this.router.navigateByUrl(url, { skipLocationChange : true });
+                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
+                        this.router.navigateByUrl(url, { skipLocationChange: true });
                     });
                 }
             });

@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import TimeRange from './TimeRange';
 import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases';
 import cfg from './timeline.config';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 export interface TimelineServiceStatus {
     fullRange: TimeRange,
@@ -20,6 +21,7 @@ export interface TimelineServiceStatus {
     providedIn: 'root'
 })
 export class TimelineService {
+    public readonly renderFps: number;
     protected _fullRange: TimeRange = new TimeRange(0, 0)
     protected _visibleRange: TimeRange = new TimeRange(0, 0)
     protected _canvasGeometry: CanvasGeometry = { width: 0, height: 0, dpr: 1 }
@@ -27,9 +29,17 @@ export class TimelineService {
     protected _subject = new Subject<TimelineServiceStatus>()
     protected _canvasGeometryUpdateRequested: boolean = true
 
-    public constructor () {
-        this._onAnimationFrame = this._onAnimationFrame.bind(this);
-        requestAnimationFrame(this._onAnimationFrame);
+    public constructor (browserDetector: DeviceDetectorService) {
+        const _60fps = Math.ceil(1000 / 17);
+        const _30fps = Math.ceil(1000 / 34);
+
+        let renderFps = _60fps;
+        if (browserDetector.isMobile() || ['safari', 'firefox'].includes(browserDetector.browser)) {
+            renderFps = _30fps;
+        }
+        this.renderFps = renderFps;
+
+        requestAnimationFrame(() => this._onAnimationFrame());
     }
 
     public get canvasGeometryUpdateRequested () {
@@ -235,7 +245,9 @@ export class TimelineService {
             this._animationStep = 0;
             this._emit();
         }
-        requestAnimationFrame(this._onAnimationFrame);
+        setTimeout(() => {
+            requestAnimationFrame(() => this._onAnimationFrame());
+        }, this.renderFps);
     }
 }
 

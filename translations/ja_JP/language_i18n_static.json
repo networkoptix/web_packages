@@ -161,6 +161,7 @@
         "systemServerError": "内部サーバーエラー",
         "systemServerErrorMessage": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "systemUnreachable": "システムにアクセスできません",
+        "systemUnresponsive": "システムが応答しないようです。ページを再読み込みしてください。",
         "unknown": "未知の値",
         "vendor": "ベンダー",
         "model": "モデル",
@@ -476,8 +477,8 @@
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスの有効化に失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
-        "archiveEncrypted": "アーカイブ<br>が暗号化されています",
-        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化<br>パスワードを入力するようシステム管理者に依頼してください。"
+        "archiveEncrypted": "アーカイブは\n暗号化されています",
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -675,6 +676,11 @@
             "restarting": "再起動しています..."
         },
         "successRename": "サーバー名を保存しました。"
+    },
+    "serverTabTitles": {
+        "View": "映像",
+        "Settings": "設定",
+        "Information": "情報"
     },
     "system": {
         "connected": "接続済み",

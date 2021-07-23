@@ -161,6 +161,7 @@
         "systemServerError": "内部服务器错误",
         "systemServerErrorMessage": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "systemUnreachable": "系统无法连接",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "未知的",
         "vendor": "厂商",
         "model": "型号",
@@ -476,8 +477,8 @@
         "licenseTimeout": "连接超时，激活授权失败。请确保服务器在线，然后重试。",
         "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系支持人员。",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "门禁管理",
@@ -675,6 +676,11 @@
             "restarting": "重启中……"
         },
         "successRename": "服务器名称已保存。"
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",

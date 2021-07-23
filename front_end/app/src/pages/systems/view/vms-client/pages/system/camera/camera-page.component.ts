@@ -73,8 +73,9 @@ export class CameraPageComponent implements OnInit, OnDestroy {
             this.timelineExtendToNow.extendToNow();
         }
 
-        this._animationFrameRequestHandler =
-            requestAnimationFrame(this._onAnimationFrame);
+        setTimeout(() => {
+            this._animationFrameRequestHandler = requestAnimationFrame(() => this._onAnimationFrame);
+        }, Math.ceil(1000 / 34));
     }
 
     public get showPlayer (): boolean {

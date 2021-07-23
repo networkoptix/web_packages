@@ -161,6 +161,7 @@
         "systemServerError": "שגיאת שרת פנימית",
         "systemServerErrorMessage": "אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
         "systemUnreachable": "אי אפשר להגיע למערכת",
+        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
         "unknown": "לא ידוע",
         "vendor": "ספק",
         "model": "מודל",
@@ -476,8 +477,8 @@
         "licenseTimeout": "הפעלת הרישיון נכשלה עקב חוסר תגובה לחיבור. אנא וודא שהשרת מקוון ונסה שוב.",
         "licenseServerError": "הפעלת הרישיון נכשלה. שרת הרישיונות לא הגיב. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE<br>ENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption<br>password to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
     },
     "integration": {
         "Access Control": "בקרת כניסה",
@@ -675,6 +676,11 @@
             "restarting": "מפעיל מחדש..."
         },
         "successRename": "שם השרת נשמר."
+    },
+    "serverTabTitles": {
+        "View": "View",
+        "Settings": "Settings",
+        "Information": "Information"
     },
     "system": {
         "connected": "Connected",
