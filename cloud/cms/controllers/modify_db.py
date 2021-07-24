@@ -64,7 +64,7 @@ def notify_version_ready(asset, version, exclude_user):
                 (not asset.is_integration or cloud_capabilities.get('integration_store_enabled', False)):
             asset_customizations_set.add(customization)
 
-    if len(asset_customizations_set) == 0:
+    if not asset_customizations_set:
         return
 
     for user in users:
@@ -214,9 +214,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     def process_checkbox():
         nonlocal new_record_value
         new_record_value = data_structure_name in request_data
-        if data_structure.advanced and not can_edit_advanced:
-            return False
-        return True
+        return bool(not data_structure.advanced or can_edit_advanced)
 
     def process_integer():
         nonlocal new_record_value, has_error
@@ -549,7 +547,7 @@ def asset_has_required_data(asset, version_id=None):
             else:
                 has_default_value = len(default_value) > 0
         if not datastructure.optional and not has_default_value and (not records.exists() or last_record_value == ""):
-            ds_name = datastructure.label if datastructure.label else datastructure.name
+            ds_name = datastructure.label or datastructure.name
             change_url = reverse('admin:change_page', kwargs={'asset_id': asset.id, 'context_id': datastructure.context.id})
             errors.append((
                 ds_name,
@@ -622,17 +620,17 @@ def get_records_for_version(asset, version, customization):
 
 # File upload helpers
 def is_not_valid_file_type(file_type, meta_types):
-    for meta_type in meta_types.split(','):
-        if meta_type.strip() in file_type:
-            return False
-    return True
+    return all(
+        meta_type.strip() not in file_type
+        for meta_type in meta_types.split(',')
+    )
 
 
 def is_not_valid_file_extension(file_name, meta_types):
-    for meta_type in meta_types.split(','):
-        if file_name.endswith(f'.{meta_type.strip()}'):
-            return False
-    return True
+    return not any(
+        file_name.endswith(f'.{meta_type.strip()}')
+        for meta_type in meta_types.split(',')
+    )
 
 
 def get_image_dimensions(image_file):
@@ -675,7 +673,10 @@ def check_image_dimensions(data_structure_name,
 
 
 def has_wrong_image_sizes(multi_image_file_sizes, required_image_sizes):
-    return not all(image_size in multi_image_file_sizes for image_size in required_image_sizes)
+    return any(
+        image_size not in multi_image_file_sizes
+        for image_size in required_image_sizes
+    )
 
 
 def check_meta_settings(data_structure, new_file):

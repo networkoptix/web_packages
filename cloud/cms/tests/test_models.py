@@ -2,6 +2,7 @@ import pytest
 from collections import Counter
 
 from django.db.models import Count
+from django.core.files.base import ContentFile
 from model_bakery import baker, seq
 
 from django.test import TestCase
@@ -1543,6 +1544,7 @@ class TestContentVersionMethods:
         )
 
         version_older = baker.make('ContentVersion', asset=asset, created_by=superuser)
+        baker.make(
             'AssetCustomizationReview', version=version_older,
             customization=default_customization, state=AssetCustomizationReview.REVIEW_STATES.accepted
         )
