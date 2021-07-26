@@ -62,7 +62,7 @@
       <div class="options" *ngIf="(visibleQualities$ | async)?.length else noQualitiesAvailable">
         <div *ngFor="let q of visibleQualities$ | async" class="option"
              [ngClass]="{ selected: (selectedQuality$ | async) === q.toLowerCase(), divider: (drawQualityDivider$ | async) === q.toLowerCase() }"
-             (click)="selectedQuality = q"><div>{{ q }}</div></div>
+             (click)="selectedQuality = q; settingsShown = false"><div>{{ q }}</div></div>
       </div>
       <ng-template #noQualitiesAvailable>
         <div class="options">
