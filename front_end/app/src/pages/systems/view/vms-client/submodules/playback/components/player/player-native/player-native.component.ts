@@ -1,12 +1,14 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
-import { HttpClient }                                                                               from '@angular/common/http';
-import PlaybackService from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-import { Subscription } from 'rxjs';
-import Hls from 'hls.js';
-import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
-import { NxUtilsService } from '@services/utils.service';
+import { HttpClient }                                                                                                               from '@angular/common/http';
+import PlaybackService                                                                                                              from '../../../services/playback.service';
+import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE }                                                                             from '../../../datatypes/PlaybackState';
+import { Subscription }                                                                                                             from 'rxjs';
+import Hls                                                                                                                          from 'hls.js';
+import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                                                            from '@pages/systems/view/vms-client/utils';
+import { WebClientUxService }                                                                                                       from '@pages/systems/view/services/webclient-ux.service';
+import { NxUtilsService }                                                                                                           from '@services/utils.service';
+import { NxLanguageProviderService }                                                                                                from '../../../../../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }                                                                                                  from '../../../../../../../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'player-native',
@@ -19,6 +21,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     _warn: Function;
 
     @Input() rotation: number;
+
+    LANG: LanguageI18NStaticTypes;
 
     @Output() bufferingChange = new EventEmitter<boolean>();
 
@@ -34,11 +38,13 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     protected readonly isMobile: boolean;
 
     constructor (
+        languageService: NxLanguageProviderService,
+        utilsService: NxUtilsService,
         public playback: PlaybackService,
         public ux: WebClientUxService,
-        private http: HttpClient,
-        utilsService: NxUtilsService
+        private http: HttpClient
     ) {
+        this.LANG = languageService.translations;
         this.isMobile = utilsService.isMobile() || utilsService.isTablet();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
@@ -47,6 +53,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     videoErrorEventHandler = (event: any) => {
+        if (this.videoView?.nativeElement.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+            this.playback.setError(this.LANG.common.cameraStates.noFormat());
+        }
+
         if (this.videoView && this.videoView.nativeElement.error) {
             this.http.get(event.target.src)
                 .subscribe((response: any) => {
