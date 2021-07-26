@@ -78,14 +78,14 @@
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
           <nx-player-placeholder
-                  *ngIf="cameraError && !transportError; else unreachable"
+                  *ngIf="cameraError; else unreachable"
                   svgFileName="placeholder_camera_alert"
                   [heading]="LANG.common.cameraStates.error()"
                   [description]="cameraError">
           </nx-player-placeholder>
           <ng-template #unreachable>
             <nx-player-placeholder
-                    *ngIf="transportError && !camera.isOffline && !camera.isUnauthorized"
+                    *ngIf="!camera.isOffline && !camera.isUnauthorized"
                     svgFileName="placeholder_camera_alert"
                     [heading]="LANG.common.cameraStates.error()"
                     [description]="LANG.common.cameraStates.noFormat()">

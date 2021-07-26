@@ -65,7 +65,6 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         if (event.type === 'networkError') {
             // manifestLoadTimeOut ... etc. hls.js already tried to recover - nothing else can be done.
             this.playback.setError(this.LANG.common.cameraStates.errorLoading());
-            return;
         }
 
         const sourceUrl = this.state.mode !== PLAYBACK_MODE.STOPPED && this.state?.sourceUrl;

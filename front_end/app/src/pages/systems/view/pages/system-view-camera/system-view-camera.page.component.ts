@@ -82,7 +82,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public cameraError: string;
     private status = false;
     private cameraCurrentState: PlaybackState;
-    public transportError: boolean;
     private unsub$ = new Subject();
 
     constructor(
@@ -188,7 +187,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.resetTransport();
             }
             this.qualities = this.availableTransportsAndResolutions[this.selectedTransport];
-            this.transportError = (this.selectedTransport === undefined);
         });
 
         this.qualities$.subscribe((qualities) => {
@@ -518,7 +516,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get enableControls (): boolean {
-        return this.camera && !this.transportError && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
+        return this.camera && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
     }
 
     showPlayer () {
