@@ -9,7 +9,7 @@ import { WINDOW } from '@services/window-provider';
     templateUrl : './capabilities.component.html',
     styleUrls   : ['./capabilities.component.scss']
 })
-export class NxNewCapabilitiesComponent implements OnInit, AfterViewInit {
+export class NxNewCapabilitiesComponent implements OnInit {
     @Input() devCapabilitiesNode: AboutNode;
 
     errorManager: ErrorStateManager;
@@ -18,8 +18,6 @@ export class NxNewCapabilitiesComponent implements OnInit, AfterViewInit {
         width  : '72',
         height : '76'
     }
-
-    checkHeight = false;
 
     constructor(configService: NxConfigService,  @Inject(WINDOW) private window: Window) {
         this.CONFIG = configService.config;
@@ -37,9 +35,5 @@ export class NxNewCapabilitiesComponent implements OnInit, AfterViewInit {
             this.devCapabilitiesNode,
             capabilitiesConfig
         );
-    }
-
-    ngAfterViewInit(): void {
-        this.checkHeight = true;
     }
 }

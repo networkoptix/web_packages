@@ -1,13 +1,9 @@
 import { Component, Inject, Input } from '@angular/core';
-import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 import { WINDOW } from '@services/window-provider';
-import { fromEvent, merge } from 'rxjs';
-
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
-@UntilDestroy()
 @Component({
     selector    : 'nx-capabilities',
     templateUrl : 'capabilities.component.html',

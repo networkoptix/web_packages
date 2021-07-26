@@ -5,6 +5,7 @@ import { debounceTime } from 'rxjs/operators';
 
 // Allows you to make all children with a certain class of the parent component have the same height dyamically
 // Attach to parent, and then specify a class to look for in the children with classToMatch input.
+// ATM, this directive doesnt work if new cards are added after the initial load, can possibly be added.
 @UntilDestroy()
 @Directive({
     selector: '[nxMatchHeight]'

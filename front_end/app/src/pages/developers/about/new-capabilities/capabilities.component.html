@@ -3,9 +3,9 @@
 </ng-template>
 
 <ng-template #multiblocks>
-    <div class="card-grid card-grid-multi" *ngIf="devCapabilitiesNode">
+    <div class="card-grid card-grid-multi"  nxMatchHeight [classToMatch]="'card'" *ngIf="devCapabilitiesNode">
         <div class="card-container-multi" *ngFor="let node of devCapabilitiesNode.nodes; let last = last" [ngClass]="devCapabilitiesNode.nodes.length === 2?'card-only-two':'card-type-3'"> 
-            <div class="card dev-capabilities-card" nxMatchHeight [shouldExecuteMatchHeight]="last && checkHeight" [classToMatch]="'card'" [parentToMatch]="'card-grid'">
+            <div class="card dev-capabilities-card">
                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirDevCapabilities + 'd-hex.svg'" class="card-icon" [svgStyle]="{ 'height.px': svg.height, 'width.px': svg.width }"></svg-icon>
                 <h3 class="title">{{ node.title}}</h3>
                 <ul class="bullet-points">

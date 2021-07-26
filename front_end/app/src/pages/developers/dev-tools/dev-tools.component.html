@@ -13,7 +13,7 @@
             <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
             <svg-icon *ngIf="tool.icon" nx-add-svg-src [src]="CONFIG.icons.dirDevtools + tool.icon"></svg-icon>
         </header>
-        <div class="tool-detail" nxMatchHeight [classToMatch]="'tool-detail'" [parentToMatch]="'detail-blocks'"  [shouldExecuteMatchHeight]="last">
+        <div class="tool-detail">
             <h3>{{tool.title}}</h3>
             <p>{{tool.asset?.shortDescription}}</p>
         </div>
@@ -21,7 +21,7 @@
 </ng-template>
 
 <ng-template #blocks let-noMargin="noMargin">
-    <div *ngIf="this.devToolsNode" class="card-grid detail-blocks"[ngClass]="noMargin ? '' : 'stand-alone-blocks'">
+    <div *ngIf="this.devToolsNode" nxMatchHeight [classToMatch]="'tool-detail'" class="card-grid detail-blocks"[ngClass]="noMargin ? '' : 'stand-alone-blocks'">
         <ng-container *ngFor="let tool of devToolsNode.nodes; let last = last">
             <ng-container *ngTemplateOutlet="toolBlock;context{tool:tool, last: last}"></ng-container>
         </ng-container>
