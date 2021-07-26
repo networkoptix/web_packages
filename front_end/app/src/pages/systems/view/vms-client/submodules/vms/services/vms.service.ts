@@ -93,6 +93,7 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo>
 
     public set serverTimes (st: Array<ServerTimeInfo>) {
+        this._log('serverTimes set', st.map(i => i.timeZoneOffset))
         this._serverTimes = [...st];
     }
 
@@ -136,19 +137,21 @@ export class VideoManagementSystemService {
     */
 
     public get timeZoneOffset (): ms {
+        let result = 0
         if (!this.serverTimes?.length) {
-            return 0;
+            this._warn('TZO no server times data')
+        } else if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
+            this._warn('TZO no camera selected')
+        } else {
+            const preferredServerTime =
+                this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId) ||
+                this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
+                this.serverTimes[0];
+            const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
+            const serverTZO = preferredServerTime?.timeZoneOffset || clientTZO;
+            result = serverTZO - clientTZO;
         }
-        if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
-            return 0;
-        }
-        const preferredServerTime =
-            this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId) ||
-            this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
-            this.serverTimes[0];
-        const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
-        const serverTZO = preferredServerTime?.timeZoneOffset || clientTZO;
-        return serverTZO - clientTZO;
+        return result
     }
     public tweakT (t: fairMs): tweakedMs {
         return t + this.timeZoneOffset

@@ -338,32 +338,32 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unsub$.next('done');
         this.getRecordsInProgress = this.id;
         this.previewUrl = `url(${this.system.getPreviewUrl(this.id, null)})`;
-        if (!this.system.userManager.permissions.viewArchives) {
+        if (!this.system?.userManager.permissions.viewArchives) {
             this.getRecordsInProgress = undefined;
             this._initSelectedCamera();
             this.playback.restore(false);
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
-                ar = await this._prepareArchiveRecords(ar);
+                const records = this._extractPeriodsFromServerResponse(ar)
                 this._log('got camera archive range', this.id, ar);
                 this.playback.save();
-                if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-                    this._log('empty archive');
+                if (!ar.error || ar.error !== '0' || !records.length) {
+                    this._log('empty archive', ar);
                     this.playback.restore(false);
                 } else {
                     try {
-                        const firstRecordStartTimeMs = parseInt(ar.reply[0].startTimeMs);
-                        const lastRecordStartTimeMs = parseInt(ar.reply[ar.reply.length - 1].startTimeMs);
-                        const lastRecordDuration = parseInt(ar.reply[ar.reply.length - 1].durationMs);
+                        const firstRecordStartTimeMs = parseInt(records[0].startTimeMs);
+                        const lastRecordStartTimeMs = parseInt(records[records.length - 1].startTimeMs);
+                        const lastRecordDuration = parseInt(records[records.length - 1].durationMs);
                         const showToLive = this.camera.isLive || this.camera.isScheduleEnabled || this.camera.hasArchive;
                         const now = Date.now();
                         const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
-                        const archive = ar.reply.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
+                        const archive = records.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
                         if (lastRecordDuration === -1) {
                             archive[archive.length - 1] = new SimpleTimeRange(lastRecordStartTimeMs, now);
                             this._log('still recording', archive[archive.length - 1], archive[archive.length - 1].duration);
                         }
-                        this._log('non-empty archive', this.id, range, archive);
+                        this._log('non-empty archive', ar, this.id, range, archive);
                         this.vms.setCameraRecords(this.id, range, archive);
                         this.playback.restore(true);
                     } catch (e) {
@@ -392,12 +392,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             const cameraId = this.id;
             this._log('requesting new records', since, now, cameraId, now - since)
             this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
-                ar = await this._prepareArchiveRecords(ar);
-                if (!ar.error || ar.error !== '0' || !ar.reply || !ar.reply.length) {
-                    this._log('no newly recorded');
+                const records = this._extractPeriodsFromServerResponse(ar)
+                if (!ar.error || ar.error !== '0' || !records.length) {
+                    this._log('no newly recorded', ar);
                 } else {
-                    this._log('newly recorded', ar);
-                    const prepared = ar.reply.map(r => {
+                    this._log('newly recorded', ar, records);
+                    const prepared = records.map(r => {
                         // the server has a weird habit of sending strings instead of numbers every now and then
                         const start = Math.max(parseInt(r.startTimeMs), since);
                         const duration = parseInt(r.durationMs);
@@ -423,32 +423,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    protected async _getServerTimes () {
-        let res;
-        try {
-            res = await this.system.getServerTimes();
-        } catch (err) {
-            if (err.name === 'TimeoutError') {
-                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
-            }
-        }
-        this.vms.serverTimes = res ?? [];
-        return this.vms.serverTimes;
-    }
-
-    protected async _prepareArchiveRecords (ar) {
-        // this method here is kinda legacy
-        // TODO: refactor
-        await this._getServerTimes();
-        if (ar.reply.length) {
-            ar.reply = ar.reply
-                .reduce((records, { periods }) => {
-                    records.splice(-1, 0, ...periods);
-                    return records;
-                }, [])
-                .sort((a, b) => a.startTimeMs - b.startTimeMs);
-        }
-        return ar;
+    protected _extractPeriodsFromServerResponse (response) {
+        return response.reply[0]?.periods || []
     }
 
     public ngAfterViewInit () {

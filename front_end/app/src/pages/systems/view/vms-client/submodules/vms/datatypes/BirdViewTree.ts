@@ -88,7 +88,7 @@ export class BirdViewTree {
             if (endMs < this._originalArchiveRange.start) {
                 console.warn('BirdViewTree::getRecords hard miss in the past');
             } else {
-                console.warn('BirdViewTree::getRecords soft miss in the past');
+                // console.warn('BirdViewTree::getRecords soft miss in the past');
             }
             return [];
         }
