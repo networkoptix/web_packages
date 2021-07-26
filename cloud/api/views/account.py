@@ -38,6 +38,7 @@ email__body = openapi.Schema(type=openapi.TYPE_STRING)
 first_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 last_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
+totp__body = openapi.Schema(description="Timed one time password for auth app.", type=openapi.TYPE_STRING)
 
 login__body = openapi.Schema(type=openapi.TYPE_STRING)
 remember__body = openapi.Schema(type=openapi.TYPE_BOOLEAN)
@@ -282,16 +283,23 @@ def delete_user(request):
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "password": password__body
+                             "password": password__body,
+                             "totp": totp__body
                          },
-                         required=["password"]
+                         required=["password", "totp"]
                      ))
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def toggle2fa(request):
-    require_params(request, ("password",))
+    require_params(request, ("password", "totp"))
     account = Account.get(request)
-    return api_success(Account.toggle_2fa(request, request.data.get("password"), not account.get('account2faEnabled')))
+    return api_success(
+        Account.toggle_2fa(request,
+                           request.data.get("password"),
+                           request.data.get("totp"),
+                           not account.get('account2faEnabled')
+                           )
+    )
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
