@@ -5,7 +5,7 @@ from inlinestyler.utils import inline_css
 import re
 import sass
 
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
 
 from util.base_cache import BaseCache
@@ -135,12 +135,14 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             css = values['styling']
 
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
-            process_global_contexts(cloud_portal, doc_dict, doc.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+            context_processor = ContextProcessor(
+                asset=cloud_portal, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict,
+                preview=False, version_id=doc.version_id()
+            )
+            context_processor.process_global_contexts(content=doc_dict, language=language)
+
             doc_dict['version'] = version
-
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
-
             doc_dict['id'] = doc.id
 
             if review and pending_review:

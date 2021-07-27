@@ -645,7 +645,7 @@ def download_package(request, asset_id):
         is_ready = package_info.get("is_ready")
         return api_success({"msg": "Package is ready" if is_ready else "Package is not ready", "is_ready": is_ready, "task_id": package_info.get("task_id")})
     else:
-        zipped_data = filldata.get_zip_package(asset, preview, version_id)
+        zipped_data = filldata.PackageExporter(asset, preview, version_id).get_zip_package()
         return response_attachment(zipped_data, make_package_name(asset), "application/zip")
 
 

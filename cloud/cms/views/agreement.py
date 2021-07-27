@@ -8,7 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
                         DataStructure, ContributorAgreement)
 from util.base_cache import BaseCache
@@ -119,8 +119,12 @@ def get_agreement(request):
             cloud_portal = get_cloud_portal_asset()
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-            process_global_contexts(cloud_portal, agreement_dict, agreement.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+            context_processor = ContextProcessor(
+                asset=cloud_portal, preview=False, version_id=agreement.version_id(), global_contexts=global_contexts,
+                global_contexts_dict=global_contexts_dict
+            )
+            context_processor.process_global_contexts(content=agreement_dict, language=language)
+
             AGREEMENT_CACHE.set_cached_item(agreement_dict)
             if agreement_id:
                 AGREEMENT_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}--{state}-latest'

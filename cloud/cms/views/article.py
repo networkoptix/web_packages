@@ -6,13 +6,15 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language,
                         AssetCustomizationReview, DataStructure)
+from cms.serializers import ArticleSerializer
+
 from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request
 
-from cms.serializers import ArticleSerializer
+from typing import Union
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the article. Ex: draft, published, or review",
@@ -37,7 +39,7 @@ def get_article(request, url_param, **kwargs):
     review = state == 'pending'
     article_id = request.query_params.get('id')
     language = get_language_object_from_request(request)
-    article = None
+    article: Union[Asset, None] = None
     version = None
     cached_article = None
 
@@ -109,8 +111,11 @@ def get_article(request, url_param, **kwargs):
             cloud_portal = get_cloud_portal_asset()
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
-            process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
-                                    global_contexts, global_contexts_dict, language=language)
+            context_processor = ContextProcessor(
+                asset=cloud_portal, version_id=article.version_id(), preview=False, global_contexts=global_contexts,
+                global_contexts_dict=global_contexts_dict
+            )
+            context_processor.process_global_contexts(content=article_dict, language=language)
             ARTICLE_CACHE.set_cached_item(article_dict)
 
             ser = ArticleSerializer(data=article_dict)

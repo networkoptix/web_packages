@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from util.base_cache import BaseCache
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import AssetType, Context, DataStructure, Asset, AssetCustomizationReview,\
     cloud_portal_customization_cache, get_cloud_portal_asset
 
@@ -35,8 +35,10 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
         elif show_drafts:
             state = 'draft'
 
-        global_contexts_dict = None
         versions = Asset.version_ids(integrations)
+
+        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+        global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
         for integration in integrations:
             current_version = versions[integration.id]
@@ -65,12 +67,6 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
             integration_dict = INTEGRATION_CACHE[customization_id_state_key]
             # If the integration doesn't exist or the version is wrong recalculate it
             if not integration_dict or integration_dict['version'] != current_version or show_drafts:
-                if not global_contexts_dict:
-                    global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True,
-                                                             hidden=False)
-                    global_contexts_dict = global_contexts_to_dict(
-                        global_contexts, cloud_portal)
-
                 records = DataStructure.find_actual_values(
                     data_structures, asset=integration, version_id=current_version, draft=show_pending or show_drafts,
                     customization_name=settings.CUSTOMIZATION
@@ -115,8 +111,10 @@ def make_integrations_json(integrations, language, contexts=None, show_pending=F
                 if not integration_dict:
                     continue
 
-                process_global_contexts(cloud_portal, integration_dict, current_version, False,
-                                        global_contexts, global_contexts_dict, language=language)
+                context_processor = ContextProcessor(
+                    asset=cloud_portal, version_id=current_version, preview=False, global_contexts=global_contexts
+                )
+                context_processor.process_global_contexts(content=integration_dict, language=language)
 
                 if show_drafts or show_pending:
                     integration_dict['pending'] = show_pending

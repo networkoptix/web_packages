@@ -35,7 +35,7 @@ def make_package(asset_id, preview, version_id):
     asset = Asset.objects.get(id=asset_id)
     cache_key = get_package_cache_key(asset, preview, version_id)
 
-    zip_package = filldata.get_zip_package(asset, preview, version_id, update_progress_cb=update_progress)
+    zip_package = filldata.PackageExporter(asset, preview, version_id, update_progress_cb=update_progress).get_zip_package()
     PACKAGE_CACHE[cache_key] = {"file": zip_package, "is_ready": True}
 
 
@@ -58,10 +58,10 @@ def make_custom_client(custom_client_id, download_id):
             state='ERROR', meta={'errors': errors}
         )
         raise TaskErrors(errors)
-    zip_package = filldata.get_zip_package(
+    zip_package = filldata.PackageExporter(
         asset=custom_client.base_vms, preview=False, update_progress_cb=update_progress,
         custom=True, custom_data=custom_data
-    )
+    ).get_zip_package()
     PACKAGE_CACHE[cache_key] = {"file": zip_package, "is_ready": True, 'task_id': str(current_task.request.id)}
 
 

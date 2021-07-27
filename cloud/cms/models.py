@@ -544,6 +544,14 @@ class Asset(models.Model):
         return Customization.objects.get(name=settings.CUSTOMIZATION).languages_list
 
     @property
+    def languages(self):
+        customizations = self.customizations.all()
+        if customizations:
+            return Language.objects.filter(customization__in=customizations)
+        else:
+            return Customization.objects.get(name=settings.CUSTOMIZATION).languages.all()
+
+    @property
     def asset_root(self):
         if self.asset_type and self.is_cloud_portal:
             return self.customizations.first().name
