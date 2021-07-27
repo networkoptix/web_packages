@@ -413,6 +413,7 @@ class Account(object):
         return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, auth={"email": email, "password": old_password})
 
     @staticmethod
+    @validate_response
     @auto_refresh_token
     def create_temporary_credentials(request,
                                      credential_type=None, expiration_period=None,
