@@ -60,7 +60,14 @@ export class TimelineScrollbarRelativeService {
     }
 
     public get offset (): px {
-        return (this.timeline.targetScrollMs - this.timeline.fullRange.start) / this.timeline.fullRange.duration;
+        return Math.max(
+            0,
+            Math.min(
+                (this.timeline.targetScrollMs - this.timeline.fullRange.start)
+                    / this.timeline.fullRange.duration,
+                1.0 - 1 / this.magnification,
+            )
+        );
     }
 
     public get magnification (): float {
@@ -75,10 +82,9 @@ export class TimelineScrollbarRelativeService {
         return this.timeline.visibleRange.end < this.timeline.fullRange.end;
     }
 
-    public handleBarDoubleClick (e: MouseEvent|TouchEvent) {
+    public handleBarDblClick (e: MouseEvent|TouchEvent) {
         e.preventDefault();
         this.timeline.fullZoomOut();
-        this._emit();
     }
 
     protected isBackgroundMouseDown: boolean = false;

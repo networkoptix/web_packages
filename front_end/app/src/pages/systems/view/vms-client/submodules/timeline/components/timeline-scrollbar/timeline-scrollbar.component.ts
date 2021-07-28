@@ -139,8 +139,8 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public barDoubleClickHandler (e: MouseEvent|TouchEvent) {
-        this.scrollbarRelative.handleBarDoubleClick(e);
+    public barDblClickHandler (e: MouseEvent|TouchEvent) {
+        this.scrollbarRelative.handleBarDblClick(e);
     }
 
     public barMouseDownHandler (e: MouseEvent|TouchEvent) {
@@ -166,7 +166,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
                     this.backgroundDblClickHandler(e);
                     break;
                 case this.barView.nativeElement:
-                    this.barDoubleClickHandler(e);
+                    this.barDblClickHandler(e);
                     break;
                 default:
                     break;
