@@ -84,9 +84,12 @@ Restart
 
 Open Share Dialog
     Share Form Setup
-    Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${url}/systems/${server['cloud id']}
-    ...    ELSE    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
-    Log In    ${server['owner']}    ${password}    button=None
+        Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
+    ...    Go To   ${url}/systems/${server['cloud id']}
+    ...    AND    Log In     ${server['owner']}    ${password}    button=None
+    ...    ELSE    Run Keywords
+    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
+    ...    AND    Log In     ${server['local auth'][0]}    ${server['local auth'][1]}    button=None
     # Run Keyword If    '${email}' == '${server['owner']}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     # Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
