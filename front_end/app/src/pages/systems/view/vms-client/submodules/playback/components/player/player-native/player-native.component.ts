@@ -100,6 +100,12 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         if (!this.videoView) {
             return;
         }
+        if (this.state.transport !== 'hls') {
+            // ensures that we strip rotation and width modifications.
+            this.videoView.nativeElement.style = undefined;
+            return;
+        }
+
         if (Math.abs(this.rotation % 180) === 90) {
             this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
             this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`;
@@ -157,8 +163,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this._log('starting playback', { ...this.state });
         // @ts-ignore
         const sourceUrl = this.state?.sourceUrl || '';
+        // Non-Hls videos are rotate by the server so we need to rotate the poster image.
+        // Hls videos the video element is rotated so the poster doesn't need to be.
         // @ts-ignore
-        const posterUrl = `${this.state?.posterUrl}&rotate=0` || null;
+        const posterUrl = `${this.state?.posterUrl}&rotate=${this.state.transport !== 'hls' ? this.rotation : 0}` || null;
 
         this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
 
