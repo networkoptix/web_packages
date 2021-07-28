@@ -84,7 +84,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
 
         this.player.on('ended', () => {
             this._log('video ended');
-            this.playback.stop();
+            this.playback.playLive()
         });
 
         // this.player.on('error', (err) => {

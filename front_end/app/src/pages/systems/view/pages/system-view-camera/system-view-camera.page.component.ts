@@ -344,7 +344,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
                 const records = this._extractPeriodsFromServerResponse(ar)
                 this._log('got camera archive range', this.id, ar);
-                this.playback.save();
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('empty archive', ar);
                     this.playback.restore(false);
@@ -462,8 +461,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _onRouteChange (params) {
+        this._log('ROUTE CHANGE: NEW CAMERA', this.id, '->', params.cameraId);
         this.id = params.cameraId;
-        this._log('ROUTE CHANGE: NEW CAMERA', this.id);
+        this.playback.save();
+        this.vms.clearCameraSelection();
         this.vms.selectCamera(this.id);
         this.resetTransport();
         this.resetQuality();
