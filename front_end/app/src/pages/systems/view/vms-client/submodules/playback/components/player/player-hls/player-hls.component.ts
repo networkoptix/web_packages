@@ -122,10 +122,17 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this._reactOnPlaybackStateChange(prevState);
     }
 
+    private pauseVideo() {
+        this.$video.pause();
+        // remind player it have poster to show (Safari)
+        const poster = this.videoView.nativeElement.getAttribute('poster');
+        this.videoView.nativeElement.setAttribute('poster', poster || BASE64_SINGLE_TRANSPARENT_PIXEL);
+    }
+
     protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this.$video.pause();
+                this.pauseVideo();
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
@@ -135,7 +142,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                     this._startPlayback();
                 }
                 if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
-                    this.$video.pause();
+                    this.pauseVideo();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
                 }

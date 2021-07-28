@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
 import { HttpClient }                                                                                                               from '@angular/common/http';
-import PlaybackService                                                                                                              from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE }                                                                             from '../../../datatypes/PlaybackState';
-import { Subscription }                                                                                                             from 'rxjs';
+import PlaybackService                                                     from '../../../services/playback.service';
+import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE, LivePlaybackState } from '../../../datatypes/PlaybackState';
+import { Subscription }                                                    from 'rxjs';
 import Hls                                                                                                                          from 'hls.js';
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                                                            from '@pages/systems/view/vms-client/utils';
 import { WebClientUxService }                                                                                                       from '@pages/systems/view/services/webclient-ux.service';
@@ -123,10 +123,17 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this._reactOnPlaybackStateChange(prevState);
     }
 
+    private pauseVideo() {
+        this.$video.pause();
+        // remind player it have poster to show (Safari)
+        const poster = this.videoView.nativeElement.getAttribute('poster');
+        this.videoView.nativeElement.setAttribute('poster', poster || BASE64_SINGLE_TRANSPARENT_PIXEL);
+    }
+
     protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this.$video.pause();
+                this.pauseVideo();
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
@@ -136,7 +143,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
                     this._startPlayback();
                 }
                 if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
-                    this.$video.pause();
+                    this.pauseVideo();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
                 }
