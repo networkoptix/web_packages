@@ -73,7 +73,7 @@ ${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class
 ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 
 # ADVANCED SETTINGS
-${ADVANCED SETTINGS}                    ?advanced=true
+${ADVANCED SETTINGS}                    ?advanced
 ${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
 ${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
 ${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
