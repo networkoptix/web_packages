@@ -139,8 +139,7 @@ export class PlaybackService implements OnDestroy {
     public playLive () {
         this.livePaused = false;
         if (!this.canPlayLive) {
-            this.stop()
-            return
+            return;
         }
         const [width, height] = this.extractDimensions();
         this._state = createInitialLiveState(
