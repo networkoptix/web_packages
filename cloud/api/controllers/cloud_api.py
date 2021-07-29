@@ -790,9 +790,9 @@ class Auth(object):
     @staticmethod
     @validate_response
     def verify_2fa_code(temp_2fa_code, access_code):
-        return get_wrapper(f"{CLOUD_2FA_URL}/totp/key/{temp_2fa_code}", params={'code': access_code})
+        return get_wrapper(f"{CLOUD_2FA_URL}/totp/key/{temp_2fa_code}", params={'token': access_code})
 
     @staticmethod
     @validate_response
     def verify_backup_code(backup_code, access_code):
-        return get_wrapper(f"{CLOUD_2FA_URL}/backupCode/{backup_code}", params={'code': access_code})
+        return get_wrapper(f"{CLOUD_2FA_URL}/backupCode/{backup_code}", params={'token': access_code})
