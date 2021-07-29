@@ -131,9 +131,13 @@ $large-desktop-breakpoint: 1477px;
     justify-content: center;
     align-items: center;
     border: 1px solid $light4;
-    background-color: $additional_light1;
+    border-radius: 2px;
+    background-color: $light1;
     &:hover {
-        background-color: $additional_light2;
+        border-color: $light8;
+    }
+    &:active {
+        border-color: $light10;
     }
     img {
         max-height: 54px;
