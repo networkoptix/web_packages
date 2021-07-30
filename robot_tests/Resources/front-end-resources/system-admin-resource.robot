@@ -32,9 +32,12 @@ System Admin Test Restart
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out via API
 
+    Run Keyword If Test Failed    Run Keywords
+        ...    Start Docker Server    ${system}[id]
+        ...    AND    Sleep    10
+
     Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
     Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
-    Run Keyword If Test Failed    Start Docker Server    ${system}[cloud id]
 
 # Waits
 Wait until settings are visible
