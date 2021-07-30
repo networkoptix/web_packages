@@ -14,28 +14,21 @@
 
 
 div#nx-vjs-player {
-  height     : 100%;
-  width      : 100%;
-  object-fit : contain;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100% !important;
+  width: 100% !important;
+}
 
-  video {
-    width  : 100%;
-    height : 100%;
-  }
+video {
+  height: 100% !important;
+  width: 100% !important;
 }
 
 .vjs-loading-spinner, .vjs-error-display {
     display: none !important;
 }
-//.nx-vjs-player-dimensions {
-//  width: 100%;
-//  height: 100%;
-//
-//  video {
-//    width  : 100%;
-//    height : 100%;
-//  }
-//}
 
 .vjs-modal-dialog .vjs-modal-dialog-content, .video-js .vjs-modal-dialog, .vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
   position : absolute;
@@ -585,7 +578,7 @@ body.vjs-full-window {
 .vjs-has-started .vjs-big-play-button,
 .vjs-using-native-controls .vjs-big-play-button,
 .vjs-error .vjs-big-play-button {
-  display : none;
+  display : none !important;
 }
 
 .vjs-has-started.vjs-paused.vjs-show-big-play-button-on-pause .vjs-big-play-button {
@@ -831,6 +824,7 @@ body.vjs-full-window {
   transition : visibility 1s, opacity 1s;
 }
 
+.video-js .vjs-control-text,
 .vjs-controls-disabled .vjs-control-bar,
 .vjs-using-native-controls .vjs-control-bar,
 .vjs-error .vjs-control-bar {
