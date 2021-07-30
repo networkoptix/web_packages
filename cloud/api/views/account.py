@@ -358,7 +358,7 @@ def change_password(request):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def verify_password(request):
     require_params(request, ['password'])
-    Account.get(request, email=request.user.email, password=request.data.password)
+    Account.get(request, email=request.user.email, password=request.data["password"])
     return api_success()
 
 

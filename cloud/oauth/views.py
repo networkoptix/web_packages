@@ -142,7 +142,16 @@ def authenticate(request):
     except APILogicException:
         raise APINotAuthorisedException("Invalid credentials", error_code=ErrorCodes.not_authorized)
 
-    return api_success({"link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(res.get('access_code'), state))}"})
+    data = {
+        "access_code": res.get('access_code'),
+        "link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(res.get('access_code'), state))}"
+    }
+
+    error = res.get("error")
+    if error:
+        data["error"] = error
+
+    return api_success(data)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,
