@@ -220,7 +220,7 @@ class CloudPortalAPI(object):
                     "title": title,
                     "body": name,
                     "payload": {
-                        "url": "nx-vms://test3.cloud.hdw.mx/client/"+id+"/view",
+                        "url": "nx-vms://test4.cloud.hdw.mx/client/"+id+"/view",
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
                         }
                     }
@@ -235,7 +235,7 @@ class CloudPortalAPI(object):
 
     @staticmethod
     def create_systems_json(env, email, password):
-        r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
+        r = requests.get(env+"cdb/system/get", auth=HTTPBasicAuth(email, password))
 
         systemsDict = r.json()
         systemsList = []
@@ -274,7 +274,7 @@ class CloudPortalAPI(object):
                     "title": title,
                     "body": name,
                     "payload": {
-                        "url": "nx-vms://test3.cloud.hdw.mx/client/"+id+"/view",
+                        "url": "nx-vms://test4.cloud.hdw.mx/client/"+id+"/view",
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
                         }
                     }
