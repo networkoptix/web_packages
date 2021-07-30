@@ -4,7 +4,7 @@ Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
 Suite Teardown    System Admin Suite Teardown
-Force Tags        system    advanced_settings    threaded    cloud    webadmin
+Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
 Advanced system settings availability
@@ -27,7 +27,7 @@ Advanced system settings availability
     END
 
 Advanced system settings for offline system
-    [Tags]    C76634    deb
+    [Tags]    C76634
     Remove Tags    webadmin
     Skip If Irrelevant
 
@@ -53,7 +53,7 @@ Hide Advanced Settings button functionality
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
 
 Audit trail, backup and statistics section
-    [Tags]    C78244    deb
+    [Tags]    C78244
     Log    Preconditions
     ${settings}=   Create Dictionary
         ...    additionalLocalFsTypes=${EMPTY}
