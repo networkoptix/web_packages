@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^account/delete$',             account.delete_user),
     url(r'^account/toggle2fa$',          account.toggle2fa),
     url(r'^account/reviewCookie$',       account.review_cookie),
+    url(r'^account/verify$',             account.verify_password),
     url(r'^account/?$',                  account.index),
 
     url(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),

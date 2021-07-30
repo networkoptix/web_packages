@@ -312,6 +312,7 @@ def review_cookie(request):
     request.user.save()
     return api_success()
 
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -341,6 +342,23 @@ def change_password(request):
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
                                   error_data={'old_password': error.error_data})
+    return api_success()
+
+
+@swagger_auto_schema(method="POST", auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "password": password__body
+                         },
+                         required=["password"]
+                     ),
+                     responses={'200': 'Ok'})
+@api_view(['POST'])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def verify_password(request):
+    require_params(request, ['password'])
+    Account.get(request, email=request.user.email, password=request.data.password)
     return api_success()
 
 
