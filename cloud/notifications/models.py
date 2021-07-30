@@ -29,6 +29,7 @@ USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "CELERY_BROKER_TRANSPORT_OPT
 
 RELAY_GUID_PATTERN = re.compile('([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(/)')
 
+NOPTIXQA_SENDEMAILS_PATTERN = re.compile(r'^[a-zA-Z0-9_.+-]*noptixautoqa[a-zA-Z0-9_.+-]*\+[a-zA-Z0-9_.+-]*sendemail[a-zA-Z0-9_.+-]*@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
 class MessageTypes(object):
     contact_sales = "contact_sales"
@@ -121,6 +122,13 @@ class Message(models.Model):
         self.save()
 
         # TODO: initiate business-logic here
+
+        # Skips noptixautoqa emails unless they have sendemail in the alias
+        if 'noptixautoqa' in self.user_email and not NOPTIXQA_SENDEMAILS_PATTERN.match(self.user_email):
+            self.send_date = timezone.now()
+            self.save()
+            return
+
         from notifications.tasks import send_email
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
