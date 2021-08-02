@@ -70,14 +70,14 @@ def lower_case_email(func):
 
 def auto_refresh_token(func):
     def _wrapper(request, *args, **kwargs):
-        access_token = None
-        refresh_token = None
         if hasattr(request, "session"):
             access_token = request.session.get("access_token")
             refresh_token = request.session.get("refresh_token")
         elif type(request) is dict:
             access_token = request.get("access_token")
             refresh_token = request.get("refresh_token")
+        else:
+            raise TypeError("Arg request should be of type request or dict")
 
         ip = ""
         if hasattr(request, "META"):
