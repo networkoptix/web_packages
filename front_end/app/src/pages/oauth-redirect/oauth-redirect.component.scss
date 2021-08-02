@@ -1,5 +1,6 @@
 @use '../../styles/typography';
-@import '../../styles/buttons';
+@use '../../styles/mixins';
+@use '../../../styles/theme_variables' as *;
 
 .oauth-redirect {
     height: 100vh;

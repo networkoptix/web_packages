@@ -84,7 +84,7 @@ export class AppComponent {
                     ev.url.includes('authorize') ||
                     ev.url.includes('activate') ||
                     ev.url.includes('restore_password') ||
-                    ev.url.includes('oauth-redirect');
+                    ev.url.includes('redirect-oauth');
             });
 
         /* No real need to update often unless some browser have major upgrade

@@ -108,7 +108,7 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
     },
     {
-        path         : 'oauth-redirect',
+        path         : 'redirect-oauth',
         loadChildren : () => import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
     },
     {

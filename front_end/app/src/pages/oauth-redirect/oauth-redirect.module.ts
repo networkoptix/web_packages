@@ -9,7 +9,7 @@ import { DirectivesModule }     from '../../directives/directives.module';
 import { PipesModule }          from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
-    { path: '', component: NxOAuthRedirectComponent, pathMatch: 'full' }
+    { path: '', component: NxOAuthRedirectComponent }
 ];
 
 @NgModule({

@@ -231,9 +231,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             // TODO: handle other cases in the future
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        if (this.initialData.redirect_url === 'oauth-redirect') {
+        if (this.initialData.redirect_url === 'redirect-oauth') {
             const { client_id, client_type, view_type } = this.initialData;
-            this.router.navigate(['oauth-redirect'], {
+            this.router.navigate(['redirect-oauth'], {
                 queryParams: { code, client_id, client_type, view_type }}
             );
         } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {

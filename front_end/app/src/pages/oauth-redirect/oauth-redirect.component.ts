@@ -10,11 +10,11 @@ import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AuthorizeParams, ClientType } from '@components/authorize/authorize.component';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector    : 'oauth-redirect-component',
-    templateUrl : 'oauth-redirect.component.html',
-    styleUrls   : ['oauth-redirect.component.scss']
+    templateUrl : './oauth-redirect.component.html',
+    styleUrls   : ['./oauth-redirect.component.scss']
 })
 
 export class NxOAuthRedirectComponent implements OnInit {
@@ -64,11 +64,11 @@ export class NxOAuthRedirectComponent implements OnInit {
 
     redirectToOAuth() {
         const { client_id, client_type, view_type } = this.initialData;
-        const redirect_url = 'oauth-redirect'
+        const redirect_url = 'redirect-oauth'
         this.router.navigate(['authorize'], {
             queryParams: {
                 client_id,
-                client_type: client_type || 'loginToSystem',
+                client_type: client_type || 'loginSystem',
                 redirect_url,
                 view_type: view_type || 'desktop',
                 response_type: 'code'
