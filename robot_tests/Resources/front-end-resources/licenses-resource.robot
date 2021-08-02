@@ -137,7 +137,7 @@ Validate Input Error
     Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
 
 Validate Input Normal State
-    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${DISABLED TEXT COLOR}   # rgba(43, 56, 63, 1)
+    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    rgba(43, 56, 63, 1)    #${DISABLED TEXT COLOR}
     Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    rgb(205, 215, 220)    #rgb(47, 162, 219)
 
 # Licenses Summary
