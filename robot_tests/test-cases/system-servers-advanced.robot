@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
-Test Setup        Advanced Server Settings Test Setup    ${server['owner']}    ${server['cloud id']}
-Test Teardown     Common Restart Logout    ${url}
+Test Setup        Advanced Server Settings Test Setup
+Test Teardown     Advanced Server Test Teardown
 Suite Teardown    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
 
@@ -18,21 +18,43 @@ Server Advanced Settings Suite Setup
     ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
     Set Suite Variable    &{server}    &{server} 
     Open Browser and go to URL    ${url}
+    
+    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[owner]
+    ...    ELSE   Set Suite Variable     ${user in charge}    admin
+    Sleep    20
 
 Advanced Server Settings Test Setup
-    [Arguments]    ${email}    ${system id}
-    Log in to user and system      ${email}    ${system id}
+    [Arguments]    ${server}=&{server}    ${user}=${user in charge}    ${verify}=${True}
+    Skip If Irrelevant
+    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
+    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
+
+Cloud Test Setup
+    [Arguments]    ${server}    ${user}    ${verify}
+    Log in to system    ${server}    ${user}    validate=${True}
     Wait Until Element is Visible    ${SERVERS LINK}
+    Sleep    1
     Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+
+Web Admin Test Setup
+    [Arguments]    ${server}    ${user}    ${verify}
+    Log in to system    ${server}    ${user}    validate=${True}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Sleep    1
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+
+Advanced Server Test Teardown
+    Log out
 
 Server Advanced Settings Suite Teardown
     Close All Browsers
-    Stop Docker Server    ${server['id']}
-    Delete Docker Server    ${server['id']}
+    Delete Base System    ${server}
 
 *** Test Cases ***
 Advanced server settings availability
-    [Tags]    C76558    threaded
+    [Tags]    C76558    threaded    cloud    webadmin
     Log    Step 1
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
@@ -41,30 +63,39 @@ Advanced server settings availability
     Log    Step 2
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 3
     Log Out
-    Log in to user and system    ${server['cloud users']['cloudAdmin']}    ${server['cloud id']}
+    
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][cloudAdmin]    
+    ...    ELSE    Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
     Wait Until Element is Visible    ${SERVERS LINK}
+    Sleep    1
     Click Link    ${SERVERS LINK}
+    Verify on Servers Page
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     ${location} =    Get Location
+    #sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 4
     Log Out
-    Log in to user and system    ${server['cloud users']['advancedViewer']}    ${server['cloud id']}
-    Elements Should Not Be Visible    ${SERVERS LINK}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
+    ...    ELSE    Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+    sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
@@ -72,9 +103,10 @@ Advanced server settings availability
 
 
 "Hide Advanced Settings" button is available and functional
-    [Tags]    C76571    threaded
+    [Tags]    C76571    threaded    cloud    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
@@ -85,15 +117,18 @@ Advanced server settings availability
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
 
 Toggle switch functionality
-    [Tags]    C76572    threaded
+    [Tags]    C76572    threaded    cloud    webadmin
     ${location} =    Get Location
+    ##sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
@@ -113,20 +148,20 @@ Toggle switch functionality
     Click Button    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Wait Until Element Has Style    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
-    #Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     Log    Step 3
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    true
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Click Element   ${STORAGE SAVE BUTTON}
-    #Wait Until Element is Visible    ${HIDE ADVANCED SETTINGS BUTTON}
-    #Click Button    ${HIDE ADVANCED SETTINGS BUTTON}/..
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
+    Press Keys    None    ESC
 
 Reserved space dropdown menu functionality
-    [Tags]    C76576    threaded
+    [Tags]    C76576    threaded    cloud    webadmin
     ${location} =    Get Location
+    ##sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
@@ -193,9 +228,10 @@ Reserved space dropdown menu functionality
     ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1024}
 
 Log settings functionality
-    [Tags]    C76573    threaded
+    [Tags]    C76573    threaded    cloud    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
@@ -212,18 +248,15 @@ Log settings functionality
     END
 
 Advanced server settings for offline system
-    [Tags]    C76559    threaded
+    [Tags]    C76559    threaded    cloud
     Log    Preconditions
-    Log Out
-    Log in to user and system    ${server['owner']}    ${server['cloud id']}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
     Verify on Servers Page
-    Stop Docker Server    ${server['id']}
+    Stop Docker Server    ${server}[id]
     ${location} =    Get Location
 
     Log    Step 1
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible    ${PLACEHOLDER NO SETTINGS}    ${THIS PAGE CANNOT BE LOADED}
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
@@ -231,10 +264,14 @@ Advanced server settings for offline system
     ...    @{LOG SETTINGS BLOCK}
 
     Log    Step 2: make sure settings are back after the server is back online
-    Start Docker Server    ${server['id']}
+    Start Docker Server    ${server}[id]
     Wait Until Element Is Not Visible    ${THIS PAGE CANNOT BE LOADED}    timeout=300
+    Wait Until Element is Visible    ${SERVERS LINK}    60
+    Sleep    1
+    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Go To    ${location}${ADVANCED SETTINGS}
+    Reload Page
     Wait Until Elements Are Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}

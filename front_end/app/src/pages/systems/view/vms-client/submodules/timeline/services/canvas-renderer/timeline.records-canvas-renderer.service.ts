@@ -11,7 +11,7 @@ import stripeCfg from './stripy-bar/cfg';
     providedIn: 'root'
 })
 export class TimelineRecordsCanvasRendererService {
-    constructor(
+    constructor (
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService
     ) {

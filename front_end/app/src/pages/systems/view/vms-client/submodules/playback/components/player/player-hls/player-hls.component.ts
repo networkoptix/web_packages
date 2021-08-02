@@ -10,14 +10,16 @@ import {
     EventEmitter,
     OnChanges,
     HostListener
-} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import PlaybackService from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-import { Subscription } from 'rxjs';
-import Hls from 'hls.js';
+}                                                                        from '@angular/core';
+import { HttpClient }                                                    from '@angular/common/http';
+import PlaybackService                                                   from '../../../services/playback.service';
+import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE }                  from '../../../datatypes/PlaybackState';
+import { Subscription }                                                  from 'rxjs';
+import Hls                                                               from 'hls.js';
 import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
+import { WebClientUxService }                                            from '@pages/systems/view/services/webclient-ux.service';
+import { LanguageI18NStaticTypes }                                       from '../../../../../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }                                     from '../../../../../../../../../services/nx-language-provider';
 
 @Component({
     selector    : 'player-hls',
@@ -30,6 +32,9 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     _warn: Function
 
     @Input() rotation: number;
+
+    LANG: LanguageI18NStaticTypes;
+    fatalErrorTimer;
 
     @ViewChild('video') videoView: ElementRef;
     @ViewChild('videoSource') videoSourceView: ElementRef;
@@ -44,10 +49,12 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     protected state: PlaybackState
 
     constructor (
+        languageService: NxLanguageProviderService,
         private http: HttpClient,
         public playback: PlaybackService,
         public ux: WebClientUxService
     ) {
+        this.LANG = languageService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 
@@ -55,6 +62,11 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     }
 
     videoErrorEventHandler = (event: any) => {
+        if (event.fatal && event.type === 'networkError') {
+            // manifestLoadTimeOut ... etc. hls.js already tried to recover - nothing else can be done.
+            this.playback.setError(this.LANG.common.cameraStates.errorLoading());
+        }
+
         const sourceUrl = this.state.mode !== PLAYBACK_MODE.STOPPED && this.state?.sourceUrl;
         if (sourceUrl && this.videoView?.nativeElement) {
             this.http.get(sourceUrl)
@@ -76,7 +88,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     public ngAfterViewInit (): void {
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
+        this.$video.addEventListener('error', this.videoErrorEventHandler);
         this._handleRotation();
     }
 
@@ -87,20 +99,19 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     @HostListener('window:resize', ['$event'])
     protected _handleRotation () {
         if (!this.videoView) {
-            return
+            return;
         }
         if (Math.abs(this.rotation % 180) === 90) {
-            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`
-            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`
+            this.$video.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
+            this.$video.style.transform = `rotate(${this.rotation}deg)`;
         } else {
-            this.videoView.nativeElement.style.width = "100%"
-            this.videoView.nativeElement.style.transform =
-                this.rotation ? `rotate(${this.rotation}deg)` : ""
+            this.$video.style.width = '100%';
+            this.$video.style.transform = this.rotation ? `rotate(${this.rotation}deg)` : '';
         }
     }
 
     public ngOnDestroy (): void {
-        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.$video.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.hls?.destroy();
     }
@@ -111,10 +122,17 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this._reactOnPlaybackStateChange(prevState);
     }
 
+    private pauseVideo() {
+        this.$video.pause();
+        // remind player it have poster to show (Safari)
+        const poster = this.videoView.nativeElement.getAttribute('poster');
+        this.videoView.nativeElement.setAttribute('poster', poster || BASE64_SINGLE_TRANSPARENT_PIXEL);
+    }
+
     protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this.$video.pause();
+                this.pauseVideo();
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
@@ -124,7 +142,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                     this._startPlayback();
                 }
                 if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
-                    this.$video.pause();
+                    this.pauseVideo();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
                 }
@@ -132,6 +150,18 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
             default:
                 assertNever(this.state);
         }
+    }
+
+    private setErrorEvent(data) {
+        return setTimeout(() => {
+            console.error('HLS error, cannot recover', data.details);
+            this.fatalErrorTimer = undefined;
+            if (data?.response === undefined) {
+                this.videoErrorEventHandler(data);
+            } else {
+                this.playback.setError(data.response.text || '');
+            }
+        }, 30 * 1000);
     }
 
     protected hls: Hls
@@ -143,7 +173,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         // @ts-ignore
         const posterUrl = `${this.state?.posterUrl}&rotate=0` || null;
 
-        this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
+        this.$video.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
 
         if (!sourceUrl) {
             this._warn('ordered start playback request with empty sourceUrl');
@@ -153,7 +183,6 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         const sourceUrlMainPart = sourceUrl.split('?')[0];
         const sourceUrlParts = sourceUrlMainPart.split('.');
         const sourceUrlExtension = sourceUrlParts[sourceUrlParts.length - 1];
-        let fatalErrorTimer;
 
         switch (sourceUrlExtension) {
             case 'm3u8':
@@ -162,6 +191,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                     this.hls.destroy();
                     this.hls = undefined;
                 }
+
                 if (Hls.isSupported()) {
                     this._log('HLS is supported');
                     this.hls = new Hls();
@@ -172,48 +202,34 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                     this.hls.on(Hls.Events.ERROR, (event, data) => {
                         this._warn('HLS PLAYER HLS.js ERROR', event, data);
                         if (data.fatal) {
-                            fatalErrorTimer = setTimeout(() => {
-                                console.error('HLS error, cannot recover');
-                                fatalErrorTimer = undefined;
-                                if (data?.response === undefined) {
-                                    this.videoErrorEventHandler(data);
-                                } else {
-                                    this.playback.setError(data.response?.text || '');
-                                }
-                            }, 30 * 1000);
-                            // TODO: try to switch to WEBM or another alternative stream here
-                            switch (data.type) {
-                                case Hls.ErrorTypes.NETWORK_ERROR:
-                                    // try to recover network error
-                                    this._warn('fatal network error encountered, try to recover');
-                                    this.hls.startLoad();
-                                    break;
-                                case Hls.ErrorTypes.MEDIA_ERROR:
-                                    this._warn('fatal media error encountered, try to recover');
-                                    this.hls.recoverMediaError();
-                                    break;
-                                default:
-                                    console.error('HLS error, cannot recover');
-                                    this.hls.destroy();
-                                    this.hls = undefined;
-                                    break;
-                            }
+                            this.fatalErrorTimer = this.setErrorEvent(data);
+                        }
+                        // TODO: try to switch to WEBM or another alternative stream here
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                // try to recover network error
+                                this._warn('network error encountered, try to recover', data.details);
+                                this.fatalErrorTimer = this.setErrorEvent(data);
+                                this.hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                this._warn('media error encountered, try to recover', data.details);
+                                this.hls?.recoverMediaError();
+                                this.hls && this.fatalErrorTimer && clearTimeout(this.fatalErrorTimer);
+                                break;
+                            default:
+                                console.error('HLS error, cannot recover', data.details);
+                                this.hls.destroy();
+                                this.hls = undefined;
+                                break;
                         }
                     });
                     this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
                         this._log('HLS manifest parsed');
-                        // this._playVideo()
-                        // console.log('PLAY 3 (HLS)')
                     });
                     this.hls.on(Hls.Events.FRAG_LOADED, () => {
                         this._log('HLS Fragment Loaded');
-                        clearTimeout(fatalErrorTimer);
-                        // if (this.playback.state.mode !== PLAYBACK_MODE.STOPPED) {
-                        //   if (!this.playback.state.started) {
-                        //     // console.log('HLS it was the first fragment')
-                        //     // this.playback.handleStarted()
-                        //   }
-                        // }
+                        this.fatalErrorTimer && clearTimeout(this.fatalErrorTimer);
                     });
                 } else {
                     this._warn('HLS is not supported');
@@ -230,12 +246,12 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this.bufferingChange.emit(false);
         switch (this.state.mode) {
             case PLAYBACK_MODE.LIVE:
-                this.videoView.nativeElement.play();
+                this.$video.play();
                 this._log('LIVE play()');
                 break;
             case PLAYBACK_MODE.ARCHIVE:
                 if (!this.state.paused) {
-                    this.videoView.nativeElement.play();
+                    this.$video.play();
                     this._log('ARCHIVE play()');
                 } else {
                     this._log('ARCHIVE could play but remains stopped');
@@ -245,8 +261,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     public onVideoEnded (e: MediaStreamEvent) {
         this._log('video ended');
-        // Used to attempt jumping to live.
-        this.playback.restore(this.playback.canPlayArchive(-1));
+        this.playback.playLive()
     }
 }
 

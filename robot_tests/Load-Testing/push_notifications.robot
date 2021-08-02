@@ -5,7 +5,7 @@ Library           OperatingSystem
 # Suite Setup       Open Browser and go to URL    ${url}
 # Test Setup        Restart
 # Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-#Suite Teardown    Teardown
+Suite Teardown    Teardown
 
 *** Variables ***
 ${url}             http://localhost:8085/
@@ -14,10 +14,10 @@ ${google api key}  //*[@id="googApiKey"]
 ${FIS}             //*[@id="googFirebaseInstallationAuth"]
 ${post body}       //*[@id="postBody"]
 ${recieved msg}    //*[@id="messages"]/h5
-${tokens per browser}      1000
-${browsers}                10
-${devices per user}        5
-${testenv}    https://test3.cloud.hdw.mx/
+${tokens per browser}      1
+${browsers}                5
+${devices per user}        2
+${testenv}    https://test4.cloud.hdw.mx
 ${email}  noptixautoqa+owner@gmail.com
 ${password}  qweasd 123
 
@@ -43,7 +43,8 @@ Get Tokens
     Wait Until Element is Visible    ${first token}    timeout=30
     ${token} =    Get Text    ${first token}
     ${token count} =    Evaluate     1
-    ${response} =    Subscribe Push Notification    https://test3.cloud.hdw.mx    noptixautoqa+notifications${starting int}@gmail.com    ${BASE PASSWORD}    ${token}    ${browser name}
+    Sleep    1
+    ${response} =    Subscribe Push Notification    ${testenv}    noptixautoqa+notifications${starting int}@gmail.com    ${BASE PASSWORD}    ${token}    ${browser name}
     ${status} =    Run Keyword And Return Status    Should Contain    ${response}    deviceInfo
     Run Keyword If    '${status}' == 'True'    Append To List    ${response list}    ${browser name}, ${token count}
     Log To Console    ${browser name}, ${token count}, ${response}
@@ -53,10 +54,10 @@ Get Tokens
     ${starting int} =    Evaluate   ${starting int}+1 
     
     FOR    ${index}    IN RANGE    ${starting int}    ${ending int}
-        Sleep    .1
+        Sleep    1
         ${token} =    Get New FCM Token    ${key}    ${auth}    ${body}
         ${token count} =    Evaluate     ${token count}+1
-        ${response} =    Subscribe Push Notification    https://test3.cloud.hdw.mx    noptixautoqa+notifications${index}@gmail.com    ${BASE PASSWORD}    ${token}    ${browser name}
+        ${response} =    Subscribe Push Notification    ${testenv}    noptixautoqa+notifications${index}@gmail.com    ${BASE PASSWORD}    ${token}    ${browser name}
         ${status} =    Run Keyword And Return Status    Should Contain    ${response}    deviceInfo
         Run Keyword If    '${status}' == 'True'    Append To List    ${response list}    ${browser name}, ${token count}
         Log To Console    ${browser name}, ${token count}, ${response}    
@@ -65,7 +66,7 @@ Get Tokens
     Create File    async/${device count}_${browser count}.txt    Done with token registration ${registrations}
     FOR     ${i}    IN RANGE    20
         Sleep    1
-        ${status} =    Run Keyword And Return Status    File Should Exist    async/${device count}_${browser count}.txt
+        ${status} =    Run Keyword And Return Status    OperatingSystem.File Should Exist    async/${device count}_${browser count}.txt
         Run Keyword If    '${status}' == 'False'    Log To Console    ${device count}_${browser count} Failed to create file
         Sleep    1
         Run Keyword Unless    '${status}' == 'True'     Create File    async/${device count}_${browser count}.txt    Done with token registration
@@ -79,11 +80,11 @@ Receive Notifications
     ${total browsers} =     Evaluate    ${browsers}*${devices per user}
     #${timeout} =    Evaluate    (${tokens per browser}/100)*60
     ${wait} =    Evaluate     ${total browsers}+1   
-    ${recieved per browser} =    Evaluate    ${tokens per browser} * 10
+    ${recieved per browser} =    Evaluate    ${tokens per browser} * 10000
     Log To Console    Waiting for Locust
     Wait Until Keyword Succeeds    20 min    1 min    Async Check    ${wait}
     Log To Console    Waiting to receive all
-    ${wait for msg} =   Evaluate    360    #(${recieved per browser}/25000)*600
+    ${wait for msg} =   Evaluate    (${recieved per browser}/25000)*600
     Sleep    ${wait for msg}     
     #${status} =    Run Keyword And Return Status    Page Should Contain Element    ${recieved msg}    limit=${recieved per browser}
     Log To Console    Counting...
@@ -98,7 +99,7 @@ Receive Notifications
     Create File    async/${device count}_${browser count}_${received FCM}.txt    Done with count
     FOR     ${i}    IN RANGE    20
         Sleep     1
-        ${status} =    Run Keyword And Return Status    File Should Exist    async/${device count}_${browser count}_${received FCM}.txt
+        ${status} =    Run Keyword And Return Status    OperatingSystem.File Should Exist    async/${device count}_${browser count}_${received FCM}.txt
         Run Keyword If    '${status}' == 'False'    Log To Console    ${device count}_${browser count}_${received FCM} Failed to create file
         Sleep     1
         Run Keyword Unless    '${status}' == 'True'     Create File    async/${device count}_${browser count}_${received FCM}.txt    Done with count
@@ -109,7 +110,7 @@ Receive Notifications
     # Sleep    1
     # Close Browser
     Sleep    1
-    ${status2} =    Evaluate    9899 < ${received FCM} < 10001            
+    ${status2} =    Evaluate    99 < ${received FCM} < 101            
     Run Keyword If    ${status2}==True    Close Browser
     
 Bind Users to Browsers
@@ -139,8 +140,8 @@ Push Notifications To Browsers
        
     # ${browser index} =    Evaluate    ${total browsers}+1
     
-    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/200
-    ${locust ramp} =    Evaluate    ${tokens per browser}*${browsers}/200      
+    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}*10    #/200
+    ${locust ramp} =    Evaluate    ${tokens per browser}*${browsers}*10    #/200      
     ${locust slaves} =    Evaluate    ${locust users}/5
     ${locust time} =    Evaluate    ${locust users}+120
     Append To File    received.txt    , , STATS, BELOW \n
@@ -149,17 +150,19 @@ Push Notifications To Browsers
         ${device count} =    Evaluate     ${device count}+1
         Run Keyword Async    Bind Users to Browsers    ${device count}    ${locust time}    ${sleep} 
         #Bind Users to Browsers    ${device count}    ${locust time}    ${sleep}            
-        Sleep    22
+        Sleep    2
     END
-    ${wait} =    Evaluate    ${total browsers}-2
+    ${wait} =    Evaluate    ${total browsers}+1
     #Sleep    ${timeout}   
-    Wait Until Keyword Succeeds    40 min    2 min    Async Check    ${wait}
-    Create Systems Json    ${testenv}    ${email}    ${password}
+    Wait Until Keyword Succeeds    2 min    1 sec    Async Check    ${wait}
+    #Sleep    120
+    Create Systems Json    ${testenv}/    ${email}    ${password}
 
     Push Notifications Swarm     ${locust slaves}    ${locust users}    ${locust ramp}    ${locust time}      
     Create File    async/locust.txt    Done with pushing
-    ${wait} =    Evaluate     (${total browsers}*2)
-    Wait Until Keyword Succeeds    30 min    2 min    Async Check    ${wait}
+    ${wait} =    Evaluate     (${total browsers}*2)+2
+    Wait Until Keyword Succeeds    10 min    10 sec    Async Check    ${wait}
+    Sleep    90
     #Sleep    ${sleep}
     #Log    ${result}
     #Log To Console    @{asyncList}

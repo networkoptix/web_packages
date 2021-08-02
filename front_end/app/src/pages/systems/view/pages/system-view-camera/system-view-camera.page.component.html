@@ -62,7 +62,7 @@
       <div class="options" *ngIf="(visibleQualities$ | async)?.length else noQualitiesAvailable">
         <div *ngFor="let q of visibleQualities$ | async" class="option"
              [ngClass]="{ selected: (selectedQuality$ | async) === q.toLowerCase(), divider: (drawQualityDivider$ | async) === q.toLowerCase() }"
-             (click)="selectedQuality = q"><div>{{ q }}</div></div>
+             (click)="selectedQuality = q; settingsShown = false"><div>{{ q }}</div></div>
       </div>
       <ng-template #noQualitiesAvailable>
         <div class="options">
@@ -78,14 +78,14 @@
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
           <nx-player-placeholder
-                  *ngIf="cameraError && !transportError; else unreachable"
+                  *ngIf="cameraError; else unreachable"
                   svgFileName="placeholder_camera_alert"
                   [heading]="LANG.common.cameraStates.error()"
                   [description]="cameraError">
           </nx-player-placeholder>
           <ng-template #unreachable>
             <nx-player-placeholder
-                    *ngIf="transportError && !camera.isOffline && !camera.isUnauthorized"
+                    *ngIf="!camera.isOffline && !camera.isUnauthorized"
                     svgFileName="placeholder_camera_alert"
                     [heading]="LANG.common.cameraStates.error()"
                     [description]="LANG.common.cameraStates.noFormat()">

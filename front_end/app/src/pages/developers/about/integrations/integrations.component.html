@@ -3,7 +3,7 @@
 </ng-template>
 
 <ng-template #integrationBlock let-integration="integration">
-    <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]" [ngbTooltip]="integration.asset.information.shortDescription">
+    <div class="integration-block" [routerLink]="['/integrations', integration.asset.id]">
         <img [src]="integration.asset.information.logo" [alt]="integration.title">
     </div>
 </ng-template>

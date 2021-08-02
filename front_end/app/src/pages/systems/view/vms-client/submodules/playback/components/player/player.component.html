@@ -23,25 +23,9 @@
         (dblclick)="onDblClick($event)">
         <nx-pre-loader></nx-pre-loader>
     </div>
-
-    <player-native
-        *ngIf="useNativePlayer"
-        (bufferingChange)="onBufferingChange($event)"
-        [rotation]="rotateDeg"
-    >
-    </player-native>
-
     <player-js
-        *ngIf="useJsPlayer"
         (bufferingChange)="onBufferingChange($event)"
         [rotation]="rotateDeg"
     >
     </player-js>
-
-    <player-hls
-        *ngIf="useHlsPlayer"
-        [rotation]="rotateDeg"
-        (bufferingChange)="onBufferingChange($event)"
-    >
-    </player-hls>
 </ng-template>

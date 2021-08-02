@@ -73,7 +73,7 @@ ${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class
 ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 
 # ADVANCED SETTINGS
-${ADVANCED SETTINGS}                    ?advanced=true
+${ADVANCED SETTINGS}                    ?advanced
 ${HIDE ADVANCED SETTINGS BUTTON}        //button/span[text()='${HIDE ADVANCED SETTINGS TEXT}']
 ${HIDE ADVANCED SETTINGS ICON}          //*[name()="svg-icon" and @data-src="/static/images/icons/standard/eye_closed.svg"]
 ${ADVANCED SETTINGS ALERT ICON}         //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
@@ -96,28 +96,27 @@ ${ADDITIONAL LOCAL FS TYPES INPUT}          //input[@id='additionalLocalFsTypes'
 ${ADDITIONAL LOCAL FS TYPES LABEL}          //div[text()='${ADDITIONAL LOCAL FS TYPES TEXT}']
 ${AUDIT TRAIL PERIOD DAYS INPUT}            //input[@id='auditTrailPeriodDays']
 ${AUDIT TRAIL PERIOD DAYS LABEL}            //div[text()='${AUDIT TRAIL PERIOD DAYS TEXT}']
-${BACKUP QUALITIES INPUT}                   //input[@id='backupQualities']
+${BACKUP SETTINGS INPUT}                    //input[@id='backupSettings']
 ${BACKUP QUALITIES LABEL}                   //div[text()='${BACKUP QUALITIES TEXT}']
-${BACKUP QUALITIES DEFAULT TEXT}            CameraBackupHighQuality|CameraBackupLowQuality
+${BACKUP SETTINGS DEFAULT TEXT}             CameraBackupHighQuality|CameraBackupLowQuality
 ${CLIENT STATISTICS RELATIVE URL INPUT}     //input[@id='clientStatisticsSettingsUrl']
 ${CLIENT STATISTICS RELATIVE URL LABEL}     //div[text()='${CLIENT STATISTICS RELATIVE URL TEXT}']
 
 ${ARECONT RTSP ENABLED CHECKBOX}               	//*[@id='arecontRtspEnabled']
-${ARECONT RTSP ENABLED LABEL}                           //div[text()='${ARECONT RTSP ENABLED TEXT}']
-${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}        //*[@id='autoDiscoveryResponseEnabled']
-${AUTO DISCOVERY RESPONSE ENABLED LABEL}                //div[text()='${AUTO DISCOVERY RESPONSE TEXT}']
-${AUTO UPDATE THUMBNAILS CHECKBOX}                 //*[@id='autoUpdateThumbnails']
-${AUTO UPDATE THUMBNAILS LABEL}                         //div[text()='${AUTO UPDATE THUMNAILS TEXT}']
-${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}          //*[@id='backupNewCamerasByDefault']
-${BACKUP NEW CAMERAS BY DEFAULT LABEL}                  //div[text()='${BACKUP NEW CAMERAS BY DEFAULT TEXT}']
+${ARECONT RTSP ENABLED LABEL}                   //div[text()='${ARECONT RTSP ENABLED TEXT}']
+${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     //*[@id='autoDiscoveryResponseEnabled']
+${AUTO DISCOVERY RESPONSE ENABLED LABEL}        //div[text()='${AUTO DISCOVERY RESPONSE TEXT}']
+${AUTO UPDATE THUMBNAILS CHECKBOX}              //*[@id='autoUpdateThumbnails']
+${AUTO UPDATE THUMBNAILS LABEL}                 //div[text()='${AUTO UPDATE THUMNAILS TEXT}']
+${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}       //*[@id='backupNewCamerasByDefault']
+${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMERAS BY DEFAULT TEXT}']
 
 @{ADVANCED SETTING ELEMENT BLOCK ONE}
-#...    ${ADDITIONAL LOCAL FS TYPES INPUT}
-#...    ${ADDITIONAL LOCAL FS TYPES LABEL}
+...    ${ADDITIONAL LOCAL FS TYPES INPUT}
+...    ${ADDITIONAL LOCAL FS TYPES LABEL}
 ...    ${AUDIT TRAIL PERIOD DAYS INPUT}
 ...    ${AUDIT TRAIL PERIOD DAYS LABEL}
-...    ${BACKUP QUALITIES INPUT}
-...    ${BACKUP QUALITIES LABEL}
+...    ${BACKUP SETTINGS INPUT}
 ...    ${CLIENT STATISTICS RELATIVE URL INPUT}
 ...    ${CLIENT STATISTICS RELATIVE URL LABEL}
 ...    ${ARECONT RTSP ENABLED CHECKBOX}${visible}
@@ -126,8 +125,8 @@ ${BACKUP NEW CAMERAS BY DEFAULT LABEL}                  //div[text()='${BACKUP N
 ...    ${AUTO DISCOVERY RESPONSE ENABLED LABEL}
 ...    ${AUTO UPDATE THUMBNAILS CHECKBOX}${visible}
 ...    ${AUTO UPDATE THUMBNAILS LABEL}
-...    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}${visible}
-...    ${BACKUP NEW CAMERAS BY DEFAULT LABEL}
+#...    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}${visible}
+#...    ${BACKUP NEW CAMERAS BY DEFAULT LABEL}
 
 
 ${CLOUD CONNECT RELAYING ENABLED CHECKBOX}                //*[@id='cloudConnectRelayingEnabled']
@@ -311,9 +310,9 @@ ${MAX RTSP CONNECT DURATION LABEL}              //div[text()='${MAX RTSP CONNECT
 ${MAX SCENE ITEMS INPUT}                        //input[@id='maxSceneItems']
 ${MAX SCENE ITEMS LABEL}                        //div[text()='${MAX SCENE ITEMS TEXT}']
 ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}  //input[@id='maxVirtualCameraArchiveSynchronizationThreads']
-${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX WEARABLE CAM ARCHIVE SYNC THREADS TEXT}']
-${MAX WEBM TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
-${MAX WEBM TRANSCODERS LABEL}                   //div[text()='${MAX WEBM TRANSCODERS TEXT}']
+${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT}']
+${MAX HTTP TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
+${MAX HTTP TRANSCODERS LABEL}                   //div[text()='${MAX HTTP TRANSCODERS TEXT}']
 
 @{ADVANCED SETTING ELEMENT BLOCK EIGHT}
 ...    ${MAX RTP RETRY COUNT INPUT}
@@ -324,8 +323,8 @@ ${MAX WEBM TRANSCODERS LABEL}                   //div[text()='${MAX WEBM TRANSCO
 ...    ${MAX SCENE ITEMS LABEL}
 ...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}
 ...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}
-...    ${MAX WEBM TRANSCODERS INPUT}
-...    ${MAX WEBM TRANSCODERS LABEL}
+...    ${MAX HTTP TRANSCODERS INPUT}
+...    ${MAX HTTP TRANSCODERS LABEL}
 
 
 ${RTSP BUFFER SIZE INPUT}                       //input[@id='rtspBufferSizeKb']

@@ -10,7 +10,7 @@ import uuid
 import os
 import math
 
-env = "https://test3.cloud.hdw.mx/"
+env = "https://test4.cloud.hdw.mx/"
 
 class UserBehavior(TaskSet):
     def order(self):
@@ -22,8 +22,10 @@ class UserBehavior(TaskSet):
 #            contents = f.read()
         lines = f.readlines()
         self.currentProc = len(lines)
-        self.minSys = (self.currentProc-1)*20
-        self.maxSys = self.currentProc * 20
+#         self.minSys = (self.currentProc-1)*20
+#         self.maxSys = self.currentProc * 20
+        self.minSys = 0
+        self.maxSys = 1
 #         print(self.minSys, self.maxSys)
         f= open(f'{txtFile}.txt', 'a')
         f.write(f"{self.currentProc+1}\n")
@@ -57,13 +59,14 @@ class UserBehavior(TaskSet):
             self.id = x['id']
             self.body = x['body']
             self.title = x['title']
-            for y in range(10): 
-                self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
+            for y in range(200): 
+                r = self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
                 notificationSent.append({"Process": self.currentProc, "notification": n, "copy": y, "title": self.title})
 #            time.sleep(random.uniform(0, 1))
 #               print(f'{self.currentProc}_{n}_{y}')
 #             f.write(f'{self.currentProc} {x} {r.text}\n\n')
             n += 1
+        print(r.text)
         print(str(self.currentProc)+" proc ended push")
         f= open(f'{self.currentProc}_sent.json', 'w')
         f.write(json.dumps(notificationSent))

@@ -161,7 +161,7 @@
         "systemServerError": "Erreur Interne du Serveur",
         "systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Le système semble ne pas répondre. Veuillez recharger la page.",
         "unknown": "Inconnu",
         "vendor": "Vendeur",
         "model": "Modèle",
@@ -477,8 +477,8 @@
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
         "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance.",
         "networkConnection": "Impossible de se connecter à %CLOUD_NAME%, veuillez vérifier votre connexion réseau.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncrypted": "ARCHIVE\nCHIFFREE",
+        "archiveEncryptedMessage": "Demandez à votre administrateur système d'entrer le mot de passe de cryptage\npour déchiffrer cette archive."
     },
     "integration": {
         "Access Control": "Contrôle d'accès",
@@ -678,8 +678,8 @@
         "successRename": "Nom du serveur enregistré."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
+        "View": "Voir",
+        "Settings": "Réglages",
         "Information": "Information"
     },
     "system": {

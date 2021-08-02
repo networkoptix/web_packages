@@ -32,6 +32,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
 
     protected playbackSubscription: Subscription
     protected state: PlaybackState
+    protected uxSubscription: Subscription;
 
     constructor(
         private http: HttpClient,
@@ -69,6 +70,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     }
 
     ngAfterViewInit(): void {
+        let stallTimer;
         const options = { autoplay: true };
         this.player = videojs(this.videoView.nativeElement, options);
 
@@ -79,12 +81,20 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
         });
 
         this.player.on('playing', () => {
+            stallTimer && clearTimeout(stallTimer);
             this.bufferingChange.emit(false);
+        });
+
+        this.player.on('waiting', (e) => {
+            stallTimer && clearTimeout(stallTimer);
+            stallTimer = setTimeout(() => {
+                this._startPlayback();
+            }, 10 * 1000);
         });
 
         this.player.on('ended', () => {
             this._log('video ended');
-            this.playback.stop();
+            this.playback.playLive();
         });
 
         // this.player.on('error', (err) => {
@@ -93,6 +103,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
 
         this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
+        this.uxSubscription = this.ux.subject.subscribe(() => this._handleRotation());
         this._handleRotation();
     }
 
@@ -103,15 +114,21 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     @HostListener('window:resize', ['$event'])
     protected _handleRotation () {
         if (!this.videoView) {
-            return
+            return;
         }
+
+        if (this.state.transport !== 'hls') {
+            this.videoView.nativeElement.style = undefined;
+            return;
+        }
+
         if (Math.abs(this.rotation % 180) === 90) {
-            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`
-            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`
+            this.videoView.nativeElement.style.maxWidth = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
+            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`;
         } else {
-            this.videoView.nativeElement.style.width = "100%"
+            this.videoView.nativeElement.style.width = '100%';
             this.videoView.nativeElement.style.transform =
-                this.rotation ? `rotate(${this.rotation}deg)` : ""
+                this.rotation ? `rotate(${this.rotation}deg)` : '';
         }
     }
 
@@ -121,7 +138,8 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
             this.player.dispose();
         }
         this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
-        this.playbackSubscription.unsubscribe();
+        this.playbackSubscription?.unsubscribe();
+        this.uxSubscription?.unsubscribe();
     }
 
     public onPlaybackSubjectChange(s: PlaybackState) {
@@ -131,19 +149,21 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     }
 
     protected _reactOnPlaybackStateChange(prevState: PlaybackState) {
+        const isPaused = this.player.paused();
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
-                this.player.pause();
+                !isPaused && this.player.pause();
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
                 if (prevState.mode !== this.state.mode) {
+                    this._handleRotation();
                     this._startPlayback();
                 }
                 if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
-                    this.player.pause();
+                    !isPaused && this.player.pause();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
                 }
@@ -162,7 +182,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
             sourceUrl = this.state.sourceUrl;
         }
         if ('posterUrl' in this.state) {
-            posterUrl = this.state.posterUrl;
+            posterUrl = `${this.state.posterUrl}&rotate=${this.state.transport !== 'hls' ? this.rotation : 0}`;
         }
 
         if (!sourceUrl) {
@@ -170,42 +190,26 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
             return;
         }
 
-        const sourceUrlMainPart = sourceUrl.split('?')[0];
-        const sourceUrlParts = sourceUrlMainPart.split('.');
-        const sourceUrlExtension = sourceUrlParts[sourceUrlParts.length - 1];
-
-        const options = { sources: [{ src: sourceUrl, type: '' }] };
-        switch (sourceUrlExtension) {
-            case 'mp4':
-                options.sources[0].type = 'video/mp4';
-                break;
-            case 'webm':
-                options.sources[0].type = 'video/webm';
-                break;
-            case 'm3u8':
-                options.sources[0].type = 'application/x-mpegURL';
+        if (!['m3u8', 'webm'].some((transport) => sourceUrl.includes(transport))) {
+            this._warn('wrong source format', sourceUrl);
+            return;
         }
 
-        switch (sourceUrlExtension) {
-            case 'mp4':
-            case 'webm':
-            case 'm3u8':
-                this._log('correct source format', sourceUrlExtension, sourceUrl);
-                if ([1, 2].includes(this.state.mode)) {
-                    this._log('setting source (1-ARCHIVE, 2-LIVE)', this.state.mode);
-                    this.bufferingChange.emit(true);
-                    this.player.src({ src: sourceUrl, type: options.sources[0].type });
-                    this.player.poster(posterUrl);
-                    if (this.player.paused()) {
-                        this.player.play();
-                    }
-                } else {
-                    this._warn('playback requested in wrong mode');
-                }
-                break;
-            default:
-                this._warn('wrong source format', sourceUrlExtension, sourceUrl);
-                break;
+        const source = { src: sourceUrl, type: 'video/webm' };
+        if (sourceUrl.includes('m3u8')) {
+            source.type = 'application/x-mpegURL';
+        }
+        this._log('correct source format', sourceUrl);
+        if ([1, 2].includes(this.state.mode)) {
+            this._log('setting source (1-ARCHIVE, 2-LIVE)', this.state.mode);
+            this.bufferingChange.emit(true);
+            this.player.src(source);
+            this.player.poster(posterUrl);
+            if (this.player.paused()) {
+                setTimeout(() => this.player.play());
+            }
+        } else {
+            this._warn('playback requested in wrong mode');
         }
     }
 }

@@ -154,7 +154,8 @@ export class PlaybackService implements OnDestroy {
 
     public playArchive (t: ms, paused = false) {
         if (!this.canPlayArchive(t)) {
-            return;
+            this.playLive()
+            return
         }
         if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.stop();
@@ -537,16 +538,16 @@ export class PlaybackService implements OnDestroy {
 
     public save () {
         this._prevState = { ...this.state }
-        // console.log('PLAYBACK SAVE', { ...this.state })
+        this._log('PLAYBACK STATE SAVED', { ...this.state })
     }
 
     public restore (hasArchive = false) {
-        // console.log('PLAYBACK RESTORE', hasArchive, { ...this._prevState })
+        this._log('PLAYBACK SAVE RESTORE', hasArchive, { ...this._prevState })
         if (hasArchive && this._prevState.mode === PLAYBACK_MODE.ARCHIVE) {
-            // console.log('trying to start archive from the same place')
-            this.playArchive(this._prevState.currentTime)
+            this._log('trying to start archive from the same place')
+            this.playArchive(this._prevState.currentTime, this._prevState.paused)
         } else {
-            // console.log('trying to play live')
+            this._log('trying to play live')
             this.playLive()
         }
     }

@@ -5,8 +5,7 @@ import { Subscription } from 'rxjs';
 import { PlaybackTransport } from '@pages/systems/view/view.types';
 import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '../../../../../../../../../language_i18n_static_types';
-import { NxUtilsService } from '@services/utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import VmsState from '../../../vms/datatypes/VmsState';
 
@@ -35,37 +34,15 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public rotateDeg: number = 0
 
-    public get useNativePlayer () {
-        const isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
-        return isMobile || (
-            this.transport === 'webm' ||
-            this.transport === 'rtsp' ||
-            // this.transport === 'mpegts' ||
-            this.transport === 'mjpeg' ||
-            this.transport === 'mp4'
-            // || this.transport === 'mkv'
-        );
-    }
-
-    public get useHlsPlayer () {
-        const isNotMobile = !(this.utilsService.isMobile() || this.utilsService.isTablet());
-        return isNotMobile && this.transport === 'hls';
-    }
-
-    public get useJsPlayer() {
-        return false;
-    }
-
     constructor (
         translateService: NxLanguageProviderService,
         public playback: PlaybackService,
         protected vms: VideoManagementSystemService,
-        private utilsService: NxUtilsService,
-        protected self: ElementRef,
+        protected self: ElementRef
     ) {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
-        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this)
+        this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
     }
 
     public ngOnInit (): void {

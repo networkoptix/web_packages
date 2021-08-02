@@ -23,6 +23,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() description: any;
 
     CONFIG: IConfig;
+    isUrl: boolean;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -33,5 +34,6 @@ export class NxPlayerPlaceholderComponent implements OnInit {
 
     ngOnInit() {
         this.height = this.height || '96';
+        this.isUrl = !this.description.includes(' ');
     }
 }

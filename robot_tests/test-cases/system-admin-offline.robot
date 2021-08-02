@@ -7,22 +7,27 @@ Force Tags        system
 
 *** Keywords ***
 System Offline Suite Setup
-    Create Base Cloud System
-    Stop Docker Server    ${system}[cont]
-    ${extra system}=   Setup Docker System    cloud email=${system}[owner]
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    Set Suite Variable    ${system}
+    Stop Docker Server    ${system}[id]
+
+    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE 4.3}    owner=${owner}
     Set Suite Variable    ${extra system}
     Sleep    30
     Open browser and go to URL    ${ENV}
 
 System Offline Suite Teardown
-    Delete Base Cloud System
-    Run keyword and ignore error    Disconnect    ${ENV}    ${extra system}[owner]    ${base password}    ${extra system}[id]
-    Delete Docker Server  ${extra system}[cont]
+    Run keyword and ignore error    Disconnect    ${ENV}    ${extra system}[owner]    ${base password}    ${extra system}[cloud id]
+    Delete Base System    ${system}
+    Delete Base System    ${extra system}
+    Delete Docker Server  ${extra system}[id]
     Close All Browsers
 
 Restart
     Common Restart Logout    ${ENV}
-    Log in to user and system   ${system}[owner]    ${system}[id]
+    Log in to user and system   ${system}[owner]    ${system}[cloud id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
 
 *** Test Cases ***
@@ -42,7 +47,7 @@ Should confirm, if owner deletes system
 Offline system should confirm, if not owner deletes system
     [Tags]    Threaded    system_offline
     Log Out
-    Log in to user and system    ${users}[viewer]    ${system}[id]
+    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible
@@ -77,7 +82,7 @@ Should show offline next to system name
 Should not be able to delete/edit users
     [Tags]    Threaded    system_offline    CLOUD-6615
     Click Link    ${USERS LIST LINK}
-    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${users}[viewer]']
+    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloud users][viewer]']
     Wait Until Element Is Visible    ${viewer}
     Click Element    ${viewer}
     Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
@@ -87,7 +92,7 @@ Should not be able to delete/edit users
 Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    Threaded    system_offline
     Log Out
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
@@ -96,7 +101,7 @@ Offline system should open System page by link to not authorized user and redire
 Offline system should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded    system_offline
     Log Out
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]    ${base password}    button=None
     Wait until element is visible    //h2[contains(text(), "${system}[name]")]
 
@@ -104,7 +109,7 @@ Offline system should open System page by link to user without permission and sh
     [Tags]    C41572    Threaded    system_offline
     Log Out
     Log In    ${email noperm}    ${base password}
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
     Slow   Click Button    ${TAKE ME HOME}    timeout=0.5
     Wait Until Location Is    ${ENV}/systems
@@ -112,7 +117,7 @@ Offline system should open System page by link to user without permission and sh
 Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded    system_offline
     Log Out
-    Go To    ${ENV}/systems/${system}[id]
+    Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${email noperm}    ${base password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
 
@@ -124,24 +129,24 @@ Offline system should open System page by link to not authorized user, and show 
 #    Log Out
 #
 #    # Make sure new name is saved
-#    Log in to user and system    ${system}[owner]    ${system}[id]
+#    Log in to user and system    ${system}[owner]    ${system}[cloud id]
 #    ${current name}=   Get Text    //h2[@id="editable-title"]
-#    ${system info}=   Get Cloud System Settings    ${cloud auth}    ${system}[id]
+#    ${system info}=   Get Cloud System Settings    ${cloud auth}    ${system}[clud id]
 #    Should be equal as strings    ${system}[name]     ${new name}
 #    Should be equal as strings    ${current name}     ${new name}
 #
 #    # Return to initial name
-#    Rename System    ${auth}    ${system}[id]    ${system}[name]
+#    Rename System    ${auth}    ${system}[cloud id]    ${system}[name]
 #
 #    # Make sure old name is saved
-#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[id]
+#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[cloud id]
 #    Should be equal as strings    ${system info}[name]     ${system}[name]
 
 Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]    threaded    system_offline
     Log Out
-    FOR    ${user}    IN    ${users}[viewer]    ${users}[advancedViewer]    ${users}[liveViewer]
-        Log in to user and system    ${user}    ${system}[id]
+    FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
+        Log in to user and system    ${user}    ${system}[cloud id]
         Wait Until Element is Visible    //h2[contains(text(), "${system}[name]")]
         Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
@@ -151,10 +156,10 @@ Your permissions is shown for non-owners
     [Tags]    threaded    C41881    system_offline
     Log Out
     ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
-    ${users emails}=   Create List    ${users}[cloudAdmin]    ${users}[viewer]    ${users}[liveViewer]    ${users}[advancedViewer]    ${users}[custom]
+    ${users emails}=   Create List    ${system}[cloud users][cloudAdmin]    ${system}[cloud users][viewer]    ${system}[cloud users][liveViewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][custom]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}  ${text}  IN ZIP  ${users emails}  ${users text}
-        Log in to user and system    ${user}    ${system}[id]
+        Log in to user and system    ${user}    ${system}[cloud id]
         Wait Until Elements Are Visible
            ...    ${current owner name}
            ...    //span[contains(text(), "${system}[owner]")]
@@ -169,7 +174,7 @@ Should show (you) for owner and (owner's name & email) for non-owners
     Wait Until Element Is Visible    ${current owner name}
     Log Out
 
-    Log in to user and system    ${users}[viewer]    ${system}[id]
+    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
@@ -178,16 +183,16 @@ System changes state to offline if all its Servers goes offline
     Log Out
 
     Log    Step 1
-    Log in to user and system    ${extra system}[owner]    ${extra system}[id]
+    Log in to user and system    ${extra system}[owner]    ${extra system}[cloud id]
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
 
     Log    Step 2
-    Stop Docker Server    ${extra system}[cont]
+    Stop Docker Server    ${extra system}[id]
     Reload Page
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
 
     Log    Step 3
-    Start Docker Server    ${extra system}[cont]
+    Start Docker Server    ${extra system}[id]
     Reload Page
     Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}

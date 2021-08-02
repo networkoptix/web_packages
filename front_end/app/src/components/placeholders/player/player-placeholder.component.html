@@ -6,5 +6,7 @@
         }"
         [src]="CONFIG.icons.dirNonStandardView + svgFileName + '.svg'"></svg-icon>
     <span class="heading" [innerText]="heading"></span>
-    <span class="description" [innerText]="description"></span>
+    <span class="description"
+          [ngStyle]="{'line-break': isUrl ? 'anywhere' : undefined}"
+          [innerText]="description"></span>
 </div>

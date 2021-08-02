@@ -4,11 +4,11 @@ Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
 Suite Teardown    System Admin Suite Teardown
-Force Tags        system    cloud    webadmin
+Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
 Advanced system settings availability
-    [Tags]    C76633    advanced settings    threaded
+    [Tags]    C76633    advanced settings
     Log    Step 1, 2 - advanced block is available for admins
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
@@ -27,23 +27,23 @@ Advanced system settings availability
     END
 
 Advanced system settings for offline system
-    [Tags]    C76634    advanced settings    threaded
-    Stop Docker Server    ${system}[cloud id]
+    [Tags]    C76634
+    Remove Tags    webadmin
+    Skip If Irrelevant
+
+    Stop Docker Server    ${system}[id]
     Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
-    Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
+    Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
     Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
 
     Log    Get System back online and check advanced settings
-    Start Docker Server    ${system}[cloud id]
+    Start Docker Server    ${system}[id]
     Reload Page
-    Run keyword and continue on failure    Wait Until Elements Are Visible
-        ...    @{ADVANCED SETTINGS ALERT BAR}
-        ...    @{ADVANCED SETTING ELEMENT BLOCK ONE}
-        ...    timeout=60
+    Wait Until Advanced Settings Are Visible    timeout=120
 
 Hide Advanced Settings button functionality
-    [Tags]    C76635    advanced settings    threaded
+    [Tags]    C76635    threaded
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
@@ -53,7 +53,7 @@ Hide Advanced Settings button functionality
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
 
 Audit trail, backup and statistics section
-    [Tags]    C78244    advanced settings    threaded
+    [Tags]    C78244
     Log    Preconditions
     ${settings}=   Create Dictionary
         ...    additionalLocalFsTypes=${EMPTY}
@@ -62,7 +62,7 @@ Audit trail, backup and statistics section
         ...    autoDiscoveryResponseEnabled=true
         ...    autoUpdateThumbnails=true
         ...    backupNewCamerasByDefault=false
-        ...    backupQualities=${BACKUP QUALITIES DEFAULT TEXT}
+        ...    backupSettings=${BACKUP SETTINGS DEFAULT TEXT}
         ...    clientStatisticsSettingsUrl=${EMPTY}
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
@@ -79,7 +79,7 @@ Audit trail, backup and statistics section
     Log    Step 4
     Changing input setting changes it on server    ${AUDIT TRAIL PERIOD DAYS INPUT}    auditTrailPeriodDays    150
     
-    Log    Step 6    
+    Log    Step 6
     Changing setting changes it on server    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     autoDiscoveryResponseEnabled    advanced=True
     
     Log    Step 7    
@@ -89,13 +89,13 @@ Audit trail, backup and statistics section
     Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=True
     
     Log    Step 9
-    Changing input setting changes it on server    ${BACKUP QUALITIES INPUT}    backupQualities    CameraBackupHighQuality
+    Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    CameraBackupHighQuality
 
     Log    Step 11
     Changing input setting changes it on server    ${CLIENT STATISTICS RELATIVE URL INPUT}    clientStatisticsSettingsUrl    https://www.google.com
 
 Cloud connect and video codec
-    [Tags]    C78259    advanced settings    threaded
+    [Tags]    C78259
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    cloudConnectRelayingEnabled=true
@@ -143,7 +143,7 @@ Cloud connect and video codec
     Changing input setting changes it on server    ${SYSTEM ALIVE INTERVAL INPUT}    ec2AliveUpdateIntervalSec    75
     
 Connection and email
-    [Tags]    C78260    advanced settings    threaded
+    [Tags]    C78260
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    cloudConnectRelayingEnabled=true
@@ -174,7 +174,7 @@ Connection and email
     Changing input setting changes it on server    ${SUPPORT EMAIL INPUT}    emailSupportEmail    http://support.networkoptix.testing.com
 
 Recording and log
-    [Tags]    C78262    advanced settings    threaded
+    [Tags]    C78262
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    enableEdgeRecording=true
@@ -208,7 +208,7 @@ Recording and log
     Changing input setting changes it on server    ${LAST MERGE SLAVEID INPUT}    lastMergeSlaveId    slaveId
 
 LDAP and license server
-    [Tags]    C78263    advanced settings    threaded
+    [Tags]    C78263
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    ldapAdminDn=${EMPTY}
@@ -241,7 +241,7 @@ LDAP and license server
     Changing input setting changes it on server    ${LICENSE SERVER INPUT}    licenseServer    https://licensing.vmsproxy.testing.com
 
 Screen quality, time settings and event log
-    [Tags]    C78264    advanced settings    threaded
+    [Tags]    C78264
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    lowQualityScreenVideoCodec=mpeg2video
@@ -267,7 +267,7 @@ Screen quality, time settings and event log
     Changing input setting changes it on server    ${MAX EVENT LOG RECORDS INPUT}    maxEventLogRecords    90000
 
 Max P2P, record queue size, and remote archive
-    [Tags]    C78265    advanced settings    threaded
+    [Tags]    C78265
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    maxP2pAllClientsSizeBytes=1073741824
@@ -295,8 +295,8 @@ Max P2P, record queue size, and remote archive
     Log    Step 5
     Changing input setting changes it on server    ${MAX REMOTE ARCHIVE SYNC THREADS INPUT}    maxRemoteArchiveSynchronizationThreads    1
 
-RTP, Rtsp, scene items, archive sync, WEBM
-    [Tags]    C78379    advanced settings    threaded
+RTP, Rtsp, scene items, archive sync, HTTP
+    [Tags]    C78379
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    maxRtpRetryCount=6
@@ -322,10 +322,10 @@ RTP, Rtsp, scene items, archive sync, WEBM
     Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
 
     Log    Step 5
-    Changing input setting changes it on server    ${MAX WEBM TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
+    Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
 
 Meta data storage, OS time change, proxy connection timeout, push notification language
-    [Tags]    C78380    advanced settings    threaded
+    [Tags]    C78380
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    rtspBufferSizeKb=64
@@ -355,7 +355,7 @@ Meta data storage, OS time change, proxy connection timeout, push notification l
     Changing input setting changes it on server    ${PUSH NOTIFICATION LANGUAGE INPUT}    pushNotificationsLanguage    Russian
 
 File URI, RTP timeout, rtsp buffer, Flir Onvif
-    [Tags]    C78385    C78386    advanced settings    threaded
+    [Tags]    C78385    C78386
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    resourceFileUri=http://resources.vmsproxy.com/resource_data.json
@@ -381,7 +381,7 @@ File URI, RTP timeout, rtsp buffer, Flir Onvif
     Changing input setting changes it on server    ${SERVER DISCOVERY TIMEOUT INPUT}    serverDiscoveryPingTimeoutSec    50
 
 SMTP settings
-    [Tags]    C78387    advanced settings    threaded
+    [Tags]    C78387
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    smtpConnectionType=Unsecure
@@ -414,7 +414,7 @@ SMTP settings
     Changing input setting changes it on server    ${SMTP USER INPUT}    smtpUser    networkoptixtesting123
 
 Specific features, statistics report
-    [Tags]    C78388    advanced settings    threaded
+    [Tags]    C78388
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    specificFeatures=${SPECIFIC FEATURES DEFAULT}
@@ -452,7 +452,7 @@ Specific features, statistics report
     Changing input setting changes it on server    ${STATISTICS REPORT UPDATE DELAY INPUT}    statisticsReportUpdateDelay    86400
 
 Sync, Camera Ownership, Time, UPNP, Video Traffic
-    [Tags]    C78393    C78398    C78399    C78401    C78402    advanced settings    threaded
+    [Tags]    C78393    C78398    C78399    C78401    C78402
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    syncTimeEpsilon=200

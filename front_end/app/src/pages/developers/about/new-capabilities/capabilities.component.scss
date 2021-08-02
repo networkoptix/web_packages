@@ -24,10 +24,11 @@
     margin-top: -50px;
 
     & .bullet-points-single-card {
-        margin: 19px 0px 24px 0px;
+        margin: 19px 0px 5px 0px;
         @include bootstrap.media-breakpoint-up(md){
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: start;
         }
         @include bootstrap.media-breakpoint-down(sm){
             margin-top: 6px;
@@ -36,8 +37,10 @@
         & .bullet-item {
             @extend .bullet-point-text;
             padding-right: 36px;
+            flex: 0 1 33% !important;
+            margin-bottom: 19px;
             @include bootstrap.media-breakpoint-down(sm){
-                margin-top: 12px;
+                margin-top: 12px !important;
             }
         }
     }

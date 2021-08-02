@@ -56,14 +56,15 @@ Share Form Setup
     ${owner}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      shareform-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}
-    Open Browser and Go To URL    ${url}
-    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
-    Sleep    10
-    Wait Until Element is Visible    ${SERVERS LINK}    300
-    Sleep    5
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page    timeout=120
-    Log Out
+    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
+    ...    Open Browser and Go To URL    ${url}
+    ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
+    ...    AND    Sleep    10
+    ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
+    ...    AND    Sleep    5
+    ...    AND    Click Link    ${SERVERS LINK}
+    ...    AND    Verify on Servers Page    timeout=120
+    ...    AND    Log Out
     
 Share Form Tear Down
     Run Keyword If    '''${mode}'''=='''cloud'''    Disconnect Server via API    ${auth}    ${server['cloud id']}    ${password}    ${server['owner']}
@@ -83,8 +84,12 @@ Restart
 
 Open Share Dialog
     Share Form Setup
-    Go To    ${url}/systems/${server['cloud id']}
-    Log In    ${server['owner']}    ${password}    button=None
+        Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
+    ...    Go To   ${url}/systems/${server['cloud id']}
+    ...    AND    Log In     ${server['owner']}    ${password}    button=None
+    ...    ELSE    Run Keywords
+    ...    Open Browser and Go To URL    https://${QA BURBANK IP}:${server['port']}
+    ...    AND    Log In     ${server['local auth'][0]}    ${server['local auth'][1]}    button=None
     # Run Keyword If    '${email}' == '${server['owner']}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}
     # Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}

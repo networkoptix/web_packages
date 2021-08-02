@@ -20,7 +20,7 @@
     class="bar"
     #bar
     (touchstart)="barMouseDownHandler($event)"
-    (dblclick)="barDoubleClickHandler($event)"
+    (dblclick)="barDblClickHandler($event)"
     (mousedown)="barMouseDownHandler($event)"
     [ngClass]="{ 'grabbed': isBarGrabbed }"
     [ngStyle]="{ 'left.px': barLeftPx, 'width.px': barWidthPx }">

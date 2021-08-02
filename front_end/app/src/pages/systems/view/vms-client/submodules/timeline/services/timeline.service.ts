@@ -170,6 +170,7 @@ export class TimelineService {
     public fullZoomOut () {
         this._visibleRange.start = this._fullRange.start;
         this._visibleRange.end = this._fullRange.end;
+        this._targetScrollMs = undefined;
         this._emit();
     }
 
@@ -238,13 +239,12 @@ export class TimelineService {
             const dMs = Math.round(diffMs * percentage);
             const current = this._initialScrollMs + dMs;
             this._changeVisibleDurationStart(current);
-            this._emit();
         } else if (this._targetScrollMs) {
             this._changeVisibleDurationStart(this._targetScrollMs);
             this._targetScrollMs = undefined;
             this._animationStep = 0;
-            this._emit();
         }
+        this._emit();
         setTimeout(() => {
             requestAnimationFrame(() => this._onAnimationFrame());
         }, this.renderFps);

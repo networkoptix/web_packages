@@ -153,7 +153,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.systems = systems;
                 }
                 if (!this.system) {
-                    this._log('systemsService -> initSystem', { ...systems });
+                    this._log('systemsService -> initSystem', [ ...systems ]);
                     this._initSystem();
                 }
             });
@@ -227,23 +227,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.system = undefined;
         this.hasCameras = false;
         this._setInitializationState(false, false);
+        this.vms.reset()
 
         // reset subscription to get values immediately and not waiting for next update
         this.setSystemSubscription();
     }
 
-    private async _getServerTimes() {
-        let res;
-        try {
-            res = await this.system.getServerTimes();
-        } catch (err) {
-            if (err.name === 'TimeoutError') {
-                this.dialogs.notify(this.LANG.common.systemUnresponsive(), this.CONFIG.toast.danger, true);
-            }
-        }
-        this.vms.serverTimes = res ?? [];
-        return this.vms.serverTimes;
-    }
 
     protected _initSystem () {
         this._log('initSystem entered');
@@ -337,7 +326,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     }
 
                     processingMediaServers = true;
-                    const serverTimeInfos = await this._getServerTimes();
+                    const serverTimeInfos = await this.system.getServerTimes();
+                    this.vms.serverTimes = serverTimeInfos;
                     serverTimeInfos.forEach(sti => {
                         const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
                         if (mediaServer) {
@@ -348,7 +338,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     // issue with camera archive data not being loaded --> may refactor in 21.1
                     const findCameraArchiveRanges = (cid) => {
                         // (check archive presence mode)
-                        if (!this.system.userManager.permissions.viewArchives) {
+                        if (!this.system?.userManager.permissions.viewArchives) {
                             return Promise.resolve();
                         }
                         return this.system.getCameraRecords(cid, 0, now, now).then(response => {
