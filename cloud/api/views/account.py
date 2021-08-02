@@ -222,7 +222,6 @@ def index(request):
     if request.method == 'GET':
         # get authorized user here
         serializer = AccountSerializer(request.user, many=False)
-        return Response(serializer.data)
 
     elif request.method == 'POST':
         serializer = AccountUpdateSerializer(request.user, data=request.data)
@@ -236,7 +235,10 @@ def index(request):
         # if not success:
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
-        return api_success(serializer.data)
+    data = serializer.data
+    cdb_account = Account.get(request)
+    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
+    return api_success(data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
