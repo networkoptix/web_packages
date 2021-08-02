@@ -9,6 +9,13 @@ from api.controllers.cloud_api import Auth
 from api.helpers.exceptions import api_success
 
 
+class TwoFactorPermissionsMixin(APIView):
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return super().get_permissions()
+
+
 class BackupCodeSerializer(serializers.Serializer):
     backup_codes = serializers.CharField()
 
@@ -24,12 +31,11 @@ class VerificationSerializer(serializers.Serializer):
     verification_code = serializers.CharField(required=True)
 
 
-class TwoFactorVerification(APIView):
+class TwoFactorVerification(TwoFactorPermissionsMixin):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
-    @method_decorator(decorators.permission_classes((AllowAny,)))
     def get(self, request, *args, **kwargs):
         """
         Verifies an access code using a 2fa code.
@@ -46,12 +52,11 @@ class TwoFactorVerification(APIView):
         return api_success(Auth.generate_2fa_key(request))
 
 
-class BackupCode(APIView):
+class BackupCode(TwoFactorPermissionsMixin):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
-    @method_decorator(decorators.permission_classes((AllowAny,)))
     def get(self, request, *args, **kwargs):
         """
         Verifies an access code using a backup code.
