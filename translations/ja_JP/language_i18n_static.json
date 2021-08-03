@@ -155,7 +155,7 @@
         "systemNewVersion": "システムを更新する",
         "systemNewVersionMessage": "現在のバージョンはこの機能と互換性がありません。この機能を使用するにはサーバーを最新バージョンに更新してください。",
         "systemNoAlerts": "アラートはありません",
-        "systemNoAlertsMessage": "あなたのシステムはうまくいっていなければなりません！",
+        "systemNoAlertsMessage": "システムは正常に動作しています！",
         "systemOffline": "システムはオフラインです",
         "systemOfflineMessage": "このシステムはオフラインのため現在アクセスできません。",
         "systemServerError": "内部サーバーエラー",
