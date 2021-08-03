@@ -14,18 +14,6 @@ class TestStorageViews:
         self.session = {'login': str(uuid4()), 'password': str(uuid4())}
 
     @pytest.fixture
-    def mock_cloud_portal_customization_cache(self, mocker):
-        def handler(storage_size):
-            return mocker.patch(
-                'cms.models.cloud_portal_customization_cache', return_value={
-                    'config': {
-                        'cloud_storage_size': storage_size
-                    }
-                })
-
-        return handler
-
-    @pytest.fixture
     def request_factory(self, arf):
         def handler(endpoint, get=False, data=None, authenticated=True):
             request_method_mocker = arf.get if get else arf.post
@@ -67,7 +55,7 @@ class TestStorageViews:
         system_id = str(uuid4())
         data = {'systemId': system_id}
 
-        mock_cloud_portal_customization_cache(storage_size)
+        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
         request = request_factory(endpoint, data=data)
 
         mock_create, expected_return = mock_storage_controller('create')
@@ -89,7 +77,7 @@ class TestStorageViews:
         system_id = str(uuid4())
         data = {'systemId': system_id}
 
-        mock_cloud_portal_customization_cache(storage_size)
+        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
         request = request_factory(endpoint, data=data)
 
         mock_create, expected_return = mock_storage_controller('create')
@@ -141,7 +129,7 @@ class TestStorageViews:
     def test_usage_stats(self, request_factory, mock_storage_controller, mock_cloud_portal_customization_cache, assert_auth_required):
         endpoint = '/api/storage/statistics'
         storage_size = randint(1, 10000)
-        mock_cloud_portal_customization_cache(storage_size)
+        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
         system_id = str(uuid4())
         data = {'systemId': system_id}
         expected_storage_info = {

@@ -1,5 +1,6 @@
 from typing import Iterable
 
+import os
 import pytest
 import model_bakery
 from model_bakery import baker
@@ -104,9 +105,18 @@ def active_user(db, django_user_model):
     return django_user_model.objects.create(email='active_user@fixture.com', is_active=True)
 
 
+@pytest.fixture
+def mock_cloud_portal_customization_cache(mocker):
+    def handler(**kwargs):
+        return mocker.patch(
+            'cms.models.cloud_portal_customization_cache', return_value=kwargs)
+
+    return handler
+
+
 @pytest.fixture(scope="session")
 def asset_factory():
-    def generate_mock_assets(name="test", qty=1, state=AssetCustomizationReview.REVIEW_STATES.accepted, customization_name='default', asset_type=AssetType.ASSET_TYPES.integration, account=None, draft=False):
+    def generate_mock_assets(name="test", qty=1, state=AssetCustomizationReview.REVIEW_STATES.accepted, customization_name='default', asset_type=AssetType.ASSET_TYPES.integration, account=None, draft=False, write_db=True):
         """Useful for generating mock assets for testing. Current implementation works well for integrations, some changes might need to be made to use with other asset types.
 
         Args:
@@ -125,16 +135,16 @@ def asset_factory():
         customization = get_customization(customization_name)
         customization.languages.add(language)
         accepted = state == AssetCustomizationReview.REVIEW_STATES.accepted
-
+        create_asset = baker.make if write_db else baker.prepare
         for asset_copy in range(qty):
-            asset = baker.make(
+            asset = create_asset(
                 Asset, name=f"{name} - {asset_copy}", customizations=[customization], asset_type=get_asset_type(asset_type))
             accepted_date = datetime.now() if accepted else None
             accepted_by = account if accepted else None
-            version = baker.make(
+            version = create_asset(
                 ContentVersion, asset=asset, customization=customization, created_by=account, accepted_date=accepted_date, accepted_by=accepted_by)
             if not draft:
-                baker.make(AssetCustomizationReview,
+                create_asset(AssetCustomizationReview,
                            customization=customization, version=version)
             if accepted:
                 reviews = AssetCustomizationReview.objects.filter(
@@ -149,7 +159,7 @@ def asset_factory():
 
 @pytest.fixture(scope="session")
 def account_factory():
-    def get_account(email='super@user.com', is_superuser=True):
+    def get_account(email='super@user.com', is_superuser=True, customization_name='default'):
         """Gets existing Account or creates new.
 
         Args:
@@ -159,10 +169,13 @@ def account_factory():
         Returns:
             Account: Account with superuser value mocked
         """
-        account = Account.objects.filter(email=email).first(
-        ) or baker.make(Account, email=email)
+        existing = Account.objects.filter(email=email).first()
+        account = existing or baker.make(Account, email=email, is_superuser=is_superuser, customization=customization_name)
 
-        account.is_superuser = is_superuser
+        if existing:
+            account.is_superuser = is_superuser
+            account.save()
+
         return account
     return get_account
 
