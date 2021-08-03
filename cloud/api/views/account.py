@@ -236,7 +236,7 @@ def index(request):
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
     data = serializer.data
-    cdb_account = Account.get(request)
+    cdb_account = Account.get(request) if request.user.is_authenticated else dict()
     data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
     return api_success(data)
 
