@@ -10,7 +10,7 @@
         <form>
             <section *ngFor="let structure of context.fields">
                 <label [for]="structure.name">{{structure.label}}</label>
-                <span *ngIf="structure.label">{{structure.name}}</span>
+                <span *ngIf="context.global && structure.label">{{structure.name}}</span>
                 <ng-container [ngSwitch]="structure.type">
                     <nx-html *ngSwitchCase="INPUT_TYPE.HTML"
                         [name]="structure.name"

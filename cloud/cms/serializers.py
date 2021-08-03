@@ -161,10 +161,21 @@ class CustomClientSerializer(serializers.ModelSerializer):
             return match.group(1)
 
         def validate(self, data):
+            increment_eula = False
+            eula_version = 1
             if self.parent and self.parent.instance:
                 for key in self.custom_fields:
                     if key not in data:
                         data[key] = self.parent.instance.values.get(key, '')
+                    elif key in ['%eulaTitle%', '%eulaContent%'] and data[key] != self.parent.instance.values.get(key, ''):
+                        increment_eula = True
+
+                if increment_eula:
+                    eula_version = self.parent.instance.values.get('%eulaVersion%', 0) + 1
+                else:
+                    eula_version = self.parent.instance.values.get('%eulaVersion%', 1)
+
+            data['%eulaVersion%'] = eula_version
             return data
 
         def to_representation(self, instance):
@@ -225,10 +236,12 @@ class CheckPackageCustomClientSerializer(serializers.Serializer):
                     return {'state': 'failed', 'message': 'Failed to generate package', 'errors': instance.result.errors}
                 else:
                     return {'state': 'failed', 'message': 'Unknown error occured while generating package'}
-        else:
+        elif instance.result:
             current = instance.result.get('current', 0)
             total = instance.result.get('total', 0)
             return {'state': 'pending', 'current': current, 'total': total}
+        else:
+            return {'state': 'pending', 'current': None, 'total': None}
 
 
 class PackageDownloadIdSerializer(serializers.Serializer):

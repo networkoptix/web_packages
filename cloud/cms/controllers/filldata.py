@@ -71,21 +71,24 @@ def global_contexts_to_dict(contexts, asset):
                     data_structures[lang.code] = context.datastructure_set.all()
                 else:
                     data_structures[lang.code] |= context.datastructure_set.all()
-
-    universal_vals = DataStructure.find_actual_values(
-        data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
-    )
-    del data_structures['universal']
-    data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+    if 'universal' in data_structures:
+        universal_vals = DataStructure.find_actual_values(
+            data_structures['universal'], asset, version_id=version_id, customization_name=customization_name
+        )
+        del data_structures['universal']
+        data_structure_dict = {ds.name: value for ds, value in universal_vals.items()}
+    else:
+        data_structure_dict = {}
 
     for language in languages:
-        vals = DataStructure.find_actual_values(
-            data_structures[language.code], asset, version_id=version_id, language=language,
-            customization_name=customization_name
-        )
-        # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
-        for ds, value in vals.items():
-            data_structure_dict[f'{ds.name}__{language.code}'] = value
+        if language.code in data_structures:
+            vals = DataStructure.find_actual_values(
+                data_structures[language.code], asset, version_id=version_id, language=language,
+                customization_name=customization_name
+            )
+            # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
+            for ds, value in vals.items():
+                data_structure_dict[f'{ds.name}__{language.code}'] = value
 
     for tag in SPECIAL_STRUCTURES.function_dict:
         data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, asset)
@@ -645,6 +648,9 @@ def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, Lis
 
         elif source == 'constant':
             custom_data[name] = field.get('value')
+
+        elif source == 'auto':
+            custom_data[name] = client_values.get(name, None)
 
     if custom_client.created_customization.name == settings.META_CUSTOMIZATION:
         portal_url = client_values.get('portalUrl', '')

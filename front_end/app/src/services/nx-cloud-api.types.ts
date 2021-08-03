@@ -269,6 +269,7 @@ export interface ContextManifest {
     label: string;
     icon?: string;
     fields: FieldManifest[];
+    global: boolean;
 }
 
 export interface ContentSettings {

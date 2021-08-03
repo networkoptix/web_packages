@@ -824,6 +824,7 @@ class CustomClientViewSet(ModelViewSet):
         contexts = [{
             'name': 'information',
             'label': 'Information',
+            'global': False,
             'fields': fields
         }]
 
