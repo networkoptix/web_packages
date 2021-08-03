@@ -15,7 +15,6 @@ from rest_framework import status
 
 logger = logging.getLogger(__name__)
 
-
 class ErrorCodes(Enum):
     ok = 'ok'
 
@@ -59,33 +58,34 @@ class ErrorCodes(Enum):
     not_acceptable = 'notAcceptable'
 
     def log_level(self):
-        if self in (ErrorCodes.account_activated,
-                    ErrorCodes.account_exists,
-                    ErrorCodes.account_not_activated,
-                    ErrorCodes.bad_username,
-                    ErrorCodes.ok,
-                    ErrorCodes.not_authorized,
-                    ErrorCodes.not_found,
-                    ErrorCodes.wrong_old_password,
-                    ErrorCodes.wrong_password):
+        if self in info_level_errors:
             return logging.INFO
-        if self in (ErrorCodes.account_blocked,
-                    ErrorCodes.cloud_invalid_response,
-                    ErrorCodes.forbidden,
-                    ErrorCodes.invalid_nonce,
-                    ErrorCodes.wrong_code,
-                    ErrorCodes.wrong_parameters,
-                    ErrorCodes.unsupported_media_type,
-                    ErrorCodes.credentials_removed_permanently):
+
+        if self in warning_level_errors:
             return logging.WARNING
         return logging.ERROR
 
+info_level_errors = (ErrorCodes.account_activated,
+                ErrorCodes.account_exists,
+                ErrorCodes.account_not_activated,
+                ErrorCodes.bad_username,
+                ErrorCodes.ok,
+                ErrorCodes.not_authorized,
+                ErrorCodes.not_found,
+                ErrorCodes.wrong_old_password,
+                ErrorCodes.wrong_password)
 
-def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
-    if data is None:
-        data = {
-            'resultCode': ErrorCodes.ok.value
-        }
+warning_level_errors = (ErrorCodes.account_blocked,
+                ErrorCodes.cloud_invalid_response,
+                ErrorCodes.forbidden,
+                ErrorCodes.invalid_nonce,
+                ErrorCodes.wrong_code,
+                ErrorCodes.wrong_parameters,
+                ErrorCodes.unsupported_media_type,
+                ErrorCodes.credentials_removed_permanently)
+
+def create_response_with_cookies(data, status_code, cookies):
+    from rest_framework.response import Response
     response = Response(data, status=status_code)
     if cookies is not None:
         for name, value in cookies.items():
@@ -94,6 +94,13 @@ def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
             else:
                 response.set_cookie(name, value, httponly=True, secure=True)
     return response
+
+def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
+    if data is None:
+        data = {
+            'resultCode': ErrorCodes.ok.value
+        }
+    return create_response_with_cookies(data, status_code, cookies)
 
 
 def require_params(request, params_list):
@@ -148,9 +155,9 @@ class APIException(Exception):
             }, status=self.status_code)
 
     def log_level(self):
-        if isinstance(self.error_code, str):
-            return logging.ERROR
-        return self.error_code.log_level()
+        if isinstance(self.error_code, ErrorCodes):
+            return self.error_code.log_level()
+        return logging.ERROR
 
 
 class APIInternalException(APIException):
@@ -204,6 +211,14 @@ class APILogicException(APIException):
         super(APILogicException, self).__init__(error_text, error_code, error_data=error_data,
                                                 status_code=status.HTTP_200_OK)
 
+vms_errors = {
+    status.HTTP_500_INTERNAL_SERVER_ERROR: APIInternalException,
+    status.HTTP_503_SERVICE_UNAVAILABLE: APIServiceException,
+    status.HTTP_404_NOT_FOUND: APINotFoundException,
+    status.HTTP_403_FORBIDDEN: APIForbiddenException,
+    status.HTTP_401_UNAUTHORIZED: APINotAuthorisedException,
+    status.HTTP_400_BAD_REQUEST: APIRequestException,
+}
 
 def validate_mediaserver_response(func):
     def validate_error(response_data):
@@ -223,28 +238,31 @@ def validate_mediaserver_response(func):
         except ValueError:
             response_data = None
 
-        errors = {
-            status.HTTP_500_INTERNAL_SERVER_ERROR: APIInternalException,
-            status.HTTP_503_SERVICE_UNAVAILABLE: APIServiceException,
-            status.HTTP_404_NOT_FOUND: APINotFoundException,
-            status.HTTP_403_FORBIDDEN: APIForbiddenException,
-            status.HTTP_401_UNAUTHORIZED: APINotAuthorisedException,
-            status.HTTP_400_BAD_REQUEST: APIRequestException,
-        }
+        if vms_error := vms_errors.get(response.status_code, False):
+            if not response_data:
+                raise vms_error(response.text, error_code=ErrorCodes.unknown_error)
 
-        if response.status_code in errors:
-            if response_data:
-                validate_error(response_data)
-                raise errors[response.status_code](response_data['errorText'], error_code=response_data['resultCode'],
-                                                   error_data=response_data)
-            else:
-                raise errors[response.status_code](response.text, error_code=ErrorCodes.unknown_error)
-
+            validate_error(response_data)
+            raise vms_error(response_data['errorText'], error_code=response_data['resultCode'],
+                                               error_data=response_data)
         # everything is OK - return server's response
         return response_data
 
     return validator
 
+response_errors = {
+    status.HTTP_500_INTERNAL_SERVER_ERROR: APIInternalException,
+    status.HTTP_503_SERVICE_UNAVAILABLE: APIServiceException,
+    status.HTTP_404_NOT_FOUND: APINotFoundException,
+    # HTTP_403_FORBIDDEN
+    status.HTTP_401_UNAUTHORIZED: APINotAuthorisedException,
+    status.HTTP_400_BAD_REQUEST: APIRequestException,
+}
+
+logic_errors = {
+    ErrorCodes.forbidden: APINotAuthorisedException,
+    ErrorCodes.not_authorized: APINotAuthorisedException
+}
 
 def validate_response(func):
     def validate_error(response_data):
@@ -262,34 +280,20 @@ def validate_response(func):
         try:
             response_data = response.json()
         except ValueError:
-            raise APIInternalException('No JSON data from cloud_db (code:' + str(response.status_code) + ") " +
-                                       response.text, ErrorCodes.cloud_invalid_response)
+            raise APIInternalException(
+                f'No JSON data from cloud_db (code:{response.status_code}) {response.text}', ErrorCodes.cloud_invalid_response)
 
-        errors = {
-            status.HTTP_500_INTERNAL_SERVER_ERROR: APIInternalException,
-            status.HTTP_503_SERVICE_UNAVAILABLE: APIServiceException,
-            status.HTTP_404_NOT_FOUND: APINotFoundException,
-            # HTTP_403_FORBIDDEN
-            status.HTTP_401_UNAUTHORIZED: APINotAuthorisedException,
-            status.HTTP_400_BAD_REQUEST: APIRequestException,
-        }
-
-        if response.status_code in errors:
+        if response.status_code in response_errors:
             validate_error(response_data)
-            raise errors[response.status_code](response_data['errorText'], error_code=response_data['resultCode'])
-
-        logic_errors = {
-            ErrorCodes.forbidden: APINotAuthorisedException,
-            ErrorCodes.not_authorized: APINotAuthorisedException
-        }
+            raise response_errors[response.status_code](response_data['errorText'], error_code=response_data['resultCode'])
 
         # Check error_code status - raise APILogicException
-        if 'resultCode' in response_data and response_data['resultCode'] != ErrorCodes.ok.value:
+        if (result_code := response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:
             validate_error(response_data)
-            if response_data['resultCode'] in logic_errors:
-                raise logic_errors[response_data['resultCode']](response_data['errorText'],
-                                                                error_code=response_data['resultCode'])
-            raise APILogicException(response_data['errorText'], response_data['resultCode'])
+            if result_code in logic_errors:
+                raise logic_errors[result_code](response_data['errorText'],
+                                                                error_code=result_code)
+            raise APILogicException(response_data['errorText'], result_code)
 
         # everything is OK - return server's response
         return response_data
@@ -299,11 +303,8 @@ def validate_response(func):
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+    return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+
 
 
 def clean_passwords(dictionary):
@@ -326,7 +327,7 @@ def log_error(request, error, log_level):
     login_type = 'temp key'
     session_time = 0
 
-    if isinstance(request, Request):
+    if isinstance(request, Request) or getattr(request, 'is_mock_request', False):
         page_url = request.build_absolute_uri()
         try:
             request_data = request.data
@@ -339,8 +340,8 @@ def log_error(request, error, log_level):
         if request.session:
             if 'login' in request.session:
                 login_type = 'email and password'
-            if 'time' in request.session:
-                session_time = (time.time() - request.session['time'])/1000.0
+            if request_session_time := request.session.get('time', False):
+                session_time = (time.time() - request_session_time)/1000.0
 
     if isinstance(request_data, QueryDict):
         request_data = request_data.dict()
@@ -373,11 +374,12 @@ def log_error(request, error, log_level):
 
 
 def kill_session(request):
+    from django.contrib.auth import logout
     request.session.pop('access_token', None)
     request.session.pop('refresh_token', None)
     request.session.pop('timezone', None)
     request.session.pop('time', None)
-    django.contrib.auth.logout(request)
+    logout(request)
 
 
 def handler(request, exception):
