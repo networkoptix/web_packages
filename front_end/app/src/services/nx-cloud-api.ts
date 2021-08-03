@@ -330,6 +330,11 @@ export class NxCloudApiService {
         return this.http.post<any>('/oauth/authenticate', body).toPromise();
     }
 
+    verifyCode(verification_code: string, access_code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verification_code}&access_code=${access_code}`;
+        return this.http.get<any>(url);
+    }
+
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();

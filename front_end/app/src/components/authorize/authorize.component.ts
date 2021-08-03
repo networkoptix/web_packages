@@ -94,6 +94,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginProcess: Process;
     loginPassword: string;
     passwordErrorCode: string;
+    redirectLink: string;
+    loginCode: string;
     // shouldStayLoggedIn: boolean;
 
     // create account
@@ -214,13 +216,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleCloudConnectionError(err: any, process: Process) {
-        if ([500, 503].includes(err?.status) || err.message.includes('timeout')) {
+        if (err && ([500, 503].includes(err.status) || err.message.includes('timeout'))) {
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }
     }
 
-    handleLoginSuccess = async (res: { link: string }) => {
+    handleLoginSuccess = async (res: { link: string, code: string, error: string }) => {
         let code: string;
         if (res?.link.startsWith('http')) {
             const url = new URL(res.link.replace('/#', ''));
@@ -307,24 +309,61 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 timeoutMs
             },
             res => {
-                // not final code
-                if (res['2faRequired']) {
-                    this.currentState = AuthorizeState.auth;
-                } else {
-                    this.handleLoginSuccess(res);
-                }
+                this.handleLoginSuccess(res);
             },
             err => {
-                console.error('err from loginProcess', err);
                 if (err?.resultCode) {
                     if (err.resultCode === 'notAuthorized') {
                         this.passwordErrorCode = 'wrongPassword';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
                     }
+                // error message exists when 2fa is required
+                } else if (err?.error === 'second_factor_required') {
+                    this.loginCode = err.access_code;
+                    this.redirectLink = err.link;
+                    this.currentState = AuthorizeState.auth;
                 } else {
+                    console.error('err from loginProcess', err);
                     this.handleCloudConnectionError(err, this.loginProcess);
                 }
+            }
+        );
+
+        this.checkAuthCodeProcess = this.processService.createProcess(
+            () => {
+                return this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
+            },
+            {
+                ignoreUnauthorized : true,
+                ignoreError        : true,
+                timeoutMs
+            },
+            res => {
+                if (res.resultCode === 'ok') {
+                    this.handleLoginSuccess({
+                        link: this.redirectLink, code: this.loginCode, error: undefined
+                    });
+                }
+            },
+            err => {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.authCodeErrorCode = 'wrongAuthCode';
+                } else {
+                    console.error('err from checkAuthCodeProcess', err);
+                    this.handleCloudConnectionError(err, this.checkAuthCodeProcess);
+                }
+            }
+        );
+
+        this.checkBackupCodeProcess = this.processService.createProcess(
+            () => {
+                return Promise.resolve();
+            },
+            { ignoreError: true, timeoutMs },
+            () => {
+                this.newBackupCode = '2f4q sip7 rdcr';
+                this.currentState = AuthorizeState.newBackup;
             }
         );
 
@@ -391,27 +430,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });
-
-        this.checkAuthCodeProcess = this.processService.createProcess(
-            () => {
-                return Promise.resolve();
-            },
-            { ignoreError: true, timeoutMs },
-            () => {
-                this.currentState = AuthorizeState.backup;
-            }
-        );
-
-        this.checkBackupCodeProcess = this.processService.createProcess(
-            () => {
-                return Promise.resolve();
-            },
-            { ignoreError: true, timeoutMs },
-            () => {
-                this.newBackupCode = '2f4q sip7 rdcr';
-                this.currentState = AuthorizeState.newBackup;
-            }
-        );
     }
 
     login = () => {

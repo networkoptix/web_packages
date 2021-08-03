@@ -38,7 +38,7 @@
         </div>
         <div class="mt-2" *ngIf="authCode.invalid && (authCode.dirty || authCode.touched)">
             <p *ngIf="authCode.errors.required" class="error-label mb-0" translate>Enter Authentication code</p>
-            <p *ngIf="authCode.errors.wrongauthCode" class="error-label mb-0" translate>Wrong Authentication code</p>
+            <p *ngIf="authCode.errors.wrongAuthCode" class="error-label mb-0" translate>Wrong Authentication code</p>
             <p *ngIf="authCode.errors.lockedOut" class="error-label mb-0" translate>Too many attempts. Try again in a minute.</p>
         </div>
     </form>
