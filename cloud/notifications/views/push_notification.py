@@ -60,7 +60,7 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
         else:
             try:
                 # System credentials should fail account.get and raise an exception
-                Clouddb_Account.get(request, username=user, password=password)
+                Clouddb_Account.get(request, email=user, password=password)
                 raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
@@ -82,7 +82,7 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
 class CloudAccountBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
         try:
-            clouddb_account = Clouddb_Account.get(request, username=user, password=password)
+            clouddb_account = Clouddb_Account.get(request, email=user, password=password)
         except (APINotAuthorisedException, APILogicException):
             raise exceptions.AuthenticationFailed('Invalid email/password')
 

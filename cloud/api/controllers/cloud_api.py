@@ -481,7 +481,10 @@ class Account(object):
     @validate_response
     @auto_refresh_token
     def get(request, email=None, password=None, headers=None):
-        return get_wrapper(f'{CLOUD_DB_URL}/account/get', headers=headers, auth={"email": email, "password": password})
+        auth = None
+        if email and password:
+            auth = {"email": email, "password": password}
+        return get_wrapper(f'{CLOUD_DB_URL}/account/get', headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
