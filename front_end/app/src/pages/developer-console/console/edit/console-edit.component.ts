@@ -166,7 +166,7 @@ export class NxDevConsoleEditComponent {
     }
 
     addWatchers = () => this.context?.fields.forEach(({ name }) => {
-        this.watchers[name] = new Watcher(this.values.values[name], this);
+        this.watchers[name] = new Watcher(this.values.values[name] || '', this);
 
         this.applyService.initPageWatcher(
             this.applyContainer,
