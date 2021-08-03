@@ -121,7 +121,7 @@ export class NxApiToolComponent implements OnInit {
             // get first online
             await this.systems.some(async(system) => {
                 if (system.stateOfHealth === 'online') {
-                    this.system = await this.systemService.createSystem('', system.id, '');
+                    this.system = await this.systemService.createSystem('', system.id, '', true);
                 }
                 return system.stateOfHealth === 'online';
             });
@@ -142,7 +142,7 @@ export class NxApiToolComponent implements OnInit {
     }
 
     async onSystemChange(system) {
-        this.system = await this.systemService.createSystem('', system.value, '');
+        this.system = await this.systemService.createSystem('', system.value, '', true);
         this.selectedSystem = { value: system.value, name: system.name };
 
         this.getServersInfo();

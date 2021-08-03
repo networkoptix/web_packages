@@ -256,7 +256,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this._setInitializationState(false, false);
                     this.ribbonService.hide();
 
-                    this.system = await this.systemService.createSystem(account.email, this.systemId);
+                    this.system = await this.systemService.createSystem(account.email, this.systemId, undefined, true);
                     await this.system.update();
 
                     return Promise.resolve();

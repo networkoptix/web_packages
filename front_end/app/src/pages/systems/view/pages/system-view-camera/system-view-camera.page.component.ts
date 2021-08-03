@@ -205,7 +205,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                 this._log('local system created', this.system);
             } else {
-                this.system = await this.systemService.createSystem(account.email, this.vms.systemId);
+                this.system = await this.systemService.createSystem(account.email, this.vms.systemId, undefined, true);
             }
             this._getRecords();
         });

@@ -345,15 +345,15 @@ export class NxSystem extends System {
         return this.infoPromise;
     }
 
-    startPoll() {
+    startPoll(systemId?: string) {
         if (this.subscriberCount === 0) {
             if (this.CONFIG.isLocal || this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
             } else {
-                setTimeout(() => this.startPoll(), 1000);
+                setTimeout(() => this.startPoll(systemId), 1000);
             }
-        } else {
+        } else if (!systemId || this.id !== systemId) {
             this.subscriberCount++;
         }
     }
