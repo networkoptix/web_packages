@@ -43,6 +43,7 @@ django-storages==1.7.1
 django-stubs==1.7.0
 django-timezone-field==4.1.1
 django-tinymce==2.8.0
+django-waffle==2.2.1
 djangorestframework==3.12.2
 djangorestframework-stubs==1.4.0
 docutils==0.14

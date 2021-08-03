@@ -1,6 +1,7 @@
 import { IConfig }                               from './config-types';
 import { environment }                           from '@environments/environment';
 import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
+import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
 
 export const nxConfig: IConfig = {
     alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -516,6 +517,8 @@ export const nxConfig: IConfig = {
     cloudName     : '',
     cloudHost     : '',
     cloudSystemId : '',
+    featureFlags  : {},
+    featureFlagStrings : FeatureFlagStrings,
     localSystemId : '',
     localServerId : '',
     company       : {

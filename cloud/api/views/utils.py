@@ -14,11 +14,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType
+from cms.feature_flags import *
 
 logger = logging.getLogger(__name__)
 
@@ -365,6 +367,14 @@ def downloads(request):
     return Response(downloads_json)
 
 
+def get_feature_flags(request):
+    return {
+        **{FLAGS.json_key(key): flag_is_active(request, FLAGS[key]) for key in FLAGS.all_keys},
+        **{SWITCHES.json_key(key): switch_is_active(SWITCHES[key]) for key in SWITCHES.all_keys},
+        **{SAMPLES.json_key(key): sample_is_active(SAMPLES[key]) for key in SAMPLES.all_keys}
+    }
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns cloud config information to the web client.")
 @api_view(['GET'])
@@ -395,6 +405,8 @@ def get_settings(request):
             UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
         settings_object['customClientsEnabled'] = True
+
+    settings_object['featureFlags'] = get_feature_flags(request)
     return Response(settings_object)
 
 

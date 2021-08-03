@@ -233,6 +233,8 @@ export class NxBootstrapProvider {
                 data.menus.authorizeFooter = authorizeFooter;
             }
             this.CONFIG.dynamicMenus = data?.menus;
+
+            Object.assign(this.CONFIG.featureFlags, data?.featureFlags);
         }
 
         // Temporary link to Swagger

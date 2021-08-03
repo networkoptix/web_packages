@@ -28,6 +28,8 @@ export interface BaseConfig {
     dialogs: Dialogs;
     developers: Developers;
     downloads: Downloads;
+    featureFlags: FeatureFlags;
+    featureFlagStrings: Record<FeatureFlagType, FeatureFlagType>
     healthMonitoring: HealthMonitoring;
     icons: Icons;
     images: Images;
@@ -143,6 +145,22 @@ export interface Capabilities {
     integrationStore: boolean;
     publicDownloads: boolean;
     publicReleases: boolean;
+}
+
+// Feature flags go here
+const FeatureFlagKeys = [
+    'customClients'
+] as const;
+
+export type FeatureFlagType = typeof FeatureFlagKeys[number];
+
+export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
+    obj[key] = key;
+    return obj;
+}, {}) as Record<FeatureFlagType, FeatureFlagType>;
+
+export type FeatureFlags = {
+    [key in FeatureFlagType]?: boolean
 }
 
 export interface AccessRoles {

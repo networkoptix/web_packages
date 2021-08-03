@@ -14,6 +14,7 @@ from django.urls import reverse, path
 from django.utils.html import format_html
 
 import nested_admin
+from waffle.admin import FlagAdmin as WaffleFlagAdmin
 
 from cms.forms import *
 from cms.controllers import generate_structure, structure
@@ -1373,3 +1374,8 @@ class SpecialStructAdmin(CMSAdmin):
 class CustomClientAdmin(admin.ModelAdmin):
     autocomplete_fields = ['created_by']
     readonly_fields = ['last_modified', 'created_on']
+
+
+@admin.register(Flag)
+class FlagAdmin(WaffleFlagAdmin):
+    pass

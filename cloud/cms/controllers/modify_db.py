@@ -563,6 +563,7 @@ def publish_latest_version(asset, review_id, user, state=None):
 
     if asset.is_cloud_portal:
         BaseCache.clear_global_cache()
+        Flag.flush_global_vals()
     return publish_errors
 
 

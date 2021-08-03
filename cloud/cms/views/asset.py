@@ -23,13 +23,14 @@ from celery.result import AsyncResult
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema, no_body
 from queue import SimpleQueue
+from waffle.mixins import WaffleFlagMixin
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
-from cms.permissions import IsSuperuser, CanUseCustomClients
+from cms.permissions import IsSuperuser
 from cms.serializers import CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
     CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
 from cms.tasks import async_import_assets_from_json, get_package_cache_key, make_package, make_structure, \
@@ -786,9 +787,10 @@ def get_asset_info_by_menu(request, menu_id):
     return api_success(prepare_asset_info_for_menu(request, menu_id))
 
 
-class CustomClientViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrTokenHasScope, CanUseCustomClients]
+class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = CustomClientSerializer
+    waffle_flag = FLAGS.custom_clients
 
     def get_queryset(self):
         if self.request.user.is_superuser:

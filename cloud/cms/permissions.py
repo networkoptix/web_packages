@@ -19,13 +19,3 @@ class CanViewDevelopers(permissions.BasePermission):
                 check_customization_permission(request.user, settings.CUSTOMIZATION, "cms.access_developers")
         return False
 
-
-class CanUseCustomClients(permissions.BasePermission):
-    def has_permission(self, request, view):
-        config_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
-        if config_cache.get('public_custom_clients', False):
-            return True
-        elif request.user.is_authenticated:
-            return UserGroupsToAssetPermissions. \
-                check_customization_permission(request.user, settings.CUSTOMIZATION, "cms.custom_clients")
-        return False

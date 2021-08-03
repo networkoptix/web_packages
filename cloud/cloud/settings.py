@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'django.forms',
 
     'drf_yasg',
+    'waffle',
 
     'storages',
 
@@ -133,6 +134,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'cloud.middleware.CatchExceptionMiddleware',
     'cloud.middleware.FilterErrorMiddleware',
 )
@@ -164,6 +166,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'cloud.context_processors.flags_processor'
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
@@ -642,6 +645,14 @@ NPM_FILE_PATTERNS = {
 SILKY_AUTHENTICATION = True
 SILKY_AUTHORISATION = True
 SILKY_PYTHON_PROFILER = True
+
+# Waffle Settings
+WAFFLE_FLAG_MODEL = 'cms.Flag'
+WAFFLE_CREATE_MISSING_FLAGS = True
+WAFFLE_CREATE_MISSING_SAMPLES = True
+WAFFLE_CREATE_MISSING_SWITCHES = True
+# End Waffle Settings
+
 
 # In House Settings
 

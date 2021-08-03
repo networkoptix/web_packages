@@ -19,7 +19,9 @@ import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { FeatureGuard }              from '@src/routeGuards';
+import { PipesModule }               from '@src/pipes/pipes.module';
+import { FeatureFlagStrings }        from '@services/nx-config/base-config';
 
 const lazyRoutes: Routes = [
     {
@@ -60,7 +62,11 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'developers',
-        loadChildren : () => import('./developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule)
+        loadChildren : () => import('./developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule),
+        canLoad      : [FeatureGuard],
+        data         : {
+            flags: FeatureFlagStrings.customClients
+        }
     },
     {
         path         : 'systems/:systemId',

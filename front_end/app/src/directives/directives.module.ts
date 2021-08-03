@@ -15,6 +15,7 @@ import { NxIntersectionObserver }     from './nx-intersection.directive';
 import { NxProjectedLinkHandler }     from './nx-projected-link-handler.directive';
 import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive';
 import { NxMatchHeightDirective } from './nx-match-height.directive';
+import { FeatureFlagDirective } from './feature.directive';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { NxMatchHeightDirective } from './nx-match-height.directive';
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
-        NxMatchHeightDirective
+        NxMatchHeightDirective,
+        FeatureFlagDirective
     ],
     exports: [
         NxArrowNavDirective,
@@ -50,7 +52,8 @@ import { NxMatchHeightDirective } from './nx-match-height.directive';
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
-        NxMatchHeightDirective
+        NxMatchHeightDirective,
+        FeatureFlagDirective
     ]
 })
 export class DirectivesModule {

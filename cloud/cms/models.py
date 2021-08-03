@@ -9,6 +9,7 @@ from distutils.util import strtobool
 from util.base_cache import BaseCache
 
 from redis.exceptions import ConnectionError
+from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
@@ -21,8 +22,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError, FieldError
 from jsonfield import JSONField
 from model_utils import Choices
-from django.core.cache import cache, caches
-from util.config import get_config
+from waffle.models import AbstractUserFlag, keyfmt, get_cache
+
+from .feature_flags import FLAGS
 
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
@@ -2293,3 +2295,58 @@ class CustomClient(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     created_customization = models.ForeignKey(Customization, null=True, on_delete=models.CASCADE)
+
+
+class Flag(AbstractUserFlag):
+    FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'
+
+    data_structure = models.ForeignKey(DataStructure, blank=True, null=True, on_delete=models.SET_NULL)
+
+    @classmethod
+    def _ds_cache_key(cls, name, customization_name):
+        return keyfmt(cls.FLAG_DS_VAL_CACHE_KEY, f'{name}--{customization_name}')
+
+    def _get_data_structure_value(self, customization_name):
+        flag_cache = get_cache()
+        cache_key = self._ds_cache_key(self.name, customization_name)
+        cached = flag_cache.get(cache_key)
+        if cached:
+            return cached
+
+        ds_val = self.data_structure.find_actual_value(get_cloud_portal_asset(customization_name))
+
+        flag_cache.add(cache_key, ds_val)
+        return ds_val
+
+    @classmethod
+    def flush_global_vals(cls):
+        customizations = Customization.objects.values_list('name', flat=True)
+        keys = [
+            cls._ds_cache_key(flag.name, cust_name)
+            for flag in cls.objects.filter(data_structure__isnull=False)
+            for cust_name in customizations
+        ]
+        flag_cache = get_cache()
+        flag_cache.delete_many(keys)
+
+    def is_active(self, request, customization_name=settings.CUSTOMIZATION):
+        if super().is_active(request):
+            return True
+
+        if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
+            return True
+
+        return False
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            key = FLAGS.name_to_key(self.name)
+            if key:
+                ds_name = FLAGS.data_structure_name(key)
+                if ds_name:
+                    ds = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal, name=ds_name).first()
+                    if ds:
+                        self.data_structure = ds
+        ret = super().save(*args, **kwargs)
+        Flag.flush_global_vals()
+        return ret

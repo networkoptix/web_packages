@@ -4,6 +4,8 @@ import { HttpClient }        from '@angular/common/http';
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
 import { environment }       from '@environments/environment';
+import { FeatureFlagType }   from '@services/nx-config/base-config';
+import { coerceArray }       from '@angular/cdk/coercion';
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +42,17 @@ export class NxConfigService {
 
     getConfig() {
         return this.config;
+    }
+
+    flagsEnabled(flags: boolean | FeatureFlagType | (FeatureFlagType | boolean)[]) {
+        return coerceArray(flags).every(key => {
+            if (typeof key === 'boolean') {
+                return key;
+            } else if (key) {
+                return !!this.config.featureFlags[key];
+            }
+            return false;
+        });
     }
 
     static get isLocal() {
