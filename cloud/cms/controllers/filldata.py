@@ -528,9 +528,9 @@ class PackageExporter:
     def __post_init__(self):
         self.skin = self.asset.read_global_value('%SKIN%')
         self.global_contexts = Context.objects.filter(is_global=True, asset_type=self.asset.asset_type)
-        self.global_contexts_dict = global_contexts_to_dict(self.global_contexts, self.asset)
+
         self.context_processor = ContextProcessor(
-            asset=self.asset, global_contexts=self.global_contexts, global_contexts_dict=self.global_contexts_dict,
+            asset=self.asset, global_contexts=self.global_contexts,
             preview=self.preview, skin=self.skin, version_id=self.version_id, custom=self.custom,
             custom_data=self.custom_data
         )
