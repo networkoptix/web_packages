@@ -95,9 +95,6 @@
                   "id": "free",
                   "label": "Free"
                 }, {
-                  "id": "paid",
-                  "label": "Paid"
-                }, {
                   "id": "trial",
                   "label": "Trial"
                 }, {
