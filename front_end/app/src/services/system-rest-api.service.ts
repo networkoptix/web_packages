@@ -82,6 +82,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.cookieService.get(this.token).includes('nxcdb');
     }
 
+    private createSignature(message) {
+        return this.post('/rest/v1/system/cloudSignature', { message });
+    }
+
     private handleOldToken(request, allSystems?: boolean) {
         return request.pipe(
             mergeMap(
@@ -365,7 +369,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
-    redirectOauth(allSystems?: boolean) {
+    async redirectOauth(allSystems?: boolean) {
         const window = this.injector.get(WINDOW);
         const { href } = window.location;
         const params = new URLSearchParams({
@@ -377,6 +381,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
             grant_type    : 'password',
             scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
         });
+        if (!allSystems) {
+            const { signature } = await this.createSignature(href).toPromise();
+            params.append('signature', signature);
+        }
         window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 

@@ -12,6 +12,7 @@
     "serve-webadmin-demo": "export WEBADMIN_TARGET=demo && npm run serve:webadmin",
     "serve-webadmin-nuke": "export WEBADMIN_TARGET=nuke && npm run serve:webadmin",
     "serve-webadmin-sofia": "export WEBADMIN_TARGET=sofia && npm run serve:webadmin",
+    "serve-webadmin-webpi": "export WEBADMIN_TARGET=webpi && npm run serve:webadmin",
     "serve:cloud": "npm run setVarSkin && npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.js",
     "build": "npm run lang && ng build --prod",

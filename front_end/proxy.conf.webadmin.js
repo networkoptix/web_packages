@@ -19,6 +19,10 @@ const proxyTargetConfig = {
     sofia: {
         host  : 'https://10.1.5.196:7001',
         cloud : defaultCloud
+    },
+    webpi: {
+        host  : 'https://10.1.5.111:7001',
+        cloud : 'https://dev3.cloud.hdw.mx'
     }
 };
 const useProxy = process.env.WEBADMIN_TARGET || 'local';

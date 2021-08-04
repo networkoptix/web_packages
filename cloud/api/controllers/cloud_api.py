@@ -325,6 +325,15 @@ class System(object):
         }
         return post_wrapper(System.get_request_url('merged_systems/', master_system_id), json=params, headers=headers)
 
+    @staticmethod
+    @validate_response
+    def validate_signature(system_id, signature, redirect_uri):
+        data = {
+            "signature": signature,
+            "message": redirect_uri
+        }
+        return post_wrapper(f"{CLOUD_DB_URL}/system/{system_id}/signature/validate", json=data)
+
 
 class Account(object):
     @staticmethod
