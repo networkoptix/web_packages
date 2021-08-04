@@ -184,42 +184,35 @@
                             <span translate>Only client-server video traffic can be encrypted.</span>
                         </label>
                     </ng-container>
-                    <ng-template #sessionToggle>
-                        <div class="d-flex checkbox-block align-items-center mt-1"
-                             *ngIf="settingsWatchers.sessionLimitMinutes !== undefined"
-                             (click)="handleSessionLimitToggle()">
-                            <nx-checkbox
-                                    name="sessionLimitMinutes"
-                                    componentId="sessionLimitMinutes"
-                                    [(ngModel)]="sessionLimitToggle"
-                                    #sessionLimitMinutes="ngModel">
-                            </nx-checkbox>
-    
-                            <label class="control-label mb-0" for="sessionLimitMinutes">
-                                <span translate>Limit session duration to</span>
-                            </label>
-                        </div>
-                    </ng-template>
-                    <div *ngIf="this.system.useRest; else sessionToggle" class="d-flex checkbox-block align-items-center mt-1">
-                        <span class="session-toggle-disabled" translate>Limit session duration to</span>
-                    </div>
-                    <div *ngIf="sessionLimitToggle"
-                         class="row ml-4 mt-2">
+                    <div class="d-flex checkbox-block align-items-center mt-1"
+                            *ngIf="settingsWatchers.sessionLimitMinutes !== undefined"
+                            (click)="handleSessionLimitToggle()">
+                        <nx-checkbox
+                                name="sessionLimitMinutes"
+                                componentId="sessionLimitMinutes"
+                                [(ngModel)]="sessionLimitToggle"
+                                #sessionLimitMinutes="ngModel">
+                        </nx-checkbox>
 
+                        <label class="control-label mb-0" for="sessionLimitMinutes">
+                            <span translate>Limit session duration to</span>
+                        </label>
+                    </div>
+                    <div *ngIf="sessionLimitToggle" class="row ml-4 mt-2">
                         <div class="mr-2" style="width: 70px;">
                             <nx-numeric
-                                    [class]="'pl-2'"
-                                    [min]="1"
-                                    [max]="currentMaxTimeUnit"
-                                    [(ngModel)]="timeValue"
-                                    [ngModelOptions]="{standalone: true}"
-                                    (onChange)="updateLimitSessionValue($event)"></nx-numeric>
+                                [class]="'pl-2'"
+                                [min]="1"
+                                [max]="currentMaxTimeUnit"
+                                [(ngModel)]="timeValue"
+                                [ngModelOptions]="{standalone: true}"
+                                (onChange)="updateLimitSessionValue($event)"></nx-numeric>
                         </div>
                         <nx-select #selectorTracker
-                                   class="time-unit-select"
-                                   [items]="limitSessionTimeItems"
-                                   [selected]="selectedTimeUnit"
-                                   (onSelected)="updateTimeUnitInput($event)"></nx-select>
+                            class="time-unit-select"
+                            [items]="limitSessionTimeItems"
+                            [selected]="selectedTimeUnit"
+                            (onSelected)="updateTimeUnitInput($event)"></nx-select>
                     </div>
                 </div>
             </form>

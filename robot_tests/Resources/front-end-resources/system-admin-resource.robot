@@ -6,7 +6,7 @@ Library    String
 System Admin Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
     ${rand}=   Generate Random String
-    ${system}=   Create Base System    system_admin_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
     ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}

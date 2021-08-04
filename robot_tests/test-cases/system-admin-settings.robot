@@ -41,7 +41,7 @@ Changing the Setting 'Encrypt video traffic' changes it on the server
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     ${selected}=   Change Setting Encrypt video traffic
-    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    ${selected}
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    ${selected}
 
 Changing the Setting 'Limit session duration to' changes it on the server
     [Tags]    system settings    cloud    webadmin    threaded
@@ -49,7 +49,7 @@ Changing the Setting 'Limit session duration to' changes it on the server
     Wait Until Settings Are Visible
     Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}     sessionLimitMinutes    0
+    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${system['local auth']}    ${server url}     sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
 
 Change Time Interval And Verify on Server
@@ -77,7 +77,7 @@ Changing Several Random Checkboxes Works
 Systems Settings Block is Available for Administrator or Owner
     [Tags]    C69736    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
 
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
@@ -105,7 +105,7 @@ System and Security Settings block is not available for other users
 Cancel changes in System Settings block
     [Tags]    C69738    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -123,7 +123,7 @@ Cancel changes in System Settings block
 Moving to a different page after making changes in System Settings without saving them first
     [Tags]    C69739    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
 
     Log    Step 1
@@ -203,7 +203,7 @@ Changing All Checkboxes Works
     Log    Testrail: Changes in the security block are displayed in the thick client
     Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
 
     Log    Steps 1 - 8
     Log in to system    ${system}    ${system}[owner]
@@ -215,47 +215,47 @@ Changing All Checkboxes Works
 Changes made in the thick client are displayed in System Settings block in Cloud Portal
     [Tags]    C69741    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
 
     Log    Step 1
-    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    false
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
     Log    Step 2
-    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
 
     Log    Step 3
-    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    statisticsAllowed    false
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
 
     Log    Step 4
-    Set System Settings via API    ${local auth}    ${server url}    statisticsAllowed    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    statisticsAllowed    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
 
     Log    Step 5
-    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    cameraSettingsOptimization    false
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
 
     Log    Step 6
-    Set System Settings via API    ${local auth}    ${server url}    cameraSettingsOptimization    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    cameraSettingsOptimization    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
 
     Log    Step 7
     ${settings}=   Create Dictionary    autoDiscoveryEnabled=false   statisticsAllowed=false    cameraSettingsOptimization=false
-    Set System Settings    ${local auth}    ${server url}    ${settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
@@ -263,7 +263,7 @@ Changes made in the thick client are displayed in System Settings block in Cloud
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
 
     Log    Step 8
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
@@ -273,7 +273,7 @@ Changes made in the thick client are displayed in System Settings block in Cloud
 Checking the dependency of system settings checkboxes
     [Tags]    C69742    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
 
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
@@ -311,46 +311,46 @@ Checking the dependency of system settings checkboxes
 Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723    cloud    webadmin   system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
 
     Log    Step 1
-    Set System Settings via API    ${local auth}    ${server url}    autoDiscoveryEnabled    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    autoDiscoveryEnabled    false
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
     Log    Step 2
-    Set System Settings via API    ${local auth}    ${server url}    auditTrailEnabled    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    auditTrailEnabled    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
     Log    Step 3
-    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
 
     Log    Step 4
-    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    true
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
 
     Log    Step 5
-    Set System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
 
     Log    Step 6
-    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
+    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    false
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
 
     Log    Step 7
-    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    30
+    Set System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    30
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
@@ -358,7 +358,7 @@ Changes made in the thick client are displayed in the security block in Cloud Po
     Run Keyword If    ${value} != 30    Fail
     
     Log    Step 8
-    Set System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    Set System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
@@ -366,7 +366,7 @@ Changes made in the thick client are displayed in the security block in Cloud Po
 Security block is available for administrator or owner
     [Tags]    C65697    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}     ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
 
     Log    Step 1, 2
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
@@ -403,7 +403,7 @@ System Settings block is not available when the system is offline
 #    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
 #    Common Restart Logout    ${ENV}
 #    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
-#        Set System Settings    ${local auth}    ${url}     ${default settings}
+#        Set System Settings    ${system['local auth']}    ${url}     ${default settings}
 #        Log in to user and system    ${EMAIL OWNER}    ${id}
 #        Reload Page
 #        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
@@ -425,7 +425,7 @@ System Settings block is not available when the system is offline
 Cancel changes in Security block
     [Tags]    C65724    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}     ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -461,7 +461,7 @@ Cancel changes in Security block
 Checking the dependency of security settings checkboxes
     [Tags]    C65700    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}    ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -498,7 +498,7 @@ Checking the dependency of security settings checkboxes
 Check Limit session duration
     [Tags]    C65703    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}     ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -527,7 +527,7 @@ Check Limit session duration
     Sleep    1
     Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 3
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -540,7 +540,7 @@ Check Limit session duration
     Sleep    1
     Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 4
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -553,7 +553,7 @@ Check Limit session duration
     Sleep    1    
     Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 5
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -570,7 +570,7 @@ Check Limit session duration
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    65
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    65
         
     Log    Step 6
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -584,7 +584,7 @@ Check Limit session duration
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    1
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    1
     
     Log    Step 7
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -599,7 +599,7 @@ Check Limit session duration
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${minutes} =    Evaluate    600*60
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    ${minutes}
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    ${minutes}
     
     Log    Step added by auto qa (CLOUD-5221 found)
     Click Button    ${TIME DURATION INTERVAL BUTTON}
@@ -613,7 +613,7 @@ Check Limit session duration
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    600
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    600
     
     Log    Step 8
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -629,12 +629,12 @@ Check Limit session duration
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 5   Fail    Interval not 5 minutes as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    5
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    5
 
 Check HTTPS traffic encryption
     [Tags]    C65701    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    Set System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
+    Set System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    true
     
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -647,8 +647,8 @@ Check HTTPS traffic encryption
     Wait until location is    ${server url}/static/index.html#/
 
     Log    Step 3
-    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    false
-    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    false
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 4
     ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
@@ -664,8 +664,8 @@ Check HTTPS traffic encryption
     Run keyword and continue on failure    Wait until location contains    ${server url}
 
     Log    Step 7
-    Evaluate System Settings via API    ${local auth}    ${server url}    trafficEncryptionForced    true
-    Evaluate System Settings via API    ${local auth}    ${server url}    videoTrafficEncryptionForced    false
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    true
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 8
     ${resp}=   Check Connection    ${server url}
@@ -680,7 +680,7 @@ Check HTTPS traffic encryption
 #Security block view for 3 dot 2 System
 #    [Tags]    C65829    cloud    system settings    threaded
 #    Log    Preconditions
-#    Set System Settings via API    ${local auth}    ${3.2 system url}    auditTrailEnabled    true
+#    Set System Settings via API    ${system['local auth']}    ${3.2 system url}    auditTrailEnabled    true
 #    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
 #
 #    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
@@ -690,7 +690,7 @@ Check HTTPS traffic encryption
 Changes in System Settings block are displayed in thick client
     [Tags]    C69740    cloud    webadmin    threaded    system settings
     Log    Preconditions
-    Set System Settings    ${local auth}    ${server url}     ${default settings}
+    Set System Settings    ${system['local auth']}    ${server url}     ${default settings}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
 

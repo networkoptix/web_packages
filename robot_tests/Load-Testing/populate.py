@@ -35,8 +35,15 @@ def add_server(name, idx):
         share(bind_json["id"], "viewer", f"noptixautoqa+notifications{x}@gmail.com")
 
 def create_systems_add_users():
-    for idx in range(1000):
-        add_server(f"notifications{idx}", idx)
+    r = requests.get(f"{env}/api/utils/cloudCapabilities",
+                     auth=HTTPBasicAuth(owner, "qweasd 123"))
+    #IMPORTANT: This check is required so as not to slam the smtp server and ruin our alloted emails for the month
+    try:    
+        if r.json()["smtpDisabled"]:
+            for idx in range(1000):
+                add_server(f"notifications{idx}", idx)
+    except KeyError:
+        print("Key Error, this means that SMTP is enabled.  Disable it to continue.")
 
 if __name__ == "__main__":
     create_systems_add_users()

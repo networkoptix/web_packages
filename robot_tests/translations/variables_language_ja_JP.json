@@ -351,7 +351,7 @@
     "SYSTEM CANNOT BE ACCESSED TEXT": "このシステムはオフラインのため現在アクセスできません。",
     "VIEWING IMPORTED REPORT TEXT": "インポートしたレポートを表示しています。ページを更新して新しいレポートを取得してください",
     "NO ALERTS TEXT": "アラートはありません",
-    "SYSTEM DOING WELL TEXT": "システムが正常に動作している必要があります。",
+    "SYSTEM DOING WELL TEXT": "システムは正常に動作しています！",
     "PORT TEXT": "ポート",
     "CHECK STATUS TEXT": "ステータスの確認",
     "SERVER NAME REQUIRED": "サーバー名が必要です",

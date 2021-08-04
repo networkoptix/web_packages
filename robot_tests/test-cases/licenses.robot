@@ -325,7 +325,6 @@ Successful scenarios
     Log    C76554: Successful trial license activation
     Log    Step 2
     Activate Trial
-    Take Screenshot
     Validate Licenses Page    trial left=False    clean=False
 
     Log    Step 3

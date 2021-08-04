@@ -302,7 +302,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 if (this.systemId === this.system?.id) {
                                     return;
                                 }
-                                this.system = await this.systemService.createSystem(this.account.email, this.systemId);
+                                this.system = await this.systemService.createSystem(this.account.email, this.systemId, undefined, true);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
                                     this.systemNoAccess = true;

@@ -69,7 +69,7 @@ export class NxSystemService {
         system.lostConnection = false;
         system.setApiVersion(version);
         if (!skipPoll) {
-            system.startPoll();
+            system.startPoll(systemId);
         }
         return system;
     }
