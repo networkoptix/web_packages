@@ -14,7 +14,9 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { skip, take } from 'rxjs/operators';
+import { filter, map, skip, take } from 'rxjs/operators';
+import { CurrentStorageState } from '@services/system.service/system/storage-manager/current-storage-state';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -168,7 +170,7 @@ export class AddStorageModalContent {
                 const size = reply.storage.totalSpace;
                 const upperBound = 107374182400; // 100GB
                 const lowerBound = upperBound / 2; // 50GB
-                const id = await this.storageManager.saveStorage({
+                const res = await this.storageManager.saveStorage({
                     parentId       : this.serverId,
                     url            : smbShare,
                     storageType    : 'smb',
@@ -177,11 +179,16 @@ export class AddStorageModalContent {
                     isWritable     : true,
                     isBackup       : false
                 }).toPromise();
-                return id ? new Promise(resolve => {
+                return res ? new Promise(resolve => {
                     this.cancelPolls();
-                    this.storageManager.update().pipe(skip(1), take(1)).subscribe(_ => {
+                    const updateSubscription = this.storageManager.update().pipe(
+                        filter((state: any) => state.locations.find(({
+                            storageId
+                        }) => storageId === NxUtilsService.cleanId(res.id)))
+                    ).subscribe(_ => {
                         setTimeout(() => {
-                            resolve(id);
+                            resolve(res);
+                            updateSubscription.unsubscribe();
                         }, 5000);
                     });
                 }) : Promise.reject();
