@@ -642,7 +642,7 @@ admin.site.register(Customization, CustomizationAdmin)
 
 class DataRecordAdmin(CMSAdmin):
     list_display = ('asset', 'language', 'context',
-                    'data_structure', 'short_description', 'version')
+                    'data_structure', 'short_description', 'created_by', 'version')
     list_filter = ('asset', 'language', 'data_structure__context', 'data_structure')
     search_fields = ('data_structure__context__name', 'data_structure__name',
                      'data_structure__description', 'value', 'language__code')
