@@ -45,9 +45,10 @@ import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.
 import { ResetBackupModalContent }        from './reset-backup/reset-backup.component';
 import { RemoveSystemModalContent }       from './remove-system/remove-system.component';
 import { EditModalContent }               from './edit/edit.component';
+import { TwoFAModalContent }              from './two-fa/two-fa.component';
 import { DownloadAsyncModalContent }      from './download-async/download-async.component';
 import { NxDialogsService }               from './dialogs.service';
-
+import { QrCodeModule } from 'ng-qrcode';
 
 @NgModule({
     imports: [
@@ -61,7 +62,8 @@ import { NxDialogsService }               from './dialogs.service';
         RouterModule,
         NgbModule,
         AngularSvgIconModule.forRoot(),
-        PipesModule
+        PipesModule,
+        QrCodeModule
     ],
     declarations: [
         LoginModalContent,
@@ -92,6 +94,7 @@ import { NxDialogsService }               from './dialogs.service';
         AddStorageModalContent,
         RemoveSystemModalContent,
         EditModalContent,
+        TwoFAModalContent,
         DownloadAsyncModalContent
     ],
     providers: [

@@ -124,11 +124,11 @@ export abstract class BaseAccount implements OnDestroy {
 
     // Methods shared between local and cloud versions of account service.
 
-    protected get account() {
+    get account() {
         return this.accountSubject.getValue();
     }
 
-    protected set account(account: Account) {
+    set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
@@ -211,6 +211,26 @@ export abstract class BaseAccount implements OnDestroy {
 
     connect(systemName, userEmail, userPassword) {
         return this.cloudApi.connect(systemName, userEmail, userPassword);
+    }
+
+    verify(password) {
+        return this.cloudApi.verify(password);
+    }
+
+    toggle2fa(password, totp) {
+        return this.cloudApi.toggle2fa(password, totp);
+    }
+
+    get2FaKey() {
+        return this.cloudApi.get2FaKey();
+    }
+
+    get2FaBackupCode() {
+        return this.cloudApi.get2FaBackupCode();
+    }
+
+    verify2FaKey(accessCode, verificationCode) {
+        return this.cloudApi.verify2FaKey(accessCode, verificationCode);
     }
 
     sendMessage(subject, asset, message, userName, userEmail) {

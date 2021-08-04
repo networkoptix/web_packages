@@ -463,11 +463,12 @@ export interface Menus {
 export interface Account {
     baseUrl: string;
     icon: string;
-    settings: Password;
-    password: Password;
+    settings: Path;
+    password: Path;
+    security: Path;
 }
 
-export interface Password {
+export interface Path {
     id: string;
     path: string;
 }

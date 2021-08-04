@@ -100,6 +100,11 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                             id    : accountMenu.password.id,
                             label : this.LANG.account.changePassword(),
                             path  : accountMenu.password.path
+                        },
+                        {
+                            id    : accountMenu.security.id,
+                            label : this.LANG.account.security(),
+                            path  : accountMenu.security.path
                         }
                     ]
                 }

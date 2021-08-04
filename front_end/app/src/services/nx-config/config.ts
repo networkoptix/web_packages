@@ -376,6 +376,10 @@ export const nxConfig: IConfig = {
             password: {
                 id   : 'password',
                 path : '/password'
+            },
+            security: {
+                id   : 'security',
+                path : '/security'
             }
         },
         systemHealth: {

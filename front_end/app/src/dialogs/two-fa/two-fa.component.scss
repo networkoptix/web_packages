@@ -1,0 +1,69 @@
+@use "../../../styles/theme_variables" as *;
+
+:host {
+    .modal-footer{
+        &.justify-end {
+            // hard overwrite
+            justify-content: flex-end !important;
+        }
+        &.justify-between{
+            justify-content : space-between !important;
+        }
+        .btn {
+            margin: 0 !important;
+            padding: 0 !important;
+            
+            svg-icon {
+                width: 24px;
+                margin-left: 8px;
+                
+                svg path {
+                    fill : $additional_light1;
+                }
+            }
+            
+            &.btn-back {
+                svg-icon {
+                    width : 24px;
+                    margin-left : 0;
+                    
+                    svg path {
+                        fill : $dark9;
+                    }
+                }
+            }
+        }
+    };
+    
+    .modal-body {
+        .lineStrong {
+            font-family: "robotobold", Roboto, Helvetica, sans-serif;
+        }
+    
+        .code-area {
+            display          : flex;
+            justify-content  : center;
+            align-items      : center;
+            width            : 100%;
+            background-color : $additional_light1;
+            border           : 1px solid $light3;
+            height           : 48px;
+            margin-top       : 1rem;
+        
+            &-code {
+                font-family : robotomonoregular, monospace;
+                font-size   : $h3-font-size;
+            }
+    
+            &-copy {
+                padding-left : 4px !important;
+            }
+        
+            &-note {
+                color         : $light16;
+                margin-top    : 16px;
+                margin-bottom : 16px;
+            }
+        }
+    }
+}

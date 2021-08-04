@@ -1,0 +1,189 @@
+
+<ng-container [ngTemplateOutlet]="templateType"></ng-container>
+
+<ng-template #code>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Backup code</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="close()" *ngIf="closable">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <span translate>If you ever lose access to your mobile authentication app, you can use this code to verify your identity.</span>
+
+        <div class="code-area">
+            <div class="code-area-code">{{ newCode }}</div>
+            <button class="btn btn-text code-area-copy" (click)="copyToClipboard()">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                    [svgStyle]="{'width.px': '28', 'height.px': '28'}"
+                    [applyClass]="true"></svg-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button type="button" class="btn btn-primary"
+                (click)="close()"
+                translate>OK</button>
+    </div>
+</ng-template>
+
+<ng-template #wizardLogin>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #loginForm="ngForm" name="loginForm" novalidate>
+            <div class="form-group">
+                <label for="login_password" translate>Enter your password to verify it's really you</label>
+                <input type="password" class="form-control"
+                       name="login_password" id="login_password"
+                       [(ngModel)]="password"
+                       #loginPassword="ngModel"
+                       maxlength="255"
+                       [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
+                       required>
+                <ng-container *ngIf="loginPassword.invalid">
+                    <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
+                        minute.
+                    </div>
+                    <div class="input-error" *ngIf="loginPassword.touched && loginPassword.errors?.pattern">
+                        {{LANG.passwordRequirements.requiredMessage()}}</div>
+                </ng-container>
+            </div>
+
+        </form>
+
+
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button id="nextWizardQR" class="btn btn-primary btn-next" (click)="next()">
+            <span translate>Next</span>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #wizardQR>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+
+    <div class="modal-body" *ngIf="showQR; else showParams">
+        <div id="qrText" translate>With the authentication app on your mobile device scan the following QR code to link the app to your %CLOUD_NAME% account. If you don't have an authentication app, you'll need to install one now.</div>
+
+        <div id="qrBadge" class="d-flex justify-content-center">
+            <qr-code [value]="valueQR" size="200" errorCorrectionLevel="H"></qr-code>
+        </div>
+    </div>
+
+    <ng-template #showParams>
+        <div class="modal-body">
+            <div id="paramsText" translate>Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.</div>
+
+            <div id="paramsBlock">
+                <nx-info-block [sectionsOrColumns]="[credentials]" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="modal-footer justify-between">
+        <button id="qrMode" class="btn btn-text" (click)="showQR = !showQR">
+            <span *ngIf="showQR" translate>Cannot scan QR code?</span>
+            <span *ngIf="!showQR" translate>Show QR code</span>
+        </button>
+
+        <button id="nextWizardCode" class="btn btn-primary btn-next" (click)="next()">
+            <span translate>Next</span>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #wizardCode>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="loginForm" novalidate>
+            <div id="codeText" translate>From authentication app, get a code and enter it below to complete the verification process.</div>
+            <div class="form-group mt-3">
+                <label for="tfaCodeInput" translate>Enter authentication code</label>
+                <input type="text" class="form-control"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       autocomplete="off"
+                       maxlength="255"
+                       required>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer justify-between">
+        <button id="previousWizardQR" class="btn btn-default btn-back" (click)="prev()">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'"></svg-icon>
+        </button>
+        <button id="nextWizardFinish" class="btn btn-primary btn-next" (click)="next()">
+            <span translate>Verify</span>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #wizardFinish>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="close()" *ngIf="closable">
+            <div class="close-content"><span class="close-icon"></span></div>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="line1" translate>Two-factor authentication is <span class="lineStrong">enabled</span> now!</div>
+
+        <div class="lineStrong mt-3" translate>Save this single-use backup code in a safe place.</div>
+
+        <div class="code-area">
+            <div class="code-area-code">{{ newCode }}</div>
+            <button class="btn btn-text code-area-copy" (click)="copyToClipboard()">
+                <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                        [svgStyle]="{'width.px': '28', 'height.px': '28'}"
+                        [applyClass]="true"></svg-icon>
+            </button>
+        </div>
+        <div class="code-area-note" translate>This backup code lets you login to %CLOUD_NAME% if you don't have access to your mobile authentication app.</div>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button id="wizardDone" type="button" class="btn btn-primary" (click)="next()">
+            <span translate>Ok</span>
+        </button>
+    </div>
+</ng-template>

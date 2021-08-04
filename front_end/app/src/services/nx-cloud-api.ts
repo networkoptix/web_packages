@@ -158,6 +158,32 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    verify(password) {
+        return this.http.post(this.CONFIG.apiBase + '/account/verify', {
+            password: password
+        }).toPromise();
+    }
+
+    toggle2fa(password, totp) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/toggle2fa', {
+            password : password,
+            totp     : totp
+        }).toPromise();
+    }
+
+    get2FaKey() {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/verification', {}).toPromise();
+    }
+
+    get2FaBackupCode() {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/backup', {}).toPromise();
+    }
+
+    verify2FaKey(accessCode, verificationCode) {
+        const uri = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verificationCode}&access_code=${accessCode}`;
+        return this.http.get(uri).toPromise();
+    }
+
     getStaticLanding() {
         const httpOptions = {
             headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),

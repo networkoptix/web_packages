@@ -1,5 +1,6 @@
-import { IConfig }     from '@services/nx-config';
-import { environment } from '@environments/environment';
+import { IConfig }                               from '@services/nx-config';
+import { environment }                           from '@environments/environment';
+import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
 
 export function setupConfig(): IConfig {
     return {
@@ -176,19 +177,23 @@ export function setupConfig(): IConfig {
                 { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
-            devTools             : '/static/images/icons/dev_tools/',
             backgrounds          : '/static/images/icons/backgrounds/',
             dir                  : '/static/images/icons/standard/',
             dirDevtools          : '/static/images/icons/dev_tools/',
             dirButtons           : '/static/images/icons/buttons/',
+            dirTextButtons       : '/static/images/icons/text_buttons/',
+            dirHeader            : '/static/images/icons/header/',
             dirNonStandard       : '/static/images/icons/',
             dirNonStandardView   : '/static/images/icons/view/',
             dirPagePlaceholder   : '/static/images/placeholders/page/',
-            dirSectionPlaceholder: '/static/images/placeholders/section/'
+            dirSectionPlaceholder: '/static/images/placeholders/section/',
+            dirLandingIcons      : '/static/images/landing/block_icons/'
         },
         images                       : {
-            dir          : '/static/images/',
-            dirDevelopers: '/static/images/developers/'
+            dir               : '/static/images/',
+            dirDevelopers     : '/static/images/developers/',
+            dirLanding        : '/static/images/landing/',
+            dirLandingGraphic : '/static/images/landing/main_screen/'
         },
         integration                  : {
             adminLink           : '/admin/cms/asset/%ID%/pages/',
@@ -248,6 +253,111 @@ export function setupConfig(): IConfig {
             description: ''
         },
         maintenanceTimeout           : 60 * 1000,
+        manifest: {
+            [ConsoleSection.CUSTOM_CLIENTS]: {
+                // intro: {
+                //     // TODO: Remove once we decide how this will be provided from the CMS.
+                //     title   : 'About',
+                //     content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
+                // },
+                sort: 0,
+                title: 'Custom VMS Clients',
+                url: 'custom-clients',
+                icon: 'servers.svg',
+                perPage: 4,
+                pagesToShow: 4,
+                searchable: true,
+                excludeFromSearch: ['last_modified', 'downloadLink', 'settingsModal'],
+                contexts: [
+                    {
+                        type: ConfigType.TEXT,
+                        name: 'name',
+                        label: 'Internal Name',
+                        meta: {
+                            styles: 'font-italic'
+                        }
+                    },
+                    {
+                        type: ConfigType.DATE,
+                        name: 'last_modified',
+                        label: 'Last Modified',
+                        meta: {
+                            styles: 'expanded-width'
+                        }
+                    },
+                    {
+                        type: ConfigType.ICON_LINK,
+                        name: 'downloadLink',
+                        label: '',
+                        meta: {
+                            icon: 'eye.svg',
+                            tooltip: 'Download'
+                        }
+                    },
+                    {
+                        type: ConfigType.ICON_MODAL,
+                        name: 'settingsModal',
+                        label: '',
+                        meta: {
+                            icon: 'lock.svg',
+                            tooltip: 'Settings'
+                        }
+                    }
+                ],
+                editManifest: {
+                    label: 'Edit',
+                    fields: [
+                        {
+                            type: ConfigType.TEXT,
+                            name: 'name',
+                            label: 'Internal Name',
+                            placeholder: 'Custom VMS Client Name',
+                            description: 'Name is hidden from external users'
+                        },
+                        {
+                            type: ConfigType.DROPDOWN,
+                            name: 'base_vms',
+                            label: 'Based on'
+                        }
+                    ]
+                },
+                downloadManifest: {
+                    label: 'Download Package',
+                    fields: [
+                        {
+                            // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                            // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                            type: ConfigType.TEXT,
+                            name: 'preparing',
+                            label: 'Preparing to Build',
+                            description: 'Starting Custom Client build.'
+                        },
+                        {
+                            // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                            // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                            type: ConfigType.TEXT,
+                            name: 'generating',
+                            label: 'Generating Custom Client',
+                            description: 'Custom Client is being built'
+                        },
+                        {
+                            // Waiting on spec. Fields could potentially be used for configurations per modal view.
+                            // For example this would be the preparing view, then we can add a ready view, and then an error view.
+                            type: ConfigType.TEXT,
+                            name: 'ready',
+                            label: 'Custom Client Ready',
+                            description: 'Custom Client is ready to download'
+                        }
+                    ]
+                },
+                actions: [
+                    {
+                        title: 'Create',
+                        modal: ModalType.CLIENT_CREATE
+                    }
+                ]
+            }
+        },
         maxServers                   : 100, // The maximum amount of server that can be in a system
         meta                         : {
             viewport: {
@@ -266,6 +376,10 @@ export function setupConfig(): IConfig {
                 password: {
                     id  : 'password',
                     path: '/password'
+                },
+                security: {
+                    id: 'security',
+                    path: '/security'
                 }
             },
             systemHealth  : {
@@ -395,7 +509,8 @@ export function setupConfig(): IConfig {
             publicReleases           : false,
             cloudStorageEnabled      : false,
             cloudStorageSize         : 0,
-            healthMonitorCacheTimeout: 60
+            healthMonitorCacheTimeout: 60,
+            customClientsEnabled: false
         },
         cloudName             : '',
         cloudHost             : '',

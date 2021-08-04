@@ -1,0 +1,41 @@
+
+<div class="col-12 p-0">
+    <ng-container *ngIf="account?.id || account?.email; else preloader">
+        <nx-block>
+            <header>
+                <div class="tfauth-status-switch-wrapper">
+                    <span translate>Two-factor authentication</span>
+                    <nx-switch
+                            [ngModel]="tfauth.on"
+                            (ngModelChange)="enabled2FA($event);"
+                            componentId="2fa-active-status"></nx-switch>
+                </div>
+            </header>
+
+            <nx-section>
+                <span translate>Better protect your account from unauthorized access by requiring a verification code generated in a mobile authentication app (such as Google Authenticator, Microsoft Authenticator or Duo Mobile) in addition to your %CLOUD_NAME% password.</span>
+            </nx-section>
+        </nx-block>
+
+        <nx-block class="d-block mt-3" *ngIf="tfauth.enabled">
+            <header>
+                <div class="tfauth-status-switch-wrapper">
+                    <span translate>Backup code</span>
+                </div>
+            </header>
+
+            <nx-section>
+                <span translate>Get a single-use backup code so you can log in to %CLOUD_NAME% if you don't have access to your mobile authentication app.</span>
+            </nx-section>
+
+            <nx-section>
+                <button class="btn btn-default"
+                        id="genNewCodeButton"
+                        (click)="genNewCode()"
+                        translate>Generate a new code</button>
+            </nx-section>
+        </nx-block>
+    </ng-container>
+</div>
+
+<ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>

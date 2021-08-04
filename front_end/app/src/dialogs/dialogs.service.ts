@@ -39,6 +39,7 @@ import { CloudConnectModalContent }            from './cloud-connect/cloud-conne
 import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
 import { AddStorageModalContent }              from './add-storage/add-storage.component';
 import { ChangeStorageModalContent }           from './change-storage/change-storage.component';
+import { TwoFAModalContent }                   from './two-fa/two-fa.component';
 import { NxAccountService }                    from '@services/account.service';
 import { BaseAccount }                         from '@services/account.service/base';
 import { CloudAccount }                        from '@services/account.service/cloud';
@@ -539,5 +540,50 @@ export class NxDialogsService {
         };
 
         return this.createModal(ResetBackupModalContent, options, params);
+    }
+
+    newCode2FA() {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'sm'
+        };
+
+        const params: IParams = {
+            type     : 'code',
+            closable : true
+        };
+
+        return this.createModal(TwoFAModalContent, options, params);
+    }
+
+    off2FA() {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'sm'
+        };
+
+        const params: IParams = {
+            type     : 'off',
+            closable : true
+        };
+
+        return this.createModal(TwoFAModalContent, options, params);
+    }
+
+    wizard2FA() {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'sm'
+        };
+
+        const params: IParams = {
+            type     : 'wizard',
+            closable : true
+        };
+
+        return this.createModal(TwoFAModalContent, options, params);
     }
 }

@@ -102,7 +102,7 @@ export class LoginModalContent implements OnInit {
             delete errors.not_activated;
             this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
         }
-        
+
         const passwordErrors = this.loginForm.controls.login_password.errors;
         if (passwordErrors?.pattern) {
             this.loginForm.controls.login_password.setErrors({ pattern: true });
@@ -179,7 +179,7 @@ export class LoginModalContent implements OnInit {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount()
             }
-        }).then((result) => {
+        }, (result) => {
             if (this.CONFIG.isLocal) {
                 return this.activeModal.close(result);
             }

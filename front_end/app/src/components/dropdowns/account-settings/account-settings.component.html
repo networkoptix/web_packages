@@ -36,6 +36,11 @@
                    routerLink="/account/password/"><span translate>Change Password</span>
                 </a>
             </li>
+            <li *ngIf="!CONFIG.isLocal" class="dropdown-item-container">
+                <a class="dropdown-item inset" (click)="hide()"
+                   routerLink="/account/security/"><span translate>Security</span>
+                </a>
+            </li>
             <li class="dropdown-item-container">
                 <a class="dropdown-item inset" (click)="show = false; logout()">
                     <span translate>Log Out</span>

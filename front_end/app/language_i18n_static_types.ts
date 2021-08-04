@@ -61,11 +61,14 @@ export interface AccessRole {
 }
 
 export interface LanguageI18NStaticTypesAccount {
+    account:                any;
+    key:                    any;
     accountSavedSuccess:    any;
     accountSettings:        any;
     activationLinkSent:     any;
     agreementAccepted:      any;
     changePassword:         any;
+    security:               any;
     newPasswordLabel:       any;
     passwordChangedSuccess: any;
     saveChanges:            any;
@@ -132,12 +135,14 @@ export interface Common {
     cameraLinks:                CameraLinks;
     cameraStates:               CameraStates;
     chromeCastWarning:          any;
+    copiedToClipboard:          any;
     login:                      any;
     recordingSettingsWarning:   any;
     disableMotionWarning:       any;
     recordingModes:             RecordingModes;
     resolution:                 Resolution;
     general:                    any;
+    generalError:               any;
     inaccessibleFeatureMessage: any;
     morePlugins:                any;
     searchCamPlaceholder:       any;
@@ -656,6 +661,7 @@ export interface PageTitles {
     template:               any;
     view:                   any;
     apiTool:                any;
+    security:               any;
 }
 
 export interface PasswordRequirements {
@@ -1101,11 +1107,14 @@ const typeMap: any = {
         { json: "label", js: "label", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesAccount": o([
+        { json: "account", js: "account", typ: "any" },
+        { json: "key", js: "key", typ: "any" },
         { json: "accountSavedSuccess", js: "accountSavedSuccess", typ: "any" },
         { json: "accountSettings", js: "accountSettings", typ: "any" },
         { json: "activationLinkSent", js: "activationLinkSent", typ: "any" },
         { json: "agreementAccepted", js: "agreementAccepted", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
+        { json: "security", js: "security", typ: "any" },
         { json: "newPasswordLabel", js: "newPasswordLabel", typ: "any" },
         { json: "passwordChangedSuccess", js: "passwordChangedSuccess", typ: "any" },
         { json: "saveChanges", js: "saveChanges", typ: "any" },
@@ -1168,12 +1177,14 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "any" },
+        { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
         { json: "login", js: "login", typ: "any" },
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "any" },
         { json: "disableMotionWarning", js: "disableMotionWarning", typ: "any" },
         { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "any" },
+        { json: "generalError", js: "generalError", typ: "any" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
         { json: "morePlugins", js: "morePlugins", typ: "any" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "any" },
@@ -1642,6 +1653,7 @@ const typeMap: any = {
         { json: "template", js: "template", typ: "any" },
         { json: "view", js: "view", typ: "any" },
         { json: "apiTool", js: "apiTool", typ: "any" },
+        { json: "security", js: "security", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },

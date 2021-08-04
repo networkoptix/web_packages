@@ -59,50 +59,57 @@ describe('OAuth Test Suite', () => {
             }
         }
     };
-    nxConfig.dynamicMenus.authorizeFooter.nodes = [
-        {
-            name              : 'About %CLOUD_NAME% Cloud',
-            url               : '/content/about',
-            asset_id          : null,
-            authentication    : null,
-            display_name      : 'About %CLOUD_NAME% Cloud',
-            icon              : '',
-            new_window        : false,
-            next_item         : false,
-            breadcrumbs       : null,
-            related_asset_ids : [],
-            urlified          : '',
-            subtitle          : ''
-        },
-        {
-            name              : 'Terms',
-            url               : '/content/eula',
-            asset_id          : null,
-            authentication    : null,
-            display_name      : 'Terms',
-            icon              : '',
-            new_window        : false,
-            next_item         : false,
-            breadcrumbs       : null,
-            related_asset_ids : [],
-            urlified          : '',
-            subtitle          : ''
-        },
-        {
-            name              : 'Privacy Policy',
-            url               : 'https://www.networkoptix.com/privacy-policy',
-            asset_id          : null,
-            authentication    : null,
-            display_name      : 'Privacy Policy',
-            icon              : '',
-            new_window        : false,
-            next_item         : false,
-            breadcrumbs       : null,
-            related_asset_ids : [],
-            urlified          : '',
-            subtitle          : ''
-        }
-    ];
+    nxConfig.dynamicMenus.authorizeFooter = {
+        title : 'Demo',
+        description : 'demo',
+        nodes : [
+            {
+                name              : 'About %CLOUD_NAME% Cloud',
+                url               : '/content/about',
+                asset_id          : null,
+                authentication    : null,
+                display_name      : 'About %CLOUD_NAME% Cloud',
+                icon              : '',
+                new_window        : false,
+                next_item         : false,
+                breadcrumbs       : null,
+                related_asset_ids : [],
+                urlified          : '',
+                subtitle          : '',
+                name_raw          : ''
+            },
+            {
+                name              : 'Terms',
+                url               : '/content/eula',
+                asset_id          : null,
+                authentication    : null,
+                display_name      : 'Terms',
+                icon              : '',
+                new_window        : false,
+                next_item         : false,
+                breadcrumbs       : null,
+                related_asset_ids : [],
+                urlified          : '',
+                subtitle          : '',
+                name_raw          : ''
+            },
+            {
+                name              : 'Privacy Policy',
+                url               : 'https://www.networkoptix.com/privacy-policy',
+                asset_id          : null,
+                authentication    : null,
+                display_name      : 'Privacy Policy',
+                icon              : '',
+                new_window        : false,
+                next_item         : false,
+                breadcrumbs       : null,
+                related_asset_ids : [],
+                urlified          : '',
+                subtitle          : '',
+                name_raw          : ''
+            }
+        ]
+    };
     const configMock = { getConfig: () => nxConfig };
     const processMock = {
         classVariables : 'put value here'
