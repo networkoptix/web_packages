@@ -84,8 +84,8 @@ Cloud Suite Setup
 
     Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
     Sleep    5
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    ${location}=   Get Location
+    Go To    ${location}/servers
     Verify on Servers Page    timeout=120
 
     Go To    ${ENV}/systems/${server 2}[sysId]

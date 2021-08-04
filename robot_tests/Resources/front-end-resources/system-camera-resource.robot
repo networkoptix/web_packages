@@ -51,6 +51,7 @@ Toggle Recording
 Select Camera By Name
     [Arguments]    ${camera name}
     Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${camera name}")]
+    Sleep    1
     Click Link    //nx-level-3-item/a//span[contains(text(),"${camera name}")]/../..
 
 Change Aspect Ratio
