@@ -36,6 +36,7 @@ require('./scripts/vendor/protocolcheck');
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.ribbonVisibility ? appStateService.appContainerHeight : appStateService.appContainerHeight }">
             <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground, 'full-screen': appStateService.authorizing}" nxScrollHelper #mainContainer>
+                <nx-cookie-banner></nx-cookie-banner>
                 <router-outlet></router-outlet>
             </div>
         </div>

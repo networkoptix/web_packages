@@ -5,7 +5,7 @@ import { RouterModule }                       from '@angular/router';
 import { FormsModule }                        from '@angular/forms';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
-import { EditorModule, TINYMCE_SCRIPT_SRC }   from '@tinymce/tinymce-angular'
+import { EditorModule, TINYMCE_SCRIPT_SRC }   from '@tinymce/tinymce-angular';
 import { DirectivesModule }                   from '@directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
@@ -64,6 +64,7 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
 import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
 import { NxHTMLComponent }                  from '@components/html-input/html-input.component';
 import { PipesModule }                      from '@src/pipes/pipes.module';
+import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component';
 
 @NgModule({
     imports: [
@@ -133,7 +134,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxImageComponent,
         NxEditableSettingsHeading,
         NxPaginatorComponent,
-        NxHTMLComponent
+        NxHTMLComponent,
+        NxCookieBannerComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
@@ -230,7 +232,8 @@ import { PipesModule }                      from '@src/pipes/pipes.module';
         NxImageComponent,
         NxEditableSettingsHeading,
         NxPaginatorComponent,
-        NxHTMLComponent
+        NxHTMLComponent,
+        NxCookieBannerComponent
     ]
 })
 export class ComponentsModule {
