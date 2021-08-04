@@ -1,11 +1,13 @@
 import {
     Component, SimpleChanges, OnChanges, OnDestroy,
     Input, Output, EventEmitter
-}                                    from '@angular/core';
+}                                        from '@angular/core';
 import { ActivatedRoute }                from '@angular/router';
 import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
 import { of, SubscriptionLike, Subject } from 'rxjs';
-import { catchError, filter }            from 'rxjs/operators';
+import {
+    catchError, filter, skipWhile, takeUntil
+}                                        from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
@@ -86,6 +88,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     storageSubscription: SubscriptionLike;
     analyticsSubscription: SubscriptionLike;
     unsub$ = new Subject<string>();
+    destroyRestartTake$ = new Subject<boolean>();
 
     set serverLoaded(value) {
         this._serverLoaded = value;
@@ -161,7 +164,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.destroyRestartTake$.complete();
+    }
 
     setServer(isDifferentServer = false): void {
         this.initForApplyService();
@@ -304,7 +309,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     checkIfOnline = (serverId) => {
-        return this.system.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
+        return this.system.serverManager.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
             if (res) {
                 const servers: any[] = Object.entries(res).map(server => server[1]);
                 this.setStatus(servers.find(server => NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)).status === 'Online'
@@ -349,7 +354,20 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
-            .then(res => this.setStatus(res));
+            .then(res => {
+                this.setStatus(res);
+                this.system.infoSubject
+                    .pipe(untilDestroyed(this), skipWhile(system => system.isOnline), takeUntil(this.destroyRestartTake$))
+                    .subscribe(() => {
+                        if (this.system.isOnline) {
+                            this.system.currentServerNotBusy = true;
+                            this.system.currentBusyServerIds.delete(id);
+                            this.destroyRestartTake$.next(true);
+                            this.destroyRestartTake$.complete();
+                            this.setStatus('');
+                        }
+                    })
+            });
     }
 
     detachServer() {
