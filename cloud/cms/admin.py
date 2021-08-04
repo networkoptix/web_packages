@@ -647,6 +647,7 @@ class DataRecordAdmin(CMSAdmin):
     search_fields = ('data_structure__context__name', 'data_structure__name',
                      'data_structure__description', 'value', 'language__code')
     readonly_fields = ('created_by',)
+    actions = ('delete_selected',)
 
 
 admin.site.register(DataRecord, DataRecordAdmin)
@@ -1327,6 +1328,7 @@ class MenuNodeAdmin(CMSAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }
+    actions = ('delete_selected',)
 
     def menu(self, obj):
         menu = obj.get_parent()
