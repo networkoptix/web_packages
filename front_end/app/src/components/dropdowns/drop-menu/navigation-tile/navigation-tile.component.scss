@@ -6,6 +6,7 @@
     .active {
         background : $light5 !important;
         border     : 1px solid $light6 !important;
+        margin-left: 0px !important;
     }
 
     .navigation-tile {
@@ -28,6 +29,9 @@
     #link {
         white-space   : nowrap;
         border        : 1px solid transparent;
+        border-right  : 0px;
+        border-left   : 0px;
+        margin-left   : 1px;
         display       : block;
         border-radius : 4px;
         padding       : 0 8px;
@@ -50,7 +54,7 @@
         
         &-text {
             @include ellipsis;
-            margin-left : 32px;
+            margin-left : 33px;
             height      : 24px;
             line-height : 22px;
             @extend #link;
