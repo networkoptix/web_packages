@@ -23,9 +23,15 @@
         (dblclick)="onDblClick($event)">
         <nx-pre-loader></nx-pre-loader>
     </div>
-    <player-js
+    <player-js *ngIf="playback.subject | async as playbackState"
+        (videoEnded)="videoEnded($event)"
+        (videoError)="videoErrorEventHandler($event)"
         (bufferingChange)="onBufferingChange($event)"
+        [mode]="playbackState.mode"
+        [paused]="playbackState.paused"
+        [posterUrl]="playbackState.posterUrl"
         [rotation]="rotateDeg"
+        [sourceUrl]="playbackState.sourceUrl"
     >
     </player-js>
 </ng-template>

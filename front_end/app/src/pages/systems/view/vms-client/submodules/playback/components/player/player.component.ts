@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, ElementRef } from '@angular/core';
 import PlaybackService from '../../services/playback.service';
 import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
@@ -34,8 +35,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public rotateDeg: number = 0
 
+    private transportChangeByError: boolean = false;
+
     constructor (
         translateService: NxLanguageProviderService,
+        public http: HttpClient,
         public playback: PlaybackService,
         protected vms: VideoManagementSystemService,
         protected self: ElementRef
@@ -84,12 +88,46 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
+                    this.transportChangeByError = false;
                     if (!this.playback.state.started && !(<ArchivePlaybackState> this.playback.state).paused) {
                         this._log('triggering handle started');
                         this.playback.handleStarted();
                     }
                     break;
             }
+        }
+    }
+
+    public videoEnded(event: boolean) {
+        this.playback.playLive();
+    }
+
+    public videoErrorEventHandler (event: any) {
+        const { player } = event.target;
+        if (player?.error()?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+            if (this.transportChangeByError) {
+                this.playback.setError(this.LANG.common.cameraStates.noFormat());
+                return;
+            }
+            this.transportChangeByError = true;
+            this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
+        } else if (player && event.type === 'error') {
+            this.http.get(player.src())
+                .subscribe((response: any) => {
+                    switch (response.error) {
+                        case '4':
+                            if (response.errorString === 'Cannot decrypt media') {
+                                this.playback.unplayableArchive();
+                            } else {
+                                this.playback.setError(response.errorString);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }, (error) => {
+                    this.playback.setError(error.message);
+                });
         }
     }
 

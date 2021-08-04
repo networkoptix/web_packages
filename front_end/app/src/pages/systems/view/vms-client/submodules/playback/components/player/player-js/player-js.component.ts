@@ -1,15 +1,11 @@
 import {
     Component, AfterViewInit, OnDestroy,
     ElementRef, ViewChild, Input, Output,
-    EventEmitter, ViewEncapsulation, HostListener, OnChanges
-}                                                                        from '@angular/core';
-import { HttpClient }                                                    from '@angular/common/http';
-import { Subscription }                                                  from 'rxjs';
-import PlaybackService                                                   from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_MODE, PLAYBACK_ERROR }                  from '../../../datatypes/PlaybackState';
-import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import { WebClientUxService }                                            from '@pages/systems/view/services/webclient-ux.service';
-import videojs                                                           from 'video.js';
+    EventEmitter, ViewEncapsulation, OnChanges, SimpleChanges
+} from '@angular/core';
+import { PLAYBACK_MODE }                                    from '../../../datatypes/PlaybackState';
+import { LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
+import videojs                                              from 'video.js';
 
 @Component({
     selector      : 'player-js',
@@ -22,52 +18,25 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     _log: Function;
     _warn: Function;
 
+    @Input() mode: number;
+    @Input() paused: boolean;
+    @Input() posterUrl: string;
     @Input() rotation: number;
+    @Input() sourceUrl: string;
+    @Input() transportError: boolean;
 
     @Output() bufferingChange = new EventEmitter<boolean>();
+    @Output() videoEnded = new EventEmitter<boolean>();
+    @Output() videoError = new EventEmitter<any>();
 
     @ViewChild('video') videoView: ElementRef;
 
+    actualRotation = 0;
     player: videojs.Player;
 
-    protected playbackSubscription: Subscription
-    protected state: PlaybackState
-    protected uxSubscription: Subscription;
+    protected transport = '';
 
-    constructor(
-        private http: HttpClient,
-        public playback: PlaybackService,
-        public ux: WebClientUxService
-    ) {
-        this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
-    }
-
-    videoErrorEventHandler = (event: any) => {
-        if (this.videoView && this.videoView.nativeElement.error && this.videoView.nativeElement.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
-            // if 'webm' switch to 'hlc'
-            this.playback.changeTransport('hls');
-            return;
-        }
-
-        if (event.type === 'error') {
-            this.http.get(event.target.src)
-                .subscribe((response: any) => {
-                    switch (response.error) {
-                        case '4':
-                            if (response.errorString === 'Cannot decrypt media') {
-                                this.playback.unplayableArchive();
-                            } else {
-                                this.playback.setError(response.errorString);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }, (error) => {
-                    this.playback.setError(error.message);
-                });
-        }
-    }
+    constructor() {}
 
     ngAfterViewInit(): void {
         let stallTimer;
@@ -85,7 +54,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
             this.bufferingChange.emit(false);
         });
 
-        this.player.on('waiting', (e) => {
+        this.player.on('waiting', () => {
             stallTimer && clearTimeout(stallTimer);
             stallTimer = setTimeout(() => {
                 this._startPlayback();
@@ -94,42 +63,30 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
 
         this.player.on('ended', () => {
             this._log('video ended');
-            this.playback.playLive();
+            this.videoEnded.emit(true);
         });
 
-        // this.player.on('error', (err) => {
-        //     debugger;
-        // });
-
-        this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.uxSubscription = this.ux.subject.subscribe(() => this._handleRotation());
-        this._handleRotation();
+        this.player.on('error', (err) => {
+            this.videoError.emit(err);
+        });
     }
 
-    public ngOnChanges (): void {
-        this._handleRotation();
+    public ngOnChanges (changes: SimpleChanges): void {
+        const prevMode = changes.mode?.previousValue || -1;
+        this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
+        if (this.player && (changes.mode || changes.sourceUrl || changes.posterUrl)) {
+            this.transport = this.sourceUrl && this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm' || '';
+            this._reactOnPlaybackStateChange(prevMode);
+        }
+        this._calculateRotation();
     }
 
-    @HostListener('window:resize', ['$event'])
-    protected _handleRotation () {
-        if (!this.videoView) {
-            return;
+    private _calculateRotation() {
+        let rotation = this.rotation;
+        if (this.transport !== 'hls') {
+            rotation = 0;
         }
-
-        if (this.state.transport !== 'hls') {
-            this.videoView.nativeElement.style = undefined;
-            return;
-        }
-
-        if (Math.abs(this.rotation % 180) === 90) {
-            this.videoView.nativeElement.style.maxWidth = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
-            this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`;
-        } else {
-            this.videoView.nativeElement.style.width = '100%';
-            this.videoView.nativeElement.style.transform =
-                this.rotation ? `rotate(${this.rotation}deg)` : '';
-        }
+        this.actualRotation = rotation;
     }
 
     ngOnDestroy(): void {
@@ -137,52 +94,42 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
         if (this.player) {
             this.player.dispose();
         }
-        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
-        this.playbackSubscription?.unsubscribe();
-        this.uxSubscription?.unsubscribe();
     }
 
-    public onPlaybackSubjectChange(s: PlaybackState) {
-        const prevState = { ...this.state };
-        this.state = { ...s };
-        this._reactOnPlaybackStateChange(prevState);
-    }
-
-    protected _reactOnPlaybackStateChange(prevState: PlaybackState) {
-        const isPaused = this.player.paused();
-        switch (this.state.mode) {
+    protected _reactOnPlaybackStateChange(prevMode: number) {
+        const isPaused = this.player.paused() || false;
+        switch (this.mode) {
             case PLAYBACK_MODE.STOPPED:
-                !isPaused && this.player.pause();
+                if (prevMode === PLAYBACK_MODE.STOPPED) {
+                    !isPaused && this.player.pause();
+                }
                 this._log('react on stopped');
                 this.bufferingChange.emit(false);
                 break;
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
-                if (prevState.mode !== this.state.mode) {
-                    this._handleRotation();
+                if (this.player && prevMode !== this.mode) {
                     this._startPlayback();
                 }
-                if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
+                if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {
                     !isPaused && this.player.pause();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
                 }
                 break;
             default:
-                assertNever(this.state);
+                throw Error('Client is in a broken state');
         }
     }
 
     protected _startPlayback() {
-        this._log('starting playback', { ...this.state });
+        this._log(`starting playback source: ${this.sourceUrl}\t poster: ${this.posterUrl}`);
 
-        let sourceUrl = null;
+        const sourceUrl = this.sourceUrl || null;
         let posterUrl = BASE64_SINGLE_TRANSPARENT_PIXEL;
-        if ('sourceUrl' in this.state) {
-            sourceUrl = this.state.sourceUrl;
-        }
-        if ('posterUrl' in this.state) {
-            posterUrl = `${this.state.posterUrl}&rotate=${this.state.transport !== 'hls' ? this.rotation : 0}`;
+
+        if (this.posterUrl) {
+            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' ? this.rotation : 0}`;
         }
 
         if (!sourceUrl) {
@@ -200,18 +147,16 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
             source.type = 'application/x-mpegURL';
         }
         this._log('correct source format', sourceUrl);
-        if ([1, 2].includes(this.state.mode)) {
-            this._log('setting source (1-ARCHIVE, 2-LIVE)', this.state.mode);
+        if ([1, 2].includes(this.mode)) {
+            this._log('setting source (1-ARCHIVE, 2-LIVE)', this.mode);
             this.bufferingChange.emit(true);
             this.player.src(source);
             this.player.poster(posterUrl);
             if (this.player.paused()) {
-                setTimeout(() => this.player.play());
+                setTimeout(() => this.player.play().catch(() => this._log('pause was called in start playback')));
             }
         } else {
             this._warn('playback requested in wrong mode');
         }
     }
 }
-
-export default PlayerJsComponent;
