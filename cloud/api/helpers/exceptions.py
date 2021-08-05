@@ -288,7 +288,7 @@ def validate_response(func):
             raise response_errors[response.status_code](response_data['errorText'], error_code=response_data['resultCode'])
 
         # Check error_code status - raise APILogicException
-        if (result_code := response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:
+        if (result_code := isinstance(response_data, dict) and response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:
             validate_error(response_data)
             if result_code in logic_errors:
                 raise logic_errors[result_code](response_data['errorText'],
