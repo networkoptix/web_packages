@@ -219,7 +219,7 @@ function build_webadmin_locally() {
     cp webadmin/customize_package.sh $BUILD_DIR
     pushd $BUILD_DIR
         . "$REPO/webadmin/build.sh"
-        . ./customize_package.sh
+        #. ./customize_package.sh
     popd
 }
 

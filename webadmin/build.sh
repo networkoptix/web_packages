@@ -15,10 +15,11 @@ fi
 [ -e skins ] && rm -rf skins
 [ -e translations ] && rm -rf translations
 
-rsync -av --progress $SOURCE_DIR/../build_scripts .
-rsync -av --progress $SOURCE_DIR/../skins .
-rsync -av --progress $SOURCE_DIR/../translations .
-rsync -av --progress $SOURCE_DIR/../front_end . --exclude node_modules --exclude dist --exclude .idea
+# Add v flag to see what's being copied.
+rsync -a --progress $SOURCE_DIR/../build_scripts .
+rsync -a --progress $SOURCE_DIR/../skins .
+rsync -a --progress $SOURCE_DIR/../translations .
+rsync -a --progress $SOURCE_DIR/../front_end . --exclude node_modules --exclude dist --exclude .idea
 
 if [ $IS_LOCAL ]
 then
@@ -99,4 +100,6 @@ echo "Pack external.dat" >&2
 zip -qq -r "../external.dat" ./static
 popd
 
+# Temporary until we have cmake support from the vms side. Bundle is only default.
+./customize_package.sh
 echo "Webadmin build done" >&2
