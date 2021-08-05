@@ -1,5 +1,5 @@
 export const DEFAULT_EDITOR_CONFIG = {
-    base_url                   : '/tinymce',
+    base_url                   : '/static/tinymce',
     suffix                     : '.min',
     branding                   : false,
     toolbar                    : 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
