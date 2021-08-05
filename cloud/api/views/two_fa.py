@@ -78,6 +78,7 @@ class BackupCode(TwoFactorPermissionsMixin):
         Codes should be separated by “,“. If no codes specified, all codes will be deleted for the user.
         """
         backupCodeSerializer = BackupCodeSerializer(data=request.data)
+        backupCodeSerializer.is_valid()
         data = backupCodeSerializer.validated_data
         return api_success(Auth.delete_backup_codes(request, data["backup_codes"]))
 
