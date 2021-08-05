@@ -54,7 +54,15 @@
             [form]="loginForm"
             [process]="login">
         </nx-process-button>
-            <a *ngIf="CONFIG.cloudSystemId" class="text-muted oauth-login"
-               (click)="redirectOauthLogin()">Login to cloud</a>
+        <ng-container *ngIf="CONFIG.isLocal && CONFIG.cloudSystemId">
+            <div class="separator" translate>or</div>
+            <button class="btn btn-default oauth-login"
+               (click)="redirectOauthLogin()">
+                <svg-icon nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '20', 'pointerEvents': 'none' }"
+                    [src]="CONFIG.icons.dirTextButtons + 'storage_cloud.svg'"
+                    [applyClass]="true"></svg-icon><span translate>Log In with %CLOUD_PORTAL%</span>
+            </button>
+        </ng-container>
     </div>
 </form>

@@ -1,5 +1,9 @@
 @use '../../../styles/theme_variables' as *;
 
+svg-icon {
+    stroke: #2B383F
+}
+
 .logo-header {
     background: $additional_light1;
     height: 160px;
@@ -19,5 +23,32 @@
 }
 
 .oauth-login {
-    margin-top: 0.5rem !important;
+    margin: 0 !important;
+    width: calc(100vw - 48px) !important;
+    max-width: 100% !important;
+}
+
+.separator {
+    color: $light16;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 16px;
+    margin: 16px 0 !important;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid $additional_light8;
+}
+
+.separator:not(:empty)::before {
+  margin-right: 1em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: 1em;
 }
