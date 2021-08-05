@@ -138,7 +138,7 @@ import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component
         NxCookieBannerComponent
     ],
     providers: [
-        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
