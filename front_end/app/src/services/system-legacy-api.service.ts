@@ -717,12 +717,14 @@ export class NxSystemAPI {
     public getStorageStatus(queryParams) {
         return this.get<t.NormalResponse<any>>(
             '/api/storageStatus',
-            queryParams
+            queryParams,
+            {},
+            60000
         );
     }
 
     saveStorage(updateParams: IParams) {
-        return this.post<any>('/ec2/saveStorage', updateParams);
+        return this.post<any>('/ec2/saveStorage', updateParams, {}, 60000);
     }
 
     removeStorage(updateParams: IParams) {

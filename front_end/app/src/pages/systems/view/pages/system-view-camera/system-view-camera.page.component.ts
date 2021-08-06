@@ -78,9 +78,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public controlsShown: boolean = false
     public canViewArchives = false;
-    public showPlayerSection = false;
+    public showPlayerSection = true;
     public cameraError: string;
-    private status = false;
     private cameraCurrentState: PlaybackState;
     private unsub$ = new Subject();
 
@@ -525,13 +524,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.camera && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
     }
 
-    showPlayer () {
-        this.status = this.cameraError === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (this.cameraCurrentState.mode === PLAYBACK_MODE.STOPPED || this.cameraCurrentState.mode === PLAYBACK_MODE.LIVE) ||
-            this.camera?.hasArchive && this.cameraCurrentState.mode === PLAYBACK_MODE.ARCHIVE);
-
-        return this.status;
-    }
-
     protected _initSelectedCamera () {
         this._log('_initSelectedCamera');
         this.resetTransport();
@@ -542,8 +534,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.cameraCurrentState = state;
             this.cameraError = state.error;
             // Moved into a function to detect camera's state change Offline<->Online ..etc.
-            // this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
-            //     this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
+            this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
+                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
         });
 
         if (this.camera?.hasArchive) {

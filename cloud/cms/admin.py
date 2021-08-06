@@ -1325,7 +1325,7 @@ class MenuNodeAdmin(CMSAdmin):
     list_filter = (MenuFilter, 'enabled', 'authentication')
     form = MenuNodeChangeForm
     fields = ('name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available',
-              'enabled', 'touched', 'parent_node', 'menu')
+              'enabled', 'touched', 'parent_node', 'parent_menu', 'menu')
     formfield_overrides = {
         models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
     }

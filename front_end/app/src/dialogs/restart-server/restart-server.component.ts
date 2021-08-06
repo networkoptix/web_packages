@@ -65,16 +65,10 @@ export class RestartServerModalContent {
                 () => {
                     this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);
-                    let isFirstTime = true;
                     let systemOfflineShown = false;
-                    const serverSubscription = this.system.getServers()
+                    const serverSubscription = this.system.serverManager.getForceServers(false)
                         .pipe(
                             map((res: any) => {
-                                // first response comes back with restarted server as online erroneously
-                                if (isFirstTime) {
-                                    isFirstTime = false;
-                                    throw Error('retry once');
-                                }
                                 if (res) {
                                     // maps server status into serverObj
                                     const serverObj: { id?: string } = {};
@@ -84,9 +78,11 @@ export class RestartServerModalContent {
                                     if (!serverObj[this.serverId]) {
                                         throw Error('server not found');
                                     }
-                                    if (serverObj[this.serverId] !== 'Online') {
+                                    if (serverObj[this.serverId] === 'Offline') {
                                         throw Error('still restarting');
                                     }
+                                } else {
+                                    throw Error('no response yet');
                                 }
                             }),
                             mergeMap(() => {
@@ -122,8 +118,6 @@ export class RestartServerModalContent {
                         )
                         .subscribe(() => {
                             this.ribbonService.hide();
-                            this.system.currentServerNotBusy = true;
-                            this.system.currentBusyServerIds.delete(this.serverId);
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
                             this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);

@@ -1206,7 +1206,7 @@ Restart Docker Server
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${port info}=   Execute Command    docker container port ${name}
-    ${port info}=   Split String    ${port info}    :
+    ${port info}=   Split String    ${port info}    :::
     Close Connection
     Release Lock   restart_server_lock
     [Return]    ${port info}[1]
@@ -1268,13 +1268,24 @@ Verify Horizontal Scrollbar Exists
     
 Delete All Text
     [Arguments]    ${input}
-    ${text} =    Get Element Attribute    ${input}    value
-    ${length} =    Get Length    ${text}
-    ${length} =    Evaluate    ${length} + 1
+    ${text}=   Get Element Attribute    ${input}    value
+    ${text}=   Run Keyword If    ${text}==${None}    Get Element Attribute    ${input}    innertext
+    ${length}=   Get Length    ${text}
+    ${length}=   Evaluate    ${length} + 1
     Click Element    ${input}
     FOR    ${n}    IN RANGE    ${length}
         Press Keys    None     BACKSPACE 
     END
+
+#Delete All Content Editable Text
+#    [Arguments]    ${input}
+#    ${text}=   Get Element Attribute    ${input}    innertext
+#    ${length}=   Get Length    ${text}
+#    ${length}=   Evaluate    ${length} + 1
+#    Click Element    ${input}
+#    FOR    ${n}    IN RANGE    ${length}
+#        Press Keys    None     BACKSPACE 
+#    END
 
 Skip If Irrelevant
     ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
@@ -1290,10 +1301,10 @@ Create Virtual Disk
     &{disk}=   Create Dictionary
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${results}    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
-    ${results}    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
+    ${results}=    Execute Command     dd if=/dev/zero of=${disk location}/${disk name}.img bs=1M count=${disk size}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}=    Execute Command     mkfs -t ext4 ${disk location}/${disk name}.img    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}=    Execute Command     mkdir ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}
+    ${results}=    Execute Command     mount -t auto -o loop ${disk location}/${disk name}.img ${disk name}    sudo=True    sudo_password=${QA BURBANK PASS}    return_stdout=False    return_rc=True
     Should Be Equal As Integers   ${results}    0
     Close Connection
     Set To Dictionary    ${disk}    img=${disk location}/${disk name}.img

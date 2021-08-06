@@ -510,7 +510,7 @@ class MenuChangeForm(forms.ModelForm):
 
 
 class MenuNodeChangeForm(forms.ModelForm):
-    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput)
+    menu = forms.ModelChoiceField(queryset=Menu.objects.all(), required=True, widget=forms.HiddenInput)
 
     class Meta:
         widgets = {
@@ -529,9 +529,18 @@ class MenuNodeChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         parent = self.instance.get_parent()
-        self.fields['menu'].initial = parent
-        node_ids = parent.all_node_ids
-        self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
+        if parent is not None:
+            self.fields['menu'].initial = parent
+            node_ids = parent.all_node_ids
+            self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
+            self.fields['parent_menu'] = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput, required=False)
+        else:
+            # if parent is none, that means we are creating a new MenuNode. 
+            # In this case, hide the parent_node field and let the user choose a menu to attach the node to with parent_menu field
+            # menu.required is set to false for creating a new node to avoid a validation error, it will be overwritten on submit by the value of parent_menu
+            self.fields['parent_menu'].required = True
+            self.fields['menu'].required = False
+            self.fields['parent_node'] = forms.ModelChoiceField(queryset=MenuNode.objects.none(), widget=forms.HiddenInput, required=False)
 
     def clean_enabled(self):
         enabled = self.cleaned_data['enabled']
@@ -543,7 +552,7 @@ class MenuNodeChangeForm(forms.ModelForm):
                 raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
         return enabled
 
-
+        
 class MenuNodeInlineForm(forms.ModelForm):
     class Meta:
         widgets = {

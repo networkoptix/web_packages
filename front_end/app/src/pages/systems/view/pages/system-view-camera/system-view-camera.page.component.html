@@ -17,7 +17,7 @@
     <span class="name">
       {{ camera.name }}
       (<span *ngIf="CONFIG.allowDebugMode" class="transport">{{ selectedTransport$ | async | uppercase }},&nbsp;</span>
-      <span class="quality">{{ selectedQuality$ | async }}</span>)
+      <span class="quality">{{ (selectedQuality$ | async) || 'Auto' }}</span>)
     </span>
 
     <div class="buttons">
@@ -74,7 +74,7 @@
 
   <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">
     <div class="player-wrapper">
-      <player *ngIf="camera && showPlayer() else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
+      <player *ngIf="camera && showPlayerSection else noPlayer" (videoDblClick)="onVideoDblClick($event)"></player>
       <ng-template #noPlayer>
         <div class="offline-message" [style.background-image]="previewUrl">
           <nx-player-placeholder

@@ -310,7 +310,7 @@ export class NxSystemStorageComponent implements OnInit {
                     this.handleModeUpdate()
                 ]).then(res => {
                     if (res[1] !== 'storageModesNotUpdated') {
-                        this.pollStats(true);
+                        this.pollStats();
                     }
                     return res;
                 });

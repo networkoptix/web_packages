@@ -84,8 +84,8 @@ Cloud Suite Setup
 
     Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
     Sleep    5
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    ${location}=   Get Location
+    Go To    ${location}/servers
     Verify on Servers Page    timeout=120
 
     Go To    ${ENV}/systems/${server 2}[sysId]
@@ -369,22 +369,24 @@ Administrator cannot change port via API
     Should Be True    ${status is correct}
 
 Check status
-    [Tags]    C70957    deb
+    [Tags]    C70957
     Verify on Servers Page
     Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}
     Select Server By Name    server 2
     Verify on Servers Page
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
-    ${results}    Execute Command    docker container start ${server 2}[id]
-    Sleep    1
+    Element Text Should Be    ${OFFLINE BANNER}   ${SERVER OFFLINE TEXT}
+    Click Button    ${CHECK STATUS BUTTON}
+    Wait Until Element is Visible    ${CHECKING BANNER}
+    Wait Until Element Is Not Visible    ${CHECKING BANNER}
+    Element Text Should Be    ${OFFLINE BANNER}    ${SERVER OFFLINE TEXT}
+    Start Docker Server    ${server 2}[id]
+    Sleep    2
     Click Button    ${CHECK STATUS BUTTON}
     Wait Until Element is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}    300
-    ${results}    Execute Command    docker container stop ${server 2}[id]
-    Close Connection
+    Stop Docker Server    ${server 2}[id]  
 
 Detailed info 1 server
     [Tags]   C70923    threaded

@@ -115,8 +115,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     get previewWidth() {
         const height = 120;
         const defaultAspectRatio = 1.77778;
-        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
-        const rotated = <number> this.selectedRotation.value % 180;
+        const aspect = <number> this.selectedAspect?.value || defaultAspectRatio;
+        const rotated = <number> this.selectedRotation?.value % 180 || 0;
         return rotated ? height / aspect : aspect * height;
     }
 
@@ -412,11 +412,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         if (!this.system.isOnline || !this.system.isAvailable) {
                             this.alertsLoaded = true;
                             this.canSeeInfo = false;
+                            this.showPreloader = false;
                         } else {
                             this.canSeeInfo = this.system.canViewInfo();
                         }
                         this.noCameras = this.system.cameraManager.cameras === undefined || this.system.cameraManager.cameras.length === 0;
-                        this.showPreloader = false;
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
                         this.initUpdateProcess();
                     });
@@ -521,7 +521,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
-                return Promise.reject(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning()));
+                this.applyService.setWarn(this.LANG.common.recordingSettingsWarning());
+                return Promise.reject();
             }
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
@@ -800,8 +801,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionGridChangeWatcher.originalValue = false;
             // Setup the automatic value based on the camera's dimensions
             this.aspectRatios[0].value = this.selectedCamera.defaultRatio > 0 ? this.selectedCamera.defaultRatio : '';
-            const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
-            this.selectedAspect = aspect;
+            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;

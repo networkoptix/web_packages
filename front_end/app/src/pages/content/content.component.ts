@@ -137,7 +137,7 @@ export class NxContentComponent implements OnInit {
         this.http.get(uri, { headers, params }).subscribe(
             (data: any) => {
                 this.title = data.title;
-                this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
+                this.body = data.body;
                 this.pageService.pageTitle = this.title;
                 this.pageService.pageDescription = data.shortDescription;
                 this.loaded = true;
@@ -167,7 +167,7 @@ export class NxContentComponent implements OnInit {
             .getStatic(templateUrl)
             .toPromise()
             .then((result) => {
-                this.body = this.sanitizer.bypassSecurityTrustHtml(result);
+                this.body = result;
                 this.loaded = true;
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */
