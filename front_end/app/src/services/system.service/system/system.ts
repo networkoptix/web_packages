@@ -375,7 +375,7 @@ export class NxSystem extends System {
 
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false)
+            return this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.checkRestCompatibility())
                 .then(() => this.getUsers(true))
@@ -385,8 +385,10 @@ export class NxSystem extends System {
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
                     if (error?.offline) {
+                        this.isOnline = false;
                         this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                         this.isAvailable = false;
+                        this.systemInfo = this;
                     }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })

@@ -26,6 +26,9 @@ export class CameraManager {
             this.getCameras(serverTimes, cameras);
             return Promise.resolve();
         } catch (error) {
+            if (error.name === 'TimeoutError') {
+                return Promise.reject({ offline: true });
+            }
             return Promise.reject(Error(`Request to server has failed ${error}`));
         }
     }
