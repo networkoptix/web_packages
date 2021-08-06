@@ -19,32 +19,27 @@ import { NxDevConsoleEditComponent }     from './console/edit/console-edit.compo
 
 const appRoutes: Routes = [
     {
-        path        : '',
-        component   : NxDevConsoleComponent,
-        pathMatch   : 'full',
-        canActivate : [DevelopersGuard]
+        path      : '',
+        component : NxDevConsoleComponent,
+        pathMatch : 'full'
     },
     {
-        path        : ':section',
-        canActivate : [DevelopersGuard],
-        pathMatch   : 'full',
-        component   : NxDevConsoleComponent
+        path      : ':section',
+        pathMatch : 'full',
+        component : NxDevConsoleComponent
     },
     {
-        path        : ':section/:mode',
-        canActivate : [DevelopersGuard],
-        pathMatch   : 'full',
-        component   : NxDevConsoleComponent
+        path      : ':section/:mode',
+        pathMatch : 'full',
+        component : NxDevConsoleComponent
     },
     {
-        path        : ':section/:mode/:id',
-        canActivate : [DevelopersGuard],
-        pathMatch   : 'full',
-        component   : NxDevConsoleComponent
+        path      : ':section/:mode/:id',
+        pathMatch : 'full',
+        component : NxDevConsoleComponent
     },
     {
         path          : ':section/:mode/:id/:context',
-        canActivate   : [DevelopersGuard],
         pathMatch     : 'full',
         canDeactivate : [ApplyGuard],
         component     : NxDevConsoleComponent
