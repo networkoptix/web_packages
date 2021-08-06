@@ -101,5 +101,5 @@ zip -qq -r "../external.dat" ./static
 popd
 
 # Temporary until we have cmake support from the vms side. Bundle is only default.
-./customize_package.sh
+$SOURCE_DIR/customize_package.sh
 echo "Webadmin build done" >&2
