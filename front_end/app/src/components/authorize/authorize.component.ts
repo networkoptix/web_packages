@@ -222,26 +222,24 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
-    handleLoginSuccess = async (res: { link: string, code: string, error: string }) => {
-        let code: string;
-        if (res?.link.startsWith('http')) {
-            const url = new URL(res.link.replace('/#', ''));
-            code = new URLSearchParams(url.search).get('code');
-        } else if (res?.link.startsWith('?code=')) {
-            code = new URLSearchParams(res.link).get('code');
-        } else {
-            // TODO: handle other cases in the future
+    handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
+        if (!code && link) {
+            // unit tests should look for: startsWith 'http', '?code=', and 'redirect-oauth'
+            // match groups the ? + queryParams
+            code = link.includes('?') && new URLSearchParams(
+                link.match(/.*(\?.*)/i)[1]
+            ).get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         if (this.initialData.redirect_url === 'redirect-oauth') {
-            const { client_id, client_type, view_type } = this.initialData;
+            const { client_id, client_type } = this.initialData;
             this.router.navigate(['redirect-oauth'], {
-                queryParams: { code, client_id, client_type, view_type }}
+                queryParams: { code, client_id, client_type, view_type: this.viewType }}
             );
         } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
-            this.initialData.redirect_url = res.link;
+            this.initialData.redirect_url = link;
             this.currentState = AuthorizeState.confirm;
-        } else if (res?.link.startsWith('?code=') || res.link.includes(this.window.location.origin)) {
+        } else if (link.startsWith('?code=') || link.includes(this.window.location.origin)) {
             await this.cloudService.loginCode(code);
             defer(() => this.accountService.get())
                 .pipe(
@@ -257,7 +255,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.router.navigate([this.CONFIG.redirect.authorised]);
                 });
         } else {
-            this.redirect(res.link);
+            this.redirect(link);
         }
     }
 
@@ -342,7 +340,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             res => {
                 if (res.resultCode === 'ok') {
                     this.handleLoginSuccess({
-                        link: this.redirectLink, code: this.loginCode, error: undefined
+                        link: this.redirectLink, code: this.loginCode
                     });
                 }
             },
