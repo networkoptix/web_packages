@@ -287,8 +287,8 @@ export const nxConfig: IConfig = {
                     }
                 },
                 {
-                    type  : ConfigType.ICON_MODAL,
-                    name  : 'downloadModal',
+                    type  : ConfigType.ASYNC_HANDLER,
+                    name  : 'downloadAsync',
                     label : '',
                     meta  : {
                         icon    : 'eye.svg',
@@ -328,26 +328,32 @@ export const nxConfig: IConfig = {
                     {
                         // Waiting on spec. Fields could potentially be used for configurations per modal view.
                         // For example this would be the preparing view, then we can add a ready view, and then an error view.
-                        type        : ConfigType.TEXT,
-                        name        : 'preparing',
-                        label       : 'Preparing to Build',
-                        description : 'Starting Custom Client build.'
+                        type  : ConfigType.TEXT,
+                        name  : 'download',
+                        label : 'Download',
+                        meta  : {
+                            options: {
+                                error             : '(Error generating package)',
+                                errorHeading      : 'Error Generating Package:',
+                                errorToastMessage : 'Error Generating Package for "%NAME%" custom client:',
+                                toastMessage      : 'Package ready for "%NAME%" custom client. If the package doesn\'t download automatically then <a href="%URL%">click here to download</a>'
+                            },
+                            icon: 'download.svg'
+                        }
                     },
                     {
                         // Waiting on spec. Fields could potentially be used for configurations per modal view.
                         // For example this would be the preparing view, then we can add a ready view, and then an error view.
-                        type        : ConfigType.TEXT,
-                        name        : 'generating',
-                        label       : 'Generating Custom Client',
-                        description : 'Custom Client is being built'
-                    },
-                    {
-                        // Waiting on spec. Fields could potentially be used for configurations per modal view.
-                        // For example this would be the preparing view, then we can add a ready view, and then an error view.
-                        type        : ConfigType.TEXT,
-                        name        : 'ready',
-                        label       : 'Custom Client Ready',
-                        description : 'Custom Client is ready to download'
+                        type  : ConfigType.TEXT,
+                        name  : 'generating',
+                        label : 'Generating...',
+                        meta  : {
+                            options: {
+                                pending: '(Checking package settings)'
+                            },
+                            icon   : 'loading.svg',
+                            styles : 'animate-rotation'
+                        }
                     }
                 ]
             },

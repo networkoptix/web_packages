@@ -17,7 +17,7 @@ export enum DataStructureType {
 }
 
 export interface DataStructureMeta {
-    options?: { name: any, value: any }[],
+    options?: Record<any, any>,
     icon?: string,
     tooltip?: string,
     styles? : string

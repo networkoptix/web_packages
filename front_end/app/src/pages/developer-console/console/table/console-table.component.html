@@ -50,6 +50,47 @@
                         </a>
                     </td>
                 </ng-container>
+                <ng-container *ngSwitchCase="CONFIG_TYPE.ASYNC_HANDLER">
+                    <td cdk-cell *cdkCellDef="let element"
+                        [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])" [ngClass]="asyncInProgress[element[field.name].lookupKey] ? 'in-progress-wrapper': 'async-wrapper'">
+                            <ng-template #showIcon>
+                                <svg-icon nx-add-svg-src
+                                    [src]="CONFIG.icons.dirTextButtons + element[field.name].manifest.fields[0].meta.icon"
+                                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8'}"
+                                    class="async-svg"
+                                    [applyClass]="true"></svg-icon>
+                            </ng-template>
+                            <svg-icon *ngIf="asyncInProgress[element[field.name].lookupKey]; else showIcon"
+                                nx-add-svg-src
+                                class="animate-rotation in-progress-svg"
+                                [src]="CONFIG.icons.dirTextButtons + 'loading.svg'"
+                                [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8'}"
+                                [applyClass]="true"></svg-icon>
+                            <ng-template #download>
+                                <ng-template #errorsTooltip>
+                                    <div class="d-flex flex-column">
+                                      <span class="mb-3 text-decoration-underline">{{element[field.name].manifest.fields[0].meta.options.errorHeading}}</span>
+                                      <span *ngFor="let error of (asyncErrors[element[field.name].lookupKey]  || [])">{{ error.message}}</span>
+                                    </div>
+                                </ng-template>
+                                    <span class="status-label">{{element[field.name].manifest.fields[0].label}}</span>
+                                    <span *ngIf="asyncErrors[element[field.name].lookupKey] as async_errors" class="error padded-label" [ngbTooltip]="errorsTooltip">{{element[field.name].manifest.fields[0].meta.options.error}}</span>
+                            </ng-template>
+                            <ng-container *ngIf="asyncInProgress[element[field.name].lookupKey] as progress; else download">
+                                <span class="status-label">{{element[field.name].manifest.fields[1].label}}</span>
+                                <span class="status-label padded-label">{{progress}}</span>
+                                <span (click)="$event.stopPropagation(); cancelHandlers[element[field.name].lookupKey]()" class="close-wrapper">
+                                    <svg-icon nx-add-svg-src
+                                        [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                                        [svgStyle]="{'width.px': '12', 'height.px': '12'}"
+                                        class="close-svg"
+                                        [applyClass]="true"></svg-icon>
+                                </span>
+                            </ng-container>
+                        </div>
+                    </td>
+                </ng-container>
                 <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_MODAL">
                     <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
                         <a (click)="handleModal(element[field.name])">

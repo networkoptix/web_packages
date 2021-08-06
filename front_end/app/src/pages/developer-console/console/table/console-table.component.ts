@@ -1,19 +1,23 @@
 import { DataSource }                                 from '@angular/cdk/collections';
-import { Component, Input, SimpleChanges }            from '@angular/core';
+import { Component, Inject, Input, SimpleChanges }            from '@angular/core';
 import { ActivatedRoute, Router }                     from '@angular/router';
 import { NxDialogsService }                           from '@dialogs/dialogs.service';
 import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
 import { TranslateService }                           from '@ngx-translate/core';
-import { map, switchMap }                                        from 'rxjs/operators';
+import { map, switchMap, takeUntil }                             from 'rxjs/operators';
+import md5                                            from 'md5';
 
-import { NxCloudApiService }                                 from '@services/nx-cloud-api';
-import { ContentManifest, ContentSettings, ContextManifest, DocAsset } from '@services/nx-cloud-api.types';
+import { CustomClientAPI, NxCloudApiService }                                 from '@services/nx-cloud-api';
+import { ContentManifest, ContentSettings, DocAsset }        from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }                          from '@services/nx-config';
-import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject }        from 'rxjs';
 import { ConsoleMode }                                       from '../console.component';
 import { DataStructureMeta }                                 from '../edit/console-edit.component';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxMenusService } from '@services/menus.service';
+import { PackageHandler, PackageProgress } from '@dialogs/download-async/download-async.component';
+import { WINDOW } from '@services/window-provider';
+import { NxToastService } from '@dialogs/toast.service';
 
 export enum ConfigType {
     TEXT='text',
@@ -23,6 +27,7 @@ export enum ConfigType {
     STATUS='status',
     ICON_LINK='icon_link',
     ICON_MODAL='icon_modal',
+    ASYNC_HANDLER='async_handler',
     DROPDOWN='dropdown'
 }
 
@@ -123,11 +128,13 @@ export class ListSerializer<Initial, Serialized> {
     }
 
     #customClientsSerializer = (data) => {
-        const createDownloadModalValues = ({ values: _, ...values }) => ({
-            modal    : ModalType.CLIENT_DOWNLOAD,
-            heading  : this.downloadManifest.label,
-            manifest : this.downloadManifest,
-            settings : this.contentSettings || {},
+        const createHash = (values: Record<any, any>) => md5(JSON.stringify(Object.entries(values).sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)));
+        const createDownloadAsyncValues = ({ values: _, ...values }) => ({
+            modal     : ModalType.CLIENT_DOWNLOAD,
+            heading   : this.downloadManifest.label,
+            manifest  : this.downloadManifest,
+            settings  : this.contentSettings || {},
+            lookupKey : createHash(values),
             values
         });
         const createSettingsModalValues = ({ values: _, ...values }) => ({
@@ -141,7 +148,7 @@ export class ListSerializer<Initial, Serialized> {
         return data.map(
             item => ({
                 ...item,
-                downloadModal : createDownloadModalValues(item),
+                downloadAsync : createDownloadAsyncValues(item),
                 settingsModal : createSettingsModalValues(item)
             }));
     }
@@ -180,7 +187,9 @@ export class NxDevConsoleTableComponent {
         private cloudApi: NxCloudApiService,
         private translate: TranslateService,
         private headerService: NxHeaderService,
-        private menusService: NxMenusService
+        private menusService: NxMenusService,
+        private toastService: NxToastService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
@@ -250,15 +259,90 @@ export class NxDevConsoleTableComponent {
         };
 
         const actions = (modal) => ({
-            [ModalType.CLIENT_CREATE]   : () => this.dialogService.edit(createClientModalContent),
-            [ModalType.CLIENT_EDIT]     : () => this.dialogService.edit(modalContent),
-            [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
+            [ModalType.CLIENT_CREATE] : () => this.dialogService.edit(createClientModalContent),
+            [ModalType.CLIENT_EDIT]   : () => this.dialogService.edit(modalContent)
+            // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
         })[modal || ModalType.CLIENT_CREATE]();
 
         const action = await actions(modalContent?.modal);
         if (action) {
             this.updateData();
         }
+    }
+
+    asyncInProgress = {}
+    asyncErrors = {};
+    cancelHandlers = {}
+
+    handleAsync = async(asyncSettings) => {
+        const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
+            [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
+        };
+
+        const buildDownloadToast = (url) => asyncSettings.manifest.fields[0].meta.options.toastMessage.replace(
+            '%NAME%', asyncSettings.values.name
+        ).replace(
+            '%URL%', url
+        );
+
+        const buildErrorToast = (errors) => {
+            return errors.reduce(
+                (toastMessage, { message }) => `${toastMessage}<p>${message}</p>`,
+                `<h3>${asyncSettings.manifest.fields[0].meta.options.errorToastMessage.replace('%NAME%', asyncSettings.values.name)}</h3>`
+            );
+        };
+
+        const notifyDownload = (url) => {
+            const options = {
+                classname : this.CONFIG.toast.success,
+                showHTML  : true
+            };
+            this.toastService.show(buildDownloadToast(url), options);
+        };
+
+        const notifyError = (errors) => {
+            const options = {
+                classname : this.CONFIG.toast.warning,
+                showHTML  : true
+            };
+            this.toastService.show(buildErrorToast(errors), options);
+        };
+
+        const {
+            generatePackage,
+            checkPackage,
+            getDownloadUrl
+        } = this.cloudApi.getSubAPI(apiLookup[asyncSettings.modal]) as CustomClientAPI;
+        const packageHandler = new PackageHandler(
+            asyncSettings.values.id,
+            generatePackage,
+            checkPackage,
+            getDownloadUrl,
+            this.window,
+            notifyDownload,
+            notifyError
+        );
+        this.asyncErrors[asyncSettings.lookupKey] = false;
+        this.asyncInProgress[asyncSettings.lookupKey] = asyncSettings.manifest.fields[1].meta.options.pending;
+        this.cancelHandlers[asyncSettings.lookupKey] = () => {
+            this.asyncInProgress[asyncSettings.lookupKey] = this.asyncErrors[asyncSettings.lookupKey] = false;
+            packageHandler.cancelProcess();
+        };
+        packageHandler.state$.pipe(untilDestroyed(this)).subscribe((state) => {
+            switch (state.packageState) {
+                case PackageProgress.PACKAGE_ERROR:
+                    this.asyncErrors[asyncSettings.lookupKey] = state.errors;
+                    this.asyncInProgress[asyncSettings.lookupKey] = false;
+                    break;
+
+                case PackageProgress.DOWNLOAD_READY:
+                    this.asyncInProgress[asyncSettings.lookupKey] = false;
+                    break;
+
+                default:
+                    this.asyncInProgress[asyncSettings.lookupKey] = `(${state ? Math.floor(state.current / state.total) : 0}%)`;
+            }
+        });
     }
 
     updateTableSize({ width, height }) {

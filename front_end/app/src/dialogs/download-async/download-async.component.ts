@@ -1,18 +1,19 @@
-import { Component, Inject, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }                from '@ngneat/until-destroy';
+import { Component, Inject, Input }                       from '@angular/core';
+import { NgbActiveModal }                                 from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }                                   from '@ngneat/until-destroy';
+import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
+import { filter, startWith, switchMap, takeUntil, tap }   from 'rxjs/operators';
+import { WINDOW }                                         from '@services/window-provider';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import {
-    ConsoleSection,
-    ModalContent, ModalManifest, ModalType
+    ConsoleSection, ModalContent, ModalManifest, ModalType
 }                                    from '@pages/developer-console/console/table/console-table.component';
-import { CustomClientAPI, NxCloudApiService }         from '@services/nx-cloud-api';
-import { interval, Observable, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { WINDOW } from '@services/window-provider';
+import {
+    CustomClientAPI, NxCloudApiService
+}                                    from '@services/nx-cloud-api';
 
 export enum PackageProgress {
     STARTING,
@@ -53,15 +54,23 @@ export class PackageHandler {
     total = 0;
     downloadUrl = '';
     errors = [];
+    #state$: BehaviorSubject<PackageHandler> = new BehaviorSubject(null)
+    state$ = this.#state$.pipe(filter(state => !!state))
 
     #START = 0.15;
+
+    cancelProcess = () => {
+        this.#done$.next('canceled');
+    }
 
     constructor(
         private id: string | number,
         generatePackage: GenerateHandler,
         checkPackageHandler: CheckPackageHandler,
         packageDownloadHandler: PackageDownloadHandler,
-        private window: Window
+        private window: Window,
+        notifyDownload = (downloadPath) => console.info(`Download ready: ${downloadPath}`),
+        notifyError = (errors) => console.error(errors)
     ) {
         generatePackage(
             this.id
@@ -71,7 +80,7 @@ export class PackageHandler {
                 this.total = 100;
                 this.current = 2;
                 this.downloadId = downloadId;
-                return interval(250);
+                return interval(100).pipe(startWith(0));
             }),
             tap(_ => {
                 if (this.current < (this.#START * this.total)) {
@@ -89,6 +98,7 @@ export class PackageHandler {
                     this.packageState = PackageProgress.DOWNLOAD_READY;
                     this.current = this.total = this.total || 100;
                     this.downloadUrl = packageDownloadHandler(this.id, this.downloadId);
+                    notifyDownload(this.downloadUrl);
                     this.window.location.assign(this.downloadUrl);
                     this.#done$.next('done');
                     break;
@@ -96,6 +106,7 @@ export class PackageHandler {
                 case PackageState.FAILED:
                     this.packageState = PackageProgress.PACKAGE_ERROR;
                     this.errors = errors;
+                    notifyError(errors);
                     this.#done$.next('done');
                     break;
 
@@ -110,6 +121,7 @@ export class PackageHandler {
                     this.current = this.#START * this.total;
                     this.total = 100;
             }
+            this.#state$.next(this);
         });
     }
 }
