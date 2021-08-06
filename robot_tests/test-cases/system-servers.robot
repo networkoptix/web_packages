@@ -199,7 +199,7 @@ Server name can be changed
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Reload Page
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-
+    Element Text Should Be    ${SERVER 1 LIST MENU NAME}     server 1 name changed
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page

@@ -10,6 +10,7 @@ ${PORT TOO LOW ERROR}               //nx-apply//div[contains(@class,"warning-tex
 ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/following-sibling::input
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
 ${SERVER DETAILED INFO BUTTON}      //div[contains(@class, "server-info")]//header//button/span[contains(text(),"${DETAILED INFO TEXT}")]/..
+${SERVER 1 LIST MENU NAME}          //nx-level-3-item//a//span[contains(text(),"server 1")]
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..
 ${RESTART SERVER FORM}              //form[@name="restartServerForm"]
