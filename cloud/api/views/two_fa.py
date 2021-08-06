@@ -64,7 +64,7 @@ class BackupCode(TwoFactorPermissionsMixin):
         verificationSerializer = VerificationSerializer(data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
-        return api_success(Auth.verify_2fa_code(data["verification_code"], data["access_code"]))
+        return api_success(Auth.verify_backup_code(data["verification_code"], data["access_code"]))
 
     def post(self, request, *args, **kwargs):
         """
