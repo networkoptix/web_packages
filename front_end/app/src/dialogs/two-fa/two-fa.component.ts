@@ -16,7 +16,7 @@ import {
 import { NxToastService }                       from '@dialogs/toast.service';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CloudResponse }                        from '@services/nx-cloud-api.types';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 export enum T_FA_STEPS {
     Code,
@@ -26,6 +26,7 @@ export enum T_FA_STEPS {
     WizardFinish
 }
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'two-fa-modal-content',
     templateUrl : 'two-fa.component.html',
