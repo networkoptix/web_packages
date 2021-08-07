@@ -1,6 +1,6 @@
 import IAnimated     from './IAnimated';
 import AnimatedFloat from './AnimatedFloat';
-import { EASING }    from '@pages/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/animationPrimitives/easing-functions';
+import { EASING } from './easing-functions';
 
 type int = number
 type durationMs = number

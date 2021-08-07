@@ -1,12 +1,14 @@
-import { IConfig }                               from '@services/nx-config';
-import { environment }                           from '@environments/environment';
+import { IConfig }     from '@services/nx-config';
+import { environment } from '@environments/environment';
 import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
+import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
 
 export function setupConfig(): IConfig {
     return {
         alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
         pollingTimeout         : 30 * 1000,
         extendedRequestTimeout : 15 * 1000,
+        apiRequestAttempts     : 4,
 
         animations             : {
             carouselImage: {
@@ -104,6 +106,7 @@ export function setupConfig(): IConfig {
                 skd    : 'SDK'
             }
         },
+        
         healthMonitoring             : {
             staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
             valueFormats      : {
@@ -168,30 +171,31 @@ export function setupConfig(): IConfig {
                 unset    : 'no-max-width'
             }
         },
-        icons                        : {
-            default              : '/static/images/integration/integration_tile_preview_plugin.svg',
-            platforms            : [
+        icons: {
+            default   : '/static/images/integration/integration_tile_preview_plugin.svg',
+            platforms : [
                 { name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg' },
                 { name: 'android', src: '/static/images/integration/integration_tile_os_android.svg' },
                 { name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg' },
                 { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
-            backgrounds          : '/static/images/icons/backgrounds/',
-            dir                  : '/static/images/icons/standard/',
-            dirDevtools          : '/static/images/icons/dev_tools/',
-            dirButtons           : '/static/images/icons/buttons/',
-            dirTextButtons       : '/static/images/icons/text_buttons/',
-            dirHeader            : '/static/images/icons/header/',
-            dirNonStandard       : '/static/images/icons/',
-            dirNonStandardView   : '/static/images/icons/view/',
-            dirPagePlaceholder   : '/static/images/placeholders/page/',
-            dirSectionPlaceholder: '/static/images/placeholders/section/',
-            dirLandingIcons      : '/static/images/landing/block_icons/'
+            backgrounds           : '/static/images/icons/backgrounds/',
+            dir                   : '/static/images/icons/standard/',
+            dirDevtools           : '/static/images/icons/dev_tools/',
+            dirButtons            : '/static/images/icons/buttons/',
+            dirTextButtons        : '/static/images/icons/text_buttons/',
+            dirHeader             : '/static/images/icons/header/',
+            dirNonStandard        : '/static/images/icons/',
+            dirNonStandardView    : '/static/images/icons/view/',
+            dirPagePlaceholder    : '/static/images/placeholders/page/',
+            dirSectionPlaceholder : '/static/images/placeholders/section/',
+            dirDevCapabilities    : '/static/images/icons/dev_capabilities/',
+            dirLandingIcons       : '/static/images/landing/block_icons/'
         },
         images                       : {
-            dir               : '/static/images/',
-            dirDevelopers     : '/static/images/developers/',
+            dir          : '/static/images/',
+            dirDevelopers: '/static/images/developers/',
             dirLanding        : '/static/images/landing/',
             dirLandingGraphic : '/static/images/landing/main_screen/'
         },
@@ -501,6 +505,7 @@ export function setupConfig(): IConfig {
 
         // Dynamic from cloud_portal
         cloudCapabilities     : {
+            alexaIntegrationEnabled   : false,
             developersEnabled        : false,
             feedbackEnabled          : false,
             healthMonitor            : '',
@@ -509,12 +514,14 @@ export function setupConfig(): IConfig {
             publicReleases           : false,
             cloudStorageEnabled      : false,
             cloudStorageSize         : 0,
-            healthMonitorCacheTimeout: 60,
-            customClientsEnabled: false
+            customClientsEnabled      : false,
+            healthMonitorCacheTimeout: 60
         },
         cloudName             : '',
         cloudHost             : '',
         cloudSystemId         : '',
+        featureFlags  : {},
+        featureFlagStrings : FeatureFlagStrings,
         localSystemId         : '',
         localServerId         : '',
         company               : {

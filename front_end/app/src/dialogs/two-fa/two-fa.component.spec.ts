@@ -89,6 +89,7 @@ describe('TwoFAModalContent', () => {
 
                 component.account = {
                     can_publish_integration : false,
+                    name                    : 'Test',
                     first_name              : 'Test',
                     isCloud                 : false,
                     is_staff                : false,

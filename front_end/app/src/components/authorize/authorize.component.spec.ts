@@ -112,7 +112,7 @@ describe('OAuth Test Suite', () => {
     };
     const configMock = { getConfig: () => nxConfig };
     const processMock = {
-        classVariables : 'put value here'
+        classVariables: 'put value here'
     };
     const routeMock = {
         queryParams: of({

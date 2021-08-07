@@ -70,6 +70,7 @@ describe('NxAccountSecurityComponent', () => {
                 fixture.detectChanges();
                 component.account = {
                     can_publish_integration: false,
+                    name: 'test',
                     first_name: 'Test',
                     isCloud: false,
                     is_staff: false,
