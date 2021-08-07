@@ -666,6 +666,10 @@
         "server": {
             "title": "Server not accessible",
             "message": "System is offline and hence, servers are not accessible."
+        },
+        "noSystemApiTool": {
+            "title": "No System Found",
+            "message": ""
         }
     },
     "pleaseSelect": "Please select...",

@@ -1,5 +1,5 @@
 
-<ng-container>
+<ng-container *ngIf="!noSystemError;else noSystem">
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
@@ -80,3 +80,12 @@
         </div>
     </div>
 </ng-container>
+
+
+<ng-template #noSystem>
+    <nx-page-placeholder type="NO_SYSTEM_FOUND_API_TOOL">
+        <button class="btn btn-primary main-button mx-auto">
+            <a routerLink="/" translate>Go to Main Page</a>
+        </button>
+    </nx-page-placeholder>
+</ng-template>

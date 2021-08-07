@@ -88,6 +88,10 @@ export class NxHeaderService {
         this.setLocation(this.router.url);
     }
 
+    get lastActive() {
+        return this.lastActive$.value;
+    }
+
     setLocation(url?) {
         const bestMatch: any = {};
         // Check if system url or go through nodes

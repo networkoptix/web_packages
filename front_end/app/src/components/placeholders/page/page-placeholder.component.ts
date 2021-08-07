@@ -150,6 +150,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = this.LANG.placeholderTexts.noSettings.message();
                     this.iconName = 'NoSettings';
                     break;
+                case 'NO_SYSTEM_FOUND_API_TOOL':
+                    this.iconName = '404';
+                    this.message = '';
+                    this.placeholderTitle = this.LANG.placeholderTexts.noSystemApiTool.title();
+                    break;
             }
         }
     }

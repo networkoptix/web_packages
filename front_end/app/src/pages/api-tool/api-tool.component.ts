@@ -6,7 +6,6 @@ import { NxPageService }             from '@services/page.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSystem, NxSystemService } from '@services/system.service';
-import { ActivatedRoute }            from '@angular/router';
 import { Subscription }              from 'rxjs';
 import {
     delay, distinctUntilChanged,
@@ -19,13 +18,14 @@ import { NxAppStateService }         from '@services/nx-app-state.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxMenuService }             from '@src/menu';
 import { NxUtilsService }            from '@services/utils.service';
-import { NxSystemsService }          from '@services/systems.service';
+import { NxSystemsService, NxSystemWithUserInfo }          from '@services/systems.service';
+import { NxHeaderService } from '@services/nx-header.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-api-tool',
-    styleUrls   : ['api-tool.component.scss'],
-    templateUrl : 'api-tool.component.html',
+    selector      : 'nx-api-tool',
+    styleUrls     : ['api-tool.component.scss'],
+    templateUrl   : 'api-tool.component.html',
     encapsulation : ViewEncapsulation.None
 })
 export class NxApiToolComponent implements OnInit {
@@ -37,12 +37,13 @@ export class NxApiToolComponent implements OnInit {
     content : any;
     headerHeight: number;
     swagger: SwaggerUI;
-    systems;
+    systems: NxSystemWithUserInfo[];
     systemsDropdown: any = [];
     selectedSystem: any = {};
     serversDropdown: any = [];
     selectedServer: any = {};
     serversLoaded: boolean;
+    noSystemError = false;
 
     private resizeSubscription: Subscription;
     private menuSectionSubscription: Subscription;
@@ -54,12 +55,12 @@ export class NxApiToolComponent implements OnInit {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         pageService: NxPageService,
-        private route: ActivatedRoute,
         private systemService: NxSystemService,
         private appStateService: NxAppStateService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private menuService: NxMenuService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        private headerService: NxHeaderService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -115,20 +116,21 @@ export class NxApiToolComponent implements OnInit {
             const sysName = (system.stateOfHealth !== 'online') ? system.name + ' - Offline' : system.name;
             return { value: system.id, name: sysName };
         });
-        this.system = this.systemService.getCurrentSystem();
 
-        if (!this.system) {
-            // get first online
-            await this.systems.some(async(system) => {
-                if (system.stateOfHealth === 'online') {
-                    this.system = await this.systemService.createSystem('', system.id, '', true);
-                }
-                return system.stateOfHealth === 'online';
-            });
-            this.getServersInfo();
-        } else {
+        const localSystem = this.systemService.getLocalSystem();
+
+        if (localSystem) {
+            this.system = localSystem;
             this.selectedSystem = { value: this.system.id, name: this.system.info.name };
             this.updateMediaServers();
+        } else {
+            const validSystem = this.headerService.lastActive || this.systems.find(system => system.stateOfHealth === 'online') || this.systems[0];
+            if (validSystem) {
+                this.system = await this.systemService.createSystem('', validSystem.id);
+                this.getServersInfo();
+            } else {
+                this.noSystemError = true;
+            }
         }
     }
 

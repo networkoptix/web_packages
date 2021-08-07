@@ -19,7 +19,7 @@ import { Router }                          from '@angular/router';
 export class NxSystemService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    private system: NxSystem;
+    private localSystem: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
 
     constructor(
@@ -38,16 +38,19 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    getCurrentSystem() {
-        return this.system;
+    getLocalSystem() {
+        return this.localSystem;
     }
 
+    /**
+        * Factory that creates NxSystem instances
+    */
     async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;
         const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
             .getModuleInfo().toPromise()
-            .catch(() => { return { reply: { version: 0 }}});
+            .catch(() => { return { reply: { version: 0 } }; });
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
         } else {
@@ -75,8 +78,8 @@ export class NxSystemService {
     }
 
     createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
-        if (this.system === undefined) {
-            this.system = new NxSystem(
+        if (this.localSystem === undefined) {
+            this.localSystem = new NxSystem(
                 this.CONFIG,
                 this.LANG,
                 this.cloudApi,
@@ -91,19 +94,19 @@ export class NxSystemService {
                 userId,
                 this.appState
             );
-            this.system.mediaserver = mediaServer;
-            this.system.canMerge = true;
-            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
-            this.system.update();
+            this.localSystem.mediaserver = mediaServer;
+            this.localSystem.canMerge = true;
+            this.localSystem.setApiVersion(NxSystemRestAPI.supportedVersion);
+            this.localSystem.update();
         }
 
-        if (this.system.subscriberCount === 0) {
-            this.system.startPoll();
+        if (this.localSystem.subscriberCount === 0) {
+            this.localSystem.startPoll();
         }
 
         if (!this.systemsService.systems) {
-            this.systemsService.systems = [<any> this.system];
+            this.systemsService.systems = [<any> this.localSystem];
         }
-        return this.system;
+        return this.localSystem;
     }
 }
