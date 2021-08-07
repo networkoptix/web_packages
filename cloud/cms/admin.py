@@ -646,7 +646,7 @@ class DataRecordAdmin(CMSAdmin):
                     'data_structure', 'short_description', 'created_by', 'version')
     list_filter = ('asset', 'language', 'data_structure__context', 'data_structure')
     search_fields = ('data_structure__context__name', 'data_structure__name',
-                     'data_structure__description', 'value', 'language__code')
+                     'data_structure__description', 'value', 'language__code', 'created_by__email',)
     readonly_fields = ('created_by',)
     actions = ('delete_selected',)
 
