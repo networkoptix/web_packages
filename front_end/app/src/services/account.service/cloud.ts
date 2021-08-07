@@ -74,14 +74,15 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         return this.cloudApi
             .account(true).toPromise()
             .then((account: Account|any) => {
-                if (account.is_authenticated) {
-                    account.isCloud = true;
-                    this.account = account;
+                // eslint-disable-next-line camelcase
+                if (!account?.is_authenticated) {
+                    return undefined;
                 }
+                this.account = { ...account, isCloud: true };
                 return this.account;
             })
             .catch(() => {
-                return this.account;
+                return undefined;
             });
     }
 
