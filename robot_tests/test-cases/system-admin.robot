@@ -282,12 +282,14 @@ Correct items are shown for admin
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin    cloud
+    ${custom role}=    Create And Add Custom Camera User Type and User
     ${viewers}=    Create List
         ...    ${system}[cloud users][advancedViewer]
         ...    ${system}[cloud users][viewer]
         ...    ${system}[cloud users][liveViewer]
         ...    ${system}[cloud users][custom]
-    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
+        ...    ${custom role}
+    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Custom Cameras
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
         Log in to system    ${system}    ${user}
@@ -297,14 +299,14 @@ Correct items are shown for advanced viewer and below
 #            ...    ${OWNER LABEL}
 #            ...    //span[contains(text(), "${system}[owner]")]
             ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
-        Wait Until Elements Are Not Visible
+        Wait Until Elements Are Not Visible    
             ...    ${RENAME SYSTEM}
             ...    ${DISCONNECT FROM NX}
             ...    ${MERGE BUTTON SYSTEM}
             ...    ${LICENSES LINK}
-            ...    ${CAMERAS LINK}
             ...    ${USERS LINK}
-            ...    ${SERVERS LINK}
+            ...    ${SERVERS LINK}   
+        Run Keyword Unless     '${text}' == 'Custom Cameras'    Wait Until Element Is Not Visible    ${CAMERAS LINK}
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Log Out
     END
