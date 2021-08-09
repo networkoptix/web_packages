@@ -62,8 +62,18 @@ PORTAL_MANAGER_PERMISSIONS = [
 INTEGRATIONS_DEV_PERMISSIONS = [
     'edit_content', 'change_asset', 'change_assetcustomizationreview']
 
-def get_name_factory(group_name):
-    return lambda asset: f'{group_name} - {asset.name} - {asset.id}'
+def get_name_factory(base_group_name):
+    def get_name_handler(asset):
+        def generate_name (name = ''):
+            return f'{base_group_name} - {name} - {asset.id}'
+
+        max_group_name_length = Group._meta.get_field('name').max_length
+        max_asset_name_length = max_group_name_length - len(generate_name())
+        trimmed_asset_name = asset.name[:max_asset_name_length]
+
+        return generate_name(trimmed_asset_name)
+    
+    return get_name_handler
 
 def portal_manager_group_name(asset):
     return get_name_factory('Portal Manager')(asset)

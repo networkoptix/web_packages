@@ -1,5 +1,6 @@
 import pytest
 from collections import Counter
+from random import randint
 
 from django.db.models import Count
 from django.core.files.base import ContentFile
@@ -76,6 +77,17 @@ class TestModelFunctions:
         return group
 
     # Permission group tests
+
+    def test_get_name_factory_group_name_length(self, mocker):
+        mock_asset = mocker.MagicMock()
+        mock_asset.id = randint(1, 1000)
+        mock_group_name = str(uuid.uuid4())[:randint(1, 36)]
+        mock_asset.name = str(uuid.uuid4()) * 7
+        generated_name = get_name_factory(mock_group_name)(mock_asset)
+        generated_name_length = len(generated_name)
+        group_name_max_length = Group._meta.get_field('name').max_length
+        assert  generated_name_length == group_name_max_length
+
 
     def test_create_default_permission_group_documentation(self, uses):
         uses(documentation_asset=True)
