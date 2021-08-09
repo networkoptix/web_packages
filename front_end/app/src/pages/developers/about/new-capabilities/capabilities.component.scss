@@ -28,7 +28,7 @@
         @include bootstrap.media-breakpoint-up(md){
             display: flex;
             flex-wrap: wrap;
-            justify-content: start;
+            justify-content: center;
         }
         @include bootstrap.media-breakpoint-down(sm){
             margin-top: 6px;
@@ -37,11 +37,15 @@
         & .bullet-item {
             @extend .bullet-point-text;
             padding-right: 36px;
-            flex: 0 1 33% !important;
+            flex: 0 1 33%;
             margin-bottom: 19px;
             @include bootstrap.media-breakpoint-down(sm){
                 margin-top: 12px !important;
             }
+        }
+
+        & .bullet-item-alone{
+            flex: none !important;
         }
     }
 }
