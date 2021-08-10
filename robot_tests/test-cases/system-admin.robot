@@ -265,9 +265,9 @@ Correct items are shown for admin
         ...    ${SYSTEMS DROPDOWN}
         ...    ${RENAME SYSTEM}
         ...    ${DISCONNECT FROM MY ACCOUNT}
-#        ...    ${OWNER LABEL}
-#        ...    ${expected name}
-#        ...    //span[contains(text(), "${system}[owner]")]
+        ...    ${OWNER LABEL}
+        ...    ${expected name}
+        ...    //span[contains(text(), "${system}[owner]")]
         ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
         ...    ${LICENSES LINK}
         ...    ${CAMERAS LINK}
@@ -294,10 +294,10 @@ Correct items are shown for advanced viewer and below
     FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
-#            ...    ${current owner name}
+            ...    ${current owner name}
             ...    ${DISCONNECT FROM MY ACCOUNT}
-#            ...    ${OWNER LABEL}
-#            ...    //span[contains(text(), "${system}[owner]")]
+            ...    ${OWNER LABEL}
+            ...    //span[contains(text(), "${system}[owner]")]
             ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
         Wait Until Elements Are Not Visible    
             ...    ${RENAME SYSTEM}
