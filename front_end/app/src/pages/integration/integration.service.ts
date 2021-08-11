@@ -242,7 +242,7 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = this.formatVersion(plugin.versionDetails.version);
+            plugin.versionDetails.version = NxUtilsService.htmlToEntity(this.formatVersion(plugin.versionDetails.version));
         } else {
             plugin.versionDetails = {
                 version: '&nbsp;'

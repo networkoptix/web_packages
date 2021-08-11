@@ -14,7 +14,7 @@
                     <div *ngIf="plugin.information" class="title" id="info-block-name">{{plugin.information.name}}</div>
                     <div class="minor-text d-flex justify-content-between">
                         <div *ngIf="plugin.versionDetails" name="version" id="info-block-version"
-                             [innerText]="plugin.versionDetails.version">
+                             [innerHTML]="plugin.versionDetails.version">
                         </div>
                         <div *ngIf="plugin.lastModified" name="updateDate" id="info-block-last-modified">
                             <span translate>Updated</span>&nbsp;<span>{{plugin.lastModified}}</span>
