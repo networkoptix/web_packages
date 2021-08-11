@@ -4,7 +4,7 @@ import { ActivatedRoute, Router }                     from '@angular/router';
 import { NxDialogsService }                           from '@dialogs/dialogs.service';
 import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
 import { TranslateService }                           from '@ngx-translate/core';
-import { map, switchMap, takeUntil }                             from 'rxjs/operators';
+import { map, switchMap }                             from 'rxjs/operators';
 import md5                                            from 'md5';
 
 import { CustomClientAPI, NxCloudApiService }                                 from '@services/nx-cloud-api';
@@ -18,6 +18,8 @@ import { NxMenusService } from '@services/menus.service';
 import { PackageHandler, PackageProgress } from '@dialogs/download-async/download-async.component';
 import { WINDOW } from '@services/window-provider';
 import { NxToastService } from '@dialogs/toast.service';
+import { NxUriService } from '@services/uri.service';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
 
 export enum ConfigType {
     TEXT='text',
@@ -189,6 +191,8 @@ export class NxDevConsoleTableComponent {
         private headerService: NxHeaderService,
         private menusService: NxMenusService,
         private toastService: NxToastService,
+        private uriService: NxUriService,
+        private consoleService: NxConsoleService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
@@ -223,8 +227,19 @@ export class NxDevConsoleTableComponent {
                     this.updatePageParam
                 );
                 this.dataLoaded = true;
+                const targetState = this.consoleService.targetState;
+                if (targetState && targetState.id !== undefined) {
+                    const { index, value } = this.selectedData.findElementIndex(targetState.id);
+                    const page = this.selectedData.indexToPage(index);
+                    setTimeout(_ => this.updatePageParam(page));
+
+                    if (targetState.download) {
+                        this.handleAsync(value.downloadAsync);
+                    }
+                    this.consoleService.targetState = undefined;
+                }
             });
-        };
+        }
     }
 
     #paramUpdaterFactory = (param: string) => <Value>(value: Value) => this.router.navigate(
@@ -424,5 +439,14 @@ class TableDataSource extends DataSource<any> {
         if (page > this.numberOfPages$.value && this.updatePageParam) {
             this.updatePageParam(this.numberOfPages$.value);
         }
+    }
+
+    findElementIndex(id: number): { index: number, value: any } {
+        const index = this.#baseData$.value.findIndex(item => item.id === id);
+        return { index, value: this.#baseData$.value[index] };
+    }
+
+    indexToPage(index: number): number {
+        return Math.floor(index / this.#itemsPerPage$.value) + 1;
     }
 }
