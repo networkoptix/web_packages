@@ -9592,7 +9592,7 @@
 }
 
 .swagger-ui .response-col_status {
-
+	width: 20%;
 }
 
 .swagger-ui .response-col_status .response-undocumented {
@@ -9652,7 +9652,7 @@
 .swagger-ui .highlight-code > .microlight {
 	overflow-y : auto;
 	max-height : 400px;
-	min-height : 6em
+	min-height : 6em;
 }
 
 .swagger-ui .highlight-code > .microlight code span {
@@ -10744,12 +10744,17 @@
 	padding : 16px;
 }
 
+.swagger-ui .responses-table {
+	table-layout: fixed;
+	width: 100%
+}
+
 .swagger-ui .response-col_description {
-	width : 99%
 }
 
 .swagger-ui .response-col_links {
-	min-width : 6em
+	min-width : 6em;
+	width     : 20%;
 }
 
 .swagger-ui .response__extension {
