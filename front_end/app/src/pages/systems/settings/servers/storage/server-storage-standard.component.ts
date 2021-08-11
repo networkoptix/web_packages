@@ -186,7 +186,7 @@ export class NxSystemStorageComponent implements OnInit {
                 this.customSettings = backupState.custom;
                 this.backupState = this.isBackupOn.originalValue = backupState.backup;
                 this.setupWatchers();
-                if (this.loading && this.currentStorageState.beingChecked) {
+                if (this.loading && this.currentStorageState?.beingChecked) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                     this.pollStats();
                 }

@@ -1,23 +1,32 @@
 import {
     Component, HostListener, Inject,
-    ViewEncapsulation, ViewChild, ElementRef
-}                                                  from '@angular/core';
-import { ActivationStart, Event, Router }          from '@angular/router';
-import { CookieService }                           from 'ngx-cookie-service';
-import { DeviceDetectorService }                   from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
-import { fromEvent }                               from 'rxjs';
-import { LocalStorageService }                     from 'ngx-webstorage';
-import { NxRibbonService }                         from '@components/ribbon';
-import { WINDOW }                                  from '@services/window-provider';
-import { NxApplyService }                          from '@services/apply.service';
-import { NxAppStateService }                       from '@services/nx-app-state.service';
-import { NxScrollMechanicsService }                from '@services/scroll-mechanics.service';
-import { NxUriService }                            from '@services/uri.service';
-import { NxPageService }                           from '@services/page.service';
-import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
-import { NxDialogsService }                        from '@dialogs/dialogs.service';
-import { NxConfigService, IConfig }                from '@services/nx-config';
+    ViewEncapsulation, ViewChild,
+    ElementRef
+}                                   from '@angular/core';
+import {
+    ActivationStart, Event,
+    GuardsCheckEnd, GuardsCheckStart,
+    Router
+}                                   from '@angular/router';
+import {
+    debounceTime, filter,
+    finalize, timeout
+}                                   from 'rxjs/operators';
+import { fromEvent }                from 'rxjs';
+import { CookieService }            from 'ngx-cookie-service';
+import { DeviceDetectorService }    from 'ngx-device-detector';
+import { LocalStorageService }      from 'ngx-webstorage';
+import { NxRibbonService }          from '@components/ribbon';
+import { WINDOW }                   from '@services/window-provider';
+import { NxApplyService }           from '@services/apply.service';
+import { NxAppStateService }        from '@services/nx-app-state.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUriService }             from '@services/uri.service';
+import { NxPageService }            from '@services/page.service';
+import { NxBootstrapProvider }      from '@services/nx-bootstrap-provider';
+import { NxDialogsService }         from '@dialogs/dialogs.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { SystemGuard }              from '@src/routeGuards';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -37,7 +46,7 @@ require('./scripts/vendor/protocolcheck');
             </div>
         </div>
         <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
-        <nx-pre-loader type="page" *ngIf="!appStateService.ready && !newSystem"></nx-pre-loader>
+        <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
     styleUrls     : ['./app.component.scss'],
     encapsulation : ViewEncapsulation.None
@@ -48,6 +57,7 @@ export class AppComponent {
     browserBlacklist: {};
     isInIframe: boolean;
     newSystem: boolean;
+    loading: boolean;
 
     CONFIG: IConfig;
 
@@ -57,6 +67,7 @@ export class AppComponent {
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
+        public systemGuard: SystemGuard,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,
@@ -155,15 +166,25 @@ export class AppComponent {
         }
 
         // Updates query params for components without routes.
-        this.router.events.pipe(
-            filter((event: Event) => event instanceof ActivationStart)
-        ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
-            if ('debug' in queryParams) {
-                this.CONFIG.allowDebugMode = true;
-            }
-            this.uriService.queryParams = queryParams;
-            this.mainContainer.nativeElement.scrollTop = 0;
-        });
+        this.router.events
+            .pipe(
+                filter((event: Event) => event instanceof ActivationStart || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
+            ).subscribe((event: ActivationStart | GuardsCheckStart | GuardsCheckEnd) => {
+                if (event instanceof GuardsCheckStart) {
+                    this.loading = true;
+                    return;
+                }
+                if (event instanceof GuardsCheckEnd) {
+                    this.loading = false;
+                    return;
+                }
+
+                if ('debug' in event.snapshot.queryParams) {
+                    this.CONFIG.allowDebugMode = true;
+                }
+                this.uriService.queryParams = event.snapshot.queryParams;
+                this.mainContainer.nativeElement.scrollTop = 0;
+            });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
             this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);

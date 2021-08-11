@@ -378,10 +378,9 @@ export class NxSystem extends System {
             return this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.checkRestCompatibility())
-                .then(() => this.getUsers(true))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
-                .then(() => from(this.getUsers(true)))
+                .then(() => this.getUsers(true))
                 .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
                     if (error?.offline) {
