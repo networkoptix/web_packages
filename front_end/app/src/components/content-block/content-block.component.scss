@@ -20,7 +20,7 @@
     }
 
     &--header {
-        height           : 3rem;
+        min-height       : 3rem;
         display          : flex;
         align-items      : center;
         background-color : $additional_light1;
