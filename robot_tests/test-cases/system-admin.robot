@@ -187,8 +187,8 @@ User can rename System: change in web -> check server
     Log    Step 3 & 4
     Change System Name    ${new system name}    save=False
     Log    Step 5
-    Click Button    ${CANCEL BUTTON}
-    Wait until elements are not visible
+    Click Button    ${CANCEL BUTTON}    
+    Wait until elements are not visible    ${CANCEL BUTTON}    ${SAVE BUTTON}
     Wait until element is visible    ${NO UNSAVED CHANGES}
     ${actual name}=   Get Text    ${SYSTEM NAME}
     Should be equal as strings    ${actual name}    ${system}[name]
