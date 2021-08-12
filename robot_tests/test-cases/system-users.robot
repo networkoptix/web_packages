@@ -275,7 +275,7 @@ Cloud Admin/administrator cannot delete or edit self
     END
 
 Admin and owner cannot edit self and other users via share
-        [Tags]    web_admin
+    [Tags]    web_admin    C41904
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    admin    ${server 1['local users']}[cloudAdmin]
     FOR    ${user}    IN    @{list}
