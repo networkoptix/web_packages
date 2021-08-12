@@ -173,21 +173,34 @@ Should open System page by link not authorized user, and show alert if logs in a
 # COMMON
 User can rename System: change in web -> check server
     [Tags]    C41880    webadmin    cloud
-    Log in to system    ${system}    ${system}[owner]
+    Log    Step 1
+    Log In To System    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
-        ...    ${SYSTEMS DROPDOWN}
-        ...    ${RENAME SYSTEM}
-        ...    ${NO UNSAVED CHANGES}
+    ...    ${SYSTEMS DROPDOWN}
+    ...    ${RENAME SYSTEM}
+    ...    ${NO UNSAVED CHANGES}
+    Log    Step 2
+    Mouse Over    ${SYSTEM NAME}
 
+    Element Style Should Be    ${SYSTEM NAME}    background-color    ${COLOR ALIGHT2 RGB}
     Log    Cancel button works fine
+    Log    Step 3 & 4
     Change System Name    ${new system name}    save=False
+    Log    Step 5
     Click Button    ${CANCEL BUTTON}
     Wait until elements are not visible
     Wait until element is visible    ${NO UNSAVED CHANGES}
     ${actual name}=   Get Text    ${SYSTEM NAME}
     Should be equal as strings    ${actual name}    ${system}[name]
+    Log    Step 6
+    Click Element    ${SYSTEM NAME}
+    Delete All Text    ${SYSTEM NAME}
+    Element Style Should Be    ${SYSTEM NAME}    border-color    ${ERROR COLOR}
+    Click Button    ${SAVE BUTTON}
+    Element Text Should Be    ${SYSTEM NAME}    ${system}[name]
 
     Log    Save button works fine
+    Log    Step 7
     Change System Name    ${new system name}
     ${actual name}=   Get Text    ${SYSTEM NAME}
     Should be equal as strings    ${actual name}    ${new system name}
