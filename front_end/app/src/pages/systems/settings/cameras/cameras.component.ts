@@ -414,16 +414,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.showPreloader = false;
                         } else {
                             this.canSeeInfo = this.system.canViewInfo();
+                            if (this.canSeeInfo) {
+                                this.fullInfoPath = this.uriService.getSystemSettingsRoute({
+                                    systemId   : this.system.id,
+                                    childRoute : ChildRoutes.HEALTH
+                                }) + this.CONFIG.menus.systemSettings.cameras.path;
+                            }
                         }
-                        this.noCameras = this.system.cameraManager.cameras === undefined || this.system.cameraManager.cameras.length === 0;
-                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
-                        this.initUpdateProcess();
                     });
-
-                    this.canSeeInfo = true;
-                    if (this.canSeeInfo) {
-                        this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;
-                    }
                 } else {
                     this.showPreloader = false;
                     this.alertsLoaded = true;
@@ -437,6 +435,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     .pipe(
                         untilDestroyed(this),
                         filter(res => {
+                            if (res.cameraManager.cameras === undefined) {
+                                return false;
+                            }
+
+                            this.noCameras = res.cameraManager.cameras?.length === 0;
+                            if (this.noCameras) {
+                                this.showPreloader = false;
+                            } else {
+                                this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
+                                this.initUpdateProcess();
+                            }
+
                             const isEqual = NxUtilsService.isEqual(prevCameras, res.cameraManager.cameras);
                             prevCameras = [...res.cameraManager.cameras];
                             return !isEqual;
