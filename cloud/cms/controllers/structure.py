@@ -502,6 +502,8 @@ def update_asset_type(asset_type, asset_type_structure):
 
 
 def external_file_to_content_file(url):
+    if url.startswith('//'):
+        url = f'https:{url}'
     file_request = requests.get(url)
     file_content = file_request.content
     content_type = file_request.headers.get('Content-Type', 'image/png')

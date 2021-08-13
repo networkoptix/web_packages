@@ -1,10 +1,13 @@
-from api.helpers.exceptions import APINotFoundException, api_success
+from cms.feature_flags import FLAGS, check_feature_flag
+import time
+from cms.controllers.zendesk import sync_menu
+from api.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
 from django.conf import settings
 
 from dal import autocomplete
 from rest_framework.decorators import api_view, permission_classes
 
-from cms.models import Menu, MenuNode
+from cms.models import Customization, Menu, MenuNode, ZendeskSyncLog
 from cms.permissions import IsSuperuser
 
 
@@ -15,6 +18,52 @@ def get_menu(request, name):
     if not menu:
         raise APINotFoundException(f'Menu {name} not found')
     return api_success(menu)
+
+@api_view(['POST'])
+@permission_classes((IsSuperuser,))
+@check_feature_flag(FLAGS.zendesk_sync)
+def menu_force_sync(request):
+    menu_id = request.data.get('menu_id')
+    menu = Menu.objects.filter(id=menu_id).first()
+    customizations = request.data.get('customizations')
+    if not menu_id:
+        raise APIRequestException(f'Payload must contain menu_id property', ErrorCodes.wrong_parameters)
+    if not menu:
+        raise APINotFoundException(f'Menu menu_id {menu_id} not found')
+    if customizations:
+        customization_names = [customizations] if isinstance(customizations, str) else customizations
+        customizations = list(Customization.objects.filter(name__in=customization_names))
+    for _ in sync_menu(menu, customizations):
+        # TODO: Will probably need to take the taskId and use it for tracking status
+        pass
+    return api_success(f'Menu syncing started for {menu.name} for {[customization.name for customization in customizations] if customizations else "All" } customizations ')
+
+
+@api_view(['POST'])
+@permission_classes((IsSuperuser,))
+@check_feature_flag(FLAGS.zendesk_sync)
+def menu_cancel_sync(request):
+    log_id = request.data.get('log_id')
+    sync_log = ZendeskSyncLog.objects.filter(id=log_id).first()
+    if not log_id:
+        raise APIRequestException(f'Payload must contain menu_id property', ErrorCodes.wrong_parameters)
+    if not sync_log:
+        raise APINotFoundException(f'Sync log with log_id {log_id} not found')
+
+    ZendeskSyncLog.cancel_existing_sync(log_id)
+    
+    return api_success(f'Syncing canceled for {log_id}')
+
+
+@api_view(['POST'])
+@permission_classes((IsSuperuser,))
+@check_feature_flag(FLAGS.zendesk_sync)
+def menu_clean_zd(request):
+    from cms.controllers.zendesk import ZendeskMapper
+    customization = request.data.pop('customization', '')
+    mapper = ZendeskMapper(customization_name=customization)
+    mapper.clean_zd(request.data)
+    return api_success('Cleaning Zendesk started')
 
 
 class MenuNodeAutocomplete(autocomplete.Select2QuerySetView):

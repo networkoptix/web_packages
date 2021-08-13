@@ -357,7 +357,12 @@ $(document).ready(function() {
 
         window.location.href = window.location.pathname + '?' + queryParams.toString();
     });
-
+    const syncStateNode = document.querySelector('#sync_states')
+    if (syncStateNode) {
+        const newParent = document.querySelector('.module.aligned ')
+        const removedSyncStateNode = syncStateNode.parentNode.removeChild(syncStateNode)
+        newParent.appendChild(removedSyncStateNode)
+    }
     const selectElements = $('.field-asset select');
     selectElements.each(function (index) {
         const val = $(this).children("option:selected").val();

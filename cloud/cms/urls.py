@@ -22,6 +22,9 @@ urlpatterns = [
     path('documentation/find_kb/<int:doc_id>', documentation.kb_for_article, name='find_doc_kb'),
     path('documentation/<int:doc_id>', documentation.get_page, name='doc_page'),
     path('menus/<str:name>', menu.get_menu, name='get_menu'),
+    path('menu_force_sync', menu.menu_force_sync, name='menu_force_sync'),
+    path('menu_clean_zd', menu.menu_clean_zd, name='menu_clean_zd'),
+    path('menu_cancel_sync', menu.menu_cancel_sync, name='menu_cancel_sync')
 ]
 
 

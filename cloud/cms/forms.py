@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from dal import autocomplete
+from itertools import chain
 from urllib.parse import quote
 
 from api.models import Account
@@ -57,8 +58,8 @@ def get_languages_list():
     return map(modify_default_language, customization.languages.values_list('code', 'name'))
 
 
-def get_branding_shortcuts():
-    cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
+def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
+    cloud_portal = Asset.objects.get(customizations__name=customization,
                                      asset_type=get_cloud_portal_asset().asset_type)
     branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
     brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
@@ -70,26 +71,51 @@ def get_branding_shortcuts():
     vals = DataStructure.find_actual_values(brand_structures + hidden_branding_structures, asset=cloud_portal)
     special_structures = SpecialStructures()
 
-    brands = [
-        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
-        for ds in brand_structures
-    ]
-    brands.extend([(
-        {'name': name, 'label': structure['label'], 'description': structure['description']},
-        structure['function'](cloud_portal))
-        for name, structure in special_structures.function_dict.items() if structure['shortcut']
-    ])
+    mapper = createMapper(cloud_portal, vals, special_structures)
+    
+    brands = mapper(brand_structures, lambda structure: structure['shortcut'])
+    hidden_brands = mapper(hidden_branding_structures, lambda structure: not structure['shortcut'] and not structure['hidden'])
 
-    hidden_brands = [
-        ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
-        for ds in hidden_branding_structures
-    ]
-    hidden_brands.extend([(
-        {'name': name, 'label': structure['label'], 'description': structure['description']},
-        structure['function'](cloud_portal))
-        for name, structure in special_structures.function_dict.items() if not structure['shortcut'] and not structure['hidden']
-    ])
     return brands, hidden_brands
+
+def get_restricted_keywords(customization = settings.CUSTOMIZATION):
+    '''Returns list of keywords that should be restricted from use in assets
+    '''
+    cloud_portal = Asset.objects.get(customizations__name=customization,
+                                     asset_type=get_cloud_portal_asset().asset_type)
+    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
+    restricted_struct = list(branding_context.datastructure_set.filter(name="Restricted"))
+    vals = DataStructure.find_actual_values(restricted_struct, asset=cloud_portal)
+
+
+    def get_restricted(vals):
+        return list(chain(*[vals[ds] for ds in restricted_struct]))
+
+
+    restricted = get_restricted(vals)
+
+    if customization != 'default':
+        default_cloud_portal = Asset.objects.get(customizations__name='default',
+                                     asset_type=get_cloud_portal_asset().asset_type)
+        default_vals = DataStructure.find_actual_values(restricted_struct, asset=default_cloud_portal)
+        restricted += get_restricted(default_vals)
+    
+    return restricted
+
+def createMapper(cloud_portal, vals, special_structures):
+    def mapper(structures_to_map, special_structure_filter):
+        mapped = [
+            ({'name': ds.name, 'label': ds.label, 'description': ds.description}, vals[ds])
+            for ds in structures_to_map
+        ]
+        if special_structure_filter:
+            mapped.extend([(
+                {'name': name, 'label': structure['label'], 'description': structure['description']},
+                structure['function'](cloud_portal))
+                for name, structure in special_structures.function_dict.items() if special_structure_filter(structure) 
+            ])
+        return mapped
+    return mapper
 
 
 def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_branding_shortcuts=None):
@@ -481,7 +507,7 @@ class MenuChangeForm(forms.ModelForm):
         config = self.cleaned_data['admin_config']
         updated_config = {'header': [], 'details': [], 'advanced': []}
         invalid_config = 'Invalid config structure:'
-        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'is_global']
+        valid_fields = [field.name for field in MenuNode._meta.fields] + ['enabled', 'related_assets', 'permissions', 'preview', 'zendesk_record', 'is_global']
         validation_errors = []
         try:
             parsed_config = json.loads(config)

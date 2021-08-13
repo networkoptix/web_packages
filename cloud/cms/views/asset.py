@@ -1,4 +1,5 @@
 
+from waffle import flag_is_active
 from cms.views.celery import download_result
 from util.helpers import get_admin_url
 from django.views.decorators.http import require_http_methods
@@ -27,7 +28,7 @@ from waffle.mixins import WaffleFlagMixin
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
-from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation
+from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation, zendesk
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
@@ -238,7 +239,7 @@ def accept_review(request):
 @require_http_methods(["POST"])
 @permission_required("cms.change_assetcustomizationreview")
 def review(request):
-    def publish_review(target_review, message=True):
+    def publish_review(target_review, target_customization = '', message=True):
         customization = target_review.customization.name
         target_review_id = target_review.id
         customization_cache = MENU_CACHE[customization]
@@ -262,6 +263,12 @@ def review(request):
                 messages.success(request, f"Version {target_review.version.id} has been accepted")
             if asset.is_documentation:
                 DOC_CACHE.clear_cache()
+                zd_articles = ZendeskArticle.objects.filter(asset__id=asset.id, site__customization__name=target_customization)
+                if zd_articles:
+                    zd_articles.update(needs_sync=True)
+                if flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser:
+                    from cms.tasks import async_zendesk_push_article
+                    async_zendesk_push_article.apply_async(args=[asset.id, target_customization])
 
     def review_generator(target_reviews):
         queue = SimpleQueue()
@@ -309,7 +316,7 @@ def review(request):
             messages.error(request, "You cannot force update this asset")
 
     elif publish and can_publish and has_asset_type_permission:
-        publish_review(asset_review)
+        publish_review(asset_review, settings.CUSTOMIZATION)
 
     elif publish_all and can_publish and has_asset_type_permission:
         reviews = asset_review.version.assetcustomizationreview_set. \
@@ -319,7 +326,7 @@ def review(request):
         accepted = []
         for target_review in review_generator(reviews):
             if UserGroupsToAssetPermissions.check_customization_publish(request.user, customization=target_review.customization.name):
-                publish_review(target_review, message=False)
+                publish_review(target_review, target_customization=target_review.customization.name, message=False)
                 accepted.append(target_review.customization)
         accepted_customization_portals = list(Asset.objects.filter(customizations__in=accepted, asset_type__type=AssetType.ASSET_TYPES.cloud_portal).values_list('name', flat=True))
         messages.success(request, f"Version {asset_review.version.id} has been accepted for {', '.join(accepted_customization_portals)}")

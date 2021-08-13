@@ -6,7 +6,7 @@ import re
 import sass
 
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
-from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset
+from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
 
 from util.base_cache import BaseCache
 
@@ -65,10 +65,20 @@ def sub_files(value, datastructures, record_values):
             value = value.replace(ds.name, record_values[ds.name])
     return value
 
+def filter_internal_url(link, base = settings.CLOUD_PORTAL_URL):
+    url = link.get('href', '').replace('%CLOUD_LINK%', '') or '/'
+    if url.startswith('../'):
+        url = f"/{url.split('../')[-1]}"
+    return url if url.startswith('/') or url.startswith(base) else None
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None):
+def apply_replacements(html, replacements):
+    for replacement in replacements:
+        html = html.replace(replacement['original'], replacement['updated'])
+    return html
+
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link = False):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
-    REPLACEMENT_LINK = f"{settings.CLOUD_PORTAL_URL}/static/media"
+    REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )
@@ -113,7 +123,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             # Requested state is published, but no published version exists
             continue
 
-        if not doc_dict or (not trust_cache and (doc_dict.get('version', None) != version or draft)):
+        if not doc_dict or (external_link or not trust_cache and (doc_dict.get('version', None) != version or draft)):
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
@@ -128,10 +138,15 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
+            internal_link_replacements = get_internal_links(external_link, cloud_portal, doc, doc_dict, values)
+                    
+
             doc_dict['blocks'] = values['body']
             doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
+            doc_dict['blocks'] = apply_replacements(doc_dict['blocks'], internal_link_replacements)
             doc_dict['blocks'] = doc_dict['blocks'].replace(S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
+            doc_dict['labels'] = [label.strip() for label in values.get('labels', []) if label.strip()]
             css = values['styling']
 
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
@@ -156,4 +171,53 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
         docs_json.append(doc_dict_copy)
 
     return docs_json
+
+
+def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
+    from cms.models import ZendeskArticle
+    from cms.controllers.special_structures import SpecialStructures
+
+    internal_link_replacements = []
+
+    if not external_link:
+        return internal_link_replacements
+
+    doc_dict['external_files'] = [{
+                'id': file.id,
+                'original_url': str(file),
+                'external_file_name': '_'.join(str(file).split('/')[1:])
+            } for file in ExternalFile.objects.filter(asset_ds_pair__asset=doc)]
+    internal_links = list(filter(lambda url: url is not None, [filter_internal_url(href) for href in BeautifulSoup(values['body'], features="lxml").find_all('a')]))
+    for link in internal_links:
+        internal_default = {
+                        'original': link,
+                        'updated': f'{SpecialStructures.calc_cloud_link(cloud_portal)}{link}'
+                }
+        is_doc = link.startswith('/docs')
+        if is_doc:
+            menu_url = ''
+            slug = ''
+            _, _, base_url, *other_segments = link.split('/')
+            if other_segments:
+                menu_url = other_segments[0]
+                if len(other_segments) >= 2:
+                    slug = other_segments[1]
+            asset_id = int(slug.split('-')[0]) if slug else None
+            customization = cloud_portal.customizations.first().name
+            articles = [] if not asset_id else ZendeskArticle.objects.filter(
+                        site__customization__name=customization, asset_id=asset_id)
+            for article in articles:
+                menu = article.menu_node.get_parent()
+                if menu.base_url == base_url and menu.url == menu_url:
+                    internal_link_replacements.append({
+                                'original': link,
+                                'updated': article.html_url
+                            })
+                    break
+            else:
+                internal_link_replacements.append(internal_default)
+        else:
+            internal_link_replacements.append(internal_default)
+    
+    return internal_link_replacements
 

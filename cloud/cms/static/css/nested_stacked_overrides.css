@@ -221,6 +221,10 @@
     width: 148px;
 }
 
+.aligned label + p {
+    margin-left: 0;
+}
+
 .help-tooltip {
     align-self: center;
     margin-left: 8px;

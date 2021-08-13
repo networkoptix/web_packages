@@ -5,6 +5,11 @@
 
 {% block extrahead %}
     {{ block.super }}
+    <style>
+        .restricted-warning {
+            border: red 1px solid !important;
+        }
+    </style>
     <script src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script src="{% static 'split.js/dist/split.min.js' %}"></script>
     <script src="{% static 'csstree-validator/dist/csstree-validator.js' %}"></script>
@@ -161,7 +166,83 @@
         </div>
     {% endif %}
 </form>
+<script>
+    const brandingVariables = {{default_branding|safe}}
+    const reviewButton = document.querySelector('button[name="SendReview"]')
 
+    const checkInput = (
+        inputText,
+        branding = brandingVariables
+    ) => {
+        const text = inputText.toLowerCase()
+        return branding.filter(term => text.includes(term)).join(', ')
+    }
+
+    const checkValue = elementOrEvent => {
+        const element = elementOrEvent.target || elementOrEvent
+        const matched = checkInput(element.value)
+        const errorId = `${element.name}-restricted-error`
+        const isEditor = element.classList.contains('tinymce')
+        const existingError = document.getElementById(errorId)
+        if (matched) {
+            const messageText = `Input contains restricted keyword(s) \"${matched}\"`
+            if (!existingError) {
+                const message = document.createElement('p')
+                message.id = errorId
+                message.innerText = messageText
+                message.classList.add('text-warning')
+                try {
+                    element.after(message)
+                } catch(e) {
+                    console.log(element)
+                }
+                (isEditor ? element.parentNode: element).classList.add('restricted-warning')
+            } else {
+                existingError.innerText = messageText
+            }
+        } else if (!matched && existingError) {
+            try {
+                existingError.parentNode.removeChild(existingError)
+            } catch (e) {
+                console.error(e)
+            }
+            (isEditor ? element.parentNode: element).classList.remove('restricted-warning')
+        }
+    }
+
+    const textInputs = [
+    ...document.querySelectorAll('input[type="text"]'),
+    ...document.querySelectorAll('textarea')
+    ]
+
+    textInputs.forEach(input => {
+        checkValue(input)
+        input.addEventListener('change', checkValue)
+    })
+
+    const getErrors = () => {
+        const inputs = textInputs.map(({ name, value }) => ({ name, matched: checkInput(value) })).filter(({ matched }) => matched)
+
+        return inputs.map(({ name, matched }) => `${name}: ${matched}`)
+    }
+
+    const buildErrorMessage = errors => {
+        return [
+        'The following branding variables were found within this form:\n',
+        ...errors,
+        '\nPlease confirm that you want to save or cancel to modify changes.'
+        ].join('\n')
+    }
+
+    const checkForBranding = event => {
+        const errors = getErrors()
+        if (errors.length && !confirm(buildErrorMessage(errors))) {
+            event.preventDefault();
+        }
+
+    }
+    reviewButton.addEventListener('click', checkForBranding)
+</script>
 <script>
     var bytesToMb = "{{ BYTES_TO_MB }}";
     function openPreview() {

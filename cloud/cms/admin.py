@@ -15,11 +15,13 @@ from django.utils.html import format_html
 
 import nested_admin
 from waffle.admin import FlagAdmin as WaffleFlagAdmin
+from waffle import flag_is_active
 
 from cms.forms import *
+from cms.feature_flags import *
+from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException, sync_menu
 from cms.controllers import generate_structure, structure
 from cms.controllers.modify_db import generate_preview_links, get_records_for_version, generate_preview_link
-from cms.controllers.zendesk import Importer, clean_menu, CategoryNotFoundException
 from cms.views.asset import page_editor, prepare_asset_exports, review, response_attachment, prepare_asset_info_for_menu
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
@@ -574,6 +576,13 @@ class AssetAdmin(CMSAdmin):
         for field_error in context['errors']:
             form.add_error(field_error[0], field_error[1])
         context['custom_form'] = form
+        branding, *_ = get_branding_shortcuts(customization='default')
+        restricted = get_restricted_keywords(customization='default')
+        context['default_branding'] = json.dumps(list({
+            shortcut[1].lower()
+            for shortcut in branding + [(None, term) for term in restricted]
+        }))
+
 
         return render(request, 'cms/context_change_form.html', context)
 
@@ -955,7 +964,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
     loaded_config = None
 
     hidden_fields = ('asset', 'related_assets')
-    readonly_fields = ('is_global', 'preview')
+    readonly_fields = ('is_global', 'preview', 'zendesk_record')
 
     def __init__(self, *args, **kwargs):
         default_config = Menu._meta.get_field('admin_config').default
@@ -987,7 +996,7 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
                 'classes': ('nested-stacked-advanced', 'nested-stacked-flex',),
                 'fields': []
             }),
-    )
+        )
         added_fields = ['name', 'order']
         required_fields = ['enabled', 'asset']
 
@@ -1045,6 +1054,30 @@ class MenuNodeInline(nested_admin.SortableHiddenMixin, nested_admin.NestedStacke
                 return format_html(f'<a href="{generate_preview_link(context=None, asset=obj.asset)}" title="Preview"><span class="glyphicon glyphicon-picture"></span></a>')
         return ''
 
+    def zendesk_record(self, obj):
+        if self.chosen_customization != 'all':
+            zd_obj = None
+            title = None
+            section = obj.zendesksection_set.select_related('site').filter(
+                site__customization__name=self.chosen_customization
+            ).first()
+            if section:
+                zd_obj = section
+                title = 'Section'
+            article = obj.zendeskarticle_set.select_related('site').filter(
+                site__customization__name=self.chosen_customization
+            ).first()
+            if article:
+                zd_obj = article
+                title = 'Article'
+
+            if zd_obj:
+                sync_status = 'no' if zd_obj.needs_sync or not zd_obj.sync else 'yes'
+                sync_status_title = 'Sync Disabled' if not zd_obj.sync else 'Not synced' if zd_obj.needs_sync else 'Synced'
+                return format_html(f'<a style="padding-right: 5px;" href="{zd_obj.admin_link}" target="_blank">Zendesk {title}</a>'
+                                   f'<img src="/static/admin/img/icon-{sync_status}.svg" alt="{sync_status_title}"'
+                                   f'title="{sync_status_title}">')
+        return None
 
 @admin.register(Menu)
 class MenuAdmin(nested_admin.NestedModelAdmin):
@@ -1059,8 +1092,11 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
     eval_url.short_description = 'URL'
 
     def get_fieldsets(self, request, obj=None):
+        zendesk_sync_feature_enabled = flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser
         fields = [field for field in super().get_fields(request, obj)]
         fields.remove('admin_config')
+        if not zendesk_sync_feature_enabled:
+            fields.remove('zendesk_sync_enabled')
         if not (obj and obj.pk):
             fields.remove('customization_view')
         main = (None, {
@@ -1074,6 +1110,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         return (main, advanced) if request.user.is_superuser else (main,)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
+        zendesk_sync_feature_enabled = flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser
         extra_context = extra_context or {}
         filters_dict = caches['filters'].get(request.user.id) or {}
         cached_path = filters_dict.get(request.path_info, None)
@@ -1082,13 +1119,22 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             return redirect(f'{request.path_info}?{cached_path}')
         menu = Menu.objects.get(id=object_id)
         extra_context['preview_url_draft'] = menu.preview_url('draft')
+        if zendesk_sync_feature_enabled:
+            extra_context['zendesk_sync_url'] = reverse("admin:menu_sync", args=(menu.id,))
+            extra_context['sync_states'] = menu.zendesk_sync_state
+            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(self.chosen_customization,))
         extra_context['preview_url_review'] = menu.preview_url('pending')
         extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
+        extra_context['label_lookup'] = Menu.LABEL_LOOKUP
+        extra_context['menu_id'] = object_id
         self.chosen_customization = request.GET.get('customization', 'all')
         if self.chosen_customization != 'all':
             self.chosen_customization = Customization.objects.filter(
                 name=self.chosen_customization, name__in=request.user.customizations
             ).first() or 'all'
+            extra_context['customization'] = self.chosen_customization.name
+            if zendesk_sync_feature_enabled:
+                extra_context['sync_states'] = list(filter(lambda customization: customization['customization_name'] == self.chosen_customization.name, extra_context['sync_states']))
         valid_query = query_params != 'e=1' and str(self.chosen_customization) == request.GET.get(
             'customization') and str(self.chosen_customization) != 'all'
         filters_dict[request.path_info] = query_params if valid_query else ''
@@ -1114,6 +1160,8 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         super().save_formset(request, form, formset, change)
         objs = [obj for obj, fields in formset.changed_objects]
         objs.extend(formset.new_objects)
+        ZendeskSection.objects.filter(menu_node__in=objs, sync=True).update(needs_sync=True)
+        ZendeskArticle.objects.filter(menu_node__in=objs, sync=True, section__sync=True).update(needs_sync=True)
         for obj in objs:
             obj.refresh_from_db()
             if obj.asset:
@@ -1126,9 +1174,18 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             form.current_customization = self.chosen_customization
         return form
 
+    @staticmethod
+    def on_save(obj, request):
+        MENU_CACHE.clear_cache()
+        zendesk_sync_feature_enabled = flag_is_active(request, FLAGS.zendesk_sync) and request.user.is_superuser
+        if zendesk_sync_feature_enabled:
+            for _ in sync_menu(obj):
+                # TODO: Will probably need to take the taskId and use it for tracking status
+                pass
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        transaction.on_commit(MENU_CACHE.clear_cache)
+        transaction.on_commit(lambda: self.on_save(obj, request))
 
     def response_change(self, request, obj):
         response = super().response_change(request, obj)
@@ -1140,7 +1197,9 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('port/', self.admin_site.admin_view(self.menu_porting), name='menu_porting'),
-            path('zendesk_import/', self.admin_site.admin_view(self.zendesk_import), name='zendesk_import')
+            path('zendesk_import/', self.admin_site.admin_view(self.zendesk_import), name='zendesk_import'),
+            path('zendesk_sync/<str:id>', self.admin_site.admin_view(self.menu_sync), name='menu_sync'),
+            path('zendesk_mapping/<str:customization>/', self.admin_site.admin_view(self.zendesk_mapping), name='zendesk_mapping')
         ]
         return my_urls + urls
 
@@ -1181,9 +1240,28 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
                        'site_title': admin.site.site_title,
                        'title': 'Export/Import Menus'})
 
+    @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
+    def menu_sync(self, request, id):
+        menu = Menu.objects.filter(id=id).first()
+        context = menu.get_sync_state()
+        return render(request, 'cms/zendesk_sync.html', context)
+
+    @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
+    def zendesk_mapping(self, request, customization):
+        from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured
+        try:
+            mapper = ZendeskMapper(customization_name=customization)
+        except ZendeskNotConfigured:
+            return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': 'Zendesk Sync not configured'})
+            
+        mapper.build_struct()
+        context = {
+            'items': mapper.struct,
+            **mapper.get_unmapped_and_empty(json_values=True)
+        }
+        return render(request, 'cms/zendesk_mapping.html', context)
+
     def menu_porting(self, request):
-        if not request.user.is_superuser:
-            raise PermissionDenied()
         form_export = None
         form_import = None
         conflicts = []
@@ -1348,6 +1426,7 @@ class MenuNodeAdmin(CMSAdmin):
             else:
                 obj.parent_menu = parent
         return super().save_model(request, obj, form, change)
+
 
 
 class LicenseTypeAdmin(CMSAdmin):

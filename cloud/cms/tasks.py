@@ -147,3 +147,21 @@ def async_menu_export(menu_name):
         PACKAGE_CACHE[async_menu_export.request.id] = {"file": content, "file_name": file_name, "is_ready": True}
 
     MenuAdmin.generate_export(menu_name, complete_cb=update_complete, update_progress_cb=update_progress)
+
+@shared_task
+def async_zendesk_sync(menu_id, customization_name, log_id, force_update = True):
+    from cms.models import Menu, ZendeskSite, ZendeskSyncLog
+    from cms.controllers.zendesk import update_customization_structure
+    site = ZendeskSite.objects.filter(customization__name=customization_name).first()
+    menu = Menu.objects.filter(id=menu_id).first()
+    if site and menu:
+        sync_log = ZendeskSyncLog.objects.get(id=log_id)
+        update_customization_structure(menu, site, customization_name, sync_log, force_update)
+
+@shared_task
+def async_zendesk_push_article(asset_id, customization_name):
+    from cms.models import Asset
+    from cms.controllers.zendesk import push_accepted_article_to_zendesk
+    asset = Asset.objects.filter(id=asset_id).first()
+    if asset:
+        push_accepted_article_to_zendesk(asset, customization_name)

@@ -4,8 +4,10 @@ import os
 import re
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
+from datetime import datetime, timedelta
 from distutils.util import strtobool
+
+from django.db.models.aggregates import Count
 from util.base_cache import BaseCache
 
 from redis.exceptions import ConnectionError
@@ -20,8 +22,11 @@ from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, FieldError
+from django.urls import reverse
 from jsonfield import JSONField
 from model_utils import Choices
+from django.core.cache import cache, caches
+from model_utils import FieldTracker
 from waffle.models import AbstractUserFlag, keyfmt, get_cache
 
 from .feature_flags import FLAGS
@@ -621,6 +626,11 @@ class Asset(models.Model):
         if not current_version:
             return ''
         return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
+
+    @property
+    def admin_link(self):
+        context_id = self.datarecord_set.first().context.id
+        return reverse('admin:change_page', args=(self.id, context_id))
 
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
@@ -1751,6 +1761,7 @@ class Menu(models.Model):
                            help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
+    zendesk_sync_enabled = models.ManyToManyField(Customization, blank=True, help_text="Used to select Customizations with Zendesk syncing enabled")
     title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
     short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
@@ -1760,6 +1771,8 @@ class Menu(models.Model):
     }""")
 
     enabled = models.BooleanField(default=True)
+
+    LOGS_TO_SHOW = 10
 
     def __str__(self):
         if self.name:
@@ -1872,6 +1885,9 @@ class Menu(models.Model):
             return []
         # Force qs evaluation to prevent threads from messing with prefetch cache
         return list(menu_query.prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
+
+    def prefetch_menu(self):
+        return Menu.objects.prefetch_related(*self.get_prefetch_objects(max_depth=self.depth, depth=1)).get(id=self.id)
 
     @classmethod
     def get_prefetch_objects(cls, max_depth, depth=1):
@@ -2046,6 +2062,84 @@ class Menu(models.Model):
     def all_asset_ids(self):
         return self.extract_from_nodes(lambda node: node.asset and node.asset.id)
 
+    @property
+    def admin_link(self):
+        return reverse("admin:cms_menu_change", args=(self.id,))
+
+    LABEL_LOOKUP = {
+                'Out of Sync': 'warning',
+                'In Progress': 'primary',
+                'Success': 'success',
+                'Failed': 'danger',
+                'Canceled': 'warning',
+    }
+
+    @property
+    def zendesk_sync_state(self):
+        PACKAGE_CACHE = PackagesCache()
+        customizations_not_cached = []
+        def get_cached(key):
+            return PACKAGE_CACHE[f'menu_sync_{self.id}_{key}']
+    
+        def cache_item(key, item):
+            PACKAGE_CACHE[f'menu_sync_{self.id}_{key}'] = item
+            return item
+
+        def not_cached(customization):
+            customizations_not_cached.append(customization)
+            return {
+            'logs': [],
+            'state': 'Out of Sync' if len(self.zendesk_out_of_sync(customization)) else 'Success',
+            'out_of_sync': self.zendesk_out_of_sync(customization)
+        } 
+
+        enabled_customizations = [customization.name for customization in self.zendesk_sync_enabled.all().order_by('name')]
+        logs_by_customization = {customization: get_cached(customization) or not_cached(customization) for customization in enabled_customizations}
+        for log in reversed(self.zendesksynclog_set.all().order_by('-sync_time')[:self.LOGS_TO_SHOW]):
+            customization = log.zendesk_site.customization.name
+            if customization in enabled_customizations:
+                if customization in customizations_not_cached:
+                    info = get_cached(log.id) or cache_item(log.id, log.sync_info)
+                    logs_by_customization[customization]['logs'].append(info)
+                    success = not log.sync_items.exclude(state=SYNC_STATES.success).count()
+                    failed = log.sync_items.filter(state=SYNC_STATES.failed).count()
+                    if logs_by_customization[customization]['state'] != 'Out of Sync' and not success:
+                        for sync_item in log.sync_items.all():
+                            sync_item.zendesk_article.map_sync_stats(customization, target=logs_by_customization[customization]['out_of_sync'])
+                    state = SYNC_STATES.success if success else SYNC_STATES.failed if failed else SYNC_STATES.in_progress
+                    logs_by_customization[customization]['state'] = SYNC_STATES[state]
+                else:
+                    logs_by_customization[customization]['out_of_sync'] = self.zendesk_out_of_sync(customization)
+        
+        return [cache_item(customization, {
+            'customization_name': customization,
+            'menu_admin': f'{self.admin_link}?customization={customization}',
+            'mapping_admin': reverse("admin:zendesk_mapping", args=(customization,)),
+            **details
+        }) for customization, details in logs_by_customization.items()]
+
+    def get_sync_state(self):
+        return {
+            'customizations': self.zendesk_sync_state,
+            'label_lookup': Menu.LABEL_LOOKUP,
+            'menu_admin': self.admin_link,
+            'menu_name': self.name,
+            'menu_id': self.id
+        }
+
+    def zendesk_out_of_sync(self, customization):
+        total = []
+        categories = list(self.zendeskcategory_set.filter(sync=True))
+        for category in categories:
+            sections = list(category.zendesksection_set.filter(sync=True).exclude(menu_node=None))
+            for section in sections:
+                articles = section.zendeskarticle_set.filter(sync=True).exclude(menu_node=None)
+                for article in articles:
+                    article.map_sync_stats(customization, total)
+
+        return total
+
+
 
 class MenuNodeManager(models.Manager):
     def get_queryset(self):
@@ -2202,6 +2296,10 @@ class MenuNode(models.Model):
         else:
             return getattr(self, 'enabled_list', self.enabled.all())
 
+    @property
+    def admin_link(self):
+        return reverse('admin:cms_menunode_change', args=(self.id,))
+
     def is_enabled(self, customization):
         return next(
             (cust for cust in self.enabled_customizations if cust.id == customization.id), False)
@@ -2231,25 +2329,83 @@ class ZendeskCategory(models.Model):
     name = models.CharField(max_length=500, blank=True)
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    position = models.IntegerField(default=0)
+    general_section_title = models.CharField(max_length=500, default='General')
+
+    sync = models.BooleanField(default=True)
+
+    tracker = FieldTracker()
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        from cms.controllers.zendesk import Exporter
+        exporter = Exporter(customization_name=self.site.customization)
+        previous_general_title = self.tracker.previous('general_section_title')
+        general_changed = previous_general_title != self.general_section_title
+        previous_name = self.tracker.previous('name')
+        name_changed = previous_name != self.name
+
+        if general_changed:
+            existing_section = self.zendesksection_set.filter(name=previous_general_title).first()
+            if existing_section:
+                existing_section.name = self.general_section_title
+                existing_section.needs_sync = True
+                existing_section.save()
+                exporter.sync_section(existing_section, delete=False)
+        
+        if name_changed:
+            exporter.sync_category(self, delete=False)
+            
+        super().save(*args, **kwargs)
+
+    @property
+    def general_section(self):
+        return self.zendesksection_set.filter(name=self.general_section_title).first()
+
+    @property
+    def admin_link(self):
+        return reverse('admin:cms_zendeskcategory_change', args=(self.id,))
 
 
 class ZendeskSection(models.Model):
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
-    menu_node = models.ForeignKey(
-        MenuNode, blank=True, null=True, on_delete=models.CASCADE)
-    parent_category = models.ForeignKey(
-        ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
-    parent_section = models.ForeignKey(
-        'self', blank=True, null=True, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    parent_category = models.ForeignKey(ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
+    parent_section = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
     section_id = models.BigIntegerField(blank=True, null=True)
     position = models.IntegerField(default=0)
     name = models.CharField(max_length=500, blank=True)
+
+    sync = models.BooleanField(default=True)
+    needs_sync = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def admin_link(self):
+        return reverse('admin:cms_zendesksection_change', args=(self.id,))
+
+    def get_parent_category_id(self):
+        current_section = self
+        while not current_section.parent_category:
+            current_section = current_section.parent_section
+        return current_section.parent_category.category_id
+
 
 
 class ZendeskArticleLabel(models.Model):
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
     label_id = models.BigIntegerField(blank=True, null=True)
     name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 
 class ZendeskArticle(models.Model):
@@ -2259,22 +2415,254 @@ class ZendeskArticle(models.Model):
     # ZD article meta properties
     article_id = models.BigIntegerField(blank=True, null=True)
     author_id = models.BigIntegerField(blank=True, null=True)
-    comments_disabled = models.BooleanField()
+    comments_disabled = models.BooleanField(default=True)
     created_at = models.CharField(max_length=100, blank=True)
-    draft = models.BooleanField()
+    draft = models.BooleanField(default=False)
     edited_at = models.CharField(max_length=100, blank=True)
     html_url = models.CharField(max_length=1000, blank=True)
     labels = models.ManyToManyField(ZendeskArticleLabel)
     permission_group_id = models.BigIntegerField(blank=True, null=True)
     position = models.IntegerField(default=0)
-    promoted = models.BooleanField()
+    promoted = models.BooleanField(default=False)
     title = models.CharField(max_length=500, blank=True)
     updated_at = models.CharField(max_length=100, blank=True)
     user_segment_id = models.BigIntegerField(blank=True, null=True)
 
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    sync = models.BooleanField(default=True)
+
+    needs_sync = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.title} ({self.article_id})'
+
+    @property
+    def admin_link(self):
+        return reverse('admin:cms_zendeskarticle_change', args=(self.id,))
+    
+    @property
+    def menu_sync_enabled(self):
+        return self.menu_node.get_parent().zendesk_sync_enabled.filter(name=self.site.customization).exists()
+
+    def cancel_existing_sync(self):
+        ZendeskSyncItem.cancel_existing_sync(self)
+    
+    def latest_sync(self, sync_log):
+        latest = ZendeskSyncItem.objects.filter(zendesk_article=self).last()
+        return latest.sync_log == sync_log if latest else True
+
+
+
+    def map_sync_stats(self, customization, target=[], include_published=False):
+        if not self.sync or not self.article_id:
+            return target
+
+        published_version = self.asset.version_id(customization=customization)
+        successful_syncs = self.zendesksyncitem_set.filter(
+            state=SYNC_STATES.success, sync_log__zendesk_site__customization__name=customization, zendesk_article=self)
+        update_to_date = next(filter(lambda sync: sync.review.version.id == published_version, successful_syncs), None)
+
+        if include_published or not published_version or not update_to_date:
+            last_success = successful_syncs.last()
+            mapped = {
+                'admin_link': self.asset.admin_link,
+                'title': self.asset.name,
+                'latest_version': published_version,
+                'last_sync_version': last_success.review_id if last_success else 0,
+                'last_sync_time': last_success.sync_log.sync_time.timestamp() if last_success else 0
+            }
+
+            if not next(filter(lambda existing: existing['latest_version'] == mapped['latest_version'], target), None):
+                target.append(mapped)
+
+        return target
+
+
+SYNC_STATES = Choices((0, "in_progress", "In Progress"),
+                    (1, "success", "Success"),
+                    (2, "failed", "Failed"),
+                    (3, "canceled", "Canceled"))
+
+@receiver(pre_delete, sender=ZendeskArticle)
+def archive_on_zendesk(sender, instance, **kwargs):
+    from cms.controllers.zendesk import Exporter
+    Exporter(customization_name=instance.site.customization.name).sync_article(instance, delete=True)
+
+
+class ZendeskSyncLog(models.Model):
+    SYNC_STATES = SYNC_STATES
+    sync_time = models.DateTimeField(auto_now_add=True)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, editable=False)
+    zendesk_site = models.ForeignKey(
+        ZendeskSite, on_delete=models.CASCADE, editable=False)
+    zendesk_category = models.ForeignKey(
+        ZendeskCategory, on_delete=models.CASCADE, editable=False)
+
+    @staticmethod 
+    def cancel_existing_sync(log_id):
+        sync_log = ZendeskSyncLog.objects.filter(id=log_id).first()
+
+        if not sync_log:
+            return
+        
+        for sync_item in sync_log.sync_items.all():
+            sync_item.mark_canceled()
+
+    @property
+    def sync_info(self):
+        def get_state(state_id):
+            return SYNC_STATES[state_id]
+
+        state = get_state(SYNC_STATES.in_progress)
+
+        sections = []
+        articles = []
+
+        nodes_total = self.sync_items.count()
+        nodes_failed = 0
+        nodes_success = 0
+        nodes_canceled = 0
+        nodes_in_progress = 0
+
+        for item in self.sync_items.all():
+            section = item.details['section']
+            article = item.details['article']
+            if item.state == SYNC_STATES.success:
+                nodes_success += 1
+            elif item.state == SYNC_STATES.failed:
+                nodes_failed += 1
+            elif item.state == SYNC_STATES.canceled:
+                nodes_canceled += 1
+            else:
+                nodes_in_progress += 1
+
+            section_added = next(
+                filter(lambda existing_item: existing_item['zd_section_id'] == section['zd_section_id'], sections), None)
+            article_added = next(
+                filter(lambda existing_item: existing_item['zd_article_id'] == article['zd_article_id'], articles), None)
+            if not section_added:
+                sections.append(section)
+            if not article_added:
+                articles.append(article)
+
+        progress = round(nodes_success  / nodes_total * 100) if nodes_success  else 0
+
+        sync_time = self.sync_time
+        pending_time = datetime.now() - timedelta(seconds=30)
+        pending = sync_time > pending_time
+
+        if nodes_failed or not nodes_total and not pending:
+            state = get_state(SYNC_STATES.failed)
+        elif nodes_canceled:
+            state = get_state(SYNC_STATES.canceled)
+        elif progress == 100:
+            state = get_state(SYNC_STATES.success)
+    
+        return {
+            'summary': {
+                'log_id': self.id,
+                'sync_time': self.sync_time.timestamp(),
+                'state': state,
+                'progress_percentage': progress,
+                'total': nodes_total,
+                'success': nodes_success,
+                'in_progress': nodes_in_progress,
+                'failed': nodes_failed,
+            },
+            'details': {
+                'sections': sections,
+                'articles': articles
+            }
+        }
+
+
+class ZendeskSyncItem(models.Model):
+    SYNC_STATES = SYNC_STATES
+    sync_log = models.ForeignKey(ZendeskSyncLog, 
+        on_delete=models.CASCADE, related_name='sync_items', editable=False)
     menu_node = models.ForeignKey(
-        MenuNode, blank=True, null=True, on_delete=models.SET_NULL)
+        MenuNode, on_delete=models.CASCADE, editable=False)
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, editable=False)
+    review = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE, editable=False)
+    zendesk_section = models.ForeignKey(
+        ZendeskSection, on_delete=models.CASCADE, editable=False)
+    zendesk_article = models.ForeignKey(
+        ZendeskArticle, on_delete=models.CASCADE, editable=False)
+    state = models.IntegerField(
+        choices=SYNC_STATES, default=SYNC_STATES.in_progress)
+    failure_message = models.TextField(null=True)
+
+    def __init__(self, *args, **kwargs):
+        article = kwargs.get('zendesk_article', None)
+        if article:
+            self.cancel_existing_sync(article)
+        super().__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        PACKAGE_CACHE = PackagesCache()
+        def clear_item(key):
+            del PACKAGE_CACHE[f'menu_sync_{menu.id}_{key}']
+        menu = self.menu_node.get_parent()
+        clear_item(self.sync_log.id)
+        clear_item(self.sync_log.zendesk_site.customization.name)
+
+    @staticmethod 
+    def cancel_existing_sync(zd_article):
+        for article in ZendeskSyncItem.objects.filter(zendesk_article=zd_article):
+            article.mark_canceled()
+    
+    @property
+    def details(self):
+        title_structure = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation, name='title').first()
+        title = DataStructure.find_actual_values(
+                    [title_structure], asset=self.asset, version_id=self.review.id, customization_name=self.sync_log.zendesk_site.customization.name
+        ).get(title_structure, self.zendesk_article.title)
+        menu_node_id = getattr(self.zendesk_section.menu_node, 'id', 0)
+        menu_node_admin_link = getattr(self.zendesk_section.menu_node, 'admin_link', '')
+        return {
+            'section': {
+                'zd_section_id': self.zendesk_section.section_id,
+                'zd_section_admin': self.zendesk_section.admin_link,
+                'menu_node_id': menu_node_id,
+                'menu_node_admin': menu_node_admin_link,
+                'section_name': self.zendesk_section.name,
+                'state': SYNC_STATES[self.state]
+            },
+            'article': {
+                'zd_article_id': self.zendesk_article.article_id,
+                'zd_article_admin': self.zendesk_article.admin_link,
+                'menu_node_id': menu_node_id,
+                'menu_node_admin': menu_node_admin_link,
+                'asset_id': self.zendesk_article.asset.id,
+                'asset_admin': self.zendesk_article.asset.admin_link,
+                'asset_title': title,
+                'failure_message': self.failure_message,
+                'review_id': self.review.id,
+                'review_admin': reverse('admin:cms_assetcustomizationreview_change', args=(self.review.id,)),
+                'state': SYNC_STATES[self.state]
+            }
+        }
+
+    def __update_state(self, state, exception: Exception = None):
+        if self.state != SYNC_STATES.in_progress:
+            return
+        self.state = state
+        if exception:
+            self.failure_message = str(exception)
+        self.save()
+        
+
+    def mark_completed(self):
+        self.__update_state(self.SYNC_STATES.success)
+
+    def mark_canceled(self):
+        self.__update_state(self.SYNC_STATES.canceled)
+
+    def mark_failed(self, message):
+        self.__update_state(self.SYNC_STATES.failed, message)
+
 
 # End Zendesk Models
 
