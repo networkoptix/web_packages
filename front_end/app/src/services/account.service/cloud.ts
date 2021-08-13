@@ -14,6 +14,7 @@ import { NxUriService }              from '../uri.service';
 import { NxPollService }             from '../poll.service';
 import { NxSystemAPIService }        from '../system-api.service';
 import { NxStorageService }          from '../storage.service';
+import { Account }                   from '@services/account.service/account';
 
 /**
  * CloudAccount overrides BaseAccount, should maintain the same interface.
@@ -76,12 +77,24 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             .then((account: Account|any) => {
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {
+                    this.account = undefined;
+                    this.router
+                        .navigate([this.CONFIG.redirect.unauthorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
                     return undefined;
                 }
                 this.account = { ...account, isCloud: true };
                 return this.account;
             })
             .catch(() => {
+                this.account = undefined;
+                this.router
+                    .navigate([this.CONFIG.redirect.unauthorised])
+                    .catch(error => {
+                        console.error(error);
+                    });
                 return undefined;
             });
     }
@@ -184,7 +197,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
     requireLogin() {
         return this.get()
             .then((account: Account) => {
-                if (!account && !this.loginDialogActive) {
+                if ((!account || !account.is_authenticated) && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
                         .login(this, true, true).then((result) => {
