@@ -36,8 +36,12 @@ def add_menu_to_i18n():
 
     with open('./app/customization/menus.json') as cms_static_menus:
         menus = json.load(cms_static_menus)
+        json_data.update(parse_menus(menus))
 
-    json_data.update(parse_menus(menus))
+    with open('../cloud/cms/menus.json') as cms_static_menus:
+        menus = json.load(cms_static_menus)
+        json_data.update(parse_menus(menus))
+
     copy = json_data.copy()
 
     for item in copy.keys():
