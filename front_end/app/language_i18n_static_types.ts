@@ -83,7 +83,6 @@ export interface ActiveActions {
 
 export interface Authorize {
     loginCloudHeader:           any;
-    loginSystemHeader:          any;
     connectHeader:              any;
     expiredHeader:              any;
     loginSystemSubheader:       any;
@@ -95,6 +94,8 @@ export interface Authorize {
     asAccountSubheader:         any;
     toAccountSubheader:         any;
     forAccountSubheader:        any;
+    passwordDisconnect:         any;
+    passwordMerge:              any;
     expiredAccountSubheader:    any;
     createAccountHeader:        any;
     activateHeader:             any;
@@ -1128,7 +1129,6 @@ const typeMap: any = {
     ], false),
     "Authorize": o([
         { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },
-        { json: "loginSystemHeader", js: "loginSystemHeader", typ: "any" },
         { json: "connectHeader", js: "connectHeader", typ: "any" },
         { json: "expiredHeader", js: "expiredHeader", typ: "any" },
         { json: "loginSystemSubheader", js: "loginSystemSubheader", typ: "any" },
@@ -1140,6 +1140,8 @@ const typeMap: any = {
         { json: "asAccountSubheader", js: "asAccountSubheader", typ: "any" },
         { json: "toAccountSubheader", js: "toAccountSubheader", typ: "any" },
         { json: "forAccountSubheader", js: "forAccountSubheader", typ: "any" },
+        { json: "passwordDisconnect", js: "passwordDisconnect", typ: "any" },
+        { json: "passwordMerge", js: "passwordMerge", typ: "any" },
         { json: "expiredAccountSubheader", js: "expiredAccountSubheader", typ: "any" },
         { json: "createAccountHeader", js: "createAccountHeader", typ: "any" },
         { json: "activateHeader", js: "activateHeader", typ: "any" },

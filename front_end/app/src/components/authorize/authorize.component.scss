@@ -146,11 +146,15 @@
                     padding: 2px 10px;
                     background-color: $light3;
                     border: 1px solid $light6;
-                    &:hover {
+                    cursor: pointer;
+                    &.span-disabled {
+                        cursor: text;
+                    }
+                    &:not(.span-disabled):hover {
                         background-color: $light4;
                         border-color: $light5;
                     }
-                    &:active {
+                    &:not(.span-disabled):active {
                         background-color: $light5;
                         border-color: $light6;
                     }
@@ -168,11 +172,11 @@
                     .for-account {
                         background-color: $dark9;
                         border: 1px solid $dark10;
-                        &:hover {
+                        &:not(.span-disabled):hover {
                             background-color: $dark10;
                             border-color: $dark11;
                         }
-                        &:active {
+                        &:not(.span-disabled):active {
                             background-color: $dark8;
                             border-color: $dark9;
                         }
@@ -193,7 +197,7 @@
                     .for-account {
                         background-color: $dark7;
                         border: 1px solid $dark8;
-                        &:active {
+                        &:not(.span-disabled):active {
                             background-color: $dark6;
                             border-color: $dark7;
                         }

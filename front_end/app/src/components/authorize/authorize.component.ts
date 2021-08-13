@@ -34,7 +34,8 @@ export interface AuthorizeParams {
     code?: string,
     client_type?: ClientType,
     view_type?: 'desktop' | 'mobile' | 'web',
-    message?: 'passwordReset' | 'activated'
+    message?: 'passwordReset' | 'activated',
+    email?: string
 };
 
 export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup' | 'newBackup'
@@ -54,8 +55,9 @@ export enum AuthorizeState {
 
 export enum ClientType {
     loginCloud = 'loginToCloud',
-    loginSystem = 'loginToSystem',
     loginWebadmin = 'loginToWebadmin',
+    passwordDisconnect = 'confirmPasswordDisconnect',
+    passwordMerge = 'confirmPasswordMerge',
     connect = 'connectSystemToCloud',
     setup = 'setupWizard',
     renewDesktop = 'renewSessionDesktop',
@@ -86,6 +88,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
     codeFromRoute: string;
+    emailLocked = false;
 
     // email
     loginEmail: string;
@@ -210,6 +213,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.fromEmail$.next(true);
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;
+            } else if (this.clientType.includes('Password')) {
+                this.loginEmail = this.initialData.email;
+                this.emailLocked = true;
+                this.currentState = AuthorizeState.password;
             } else {
                 this.currentState = AuthorizeState.email;
             }

@@ -24,6 +24,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Input() clientType: string;
     @Input() smallView: boolean;
     @Input() loginEmail: string;
+    @Input() emailLocked: boolean;
     @Input() loginPassword: string;
     @Output() loginPasswordChange = new EventEmitter<string>();
     @Input() passwordProcess: Process;
@@ -37,10 +38,12 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     passwordToggle = true;
     header: string;
     subHeader: string;
+    subHeaderSuffix: string;
     templateText: {
         [clientType: string]: {
             header: string,
-            subHeader: string
+            subHeader: string,
+            subHeaderSuffix?: string
         }
     };
 
@@ -91,11 +94,15 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
                 header: auth.loginCloudHeader(),
                 subHeader
             },
-            loginToSystem: {
-                header: NxLanguageProviderService.translate(
-                    auth.loginSystemHeader,
-                    { systemName: '' }),
-                subHeader
+            confirmPasswordDisconnect: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordDisconnect()
+            },
+            confirmPasswordMerge: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordMerge()
             },
             connectSystemToCloud : connect,
             setupWizard          : connect,
@@ -107,6 +114,9 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     setText() {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
+        if (this.clientType.includes('Password')) {
+            this.subHeaderSuffix = this.templateText[this.clientType]?.subHeaderSuffix;
+        }
     }
 
     ngOnDestroy(): void {}

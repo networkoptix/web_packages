@@ -86,7 +86,6 @@
     },
     "authorize": {
         "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "loginSystemHeader": "Log in to {systemName}",
         "connectHeader": "Connect System to %CLOUD_NAME%",
         "expiredHeader": "Your session has expired",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
@@ -98,6 +97,8 @@
         "asAccountSubheader": "As",
         "toAccountSubheader": "To",
         "forAccountSubheader": "For {accountEmail}",
+        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
+        "passwordMerge": "to merge systems",
         "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",

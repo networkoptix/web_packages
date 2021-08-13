@@ -86,12 +86,6 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             loginToCloud: {
                 header: auth.loginCloudHeader()
             },
-            loginToSystem: {
-                header: NxLanguageProviderService.translate(
-                    auth.loginSystemHeader,
-                    { systemName: '' }),
-                subHeader: auth.loginSystemSubheader()
-            },
             connectSystemToCloud : connect,
             setupWizard          : connect,
             renewSessionDesktop  : renew,
