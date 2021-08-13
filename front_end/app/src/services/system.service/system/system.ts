@@ -641,7 +641,10 @@ export class NxSystem extends System {
         );
         return Promise.all([
             showAlarmRule, doCommandRule
-        ].map(rule => this.mediaserver.saveEventRule(rule).toPromise()));
+        ].map(rule => this.mediaserver.saveEventRule(rule).toPromise())).catch(errors => {
+            console.error(errors);
+            return false;
+        });
     }
 
     #removeAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
@@ -658,7 +661,7 @@ export class NxSystem extends System {
 
         return Promise.all(toRemove.map(({
             id
-        }) => this.mediaserver.removeEventRule(id).toPromise()));
+        }) => this.mediaserver.removeEventRule(id).toPromise().catch(errors => errors)));
     }
 
     /**

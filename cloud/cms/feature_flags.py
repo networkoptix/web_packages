@@ -43,6 +43,7 @@ class _FlagType(type):
 class FLAGS(metaclass=_FlagType):
     # python_name = ('Human-readable and actual name', 'jsonKey', 'global_data_structure')
     custom_clients = ('Custom Clients', 'customClients', '%PUBLIC_CUSTOM_CLIENTS%')
+    alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
 
 
 class SWITCHES(metaclass=_FlagType):

@@ -162,17 +162,17 @@ export class NxBootstrapProvider {
                 name: companyName
             };
 
-            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false } = data;
+            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false, featureFlags = {} } = data;
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
-                integrationStore: integrationStoreEnabled,
+                integrationStore        : integrationStoreEnabled,
                 publicDownloads,
                 publicReleases,
                 cloudStorageEnabled,
                 cloudStorageSize,
                 customClientsEnabled,
-                alexaIntegrationEnabled
+                alexaIntegrationEnabled : featureFlags.alexaIntegration && alexaIntegrationEnabled
             };
 
             const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
@@ -234,7 +234,7 @@ export class NxBootstrapProvider {
             }
             this.CONFIG.dynamicMenus = data?.menus;
 
-            Object.assign(this.CONFIG.featureFlags, data?.featureFlags);
+            Object.assign(this.CONFIG.featureFlags, featureFlags);
         }
 
         // Temporary link to Swagger

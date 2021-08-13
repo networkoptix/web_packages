@@ -112,4 +112,4 @@ export const fallback = <T>(value: T) => catchError(() => Promise.resolve(value)
 /**
  * Use for async tasks that run quickly but for the UI you'd like to delay initial output of stream.
  */
-export const delayInitial = <Source>(source: Observable<Source>, msDelay = 750) => combineLatest([source, timer(msDelay)]).pipe(map(([source]) => source));
+export const delayInitial = <Source>(source: Observable<Source> | Promise<Source>, msDelay = 750) => combineLatest([source, timer(msDelay)]).pipe(map(([source]) => source));

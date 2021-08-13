@@ -2,7 +2,7 @@ import {
     Component, OnInit, Input,
     ViewChild, ElementRef, OnChanges, SimpleChanges
 }                                           from '@angular/core';
-import {  map, switchMap }                  from 'rxjs/operators';
+import {  catchError, map, switchMap, tap }                  from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
@@ -13,7 +13,7 @@ import { NxApplyService, Watcher }   from '../../../../../services/apply.service
 import { NxMenuService }             from '../../../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { delayInitial } from '@services/utils.service';
+import { delayInitial }              from '@services/utils.service';
 
 class AlexaSettings {
     static CUSTOM_PROPERTY_ENDPOINT = 'alexa'
@@ -21,10 +21,11 @@ class AlexaSettings {
     constructor(
         public enabled = false,
         public selectedSystem: string = null,
-        public accountLinked = false
+        public accountLinked = false,
+        public eventRulesSetup = false
     ) {}
 
-    static clean = (selectedSystem) => (input) => new AlexaSettings(input.enabled || false, input.selectedSystem || selectedSystem, input.accountLinked || false)
+    static clean = (selectedSystem) => (input) => new AlexaSettings(input.enabled || false, input.selectedSystem || selectedSystem, input.accountLinked || false, input.eventRulesSetup || false)
 
     static cleanObservable = (selectedSystem) => map(AlexaSettings.clean(selectedSystem), AlexaSettings.clean(selectedSystem))
 }
@@ -53,7 +54,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     setWarningMessageThroughApplyService;
     timeUnitTracker;
     selectElement;
-    alexaSettings: AlexaSettings;
+    alexaSettings: Partial<AlexaSettings>;
+    eventRulesBeingSetup = false;
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
@@ -114,7 +116,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 untilDestroyed(this)
             ).subscribe(settings => {
                 this.alexaSettings = settings;
-            });
+            }, _ => {
+                this.alexaSettings = {};
+            }
+            );
         }
     }
 
@@ -276,27 +281,46 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     // Alexa Methods
+    updateEventRules = (settings = { enabled: true }) => {
+        this.eventRulesBeingSetup = settings.enabled;
+        return delayInitial(this.system.updateAlexaRules(settings.enabled)).pipe(
+            catchError(error => {
+                console.error(error);
+                return delayInitial(Promise.resolve(false));
+            }),
+            tap(setup => {
+                this.alexaSettings.eventRulesSetup = !!setup;
+                this.eventRulesBeingSetup = false;
+            })
+        ).toPromise();
+    }
+
     #updateAlexa = (settings: AlexaSettings) => this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
         this.cloudApi.saveCustomAccountProperty(settings, AlexaSettings.CUSTOM_PROPERTY_ENDPOINT)
     ).pipe(
-        switchMap(settings => this.system.updateAlexaRules(settings.enabled)),
+        tap(settings => {
+            this.alexaSettings = settings;
+        }),
+        switchMap(this.updateEventRules),
+        map(setup => ({ ...settings, eventRulesSetup: !!setup })),
         untilDestroyed(this)
-    ).subscribe(_ => {
+    ).subscribe(settings => {
         this.alexaSettings = settings;
+        this.cloudApi.saveCustomAccountProperty(this.alexaSettings, AlexaSettings.CUSTOM_PROPERTY_ENDPOINT);
     });
 
     toggleAlexaEnabled = () => {
-        const { enabled, selectedSystem, accountLinked = false } = this.alexaSettings;
+        const { enabled, selectedSystem, accountLinked = false, eventRulesSetup = false } = this.alexaSettings;
         this.alexaSettings = null;
-        this.#updateAlexa({ enabled: !enabled, accountLinked, selectedSystem: enabled ? this.system.id : selectedSystem });
+        this.#updateAlexa({ enabled: !enabled, accountLinked, eventRulesSetup, selectedSystem: enabled ? this.system.id : selectedSystem });
     }
 
     toggleSystemSelected = () => {
         if (this.alexaSettings.selectedSystem === this.system.id) {
             return;
         }
-        const { enabled, accountLinked = false } = this.alexaSettings;
+        const { enabled, accountLinked = false, eventRulesSetup = false } = this.alexaSettings;
         this.alexaSettings = null;
-        this.#updateAlexa({ enabled, accountLinked, selectedSystem: this.system.id });
+        this.#updateAlexa({ enabled, accountLinked, eventRulesSetup, selectedSystem: this.system.id });
     }
 }
