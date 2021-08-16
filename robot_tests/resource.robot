@@ -997,67 +997,6 @@ Create Docker Server
     Release Lock   create_server_lock
     [Return]    ${server}
 
-#Setup Custom Docker Server
-#    [Arguments]    ${network}=host    ${image}=${IMAGE}    ${storage string}=${EMPTY}
-#    ${server}=   Create Dictionary
-#    ${mac}=   Get Random MAC
-#    Acquire Lock   setup_server_lock
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#
-#    Run Keyword If    '4.0' in $image or '4.1' in $image   Set Local Variable   ${vms}    old
-#    ...    ELSE   Set Local Variable    ${vms}    new
-#
-#    # Get random available port
-#    ${port}=   Execute Command    comm -23 <(seq 30000 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
-#
-#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --privileged --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
-#                  ...    ELSE    Execute Command    docker run -d --privileged --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
-#
-#    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --network=${network} ${storage string} ${image}
-#                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --network=${network} ${storage string} ${image}
-#    ${id}=   Evaluate    $full_id[:12]
-#    Set to Dictionary    ${server}    id=${id}
-#    Set to Dictionary    ${server}    port=${port}
-#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-#    Set to Dictionary    ${server}    name=${name}
-#    Close Connection
-#    Release Lock   setup_server_lock
-#    [Return]    ${server}
-
-#Setup Docker Server
-#    [Arguments]    ${image}=${IMAGE}
-#    ${server}=   Create Dictionary
-#    Acquire Lock   create_server_lock
-#    Open Connection    ${QA BURBANK IP}
-#    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-#    ${full id}=   Execute Command    docker run -d --restart always -p 7001 ${image}
-#    ${id}=   Evaluate    $full_id[:12]
-#    Set to Dictionary    ${server}    id=${id}
-#    ${port info}=   Execute Command    docker container port ${id}
-#    ${port info}=   Split String    ${port info}    :
-#    Set to Dictionary    ${server}    port=${port info}[1]
-#    ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
-#    Set to Dictionary    ${server}    name=${name}
-#    Close Connection
-#    Release Lock   create_server_lock
-#    [Return]    ${server}
-
-#Setup Docker System
-#    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
-#    ${server}=   Setup Custom Docker Server    network=${network}    image=${image}
-#    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]
-#    Set To Dictionary    ${system}    cont=${system}[cont]
-#    ${auth}=   Create List    admin    ${base password}
-#    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
-#    Return From Keyword If    not $cloud_email    ${system}
-#
-##   Connect system to cloud if email is provided
-#    Set To Dictionary    ${system}    owner=${cloud email}
-#    ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
-#    Set To Dictionary    ${system}    id=${id}
-#    [Return]    ${system}
-
 Create Base System
     [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}
     ${local auth}=   Create List    admin    ${base password}
@@ -1090,65 +1029,6 @@ Create Base System
 
     [Return]    ${server}
 
-#Create Base Cloud System
-#    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${add users}=${True}
-#    [Documentation]   Setup docker system, connect it to cloud, add generic and noperm users if needed.
-#    ...               Save ${system}, ${cloud auth}, ${users} and ${email noperm} as global variables in the suite,
-#    ...               where "Create Base Cloud System" is called
-#
-#    ${owner}=   Register and activate account with random email    System    Owner    ${base password}
-#    ${local auth}=   Create List    admin    ${base password}
-#    ${cloud auth}=   Create List    ${owner}    ${base password}
-#    ${random}=    Generate Random String
-#    Set Suite Variable    ${cloud auth}
-#    Set Suite Variable    ${local auth}
-#    ${system}=   Create Docker Server    ${container name}    ${image}    cloud email=${owner}
-#    Set Suite Variable    ${system}
-#    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
-#    Return From Keyword If    not $add_users
-#
-#    ${email noperm}=   Register and activate account with random email    System    NoAccess    ${base password}
-#    Set Suite Variable    ${email noperm}
-#    ${users}=   Create Dictionary
-#    ${local users}=    Create Dictionary
-#    FOR    ${role}    IN    @{permissions.keys()}
-#        ${email}=   Register and activate account with random email    System    ${role}    ${base password}
-#        Sleep    2
-#        ${role}=   Set Variable If    '''${role}'''=='''webAdmin'''    administrator    ${role}
-#        #Share    ${cloud auth}    ${system}[id]    ${role}    ${email}
-#        REST Save User
-#        ...    ${local auth}
-#        ...    ${server url}
-#        ...    ${email}
-#        ...    ${permissions}[${role}]
-#        ...    ${email}
-#        ...    Cloud User
-#        ...    password=${None}
-#        ...    is_cloud=${True}
-#
-#        REST Save User
-#        ...    ${local auth}
-#        ...    ${server url}
-#        ...    Local+${role}
-#        ...    ${permissions}[${role}]
-#        ...    noptixautoqa+local_${role}@gmail.com
-#        ...    Local User
-#        ...    password=${base password}
-#        ...    is_cloud=${False}
-#        Set To Dictionary    ${users}    ${role}=${email}
-#        Set To Dictionary    ${local users}    ${role}=Local+${role}
-#    END
-#    Set Suite Variable    ${users}
-#    Set Suite Variable    ${local users}
-
-#Delete Base Cloud System
-#    [Documentation]    Wipe out all resources related to "Create Base Cloud System"
-#    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
-#    FOR    ${email}    IN   $system['users'].values()    ${system}[owner]    ${email noperm}
-#        Run keyword and ignore error    Delete Account    ${ENV}    ${email}    ${base password}
-#    END
-#    Delete Docker Server    ${system}[id]
-
 Delete Accounts
     [Arguments]    ${accounts}
     FOR    ${email}    IN   @{accounts}
@@ -1164,25 +1044,25 @@ Delete Base System
     Delete Docker Server    ${system}[id]
 
     # Delete user if he doesn't own any cloud systems
-    Run Keyword If    not $system['owner']    Pass Execution    System is not connected to cloud
+    Run Keyword If    not $system['owner']    Return From Keyword    True
     ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
     ${num systems}=   Evaluate    len($systems)
     Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
 
 
 Create Custom Network
-    [Arguments]    ${name}    ${num}
+    [Arguments]    ${name}    ${num}    ${host}=${QA BURBANK IP}
     ${driver}=   Set Variable    bridge
     ${subnet}=   Set Variable    192.28.${num}.0/24
     ${ip range}=   Set Variable    192.28.${num}.0/24
     ${gateway}=    Set Variable    192.28.${num}.254
     ${cmd}=   Set Variable    docker network create --driver=${driver} --subnet=${subnet} --ip-range=${ip range} --gateway=${gateway} ${name}
-    Execute Command Remotely    ${cmd}
+    ${net id}=   Execute Command Remotely    ${cmd}    ${host}
     [Return]    ${net id}
 
 Remove Custom Network
-    [Arguments]    ${net id}
-    Execute Command Remotely    docker network rm ${net id}
+    [Arguments]    ${net id}    ${host}=${QA BURBANK IP}
+    Execute Command Remotely    docker network rm ${net id}    ${host}
     [Return]    ${net id}
 
 Delete Docker Server
