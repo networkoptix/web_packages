@@ -9,6 +9,7 @@ import { ContentManifest }          from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { ConsoleMenuNode }          from './menu/console-menu.component';
 import { ConsoleSection }           from './table/console-table.component';
+import { NxHeaderService }          from '@services/nx-header.service';
 
 export enum ConsoleMode {
     DEFAULT='default',
@@ -32,12 +33,14 @@ export class NxDevConsoleComponent {
     sectionParam: ConsoleSection;
     selectedMode: ConsoleMode;
     manifest: ContentManifest;
+    currentEdit
 
     constructor(
         configService: NxConfigService,
         _route: ActivatedRoute,
         private router: Router,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
+        private headerService: NxHeaderService
     ) {
         this.CONFIG = configService.config;
         _route.params.pipe(
@@ -49,16 +52,27 @@ export class NxDevConsoleComponent {
                     this.manifest = manifest;
                     const editMode = mode as ConsoleMode === ConsoleMode.EDIT;
                     if (editMode) {
-                        this.menu = this.manifest.manifest.contexts.map(({ name: url, label: title, icon }) => ({ url, title, icon }))
+                        this.menu = this.manifest.manifest.contexts.map(({ name: url, label: title, icon }) => ({ url, title, icon }));
                     }
                 });
             }),
             untilDestroyed(this)
         ).subscribe(({ sectionParam, mode, id }) => {
+            const sections = Object.values(
+                this.CONFIG.manifest
+            );
             const developers = '/developers';
             this.sectionParam = sectionParam;
             this.selectedMode = mode;
             this.base = mode ? `${developers}/${sectionParam}/${mode}/${id}` : developers;
+
+            // Remove invalid dev console sections from header in case they get added for some reason
+            const { parentNode } = this.headerService.currentLocation;
+            parentNode.nodes = parentNode.nodes.filter(({
+                url
+            }) => sections.find(({
+                url: sectionUrl
+            }) => (url.startsWith('/') ? url : '/' + url) === `${developers}/${sectionUrl}`));
         });
     }
 
@@ -74,9 +88,13 @@ export class NxDevConsoleComponent {
         const sectionParam = (matchedSection || sections[0]).url as ConsoleSection;
 
         if (!matchedSection) {
-            this.router.navigateByUrl(`${this.router.url.split(`/${section}`)[0]}/${sections[0]?.url}`, { replaceUrl: true });
+            const firstSection = `${this.router.url.split(`/${section}`)[0]}/${sections[0]?.url}`;
+            this.headerService.setLocation(firstSection);
+            this.router.navigateByUrl(firstSection, { replaceUrl: true });
         } else if (mode && !this.modes.includes(mode) || !id) {
-            this.router.navigateByUrl(this.router.url.split(`/${mode}`)[0], { replaceUrl: true });
+            const withoutMode = this.router.url.split(`/${mode}`)[0];
+            this.headerService.setLocation(withoutMode);
+            this.router.navigateByUrl(withoutMode, { replaceUrl: true });
         }
 
         return { sectionParam, mode, id, context };

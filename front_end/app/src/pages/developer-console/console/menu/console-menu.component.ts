@@ -1,7 +1,8 @@
-import { Component, Input }         from '@angular/core';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import { Component, Input, SimpleChanges }        from '@angular/core';
+import { IConfig, NxConfigService }               from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 
-import { ConsoleMode }              from '../console.component';
+import { ConsoleMode }    from '../console.component';
 import { ConsoleSection } from '../table/console-table.component';
 
 export interface ConsoleMenuNode {
@@ -25,8 +26,12 @@ export class NxDevConsoleMenuComponent {
     TYPES = ConsoleMode
 
     showAdditionalLinks = false;
+    loading = true;
 
-    constructor(configService: NxConfigService) {
+    constructor(
+        configService: NxConfigService,
+        private headerService: NxHeaderService
+    ) {
         this.CONFIG = configService.config;
     }
 
@@ -34,5 +39,22 @@ export class NxDevConsoleMenuComponent {
         this.showAdditionalLinks = ![
             ConsoleSection.CUSTOM_CLIENTS
         ].includes(this.sectionParam);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        const {
+            menu         : { currentValue: menu }
+        } = changes;
+
+        const { parentNode } = this.headerService.currentLocation;
+        for (const section in this.CONFIG.manifest) {
+            const sectionConfig = this.menu.find(({ url }) => url === section);
+            if (sectionConfig) {
+                const cmsTitle = parentNode.nodes.find(({ url }) => (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`)?.name;
+                sectionConfig.title = cmsTitle || sectionConfig.title;
+            }
+        }
+
+        this.loading = !menu.length;
     }
 }

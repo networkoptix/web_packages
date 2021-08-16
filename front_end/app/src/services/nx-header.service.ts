@@ -4,6 +4,7 @@ import { Router, NavigationStart }  from '@angular/router';
 
 import { environment }              from '../../environments/environment';
 import { NxMenusService, MenuNode } from './menus.service';
+import { ContextManifest }          from './nx-cloud-api.types';
 
 enum systemRoutes {
     SETTINGS='settings',
@@ -16,6 +17,7 @@ interface MenuNodeNavProps {
     url: string;
     // eslint-disable-next-line camelcase
     new_window: boolean;
+    queryParamsHandling
 }
 
 @Injectable({
@@ -29,6 +31,8 @@ export class NxHeaderService {
     public nodes: MenuNode[] = [];
     public currentLocation$ = new BehaviorSubject<any>({})
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary')
+
+    public dynamicRoutes = {}
 
     set currentLocation(value) {
         this.currentLocation$.next(value);
@@ -92,11 +96,58 @@ export class NxHeaderService {
         return this.lastActive$.value;
     }
 
+    getDynamicRoute(url: string) {
+        return this.dynamicRoutes[url.split('?')[0]];
+    }
+
+    setDynamicRoute(routes: string[], node, url?) {
+        for (const route of routes) {
+            this.dynamicRoutes[route] = JSON.parse(JSON.stringify(node));
+            this.dynamicRoutes[route].path = route;
+        }
+        if (url) {
+            this.setLocation(url);
+        }
+    }
+
+    addDynamicDevConsoleNode<Asset extends Record<any, any>>(asset: Asset, editBaseUrl, contexts: ContextManifest[], url?) {
+        const { id, name } = asset;
+        const editUrl = `${editBaseUrl}/${id}`;
+        for (const { name: contextName } of contexts) {
+            const matchedRoute = `${editUrl}/${contextName}`;
+            if (!this.getDynamicRoute(matchedRoute)) {
+                const baseNode = new MenuNode(
+                    name,
+                    matchedRoute,
+                    name,
+                    true
+                );
+                const { breadcrumbs, childNode } = this.currentLocation;
+                childNode.queryParamsHandling = 'merge';
+                baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
+                const dynamicNode = {
+                    isSystem    : false,
+                    breadcrumbs : [...baseNode.breadcrumbs],
+                    childNode   : { ...baseNode },
+                    parentNode  : { ...childNode }
+                };
+
+                dynamicNode.parentNode.nodes = [{ ...baseNode, url: matchedRoute }];
+                const matchedRoutes = this.getDynamicRoute(editUrl) ? [matchedRoute] : [matchedRoute, editUrl];
+                this.setDynamicRoute(matchedRoutes, dynamicNode, url);
+            }
+        }
+    }
+
     setLocation(url?) {
         const bestMatch: any = {};
         // Check if system url or go through nodes
         const settingsBase = environment.isLocal ? '/settings' : '/systems';
-        if (url.startsWith(settingsBase) ||
+        const dynamicRoute = this.getDynamicRoute(url);
+        if (dynamicRoute) {
+            this.currentLocation = dynamicRoute;
+            return;
+        } else if (url.startsWith(settingsBase) ||
             (environment.isLocal && (
                 url.startsWith('/view') ||
                 url.startsWith('/health')
@@ -124,13 +175,13 @@ export class NxHeaderService {
         } else {
             bestMatch.isSystem = false;
 
-            const recursivelyFindMatch = this.findMatchFactory(url, bestMatch);
+            const recursivelyFindMatch = NxHeaderService.findMatchFactory(url, bestMatch);
             recursivelyFindMatch(this.nodes);
         }
         this.currentLocation = bestMatch;
     }
 
-    findMatchFactory(url: any, target: Record<any, any> = {}) {
+    static findMatchFactory(url: any, target: Record<any, any> = {}) {
         return (startingNodes) => {
             const nodes = [...startingNodes];
             for (let i = 0; i < nodes.length; i++) {
@@ -163,7 +214,7 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow }: MenuNodeNavProps, event) {
+    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event) {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
         const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
@@ -176,7 +227,7 @@ export class NxHeaderService {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
             window.open(serializedUrl, '_blank');
         } else {
-            this.router.navigate([url])
+            this.router.navigate([url], { queryParamsHandling })
                 .catch((ex) => {
                     console.error(ex);
                 });

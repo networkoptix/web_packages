@@ -1,5 +1,7 @@
 import { DataSource }                                 from '@angular/cdk/collections';
-import { Component, Inject, Input, SimpleChanges }            from '@angular/core';
+import {
+    Component, EventEmitter, Inject, Input, Output, SimpleChanges
+}                                                     from '@angular/core';
 import { ActivatedRoute, Router }                     from '@angular/router';
 import { NxDialogsService }                           from '@dialogs/dialogs.service';
 import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
@@ -7,19 +9,21 @@ import { TranslateService }                           from '@ngx-translate/core'
 import { map, switchMap }                             from 'rxjs/operators';
 import md5                                            from 'md5';
 
-import { CustomClientAPI, NxCloudApiService }                                 from '@services/nx-cloud-api';
-import { ContentManifest, ContentSettings, DocAsset }        from '@services/nx-cloud-api.types';
+import { CustomClientAPI, NxCloudApiService }                from '@services/nx-cloud-api';
+import {
+    ContentManifest, ContentSettings, ContextManifest, DocAsset
+}                                                            from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }                          from '@services/nx-config';
-import { BehaviorSubject, combineLatest, Observable, Subject }        from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
 import { ConsoleMode }                                       from '../console.component';
 import { DataStructureMeta }                                 from '../edit/console-edit.component';
-import { NxHeaderService } from '@services/nx-header.service';
-import { NxMenusService } from '@services/menus.service';
-import { PackageHandler, PackageProgress } from '@dialogs/download-async/download-async.component';
-import { WINDOW } from '@services/window-provider';
-import { NxToastService } from '@dialogs/toast.service';
-import { NxUriService } from '@services/uri.service';
-import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxHeaderService }                                   from '@services/nx-header.service';
+import { NxMenusService }                                    from '@services/menus.service';
+import { PackageHandler, PackageProgress }                   from '@dialogs/download-async/download-async.component';
+import { WINDOW }                                            from '@services/window-provider';
+import { NxToastService }                                    from '@dialogs/toast.service';
+import { NxUriService }                                      from '@services/uri.service';
+import { NxConsoleService }                                  from '@pages/developer-console/console/console.service';
 
 export enum ConfigType {
     TEXT='text',
@@ -164,6 +168,8 @@ export class ListSerializer<Initial, Serialized> {
 })
 export class NxDevConsoleTableComponent {
     @Input() sectionParam: ConsoleSection;
+    @Input() contextList: ContextManifest[];
+    @Output() editValues = new EventEmitter();
 
     CONFIG: IConfig;
     CONFIG_TYPE = ConfigType;
@@ -199,8 +205,8 @@ export class NxDevConsoleTableComponent {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
 
-    async ngOnChanges({ sectionParam: { currentValue, previousValue, firstChange } }: SimpleChanges) {
-        if (firstChange || currentValue !== previousValue) {
+    async ngOnChanges({ sectionParam }: SimpleChanges) {
+        if (sectionParam && (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)) {
             this.selectedData = this.displayedColumns = this.selectedManifest = null;
             this.dataLoaded = false;
 
@@ -208,7 +214,7 @@ export class NxDevConsoleTableComponent {
                 this.update$.pipe(switchMap(this.cloudApi.getSubAPI(this.sectionParam).list)),
                 this.cloudApi.getSubAPI(this.sectionParam).getManifest(),
                 this.menusService.getMenu('header').pipe(
-                    map(({ nodes }) => this.headerService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
+                    map(({ nodes }) => NxHeaderService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
                     switchMap(assetId => assetId ? this.cloudApi.getDocAsset(assetId) : Promise.resolve(null as DocAsset))
                 )
             ]).subscribe(([list, contentManifest, docAsset]) => {
@@ -217,15 +223,20 @@ export class NxDevConsoleTableComponent {
                 this.selectedManifest = this.CONFIG.manifest[this.sectionParam];
                 this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
                 this.manifest = this.selectedManifest.editManifest;
-                const { page = 1, search = '' } = this.route.snapshot.queryParams;
+                const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
+                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.settings);
                 this.selectedData = new TableDataSource(
-                    new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.settings).data,
-                    this.selectedManifest.perPage,
+                    data,
+                    perPage || this.selectedManifest.perPage,
                     parseInt(page),
                     search,
                     this.displayedColumns.filter(key => !this.selectedManifest.excludeFromSearch.includes(key)),
                     this.updatePageParam
                 );
+
+                for (const asset of data as any[]) {
+                    this.headerService.addDynamicDevConsoleNode(asset, `${this.base}/${this.sectionParam}/${ConsoleMode.EDIT}`, this.contentManifest.manifest.contexts);
+                }
                 this.dataLoaded = true;
                 const targetState = this.consoleService.targetState;
                 if (targetState && targetState.id !== undefined) {
@@ -246,10 +257,15 @@ export class NxDevConsoleTableComponent {
         [],
         {
             relativeTo          : this.route,
-            queryParams         : { [param]: value },
-            queryParamsHandling : 'merge'
+            queryParams         : value ? { [param]: value } : {},
+            queryParamsHandling : 'merge',
+            replaceUrl          : true
         }
     );
+
+    updateEditValues(asset) {
+        this.editValues.emit(asset.values);
+    }
 
     updatePageParam = this.#paramUpdaterFactory('page')
 
@@ -261,16 +277,17 @@ export class NxDevConsoleTableComponent {
         this.update$.next('update');
     }
 
-    updatePageState = ({ page, search }) => {
-        this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search });
+    updatePageState = ({ page, search, perPage = 0 }) => {
+        this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
     }
 
     async handleModal(modalContent?) {
         const createClientModalContent = {
-            modal    : ModalType.CLIENT_CREATE,
-            manifest : this.manifest,
-            heading  : this.translate.instant('devConsole.create'),
-            settings : this.contentManifest.settings
+            modal       : ModalType.CLIENT_CREATE,
+            manifest    : this.manifest,
+            heading     : this.translate.instant('devConsole.create'),
+            settings    : this.contentManifest.settings,
+            contextList : this.contextList
         };
 
         const actions = (modal) => ({
@@ -371,9 +388,18 @@ class TableDataSource extends DataSource<any> {
     #itemsPerPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #currentPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #displayedColumns$: BehaviorSubject<string[]> = new BehaviorSubject([])
+    #numberOfItems$ = new BehaviorSubject(0)
     search$: BehaviorSubject<string> = new BehaviorSubject(null);
     noSearchMatches$ = new BehaviorSubject(false);
     numberOfPages$ = new BehaviorSubject(0)
+
+    perPage$ = combineLatest([
+        this.#numberOfItems$,
+        this.#itemsPerPage$
+    ]).pipe(
+        map(([items, perPage]) => Math.min(items, perPage))
+    )
+
     data$ = combineLatest([
         this.#baseData$, this.#itemsPerPage$, this.#currentPage$, this.#displayedColumns$, this.search$
     ]).pipe(
@@ -405,6 +431,8 @@ class TableDataSource extends DataSource<any> {
                 this.#currentPage$.next(1);
             }
 
+            this.#numberOfItems$.next(data.length);
+
             return data.slice(start, end);
         }))
 
@@ -420,6 +448,7 @@ class TableDataSource extends DataSource<any> {
         this.#itemsPerPage$.next(itemsPerPage);
         this.#currentPage$.next(currentPage);
         this.#displayedColumns$.next(displayedColumns);
+        this.#numberOfItems$.next(data.length);
         this.search$.next(search);
     }
 
@@ -433,11 +462,15 @@ class TableDataSource extends DataSource<any> {
         this.#baseData$.next(data);
     }
 
-    updateState({ page, search }) {
+    updateState({ page, search, perPage }) {
         this.#currentPage$.next(page || 1);
         this.search$.next(search || '');
         if (page > this.numberOfPages$.value && this.updatePageParam) {
             this.updatePageParam(this.numberOfPages$.value);
+        }
+
+        if (perPage) {
+            this.#itemsPerPage$.next(Math.min(perPage, this.#numberOfItems$.value));
         }
     }
 

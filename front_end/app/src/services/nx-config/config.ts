@@ -291,7 +291,7 @@ export const nxConfig: IConfig = {
                     name  : 'downloadAsync',
                     label : '',
                     meta  : {
-                        icon    : 'eye.svg',
+                        icon    : 'download.svg',
                         tooltip : 'Download'
                     }
                 },
@@ -300,7 +300,7 @@ export const nxConfig: IConfig = {
                     name  : 'settingsModal',
                     label : '',
                     meta  : {
-                        icon    : 'lock.svg',
+                        icon    : 'settings.svg',
                         tooltip : 'Settings'
                     }
                 }

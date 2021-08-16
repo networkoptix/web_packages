@@ -1,10 +1,9 @@
-import { Injectable, Injector }     from '@angular/core';
-import {
-    HttpClient, HttpHeaders, HttpParams
-}                                   from '@angular/common/http';
-import { Router }                   from '@angular/router';
+import { Injectable, Injector }                  from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams }   from '@angular/common/http';
+import { Router }                                from '@angular/router';
 import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
-import { EMPTY, of, from, BehaviorSubject }          from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject }      from 'rxjs';
+import { v4 as uuid }                            from 'uuid';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
@@ -16,6 +15,7 @@ import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
 import { ConsoleSection }           from '@pages/developer-console/console/table/console-table.component';
 import { PackageStatus }            from '@dialogs/download-async/download-async.component';
+import { NxConsoleService }         from '@pages/developer-console/console/console.service';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -100,7 +100,8 @@ export class NxCloudApiService {
         private cacheService: NxUriCacheService,
         private router: Router,
         private nxSwCacheService: NxSwCacheService,
-        private injector: Injector
+        private injector: Injector,
+        private consoleService: NxConsoleService
     ) {
         this.CONFIG = configService.getConfig();
         setTimeout(_ => {
@@ -113,7 +114,7 @@ export class NxCloudApiService {
                 }
             });
         });
-        this.customClient = new CustomClientAPI(this, this.CONFIG, this.http);
+        this.customClient = new CustomClientAPI(this, this.CONFIG, this.http, this.consoleService);
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -618,12 +619,18 @@ export class CustomClientAPI {
     constructor(
         private cloudAPI: NxCloudApiService,
         private config: IConfig,
-        private http: HttpClient
+        private http: HttpClient,
+        private consoleService: NxConsoleService
     ) {
         this.apiBase = this.config.apiBase + '/custom_clients/';
     }
 
     create = (name: string, values: Record<string, string> = {}) => {
+        if (!Object.keys(values).length) {
+            const id = uuid();
+            this.consoleService.unsavedAssets[id] = { name, id, unsaved: true, values: {} };
+            return Promise.reject(id);
+        }
         return this.http.post<t.CustomClient>(this.apiBase, Object.entries(values).length ? { name, values } : { name });
     }
 

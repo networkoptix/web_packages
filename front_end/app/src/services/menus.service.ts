@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { Inject, Injectable, OnDestroy }  from '@angular/core';
+import { QueryParamsHandling }            from '@angular/router';
 import { TranslateService }               from '@ngx-translate/core';
 import {
     BehaviorSubject, Subject, from, combineLatest, Observable
@@ -30,6 +31,7 @@ export class MenuNode {
     public indented?: boolean;
     public state?: 'pending' | 'draft'
     public breadcrumbs: MenuNode[];
+    public queryParamsHandling: QueryParamsHandling = ''
 
     constructor(
         public name = '',
@@ -37,7 +39,7 @@ export class MenuNode {
         public display_name = name,
         currentRoute = false,
         icon = '',
-        public nodes?: MenuNode[],
+        public nodes: MenuNode[] = [],
         public authentication: Auth = Auth.BOTH,
         public new_window = false,
         public asset_id = null,

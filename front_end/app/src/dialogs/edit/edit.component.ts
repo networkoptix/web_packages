@@ -12,7 +12,11 @@ import {
 }                                    from '@pages/developer-console/console/table/console-table.component';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
-import { ContentSettings }           from '@services/nx-cloud-api.types';
+import { ContentSettings, ContextManifest }           from '@services/nx-cloud-api.types';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { Router } from '@angular/router';
+import { ConsoleMode } from '@pages/developer-console/console/console.component';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {
@@ -34,6 +38,7 @@ export class EditModalContent implements ModalContent {
     @Input() values: Record<string, any>;
     @Input() manifest: ModalManifest;
     @Input() settings: ContentSettings;
+    @Input() contextList: ContextManifest[] = [];
 
     STRUCTURE_TYPE = ConfigType
     errors: Record<string, string[]> = {};
@@ -57,7 +62,10 @@ export class EditModalContent implements ModalContent {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private toastService: NxToastService,
-        private cloudApi: NxCloudApiService
+        private cloudApi: NxCloudApiService,
+        private headerService: NxHeaderService,
+        private router: Router,
+        private consoleService: NxConsoleService
     ) {
         this.CONFIG = configService.config;
         this.LANG = language.translations;
@@ -112,9 +120,25 @@ export class EditModalContent implements ModalContent {
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
-                this.toastService.show('Custom Client Created', options);
-                this.close({ id: this.values.id, action: 'create' });
-            }, err => { console.error(err); });
+                // this.toastService.show('Custom Client Created', options);
+                // this.close({ id: this.values.id, action: 'create' });
+            }, err => {
+                switch (this.modal) {
+                    case ModalType.CLIENT_CREATE:
+                        const id = err;
+                        const asset = this.consoleService.unsavedAssets[id];
+                        this.close();
+                        const [currentRoute, params = ''] = this.router.url.split('?');
+                        const baseEditUrl = `${currentRoute}/${ConsoleMode.EDIT}`;
+                        const assetEditUrl = `${baseEditUrl}/${id}`;
+                        this.router.navigateByUrl(`${assetEditUrl}${params ? '?' + params : ''}`);
+                        break;
+
+                    default:
+                        console.error(err);
+                        break;
+                }
+            });
 
         this.saveContext = this.processService.createProcess(() => getMethod('save')(this.values.id, this.values.name, this.values),
             { ignoreError: true },

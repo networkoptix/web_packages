@@ -17,7 +17,7 @@
         <h3 translate>No matching results found</h3>
         <button (click)="updateSearchParam({query: ''})" translate>Reset Search</button>
     </div>
-    <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="(selectedManifest.perPage - (selectedData.data$ | async).length) * 48">
+    <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48">
         <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
             <th cdk-header-cell *cdkHeaderCellDef>{{field.label}}</th>
             <ng-container [ngSwitch]="field.type">
@@ -35,7 +35,7 @@
                     <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
                         <ng-template #icon>
                             <svg-icon nx-add-svg-src
-                            [src]="CONFIG.icons.dir + field.meta.icon"
+                            [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
                             [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
                             [applyClass]="true"
                             [ngbTooltip]="field.meta?.tooltip"></svg-icon>
@@ -45,7 +45,7 @@
                                 <ng-container *ngTemplateOutlet="icon"></ng-container>
                             </a>
                         </ng-template>
-                        <a *ngIf="element[field.name].startsWith('/'); else externalLink" [routerLink]="base + '/' + sectionParam + '/' + element[field.name]">
+                        <a *ngIf="element[field.name].startsWith('/'); else externalLink" [routerLink]="base + '/' + sectionParam + '/' + element[field.name]" queryParamsHandling="merge">
                             <ng-container *ngTemplateOutlet="icon"></ng-container>
                         </a>
                     </td>
@@ -104,13 +104,17 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="CONFIG_TYPE.DATE">
                     <td cdk-cell *cdkCellDef="let element"
+                        (click)="updateEditValues(element)"
                         [class]="'type-default ' + (field.meta?.styles || '')"
+                        queryParamsHandling="merge"
                         [routerLink]="[CONSOLE_MODE.EDIT, element.id]">{{element[field.name] | date: 'shortDate'}}</td>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                     <td cdk-cell *cdkCellDef="let element"
+                        (click)="updateEditValues(element)"
                         [class]="'type-default ' + (field.meta?.styles || '')"
                         [innerHTML]="element[field.name] | highlight: (selectedData.search$ | async)"
+                        queryParamsHandling="merge"
                         [routerLink]="[CONSOLE_MODE.EDIT, element.id]"></td>
                 </ng-container>
             </ng-container>
@@ -122,7 +126,7 @@
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
         </tbody>
     </table>
-    <div *ngIf="!(selectedData.data$ | async)?.length" class="table-content-placeholder" [style.height.px]="48 * selectedManifest.perPage">
+    <div *ngIf="!(selectedData.data$ | async)?.length" class="table-content-placeholder" [style.height.px]="48 * (selectedData.perPage$ | async)">
         <ng-template #createPlaceholder>
             <div class="create-placeholder">
                 <h3 translate>You don't have any Custom VMS Clients yet. Add your first one!</h3>

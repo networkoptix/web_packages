@@ -15,7 +15,7 @@
     </div>
 </ng-template>
 
-<h3 *ngIf="TYPES.EDIT === type">
+<h3 *ngIf="(TYPES.EDIT === type) && !loading">
     <!-- TODO: Need to replace svg -->
     <ng-container *ngTemplateOutlet="icon; context{
         icon: 'developers.svg'
@@ -23,9 +23,9 @@
     <span translate>Content</span>
 </h3>
 
-<ul [class]="type">
+<ul *ngIf="!loading" [class]="type">
     <li *ngFor="let node of menu">
-        <a [routerLink]="base + '/' + node.url" routerLinkActive="active-section" [ngClass]="{'active-section': node.url === sectionParam}">
+        <a [routerLink]="base + '/' + node.url" routerLinkActive="active-section" [ngClass]="{'active-section': node.url === sectionParam}" queryParamsHandling="merge">
             <ng-container *ngTemplateOutlet="icon; context{icon: node.icon}"></ng-container>
             <span>{{node.title}}</span>
         </a>

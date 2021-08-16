@@ -13,6 +13,7 @@ export type TargetState = {
 export class NxConsoleService {
     #targetStateSubject$ = new BehaviorSubject<TargetState>(undefined);
     targetState$ = this.#targetStateSubject$.pipe(filter(val => val !== undefined));
+    unsavedAssets = {};
 
     constructor() { }
 

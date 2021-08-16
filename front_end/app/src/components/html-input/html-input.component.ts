@@ -20,6 +20,7 @@ export class NxHTMLComponent implements ControlValueAccessor {
 
     preloaderHeight = DEFAULT_EDITOR_CONFIG.min_height;
     editorSettings;
+    valueLoaded = false;
     #value = '';
 
     ngOnInit() {
@@ -38,6 +39,8 @@ export class NxHTMLComponent implements ControlValueAccessor {
     }
 
     writeValue(value: any) {
+        // Handles a weird edge case where value is null which prevents editor from rendering
+        this.valueLoaded = value !== null;
         this.#value = value;
     }
 
