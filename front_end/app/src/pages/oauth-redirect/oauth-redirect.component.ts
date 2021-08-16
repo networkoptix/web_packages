@@ -53,9 +53,11 @@ export class NxOAuthRedirectComponent implements OnInit {
                     this.state = 'sendingCode';
                     this.localStorageService.clear('client_type');
                     //@ts-ignore
-                    setTimeout(() => nativeClient.setCode(this.initialData.code), 2000);
+                    nativeClient.setCode(this.initialData.code);
+                    setTimeout(() => { this.state = undefined; }, 3000);
+                } else {
+                    this.state = 'readyToLogin';
                 }
-                this.state = 'readyToLogin';
             });
         } else {
             this.state = 'noNativeClient';

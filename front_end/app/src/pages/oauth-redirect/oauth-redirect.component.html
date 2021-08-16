@@ -5,12 +5,10 @@
         <button class="oauth-redirect-btn" *ngIf="state === 'readyToLogin'"
             (click)="redirectToOAuth()">Log In</button>
         <div class="oauth-text oauth-error" *ngIf="state === 'noNativeClient'">
-            <p translate>Desktop client</p>
-            <p translate>connection required</p>
+            <p translate>Desktop client connection required</p>
         </div>
         <div class="oauth-text" *ngIf="state === 'sendingCode'">
-            <p translate>Sending back to</p>
-            <p translate>desktop client</p>
+            <p translate>One moment while we log you in</p>
         </div>
     </div>
 </div>
