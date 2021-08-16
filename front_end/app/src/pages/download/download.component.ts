@@ -45,7 +45,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
     downloadsData;
     canSeeHistory: boolean;
     tabsVisible: boolean;
-    activeTab: string;
     sortedPlatforms;
     otherPackages;
     private routerSubscription: Subscription;
