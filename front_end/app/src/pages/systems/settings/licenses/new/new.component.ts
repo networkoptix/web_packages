@@ -6,11 +6,12 @@ import {
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { SubscriptionLike }          from 'rxjs';
 
-import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
+import { IConfig, NxConfigService }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService }          from '@services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSystem }                  from '../../../../../services/system.service';
+import { NxSystem }                  from '@services/system.service';
+import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
@@ -176,7 +177,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
-                        name   : server.name,
+                        name   : NxUtilsService.htmlToEntity(server.name),
                         value  : server.id,
                         status : server.status
                     };
