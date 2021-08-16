@@ -99,12 +99,6 @@
             [window]="window"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-backup-code-component>
-        <nx-authorize-new-backup-code-component
-            *ngSwitchCase="AuthorizeState.newBackup"
-            [viewType]="viewType"
-            [newBackupCode]="newBackupCode"
-            [confirm]="redirect"
-        ></nx-authorize-new-backup-code-component>
     </div>
     <div class="auth-overlay" *ngIf="errorDialog$.value">
         <div class="auth-window" [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }">

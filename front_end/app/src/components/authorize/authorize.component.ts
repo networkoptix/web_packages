@@ -38,7 +38,7 @@ export interface AuthorizeParams {
     email?: string
 };
 
-export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup' | 'newBackup'
+export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup'
 export enum AuthorizeState {
     email = 'email',
     password = 'password',
@@ -49,8 +49,7 @@ export enum AuthorizeState {
     reset = 'resetPassword',
     error = 'error',
     auth = 'authCode',
-    backup = 'backupCode',
-    newBackup = 'newBackupCode'
+    backup = 'backupCode'
 };
 
 export enum ClientType {
@@ -142,9 +141,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     backupCode: string;
     checkBackupCodeProcess: Process;
     backupCodeErrorCode: string;
-
-    // new backup code
-    newBackupCode: string;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
@@ -338,6 +334,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
         this.checkAuthCodeProcess = this.processService.createProcess(
             () => {
+                this.authCodeErrorCode = '';
                 return this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
             },
             {
@@ -347,9 +344,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             res => {
                 if (res.resultCode === 'ok') {
-                    this.handleLoginSuccess({
-                        link: this.redirectLink, code: this.loginCode
-                    });
+                    this.handleLoginSuccess({});
                 }
             },
             err => {
@@ -362,14 +357,25 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
         );
 
+        // need to test that it's working properly after backup creation endpoint updated
         this.checkBackupCodeProcess = this.processService.createProcess(
-            () => {
-                return Promise.resolve();
+            async () => {
+                this.backupCodeErrorCode = '';
+                return this.cloudService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
             },
             { ignoreError: true, timeoutMs },
-            () => {
-                this.newBackupCode = '2f4q sip7 rdcr';
-                this.currentState = AuthorizeState.newBackup;
+            res => {
+                if (res.resultCode === 'ok') {
+                    this.handleLoginSuccess({});
+                }
+            },
+            err => {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.authCodeErrorCode = 'wrongBackupCode';
+                } else {
+                    console.error('err from checkBackupCodeProcess', err);
+                    this.handleCloudConnectionError(err, this.checkBackupCodeProcess);
+                }
             }
         );
 

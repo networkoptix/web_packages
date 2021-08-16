@@ -24,7 +24,6 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
-import { NxAuthorizeNewBackupCodeComponent } from './new-backup-code/new-backup-code.component';
 
 export const authorizedRoutes: Routes = [
     { path: 'authorize', component: NxAuthorizeComponent },
@@ -55,8 +54,7 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,
-        NxAuthorizeBackupCodeComponent,
-        NxAuthorizeNewBackupCodeComponent
+        NxAuthorizeBackupCodeComponent
     ],
     exports: [
         NxAuthorizeComponent

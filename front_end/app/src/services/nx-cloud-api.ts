@@ -362,6 +362,11 @@ export class NxCloudApiService {
         return this.http.get<any>(url);
     }
 
+    verifyBackupCode(verification_code: string, access_code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/backup?verification_code=${verification_code}&access_code=${access_code}`;
+        return this.http.get<any>(url);
+    }
+
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();

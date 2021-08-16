@@ -5,7 +5,7 @@
         [svgStyle]="{'width.px': '320', 'height.px': '80'}"
         [applyClass]="true"></svg-icon>
     <div class="for-small">
-        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && smallView"
+        <button *ngIf="smallView"
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('auth')">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
@@ -38,7 +38,7 @@
         </div>
         <div class="mt-2 mb-3" *ngIf="backupCode.invalid && (backupCode.dirty || backupCode.touched)">
             <p *ngIf="backupCode.errors.required" class="error-label mb-0" translate>Enter Backup Code</p>
-            <p *ngIf="backupCode.errors.wrongBbackupCode" class="error-label mb-0" translate>Wrong Backup Code</p>
+            <p *ngIf="backupCode.errors.wrongBackupCode" class="error-label mb-0" translate>Wrong Backup Code</p>
             <p *ngIf="backupCode.errors.lockedOut" class="error-label mb-0" translate>Too many attempts. Try again in a minute.</p>
         </div>
         <div [ngClass]="{ 'mt-3': !(backupCode.invalid && (backupCode.dirty || backupCode.touched)) }">
@@ -57,7 +57,7 @@
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && !smallView"
+            <button *ngIf="!smallView"
                 class="btn text-button" type="button" (click)="setCurrentState.emit('auth')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
@@ -66,10 +66,9 @@
                 <span class="pl-1" translate>Back</span>
             </button>
             <nx-process-button
-                buttonText="{{ 'Next' | translate }}"
+                buttonText="{{ 'Log In' | translate }}"
                 [clickFn]="sendCode"
-                [process]="checkBackupCodeProcess"
-                svg="arrow_right">
+                [process]="checkBackupCodeProcess">
             </nx-process-button>
         </div>
     </footer>
