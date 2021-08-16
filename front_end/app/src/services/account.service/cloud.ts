@@ -78,11 +78,6 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                 // eslint-disable-next-line camelcase
                 if (!account?.is_authenticated) {
                     this.account = undefined;
-                    this.router
-                        .navigate([this.CONFIG.redirect.unauthorised])
-                        .catch(error => {
-                            console.error(error);
-                        });
                     return undefined;
                 }
                 this.account = { ...account, isCloud: true };
