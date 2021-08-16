@@ -3,9 +3,7 @@ import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
 import { BehaviorSubject }               from 'rxjs';
-import {
-    delay, filter, map, retryWhen, switchMap
-}                                        from 'rxjs/operators';
+import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
@@ -87,7 +85,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.settingsService.systemSubject
             .pipe(
                 filter(data => data !== undefined),
-                switchMap(async(system) => {
+                switchMap(async(system: any) => {
                     this.isOffline = !system.isOnline;
                     this.settingsService.footerSubject.next(true);
                     if (system && (!this.system || !this.CONFIG.isLocal)) {
@@ -95,39 +93,40 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             await system?.apiVersionResolved$.toPromise();
                         }
                         this.system = system;
-                        (
-                            this.CONFIG.isLocal
-                                ? this.system.update()
-                                : Promise.resolve()
-                        ).then(() => {
-                            if (system.isAvailable) {
-                                this.system.getInfoAndPermissions(false).catch(err => console.error('system subscription', err));
-                            } else {
-                                this.isOffline = true;
-                            }
-                        }).finally(() => {
-                            if (this.system && !this.system.userManager.permissions?.editUsers) {
-                                this.uriService
-                                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            }
-                        });
                     }
-                    return this.system.infoSubject.value;
                 }),
-                map(system => {
-                    if (!system.serverManager.servers || system.serverManager.servers.length === 0) {
-                        throw system;
-                    }
-                    return system;
+                tap((system: any) => {
+                    (
+                        this.CONFIG.isLocal
+                            ? this.system.update()
+                            : Promise.resolve()
+                    ).then(() => {
+                        if (system.isAvailable) {
+                            this.system.getInfoAndPermissions(false).catch(err => console.error('system subscription', err));
+                        } else {
+                            this.isOffline = true;
+                        }
+                    }).finally(() => {
+                        if (this.system && !this.system.userManager.permissions?.editUsers) {
+                            this.uriService
+                                .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        }
+                    });
                 }),
-                retryWhen(err => err.pipe(delay(1000))),
-                untilDestroyed(this)
-            ).subscribe(() => {
-                if (this.system.currentServerNotBusy) {
-                    if (this.system && this.system.servers && this.system.servers.length) {
+                switchMap(() => this.system.infoSubject.pipe(
+                    map(system => {
+                        if (!system.serverManager.servers || system.serverManager.servers.length === 0) {
+                            throw system;
+                        }
+                        return system;
+                    }),
+                    retryWhen(err => err.pipe(delay(1000)))
+                )),
+                switchMap(async() => {
+                    if (this.system.currentServerNotBusy) {
                         this.system.serverManager
                             .initSystemMediaServers()
                             .then(() => {
@@ -137,8 +136,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 console.error(error);
                             });
                     }
-                }
-            });
+                }),
+                untilDestroyed(this)
+            ).subscribe();
     }
 
     ngOnDestroy() {
@@ -193,8 +193,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             this.menuService.detail = this.selectedServer.id;
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);
+                this.system.storageManager.serverId = this.selectedServer.id;
             }
-            this.system.storageManager.serverId = this.selectedServer.id;
         }
     }
 }

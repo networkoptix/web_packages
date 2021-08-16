@@ -39,7 +39,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         configService: NxConfigService,
         private router: Router,
-        private menuService: NxMenuService,
+        private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
     }

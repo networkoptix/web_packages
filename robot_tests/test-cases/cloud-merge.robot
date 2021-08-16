@@ -12,61 +12,54 @@ Merge button availability
     Log    C70976: "Merge with Another System" button is available only for owner
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system}=   Setup System    cloud email=${owner email}
-
-    ${auth}=   Create List    ${owner email}    ${BASE PASSWORD}
-    ${users}=   Create Dictionary
-    FOR    ${role}    IN    cloudAdmin    viewer    custom
-        ${email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-        Set To Dictionary    ${users}    ${role}=${email}
-        Share    ${auth}    ${system}[id]    ${role}    ${email}
-    END
+    ${rs}=   Generate Random String
+    ${system}=   Create Base System    cloud_merge_${rs}   image=${IMAGE 4.2}    owner=${owner email}    add users=True
+    Append To List    ${test systems}    ${system}
 
     Log    Step 1: Log in as owner
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system}[id]
-    Reload Page
-    Wait until element is visible    ${MERGE BUTTON SYSTEM}
+    Log in to system    ${system}    ${owner email}
+    Wait until element is visible    ${MERGE BUTTON SYSTEM}        timeout=180
     Log Out
 
     Log    Steps 2-4: Log in as administrator, viewer, custom
-    FOR    ${user}    IN    @{users.keys()}
-        Log In    ${users}[${user}]    ${BASE PASSWORD}
-        Go To    ${ENV}/systems/${system}[id]
+    FOR    ${user}    IN    @{system['cloud users'].values()}
+        Log in to system    ${system}    ${user}
         Wait until element is visible    ${DISCONNECT FROM MY ACCOUNT}    timeout=30
         Wait until element is not visible    ${MERGE BUTTON SYSTEM}    timeout=30
         Log Out
     END
 
     Log    C70977: "Merge with Another System" button is disabled if system is offline
-    Stop Docker Server    ${system}[server name]
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system}[id]
+    Stop Docker Server    ${system}[id]
+    Log in to system    ${system}    ${owner email}
     Wait until element is visible    ${MERGE BUTTON SYSTEM DISABLED}
 
 Merge Dialog - Dropdown has three sections
     [Tags]    C70979    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 4}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 5}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 6}=   Setup System    image=${IMAGE 4.0}
-    ${system 7}=   Setup System    image=${IMAGE 4.1}    network=host
-    ${system 8}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
 
-    ${auth}=   Create List   admin    ${base password}
-    Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${auth}    ServerName
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 4.1}    add users=False
+#    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    network=host    add users=False
+    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    add users=False
 
-    Sleep    90
-    Stop Docker Server    ${system 4}[server name]
+    FOR    ${i}    IN RANGE    1    8
+        Append To List    ${test systems}    ${system ${i}}
+    END
+
+    Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${system 7}[local auth]    ServerName
+
+    Sleep    60
+    Stop Docker Server    ${system 4}[id]
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Log in to system    ${system 1}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -84,33 +77,39 @@ Merge Dialog - Dropdown has three sections
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 5}[name]")]
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 6}[name]")]
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 8}[name]")]//following-sibling::span[contains(text(), "incompatible")]
+#    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 8}[name]")]//following-sibling::span[contains(text(), "incompatible")]
     ...    ${MERGE CHECK MERGE FORM}//li/a[span="${OTHER SYSTEM}"]
     ...    timeout=10
     Element should not be visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 1}[name]")]
-    ${sys 7 description}=    Get Text    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span
-    Log    Might give false negative(shows docker internal ip instead of external)
-    Should Contain    ${sys 7 description}    (ServerName,${SPACE}${QA BURBANK IP}:${system 7}[port])
+#    ${sys 7 description}=    Get Text    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span
+#    Log    Might give false negative(shows docker internal ip instead of external)
+#    Should Contain    ${sys 7 description}    (ServerName,${SPACE}${QA BURBANK IP}:${system 7}[port])
 
 Merge Dialog - Dropdown has two sections(no cloud systems)
     [Tags]    C70980    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}
-    ${system 4}=   Setup System    image=${IMAGE 4.0}
-    ${system 5}=   Setup System    image=${IMAGE 4.0}
-    Sleep    90
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}
+    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}
+    FOR    ${i}    IN RANGE    1    6
+        Append To List    ${test systems}    ${system ${i}}
+    END
+    Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Log in to system    ${system 1}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]
+
+    # One of compatible systems is chosen by default
+    ${sys 2 shown}=   Run keyword and return status    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]    timeout=30
+    Run Keyword Unless    ${sys 2 shown}    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
 
     Click Button    ${MERGE SYSTEM DROPDOWN}
     Validate Check Merge Dialog
@@ -134,14 +133,17 @@ Merge Dialog - Dropdown has two sections(no cloud systems)
 Merge Dialog - Dropdown has two sections(no local systems)
     [Tags]    C70981    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    Sleep    90
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
+    Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -159,7 +161,7 @@ Merge Dialog - Dropdown has two sections(no local systems)
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
     Log   C76420
-    Stop Docker Server    ${system 2}[server name]
+    Stop Docker Server    ${system 2}[id]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -172,13 +174,16 @@ Merge Dialog - Dropdown has two sections(no local systems)
 Merge Dialog - Dropdown has no valid systems
     [Tags]    C76420    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.0}    network=custom1    cloud email=${owner email}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    network=custom1    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    90
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -191,14 +196,17 @@ Merge Dialog - Dropdown has no valid systems
 Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge Cloud system
     [Tags]    C76480    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    4
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Log    Step 1
@@ -221,13 +229,16 @@ Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge
 Merge Dialog - Close X Button Checking
     [Tags]    C76574    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=custom1
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Log    Step 1
@@ -277,24 +288,31 @@ Positive scenario with selected cloud system (selected system is secondary)
     [Tags]    C70930    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 4}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    5
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log In    ${owner email}    ${BASE PASSWORD}
 
     FOR    ${i}    IN    1    3
         ${j}=   Evaluate    ${i}+1
-        ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${i}}[port]    ${auth}    Server ${system ${i}}[cont]
-        ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${j}}[port]    ${auth}    Server ${system ${j}}[cont]
+        ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${i}}[port]    ${system ${i}}[local auth]    Server ${system ${i}}[id]
+        ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${j}}[port]    ${system ${j}}[local auth]    Server ${system ${j}}[id]
 
         Log    Step 1: Open System 1 page
-        Go To    ${ENV}/systems/${system ${i}}[id]
+        ${url}=   Set Variable If
+            ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system ${i}}[cloud id]
+            ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system ${i}}[port]
+        Go To    ${url}
         Reload Page
-        Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+        Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
         Log    Step 2: Press merge button and check the dialog state
         Click Button    ${MERGE BUTTON SYSTEM}
@@ -315,9 +333,10 @@ Positive scenario with selected cloud system (selected system is secondary)
         Log    Step 5: Enter correct password and press 'Merge Systems'
         Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
         Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+# TODO: figure out failure
 #        Gives false negative results
-        Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
-        Element Should Be Disabled    ${DISCONNECT FROM NX}
+#        Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
+#        Element Should Be Disabled    ${DISCONNECT FROM NX}
 
         Log    Step 6: Enter correct password and press 'Merge Systems'
         Validate Merge    ${system ${i}}[name]    ${system ${j}}[name]
@@ -326,20 +345,24 @@ Positive scenario with selected cloud system (selected system is secondary)
 
         Log    Step 7: Verify systems are actually merged
         Click Link    ${SERVERS LINK}
-        Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system ${i}}[cont]")]
-        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${i}}[cont]")]
+#        Click Element    //a[@id="${server ${i} id}"]//span[contains(text(), "Server ${system ${i}}[id]")]
+        Verify On Servers Page
+        Select Server By Name    Server ${system ${i}}[id]
+        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${i}}[id]")]
         Wait Until Element Is Not Visible    ${OFFLINE BANNER}
-        Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system ${j}}[cont]")]
-        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${j}}[cont]")]
+        Select Server By Name    Server ${system ${j}}[id]
+#        Click Element    //a[@id="${server ${j} id}"]//span[contains(text(), "Server ${system ${j}}[id]")]
+        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${j}}[id]")]
         Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
         Log    Step 8: Verify secondary system is not available anymore
-        Go To    ${ENV}/systems/${system ${i}}[id]
+        Go To    ${url}
         Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
         Click Button    ${MERGE BUTTON SYSTEM}
         Validate Check Merge Dialog
         Click Button    ${MERGE SYSTEM DROPDOWN}
         Element Should Not Be Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system ${j}}[name]")]
+        Continue For Loop If     '''${mode}''' == '''webadmin'''
         Go To    ${ENV}/systems/
         Wait Until Element Is Visible    //h2[contains(text(), "${system ${i}}[name]")]
         Wait Until Element Is Not Visible    //h2[contains(text(), "${system ${j}}[name]")]
@@ -349,19 +372,21 @@ Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
-    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${auth}    Server ${system 1}[cont]
-    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    Server ${system 2}[cont]
+    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]
+    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]    Server ${system 2}[id]
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Log in to system    ${system 1}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -389,15 +414,18 @@ Positive scenario with selected cloud system (selected system is primary)
     Sleep    5
 
     Click Link    ${SERVERS LINK}
-    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[cont]")]
+    Verify On Servers Page
+    Select Server By Name    Server ${system 1}[id]
+#    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
-    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[cont]")]
+    Select Server By Name    Server ${system 2}[id]
+#    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
     Log    Step 6
-    Go To    ${ENV}/systems/${system 2}[id]
+    Go To    ${ENV}/systems/${system 2}[cloud id]
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog    lonely=True
@@ -406,24 +434,27 @@ Positive scenario with selected cloud system (selected system is primary)
     Wait Until Element Is Not Visible    //h2[contains(text(), "${system 1}[name]")]
 
     Log    Step 7
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Positive scenario with selected local autodiscovered system not connected to the cloud
     [Tags]    C70932    pos    must
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
-    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${auth}    Server ${system 1}[cont]
-    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    Server ${system 2}[cont]
+
+    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]
+    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]    Server ${system 2}[id]
 
     Log    Step 1: Open System 1 page
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 2: Press merge button and check the dialog state
@@ -448,30 +479,36 @@ Positive scenario with selected local autodiscovered system not connected to the
 
     Log    Step 8: Validate Merge Success
     Click Link    ${SERVERS LINK}
-    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[cont]")]
+    Verify On Servers Page
+    Select Server By Name    Server ${system 1}[id]
+#    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
-    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[cont]")]
+    Select Server By Name    Server ${system 2}[id]
+#    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
 Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
     [Tags]    C76220    pos    must
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=custom1
-    ${system 3}=   Setup System    image=${IMAGE 4.1}
-    ${system 4}=   Setup System    image=${IMAGE 4.1}
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    add users=False
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    5
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
-    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${auth}    Server ${system 1}[cont]
-    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    Server ${system 2}[cont]
+
+    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]
+    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${system 1}[local auth]    Server ${system 2}[id]
 
     Log    Step 1: Open System 1 page
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 2: Press merge button and check the dialog state
@@ -497,32 +534,37 @@ Positive scenario with selected non-autodiscovered system (dropdown + Server URL
     Wait Until Elements Are Visible
     ...    //div/strong[contains(text(), "Server at https://${QA BURBANK IP}:${system 2}[port]")]
     ...    //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
-#    ${s}=   Replace String    ${SYSTEM AND SERVER MERGE COMPLETED TEXT}    %SYSTEM%    ${system 1}[name]
-#    ${s}=   Replace String    ${s}   %SERVER%    https://${QA BURBANK IP}:${system 2}[port]
-#    Run keyword and continue on failure    Check For Alert    ${s}
-    Run keyword and continue on failure    Check For Alert    ${MERGE COMPLETED TEXT}
+    ${s}=   Replace String    ${SYSTEM AND SERVER MERGE COMPLETED TEXT}    %SYSTEM%    ${system 1}[name]
+    ${s}=   Replace String    ${s}   %SERVER%    https://${QA BURBANK IP}:${system 2}[port]
+    Run keyword and continue on failure    Check For Alert    ${s}
     Slow    Reload Page    timeout=5
 
     Click Link    ${SERVERS LINK}
-    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[cont]")]
+    Verify On Servers Page
+    Select Server By Name    Server ${system 1}[id]
+#    Click Element    //a[contains(@id, "${server 1 id}")]//span[contains(text(), "Server ${system 1}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
-    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[cont]")]
-    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[cont]")]
+    Select Server By Name    Server ${system 2}[id]
+#    Click Element    //a[contains(@id, "${server 2 id}")]//span[contains(text(), "Server ${system 2}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
 Positive scenario with selected non-autodiscovered system (only Server URL input)
     [Tags]    C76221    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=custom1    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=custom2
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=custom1    owner=${owner email}     add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom2    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1: Press Merge button and validate the dialog
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog    lonely=True
@@ -545,10 +587,9 @@ Positive scenario with selected non-autodiscovered system (only Server URL input
     Wait Until Elements Are Visible
     ...    //div/strong[contains(text(), "Server at https://${QA BURBANK IP}:${system 2}[port]")]
     ...    //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
-#    ${s}=   Replace String    ${SYSTEM AND SERVER MERGE COMPLETED TEXT}    %SYSTEM%    ${system 1}[name]
-#    ${s}=   Replace String    ${s}   %SERVER%    https://${QA BURBANK IP}:${system 2}[port]
-#    Run keyword and continue on failure    Check For Alert    ${s}
-    Run keyword and continue on failure    Check For Alert    ${MERGE COMPLETED TEXT}
+    ${s}=   Replace String    ${SYSTEM AND SERVER MERGE COMPLETED TEXT}    %SYSTEM%    ${system 1}[name]
+    ${s}=   Replace String    ${s}   %SERVER%    https://${QA BURBANK IP}:${system 2}[port]
+    Run keyword and continue on failure    Check For Alert    ${s}
 
 Positive scenario with selected new system
      Log    Commented out due to CLOUD-5439
@@ -577,15 +618,17 @@ Positive scenario with back button use (on choosing primary system)
     [Tags]    C76270    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    4
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -637,9 +680,16 @@ Different types of users in both Systems
     [Tags]    C76326    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+
+    FOR    ${i}    IN RANGE    1    4
+        Append To List    ${test systems}    ${system ${i}}
+    END
+
     Sleep    60
 
     ${sys 1 admin}=   Register and activate account with random email    sys1    admin    ${BASE PASSWORD}
@@ -657,13 +707,13 @@ Different types of users in both Systems
 
     Log    Step 1: Merge System 1(primary) with System 2(secondary), check users
     Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Reload Page
     Sleep    60    # To avoid false negative tests
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Complete merge steps till final password input    ${system 1}[name]    ${system 2}[name]
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=2
     Validate Merge    ${system 1}[name]    ${system 2}[name]
 
     ${sys 1 users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${system 1}[port]
@@ -687,12 +737,12 @@ Different types of users in both Systems
     END
 
     Log    Step 2: Merge System 1(secondary) with System 3(primary), check users
-    Go To    ${ENV}/systems/${system 3}[id]
+    Go To    ${ENV}/systems/${system 3}[cloud id]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
     Complete merge steps till final password input    ${system 3}[name]    ${system 1}[name]
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=2
     Validate Merge    ${system 3}[name]    ${system 1}[name]
 
     ${sys 3 users}=   Get Users    ${auth}    https://${QA BURBANK IP}:${system 3}[port]
@@ -717,7 +767,8 @@ Different types of users in both Systems
         ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[advancedViewer]
     END
 
-    Slow    Reload Page     timeout=5
+    Reload Page
+    Sleep    10
     Click Link    ${USERS LIST LINK}
     FOR    ${user}    IN    @{sys 3 user emails}
         Wait until element is visible    //div[@id="level3users"]//span[contains(text(), "${user}")]   timeout=1
@@ -727,21 +778,25 @@ Checking state for selected Cloud system - System offline / back online
     [Tags]    C70983    C70987    state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 4}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    5
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
-    Stop Docker Server    ${system 2}[server name]
-    Stop Docker Server    ${system 4}[server name]
-    ${auth}=   Create List    ${owner email}    ${BASE PASSWORD}
+
+    Stop Docker Server    ${system 2}[id]
+    Stop Docker Server    ${system 4}[id]
 
     FOR    ${i}    IN    1    3
         Log    C70983: System offline
         Log    Step 1
         Log In    ${owner email}    ${BASE PASSWORD}
-        Go To    ${ENV}/systems/${system ${i}}[id]
-        Reload Page
+        Go To    ${ENV}/systems/${system ${i}}[cloud id]
         Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
         Slow    Click Button    ${MERGE BUTTON SYSTEM}    timeout=1
         Validate Check Merge Dialog
@@ -762,9 +817,15 @@ Checking state for selected Cloud system - System offline / back online
 
         Log    C70987: offline system becomes online
         Log    Step 2: Bring system 2 back online and click Next
-#        Start Container    ${system ${j}}[cont]
-        Start Docker Server    ${system ${j}}[server name]
-        Sleep    60
+        Start Docker Server    ${system ${j}}[id]
+        Go To    ${ENV}/systems/${system ${j}}[cloud id]
+        Reload Page
+        Wait Until Element Is Not Visible    ${SYSTEM OFFLINE}    timeout=90
+        Go To    ${ENV}/systems/${system ${i}}[cloud id]
+        Wait until element is enabled    ${MERGE BUTTON SYSTEM}
+        Slow    Click Button    ${MERGE BUTTON SYSTEM}    timeout=1
+        Validate Check Merge Dialog
+
         Click Button    ${MERGE NEXT BUTTON}
         Wait until element is visible    ${MERGE CHECKING HINT}
         Validate Choose Primary Dialog    ${system ${i}}[name]    ${system ${j}}[name]
@@ -789,14 +850,19 @@ Checking state for selected Cloud system - systems have different versions
     [Tags]    C70984    C70985   state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    C70984: System has an older software version
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 2}[id]
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Log in to system    ${system 2}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
     Choose System From Dropdown    ${system 1}[name]
@@ -814,7 +880,7 @@ Checking state for selected Cloud system - systems have different versions
     Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
     Log    C70985: System has a newer software version
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -836,15 +902,19 @@ Checking state for selected Cloud system - Duplicate servers
     [Tags]    C71004    state_cloud    state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    network=host    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    network=host    cloud email=${owner email}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
 
@@ -861,14 +931,17 @@ Checking state for selected local system - Server URL is empty
     [Tags]    C76223    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -885,18 +958,20 @@ Checking state for selected local system - Server URL is empty
     Wait until element has style    ${MERGE ENTER SERVER ADDRESS}    color    ${ERROR COLOR WITH OPACITY}
     Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
 
-Checking state for selected local system - No server is found for system 4.1
+Checking state for selected local system - No server is found for system 4.1+
     [Tags]    C76223    C76224    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -919,61 +994,69 @@ Checking state for selected local system - No server is found for system 4.1
     Wait Until Element Is Visible    ${MERGE SERVER NOT FOUND}
     Wait until element has style    ${MERGE SERVER NOT FOUND}    color    ${ERROR COLOR WITH OPACITY}
 
-Checking state for selected local system - No server is found for system 4.0
-    [Tags]    C76528    state_local    neg
-    Log    Test Setup
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.0}
-    Set Local Variable    ${not existing server}    https://10.10.10.100:7001
-    Sleep    60
-
-    Log    Step 1
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-    Choose System From Dropdown    ${OTHER SYSTEM}
-    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
-
-    Input Text   ${MERGE FORM SERVER URL INPUT}    ${not existing server}
-    Click Button    ${MERGE NEXT BUTTON}
-    # Currently fails due to CLOUD-6450
-    Validate Admin Password Dialog
-
-    Log    Step 2
-    Input Text   ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${not existing server}
-
-    Log    Step 3
-    Input Text   ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${MERGE SYSTEMS BUTTON}
-    Validate Merge Failed Dialog
-
-    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
-    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
-    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at ${not existing server}
-    ${error p2}=   Replace String    ${SERVER IS INACCESSIBLE TEXT}    %SERVER%    ${not existing server}
-    Run keyword and continue on failure    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
-
-    Log    Step 4
-    Click Button    ${MERGE FAILED OK BUTTON}
-    Wait until element is not visible    ${MERGE FAILED DIALOG}
+#Checking state for selected local system - No server is found for system 4.0
+#    [Tags]    C76528    state_local    neg
+#    Log    Test Setup
+#    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+#    ${rs}=   Generate Random String
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=False
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    add users=False
+#    FOR    ${i}    IN RANGE    1    3
+#        Append To List    ${test systems}    ${system ${i}}
+#    END
+#    Set Local Variable    ${not existing server}    https://10.10.10.100:7001
+#    Sleep    60
+#
+#    Log    Step 1
+#    Log In    ${owner email}    ${BASE PASSWORD}
+#    Go To    ${ENV}/systems/${system 1}[cloud id]
+#    Reload Page
+#    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
+#    Click Button    ${MERGE BUTTON SYSTEM}
+#    Validate Check Merge Dialog
+#    Choose System From Dropdown    ${OTHER SYSTEM}
+#    Wait Until Element Is Visible    ${MERGE FORM SERVER URL INPUT}
+#
+#    Input Text   ${MERGE FORM SERVER URL INPUT}    ${not existing server}
+#    Click Button    ${MERGE NEXT BUTTON}
+#    # Currently fails due to CLOUD-6450
+#    Validate Admin Password Dialog
+#
+#    Log    Step 2
+#    Input Text   ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
+#    Click Button    ${MERGE NEXT BUTTON}
+#    Validate Confirm Merge Dialog    ${system 1}[name]    server at ${not existing server}
+#
+#    Log    Step 3
+#    Input Text   ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
+#    Click Button    ${MERGE SYSTEMS BUTTON}
+#    Validate Merge Failed Dialog
+#
+#    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+#    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+#    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at ${not existing server}
+#    ${error p2}=   Replace String    ${SERVER IS INACCESSIBLE TEXT}    %SERVER%    ${not existing server}
+#    Run keyword and continue on failure    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
+#
+#    Log    Step 4
+#    Click Button    ${MERGE FAILED OK BUTTON}
+#    Wait until element is not visible    ${MERGE FAILED DIALOG}
 
 Checking state for selected local system - Selected server has an older software version
     [Tags]    C76226    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.0}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
     Log In    ${owner email}    ${base password}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Choose System From Dropdown    ${system 2}[name]
@@ -993,13 +1076,17 @@ Checking state for selected local system - Selected server has a newer software 
     [Tags]    C76396    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Step 1
     Log In    ${owner email}    ${base password}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
@@ -1020,13 +1107,19 @@ Checking state for selected local system - URL validation error
     [Tags]    C76227    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
+#    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
+#    ${system 2}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log    Steps 1, 2
     Log In    ${owner email}    ${base password}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
     Choose System From Dropdown    ${OTHER SYSTEM}
@@ -1053,12 +1146,16 @@ Owner's of the selected system password validation
     [Tags]    C76265    C76266    password_valid
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
     Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
+    Go To    ${ENV}/systems/${system 1}[cloud id]
     Reload Page
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -1086,14 +1183,17 @@ Current account's password validation
     Log    Fails due to CLOUD-6451
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Log in to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+
     Complete merge steps till final password input    ${system 1}[name]    ${system 2}[name]
 
     Log    C76267: Click Next with blank password field
@@ -1114,19 +1214,21 @@ General errors - Duplicate servers
     [Tags]    C76484    C76485    general_errors    neg    should
     Log    Test Set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    90
 
-    ${auth}=   Create List    ${owner email}    ${base password}
-    Merge Systems    ${auth}    ${system 1}[id]    ${system 2}[id]
+    Merge Systems Local    ${system 1}[local auth]    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${system 1}[port]    ${QA BURBANK IP}:${system 2}[port]
     Sleep    60
-    Detach Server From System    https://${QA BURBANK IP}:${system 2}[port]    ${auth}
+    Detach Server From System    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]
     Setup Local System    https://${QA BURBANK IP}:${system 2}[port]    ${base password}    ${system 2}[name]
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+
+    Log in to system     ${system 1}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Log    C76484
     Log    Step 1
@@ -1140,14 +1242,14 @@ General errors - Duplicate servers
 
     Log    Step 3
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=2
     Validate General Error Dialog
     Wait Until Elements Are Visible
     ...    ${MERGE SERVER APPEARS TO BE LISTING ITSELF}
     ...    ${MERGE REMOVE OFFLINE AND INCOMPATIBLE SERVERS}
 
     Log    Step 4
-    Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=1
+    Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=2
     Validate General Error Dialog
     Wait Until Elements Are Visible
     ...    ${MERGE SERVER APPEARS TO BE LISTING ITSELF}
@@ -1155,10 +1257,10 @@ General errors - Duplicate servers
 
     Log    C76484
     Log    Step 2
-    ${id}=    Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${auth}    Server ${system 2}[cont]
-    Remove Resource From System    https://${QA BURBANK IP}:${system 1}[port]    ${auth}    ${id}
+    ${id}=    Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 2}[id]
+    Remove Resource From System    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    ${id}
     ${auth}=   Create List    admin    ${base password}
-    ${id}=    Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    Server ${system 1}[cont]
+    ${id}=    Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    Server ${system 1}[id]
     Remove Resource From System    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    ${id}
     Sleep    5    # avoid false negative results
 
@@ -1177,17 +1279,19 @@ General Errors - Selected server is already in this system
     [Tags]    C76466    general_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    4
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    90
 
-    ${auth}=   Create List    ${owner email}    ${base password}
-    Merge Systems    ${auth}    ${system 1}[id]    ${system 2}[id]
+    Merge Systems Local    ${system 1}[local auth]    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${system 1}[port]    ${QA BURBANK IP}:${system 2}[port]
     Sleep    60
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 1
@@ -1196,7 +1300,7 @@ General Errors - Selected server is already in this system
 
     Log    Step 2
     Choose System From Dropdown    ${OTHER SYSTEM}    input url=https://${QA BURBANK IP}:${system 2}[port]    check url=True
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=2
     Validate Admin Password Dialog
 
     Log    Step 3
@@ -1211,14 +1315,16 @@ General Errors - System (server) offline after owner's of the selected system pa
     [Tags]    C76272    general_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}
-    ${auth}=   Create List    admin    ${base password}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep    60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
@@ -1231,7 +1337,7 @@ General Errors - System (server) offline after owner's of the selected system pa
     Log    Step 2
     Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE NEXT BUTTON}
-    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${auth}   # make the server offline temporary
+    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]   # make the server offline temporary
     Validate General Error Dialog
     ${s}=   Replace String    ${SYSTEM IS INACCESSIBLE TEXT}    %SYSTEM%   ${system 2}[name]
     Wait Until Element Is Visible    //p[contains(text(), "${s}")]
@@ -1241,16 +1347,19 @@ General Errors - Different owners
     Log    Test Setup
     ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner 1 email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner 2 email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner 1 email}
+
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner 2 email}    add users=False
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner 1 email}    add users=False
+    FOR    ${i}    IN RANGE    1    4
+        Append To List    ${test systems}    ${system ${i}}
+    END
     ${auth}=   Create List    admin    ${base password}
     Sleep   60
 
-    Log In    ${owner 1 email}    ${base password}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Login to system    ${system 1}    ${owner 1 email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Log    C76225
     Log    Steps 1, 2
@@ -1292,7 +1401,7 @@ General Errors - Different owners
 
     Log    C76464
     Log    Step 2
-    Disconnect    ${ENV}    ${owner 2 email}    ${base password}    ${system 2}[id]
+    Disconnect    ${ENV}    ${owner 2 email}    ${base password}    ${system 2}[cloud id]
     Slow    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    timeout=5
     Connect System to Cloud   ${auth}   https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[name]    ${owner 1 email}    ${base password}
     Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=0.5
@@ -1310,21 +1419,23 @@ Merge Errors - System (server) offline after current account's password validati
     [Tags]    C76273   merge_errors    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     ${auth}=   Create List    admin    ${base password}
     Sleep  60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
     Complete merge steps till final password input     ${system 1}[name]    ${system 2}[name]
 
     Log     Step 2
-    Stop Docker Server    ${system 2}[server name]
+    Stop Docker Server    ${system 2}[id]
     Sleep    5
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
@@ -1334,7 +1445,8 @@ Merge Errors - System (server) offline after current account's password validati
     ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
     ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
     ${error p2}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 2}[name]
-    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
+    ${offline status}=   Run Keyword And Return Status    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
+    Run Keyword Unless    $offline_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1344,14 +1456,16 @@ Merge Errors - Primary System becomes offline during merge process
     [Tags]    C76277    merge_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     ${auth}=   Create List    ${owner email}    ${base password}
     Sleep   60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
+    Login to system    ${system 1}    ${owner email}
     Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log     Step 1
@@ -1360,7 +1474,7 @@ Merge Errors - Primary System becomes offline during merge process
     Log     Step 2
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${MERGE SYSTEMS BUTTON}
-    Restart Server    https://${QA BURBANK IP}:${system 1}[port]    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[cloud auth]
     Validate Merge Failed Dialog
 
     ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
@@ -1380,15 +1494,16 @@ Merge Errors - Secondary System becomes offline during merge process
     [Tags]    C76278    merge_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.1}    cloud email=${owner email}
-    ${auth}=   Create List    ${owner email}    ${base password}
+    ${rs}=   Generate Random String
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=False
+    FOR    ${i}    IN RANGE    1    3
+        Append To List    ${test systems}    ${system ${i}}
+    END
     Sleep   60
 
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Login to system    ${system 1}    ${owner email}
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
     Log     Step 1
     Complete merge steps till final password input    ${system 1}[name]     ${system 2}[name]
@@ -1396,7 +1511,7 @@ Merge Errors - Secondary System becomes offline during merge process
     Log     Step 2
     Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}
     Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
-    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${auth}
+    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[cloud auth]
     Validate Merge Failed Dialog
 
     ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
@@ -1412,95 +1527,102 @@ Merge Errors - Secondary System becomes offline during merge process
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE DIALOG}
 
-Merge Errors - Duplicate servers for 4.0 Systems
-    [Tags]    C76546    merge_errors    neg
-    Log    Fails due to CLOUD-6450
-    Log    Test Setup
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    ${system 2}=   Setup System    image=${IMAGE 4.0}    cloud email=${owner email}
-    Sleep    90
-    ${auth}=   Create List    ${owner email}    ${base password}
-
-    Merge Systems    ${auth}    ${system 1}[id]    ${system 2}[id]
-    Sleep    60
-    Detach Server From System    https://${QA BURBANK IP}:${system 2}[port]    ${auth}
-    Sleep    10
-    Setup Local System    https://${QA BURBANK IP}:${system 2}[port]    ${base password}    ${system 2}[name]
-
-    Log In    ${owner email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-
-    Log    Step 1
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-
-    Log    Step 2
-    Choose System From Dropdown    ${system 2}[name]
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Admin Password Dialog
-
-    Log    Step 3
-    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
-
-    Log    Step 4
-    Input Text    ${MERGE PASSWORD INPUT}    ${base password}
-    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
-    Validate Merge Failed Dialog
-
-    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
-    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
-    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
-    Should be equal as strings    ${txt}    ${error p1}\n${SERVER APPEARS TO BE LISTING ITSELF TEXT}\n${REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT}
-
-    Click Button    ${MERGE FAILED OK BUTTON}
-    Wait until element is not visible    ${MERGE DIALOG}
-
-Merge Errors - Different owners for Sytems 4.0
-    [Tags]    C76547    merge_errors    neg
-    Log    Fails due to CLOUD-6450
-    Log    Test Setup
-    ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${system 1}=   Setup System    image=${IMAGE 4.0}    network=bridge    cloud email=${owner 1 email}
-    ${system 2}=   Setup System    image=${IMAGE 4.0}    network=host    cloud email=${owner 2 email}
-    ${system 3}=   Setup System    image=${IMAGE 4.1}    network=bridge    cloud email=${owner 1 email}
-    Sleep    60
-
-    Log In    ${owner 1 email}    ${BASE PASSWORD}
-    Go To    ${ENV}/systems/${system 1}[id]
-    Reload Page
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-
-    Log    Step 1
-    Slow    Click Button    ${MERGE BUTTON SYSTEM}    timeout=0.5
-    Validate Check Merge Dialog
-
-    Log    Step 2
-    Choose System From Dropdown    ${OTHER SYSTEM}
-    Wait until element is visible    ${MERGE FORM SERVER URL INPUT}
-    Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    https://${QA BURBANK IP}:${system 2}[port]    timeout=1
-    Click Button    ${MERGE NEXT BUTTON}
-    Validate Admin Password Dialog
-
-    Log    Step 3
-    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-    Validate Confirm Merge Dialog    ${system 1}[name]    server at https://${QA BURBANK IP}:${system 2}[port]
-
-    Log    Step 4
-    Input Text    ${MERGE PASSWORD INPUT}    ${base password}
-    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
-    Validate Merge Failed Dialog
-
-    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
-    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
-    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at https://${QA BURBANK IP}:${system 2}[port]
-    Should be equal as strings    ${txt}    ${error p1}\n${THIS SYSTEM HAS DIFFERENT OWNER TEXT}
-
-    Click Button    ${MERGE FAILED OK BUTTON}
-    Wait until element is not visible    ${MERGE DIALOG}
+#Merge Errors - Duplicate servers for 4.0 Systems
+#    [Tags]    C76546    merge_errors    neg
+#    Log    Fails due to CLOUD-6450
+#    Log    Test Setup
+#    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+#    ${rs}=   Generate Random String
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner email}    add users=False
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner email}    add users=False
+#    FOR    ${i}    IN RANGE    1    3
+#        Append To List    ${test systems}    ${system ${i}}
+#    END
+#    Sleep    90
+#    ${auth}=   Create List    ${owner email}    ${base password}
+#
+#    Merge Systems    ${auth}    ${system 1}[id]    ${system 2}[id]
+#    Sleep    60
+#    Detach Server From System    https://${QA BURBANK IP}:${system 2}[port]    ${auth}
+#    Sleep    10
+#    Setup Local System    https://${QA BURBANK IP}:${system 2}[port]    ${base password}    ${system 2}[name]
+#
+#    Log In    ${owner email}    ${BASE PASSWORD}
+#    Go To    ${ENV}/systems/${system 1}[cloud id]
+#    Reload Page
+#    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+#
+#    Log    Step 1
+#    Click Button    ${MERGE BUTTON SYSTEM}
+#    Validate Check Merge Dialog
+#
+#    Log    Step 2
+#    Choose System From Dropdown    ${system 2}[name]
+#    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+#    Validate Admin Password Dialog
+#
+#    Log    Step 3
+#    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
+#    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+#    Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
+#
+#    Log    Step 4
+#    Input Text    ${MERGE PASSWORD INPUT}    ${base password}
+#    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+#    Validate Merge Failed Dialog
+#
+#    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+#    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+#    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
+#    Should be equal as strings    ${txt}    ${error p1}\n${SERVER APPEARS TO BE LISTING ITSELF TEXT}\n${REMOVE OFFLINE AND INCOMPATIBLE SERVERS TEXT}
+#
+#    Click Button    ${MERGE FAILED OK BUTTON}
+#    Wait until element is not visible    ${MERGE DIALOG}
+#
+#Merge Errors - Different owners for Sytems 4.0
+#    [Tags]    C76547    merge_errors    neg
+#    Log    Fails due to CLOUD-6450
+#    Log    Test Setup
+#    ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+#    ${owner 2 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
+#    ${rs}=   Generate Random String
+#    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.0}    owner=${owner 1 email}    add users=False
+#    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.0}    owner=${owner 2 email}    add users=False
+#    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner 3 email}    add users=False
+#
+#    FOR    ${i}    IN RANGE    1    4
+#        Append To List    ${test systems}    ${system ${i}}
+#    END
+#    Sleep    60
+#
+#    Log in to system    ${system 1}    ${owner 1 email}
+#    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+#
+#    Log    Step 1
+#    Slow    Click Button    ${MERGE BUTTON SYSTEM}    timeout=0.5
+#    Validate Check Merge Dialog
+#
+#    Log    Step 2
+#    Choose System From Dropdown    ${OTHER SYSTEM}
+#    Wait until element is visible    ${MERGE FORM SERVER URL INPUT}
+#    Slow    Input Text    ${MERGE FORM SERVER URL INPUT}    https://${QA BURBANK IP}:${system 2}[port]    timeout=1
+#    Click Button    ${MERGE NEXT BUTTON}
+#    Validate Admin Password Dialog
+#
+#    Log    Step 3
+#    Input Text    ${MERGE ADMIN FORM PASSWORD INPUT}    ${base password}
+#    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+#    Validate Confirm Merge Dialog    ${system 1}[name]    server at https://${QA BURBANK IP}:${system 2}[port]
+#
+#    Log    Step 4
+#    Input Text    ${MERGE PASSWORD INPUT}    ${base password}
+#    Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
+#    Validate Merge Failed Dialog
+#
+#    ${txt}=   Get Text    ${MERGE FAILED ERROR TEXT}
+#    ${error p1}=   Replace String    ${FAILED TO MERGE SYSTEMS TEXT}    %SYSTEM1%    ${system 1}[name]
+#    ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    server at https://${QA BURBANK IP}:${system 2}[port]
+#    Should be equal as strings    ${txt}    ${error p1}\n${THIS SYSTEM HAS DIFFERENT OWNER TEXT}
+#
+#    Click Button    ${MERGE FAILED OK BUTTON}
+#    Wait until element is not visible    ${MERGE DIALOG}

@@ -323,10 +323,12 @@ Language change affects emails
     # ...    is_secure=True
     # Delete All Emails
     # Close Mailbox
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    Register And Activate Account    Mark    Hamill    ${random email}    ${password}
     Go to    ${url}/account
     ${subject}=   Set Variable If   '''${LANGUAGE}'''=='''ru_RU'''    Reset your password    Восстановление пароля
     Run Keyword If    '''${subject}'''=='''Восстановление пароля'''    Run Keywords
-    ...    Log In    ${no perm}    ${password}    button=None    AND
+    ...    Log In    ${random email}    ${password}    button=None    AND
     ...    Verify in Account Page    AND
     ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
     ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..    AND
@@ -335,7 +337,7 @@ Language change affects emails
     ...    Sleep    5    AND
     ...    Close Browser
     ...    ELSE   Run Keywords
-    ...    Log In    ${no perm}    ${password}    button=None    AND
+    ...    Log In    ${random email}    ${password}    button=None    AND
     ...    Verify in Account Page    AND
     ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}    AND
     ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='en_US']/..    AND
@@ -347,7 +349,7 @@ Language change affects emails
     Open Browser With Options
     Go To    ${url}/restore_password
     Wait Until Elements are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${no perm}
+    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
     Click Button    ${RESET PASSWORD BUTTON}
     Wait Until Element is Visible    ${RESET EMAIL SENT MESSAGE}  
     Sleep    10
@@ -357,7 +359,7 @@ Language change affects emails
     ...    port=${BASE PORT}
     ...    user=${BASE EMAIL}
     ...    is_secure=True
-    ${email}    Wait For Email    recipient=${no perm}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
     Check Email Subject
     ...    ${email}
     ...    ${subject}
@@ -367,7 +369,7 @@ Language change affects emails
     ...    ${BASE PORT}
     Delete Email    ${email}
     Close Mailbox
-    Check Language Logged In    ${no perm}    ${password}
+    Check Language Logged In    ${random email}    ${password}
 
 Language change is new default
     [tags]    C41574    

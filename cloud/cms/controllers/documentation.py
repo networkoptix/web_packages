@@ -35,26 +35,38 @@ def split_blocks(html):
             node_content = node.getText() if type(node) == Tag else str(node)
             node_content = node_content.replace('\n', '')
             node_contentHTML = str(node).replace('\n', '')
-            if type(node) == Tag and 'content-block' in node.get('class', []):
+            node_class = node.get('class', []) if type(node) == Tag else []
+            individual_block = False
+            if 'content-block' in node_class:
                 node_type = 'content'
+                individual_block = True
+            elif 'text' in node_class:
+                node_type = 'text'
+                individual_block = True
             else:
                 node_type = 'text'
 
-            if current_block and node_type != current_block['type']:
-                blocks.append(current_block.copy())
-                current_block = {}
-
-            if current_block:
-                current_block['content'] += f'{" " if current_block["content"] else ""}{node_content}'
-                current_block['contentHTML'] += node_contentHTML
-            else:
-                current_block = {
+            if individual_block:
+                if current_block and (current_block.get('content') or current_block.get('contentHTML')):
+                    blocks.append(current_block.copy())
+                    current_block = {}
+                blocks.append({
                     "type": node_type,
                     "contentHTML": node_contentHTML,
                     "content": node_content
-                }
+                })
+            else:
+                if current_block:
+                    current_block['content'] += f'{" " if current_block["content"] else ""}{node_content}'
+                    current_block['contentHTML'] += node_contentHTML
+                else:
+                    current_block = {
+                        "type": node_type,
+                        "contentHTML": node_contentHTML,
+                        "content": node_content
+                    }
         else:
-            if current_block:
+            if current_block and (current_block.get('content') or current_block.get('contentHTML')):
                 blocks.append(current_block)
     return blocks
 

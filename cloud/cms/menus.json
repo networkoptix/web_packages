@@ -13,6 +13,16 @@
         "enabled": true,
         "nodes": [
           {
+            "name": "Platform Overview",
+            "authentication": "both",
+            "enabled": false
+          },
+          {
+            "name": "Knowledgebase",
+            "authentication": "both",
+            "enabled": false
+          },
+          {
             "name": "Developer Tools",
             "display_name": "Developer Tools",
             "url": "https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools",

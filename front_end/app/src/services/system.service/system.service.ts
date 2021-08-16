@@ -46,15 +46,14 @@ export class NxSystemService {
         * Factory that creates NxSystem instances
     */
     async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
-        let system: NxSystem;
         const id = systemId || serverId;
         const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
             .getModuleInfo().toPromise()
             .catch(() => { return { reply: { version: 0 } }; });
         if (id in this.systemsCache) {
-            system = this.systemsCache[id];
+            this.system = this.systemsCache[id];
         } else {
-            system = new NxSystem(
+            this.system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
                 this.cloudApi,
@@ -67,14 +66,14 @@ export class NxSystemService {
                 systemId,
                 serverId
             );
-            this.systemsCache[id] = system;
+            this.systemsCache[id] = this.system;
         }
-        system.lostConnection = false;
-        system.setApiVersion(version);
+        this.system.lostConnection = false;
+        this.system.setApiVersion(version);
         if (!skipPoll) {
-            system.startPoll(systemId);
+            this.system.startPoll(systemId);
         }
-        return system;
+        return this.system;
     }
 
     createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {

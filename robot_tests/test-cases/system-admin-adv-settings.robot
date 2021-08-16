@@ -40,7 +40,7 @@ Advanced system settings for offline system
     Log    Get System back online and check advanced settings
     Start Docker Server    ${system}[id]
     Reload Page
-    Wait Until Advanced Settings Are Visible    timeout=120
+    Wait Until Advanced Settings Are Visible    timeout=180
 
 Hide Advanced Settings button functionality
     [Tags]    C76635    threaded

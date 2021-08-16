@@ -154,7 +154,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             }
 
             if (!NxUtilsService.isEqual(currentValue, previousValue)) {
-                this.storagesLoading = true;
                 if (!this.applyService.locked) {
                     setTimeout(() => this.setServer(currentValue?.id !== previousValue?.id));
                 }
@@ -466,6 +465,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     getCurrentStorages(isDifferentServer = false) {
         if (isDifferentServer && this.storageSubscription) {
+            this.storagesLoading = true;
             this.storageSubscription.unsubscribe();
         } else if (this.storageSubscription) {
             return;

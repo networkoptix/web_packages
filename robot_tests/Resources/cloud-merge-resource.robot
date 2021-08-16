@@ -20,38 +20,19 @@ Merge Test Setup
 Merge Test Teardown
     ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    2
     Run Keyword If    ${status}    Log Out via API    validate=False
-    Remove Test Servers
+    Remove Test Systems
+    Run Keyword If Test Failed    Execute Command Remotely    docker rm -f $(docker ps -qa --filter name="cloud_merge")
 
 Merge Suite Teardown
     Close All Browsers
-    Remove Test Servers
     Remove Custom Network    ${custom net id 1}
     Remove Custom Network    ${custom net id 2}
 
-Remove Test Servers
-    FOR    ${s}    IN    @{test servers}
-        Delete Docker Server    ${s}
-        Remove Values From List    ${test servers}    ${s}
+Remove Test Systems
+    FOR    ${s}    IN    @{test systems}
+        Delete Base System    ${s}
+        Remove Values From List    ${test systems}    ${s}
     END
-
-Setup System
-    [Arguments]    ${image}=${IMAGE}    ${network}=bridge    ${cloud email}=${None}
-    ${server}=   Create Docker Server    network=${network}    image=${image}
-    ${system}=   Create Dictionary    name=${image}_${server}[port]    port=${server}[port]    cont=${server}[id]    server name=${server}[name]
-    Append To List    ${test servers}    ${server}[name]
-    Set To Dictionary    ${system}    cont=${system}[cont]
-    ${auth}=   Create List    admin    ${base password}
-    Slow    Setup Local System    https://${QA BURBANK IP}:${system}[port]    ${base password}    ${system}[name]    timeout=1
-
-#   Connect system to cloud if email is not None
-    ${mock list}=   Create List
-    Run Keyword If    $cloud_email    Append To List    ${mock list}    1
-    FOR    ${i}    IN    @{mock list}
-        Set To Dictionary    ${system}    owner=${cloud email}
-        ${id}=   Connect System to Cloud    ${auth}   https://${QA BURBANK IP}:${system}[port]    ${system}[name]    ${system}[owner]    ${base password}
-        Set To Dictionary    ${system}    id=${id}
-    END
-    [Return]    ${system}
 
 Validate Check Merge Dialog
     [Arguments]      ${lonely}=${False}
@@ -120,7 +101,7 @@ Validate Merge Failed Dialog
     ...    ${MERGE FAILED OK BUTTON}
 
 Validate General Error Dialog
-    Wait Until Elements Are Visible
+    Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE TRY AGAIN BUTTON}
@@ -136,13 +117,13 @@ Validate Merge
         ...    //p[contains(text(), "${UNTIL MERGE IS FINISHED TEXT}")]
         ...    //p[contains(text(), "${s}")]
     ...    ELSE    Wait Until Element Is Visible    //div[strong="${secondary}" and contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
-#    /following-sibling::div[contains(text(), "${DEPENDING ON THE SIZE OF DATABASE TEXT}")]
+    #/following-sibling::div[contains(text(), "${DEPENDING ON THE SIZE OF DATABASE TEXT}")]
 
-    Run keyword and continue on failure    Check For Alert    System merge completed
+#    Run keyword and continue on failure    Check For Alert    System merge completed
 #    I beg you, devs, please, stop changing texts
-#    ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
-#    ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
-#    Run keyword and continue on failure    Check For Alert    ${s}
+    ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
+    ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
+    Run keyword and continue on failure    Check For Alert    ${s}
 
 Validate System and Server Merge
     [Arguments]    ${system}    ${server}
@@ -187,9 +168,11 @@ Complete merge steps till final password input
 
     Choose System From Dropdown   ${target system name}    ${input url}    ${check url}
     Validate Check Merge Dialog
-    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Wait Until Element Is Visible    ${MERGE NEXT BUTTON}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=2
     Run keyword and ignore error    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
 
     Choose Primary System    ${from target}
-    Slow    Click Button    ${MERGE NEXT BUTTON}        timeout=1
+    Wait Until Element Is Visible    ${MERGE NEXT BUTTON}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=2
     Validate Confirm Merge Dialog    ${primary system}    ${target system name}

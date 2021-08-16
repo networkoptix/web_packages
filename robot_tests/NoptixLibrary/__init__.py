@@ -80,9 +80,9 @@ class NoptixLibrary(object):
 #         for x in range(len(text)):
 #             element.send_keys(Keys.BACKSPACE)
 
-    def get_random_email(self, email):
+    def get_random_email(self, email, extra=""):
         index = email.find('@')
-        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + email[index:]
+        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
         return email
 
     def get_many_random_emails(self, how_many, email):

@@ -85,7 +85,7 @@ export class NxSystemStorageComponent implements OnInit {
         map(([offset, scroll]) => offset - scroll + 22) // margin offset
     )
 
-    isBackupOn = new Watcher(false);
+    isBackupOn: Watcher<boolean>;
     modeWatchers: {[key: string]: Watcher<any, NxSystemStorageComponent>} = {};
 
     ddWidth: number;
@@ -184,12 +184,13 @@ export class NxSystemStorageComponent implements OnInit {
                     return { backup: false, custom: false };
                 });
                 this.customSettings = backupState.custom;
+                this.isBackupOn = new Watcher(backupState.backup);
                 this.backupState = backupState.backup;
-                this.setupWatchers();
-                if (this.loading && this.currentStorageState.beingChecked) {
+                if (this.loading && this.currentStorageState?.beingChecked) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                     this.pollStats();
                 }
+                this.setupWatchers();
                 this.waitingForStorages = this.loading = false;
                 if (this.currentStorageState.reindexing) {
                     this.currentStorageState.reindexing.forEach(mode => {

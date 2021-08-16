@@ -173,21 +173,34 @@ Should open System page by link not authorized user, and show alert if logs in a
 # COMMON
 User can rename System: change in web -> check server
     [Tags]    C41880    webadmin    cloud
-    Log in to system    ${system}    ${system}[owner]
+    Log    Step 1
+    Log In To System    ${system}    ${system}[owner]
     Wait Until Elements Are Visible
-        ...    ${SYSTEMS DROPDOWN}
-        ...    ${RENAME SYSTEM}
-        ...    ${NO UNSAVED CHANGES}
+    ...    ${SYSTEMS DROPDOWN}
+    ...    ${RENAME SYSTEM}
+    ...    ${NO UNSAVED CHANGES}
+    Log    Step 2
+    Mouse Over    ${SYSTEM NAME}
 
+    Element Style Should Be    ${SYSTEM NAME}    background-color    ${COLOR ALIGHT2 RGB}
     Log    Cancel button works fine
+    Log    Step 3 & 4
     Change System Name    ${new system name}    save=False
-    Click Button    ${CANCEL BUTTON}
-    Wait until elements are not visible
+    Log    Step 5
+    Click Button    ${CANCEL BUTTON}    
+    Wait until elements are not visible    ${CANCEL BUTTON}    ${SAVE BUTTON}
     Wait until element is visible    ${NO UNSAVED CHANGES}
     ${actual name}=   Get Text    ${SYSTEM NAME}
     Should be equal as strings    ${actual name}    ${system}[name]
+    Log    Step 6
+    Click Element    ${SYSTEM NAME}
+    Delete All Text    ${SYSTEM NAME}
+    Element Style Should Be    ${SYSTEM NAME}    border-color    ${ERROR COLOR}
+    Click Button    ${SAVE BUTTON}
+    Element Text Should Be    ${SYSTEM NAME}    ${system}[name]
 
     Log    Save button works fine
+    Log    Step 7
     Change System Name    ${new system name}
     ${actual name}=   Get Text    ${SYSTEM NAME}
     Should be equal as strings    ${actual name}    ${new system name}
@@ -265,9 +278,9 @@ Correct items are shown for admin
         ...    ${SYSTEMS DROPDOWN}
         ...    ${RENAME SYSTEM}
         ...    ${DISCONNECT FROM MY ACCOUNT}
-#        ...    ${OWNER LABEL}
-#        ...    ${expected name}
-#        ...    //span[contains(text(), "${system}[owner]")]
+        ...    ${OWNER LABEL}
+        ...    ${expected name}
+        ...    //span[contains(text(), "${system}[owner]")]
         ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
         ...    ${LICENSES LINK}
         ...    ${CAMERAS LINK}
@@ -282,29 +295,31 @@ Correct items are shown for admin
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin    cloud
+    ${custom role}=    Create And Add Custom Camera User Type and User
     ${viewers}=    Create List
         ...    ${system}[cloud users][advancedViewer]
         ...    ${system}[cloud users][viewer]
         ...    ${system}[cloud users][liveViewer]
         ...    ${system}[cloud users][custom]
-    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
+        ...    ${custom role}
+    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Custom Cameras
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
-#            ...    ${current owner name}
+            ...    ${current owner name}
             ...    ${DISCONNECT FROM MY ACCOUNT}
-#            ...    ${OWNER LABEL}
-#            ...    //span[contains(text(), "${system}[owner]")]
+            ...    ${OWNER LABEL}
+            ...    //span[contains(text(), "${system}[owner]")]
             ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
-        Wait Until Elements Are Not Visible
+        Wait Until Elements Are Not Visible    
             ...    ${RENAME SYSTEM}
             ...    ${DISCONNECT FROM NX}
             ...    ${MERGE BUTTON SYSTEM}
             ...    ${LICENSES LINK}
-            ...    ${CAMERAS LINK}
             ...    ${USERS LINK}
-            ...    ${SERVERS LINK}
+            ...    ${SERVERS LINK}   
+        Run Keyword Unless     '${text}' == 'Custom Cameras'    Wait Until Element Is Not Visible    ${CAMERAS LINK}
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Log Out
     END

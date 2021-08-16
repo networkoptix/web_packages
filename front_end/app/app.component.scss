@@ -1,5 +1,4 @@
 @use 'styles/_theme_variables' as *;
-@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-app {
     .mainContainer {
@@ -15,13 +14,10 @@ nx-app {
         background-color : transparent;
 
         &.page {
-            @include media-breakpoint-up(lg) {
-                position : fixed;
-            }
+            position  : absolute;
             top       : 50%;
             left      : 50%;
             transform : translate(-50%, -50%);
-            z-index   : -1;
         }
     }
 }

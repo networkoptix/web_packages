@@ -373,7 +373,7 @@ Security block is available for administrator or owner
     Log in to user and system    ${user}    ${system}[cloud id]
         Wait Until Settings Are Visible    timeout=60
         Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-        Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+        # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
         Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
         Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
         Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
@@ -432,21 +432,26 @@ Cancel changes in Security block
     Wait Until Settings Are Visible
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX}
+    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${False}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 2
     Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}     ${True}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${False}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${False}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
     
     Log    Step 3
     Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
     Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
     Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${True}
+    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${True}
+    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
+    Element Should Be Visible    ${ENCRYPTING VIDEO WARNING}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     
     Log    Step 4
@@ -458,42 +463,43 @@ Cancel changes in Security block
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
     
-Checking the dependency of security settings checkboxes
-    [Tags]    C65700    cloud    webadmin    system settings    threaded
-    Log    Preconditions
-    Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
+# The testcase below is retired - no dependency of checkboxes is expected
+# Checking the dependency of security settings checkboxes
+    # [Tags]    C65700    cloud    webadmin    system settings    threaded
+    # Log    Preconditions
+    # Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
     
-    Log    Step 1
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible    timeout=60
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
+    # Log    Step 1
+    # Log in to system    ${system}    ${system}[owner]
+    # Wait Until Settings Are Visible    timeout=60
+    # Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    # Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
+    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    # Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
 
-    Log    Step 2
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
-    Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    # Log    Step 2
+    # Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
+    # Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
+    # Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
     
-    Log    Step 3
-    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
-    Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
-    Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
+    # Log    Step 3
+    # Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
+    # Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
+    # Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
     
-    Log    Step 4
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}    buttons=False
-    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
+    # Log    Step 4
+    # Change Setting    ${ALLOW ONLY SECURE CHECKBOX}    buttons=False
+    # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
+    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
+    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
 
-    Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    # Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
+    # Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    # Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 Check Limit session duration
     [Tags]    C65703    cloud    webadmin    system settings    threaded
@@ -513,45 +519,57 @@ Check Limit session duration
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
-    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
     
     Log    Step 2
     Clear Element Text    ${TIME NUMBER INPUT}
-    Input Text    ${TIME NUMBER INPUT}    0
     Sleep    1
+    # Page Should Not Contain Element     ${SAVE BUTTON}
+    Input Text    ${TIME NUMBER INPUT}    0
+    Sleep    1 
+    
+    
+    # Sleep    1
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Page Should Not Contain Element     ${SAVE BUTTON}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 3
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    hjkl
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${TIME DURATION SELECTION HOURS} 
-    ...    ${TIME DURATION SELECTION MINUTES}
-    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1 
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    # Click Button    ${TIME DURATION INTERVAL BUTTON}
+    # Wait Until Elements Are Visible
+    # ...    ${TIME DURATION SELECTION HOURS} 
+    # ...    ${TIME DURATION SELECTION MINUTES}
+    # Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
-    Page Should Not Contain Element     ${SAVE BUTTON}
+    # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 4
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    "&*("
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${TIME DURATION SELECTION HOURS} 
-    ...    ${TIME DURATION SELECTION MINUTES}
-    Click Element    ${TIME DURATION SELECTION MINUTES}
-    Sleep    1    
-    Page Should Not Contain Element     ${SAVE BUTTON}
+    # Click Button    ${TIME DURATION INTERVAL BUTTON}
+    # Wait Until Elements Are Visible
+    # ...    ${TIME DURATION SELECTION HOURS} 
+    # ...    ${TIME DURATION SELECTION MINUTES}
+    # Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1 
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
@@ -644,7 +662,8 @@ Check HTTPS traffic encryption
 
     Log    Step 2
     Go To    ${server url}
-    Wait until location is    ${server url}/static/index.html#/
+    Run Keyword If    ${IMAGE} == ${4.2_test}    Wait until location is    ${server url}/static/index.html#/
+    ...    ELSE     Wait until location is    ${server url}/#/settings
 
     Log    Step 3
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    false

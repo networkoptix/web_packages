@@ -49,7 +49,7 @@ works at registration page on account activation success
 
 works at registration page on account activation error
     [tags]    email
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
     Register    'mark'    'hamill'    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
@@ -82,13 +82,10 @@ works at restore password page with email input - after submit success
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     Check Log In
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${emailID}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
-    Delete Email    ${emailID}
 
-works at restore password page with password input - before submit
+Works at restore password page with password input - before submit
     [tags]    email
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
@@ -107,12 +104,13 @@ works at restore password page with password input - before submit
     Go To    ${link}
     Check Log In
 
-works at restore password page with password input - after submit error
+Works at restore password page with password input - after submit error
     [tags]    email
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
+    ${link}    Strip String    ${link}
     Go To    ${link}
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
@@ -131,12 +129,13 @@ works at restore password page with password input - after submit error
     Wait Until Element Is Visible    ${PASSWORD IS REQUIRED}
     Check Log In
 
-works at restore password page with password input - after submit success
+Works at restore password page with password input - after submit success
     [tags]    email
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
+    ${link}    Strip String    ${link}
     Go To    ${link}
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
@@ -155,6 +154,6 @@ works at restore password page with password input - after submit success
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Check Log In
 
-works at IPVD page
+Works at IPVD page
     Go To IPVD Page
     Check Log In

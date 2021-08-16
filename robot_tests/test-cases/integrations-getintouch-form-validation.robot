@@ -4,7 +4,7 @@ Suite Setup       Form Validation
 Test Template     Test Get In Touch Invalid
 Test Teardown     Run Keyword if Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        form    Threaded
+Force Tags        form    Threaded    integrations
 
 *** Variables ***
 ${url}    ${ENV}

@@ -93,7 +93,7 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo>
 
     public set serverTimes (st: Array<ServerTimeInfo>) {
-        this._log('serverTimes set', st.map(i => i.timeZoneOffset))
+        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st)
         this._serverTimes = [...st];
     }
 
@@ -148,7 +148,11 @@ export class VideoManagementSystemService {
                 this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
                 this.serverTimes[0];
             const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
-            const serverTZO = preferredServerTime?.timeZoneOffset || clientTZO;
+            const serverTZO = preferredServerTime?.timeZoneOffset
+            if (serverTZO === undefined) {
+                return 0;
+            }
+            // this._log('TZO', preferredServerTime, serverTZO, clientTZO, serverTZO - clientTZO)
             result = serverTZO - clientTZO;
         }
         return result
@@ -204,6 +208,7 @@ export class VideoManagementSystemService {
         if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
             this.selectedCamera = this._state.selectedCamera;
         }
+        this._log('camera selected', this.selectedCamera)
         const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
         this.cookieService.set(cookieName, cameraId, 365, '/');
         this._emit();

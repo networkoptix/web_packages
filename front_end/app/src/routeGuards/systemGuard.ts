@@ -4,16 +4,17 @@ import {
     RouterStateSnapshot, UrlTree
 }                                    from '@angular/router';
 import { Injectable }                from '@angular/core';
-import { Observable }                from 'rxjs';
+import { Observable, Subject }       from 'rxjs';
 
-import { environment }              from '../../environments/environment';
-import { NxAccountService }          from '../services/account.service';
-import { NxSystem, NxSystemService } from '../services/system.service';
-import { NxSettingsService }         from '../pages/systems/settings/settings.service';
+import { environment }               from '@environments/environment';
+import { NxAccountService }          from '@services/account.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSettingsService }         from '@pages/systems/settings/settings.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
-    system: NxSystem;
+    private loading$ = new Subject<boolean>();
+    public loading = false;
 
     constructor(
         private router: Router,
@@ -40,14 +41,16 @@ export class SystemGuard implements CanActivate {
             return snapshot.params.systemId;
         }).params.systemId;
 
-        const checkPermissions = (system = this.system) => {
+        const checkPermissionsFor = (system: NxSystem) => {
+            const permissions = system.userManager.permissions;
+            const isOwner = system.userManager.isOwner(system.userManager.currentUser);
             const canViewChecks = {
-                users           : system.userManager.permissions.editUsers,
+                users           : permissions.editUsers,
                 'cloud-storage' : system.canUserViewCloudStorage(),
                 health          : system.canViewInfo(),
-                licenses        : system.isAdmin || system.isOwner,
-                advanced        : system.isAdmin || system.isOwner,
-                servers         : system.isAdmin || system.isOwner
+                licenses        : permissions.isAdmin || isOwner,
+                advanced        : permissions.isAdmin || isOwner,
+                servers         : permissions.isAdmin || isOwner
             };
             return canViewChecks[currentRoute] || this.router.navigate(
                 [environment.isLocal ? '/settings/' : `/systems/${systemId}`]
@@ -58,31 +61,32 @@ export class SystemGuard implements CanActivate {
             .get()
             .then(async(account) => {
                 if (account) {
-                    if (environment.isLocal) {
-                        this.system = this.settingsService.system;
-                        return new Promise((resolve) => {
-                            if (this.system) {
-                                resolve(checkPermissions());
+                    const currSystem = this.systemService.getCurrentSystem();
+                    if (!this.settingsService.system) {
+                        this.settingsService.system = currSystem;
+                    }
+
+                    return new Promise((resolve) => {
+                        if (currSystem) {
+                            resolve(checkPermissionsFor(currSystem));
+                        } else {
+                            let systemPromise;
+                            if (environment.isLocal) {
+                                systemPromise = Promise.resolve(this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email));
                             } else {
-                                this.settingsService.system = this.systemService.createLocalSystem(
-                                    this.accountService.mediaServerApi, account.id, account.email
-                                );
+                                systemPromise = this.systemService.createSystem(account.email, systemId, undefined, true);
+                            }
+                            systemPromise.then(system => {
+                                this.settingsService.system = system;
+
                                 (<NxSystem> this.settingsService.system).update().then(_ => {
                                     (<NxSystem> this.settingsService.system).getInfoAndPermissions().then(_ => {
-                                        this.system = this.settingsService.system;
-                                        resolve(checkPermissions());
+                                        resolve(checkPermissionsFor(this.settingsService.system));
                                     });
                                 });
-                            }
-                        });
-                    } else {
-                        this.system = await this.systemService.createSystem(account.email, systemId, undefined, true);
-                        return this.system.getInfoAndPermissions()
-                            .then(checkPermissions)
-                            .catch(() => {
-                                this.router.navigate([`/systems/${systemId}`]);
                             });
-                    }
+                        }
+                    });
                 }
             });
     }

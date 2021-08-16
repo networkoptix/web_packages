@@ -3,7 +3,8 @@ import {
     ViewEncapsulation, ViewChild, ElementRef
 }                                                  from '@angular/core';
 import {
-    ActivatedRoute, ActivationStart, Event, NavigationEnd, Router
+    ActivatedRoute, ActivationStart, Event,
+    GuardsCheckEnd, GuardsCheckStart, NavigationEnd, Router
 }                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
@@ -21,6 +22,7 @@ import { NxBootstrapProvider }                     from '@services/nx-bootstrap-
 import { NxDialogsService }                        from '@dialogs/dialogs.service';
 import { NxConfigService, IConfig }                from '@services/nx-config';
 import { NxCloudApiService }                       from '@services/nx-cloud-api';
+import { SystemGuard }                             from '@src/routeGuards';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -41,7 +43,7 @@ require('./scripts/vendor/protocolcheck');
             </div>
         </div>
         <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
-        <nx-pre-loader type="page" *ngIf="!appStateService.ready && !newSystem"></nx-pre-loader>
+        <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
     styleUrls     : ['./app.component.scss'],
     encapsulation : ViewEncapsulation.None
@@ -52,6 +54,7 @@ export class AppComponent {
     browserBlacklist: {};
     isInIframe: boolean;
     newSystem: boolean;
+    loading: boolean;
 
     CONFIG: IConfig;
 
@@ -61,6 +64,7 @@ export class AppComponent {
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
         public appStateService: NxAppStateService,
+        public systemGuard: SystemGuard,
         private cloudApiService: NxCloudApiService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
@@ -174,15 +178,25 @@ export class AppComponent {
         }
 
         // Updates query params for components without routes.
-        this.router.events.pipe(
-            filter((event: Event) => event instanceof ActivationStart)
-        ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
-            if ('debug' in queryParams) {
-                this.CONFIG.allowDebugMode = true;
-            }
-            this.uriService.queryParams = queryParams;
-            this.mainContainer.nativeElement.scrollTop = 0;
-        });
+        this.router.events
+            .pipe(
+                filter((event: Event) => event instanceof ActivationStart || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
+            ).subscribe((event: ActivationStart | GuardsCheckStart | GuardsCheckEnd) => {
+                if (event instanceof GuardsCheckStart) {
+                    this.loading = true;
+                    return;
+                }
+                if (event instanceof GuardsCheckEnd) {
+                    this.loading = false;
+                    return;
+                }
+
+                if ('debug' in event.snapshot.queryParams) {
+                    this.CONFIG.allowDebugMode = true;
+                }
+                this.uriService.queryParams = event.snapshot.queryParams;
+                this.mainContainer.nativeElement.scrollTop = 0;
+            });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
             this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);

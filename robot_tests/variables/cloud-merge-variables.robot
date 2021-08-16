@@ -1,4 +1,5 @@
 *** Variables ***
+@{TEST SYSTEMS}
 ${MERGE BUTTON SYSTEM}                //button[span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled and span[text()="${MERGE SYSTEM BUTTON TEXT}"]]
 ${MERGE DIALOG}                       //nx-modal-merge-content

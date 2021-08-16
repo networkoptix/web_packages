@@ -245,7 +245,7 @@ Cannot register email that is already activated
 
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211    C43021    Customizations
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Check Language Anonymous
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True

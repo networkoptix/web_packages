@@ -25,8 +25,8 @@ export class NxUtilsService {
         });
     }
 
-    static cleanId(id: string) {
-        return id.replace(/{|}/g, '');
+    static cleanId(id: string | undefined) {
+        return id?.replace(/{|}/g, '');
     }
 
     static cleanIp(ip: string) {

@@ -83,9 +83,8 @@ Cloud Suite Setup
     Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id]
 
     Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
-    Sleep    5
-    ${location}=   Get Location
-    Go To    ${location}/servers
+    Sleep    95
+    Go to Servers
     Verify on Servers Page    timeout=120
 
     Go To    ${ENV}/systems/${server 2}[sysId]
@@ -153,7 +152,7 @@ Cloud Test Setup
     Log in to user and system    ${user}    ${server}[sysId]    password=${password}
     Sleep    5
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
-    Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
+    Run Keyword If    ${verify}    Go To Servers
     Run Keyword If    ${verify}    Verify on Servers Page    timeout=120
 
 Web Admin Test Setup
@@ -199,7 +198,7 @@ Server name can be changed
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Reload Page
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-
+    Element Text Should Be    ${SERVER 1 LIST MENU NAME}     server 1 name changed
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page
