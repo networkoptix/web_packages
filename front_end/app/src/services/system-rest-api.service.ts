@@ -426,7 +426,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
-        return this.http.get(`//${remoteEndpoint}/rest/v1/system/info`).pipe(
+        return this.http.get(`//${remoteEndpoint}/rest/v1/servers/this/info`).pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
             switchMap((data : any) => {
                 if (!remoteServerId) {

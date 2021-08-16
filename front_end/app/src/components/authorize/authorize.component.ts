@@ -29,6 +29,7 @@ export interface AuthorizeParams {
     redirect_url: string,
     grant_type?: string,
     scope?: string,
+    signature?: string,
     state?: string,
     code?: string,
     client_type?: ClientType,
@@ -439,7 +440,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.redirect_url, // || 'http://localhost:9000/',
             this.initialData.response_type, // || 'code',
             this.initialData.state,
-            this.initialData.scope
+            this.initialData.scope,
+            this.initialData.signature
         );
     }
 
