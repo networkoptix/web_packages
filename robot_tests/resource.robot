@@ -380,6 +380,10 @@ Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
+Go to Servers
+    ${location}=   Get Location
+    Go To    ${location}/servers
+
 Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}

@@ -114,7 +114,7 @@ Should not allow to use one restore link twice
 
 Should make not-activated user active by restoring password
     [Tags]    email    C41871    
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Validate Register Email Received    ${email}
@@ -169,7 +169,7 @@ Should handle click I forgot my password link at restore password page
 Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${user}=   Get Random Email    ${BASE EMAIL}
+    ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
     ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}

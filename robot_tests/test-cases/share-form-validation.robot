@@ -62,7 +62,7 @@ Share Form Setup
     ...    AND    Sleep    10
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
     ...    AND    Sleep    5
-    ...    AND    Click Link    ${SERVERS LINK}
+    ...    AND    Go To Servers
     ...    AND    Verify on Servers Page    timeout=120
     ...    AND    Log Out
     

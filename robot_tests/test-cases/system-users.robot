@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
+#Resource    ../special-cases/qa-user-creation.robot
 Suite Setup       Users Suite Setup
 #Test Setup        Users Test Setup
 Test Teardown     Users Test Tear Down
@@ -25,7 +26,7 @@ Reset
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
-    ${random user}    Register and activate account with random email    mark    hamil    ${password}
+    ${random user}=    Register and activate account with random email    mark    hamil    ${password}
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
@@ -486,7 +487,7 @@ Share with unregistered user - brings them to registration page with code with c
     [Tags]    email    C41889
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
-    ${random email}=   Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
     Share To    ${random email}    Administrator
@@ -572,7 +573,8 @@ Share System with the same user twice
 
 Check share email for registered user
     [Tags]    C47297
-    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    Register And Activate Account    Mark    Hamill    ${random email}    ${password}
     Append To List    ${TMP USERS}    ${random email}
     Open Mailbox
     ...    host=${BASE HOST}
