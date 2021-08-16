@@ -1581,6 +1581,7 @@ class ExternalFileManager(models.Manager):
                     raise ValueError('md5 Hash Collision')
             else:
                 external_file_obj.file=file
+        external_file_obj.assest_ds_pair_last_added = datetime.now()
         external_file_obj.asset_ds_pair.add(asset_ds_pair)
         external_file_obj.save()
         return external_file_obj
@@ -1602,6 +1603,7 @@ class ExternalFile(models.Model):
     md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
     asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
+    assest_ds_pair_last_added = models.DateTimeField(default=datetime.now)
 
     objects = ExternalFileManager()
 

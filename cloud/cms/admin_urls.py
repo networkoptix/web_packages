@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
     url(r'^async_package/(?P<asset_id>.+?)/?$', asset.download_async_package, name="download_package_async"),
 
+    url(r'^upload_image/(?P<asset_id>.+?)/(?P<ds_id>.+?)/?$', asset.upload_image, name="upload_image"),
+
     url(r'asset_settings/(?P<asset_id>.+?)/$', asset.asset_settings, name="asset_settings"),
     url(r'get_asset_ids/?$', asset.get_asset_ids_by_asset_type, name="asset_ids_by_type"),
     path('asset_autocomplete', asset.MenuAssetAutocomplete.as_view(create_field='name'), name='asset_autocomplete'),

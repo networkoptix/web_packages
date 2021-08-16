@@ -831,9 +831,15 @@ class TestModifyDB:
         assert upload_imported_image(state)(match_obj) is src
         mock_upload_image.assert_called_once_with(content_file)
 
+    def delete_abandoned_files(self):
+        # TODO: Still need to add unit test
+        assert False
+
     def test_process_html(self, mocker):
         mock_ds = mocker.MagicMock()
         data_image_src = f'src="data:image/{uuid4()};base64,{uuid4()}"'
+        mock_delete_abandoned_files = mocker.patch(
+            'cms.controllers.modify_db.delete_abandoned_files')
         mock_upload_data_image_match = mocker.patch(
             'cms.controllers.modify_db.upload_data_image_match')
         transformed_data_image_src = mock_upload_data_image_match.return_value.return_value = str(
@@ -848,12 +854,14 @@ class TestModifyDB:
         state = RecordSaveState.new(
             data_structure=mock_ds, new_record_value=f'{data_image_src} {import_image_src}')
 
+        mock_ds.meta_settings = {'upload_data_images': False}
+        assert process_html(state)
+        mock_delete_abandoned_files.assert_not_called()
+    
         mock_ds.meta_settings = {'upload_data_images': True}
         assert process_html(state)
         assert state.new_record_value == f'{transformed_data_image_src} {transformed_import_image_src}'
-
-        mock_ds.meta_settings['upload_data_images'] = False
-        assert process_html(state)
+        mock_delete_abandoned_files.assert_called_once_with(state)
 
     def test_check_optional_not_optional(self, mocker):
         mock_ds = mocker.MagicMock()

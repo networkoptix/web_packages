@@ -1,4 +1,5 @@
-
+from PIL import Image
+from django.core.files.base import ContentFile
 from waffle import flag_is_active
 from cms.views.celery import download_result
 from util.helpers import get_admin_url
@@ -676,6 +677,21 @@ def download_async_package(request, asset_id):
     else:
         zipped_data = PACKAGES_CACHE[cache_key]
         return response_attachment(zipped_data.get("file"), make_package_name(asset), "application/zip")
+
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def upload_image(request, asset_id, ds_id):
+    file = request.data.get('file')
+    pil_image = Image.open(file)
+    content_file = ContentFile(file.read(), name=f'{ds_id}-{str(uuid.uuid4())}.' + pil_image.format.lower())
+    asset = Asset.objects.filter(id=asset_id).first()
+    ds = DataStructure.objects.filter(id=ds_id).first()
+    ext_file = ExternalFile.objects.create(
+        asset=asset, data_structure=ds, file=content_file)
+
+    return api_success({'location': ext_file.file.url})
 
 
 customization__query_param = openapi.Parameter("customization", openapi.IN_QUERY, type=openapi.TYPE_STRING)

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import base64
 from io import BytesIO
 import json
@@ -134,6 +134,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
                 asset_ids_found.append(datarecord.asset.id)
     return True
 
+
 @dataclass
 class RecordSaveState:
     new_record_value: typing.Any
@@ -149,6 +150,7 @@ class RecordSaveState:
     records_exist: typing.Any
 
     staticmethod
+
     def new(**kwargs):
         default = {
             'new_record_value': '',
@@ -166,6 +168,7 @@ class RecordSaveState:
         state_dict = {**default, **kwargs}
         return RecordSaveState(**state_dict)
 
+
 def process_file_or_image(state: RecordSaveState):
     # If a file has been uploaded try to save it
     if request_file := state.request_files.get(state.data_structure_name, False):
@@ -182,7 +185,9 @@ def process_file_or_image(state: RecordSaveState):
         return False
     return True
 
+
 GUID_FORMAT = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+
 
 def process_guid(state: RecordSaveState):
     # if the guid is valid it will go to the next set of checks
@@ -202,6 +207,7 @@ def process_guid(state: RecordSaveState):
                 f'No submitted GUID or default value. GUID has been generated as {state.new_record_value}'))
     return True
 
+
 def process_select(state: RecordSaveState):
     getlist_default_value = [] if state.data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
     if hasattr(state.request_data, 'getlist'):
@@ -211,6 +217,7 @@ def process_select(state: RecordSaveState):
     if state.new_record_value != "" and state.data_structure.type == DataStructure.DATA_TYPES.select:
         state.new_record_value = state.new_record_value[0]
     return True
+
 
 def process_external(state: RecordSaveState):
     # If the user uploads a new file create a new ExternalFile record
@@ -235,9 +242,11 @@ def process_external(state: RecordSaveState):
         return False
     return True
 
+
 def process_checkbox(state: RecordSaveState):
     state.new_record_value = state.data_structure_name in state.request_data
     return bool(not state.data_structure.advanced or state.can_edit_advanced)
+
 
 def process_integer(state: RecordSaveState):
     try:
@@ -256,6 +265,7 @@ def process_integer(state: RecordSaveState):
         state.has_error = True
     return True
 
+
 def process_object_or_array(state: RecordSaveState):
     try:
         state.new_record_value = DataStructure.cast_value(state.data_structure, state.request_data.get(state.data_structure_name, ""))
@@ -268,6 +278,7 @@ def process_object_or_array(state: RecordSaveState):
         state.upload_errors.append((state.data_structure_name, "Json was incorrectly formatted."))
         return False
     return True
+
 
 def process_other(state: RecordSaveState):
     state.new_record_value = state.request_data.get(state.data_structure_name, "")
@@ -288,11 +299,13 @@ def process_other(state: RecordSaveState):
             state.has_error = True
     return True
 
+
 def upload_image(content_file, state):
     ext_file = ExternalFile.objects.create(
         asset=state.asset, data_structure=state.data_structure, file=content_file)
 
     return f'src="{ext_file.file.url}"'
+
 
 def upload_data_image_match(state):
     def handler(match_obj):
@@ -305,17 +318,51 @@ def upload_data_image_match(state):
         return upload_image(content_file, state)
     return handler
 
+
 def upload_imported_image(state):
     def handler(match_obj):
         content_file = state.request_files[match_obj[1]]
         return upload_image(content_file)
     return handler
 
+
+# Not sure if we want to make this cms configurable by customization
+STALE_FILE_DAYS = 30
+
+
+def delete_abandoned_files(state):
+    asset_ds_pair = AssetDsPair.objects.filter(
+        asset=state.asset, data_structure=state.data_structure).first()
+    
+    if not asset_ds_pair:
+        # If no asset_ds_pair that means a file was hasn't been uploaded in the past so we can shortcircuit here
+        return
+
+    cutoff_stale_files = datetime.now() - timedelta(days=STALE_FILE_DAYS)
+    files_not_recently_updated = asset_ds_pair.externalfile_set.filter(assest_ds_pair_last_added__lt=cutoff_stale_files)
+
+    previous_records = state.data_structure.datarecord_set.filter(
+        asset=state.asset) # add .order_by('-created_date')[:RECORDS_TO_KEEP_FILES] if we want to keep only latest versions
+
+    for file in files_not_recently_updated:
+        not_in_new_record = file.file.url not in state.new_record_value
+        if not_in_new_record :
+            for record in previous_records:
+                if file.file.url in record.value:
+                    break
+            else:
+                file.delete()
+
+
 def process_html(state: RecordSaveState):
     if state.data_structure.meta_settings.get('upload_data_images', False):
-        state.new_record_value = DATA_IMG_SRC_REGEX.sub(upload_data_image_match(state), state.new_record_value)
-        state.new_record_value = IMPORT_IMG_SRC_REGEX.sub(upload_imported_image(state), state.new_record_value)
+        state.new_record_value = DATA_IMG_SRC_REGEX.sub(
+            upload_data_image_match(state), state.new_record_value)
+        state.new_record_value = IMPORT_IMG_SRC_REGEX.sub(
+            upload_imported_image(state), state.new_record_value)
+        delete_abandoned_files(state)
     return True
+
 
 def check_optional(state: RecordSaveState):
     # If the data structure is not optional and has no value use the default.
@@ -331,6 +378,7 @@ def check_optional(state: RecordSaveState):
             state.upload_errors.append((state.data_structure_name, "This field cannot be blank"))
             return False
     return True
+
 
 def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
@@ -533,6 +581,7 @@ def generate_preview_links(context=None, asset=None, state=""):
 
     yield ('Other Preview', f"{context.url}?preview=true") if context and context.url else (None, None)
 
+
 def generate_preview_link(context=None, asset=None, state=""):
     (_, default_preview) = next(generate_preview_links(context=context, asset=asset, state=state))
     return default_preview
@@ -720,6 +769,7 @@ def has_wrong_image_sizes(multi_image_file_sizes, required_image_sizes):
         for image_size in required_image_sizes
     )
 
+
 def check_multi_size(meta_settings, data_structure, new_file):
     if multi_image_sizes := meta_settings.get('multi_image_sizes', False):
         multi_image_file = Image.open(new_file)
@@ -727,8 +777,9 @@ def check_multi_size(meta_settings, data_structure, new_file):
         if has_wrong_image_sizes(image_file_sizes, multi_image_sizes):
             error_msg = f"The file does not have the required sizes. Uploaded file has sizes {image_file_sizes}. It should have {multi_image_sizes}"
             return [(data_structure.name, error_msg)]
-    
+
     return False
+
 
 def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
@@ -756,12 +807,15 @@ def check_meta_settings(data_structure, new_file):
 
     return []
 
+
 def encode_file(file):
     # Must seek file before reading or else encoding will be messed ruined.
     file.seek(0)
     return base64.b64encode(file.read()).decode('utf8')
 
 # End of file upload helpers
+
+
 def upload_file(data_structure, new_file):
     if new_file.size >= settings.CMS_MAX_FILE_SIZE:
         return None, [(data_structure.name, f'Its size was {new_file.size/BYTES_TO_MEGABYTES:.2f}MB but must be less than {settings.CMS_MAX_FILE_SIZE/BYTES_TO_MEGABYTES:.2f} MB')]

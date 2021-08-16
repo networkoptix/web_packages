@@ -639,6 +639,7 @@ if LOCAL_ENVIRONMENT:
 NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/*'],
     'split.js': ['dist/*'],
+    'uuid': ['dist/*'],
     'csstree-validator': ['dist/*']
 }
 
