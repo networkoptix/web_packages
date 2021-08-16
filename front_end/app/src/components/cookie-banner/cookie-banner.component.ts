@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NxAccountService } from '@services/account.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { LocalStorageService }       from 'ngx-webstorage';
+import { first } from 'rxjs/operators';
+
+@UntilDestroy()
 @Component({
     selector    : 'nx-cookie-banner',
     templateUrl : './cookie-banner.component.html',
@@ -10,12 +15,27 @@ export class NxCookieBannerComponent implements OnInit {
     CONFIG: IConfig
     cookieBannerReviewed: boolean
 
-    constructor(private config: NxConfigService, private localStorage: LocalStorageService) {
+    constructor(private config: NxConfigService, private localStorage: LocalStorageService, private accountService: NxAccountService) {
         this.CONFIG = config.getConfig();
     }
 
     ngOnInit() {
         this.cookieBannerReviewed = this.localStorage.retrieve('cookiereviewed') === true;
+        this.accountService.accountSubject.pipe(first(value => value !== undefined), untilDestroyed(this))
+            .subscribe((account) => {
+                if (account) {
+                    if (account.cookie_reviewed) {
+                        this.localStorage.store('cookiereviewed', true);
+                        this.cookieBannerReviewed = true;
+                    }
+                    // Doesn't work properly yet, also might not be desirable, so commented out for now
+                    // } else {
+                    //     // If a new account logs in and their cookie_reviewed is false, show banner
+                    //     this.localStorage.store('cookiereviewed', false);
+                    //     this.cookieBannerReviewed = false;
+                    // }
+                }
+            });
     }
 
     onCookieBannerClose() {

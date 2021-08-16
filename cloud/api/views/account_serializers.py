@@ -52,7 +52,7 @@ class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
 
     class Meta:
         model = Account
-        fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser',
+        fields = ('email', 'first_name', 'last_name', 'language', 'is_staff', 'is_superuser', 'cookie_reviewed',
                   'permissions', 'can_publish_integration', 'is_authenticated')
 
     def get_can_publish_integration(self, obj):

@@ -22,6 +22,8 @@ export class Account {
     permissions: string[];
     // eslint-disable-next-line camelcase
     can_publish_integration: boolean;
+    // eslint-disable-next-line camelcase
+    cookie_reviewed: boolean;
 
     constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
         this.email = email;
