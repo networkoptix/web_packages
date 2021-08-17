@@ -317,27 +317,12 @@ export class NxDevConsoleTableComponent {
             '%URL%', url
         );
 
-        const buildErrorToast = (errors) => {
-            return errors.reduce(
-                (toastMessage, { message }) => `${toastMessage}<p>${message}</p>`,
-                `<h3>${asyncSettings.manifest.fields[0].meta.options.errorToastMessage.replace('%NAME%', asyncSettings.values.name)}</h3>`
-            );
-        };
-
         const notifyDownload = (url) => {
             const options = {
                 classname : this.CONFIG.toast.success,
                 showHTML  : true
             };
             this.toastService.show(buildDownloadToast(url), options);
-        };
-
-        const notifyError = (errors) => {
-            const options = {
-                classname : this.CONFIG.toast.warning,
-                showHTML  : true
-            };
-            this.toastService.show(buildErrorToast(errors), options);
         };
 
         const {
@@ -351,11 +336,10 @@ export class NxDevConsoleTableComponent {
             checkPackage,
             getDownloadUrl,
             this.window,
-            notifyDownload,
-            notifyError
+            notifyDownload
         );
         this.asyncErrors[asyncSettings.lookupKey] = false;
-        this.asyncInProgress[asyncSettings.lookupKey] = asyncSettings.manifest.fields[1].meta.options.pending;
+        this.asyncInProgress[asyncSettings.lookupKey] = asyncSettings.manifest.fields[1].meta?.options?.pending;
         this.cancelHandlers[asyncSettings.lookupKey] = () => {
             this.asyncInProgress[asyncSettings.lookupKey] = this.asyncErrors[asyncSettings.lookupKey] = false;
             packageHandler.cancelProcess();

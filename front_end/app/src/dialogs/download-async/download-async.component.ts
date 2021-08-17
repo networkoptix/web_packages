@@ -89,6 +89,7 @@ export class PackageHandler {
             }),
             filter(iteration => iteration % 20 === 0 && iteration > 20),
             switchMap(_ => checkPackageHandler(this.id, this.downloadId)),
+            startWith({ state: PackageState.PENDING, total: 100, current: 0, errors: [] }),
             takeUntil(this.#done$)
         ).subscribe((
             { state, total, current, errors }: PackageStatus

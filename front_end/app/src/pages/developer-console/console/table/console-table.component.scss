@@ -65,21 +65,20 @@ tr.data-row {
     padding-left: 16px;
 }
 .type-async_handler {
-    .async-wrapper, .in-progress-wrapper {
+    .async-wrapper, .in-progress-wrapper, .async-error-wrapper {
         margin: 8px;
         display: inline-block;
     }
 
-    .padded-label {
-        padding-left: .25em;
-    
-        &.error {
-            color: $error !important;
-        }
+    &.error-label {
+        color: $error !important;
+    }
+
+    .async-wrapper, .async-error-wrapper {
+        cursor: pointer;
     }
 
     .async-wrapper {
-        cursor: pointer;
         color: $light16;
 
         .st0 {
@@ -104,6 +103,14 @@ tr.data-row {
             & .st0 {
                 fill: $dark16;
             }
+        }
+    }
+
+    .async-error-wrapper {
+        color: $error !important;
+
+        .st0 {
+            fill: $error !important;
         }
     }
 

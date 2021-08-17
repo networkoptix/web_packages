@@ -53,7 +53,12 @@
                 <ng-container *ngSwitchCase="CONFIG_TYPE.ASYNC_HANDLER">
                     <td cdk-cell *cdkCellDef="let element"
                         [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
-                        <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])" [ngClass]="asyncInProgress[element[field.name].lookupKey] ? 'in-progress-wrapper': 'async-wrapper'">
+                        <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])"
+                            [ngClass]="asyncInProgress[element[field.name].lookupKey]
+                                ? 'in-progress-wrapper'
+                                : asyncErrors[element[field.name].lookupKey]
+                                    ? 'async-error-wrapper'
+                                    : 'async-wrapper'">
                             <ng-template #showIcon>
                                 <svg-icon nx-add-svg-src
                                     [src]="CONFIG.icons.dirTextButtons + element[field.name].manifest.fields[0].meta.icon"
@@ -74,8 +79,13 @@
                                       <span *ngFor="let error of (asyncErrors[element[field.name].lookupKey]  || [])">{{ error.message}}</span>
                                     </div>
                                 </ng-template>
+                                <ng-template #standardStatus>
                                     <span class="status-label">{{element[field.name].manifest.fields[0].label}}</span>
-                                    <span *ngIf="asyncErrors[element[field.name].lookupKey] as async_errors" class="error padded-label" [ngbTooltip]="errorsTooltip">{{element[field.name].manifest.fields[0].meta.options.error}}</span>
+                                </ng-template>
+                                <span *ngIf="asyncErrors[element[field.name].lookupKey];
+                                    else standardStatus" 
+                                    [ngbTooltip]="errorsTooltip"
+                                >{{element[field.name].manifest.fields[0].meta.options.error}}</span>
                             </ng-template>
                             <ng-container *ngIf="asyncInProgress[element[field.name].lookupKey] as progress; else download">
                                 <span class="status-label">{{element[field.name].manifest.fields[1].label}}</span>
@@ -95,7 +105,7 @@
                     <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
                         <a (click)="handleModal(element[field.name])">
                             <svg-icon nx-add-svg-src
-                                [src]="CONFIG.icons.dir + field.meta.icon"
+                                [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
                                 [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
                                 [applyClass]="true"
                                 [ngbTooltip]="field.meta?.tooltip"></svg-icon>

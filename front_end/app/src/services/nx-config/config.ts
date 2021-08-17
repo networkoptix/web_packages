@@ -333,7 +333,7 @@ export const nxConfig: IConfig = {
                         label : 'Download',
                         meta  : {
                             options: {
-                                error             : '(Error generating package)',
+                                error             : 'Download Error',
                                 errorHeading      : 'Error Generating Package:',
                                 errorToastMessage : 'Error Generating Package for "%NAME%" custom client:',
                                 toastMessage      : 'Package ready for "%NAME%" custom client. If the package doesn\'t download automatically then <a href="%URL%">click here to download</a>'
@@ -348,9 +348,6 @@ export const nxConfig: IConfig = {
                         name  : 'generating',
                         label : 'Generating...',
                         meta  : {
-                            options: {
-                                pending: '(Checking package settings)'
-                            },
                             icon   : 'loading.svg',
                             styles : 'animate-rotation'
                         }

@@ -10,7 +10,9 @@
         <nx-section>
             <form #editForm="ngForm">
                 <section *ngFor="let structure of context.fields">
-                    <label [for]="structure.name">{{structure.label}}</label>
+                    <label [for]="structure.name" [ngbTooltip]="!structure.optional && ('This field is required' | translate)">
+                        {{structure.label + (structure.optional ? '' : ' *')}}
+                    </label>
                     <span *ngIf="context.global && structure.label">{{structure.name}}</span>
                     <ng-container [ngSwitch]="structure.type">
                         <nx-html *ngSwitchCase="INPUT_TYPE.HTML"
