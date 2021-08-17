@@ -214,14 +214,14 @@ export class NxSystemStorageComponent implements OnInit {
             ).toPromise();
         }
         const started = Date.now();
-        const triggerUpdate = () => this.system.storageManager.update(UpdateTriggers.STATS);
+        const triggerUpdate = (type: UpdateTriggers) => this.system.storageManager.update(type);
         const pollUpdater$ = new Subject<number>();
         pollUpdater$.pipe(
             tap(time => {
                 if (started < (time - this.CONFIG.pollingTimeout)) {
                     this.changedModes = [];
                     this.updatingModes = [];
-                    triggerUpdate().pipe(untilDestroyed(this)).subscribe(state => {
+                    triggerUpdate(UpdateTriggers.STATS).pipe(untilDestroyed(this)).subscribe(state => {
                         this.currentStorageState.locations = (state?.locations || []).map((location) => {
                             if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)) {
                                 location.status = STORAGE_STATUS.INACCESSIBLE;
@@ -237,7 +237,8 @@ export class NxSystemStorageComponent implements OnInit {
             startWith(0),
             delay(1500),
             switchMap(_ => {
-                triggerUpdate();
+                triggerUpdate(UpdateTriggers.STATS);
+                triggerUpdate(UpdateTriggers.INFO);
                 return this.system.storageManager.statsUpdated$.pipe(take(1));
             }),
             map(_ => {
@@ -525,7 +526,7 @@ export class NxSystemStorageComponent implements OnInit {
                     // Excludes non changeable storage
                     updating.push(store.storageId);
                 }
-                this.forceShowBackupBlock ||= store.isBackup;
+                this.forceShowBackupBlock ||= currentMode === 'modeBackup';
             }
         }
         this.beingUpdated = updating.filter(id => !this.updatingModes.includes(id));
