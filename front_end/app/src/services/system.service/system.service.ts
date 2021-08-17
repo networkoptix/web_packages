@@ -19,7 +19,7 @@ import { Router }                          from '@angular/router';
 export class NxSystemService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    private localSystem: NxSystem;
+    private system: NxSystem;
     private systemsCache: { [systemId: string]: NxSystem };
 
     constructor(
@@ -38,8 +38,8 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    getLocalSystem() {
-        return this.localSystem;
+    getCurrentSystem() {
+        return this.system;
     }
 
     /**
@@ -77,8 +77,8 @@ export class NxSystemService {
     }
 
     createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
-        if (this.localSystem === undefined) {
-            this.localSystem = new NxSystem(
+        if (this.system === undefined) {
+            this.system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
                 this.cloudApi,
@@ -93,19 +93,19 @@ export class NxSystemService {
                 userId,
                 this.appState
             );
-            this.localSystem.mediaserver = mediaServer;
-            this.localSystem.canMerge = true;
-            this.localSystem.setApiVersion(NxSystemRestAPI.supportedVersion);
-            this.localSystem.update();
+            this.system.mediaserver = mediaServer;
+            this.system.canMerge = true;
+            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
+            this.system.update();
         }
 
-        if (this.localSystem.subscriberCount === 0) {
-            this.localSystem.startPoll();
+        if (this.system.subscriberCount === 0) {
+            this.system.startPoll();
         }
 
         if (!this.systemsService.systems) {
-            this.systemsService.systems = [<any> this.localSystem];
+            this.systemsService.systems = [<any> this.system];
         }
-        return this.localSystem;
+        return this.system;
     }
 }

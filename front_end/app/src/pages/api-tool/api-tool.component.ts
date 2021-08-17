@@ -117,7 +117,7 @@ export class NxApiToolComponent implements OnInit {
             return { value: system.id, name: sysName };
         });
 
-        const localSystem = this.systemService.getLocalSystem();
+        const localSystem = this.systemService.getCurrentSystem();
 
         if (localSystem) {
             this.system = localSystem;
