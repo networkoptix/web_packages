@@ -14,7 +14,7 @@ from redis.exceptions import ConnectionError
 from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.db.models.deletion import Collector
 from django.db.models.signals import post_delete, m2m_changed, post_save, pre_delete
 from django.db.utils import ProgrammingError, OperationalError
@@ -446,6 +446,16 @@ class Customization(models.Model):
             cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
                                                 asset_type=asset_type)
             cloud_portal.customizations.set([self])
+             # Automatically add new customization to all assets and menu_nodes that have all other customizations enabled
+            all_customizations_count = Customization.objects.all().count() - 1
+            if all_customizations_count > 0:
+                assets_with_all_enabled = Asset.objects.annotate(num_customizations=Count('customizations')).filter(num_customizations=all_customizations_count)
+                menu_nodes_with_all_enabled = MenuNode.objects.annotate(num_customizations=Count('enabled')).filter(num_customizations=all_customizations_count)
+                new_customization = self
+                for asset in assets_with_all_enabled:
+                    asset.customizations.add(new_customization)
+                for menu_node in menu_nodes_with_all_enabled:
+                    menu_node.enabled.add(new_customization)  
 
 
 class AssetType(models.Model):
