@@ -279,40 +279,6 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    public handleTimeUpdate (timeSinceStart: ms): void {
-        switch (this._state.mode) {
-            case PLAYBACK_MODE.STOPPED:
-                this._warn('playback time update while playback mode is STOPPED');
-                break;
-
-            case PLAYBACK_MODE.LIVE:
-                this._state.currentTime = Date.now();
-                this._emit();
-                break;
-
-            case PLAYBACK_MODE.ARCHIVE:
-                const newT = this._state.startTime + timeSinceStart;
-                const diff = newT - this._state.currentTime;
-                this._state.currentTime = newT;
-
-                if (!this.isBeyondVisibleRange) {
-                    const marginMs = this.timeline.canvasWidthToDuration(100);
-                    // make time marker appear fixed while the timeline scrolls, not the contrary
-                    if (this._state.currentTime > this.timeline.visibleRange.start + marginMs &&
-                        this._state.currentTime < this.timeline.visibleRange.end
-                    ) {
-                        this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff);
-                    }
-                }
-                this._jumpOverTheGapIfNeeded();
-
-                this._emit();
-                break;
-            default:
-                assertNever(this._state);
-        }
-    }
-
     protected _previousFrameTime: ms
 
     public handleAnimationFrame () {
@@ -327,14 +293,17 @@ export class PlaybackService implements OnDestroy {
                 break;
 
             case PLAYBACK_MODE.LIVE:
-                this.handleTimeUpdate(-1);
                 this._state.currentTime = Date.now();
                 this._emit();
                 break;
 
             case PLAYBACK_MODE.ARCHIVE:
                 const diff = thisFrameTime - this._previousFrameTime;
+
+                this._jumpOverTheGapIfNeeded();
+
                 if (this._state.started && !this._state.paused) {
+
                     // this._log('started', diff, this._state.currentTime)
                     this._state.currentTime += diff;
 
@@ -347,7 +316,6 @@ export class PlaybackService implements OnDestroy {
                             this.timeline.jumpScrollTo(this.timeline.visibleRange.start + diff);
                         }
                     }
-                    this._jumpOverTheGapIfNeeded();
 
                     this._emit();
                 } else {
@@ -477,7 +445,8 @@ export class PlaybackService implements OnDestroy {
                     // TODO: request scroll jump animation
                     // this.timeline.jumpScrollTo(this._state.currentTime)
                     if (wasVisible) {
-                        this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, true);
+                        this._log('jumbScroll', diff, diff + this.timeline.visibleRange.start)
+                        this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, false);
                     }
 
                     // TODO: maybe the logic here should be very different, actually
