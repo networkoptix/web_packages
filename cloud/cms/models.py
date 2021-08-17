@@ -77,7 +77,7 @@ def get_name_factory(base_group_name):
         trimmed_asset_name = asset.name[:max_asset_name_length]
 
         return generate_name(trimmed_asset_name)
-    
+
     return get_name_handler
 
 def portal_manager_group_name(asset):
@@ -2092,7 +2092,7 @@ class Menu(models.Model):
         customizations_not_cached = []
         def get_cached(key):
             return PACKAGE_CACHE[f'menu_sync_{self.id}_{key}']
-    
+
         def cache_item(key, item):
             PACKAGE_CACHE[f'menu_sync_{self.id}_{key}'] = item
             return item
@@ -2103,7 +2103,7 @@ class Menu(models.Model):
             'logs': [],
             'state': 'Out of Sync' if len(self.zendesk_out_of_sync(customization)) else 'Success',
             'out_of_sync': self.zendesk_out_of_sync(customization)
-        } 
+        }
 
         enabled_customizations = [customization.name for customization in self.zendesk_sync_enabled.all().order_by('name')]
         logs_by_customization = {customization: get_cached(customization) or not_cached(customization) for customization in enabled_customizations}
@@ -2122,7 +2122,7 @@ class Menu(models.Model):
                     logs_by_customization[customization]['state'] = SYNC_STATES[state]
                 else:
                     logs_by_customization[customization]['out_of_sync'] = self.zendesk_out_of_sync(customization)
-        
+
         return [cache_item(customization, {
             'customization_name': customization,
             'menu_admin': f'{self.admin_link}?customization={customization}',
@@ -2369,10 +2369,10 @@ class ZendeskCategory(models.Model):
                 existing_section.needs_sync = True
                 existing_section.save()
                 exporter.sync_section(existing_section, delete=False)
-        
+
         if name_changed:
             exporter.sync_category(self, delete=False)
-            
+
         super().save(*args, **kwargs)
 
     @property
@@ -2452,14 +2452,14 @@ class ZendeskArticle(models.Model):
     @property
     def admin_link(self):
         return reverse('admin:cms_zendeskarticle_change', args=(self.id,))
-    
+
     @property
     def menu_sync_enabled(self):
         return self.menu_node.get_parent().zendesk_sync_enabled.filter(name=self.site.customization).exists()
 
     def cancel_existing_sync(self):
         ZendeskSyncItem.cancel_existing_sync(self)
-    
+
     def latest_sync(self, sync_log):
         latest = ZendeskSyncItem.objects.filter(zendesk_article=self).last()
         return latest.sync_log == sync_log if latest else True
@@ -2511,13 +2511,13 @@ class ZendeskSyncLog(models.Model):
     zendesk_category = models.ForeignKey(
         ZendeskCategory, on_delete=models.CASCADE, editable=False)
 
-    @staticmethod 
+    @staticmethod
     def cancel_existing_sync(log_id):
         sync_log = ZendeskSyncLog.objects.filter(id=log_id).first()
 
         if not sync_log:
             return
-        
+
         for sync_item in sync_log.sync_items.all():
             sync_item.mark_canceled()
 
@@ -2570,7 +2570,7 @@ class ZendeskSyncLog(models.Model):
             state = get_state(SYNC_STATES.canceled)
         elif progress == 100:
             state = get_state(SYNC_STATES.success)
-    
+
         return {
             'summary': {
                 'log_id': self.id,
@@ -2591,7 +2591,7 @@ class ZendeskSyncLog(models.Model):
 
 class ZendeskSyncItem(models.Model):
     SYNC_STATES = SYNC_STATES
-    sync_log = models.ForeignKey(ZendeskSyncLog, 
+    sync_log = models.ForeignKey(ZendeskSyncLog,
         on_delete=models.CASCADE, related_name='sync_items', editable=False)
     menu_node = models.ForeignKey(
         MenuNode, on_delete=models.CASCADE, editable=False)
@@ -2620,11 +2620,11 @@ class ZendeskSyncItem(models.Model):
         clear_item(self.sync_log.id)
         clear_item(self.sync_log.zendesk_site.customization.name)
 
-    @staticmethod 
+    @staticmethod
     def cancel_existing_sync(zd_article):
         for article in ZendeskSyncItem.objects.filter(zendesk_article=zd_article):
             article.mark_canceled()
-    
+
     @property
     def details(self):
         title_structure = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation, name='title').first()
@@ -2664,7 +2664,7 @@ class ZendeskSyncItem(models.Model):
         if exception:
             self.failure_message = str(exception)
         self.save()
-        
+
 
     def mark_completed(self):
         self.__update_state(self.SYNC_STATES.success)
@@ -2739,6 +2739,28 @@ class Flag(AbstractUserFlag):
         flag_cache = get_cache()
         flag_cache.delete_many(keys)
 
+    def is_active_for_user(self, user):
+        is_active = super(AbstractUserFlag, self).is_active_for_user(user)
+        if is_active:
+            return is_active
+
+        user_ids = self._get_user_ids()
+        if hasattr(user, 'pk') and user.pk in user_ids:
+            return True
+
+        if hasattr(user, 'groups'):
+            group_ids = self._get_group_ids()
+            if group_ids:
+                user_groups = set(user.groups.filter(
+                    Q(options__all_assets=True, usergroupstoassettype__asset_type__type=AssetType.ASSET_TYPES.cloud_portal) |
+                    Q(usergroupstoassetpermissions__asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
+                      usergroupstoassetpermissions__asset__customizations__name=settings.CUSTOMIZATION)
+                ).values_list('pk', flat=True))
+                if group_ids.intersection(user_groups):
+                    return True
+
+        return None
+
     def is_active(self, request, customization_name=settings.CUSTOMIZATION):
         if super().is_active(request):
             return True
@@ -2750,13 +2772,10 @@ class Flag(AbstractUserFlag):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            key = FLAGS.name_to_key(self.name)
-            if key:
-                ds_name = FLAGS.data_structure_name(key)
-                if ds_name:
-                    ds = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal, name=ds_name).first()
-                    if ds:
-                        self.data_structure = ds
+            if (key := FLAGS.name_to_key(self.name)) and (ds_name := FLAGS.data_structure_name(key)) and \
+                    (ds := DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
+                                                        name=ds_name).first()):
+                self.data_structure = ds
         ret = super().save(*args, **kwargs)
         Flag.flush_global_vals()
         return ret
