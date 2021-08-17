@@ -39,7 +39,10 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     initPlayer(): void {
         let stallTimer;
-        const options = { autoplay: true };
+        const options = {
+            autoplay           : true,
+            maxPlaylistRetries : 3
+        };
         this.player = videojs(this.videoView.nativeElement, options);
 
         // this.player.errors();
@@ -66,6 +69,10 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('error', (err) => {
+            this.videoError.emit(err);
+        });
+
+        this.player.on('abort', (err) => {
             this.videoError.emit(err);
         });
     }
