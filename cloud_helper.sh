@@ -216,8 +216,10 @@ function build_webadmin_locally() {
     [[ -z $LC_CTYPE ]] && export LC_CTYPE=en_US.UTF-8
 
     [[ ! -d $BUILD_DIR ]] && mkdir $BUILD_DIR
+    cp $REPO/webadmin/customize_hack.sh $BUILD_DIR
     pushd $BUILD_DIR
         . "$REPO/webadmin/build.sh"
+        . customize_hack.sh
     popd
 }
 

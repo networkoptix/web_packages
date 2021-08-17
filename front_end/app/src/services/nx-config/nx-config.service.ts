@@ -28,8 +28,14 @@ export class NxConfigService {
     }
 
     getSettings() {
-        const url = environment.isLocal ? '/static/customization/webadmin_config.json' : '/api/utils/settings';
-        return this.http.get(url).toPromise();
+        if (environment.isLocal) {
+            const webadminConfigRequest = this.http.get('/static/customization/webadmin_config.json').toPromise();
+            const descriptionRequest = this.http.get('/static/customization/description.json').toPromise();
+            return Promise.all([webadminConfigRequest, descriptionRequest])
+                .then(([webadminConfig, description]) => ({ webadminConfig, description }));
+        } else {
+            return this.http.get('/api/utils/settings').toPromise();
+        }
     }
 
     getConfig() {
