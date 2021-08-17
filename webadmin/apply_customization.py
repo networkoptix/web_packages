@@ -5,6 +5,7 @@ import json
 import shutil
 import sys
 import tempfile
+from distutils.dir_util import copy_tree
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -26,17 +27,24 @@ def apply_customization(webadmin_package, customization_package, output_package)
             ZipFile(webadmin_package) as webadmin_zip:
 
         with customization_zip.open("description.json", "r") as file:
-            skin = json.load(file)["skin"].replace("dark_", "")
+            skin = json.load(file).get("skin", "blue").replace(r"dark_", "").replace("gray_", "")
 
-        skin_dir = f"built_skins/{skin}"
-        skin_files = [item for item in webadmin_zip.namelist() if item.startswith(skin_dir)]
-        webadmin_zip.extractall(path=temp_dir, members=skin_files)
+        webadmin_zip.extractall(path=temp_dir)
 
         static_dir = temp_dir / "static"
         customization_dir = static_dir / "customization"
         images_dir = static_dir / "images"
 
-        (temp_dir / skin_dir).rename(static_dir)
+        # Copy setup skin and setup wizard in package.
+        shutil.copyfile(f"{static_dir}/styles/{skin}.css", f"{static_dir}/styles/skin.css")
+        copy_tree(f"{static_dir}/setup_{skin}", f"{static_dir}/")
+
+        # Remove files related to other skins.
+        for skin_name in ["blue", "green", "orange"]:
+            setup_path = f"{static_dir}/setup_{skin_name}"
+            if Path(setup_path).exists():
+                shutil.rmtree(setup_path)
+            Path(f"{static_dir}/styles/{skin_name}.css").unlink(True)
 
         for file in \
                 ["description.json", "webadmin_config.json", "desktop/webadmin_config.js"]:
@@ -65,7 +73,7 @@ def check_if_update_required(webadmin_package, customization_package, output_pac
                 != output_zip.read("static/customization/description.json"):
             return True
 
-        if webadmin_zip.read("built_skins/blue/version.txt") \
+        if webadmin_zip.read("static/version.txt") \
                 != output_zip.read("static/version.txt"):
             return True
 

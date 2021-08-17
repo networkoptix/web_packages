@@ -98,7 +98,7 @@ cat static/version.txt >&2
 
 #Pack
 echo "Pack $WEBADMIN_PACKAGE" >&2
-zip -qq -r "$WEBADMIN_PACKAGE" ./static/
+zip -qq -r "../$WEBADMIN_PACKAGE" ./static/
 popd
 
 echo "Webadmin build done" >&2
