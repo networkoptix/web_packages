@@ -8,6 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('cms', '0136_merge_20210805_0126'),
         ('cms', '0132_zendesksyncitem_failure_message'),
+        ('cms', '0137_externalfile_assest_ds_pair_last_added')
     ]
 
     operations = [
