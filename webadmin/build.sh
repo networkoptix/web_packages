@@ -2,6 +2,7 @@
 
 set -e
 
+WEBADMIN_PACKAGE="webadmin.zip"
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Check prerequisites.
 if [ "$SOURCE_DIR" = "$PWD" ]
@@ -38,7 +39,7 @@ echo "Clean old directories" >&2
 [ -e node_modules ] && rm -rf node_modules
 [ -e static ] && rm -rf static
 [ -e server-external ] && rm -rf server-external
-[ -e external.dat ] && rm external.dat
+[ -e "$WEBADMIN_PACKAGE" ] && rm "$WEBADMIN_PACKAGE"
 
 # Install dependencies.
 echo "Install node dependencies" >&2
@@ -96,10 +97,8 @@ fi
 cat static/version.txt >&2
 
 #Pack
-echo "Pack external.dat" >&2
-zip -qq -r "../external.dat" ./static
+echo "Pack $WEBADMIN_PACKAGE" >&2
+zip -qq -r "$WEBADMIN_PACKAGE" ./static/
 popd
 
-# Temporary until we have cmake support from the vms side. Bundle is only default.
-$SOURCE_DIR/customize_package.sh
 echo "Webadmin build done" >&2

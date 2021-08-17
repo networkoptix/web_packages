@@ -2,6 +2,7 @@ from conans import ConanFile, tools
 from conans.errors import ConanException
 from pathlib import Path
 import os
+import shutil
 import sys
 
 
@@ -43,4 +44,6 @@ class WebadminConan(ConanFile):
 
     def package(self):
         os.rename(
-            Path(self.build_folder) / "external.dat", Path(self.package_folder) / "external.dat")
+            Path(self.build_folder) / "webadmin.zip", Path(self.package_folder) / "webadmin.zip")
+        shutil.copy(
+            Path(self.source_folder) / "webadmin" / "apply_customization.py", self.package_folder)
