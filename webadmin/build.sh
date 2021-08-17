@@ -2,7 +2,7 @@
 
 set -e
 
-WEBADMIN_PACKAGE="webadmin.zip"
+WEBADMIN_PACKAGE="external.dat"
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Check prerequisites.
 if [ "$SOURCE_DIR" = "$PWD" ]

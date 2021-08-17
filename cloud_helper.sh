@@ -219,7 +219,7 @@ function build_webadmin_locally() {
     cp webadmin/apply_customization.py $BUILD_DIR
     pushd $BUILD_DIR
         . "$REPO/webadmin/build.sh"
-        . ./apply_customization.py
+        python apply_customization.py
     popd
 }
 
@@ -363,7 +363,7 @@ do
         update_remote_vms)
             TARGET=$2
             build_webadmin_locally
-            update_webadmin $TARGET
+#             update_webadmin $TARGET
             break
             ;;
         build_mediaserver)
