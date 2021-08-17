@@ -440,7 +440,7 @@ export class MergeModalContent {
                         .then(res => {
                             if (!res.error || res.error === '0') {
                                 this.remotePassword = this.machine.state.template.passwordValue;
-                                this.machine.transition(this.confirmMerge);
+                                this.machine.transition('choosePrimary');
                                 const { history } = this.machine;
                                 if (history[history.length - 1] === this.serverUrlErrors) {
                                     history.pop();
@@ -491,12 +491,7 @@ export class MergeModalContent {
                 }
 
                 if (this.nonCloudMerge || this.CONFIG.isLocal) {
-                    // if current system is not cloud and secondary system is cloud, merge settings should be taken from secondary
-                    const takeRemoteSettings = (!this.CONFIG.cloudSystemId && this.targetSystem.cloudSystemId) || false;
-                    if (takeRemoteSettings) {
-                        this.setPrimarySystem(this.targetSystem);
-                        this.setSystems();
-                    }
+                    const takeRemoteSettings = this.system.id === this.secondarySystem.id;
                     return this.dryRunAvailable
                         ? this.system.mergeSystems(this.serverUrl, this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
