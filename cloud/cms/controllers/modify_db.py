@@ -322,7 +322,7 @@ def upload_data_image_match(state):
 def upload_imported_image(state):
     def handler(match_obj):
         content_file = state.request_files[match_obj[1]]
-        return upload_image(content_file)
+        return upload_image(content_file, state)
     return handler
 
 
@@ -333,7 +333,7 @@ STALE_FILE_DAYS = 30
 def delete_abandoned_files(state):
     asset_ds_pair = AssetDsPair.objects.filter(
         asset=state.asset, data_structure=state.data_structure).first()
-    
+
     if not asset_ds_pair:
         # If no asset_ds_pair that means a file was hasn't been uploaded in the past so we can shortcircuit here
         return
