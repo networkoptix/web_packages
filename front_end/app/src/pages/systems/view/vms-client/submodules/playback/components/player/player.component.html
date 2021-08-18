@@ -18,12 +18,12 @@
     <div
         *ngIf="showOverlay"
         class="overlay"
-        [ngClass]="{ 'active': showOverlay }"
-        (click)="onClick($event)"
-        (dblclick)="onDblClick($event)">
+        [ngClass]="{ 'active': showOverlay }">
         <nx-pre-loader></nx-pre-loader>
     </div>
     <player-js *ngIf="playback.subject | async as playbackState"
+        (click)="onClick($event)"
+        (dblclick)="onDblClick($event)"
         (videoEnded)="videoEnded($event)"
         (videoError)="videoErrorEventHandler($event)"
         (bufferingChange)="onBufferingChange($event)"
