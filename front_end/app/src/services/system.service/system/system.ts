@@ -1122,7 +1122,7 @@ export class NxSystem extends System {
      */
     getServerApiDoc(serverId: string) {
         return this.serverManager
-            .getApiDoc(serverId).toPromise()
+            .getApiDoc(serverId)
             .catch(err => Promise.reject(err));
     };
 

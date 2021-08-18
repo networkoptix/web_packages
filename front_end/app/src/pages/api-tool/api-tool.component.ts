@@ -124,7 +124,8 @@ export class NxApiToolComponent implements OnInit {
             this.selectedSystem = { value: this.system.id, name: this.system.info.name };
             this.updateMediaServers();
         } else {
-            const validSystem = this.headerService.lastActive || this.systems.find(system => system.stateOfHealth === 'online') || this.systems[0];
+            const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.headerService.lastActive.stateOfHealth === 'online'
+                ? this.headerService.lastActive : this.systems.find(system => system.stateOfHealth === 'online');
             if (validSystem) {
                 this.system = await this.systemService.createSystem('', validSystem.id);
                 this.getServersInfo();
@@ -136,7 +137,7 @@ export class NxApiToolComponent implements OnInit {
 
     getAPIDoc(serverId: string) {
         return this.system.serverManager
-            .getApiDoc(serverId).toPromise();
+            .getApiDoc(serverId);
     }
 
     onServerChange(event) {
@@ -182,45 +183,58 @@ export class NxApiToolComponent implements OnInit {
                     .then(() => {
                         this.serversDropdown = [];
                         this.system.serverManager.servers.forEach((server) => {
-                            this.getAPIDoc(server.id)
-                                .then((response) => {
+                            if (server.status !== 'Offline') {
+                                this.getAPIDoc(server.id)
+                                    .then((response) => {
                                     // extend filtering options
                                     // TODO: remove once https://networkoptix.atlassian.net/browse/CLOUD-6573 is done
-                                    const modApi = this.modifiedApi(response);
-
-                                    this.serversDropdown.push({
-                                        value        : server.id,
-                                        name         : server.name,
-                                        apiDocFull   : modApi,
-                                        incompatible : false
-                                    });
-                                }).catch(err => {
-                                    if (err.status === 404) { // this server does not support openapi
-                                        this.serversDropdown.push({
-                                            value        : server.id,
-                                            name         : server.name + ' - Incompatible',
-                                            apiDocFull   : {},
-                                            incompatible : true
+                                        const modApi = this.modifiedApi(response);
+                                        if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
+                                            this.serversDropdown.push({
+                                                value        : server.id,
+                                                name         : server.name,
+                                                apiDocFull   : modApi,
+                                                incompatible : false
+                                            });
+                                        }
+                                    }).catch(err => {
+                                        let typeOfError = 'Error';
+                                        if (err.status === 404) { // this server does not support openapi
+                                            typeOfError = 'Incompatible';
+                                        }
+                                        if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
+                                            this.serversDropdown.push({
+                                                value        : server.id,
+                                                name         : server.name + ' - ' + typeOfError,
+                                                apiDocFull   : {},
+                                                incompatible : true
+                                            });
+                                        }
+                                    }).finally(() => {
+                                        this.selectedServer = this.serversDropdown[0];
+                                        this.serversDropdown.some((server) => {
+                                            if (!server.incompatible) {
+                                                this.selectedServer = server;
+                                            }
+                                            return !server.incompatible;
                                         });
-                                    }
-                                }).finally(() => {
-                                    this.selectedServer = this.serversDropdown[0];
-                                    this.serversDropdown.some((server) => {
-                                        if (!server.incompatible) {
-                                            this.selectedServer = server;
+                                        if (this.serversDropdown.length === this.system.serverManager.servers.length) {
+                                            this.createMenuContent(this.selectedServer.apiDocFull);
+                                            this.menuService.section = 'api_information';
+                                            if (this.serverSubscription) {
+                                                this.serverSubscription.unsubscribe();
+                                            }
+                                            this.serversLoaded = true;
                                         }
-                                        return !server.incompatible;
                                     });
-
-                                    if (this.serversDropdown.length === this.system.serverManager.servers.length) {
-                                        this.createMenuContent(this.selectedServer.apiDocFull);
-                                        this.menuService.section = 'api_information';
-                                        if (this.serverSubscription) {
-                                            this.serverSubscription.unsubscribe();
-                                        }
-                                        this.serversLoaded = true;
-                                    }
+                            } else {
+                                this.serversDropdown.push({
+                                    value        : server.id,
+                                    name         : server.name + ' - Offline',
+                                    apiDocFull   : {},
+                                    incompatible : true
                                 });
+                            }
                         });
                     })
                     .catch(error => {

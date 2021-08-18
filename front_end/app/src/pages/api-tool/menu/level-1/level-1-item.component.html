@@ -8,7 +8,7 @@
         <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
     </div>
     <div class="menu-level-1-icon" *ngIf="item.svg">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + item.svg +'.svg'"
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + item.svg +'.svg'"
                   [applyClass]="true"
                   [svgStyle]="{'width.px': '24', 'height.px': '24'}"></svg-icon>
     </div>
@@ -20,7 +20,7 @@
             <span translate [translateParams]="{ count: item.level3.length }">result</span>
         </div>
         <div class="search-results" *ngIf="searchMode">
-            <svg-icon [src]="CONFIG.icons.dir + _type + '.svg'"
+            <svg-icon [src]="CONFIG.icons.dirTextButtons + _type + '.svg'"
                       [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
         </div>
     </div>

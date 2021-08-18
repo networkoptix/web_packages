@@ -401,6 +401,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
+    getApiDoc() {
+        return this.get('/swagger-ui/openapi_v1.json').toPromise();
+    }
+
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
