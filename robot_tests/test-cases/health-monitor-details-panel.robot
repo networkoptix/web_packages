@@ -63,7 +63,7 @@ Health Monitor Details Setup
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
     ...    Open Browser and Go To URL    ${url}
     ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
-    ...    AND    Sleep    10
+    ...    AND    Sleep    20
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300
     ...    AND    Go To Servers
     ...    AND    Verify on Servers Page    timeout=120
