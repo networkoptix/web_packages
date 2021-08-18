@@ -35,11 +35,10 @@ Anonymous: Header button text is correct
 
 Anonymous: Clicking on the main header button closes the dropdown
     [Tags]    threadable    anon    cloud
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
-    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Wait until element is visible    ${EXTERNAL LINKS TITLE}
     Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
@@ -69,13 +68,12 @@ Anonymous: Different page widths
 No systems: Header button text is correct
     [Tags]    threadable    no_sys    cloud
     Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Validate Header Button Text    0    systems=True
+    Sleep    5
+    Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
 
 No systems: Logo goes to landing page
     [Tags]    threadable    no_sys    cloud
     Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    0    systems=True
     Click Element    ${HEADER ICON LINK}
     Wait Until Location is    ${ENV}/systems
@@ -83,11 +81,10 @@ No systems: Logo goes to landing page
 No systems: Check Dropdown Content
     [Tags]    threadable    no_sys    cloud
     Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    0    systems=True
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
-    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Wait until element is visible    ${EXTERNAL LINKS TITLE}
     Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
@@ -99,23 +96,23 @@ No systems: Different page widths
 
 # User has one system connected to cloud
 One system: Logo goes to view for that system
-    [Tags]    threadable    one_sys
+    [Tags]    threadable    one_sys    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
+    Verify In System    ${main system}[name]
     Wait Until Element is Visible    ${HEADER ICON LINK}
-    Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${ENV}/systems/${main system}[cloud id]/view
+    Click Element    ${HEADER ICON LINK}/..
+    Run Keyword If    '''${mode}''' == '''cloud'''    Wait Until Location Is    ${ENV}/systems/${main system}[cloud id]/view
+        ...    ELSE    Verify In System    ${main system}[name]
 
 One system: Header button displays the system name
     [Tags]    threadable    one_sys    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Validate Header Button Text    ${main system}[name]    systems=False
+    Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
 
 One system: Check Dropdown content
     [Tags]    threadable    one_sys    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Validate Header Button Text    ${main system}[name]    systems=False
+    Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
     Validate System Navigation Tile    ${main system}[name]    active link=${SETTINGS TEXT}
@@ -123,13 +120,12 @@ One system: Check Dropdown content
     Run Keyword If    '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin tests PASS
     Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
-    Wait until element is visible    ${EXTERNAL LINKS HEADER}
+    Wait until element is visible    ${EXTERNAL LINKS TITLE}
 
 One system: Check header links - System
     [Tags]    threadable    one_sys    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Validate Header Button Text    ${main system}[name]    systems=False
+    Run keyword and continue on failure    Validate Header Button Text    ${main system}[name]    systems=False
     # Settings page is loaded after logging in
     Validate Active Header Link    ${SETTINGS TEXT}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -149,8 +145,9 @@ One system: Check header links - For Developers
     [Tags]    threadable    one_sys    cloud
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/docs/developers
-    Wait Until Element Is Visible    //h1[contains(text(), "${DEVELOP WITH NX META TEXT}")]
-    Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
+#    Wait Until Element Is Visible    //h1[contains(text(), "${DEVELOP WITH NX META TEXT}")]
+    Wait Until Element Is Visible    //h1[contains(text(), "Nx Witness For Developers")]
+    Run keyword and continue on failure    Validate Header Button Text    ${FOR DEVELOPERS TEXT}    systems=False
     Validate Active Header Link    ${PLATFORM OVERVIEW TEXT}
 
     FOR    ${page}    IN    @{for developers int pages}
@@ -165,7 +162,6 @@ One system: Check header links - Services
     [Tags]    threadable    one_sys    cloud
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/download
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    ${SERVICES TEXT}    systems=False
     Validate Active Header Link    ${DOWNLOADS TEXT}
 
@@ -180,8 +176,6 @@ One system: Check header links - Services
 One system: Check navigation links - System
     [Tags]    threadable    one_sys   CLOUD-7200    cloud    webadmin
     Log in to system    ${main system}    ${main system}[owner]
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Sleep    1
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -197,7 +191,6 @@ One system: Check navigation links - System
 One system: Check navigation links - For Developers
     [Tags]    threadable    one_sys    cloud
     Log In    ${one system owner}    ${BASE PASSWORD}
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -214,7 +207,6 @@ One system: Check navigation links - For Developers
 One system: Check navigation links - Services
     [Tags]    threadable    one_sys    cloud
     Log In    ${one system owner}    ${BASE PASSWORD}
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -267,6 +259,7 @@ Many systems: Check dropdown content if 17 or more systems
     [Tags]    threadable    many_sys   CLOUD-6778    cloud
     Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}
     Log In    ${many systems owner}    ${BASE PASSWORD}
+    Reload Page    # User doesn't see the system shared with them without reloading the page
     Validate on Systems Page    search=True
     Run keyword and continue on failure    Validate Header Button Text    17    systems=True
     Click Element    ${SYSTEMS DROPDOWN}
@@ -324,14 +317,13 @@ Many systems: Different page widths
 
 # Other cases
 Check header and dropdown content for not admins
-    [Tags]    threadable    other    CLOUD-6794    CLOUD-7200    cloud    webadmin
-#    FOR    ${user}    IN    @{main system users}
+    [Tags]    threadable    other    CLOUD-6794    CLOUD-7200    cloud
     FOR    ${user}    IN
         ...    ${main system}[cloud users][viewer]
         ...    ${main system}[cloud users][liveViewer]
         ...    ${main system}[cloud users][advancedViewer]
         ...    ${main system}[cloud users][custom]
-        Log in to user and system    ${user}    ${main system}[cloud id]
+        Log in to system    ${main system}    ${user}
         Wait until element is visible    ${SYSTEM NAME}\[contains(text(), "${main system}[name]")]
         # Commented out due to CLOUD-7200
         # Verify In System    ${main system}[name]    editable=False
@@ -360,7 +352,7 @@ Check external links - For Developers
     ${links names}=   Get External Links Names   ${FOR DEVELOPERS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${FOR DEVELOPERS LINK}\[contains(text(), "${name}")]    href
-        Set Local variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
+        Set Local Variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
 

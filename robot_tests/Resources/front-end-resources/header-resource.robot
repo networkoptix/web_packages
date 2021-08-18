@@ -23,7 +23,7 @@ Header Suite Setup
     ${offline systems}=   Create List
     ${rand}=   Generate Random String
     FOR    ${i}    IN RANGE    1    17
-        ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=False
+        ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=${False}
         Sleep    2
         Append To List    ${offline systems}    ${system}
         Delete Docker Server    ${system}[id]
@@ -53,6 +53,7 @@ Header Test Teardown
 Validate Header Button Text
     [Arguments]    ${expected text}    ${systems}=${True}
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Sleep    5
     ${actual text}=   Get Text    ${SYSTEMS DROPDOWN}/span
     Run Keyword If    ${systems}    Should be equal as strings    ${expected text}${SPACE}${SYSTEMS TITLE TEXT}    ${actual text}
         ...    ELSE    Should be equal as strings    ${expected text}    ${actual text}
