@@ -38,7 +38,7 @@ System Admin Test Restart
 
     Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
     Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
-
+    Set System Settings    ${system}[local auth]    ${server url}    ${default settings}
 # Waits
 Wait until settings are visible
     [Arguments]    ${timeout}=${selenium timeout}    ${old system}=${False}
