@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { NxLandingService } from '../landing.service';
 
 interface blockData {
@@ -22,7 +22,7 @@ interface dataInput {
     templateUrl : './content-container.component.html',
     styleUrls   : ['./content-container.component.scss']
 })
-export class NxContentContainerComponent {
+export class NxContentContainerComponent implements AfterViewInit {
     @ViewChild('content') contentStartRef: ElementRef
     @Input() screenWidth: number;
     // Dummy Data

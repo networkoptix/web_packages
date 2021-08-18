@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
 import { NxLandingService } from '../landing.service';
@@ -13,7 +13,7 @@ interface layer {
     templateUrl : './background-graphic.component.html',
     styleUrls   : ['./background-graphic.component.scss']
 })
-export class NxBackgroundGraphicComponent implements AfterViewInit {
+export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
   @Input() scrollPosition: number
   CONFIG: IConfig;
   componentInitialized = false;

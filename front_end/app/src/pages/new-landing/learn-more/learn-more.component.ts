@@ -8,7 +8,7 @@ import { NxLandingService } from '../landing.service';
     templateUrl : './learn-more.component.html',
     styleUrls   : ['./learn-more.component.scss']
 })
-export class NxLearnMoreComponent {
+export class NxLearnMoreComponent implements OnChanges {
     @Input() scrollPosition: number
     @Input() screenHeight: number
 
