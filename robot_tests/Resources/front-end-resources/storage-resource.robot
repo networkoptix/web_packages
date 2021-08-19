@@ -8,37 +8,13 @@ Storage Suite Setup
     ${loglevel} =    Set Loglevel    INFO
     ${ignore} =    Set Loglevel    ${loglevel}
     ${console} =    Set Variable If    '${loglevel}' != 'INFO'    yes    no
-    Set Suite Variable    ${console}    ${console}
-    # @{disk size} =    Create List    160000    40000    40000    12000    12000
-    
-    Log    Storage Suite Setup    DEBUG      console=${console}
-    
-    # FOR    ${account}    IN    owner    viewer    adv viewer    live viewer    not owner    admin    custom
-        # ${random email} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
-        # Set Suite Variable    ${${account}}          ${random email}
-    # END
-    
+    Set Suite Variable    ${console}    ${console}    
+    Log    Storage Suite Setup    DEBUG      console=${console}   
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     Log    owner created ..... | PASS |    DEBUG      console=${console}
-    
-    # @{system names} =    Create List
-    # ...    ${AUTO TESTS}
-    # ...    ${AUTO TESTS 2}
-    # ...    Auto Tests 3
-
-    # @{auth}=    Create List    ${owner}    ${password}
-    # Set Suite Variable    ${auth}    ${auth}
-
-
-
-    # @{server auth}=   Create List    admin    qweasd 123
-    # Set Suite Variable    ${server auth}    ${server auth}   
-    
-   
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
     Make Directory    disk-invalid
-    Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}
-    
+    Log    disk-invalid created ..... | PASS |    DEBUG      console=${console}    
     @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Set Suite Variable    @{disk}    @{disk}
     FOR    ${n}    IN RANGE    5
@@ -48,98 +24,42 @@ Storage Suite Setup
         Run Keyword If    ${n} < 4     Catenate Storages One    ${disk[${n}]}[string]
         ...    ELSE     Catenate Storages Two    ${disk[${n}]}[string]
     END
-
     #${storage string 1} =    Get Substring    ${storage string 1}    1
-    ${storage string 2} =    Get Substring    ${storage string 2}    1
-    
+    ${storage string 2} =    Get Substring    ${storage string 2}    1    
     ${server 1} =    Create Base System    storage0-${random}    owner=${owner}    storage string=${storage string 1}
     Set Suite Variable    ${server 1}    ${server 1}
-    # ${port} =    Create Docker Server    storage0-${random}    4.1_test    ${storage string 1}
-    # Set Suite Variable    ${port0}    ${port['port']}
-    # Sleep     10
     Log    docker ${server 1['name']} created ..... | PASS |    DEBUG      console=${console}
-    # Setup Local System    https://${QA BURBANK IP}:${port0}    ${BASE PASSWORD}    ${system names[0]}
-    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port0}    ${system names[0]}    ${owner}    ${BASE PASSWORD}
-    # Set Suite Variable    ${sysId0}    ${sysId}
-    # Sleep    10
-    # Close Connection
     Log    ${server 1['name']} system created ..... | PASS |    DEBUG      console=${console}
-
     ${server 2} =    Create Base System    storage1-${random}    owner=${owner}    add users=${False}    storage string=${storage string 2}
     Set Suite Variable    ${server 2}    ${server 2}
-    # ${port} =    Create Docker Server    storage1-${random}    4.1_test    ${storage string 2}
-    # Set Suite Variable    ${port1}    ${port['port']}
-    # Sleep     10
     Log    docker ${server 2['name']} created ..... | PASS |    DEBUG      console=${console}
-    # Setup Local System    https://${QA BURBANK IP}:${port1}    ${BASE PASSWORD}    ${system names[1]}
-    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port1}    ${system names[1]}    ${owner}    ${BASE PASSWORD}
-    # Set Suite Variable    ${sysId1}    ${sysId}
-    # Sleep    10
-    # Close Connection
     Log   ${server 2['name']} system created ..... | PASS |    DEBUG      console=${console}
-
     ${server 3} =    Create Base System    storage2-${random}    owner=${owner}    add users=${False}
     Set Suite Variable    ${server 3}    ${server 3}
-    # ${port} =    Create Docker Server    storage2-${random}    4.1_test
-    # Set Suite Variable    ${port2}    ${port['port']}
-    # Sleep     10
     Log    docker ${server 3['name']} created ..... | PASS |    DEBUG      console=${console}
-    # Setup Local System    https://${QA BURBANK IP}:${port2}    ${BASE PASSWORD}    ${system names[2]}
-    # ${sysId}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${port2}    ${system names[2]}    ${owner}    ${BASE PASSWORD}
-    # Set Suite Variable    ${sysId2}    ${sysId}
-    # Sleep    10
-    # Close Connection
     Log    ${server 3['name']} system created ..... | PASS |    DEBUG      console=${console}
-
-    # ${SUITE AUTO TESTS USERS} =    Create Dictionary
-    # ...    ${viewer}=viewer
-    # ...    ${adv viewer}=advancedViewer
-    # ...    ${live viewer}=liveViewer
-    # ...    ${not owner}=viewer
-    # ...    ${admin}=cloudAdmin
-    # ...    ${custom}=custom
-
-    # Set Suite Variable    ${SUITE AUTO TESTS USERS}    ${SUITE AUTO TESTS USERS}
-
-    # FOR    ${user email}   ${user role}    IN ZIP   ${SUITE AUTO TESTS USERS.keys()}     ${SUITE AUTO TESTS USERS.values()}
-        # Add user to cloud system if not there    ${sysId0}    ${user role}    ${user email}    ${auth}
-    # END
     Log    users added to ${server 1['name']} ..... | PASS |    DEBUG      console=${console}
-
     @{disabled} =    Create List    disk2    disk3
     @{backups} =    Create List    disk1
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
     Log    default storage config set .....| PASS |    DEBUG      console=${console}
-
     Activate License    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    ${TRIAL LICENSE}
     Sleep    5
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
-
     Add Analytics stub plugin   ${server 1['name']}
     ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${camera manufacturer}
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
-
     Sleep    15
     # restarting server and creating inaccessible disk
     Restart Server    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['cloud auth']}
     Sleep    3
-    
     Remove Directory    disk-invalid
     Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}
     Sleep    90
-    
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
-    # ${results}    Execute Command    docker container port storage0-${random}
-    # @{portnew}    Get Regexp Matches    ${results}    (:)(\\d{5})    2
-    # Close Connection
-    # Set Suite Variable    ${port0}    ${portnew[0]}
-
-    # Sleep    30
-
     Open Browser and go to URL    ${url}
     Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
-
     Verify Storages    ${server 1['owner']}    ${server 1['cloud id']}    5
     Verify Storages    ${server 1['owner']}    ${server 2['cloud id']}    1
 
@@ -157,36 +77,17 @@ Storage Suite Teardown
     Delete Base System    ${server 1}
     Delete Base System    ${server 2}
     Delete Base System    ${server 3}
-    # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${owner}
-    # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${owner}
-    # Disconnect Server via API    ${server 3['cloud auth']}    ${server 3['cloud id']}    ${password}    ${owner}
-    # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # ${results}    Execute Command    docker container stop storage0-${random} storage1-${random} storage2-${random}
-    # ${results}    Execute Command    docker container rm storage0-${random} storage1-${random} storage2-${random}
-    # Close Connection
     FOR    ${n}    IN RANGE    5
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
     Remove Directory    networkdisk/*
     Remove All Files    networkdisk/*
-    # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    # ${results}    Execute Command     rm -r networkdisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
-    # ${results}    Execute Command     rm networkdisk/*     sudo=True    sudo_password=${QA BURBANK PASS}
-    # Close Connection
-
-    # FOR    ${user email}   IN ZIP  ${SUITE AUTO TESTS USERS.keys()}
-        # Delete Account    ${ENV}    ${user email}    ${password}
-    # END
-
     Close All Browsers
 
 Verify Storages
     [Arguments]    ${owner}    ${system}    ${storages number}
     Log in to user and system    ${owner}     ${system}
-    Wait Until Element is Visible with Retry    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    Go To Servers
     Verify on Servers Page    timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
@@ -413,4 +314,50 @@ Enable Archive Backup
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Run Keyword Unless    ${status}    Click Element    ${ARCHIVE BACKUP CHECK BOX}
     Run Keyword and Continue on Failure    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=15
+    
+Cleanup External Drive
+    Log    Cleanup
+    Select Server By Name    ${server 1['id']}
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Sleep    2
+    Click Button    ${SMB STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Wait Until Elements Are Visible
+    ...    ${DELETE STORAGE MODAL}            
+    ...    ${DELETE STORAGE CLOSE BUTTON}     
+    ...    ${DELETE STORAGE CANCEL BUTTON}      
+    ...    ${DELETE STORAGE DELETE BUTTON}    
+    Click Button    ${DELETE STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Wait Until Element Is Visible    ${ALERT}
+    Wait Until Element Is Visible    ${STORAGE LOCATIONS BLOCK} 
+    Wait Until Element Is Not Visible    ${SMB STORAGE DELETE BUTTON} 
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Select Server By Name    ${server 3['id']}
+    Wait Until Elements Are Visible
+    ...    ${STORAGE DISK NETWORK}
+    ...    ${STORAGE SMB ICON}
+    ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
+    ...    ${SMB STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Sleep    2
+    Click Button    ${SMB STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Wait Until Elements Are Visible
+    ...    ${DELETE STORAGE MODAL}            
+    ...    ${DELETE STORAGE CLOSE BUTTON}     
+    ...    ${DELETE STORAGE CANCEL BUTTON}      
+    ...    ${DELETE STORAGE DELETE BUTTON}    
+    Click Button    ${DELETE STORAGE DELETE BUTTON}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Wait Until Element Is Visible    ${ALERT}
+    Wait Until Element Is Visible    ${STORAGE LOCATIONS BLOCK} 
+    Wait Until Element Is Not Visible    ${SMB STORAGE DELETE BUTTON} 
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot  
+    Log To Console   networkdisk deleted ....... | PASS |
     
