@@ -319,7 +319,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             if (isOnline) {
                                                 this.system.ribbonService.hide();
                                             } else {
-                                                this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                                this.system.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                                             }
                                         })
                                     )
@@ -392,9 +392,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.secondaryMerge = false;
                     this.system.ribbonService.hide();
                     let ribbonText: string;
+                    let systemOnly = false;
                     const { primary, secondary } = this.systemsService.systemsMerging || {};
                     if (!this.system.isOnline) {
                         ribbonText = this.LANG.ribbon.systemOffline?.();
+                        systemOnly = true;
                     } else if (primary?.id === this.system.id) {
                         const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
                         let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName?.();
@@ -414,7 +416,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
 
                     if (ribbonText) {
-                        this.system.ribbonService.show(ribbonText, [], 'alert');
+                        this.system.ribbonService.show(ribbonText, [], 'alert', undefined, systemOnly);
                     }
 
                     setTimeout(() => {
