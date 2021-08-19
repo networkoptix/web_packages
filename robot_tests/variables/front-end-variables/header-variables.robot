@@ -51,7 +51,7 @@ ${EXTRA SYSTEM TILE}           ${DROPDOWN SYSTEMS GRID}/nx-additional-systems-ti
 &{platform overview}    title=${PLATFORM OVERVIEW TEXT}    url=${ENV}/docs/developers
 &{knowledgebase}    title=${KNOWLEDGEBASE TEXT}    url=${ENV}/docs/developers/knowledgebase
 @{for developers int pages}    ${platform overview}   ${knowledgebase}
-${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//h5[text()="${FOR DEVELOPERS TEXT}"]/../following-sibling::ul//a
+${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title" and h5="${FOR DEVELOPERS TEXT}"]/../following-sibling::ul//a
 
 # Services menu items
 &{downloads}    title=${DOWNLOADS TEXT}    url=${ENV}/download
@@ -61,8 +61,8 @@ ${FOR DEVELOPERS LINK}    ${DROPDOWN NAVIGATION TILE}//h5[text()="${FOR DEVELOPE
 @{services pages}    ${downloads}    ${ipvd}    ${health viewer}    ${integrations}
 
 # External links
-${EXTERNAL LINKS HEADER}    ${DROPDOWN NAVIGATION TILE}//h5[text()="${EXTERNAL LINKS TEXT}"]
-${EXTERNAL LINK}    ${EXTERNAL LINKS HEADER}/../following-sibling::ul//a
+${EXTERNAL LINKS TITLE}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-title" and h5="${EXTERNAL LINKS TEXT}"]
+${EXTERNAL LINK}    ${EXTERNAL LINKS TITLE}/../following-sibling::ul//a
 
 &{FOR DEVS EXTERNAL LINKS}
    ...   Developer Tools=https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools

@@ -172,8 +172,9 @@ export class NxSystem extends System {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
+
         if (!this.mediaserver) {
-            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
+            this.mediaserver = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
                 /* Unauthorised request handler
                 Some options here:
                 - Access was revoked
@@ -185,9 +186,9 @@ export class NxSystem extends System {
                 return this.updateSystemAuth(true);
             },
             this.useRest);
+            // first update auth keys so other requests will not fail
+            await this.updateSystemAuth(true);
         }
-        // Handling promise to satisfy the linter.
-        this.updateSystemAuth(true).then(() => {});
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -207,15 +208,22 @@ export class NxSystem extends System {
         this.storageManager = new StorageManager(this);
     }
 
-    checkRestCompatibility() {
+    async setMediaServerApiType(currentUserEmail: string, systemId: string, serverId: string) {
+        this.mediaserver = this.systemApiService
+            .createConnection(currentUserEmail, systemId, serverId, () => {}, this.useRest);
+        // first update auth keys so other requests will not fail
+        await this.updateSystemAuth(true);
+    }
+
+    async checkRestCompatibility() {
         if (this.#apiVersion.value === 0 && this.cameraManager.moduleInfo.version) {
             this.setApiVersion(this.cameraManager.moduleInfo.version);
-            this.initSystem(this.currentUserEmail, this.systemIdInit, this.serverIdInit, this.userIdInit);
+            await this.setMediaServerApiType(this.currentUserEmail, this.systemIdInit, this.serverIdInit);
         }
         return Promise.resolve();
     }
 
-    updateSystemAuth(force = true) {
+    async updateSystemAuth(force = true) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
@@ -350,7 +358,7 @@ export class NxSystem extends System {
 
     startPoll(systemId?: string) {
         if (this.subscriberCount === 0) {
-            if (this.CONFIG.isLocal || this.mediaserver.authGet) {
+            if (this.CONFIG.isLocal || this.mediaserver?.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
             } else {

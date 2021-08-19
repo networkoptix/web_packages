@@ -14,7 +14,7 @@ import videojs                                              from 'video.js';
     encapsulation : ViewEncapsulation.None
 })
 @LoggerDecorator('JS PLAYER ::', true)
-export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
+export class PlayerJsComponent implements OnDestroy, OnChanges {
     _log: Function;
     _warn: Function;
 
@@ -29,18 +29,20 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     @Output() videoEnded = new EventEmitter<boolean>();
     @Output() videoError = new EventEmitter<any>();
 
-    @ViewChild('video') videoView: ElementRef;
+    @ViewChild('video', { static: true }) videoView: ElementRef;
 
     actualRotation = 0;
-    player: videojs.Player;
-
+    private player: videojs.Player;
     protected transport = '';
 
     constructor() {}
 
-    ngAfterViewInit(): void {
+    initPlayer(): void {
         let stallTimer;
-        const options = { autoplay: true };
+        const options = {
+            autoplay           : true,
+            maxPlaylistRetries : 3
+        };
         this.player = videojs(this.videoView.nativeElement, options);
 
         // this.player.errors();
@@ -69,16 +71,21 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
         this.player.on('error', (err) => {
             this.videoError.emit(err);
         });
+
+        this.player.on('abort', (err) => {
+            this.videoError.emit(err);
+        });
     }
 
     public ngOnChanges (changes: SimpleChanges): void {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
-        if (this.player && (changes.mode || changes.sourceUrl || changes.posterUrl)) {
+
+        if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl)) {
             this.transport = this.sourceUrl && this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm' || '';
+            this._calculateRotation();
             this._reactOnPlaybackStateChange(prevMode);
         }
-        this._calculateRotation();
     }
 
     private _calculateRotation() {
@@ -97,6 +104,7 @@ export class PlayerJsComponent implements OnDestroy, AfterViewInit, OnChanges {
     }
 
     protected _reactOnPlaybackStateChange(prevMode: number) {
+        !this.player && this.initPlayer();
         const isPaused = this.player.paused() || false;
         switch (this.mode) {
             case PLAYBACK_MODE.STOPPED:

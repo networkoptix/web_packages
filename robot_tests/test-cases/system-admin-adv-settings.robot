@@ -21,8 +21,8 @@ Advanced system settings availability
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]    ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Show Advanced Settings
-        Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-        Elements Should Not Be Visible    @{ADVANCED SETTINGS ALERT BAR}
+        Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    timeout=50
+        Elements Should Not Be Visible    @{ADVANCED SETTINGS ALERT BAR}    timeout=50
         Log Out
     END
 
@@ -39,6 +39,7 @@ Advanced system settings for offline system
 
     Log    Get System back online and check advanced settings
     Start Docker Server    ${system}[id]
+    Sleep    4
     Reload Page
     Wait Until Advanced Settings Are Visible    timeout=180
 
@@ -61,14 +62,13 @@ Audit trail, backup and statistics section
         ...    auditTrailPeriodDays=183
         ...    autoDiscoveryResponseEnabled=true
         ...    autoUpdateThumbnails=true
-        ...    backupNewCamerasByDefault=false
         ...    backupSettings=${BACKUP SETTINGS DEFAULT TEXT}
         ...    clientStatisticsSettingsUrl=${EMPTY}
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${ADDITIONAL LOCAL FS TYPES INPUT}    additionalLocalFsTypes    test Settings changed
@@ -85,13 +85,10 @@ Audit trail, backup and statistics section
     Log    Step 7    
     Changing setting changes it on server    ${AUTO UPDATE THUMBNAILS CHECKBOX}     autoUpdateThumbnails    advanced=True
     
-    Log    Step 8    
-    Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=True
-    
-    Log    Step 9
-    Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    CameraBackupHighQuality
+    Log    Step 8
+    Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
 
-    Log    Step 11
+    Log    Step 9
     Changing input setting changes it on server    ${CLIENT STATISTICS RELATIVE URL INPUT}    clientStatisticsSettingsUrl    https://www.google.com
 
 Cloud connect and video codec
@@ -107,11 +104,9 @@ Cloud connect and video codec
        ...    downloaderPeers={}
        ...    ec2AliveUpdateIntervalSec=60
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
-
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TWO    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TWO    timeout=70
 
     ${host} =    Get Text    ${CLOUD HOST}
     Should Contain    ${ENV}    ${host}
@@ -137,7 +132,7 @@ Cloud connect and video codec
     Changing input setting changes it on server    ${DISABLED VENDORS INPUT}    disabledVendors    Axis
     
     Log    Step 7
-    Changing input setting changes it on server    ${DOWNLOADER PEERS INPUT}    downloaderPeers    1000
+    Changing input setting changes it on server    ${DOWNLOADER PEERS INPUT}    downloaderPeers    {"abc": ["07a976b5-e61e-4c75-b785-e120d54a3c01"]}
     
     Log    Step 8
     Changing input setting changes it on server    ${SYSTEM ALIVE INTERVAL INPUT}    ec2AliveUpdateIntervalSec    75
@@ -278,7 +273,7 @@ Max P2P, record queue size, and remote archive
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVEN    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVEN    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${MAX P2P ALL CLIENTS SIZE INPUT}    maxP2pAllClientsSizeBytes    1073741823
@@ -322,7 +317,10 @@ RTP, Rtsp, scene items, archive sync, HTTP
     Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
 
     Log    Step 5
-    Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
+    Run Keyword If    '${IMAGE}'=='4.3_test'    Run Keyword
+    ...    Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
+    ...    ELSE    Run Keyword
+    ...    Changing input setting changes it on server    ${MAX WEBM TRANSFER}    maxWebMTranscoders    1
 
 Meta data storage, OS time change, proxy connection timeout, push notification language
     [Tags]    C78380
@@ -343,7 +341,7 @@ Meta data storage, OS time change, proxy connection timeout, push notification l
 #    Changing input setting changes it on server    ${RTSP BUFFER SIZE INPUT}    rtspBufferSizeKb    128
 
     Log    Step 1
-    Changing input setting changes it on server    ${META DATA STORAGE CHANGE POLICY INPUT}    metadataStorageChangePolicy    do not keep
+    Changing input setting changes it on server    ${META DATA STORAGE CHANGE POLICY INPUT}    metadataStorageChangePolicy    move
 
     Log    Step 2
     Changing input setting changes it on server    ${OS TIME CHANGE CHECK PERIOD INPUT}    osTimeChangeCheckPeriodMs    1998
@@ -366,7 +364,7 @@ File URI, RTP timeout, rtsp buffer, Flir Onvif
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TEN    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TEN    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${RESOURCE FILE URI INPUT}    resourceFileUri    http://resources.vmsproxy.com/resource_data_TESTING.json
@@ -393,10 +391,10 @@ SMTP settings
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ELEVEN    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ELEVEN    timeout=70
 
     Log    Step 1
-    Changing input setting changes it on server    ${SMTP CONNECTION TYPE INPUT}    smtpConnectionType    secure
+    Changing input setting changes it on server    ${SMTP CONNECTION TYPE INPUT}    smtpConnectionType    ssl
 
     Log    Step 2
     Changing input setting changes it on server    ${SMTP HOST INPUT}    smtpHost    smtp.gmail.com
@@ -428,7 +426,7 @@ Specific features, statistics report
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
 
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TWELVE    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TWELVE    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${SPECIFIC FEATURES INPUT}    specificFeatures    {"mediaserver_metrics":2}
@@ -451,24 +449,18 @@ Specific features, statistics report
     Log    Step 6
     Changing input setting changes it on server    ${STATISTICS REPORT UPDATE DELAY INPUT}    statisticsReportUpdateDelay    86400
 
-Sync, Camera Ownership, Time, UPNP, Video Traffic
-    [Tags]    C78393    C78398    C78399    C78401    C78402
+Sync time epsilon, sync time exchange period, system name
+    [Tags]    C78393
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    syncTimeEpsilon=200
        ...    syncTimeExchangePeriod=600000
        ...    systemName=Advanced Settings
-       ...    takeCameraOwnershipWithoutLock=true
-       ...    timeSynchronizationEnabled=true
-       ...    updateNotificationsEnabled=true
-       ...    upnpPortMappingEnabled=true
-       ...    useTextEmailFormat=false
-       ...    useWindowsEmailLineFeed=false
-       ...    webSocketEnabled=true
+
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Wait Until Advanced Settings Are Visible    THIRTEEN    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    THIRTEEN    timeout=60
 
     Log    Step 1
     Changing input setting changes it on server    ${SYNC TIME EPSILON INPUT}    syncTimeEpsilon    100
@@ -479,23 +471,70 @@ Sync, Camera Ownership, Time, UPNP, Video Traffic
     Log    Step 3
     Changing input setting changes it on server    ${SYSTEM NAME INPUT}    systemName    Advanced Settings changed
 
-    Log    Step 4
+Camera ownership, update information
+    [Tags]    C78398
+    Log    Preconditions
+    ${settings}=   Create Dictionary
+       ...    takeCameraOwnershipWithoutLock=true
+
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
+    Log in to system    ${system}    ${system}[owner]
+    Show Advanced Settings
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FOURTEEN    timeout=60
+
+    Log    Step 1
     Changing setting changes it on server    ${TAKE CAMERA OWNERSHIP WITHOUT LOCK CHECKBOX}    takeCameraOwnershipWithoutLock    advanced=True
 
-    Log    Step 5
+Time synchronization, update notifications
+    [Tags]    C78399
+    Log    Preconditions
+    ${settings}=   Create Dictionary
+       ...    timeSynchronizationEnabled=true
+       ...    updateNotificationsEnabled=true
+    
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
+    Log in to system    ${system}    ${system}[owner]
+    Show Advanced Settings
+    Wait Until Advanced Settings Are Visible    FIFTEEN    timeout=60
+
+    Log    Step 1
     Changing setting changes it on server    ${TIME SYNC ENABLED CHECKBOX}     timeSynchronizationEnabled    advanced=True
 
-    Log    Step 6
+    Log    Step 2
     Changing setting changes it on server    ${UPDATE NOTIFICATIONS ENABLED CHECKBOX}      updateNotificationsEnabled    advanced=True
 
-    Log    Step 7
+UPNP port mapping, plain-text emails, Windows line feed
+    [Tags]    C78401
+    Log    Preconditions
+    ${settings}=   Create Dictionary
+       ...    upnpPortMappingEnabled=true
+       ...    useTextEmailFormat=false
+       ...    useWindowsEmailLineFeed=false
+    
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
+    Log in to system    ${system}    ${system}[owner]
+    Show Advanced Settings
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN    timeout=60
+
+    Log    Step 1
     Changing setting changes it on server    ${UPNP PORT MAPPING ENABLED CHECKBOX}      upnpPortMappingEnabled    advanced=True
 
-    Log    Step 8
+    Log    Step 2
     Changing setting changes it on server    ${USE TEXT EMAIL FORMAT CHECKBOX}      useTextEmailFormat    advanced=True
 
-    Log    Step 9
+    Log    Step 3
     Changing setting changes it on server    ${USE WINDOWS EMAIL LINE FEED CHECKBOX}      useWindowsEmailLineFeed    advanced=True
 
-    Log    Step 10
+Video traffic encryption, watermark settings, web sockets
+    [Tags]    C78402
+    Log    Preconditions
+    ${settings}=   Create Dictionary
+        ...    webSocketEnabled=true
+    
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
+    Log in to system    ${system}    ${system}[owner]
+    Show Advanced Settings
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SEVENTEEN    timeout=60
+
+    Log    Step 1
     Changing setting changes it on server    ${WEB SOCKET ENABLED CHECKBOX}      webSocketEnabled    advanced=True

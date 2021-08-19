@@ -105,13 +105,13 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public videoErrorEventHandler (event: any) {
         const { player } = event.target;
         if (player?.error()?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
-            if (this.transportChangeByError) {
+            this.transportChangeByError = true;
+            this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
+        } else if (player && ['abort', 'error'].includes(event.type)) {
+            if (event.type === 'error' && this.transportChangeByError) {
                 this.playback.setError(this.LANG.common.cameraStates.noFormat());
                 return;
             }
-            this.transportChangeByError = true;
-            this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
-        } else if (player && event.type === 'error') {
             this.http.get(player.src())
                 .subscribe((response: any) => {
                     switch (response.error) {
@@ -126,7 +126,9 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
                             break;
                     }
                 }, (error) => {
-                    this.playback.setError(error.message);
+                    if (error.name !== 'HttpErrorResponse') {
+                        this.playback.setError(error.message);
+                    }
                 });
         }
     }

@@ -28,6 +28,76 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    trafficEncryptionForced=false
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
+...    additionalLocalFsTypes=${EMPTY}
+...    arecontRtspEnabled=false
+...    auditTrailPeriodDays=183
+...    autoDiscoveryResponseEnabled=true
+...    autoUpdateThumbnails=true
+...    cloudConnectRelayingEnabled=true
+...    cloudConnectUdpHolePunchingEnabled=true
+...    crossdomainEnabled=false
+...    defaultExportVideoCodec=mpeg4
+...    defaultVideoCodec=h263p
+...    disabledVendors=${EMPTY}
+...    downloaderPeers={}
+...    ec2AliveUpdateIntervalSec=60
+...    enableEdgeRecording=true
+...    eventLogPeriodDays=30
+...    forceLiveCacheForPrimaryStream=auto
+...    keepHanwhaIoPortStateIntactOnInitialization=false
+...    lastMergeMasterId=${EMPTY}
+...    lastMergeSlaveId=${EMPTY}
+...    ldapAdminDn=${EMPTY}
+...    ldapSearchBase=${EMPTY}
+...    ldapSearchFilter=${EMPTY}
+...    ldapSearchTimeoutS=30
+...    ldapUri=${EMPTY}
+...    licenseServer=https://licensing.vmsproxy.com
+...    lowQualityScreenVideoCodec=mpeg2video
+...    maxDifferenceBetweenSynchronizedAndInternetTime=2000
+...    maxDifferenceBetweenSynchronizedAndLocalTimeMs=5000
+...    maxEventLogRecords=100000
+...    maxP2pAllClientsSizeBytes=1073741824
+...    maxP2pQueueSizeBytes=52428800
+...    maxRecordQueueSizeBytes=25165824
+...    maxRecordQueueSizeElements=1000
+...    maxRemoteArchiveSynchronizationThreads=-1
+...    maxRtpRetryCount=6
+...    maxRtspConnectDurationSeconds=0
+...    maxSceneItems=0
+...    maxVirtualCameraArchiveSynchronizationThreads=-1
+...    maxHttpTranscodingSessions=2
+...    rtspBufferSizeKb=64
+...    metadataStorageChangePolicy=keep
+...    osTimeChangeCheckPeriodMs=1000
+...    proxyConnectTimeoutSec=5
+...    pushNotificationsLanguage=${EMPTY}
+...    resourceFileUri=http://resources.vmsproxy.com/resource_data.json
+...    rtpTimeoutMs=10000
+...    sequentialFlirOnvifSearcherEnabled=false
+...    serverDiscoveryPingTimeoutSec=60
+...    smtpConnectionType=Unsecure
+...    smtpHost=${EMPTY}
+...    smtpPort=0
+...    smtpSimple=true
+...    smtpTimeout=300
+...    smtpUser=${EMPTY}
+...    specificFeatures=${SPECIFIC FEATURES DEFAULT}
+...    statisticsReportLastTime=2021-01-21T20:07:05Z
+...    statisticsReportLastVersion=4.1.0.32212-7259e0f382b5-default-patch
+...    statisticsReportServerApi=${EMPTY}
+...    statisticsReportTimeCycle=${EMPTY}
+...    statisticsReportUpdateDelay=${EMPTY}
+...    syncTimeEpsilon=200
+...    syncTimeExchangePeriod=600000
+...    systemName=Advanced Settings
+...    takeCameraOwnershipWithoutLock=true
+...    timeSynchronizationEnabled=true
+...    updateNotificationsEnabled=true
+...    upnpPortMappingEnabled=true
+...    useTextEmailFormat=false
+...    useWindowsEmailLineFeed=false
+...    webSocketEnabled=true
 
 ${ENABLE AUDIT TRAIL CHECKBOX}        //*[@id='auditTrailEnabled']
 ${ALLOW ONLY SECURE CHECKBOX}         //*[@id='trafficEncryptionForced']
@@ -98,7 +168,7 @@ ${AUDIT TRAIL PERIOD DAYS INPUT}            //input[@id='auditTrailPeriodDays']
 ${AUDIT TRAIL PERIOD DAYS LABEL}            //div[text()='${AUDIT TRAIL PERIOD DAYS TEXT}']
 ${BACKUP SETTINGS INPUT}                    //input[@id='backupSettings']
 ${BACKUP QUALITIES LABEL}                   //div[text()='${BACKUP QUALITIES TEXT}']
-${BACKUP SETTINGS DEFAULT TEXT}             CameraBackupHighQuality|CameraBackupLowQuality
+${BACKUP SETTINGS DEFAULT TEXT}             {"backupNewCameras":true,"id":"{00000000-1111-0000-0000-000000000000}","quality":"CameraBackupBoth"}
 ${CLIENT STATISTICS RELATIVE URL INPUT}     //input[@id='clientStatisticsSettingsUrl']
 ${CLIENT STATISTICS RELATIVE URL LABEL}     //div[text()='${CLIENT STATISTICS RELATIVE URL TEXT}']
 
@@ -313,6 +383,7 @@ ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}  //input[@id='maxVirtualCameraArch
 ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT}']
 ${MAX HTTP TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
 ${MAX HTTP TRANSCODERS LABEL}                   //div[text()='${MAX HTTP TRANSCODERS TEXT}']
+${MAX WEBM TRANSFER}                            //input[@id='maxWebMTranscoders']
 
 @{ADVANCED SETTING ELEMENT BLOCK EIGHT}
 ...    ${MAX RTP RETRY COUNT INPUT}
@@ -465,18 +536,26 @@ ${WEB SOCKET ENABLED LABEL}                              //div[text()='${WEB SOC
 ...    ${SYNC TIME INTERVAL NETWORK LABEL}
 ...    ${SYSTEM NAME INPUT}
 ...    ${SYSTEM NAME LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK FOURTEEN}
 ...    ${TAKE CAMERA OWNERSHIP WITHOUT LOCK CHECKBOX}${visible}
 ...    ${TAKE CAMERA OWNERSHIP WITHOUT LOCK LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK FIFTEEN}
 ...    ${TIME SYNC ENABLED CHECKBOX}${visible}
 ...    ${TIME SYNC ENABLED LABEL}
 ...    ${UPDATE NOTIFICATIONS ENABLED CHECKBOX}${visible}
 ...    ${UPDATE NOTIFICATIONS ENABLED LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK SIXTEEN}
 ...    ${UPNP PORT MAPPING ENABLED CHECKBOX}${visible}
 ...    ${UPNP PORT MAPPING ENABLED LABEL}
 ...    ${USE TEXT EMAIL FORMAT CHECKBOX}${visible}
 ...    ${USE TEXT EMAIL FORMAT LABEL}
 ...    ${USE WINDOWS EMAIL LINE FEED CHECKBOX}${visible}
 ...    ${USE WINDOWS EMAIL LINE FEED LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK SEVENTEEN}
 ...    ${WATERMARK SETTINGS}
 ...    ${WATERMARK SETTINGS LABEL}
 ...    ${WEB SOCKET ENABLED CHECKBOX}${visible}
