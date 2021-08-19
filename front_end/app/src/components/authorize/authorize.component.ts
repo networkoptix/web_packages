@@ -198,7 +198,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
             if (this.clientType === ClientType.loginCloud) {
                 this.initialData.client_id = 'cloud';
-                this.initialData.redirect_url = '';
+                this.initialData.redirect_url ||= '';
                 this.initialData.response_type = 'code';
             }
 

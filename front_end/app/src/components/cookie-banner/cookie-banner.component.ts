@@ -29,6 +29,7 @@ export class NxCookieBannerComponent implements OnInit {
                         this.cookieBannerReviewed = true;
                     }
                     // Doesn't work properly yet, also might not be desirable, so commented out for now
+                    // Also, shouldn't show for environment.isLocal === true && appStateService.authorizing === true
                     // } else {
                     //     // If a new account logs in and their cookie_reviewed is false, show banner
                     //     this.localStorage.store('cookiereviewed', false);
