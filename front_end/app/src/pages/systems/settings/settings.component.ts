@@ -383,7 +383,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.checkMergeSubscription = this.system.checkMergeStatus(false)
             .subscribe(res => {
-                const { mergeInProgress } = res.reply;
+                const { mergeInProgress } = res?.reply || res;
                 if (this.CONFIG.isLocal) {
                     if (!mergeInProgress && this.system.isOnline) {
                         this.ribbonService.hide();

@@ -428,13 +428,21 @@ export class NxSystemRestAPI extends NxSystemAPI {
         ).toPromise();
     }
 
+    checkMergeStatus(forceReload = true) {
+        return this.get<t.MergeStatus>(
+            '/rest/v1/system/merge',
+            {},
+            { [forceReload ? 'reset-cache' : 'cache-request']: 'true' }
+        );
+    }
+
     mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
         return this.http.get(`//${remoteEndpoint}/rest/v1/servers/this/info`).pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
             switchMap((data : any) => {
                 if (!remoteServerId) {
-                    remoteServerId = data.localId.replace(/{|}/g, '');
+                    remoteServerId = data.id.replace(/{|}/g, '');
                 }
                 return of({ token: '', cloudId: data.cloudId ?? '' });
             }),
@@ -472,6 +480,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }),
             retryWhen((request) => this.handleOldToken(request, this.isSessionOauth))
         );
+    }
+
+    restartServer(serverId?: string) {
+        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
+            .pipe(retryWhen((request) => this.handleOldToken(request)))
+            .toPromise()
+            .catch((err) => Promise.reject(err));
     }
 
     restoreFactorySettings(password?: string, serverId?: string) {
