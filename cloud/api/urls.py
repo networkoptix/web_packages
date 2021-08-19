@@ -51,6 +51,7 @@ urlpatterns = [
     url(r'^systems/merge$',                          systems.merge),
     url(r'^systems/(?P<system_id>.+?)/accessRoles$', systems.access_roles),
     url(r'^systems/(?P<system_id>.+?)/auth$',        systems.get_auth),
+    url(r'^systems/(?P<system_id>.+?)/token$',        systems.get_token),
     url(r'^systems/(?P<system_id>.+?)/name$',        systems.rename),
     url(r'^systems/(?P<system_id>.+?)/users$',       systems.sharing),
     url(r'^systems/(?P<system_id>.+?)/proxy/(?P<system_url>.+?)$',         systems.proxy),

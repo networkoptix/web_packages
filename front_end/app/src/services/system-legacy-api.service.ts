@@ -64,7 +64,7 @@ export class NxSystemAPI {
     protected userEmail: string;
     protected userRequest: Promise<t.NormalResponse<User>>;
     protected urlBase: string;
-    unauthorizedCallback: (params: unknown) => any;
+    unauthorizedCallback: (params: unknown) => Promise<any>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
     healthService: NxHealthService;
@@ -77,7 +77,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => any,
+        unauthorizedCallback: (params: IParams) => Promise<any>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -279,7 +279,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => void
+        unauthorizedCallback: (params: IParams) => Promise<any>
     ) {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;

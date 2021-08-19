@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from api.account_backend import get_ip
 from api.controllers import cloud_api, cloud_gateway
 from api.helpers.exceptions import api_success, require_params, \
     APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
@@ -135,6 +136,30 @@ def get_auth(request, system_id):
         'authPost': digest(login, password, realm, nonce, 'POST'),
         'authPlay': digest(login, password, realm, nonce, 'PLAY')
     })
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Returns access token needed to make api requests to a cloud system.",
+                     manual_parameters=[system_id__route_param],
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "refresh_token": openapi.Schema(type=openapi.TYPE_STRING)
+                         }
+                     ))
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def get_token(request, system_id):
+    refresh_token = request.session.get('refresh_token', request.data.get('refresh_token'))
+    if not refresh_token:
+        raise APINotAuthorisedException('No refresh token was found')
+
+    data = cloud_api.Auth.get_refresh_token(refresh_token, ip=get_ip(request), scope=f"cloudSystemId={system_id}")
+
+    if "refresh_token" in data:
+        del data["refresh_token"]
+
+    return api_success(data)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

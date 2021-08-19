@@ -231,6 +231,11 @@ export class NxCloudApiService {
         return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
 
+    @swClear('cloudSystemAPI', '/systems', false)
+    getSystemToken(systemId: string) {
+        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/token`, {});
+    }
+
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {

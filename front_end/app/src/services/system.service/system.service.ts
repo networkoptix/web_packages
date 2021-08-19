@@ -64,12 +64,12 @@ export class NxSystemService {
                 this.router,
                 currentUserEmail,
                 systemId,
-                serverId
+                serverId,
+                <string> version
             );
             this.systemsCache[id] = this.system;
         }
         this.system.lostConnection = false;
-        this.system.setApiVersion(version);
         if (!skipPoll) {
             this.system.startPoll(systemId);
         }
@@ -91,11 +91,11 @@ export class NxSystemService {
                 '',
                 '',
                 userId,
+                NxSystemRestAPI.supportedVersion,
                 this.appState
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
             this.system.update();
         }
 

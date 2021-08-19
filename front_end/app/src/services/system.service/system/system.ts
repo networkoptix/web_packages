@@ -139,6 +139,7 @@ export class NxSystem extends System {
         systemId?: string,
         serverId?: string,
         userId?: string,
+        version?: string|number,
         private appState?: NxAppStateService
     ) {
         super();
@@ -146,6 +147,7 @@ export class NxSystem extends System {
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.lostConnection = false;
+        this.setApiVersion(version);
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
 
@@ -172,23 +174,20 @@ export class NxSystem extends System {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-
+        /* Unauthorised request handler
+           Some options here:
+            - Access was revoked
+            - System was disconnected from cloud\Password was changed
+            - Nonce expired
+           We try to update nonce and auth on the server again
+           Other cases are not distinguishable
+        */
+        const unauthorizedCallback = this.useRest ? (force) => this.updateToken(force) : (force) => this.updateSystemAuth(force);
         if (!this.mediaserver) {
-            this.mediaserver = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
-                /* Unauthorised request handler
-                Some options here:
-                - Access was revoked
-                - System was disconnected from cloud\Password was changed
-                - Nonce expired
-                We try to update nonce and auth on the server again
-                Other cases are not distinguishable
-                */
-                return this.updateSystemAuth(true);
-            },
-            this.useRest);
-            // first update auth keys so other requests will not fail
-            await this.updateSystemAuth(true);
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.useRest);
         }
+        // Handling promise to satisfy the linter.
+        unauthorizedCallback(true).then(() => {});
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -208,28 +207,27 @@ export class NxSystem extends System {
         this.storageManager = new StorageManager(this);
     }
 
-    async setMediaServerApiType(currentUserEmail: string, systemId: string, serverId: string) {
-        this.mediaserver = this.systemApiService
-            .createConnection(currentUserEmail, systemId, serverId, () => {}, this.useRest);
-        // first update auth keys so other requests will not fail
-        await this.updateSystemAuth(true);
-    }
-
-    async checkRestCompatibility() {
-        if (this.#apiVersion.value === 0 && this.cameraManager.moduleInfo.version) {
-            this.setApiVersion(this.cameraManager.moduleInfo.version);
-            await this.setMediaServerApiType(this.currentUserEmail, this.systemIdInit, this.serverIdInit);
-        }
-        return Promise.resolve();
-    }
-
-    async updateSystemAuth(force = true) {
+    updateSystemAuth(force = true) {
         if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
 
         return this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+            return Promise.resolve(true);
+        }).catch(() => {
+            this.lostConnection = true;
+        });
+    }
+
+    updateToken(force = true) {
+        const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
+        if (!force && accessToken) {
+            return Promise.resolve(true);
+        }
+
+        return this.cloudApi.getSystemToken(this.id).toPromise().then((tokens) => {
+            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
             return Promise.resolve(true);
         }).catch(() => {
             this.lostConnection = true;
@@ -347,7 +345,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = this.updateSystemAuth(false).then(() => {
+            this.infoPromise = this.mediaserver.unauthorizedCallback(false).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });
@@ -358,7 +356,7 @@ export class NxSystem extends System {
 
     startPoll(systemId?: string) {
         if (this.subscriberCount === 0) {
-            if (this.CONFIG.isLocal || this.mediaserver?.authGet) {
+            if (this.CONFIG.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
             } else {
@@ -387,8 +385,8 @@ export class NxSystem extends System {
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
+                // eslint-disable-next-line prefer-promise-reject-errors
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
-                .then(() => this.checkRestCompatibility())
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
                 .then(() => this.getUsers(true))
@@ -476,20 +474,22 @@ export class NxSystem extends System {
             return this.authPromise;
         }
 
-        if (!force && this.mediaserver.authGet) {
+        if (!force && (this.mediaserver.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken)) {
             return Promise.resolve(true);
         }
 
-        this.authPromise = this.cloudApi.getSystemAuth(this.id).toPromise().then(
-            (authKeys: any) => {
-                if (authKeys.authGet) {
-                    this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+        this.authPromise = this.mediaserver.unauthorizedCallback(true).then(
+            (auth: any) => {
+                if (auth.authGet) {
+                    this.mediaserver.setAuthKeys(auth.authGet, auth.authPost, auth.authPlay);
                     this.authPromise = null;
-                    return Promise.resolve(true);
+                } else if (auth.access_token) {
+                    (this.mediaserver as NxSystemRestAPI).setTokens(auth, true);
                 } else {
                     this.authPromise = null;
-                    return Promise.reject(authKeys);
+                    return Promise.reject(auth);
                 }
+                return Promise.resolve(true);
             }
         );
 

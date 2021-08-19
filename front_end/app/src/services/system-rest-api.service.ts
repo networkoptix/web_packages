@@ -47,7 +47,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams<any>) => any,
+        unauthorizedCallback: (params: IParams<any>) => Promise<any>,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -84,6 +84,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private createSignature(message) {
         return this.post('/rest/v1/system/cloudSignature', { message });
+    }
+
+    public get accessToken() {
+        return this.cookieService.get(this.token);
     }
 
     private handleOldToken(request, allSystems?: boolean) {
@@ -180,14 +184,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return { accessToken, cloudAccessToken, refreshToken };
     }
 
-    private setTokens(tokens, isSystem) {
+    public setTokens(tokens, isSystem) {
         const storageService = this.storageService;
         if (isSystem) {
             this.cookieService.set(this.token, tokens.access_token);
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
-        storageService.refreshToken = tokens.refresh_token;
+        // eslint-disable-next-line camelcase
+        if (tokens?.refresh_token) {
+            storageService.refreshToken = tokens.refresh_token;
+        }
     }
 
     private clearTokens() {
@@ -244,9 +251,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             params.auth = this.authGet;
         }
 
-        if (environment.isLocal) {
-            headers = headers.set('Authorization', `Bearer ${this.cookieService.get(this.token)}`);
-        }
+        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -285,9 +290,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             headers = headers.set(this.token, this.serverId);
         }
 
-        if (environment.isLocal) {
-            headers = headers.set('Authorization', `Bearer ${this.cookieService.get(this.token)}`);
-        }
+        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
 
         return this.http
             .post<ResponseType>(fullUrl, data, { params, headers })
