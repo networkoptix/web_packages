@@ -645,6 +645,7 @@ admin.site.register(Language, LanguageAdmin)
 class CustomizationAdmin(CMSAdmin):
     list_display = ('name', 'parent', 'trust_parent')
     form = CustomizationForm
+    ordering = ['-pk']
 
 
 admin.site.register(Customization, CustomizationAdmin)

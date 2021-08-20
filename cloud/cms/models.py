@@ -399,13 +399,13 @@ class Customization(models.Model):
             ('access_integration_store', 'Can access the integration store'),
             ('access_developers', 'Can see Developers pages')
         )
+        ordering = ['name']
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
         Language, related_name='default_in_%(class)s', on_delete=models.CASCADE)
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
     host = models.CharField(blank=True, max_length=255)
-
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
                                help_text="""Parent is the customization that the current customization depends on.<br>
