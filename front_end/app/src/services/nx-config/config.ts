@@ -1,7 +1,8 @@
 import { IConfig }                               from './config-types';
 import { environment }                           from '@environments/environment';
-import { ConfigType, ConsoleSection, ModalType } from '@pages/developer-console/console/table/console-table.component';
+import { ConfigType, ConsoleSection, ModalType } from '@components/console-table/console-table.component';
 import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
+import { GroupingOptions, SortOptions }          from '@pages/developer-console/console/edit/console-edit.component';
 
 export const nxConfig: IConfig = {
     alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -261,11 +262,21 @@ export const nxConfig: IConfig = {
             //     title   : 'About',
             //     content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
             // },
-            sort              : 0,
-            title             : 'Custom VMS Clients',
-            url               : 'custom-clients',
-            icon              : 'servers.svg',
-            perPage           : 4,
+            sort             : 0,
+            title            : 'My Custom VMS Clients',
+            url              : 'custom-clients',
+            icon             : 'servers.svg',
+            searchSubheading : 'Search works in all columns',
+            noResultsMessage : 'No Custom Clients found matching search',
+            minItemsAdvanced : 10,
+            perPage          : 10,
+            perPageOptions   : [
+                { name: '5', value: '5' },
+                { name: '10', value: '10' },
+                { name: '25', value: '25' },
+                { name: '100', value: '100' },
+                { name: 'All', value: '10000' }
+            ],
             pagesToShow       : 4,
             searchable        : true,
             excludeFromSearch : ['last_modified', 'downloadLink', 'settingsModal'],
@@ -275,7 +286,11 @@ export const nxConfig: IConfig = {
                     name  : 'name',
                     label : 'Internal Name',
                     meta  : {
-                        styles: 'font-italic'
+                        styles : 'font-italic',
+                        filter : {
+                            sortable : SortOptions.TEXT,
+                            grouping : GroupingOptions.TEXT
+                        }
                     }
                 },
                 {
@@ -283,7 +298,12 @@ export const nxConfig: IConfig = {
                     name  : 'last_modified',
                     label : 'Last Modified',
                     meta  : {
-                        styles: 'expanded-width'
+                        styles : 'expanded-width',
+                        filter : {
+                            sortable    : SortOptions.DATE,
+                            grouping    : GroupingOptions.DATE_AUTO,
+                            multiSelect : true
+                        }
                     }
                 },
                 {
@@ -356,8 +376,10 @@ export const nxConfig: IConfig = {
             },
             actions: [
                 {
-                    title : 'Create',
-                    modal : ModalType.CLIENT_CREATE
+                    title      : 'Create Custom Client',
+                    subheading : "You don't have any Custom Clients yet.",
+                    modal      : ModalType.CLIENT_CREATE,
+                    icon       : 'NoSettings.svg'
                 }
             ]
         }
@@ -517,14 +539,14 @@ export const nxConfig: IConfig = {
         healthMonitorCacheTimeout : 60,
         customClientsEnabled      : false
     },
-    cloudName     : '',
-    cloudHost     : '',
-    cloudSystemId : '',
-    featureFlags  : {},
+    cloudName          : '',
+    cloudHost          : '',
+    cloudSystemId      : '',
+    featureFlags       : {},
     featureFlagStrings : FeatureFlagStrings,
-    localSystemId : '',
-    localServerId : '',
-    company       : {
+    localSystemId      : '',
+    localServerId      : '',
+    company            : {
         copyrightYear : '',
         links         : {
             privacy : '',

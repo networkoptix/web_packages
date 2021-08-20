@@ -1,25 +1,45 @@
 <nx-pre-loader *ngIf="!selectedManifest"></nx-pre-loader>
 
-<nx-block *ngIf="docAsset?.title && docAsset?.blocks.length" header-style="slim">
+<nx-block *ngIf="docAsset?.title && docAsset?.blocks.length" header-style="slim" type="mb-3">
     <header>
         {{docAsset.title}}
     </header>
-    <nx-section *ngFor="let block of docAsset.blocks" [innerHTML]="block.contentHTML| safe:'html'"></nx-section>
+    <nx-section *ngFor="let block of docAsset.blocks">
+        <div [innerHTML]="block.contentHTML | safe:'html'"></div>
+    </nx-section>
 </nx-block>
 
-<section *ngIf="selectedManifest?.contexts" class="card mt-3 position-relative">
-    <nx-search *ngIf="selectedManifest.searchable"
-        [ngModel]="this.selectedData.search$ | async"
-        (ngModelChange)="updateSearchParam($event)"
-        layout="search"
-        instant></nx-search>
-    <div *ngIf="selectedData.noSearchMatches$ | async" class="no-results" [style.width.px]="noResultsWidth" [style.height.px]="noResultsHeight">
-        <h3 translate>No matching results found</h3>
-        <button (click)="updateSearchParam({query: ''})" translate>Reset Search</button>
-    </div>
+<nx-block *ngIf="selectedManifest?.contexts" header-style="slim">
+    <header class="header-with-search">
+        <span>{{selectedManifest.title}}</span>
+        <button *ngIf="selectedData.showAdvanced$ | async" (click)="toggleSearch()" [ngClass]="{'search-active': showSearch}">
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <span translate>Search</span>
+        </button>
+    </header>
+    <nx-section *ngIf="selectedManifest.searchable && (selectedData.showAdvanced$ | async) && showSearch" type="light-gray">
+        <div class="search-wrapper">
+            <nx-search [ngModel]="this.selectedData.search$ | async"
+                (ngModelChange)="updateSearchParam($event)"
+                layout="search"
+                instant></nx-search>
+            <div>{{selectedManifest.searchSubheading}}</div>
+        </div>
+    </nx-section>
     <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48">
         <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
-            <th cdk-header-cell *cdkHeaderCellDef>{{field.label}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative">
+                <span>{{field.label}}</span>
+                <span *ngIf="field.meta.filter as filter" (click)="updateActiveFilter(field.name)"  class="label-filter" [ngClass]="{'active': activeFilter === field.name}">&#x25BC;</span>
+                <nx-advanced-filter
+                    (onClose)="updateActiveFilter()"
+                    [filter]="field.meta.filter"
+                    [field]="field.name"
+                    [initialState]="filterStates[field.name]"
+                    [data]="(selectedData.data$ | async)"
+                    [activeFilter]="activeFilter"
+                    (updateFilter)="filterUpdaterFactory(field.name)($event)"></nx-advanced-filter>
+            </th>
             <ng-container [ngSwitch]="field.type">
                 <ng-container *ngSwitchCase="CONFIG_TYPE.STATUS">
                     <td cdk-cell *cdkCellDef="let element" [ngbTooltip]="field.meta?.tooltip" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
@@ -75,8 +95,8 @@
                             <ng-template #download>
                                 <ng-template #errorsTooltip>
                                     <div class="d-flex flex-column">
-                                      <span class="mb-3 text-decoration-underline">{{element[field.name].manifest.fields[0].meta.options.errorHeading}}</span>
-                                      <span *ngFor="let error of (asyncErrors[element[field.name].lookupKey]  || [])">{{ error.message}}</span>
+                                        <span class="mb-3 text-decoration-underline">{{element[field.name].manifest.fields[0].meta.options.errorHeading}}</span>
+                                        <span *ngFor="let error of (asyncErrors[element[field.name].lookupKey]  || [])">{{ error.message}}</span>
                                     </div>
                                 </ng-template>
                                 <ng-template #standardStatus>
@@ -134,19 +154,35 @@
         </thead>
         <tbody>
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+            <tr class="data-row" *cdkNoDataRow>
+                <td class="data-row" colspan="9999">
+                  <span>{{selectedManifest.noResultsMessage}}</span>
+                  <button (click)="resetSearch()" class="reset-search" translate>Reset Search</button>
+                </td>
+            </tr>
         </tbody>
     </table>
-    <div *ngIf="!(selectedData.data$ | async)?.length" class="table-content-placeholder" [style.height.px]="48 * (selectedData.perPage$ | async)">
+    <div *ngIf="!(selectedData.data$ | async)?.length && !(selectedData.noSearchMatches$ | async)" class="table-content-placeholder" [style.height.px]="48 * (selectedData.perPage$ | async)">
         <ng-template #createPlaceholder>
             <div class="create-placeholder">
-                <h3 translate>You don't have any Custom VMS Clients yet. Add your first one!</h3>
-                <button (click)="handleModal()" translate>Create Custom VMS Client</button>
+                <svg-icon nx-add-svg-src
+                [src]="CONFIG.icons.dirPagePlaceholder + selectedManifest.actions[0].icon"
+                [svgStyle]="{'width.px': '64', 'height.px': '64', 'margin.px': '8'}"
+                [applyClass]="true"></svg-icon>
+                <h3>{{selectedManifest.actions[0].subheading}}</h3>
+                <button (click)="handleModal()" class="btn btn-primary">{{selectedManifest.actions[0].title}}</button>
             </div>
         </ng-template>
         <nx-pre-loader *ngIf="!dataLoaded; else createPlaceholder"></nx-pre-loader>
     </div>
-    <div class="d-flex justify-content-between">
-        <nx-paginator [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
-        <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 ml-auto btn-' + (action.type || 'primary')">{{action.title}}</button>
-    </div>
-</section>
+    <nx-section [nonPadded]="true"  type="d-flex flex-row">
+        <nx-paginator *ngIf="selectedData.showAdvanced$ | async" [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
+        <div class="rows-selector">
+            <span>Rows per page:</span>
+            <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>
+        </div>
+    </nx-section>
+    <nx-section [nonPadded]="true">
+        <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')">{{action.title}}</button>
+    </nx-section>
+</nx-block>

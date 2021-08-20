@@ -1,22 +1,22 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }                from '@ngneat/until-destroy';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal }   from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy }     from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxToastService }            from '../toast.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig }         from '@services/nx-config';
+import { NxLanguageProviderService }        from '@services/nx-language-provider';
+import { NxProcessService, Process }        from '@services/process.service';
+import { NxToastService }                   from '../toast.service';
+import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
 import {
     ConfigType, ModalContent, ModalManifest, ModalType
-}                                    from '@pages/developer-console/console/table/console-table.component';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
-import { ContentSettings, ContextManifest }           from '@services/nx-cloud-api.types';
-import { NxHeaderService } from '@services/nx-header.service';
-import { NxConsoleService } from '@pages/developer-console/console/console.service';
-import { Router } from '@angular/router';
-import { ConsoleMode } from '@pages/developer-console/console/console.component';
+}                                           from '@components/console-table/console-table.component';
+import { NxCloudApiService }                from '@services/nx-cloud-api';
+import { DropdownItem }                     from '@components/dropdowns/generic/dropdown.component';
+import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
+import { NxHeaderService }                  from '@services/nx-header.service';
+import { NxConsoleService }                 from '@pages/developer-console/console/console.service';
+import { Router }                           from '@angular/router';
+import { ConsoleMode }                      from '@pages/developer-console/console/console.component';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {

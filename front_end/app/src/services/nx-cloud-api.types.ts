@@ -1,5 +1,5 @@
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
-import { ConfigType }   from '@pages/developer-console/console/table/console-table.component';
+import { ConfigType }   from '@components/console-table/console-table.component';
 
 /* eslint-disable camelcase */
 export interface ILanguage{

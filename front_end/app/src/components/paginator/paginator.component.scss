@@ -7,8 +7,8 @@
 a.btn.btn-default {
     @include typography.regular13nocolor;
     color: $light16 !important;
-    margin-top: 6px;
-    margin-bottom: 6px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     border-radius: 4px;
     box-shadow: none !important;
 

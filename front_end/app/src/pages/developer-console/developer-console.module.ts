@@ -1,5 +1,4 @@
 import { NgModule }                      from '@angular/core';
-import { CdkTableModule }                from '@angular/cdk/table';
 import { CommonModule }                  from '@angular/common';
 import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
@@ -11,10 +10,9 @@ import { ComponentsModule }              from '../../components/components.modul
 import { DirectivesModule }              from '../../directives/directives.module';
 import { PipesModule }                   from '../../pipes/pipes.module';
 import { MenuModule }                    from '../../menu';
-import { ApplyGuard, DevelopersGuard }   from '../../routeGuards';
+import { ApplyGuard }                    from '../../routeGuards';
 import { NxDevConsoleComponent }         from './console/console.component';
 import { NxDevConsoleMenuComponent }     from './console/menu/console-menu.component';
-import { NxDevConsoleTableComponent }    from './console/table/console-table.component';
 import { NxDevConsoleEditComponent }     from './console/edit/console-edit.component';
 
 const appRoutes: Routes = [
@@ -55,7 +53,6 @@ const appRoutes: Routes = [
         DirectivesModule,
         FormsModule,
         PipesModule,
-        CdkTableModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         MenuModule
@@ -64,7 +61,6 @@ const appRoutes: Routes = [
     declarations : [
         NxDevConsoleComponent,
         NxDevConsoleMenuComponent,
-        NxDevConsoleTableComponent,
         NxDevConsoleEditComponent
     ],
     bootstrap : [],

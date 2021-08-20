@@ -1,4 +1,4 @@
-<div class="card--body section clearfix" [ngClass]="type" [ngStyle]="{'padding': nonPadded ? '0': '1rem'}">
+<div class="card--body section clearfix card" [ngClass]="type" [ngStyle]="{'padding': nonPadded ? '0': '1rem'}">
     <div class="card--body-subheader" #subHeaderWrapper [hidden]="!haveSubheader">
         <h3>
             <ng-content select="header"></ng-content>

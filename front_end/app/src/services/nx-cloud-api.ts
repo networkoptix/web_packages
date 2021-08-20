@@ -13,7 +13,7 @@ import { NxUriCacheService }        from './uri-cache.service';
 import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { NxAccountService }         from '@services/account.service';
-import { ConsoleSection }           from '@pages/developer-console/console/table/console-table.component';
+import { ConsoleSection }           from '@components/console-table/console-table.component';
 import { PackageStatus }            from '@dialogs/download-async/download-async.component';
 import { NxConsoleService }         from '@pages/developer-console/console/console.service';
 

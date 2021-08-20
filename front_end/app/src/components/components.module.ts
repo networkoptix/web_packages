@@ -3,9 +3,11 @@ import { CommonModule }                       from '@angular/common';
 import { TranslateModule }                    from '@ngx-translate/core';
 import { RouterModule }                       from '@angular/router';
 import { FormsModule }                        from '@angular/forms';
+import { CdkTableModule }                     from '@angular/cdk/table';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { EditorModule, TINYMCE_SCRIPT_SRC }   from '@tinymce/tinymce-angular';
+
 import { DirectivesModule }                   from '@directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
@@ -64,7 +66,9 @@ import { NxNumericComponent }               from '@components/numeric-input/nume
 import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
 import { NxHTMLComponent }                  from '@components/html-input/html-input.component';
 import { PipesModule }                      from '@src/pipes/pipes.module';
-import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component';
+import { NxCookieBannerComponent }          from './cookie-banner/cookie-banner.component';
+import { NxAdvancedFilterComponent }        from './advanced-filter/advanced-filter.component';
+import { NxConsoleTableComponent }          from './console-table/console-table.component';
 
 @NgModule({
     imports: [
@@ -78,6 +82,7 @@ import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component
         PipesModule,
         AngularSvgIconModule.forRoot(),
         QuicklinkModule,
+        CdkTableModule,
         EditorModule
     ],
     declarations: [
@@ -135,7 +140,9 @@ import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component
         NxEditableSettingsHeading,
         NxPaginatorComponent,
         NxHTMLComponent,
-        NxCookieBannerComponent
+        NxCookieBannerComponent,
+        NxAdvancedFilterComponent,
+        NxConsoleTableComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -176,7 +183,9 @@ import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component
         NxImageComponent,
         NxEditableSettingsHeading,
         NxPaginatorComponent,
-        NxHTMLComponent
+        NxHTMLComponent,
+        NxAdvancedFilterComponent,
+        NxConsoleTableComponent
     ],
     exports: [
         QuicklinkModule,
@@ -233,7 +242,9 @@ import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component
         NxEditableSettingsHeading,
         NxPaginatorComponent,
         NxHTMLComponent,
-        NxCookieBannerComponent
+        NxCookieBannerComponent,
+        NxAdvancedFilterComponent,
+        NxConsoleTableComponent
     ]
 })
 export class ComponentsModule {

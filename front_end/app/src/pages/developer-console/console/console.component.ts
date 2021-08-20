@@ -8,7 +8,7 @@ import { NxCloudApiService }        from '@services/nx-cloud-api';
 import { ContentManifest }          from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { ConsoleMenuNode }          from './menu/console-menu.component';
-import { ConsoleSection }           from './table/console-table.component';
+import { ConsoleSection }           from '@components/console-table/console-table.component';
 import { NxHeaderService }          from '@services/nx-header.service';
 
 export enum ConsoleMode {

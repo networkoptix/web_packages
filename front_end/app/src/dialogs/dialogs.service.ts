@@ -45,7 +45,7 @@ import { BaseAccount }                         from '@services/account.service/b
 import { CloudAccount }                        from '@services/account.service/cloud';
 import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
 import { EditModalContent }                    from './edit/edit.component';
-import { ModalContent }                        from '@pages/developer-console/console/table/console-table.component';
+import { ModalContent }                        from '@components/console-table/console-table.component';
 import { DownloadAsyncModalContent }           from './download-async/download-async.component';
 import { StorageManager }                      from '@services/system.service/system/storage-manager/storage-manager';
 

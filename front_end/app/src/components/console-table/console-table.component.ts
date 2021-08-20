@@ -15,8 +15,6 @@ import {
 }                                                            from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }                          from '@services/nx-config';
 import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
-import { ConsoleMode }                                       from '../console.component';
-import { DataStructureMeta }                                 from '../edit/console-edit.component';
 import { NxHeaderService }                                   from '@services/nx-header.service';
 import { NxMenusService }                                    from '@services/menus.service';
 import { PackageHandler, PackageProgress }                   from '@dialogs/download-async/download-async.component';
@@ -24,6 +22,10 @@ import { WINDOW }                                            from '@services/win
 import { NxToastService }                                    from '@dialogs/toast.service';
 import { NxUriService }                                      from '@services/uri.service';
 import { NxConsoleService }                                  from '@pages/developer-console/console/console.service';
+import { FilterState, FilterUpdatePayload }                  from '@components/advanced-filter/advanced-filter.component';
+import { DropdownItem }                                      from '@components/dropdowns/generic/dropdown.component';
+import { ConsoleMode }                                       from '@pages/developer-console/console/console.component';
+import { DataStructureMeta }                                 from '@pages/developer-console/console/edit/console-edit.component';
 
 export enum ConfigType {
     TEXT='text',
@@ -58,7 +60,9 @@ enum ActionType {
 
 interface ActionConfig {
     title: string,
-    modal: ModalType
+    modal: ModalType,
+    subheading?: string,
+    icon?: string,
     type?: ActionType,
 }
 
@@ -79,6 +83,10 @@ export interface ConsoleManifest {
     perPage: number,
     pagesToShow: number,
     searchable: boolean,
+    searchSubheading: string,
+    noResultsMessage: string,
+    minItemsAdvanced: number,
+    perPageOptions: DropdownItem[],
     excludeFromSearch: string[],
     contexts: ColumnConfig[],
     editManifest: ModalManifest,
@@ -125,7 +133,7 @@ export class ListSerializer<Initial, Serialized> {
                 this.#serializer = (data: unknown) => data as Serialized[];
         }
         if (initialData?.length) {
-            this.data = this.#serializer(initialData);
+            this.update(initialData);
         }
     }
 
@@ -166,7 +174,7 @@ export class ListSerializer<Initial, Serialized> {
     templateUrl : 'console-table.component.html',
     styleUrls   : ['console-table.component.scss']
 })
-export class NxDevConsoleTableComponent {
+export class NxConsoleTableComponent {
     @Input() sectionParam: ConsoleSection;
     @Input() contextList: ContextManifest[];
     @Output() editValues = new EventEmitter();
@@ -178,7 +186,10 @@ export class NxDevConsoleTableComponent {
     noResultsHeight = 0;
     noResultsWidth = 0;
     dataLoaded = false;
+    showSearch = false;
+    activeFilter: string | false = false;
     update$ = new BehaviorSubject(null);
+    filterStates: Record<string, FilterState> = {}
 
     selectedManifest: ConsoleManifest;
     selectedData: TableDataSource;
@@ -186,6 +197,7 @@ export class NxDevConsoleTableComponent {
     manifest: any;
     contentManifest: ContentManifest;
     docAsset: DocAsset;
+    perPageSelectedOption: DropdownItem;
 
     constructor(
         configService: NxConfigService,
@@ -225,9 +237,19 @@ export class NxDevConsoleTableComponent {
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
                 const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.settings);
+                this.showSearch ||= !!search;
+                const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);
+                if (!isNaN(perPageFromParam)) {
+                    const name = `${perPageFromParam}`;
+                    this.perPageSelectedOption = { name, value: name };
+                } else {
+                    const name = `${this.selectedManifest.perPage}`;
+                    this.perPageSelectedOption = { name, value: name };
+                }
                 this.selectedData = new TableDataSource(
                     data,
-                    perPage || this.selectedManifest.perPage,
+                    perPageFromParam,
+                    this.selectedManifest.minItemsAdvanced,
                     parseInt(page),
                     search,
                     this.displayedColumns.filter(key => !this.selectedManifest.excludeFromSearch.includes(key)),
@@ -257,7 +279,7 @@ export class NxDevConsoleTableComponent {
         [],
         {
             relativeTo          : this.route,
-            queryParams         : value ? { [param]: value } : {},
+            queryParams         : { [param]: value },
             queryParamsHandling : 'merge',
             replaceUrl          : true
         }
@@ -267,9 +289,22 @@ export class NxDevConsoleTableComponent {
         this.editValues.emit(asset.values);
     }
 
+    toggleSearch() {
+        if (!this.route.snapshot.queryParams.search || !this.showSearch) {
+            this.showSearch = !this.showSearch;
+        }
+    }
+
+    filterUpdaterFactory = (fieldName: string) => (payload: FilterUpdatePayload) => {
+        this.filterStates[fieldName] = payload.state;
+        this.selectedData.updateFilters({ [fieldName]: payload.filter }, fieldName, payload.state);
+    };
+
     updatePageParam = this.#paramUpdaterFactory('page')
 
-    updateSearchParam = ({ query }) => {
+    updatePerPageParam = this.#paramUpdaterFactory('perPage')
+
+    updateSearchParam = ({ query } = { query: '' }) => {
         this.#paramUpdaterFactory('search')(query);
     }
 
@@ -279,6 +314,15 @@ export class NxDevConsoleTableComponent {
 
     updatePageState = ({ page, search, perPage = 0 }) => {
         this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
+    }
+
+    resetSearch() {
+        this.updateSearchParam({ query: '' });
+        this.updatePageState({ search: '', page: this.route.snapshot.params.page || '1' });
+    }
+
+    updateActiveFilter(filter: string | false = false) {
+        this.activeFilter = filter;
     }
 
     async handleModal(modalContent?) {
@@ -367,15 +411,21 @@ export class NxDevConsoleTableComponent {
     }
 }
 
+export type AdditionalFilter = <Data>(data: Data[]) => Data[]
+
 class TableDataSource extends DataSource<any> {
     #baseData$: BehaviorSubject<any[]> = new BehaviorSubject([]);
     #itemsPerPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #currentPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #displayedColumns$: BehaviorSubject<string[]> = new BehaviorSubject([])
-    #numberOfItems$ = new BehaviorSubject(0)
+    #numberOfItems$ = new BehaviorSubject(0);
+    #additionalFilters$: BehaviorSubject<Record<string, AdditionalFilter>> = new BehaviorSubject({});
     search$: BehaviorSubject<string> = new BehaviorSubject(null);
     noSearchMatches$ = new BehaviorSubject(false);
-    numberOfPages$ = new BehaviorSubject(0)
+    numberOfPages$ = new BehaviorSubject(0);
+    showAdvanced$ = this.#baseData$.pipe(map(data => data.length > this.minItemsAdvanced))
+    minItemsAdvanced = 0;
+    filterStates: Map<string, FilterState> = new Map()
 
     perPage$ = combineLatest([
         this.#numberOfItems$,
@@ -384,10 +434,20 @@ class TableDataSource extends DataSource<any> {
         map(([items, perPage]) => Math.min(items, perPage))
     )
 
+    updateFilters(filtersToUpdate: Record<string, AdditionalFilter>, fieldName: string, filterState: FilterState) {
+        if (this.filterStates.get(fieldName)?.sort !== filterState.sort) {
+            this.filterStates.delete(fieldName);
+        }
+
+        this.filterStates.set(fieldName, filterState);
+
+        this.#additionalFilters$.next({ ...this.#additionalFilters$.value, ...filtersToUpdate });
+    }
+
     data$ = combineLatest([
-        this.#baseData$, this.#itemsPerPage$, this.#currentPage$, this.#displayedColumns$, this.search$
+        this.#baseData$, this.#itemsPerPage$, this.#currentPage$, this.#displayedColumns$, this.search$, this.#additionalFilters$
     ]).pipe(
-        map(([data, perPage, currentPage, displayedColumns, search]) => {
+        map(([data, perPage, currentPage, displayedColumns, search, additionalFilters]) => {
             if (!data.length) {
                 return data;
             }
@@ -399,9 +459,31 @@ class TableDataSource extends DataSource<any> {
                 noSearchMatches = !filteredData.length;
                 if (!noSearchMatches) {
                     data = filteredData;
+                } else {
+                    this.noSearchMatches$.next(true);
+                    return filteredData;
                 }
             }
-            this.noSearchMatches$.next(noSearchMatches);
+
+            const sortOrder = [...this.filterStates].map(([fieldName]) => fieldName);
+
+            data = Object.entries(additionalFilters)
+                .sort(([a], [b]) => {
+                    const aIndex = sortOrder.indexOf(a);
+                    const bIndex = sortOrder.indexOf(b);
+                    return aIndex - bIndex;
+                })
+                .reduce((
+                    filtered, [_, filterFunc]
+                ) => filterFunc(filtered), data);
+            // for (const field of sortOrder) {
+            //     const sortBy = this.filterStates.get(field)?.sort;
+            //     if (sortBy) {
+            //         const sortValue = sortBy === FilterSort.ASC ? 1 : -1;
+            //         data = data.sort((a, b) =>  a[field] === b[field] ? 0 : a[field] > b[field] ? sortValue : -sortValue);
+            //     }
+            // }
+            this.noSearchMatches$.next(false);
             const numberOfPages = Math.ceil(data.length / perPage);
             this.numberOfPages$.next(numberOfPages);
             const end = Math.min(currentPage, this.numberOfPages$.value) * perPage;
@@ -421,14 +503,17 @@ class TableDataSource extends DataSource<any> {
         }))
 
     constructor(
-        data, itemsPerPage = 0,
+        data,
+        itemsPerPage = 0,
+        minItemsAdvanced = 0,
         currentPage = 1,
         search = '',
         displayedColumns = [],
         private updatePageParam = (page) => console.error(`Missing param handler ${page}`)
     ) {
         super();
-        this.#baseData$.next(data);
+        this.minItemsAdvanced = minItemsAdvanced;
+        this.updateBaseData(data);
         this.#itemsPerPage$.next(itemsPerPage);
         this.#currentPage$.next(currentPage);
         this.#displayedColumns$.next(displayedColumns);

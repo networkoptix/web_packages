@@ -1,5 +1,5 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 
 :host {
     grid-area: content;
@@ -9,14 +9,6 @@
 
 header {
     @include typography.medium15dark9;
-}
-
-nx-section {
-    padding: 16px;
-}
-
-nx-search {
-    margin-bottom: 16px;
 }
 
 section.card {
@@ -197,5 +189,87 @@ tr.data-row {
     border: 1px solid $light4;
     & button {
         margin-top: 16px;
+    }
+}
+
+.cdk-header-cell {
+    @include typography.medium13dark9;
+    background: $additional_light1;
+    border: 1px solid $light3;
+    line-height: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.cdk-cell {
+    border: 1px none;
+    border-left: 1px solid $light3;
+    border-right: 1px solid $light3;
+}
+
+.cdk-row:nth-child(even) {
+    background: $additional_light1;
+}
+
+nx-paginator {
+    margin: 16px;
+}
+
+.header-with-search {
+    display: flex;
+    justify-content: space-between;
+    button {
+        background: transparent;
+        color: $light16;
+
+        &.search-active {
+            background: $light16;
+            color: $light1;
+        }
+    }
+}
+
+.search-wrapper {
+    display: flex;
+    & > nx-search {
+        max-width: 432px;
+        flex-grow: 10;
+    }
+
+    & > div {
+        @include typography.regular14dark9;
+        padding-left: 8px;
+    }
+}
+
+button.reset-search {
+    color: $light16;
+    display: inline-block !important;
+    background: transparent;
+}
+
+.label-filter {
+    margin-left: 6px;
+    cursor: pointer;
+    padding: 2px 4px;
+    &:hover, &.active {
+        background: $light5;
+    }
+
+    &:active {
+        background: $light16;
+        color: $light1;
+    }
+}
+
+.rows-selector {
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    margin: 16px 16px 16px auto;
+    color: $light16;
+
+    nx-select {
+        margin-left: 8px;
     }
 }
