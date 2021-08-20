@@ -1,11 +1,11 @@
 @use 'bootstrap_utils' as bootstrap;
 @use '../../../../styles/theme_palette';
+@use "../../../styles/mixins" as *;
 
 
 integration-detail-component {
 
-    .integration-details {
-    }
+    .integration-details {}
 
     .menu {
         background-color : theme_palette.$light5;
@@ -23,7 +23,10 @@ integration-detail-component {
             position: inherit;
         }
     }
+}
 
+:host .add-ellipsis {
+    @include ellipsis;
 }
 
 #info- {

@@ -118,7 +118,7 @@
                         </nx-block>
                         <nx-block side-element type="gray"
                                   *ngIf="plugin.requirementsAndCompatibility">
-                            <header>{{'integration.requirements' | translate: {name: plugin.information.name} }}</header>
+                            <header class="add-ellipsis">{{'integration.requirements' | translate: {name: plugin.information.name} }}</header>
 
                             <nx-section>
                                 <div class="card--body-info">
