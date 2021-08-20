@@ -44,7 +44,7 @@ def apply_customization(webadmin_package, customization_package, output_package)
             setup_path = f"{static_dir}/setup_{skin_name}"
             if Path(setup_path).exists():
                 shutil.rmtree(setup_path)
-            Path(f"{static_dir}/styles/{skin_name}.css").unlink(True)
+            Path(f"{static_dir}/styles/{skin_name}.css").unlink(missing_ok=True)
 
         for file in \
                 ["description.json", "webadmin_config.json", "desktop/webadmin_config.js"]:
