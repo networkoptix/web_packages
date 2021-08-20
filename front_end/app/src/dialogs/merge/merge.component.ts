@@ -122,7 +122,7 @@ export class MergeModalContent {
             await Promise.all(
                 this.systems.map(async system => {
                     if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
-                        const tempSystemService = await this.systemService.createSystem(this.account.email, system.id, undefined, true);
+                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id, undefined, true);
                         try {
                             const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
                             system.moduleInfo = moduleInfo.reply;
@@ -660,7 +660,7 @@ export class MergeModalContent {
                     return this.targetSystem.isNew ? isNew : res;
                 });
         } else {
-            this.targetSystemService = await this.systemService.createSystem(this.account.email, this.targetSystem.id, undefined, true);
+            this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id, undefined, true);
             let targetSystem;
             try {
                 targetSystem = await this.targetSystemService.getInfo(true, false);

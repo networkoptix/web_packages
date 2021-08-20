@@ -16,7 +16,7 @@ export class ServerManager {
     moduleInfo: ModuleInfo;
 
     constructor(
-        public mediaserver: NxSystemAPI,
+        public mediaserver: NxSystemAPI | NxSystemRestAPI,
         private systemApiService: NxSystemAPIService,
         private currentUserEmail: string,
         private systemId: string,

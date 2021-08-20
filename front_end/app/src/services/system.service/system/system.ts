@@ -61,10 +61,7 @@ export class NxSystem extends System {
     systemIdInit: string;
     serverIdInit: string;
     userIdInit: string;
-
-    /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
-    #apiVersion = new BehaviorSubject(0);
-    apiVersionResolved$ = this.#apiVersion.pipe(filter(version => !!version), take(1))
+    useRest: boolean;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -72,15 +69,6 @@ export class NxSystem extends System {
     licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
-
-    /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
-    setApiVersion(version: string | number) {
-        this.#apiVersion.next(typeof version === 'string' ? parseFloat(version) : version);
-    }
-
-    get useRest() {
-        return this.#apiVersion.value >= NxSystemRestAPI.supportedVersion;
-    }
 
     get subscriberCount() {
         return this._subscribersCount.getValue();
@@ -91,7 +79,7 @@ export class NxSystem extends System {
     }
 
     get isAvailable() {
-        return this._isAvailable && !!this.#apiVersion.value;
+        return this._isAvailable;
     }
 
     set isAvailable(value) {
@@ -136,12 +124,14 @@ export class NxSystem extends System {
         systemId?: string,
         serverId?: string,
         userId?: string,
+        useRest?: boolean,
         private appState?: NxAppStateService
     ) {
         super();
 
         this.CONFIG = CONFIG;
         this.LANG = LANG;
+        this.useRest = useRest;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
@@ -156,7 +146,7 @@ export class NxSystem extends System {
         }
     }
 
-    async initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
         this.systemIdInit = systemId;
         this.serverIdInit = serverId;
         this.userIdInit = userId;
@@ -171,7 +161,7 @@ export class NxSystem extends System {
         this.currentUserEmail = currentUserEmail;
 
         if (!this.mediaserver) {
-            this.mediaserver = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
+            this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
                 /* Unauthorised request handler
                 Some options here:
                 - Access was revoked
@@ -184,8 +174,8 @@ export class NxSystem extends System {
             },
             this.useRest);
             // first update auth keys so other requests will not fail
-            await this.updateSystemAuth(true);
         }
+        this.updateSystemAuth(true);
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);
@@ -205,23 +195,8 @@ export class NxSystem extends System {
         this.storageManager = new StorageManager(this);
     }
 
-    async setMediaServerApiType(currentUserEmail: string, systemId: string, serverId: string) {
-        this.mediaserver = this.systemApiService
-            .createConnection(currentUserEmail, systemId, serverId, () => {}, this.useRest);
-        // first update auth keys so other requests will not fail
-        await this.updateSystemAuth(true);
-    }
-
-    async checkRestCompatibility() {
-        if (this.#apiVersion.value === 0 && this.cameraManager.moduleInfo.version) {
-            this.setApiVersion(this.cameraManager.moduleInfo.version);
-            await this.setMediaServerApiType(this.currentUserEmail, this.systemIdInit, this.serverIdInit);
-        }
-        return Promise.resolve();
-    }
-
-    async updateSystemAuth(force = true) {
-        if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
+    updateSystemAuth(force = true) {
+        if (this.CONFIG.isLocal || !force && this.mediaserver?.authGet) { // no need to update
             return Promise.resolve(true);
         }
 
@@ -384,8 +359,8 @@ export class NxSystem extends System {
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
+                // eslint-disable-next-line prefer-promise-reject-errors
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
-                .then(() => this.checkRestCompatibility())
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
                 .then(() => this.getUsers(true))
@@ -438,7 +413,7 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
-    mergeSystems(url: string, dryRun: string, currentPassword?: string, takeRemoteSettings = false) {
+    mergeSystems(url: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword, takeRemoteSettings);
     }
 
@@ -473,7 +448,7 @@ export class NxSystem extends System {
             return this.authPromise;
         }
 
-        if (!force && this.mediaserver.authGet) {
+        if (!force && this.mediaserver?.authGet) {
             return Promise.resolve(true);
         }
 

@@ -42,7 +42,7 @@ export class SystemGuard implements CanActivate {
         }).params.systemId;
 
         const checkPermissionsFor = (system: NxSystem) => {
-            const permissions = system.userManager.permissions;
+            const permissions: any = system.userManager?.permissions || {};
             const isOwner = system.userManager.isOwner(system.userManager.currentUser);
             const canViewChecks = {
                 users           : permissions.editUsers,
@@ -59,7 +59,7 @@ export class SystemGuard implements CanActivate {
 
         return systemId && currentRoute && this.accountService
             .get()
-            .then(async(account) => {
+            .then((account) => {
                 if (account) {
                     const currSystem = this.systemService.getCurrentSystem();
                     if (!this.settingsService.system) {

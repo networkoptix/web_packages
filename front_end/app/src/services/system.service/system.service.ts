@@ -42,11 +42,14 @@ export class NxSystemService {
         return this.system;
     }
 
-    async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         const id = systemId || serverId;
-        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
-            .getModuleInfo().toPromise()
-            .catch(() => { return { reply: { version: 0 }}});
+        const cloudSystemInfo: any = (this.systemsService.systems || []).filter((system) => system.id === id)?.shift();
+        let useRest = false;
+        if (cloudSystemInfo) {
+            // TODO: Once clouddb has versions for system use that instead of capabilities
+            useRest = Object.keys(cloudSystemInfo.capabilities).some((key) => key.includes('4_3'));
+        }
         if (id in this.systemsCache) {
             this.system = this.systemsCache[id];
         } else {
@@ -61,12 +64,13 @@ export class NxSystemService {
                 this.router,
                 currentUserEmail,
                 systemId,
-                serverId
+                serverId,
+                undefined,
+                useRest
             );
             this.systemsCache[id] = this.system;
         }
         this.system.lostConnection = false;
-        this.system.setApiVersion(version);
         if (!skipPoll) {
             this.system.startPoll(systemId);
         }
@@ -88,12 +92,12 @@ export class NxSystemService {
                 '',
                 '',
                 userId,
+                true,
                 this.appState
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.system.setApiVersion(NxSystemRestAPI.supportedVersion);
-            this.system.update();
+            this.system.update().catch(() => {});
         }
 
         if (this.system.subscriberCount === 0) {

@@ -294,7 +294,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
-                            .subscribe(async(systems) => {
+                            .subscribe((systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
                                     return;
@@ -302,7 +302,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 if (this.systemId === this.system?.id) {
                                     return;
                                 }
-                                this.system = await this.systemService.createSystem(this.account.email, this.systemId, undefined, true);
+                                this.system = this.systemService.createSystem(this.account.email, this.systemId, undefined, true);
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
                                     this.systemNoAccess = true;
@@ -441,9 +441,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     async updateMenu(system: NxSystem) {
-        if (system.isOnline && system.isAvailable) {
-            await system.apiVersionResolved$.toPromise();
-        }
         this.systemNoAccess = false;
 
         this.content.system = this.system;
