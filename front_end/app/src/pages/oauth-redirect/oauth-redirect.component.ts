@@ -42,7 +42,7 @@ export class NxOAuthRedirectComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        //@ts-ignore
+        // @ts-ignore
         if (nativeClient) {
             this.pageService.pageTitle = this.LANG.pageTitles.default?.();
             this.route.queryParams.subscribe(async(params: any) => {
@@ -52,7 +52,7 @@ export class NxOAuthRedirectComponent implements OnInit {
                 if (this.initialData.code) {
                     this.state = 'sendingCode';
                     this.localStorageService.clear('client_type');
-                    //@ts-ignore
+                    // @ts-ignore
                     nativeClient.setCode(this.initialData.code);
                     setTimeout(() => { this.state = undefined; }, 3000);
                 } else {
