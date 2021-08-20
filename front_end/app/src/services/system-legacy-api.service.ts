@@ -386,7 +386,7 @@ export class NxSystemAPI {
     getApiDoc() {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
-        return this.http.get<JSON>('/static/openapi_v1.json').toPromise();
+        return this.get<JSON>('/static/openapi_legacy.json').toPromise();
     }
 
     login(

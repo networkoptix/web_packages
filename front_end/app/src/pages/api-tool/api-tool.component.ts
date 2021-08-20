@@ -275,10 +275,19 @@ export class NxApiToolComponent implements OnInit {
         });
     }
 
+    getLegacyMenuText(endpoint: string, includeTypeOfRequest: boolean, requestType: string) {
+        if (includeTypeOfRequest) {
+            return endpoint + ' - ' + requestType.toUpperCase();
+        }
+        return endpoint;
+    }
+
     private modifiedApi(api) {
         Object.keys(api.paths).forEach(endpoint => {
-            Object.entries(api.paths[endpoint]).forEach((method: any) => {
-                api.paths[endpoint][method[0]].tags.push(method[1].summary);
+            const endpointObj = Object.entries(api.paths[endpoint]);
+            const includeTypeOfRequest = endpointObj.length > 1;
+            endpointObj.forEach((method: any) => {
+                api.paths[endpoint][method[0]].tags.push(method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]));
             });
         });
 
@@ -321,15 +330,17 @@ export class NxApiToolComponent implements OnInit {
             let categoryNode:any = [];
 
             Object.keys(response.paths).forEach(endpoint => {
-                Object.entries(response.paths[endpoint]).forEach((method: any) => {
+                const endpointObj = Object.entries(response.paths[endpoint]);
+                const includeTypeOfRequest = endpointObj.length > 1;
+                endpointObj.forEach((method: any) => {
                     categoryNode = _content.level1.find((node) => {
                         return node.id === method[1].tags[0]; // if more tags?
                     });
                     categoryNode.level3.push({
                         additionalLabel : '',
-                        id              : method[1].summary,
+                        id              : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
                         isEnabled       : true, // is proprietary?
-                        label           : method[1].summary,
+                        label           : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
                         path            : '',
                         svgIcon         : ''
                     });
