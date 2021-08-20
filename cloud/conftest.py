@@ -1,7 +1,10 @@
 from typing import Iterable
 
 import os
+import json
+from uuid import uuid4
 import pytest
+from random import randint
 import model_bakery
 from model_bakery import baker
 
@@ -12,6 +15,13 @@ from api.models import Account
 
 from rest_framework.test import APIRequestFactory
 
+def generateJSON():
+    return json.dumps({
+        str(uuid4()): str(uuid4()),
+        str(uuid4()): [str(uuid4()) for _ in range(randint(1, 20))]
+    })
+
+baker.generators.add('jsonfield.fields.JSONField', 'conftest.generateJSON')
 
 @pytest.fixture(scope='session')
 def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, django_db_keepdb):
@@ -159,7 +169,7 @@ def asset_factory():
 
 @pytest.fixture(scope="session")
 def account_factory():
-    def get_account(email='super@user.com', is_superuser=True, customization_name='default'):
+    def get_account(email='super@user.com', is_superuser=True, customization_name='default', **kwargs):
         """Gets existing Account or creates new.
 
         Args:
@@ -170,7 +180,7 @@ def account_factory():
             Account: Account with superuser value mocked
         """
         existing = Account.objects.filter(email=email).first()
-        account = existing or baker.make(Account, email=email, is_superuser=is_superuser, customization=customization_name)
+        account = existing or baker.make(Account, email=email, is_superuser=is_superuser, customization=customization_name, **kwargs)
 
         if existing:
             account.is_superuser = is_superuser
@@ -296,3 +306,17 @@ def add_permission(db, cloud_portal_type):
 @pytest.fixture(scope='session')
 def bakery():
     return model_bakery
+
+
+def check_meta_factory(target_class):
+    def check_meta(field, attribute, expected):
+        assert getattr(target_class._meta.get_field(field), attribute, not expected) == expected
+
+    return check_meta
+
+def check_against_expected_meta(target_class, expected_meta):
+    check_meta = check_meta_factory(target_class)
+    for field, meta in expected_meta.items():
+        for attribute, expected in meta.items():
+            check_meta(field, attribute, expected)
+

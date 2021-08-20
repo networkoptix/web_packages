@@ -50,6 +50,10 @@ class FLAGS(metaclass=_FlagType):
     zendesk_sync = ('Zendesk Sync', 'zendeskSync', '%ZENDESK_SYNC%')
     alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
 
+    def __getattribute__(self, name):
+        return dict(FLAGS).get(name)
+
+
 
 class SWITCHES(metaclass=_FlagType):
     pass

@@ -25,11 +25,15 @@ FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
-USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "CELERY_BROKER_TRANSPORT_OPTIONS")
+USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(
+    settings, "CELERY_BROKER_TRANSPORT_OPTIONS")
 
-RELAY_GUID_PATTERN = re.compile('([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(/)')
+RELAY_GUID_PATTERN = re.compile(
+    '([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(/)')
 
-NOPTIXQA_SENDEMAILS_PATTERN = re.compile(r'^[a-zA-Z0-9_.+-]*noptixautoqa[a-zA-Z0-9_.+-]*\+[a-zA-Z0-9_.+-]*sendemail[a-zA-Z0-9_.+-]*@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+NOPTIXQA_SENDEMAILS_PATTERN = re.compile(
+    r'^[a-zA-Z0-9_.+-]*noptixautoqa[a-zA-Z0-9_.+-]*\+[a-zA-Z0-9_.+-]*sendemail[a-zA-Z0-9_.+-]*@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
+
 
 class MessageTypes(object):
     contact_sales = "contact_sales"
@@ -72,10 +76,14 @@ class Event(models.Model):
         subscriptions = subscriptions.filter(Q(enabled=True) | Q(enabled=1))
         # 2. For each subscription create a message and send it
         for subscription in subscriptions.all():
-            user = Account.objects.filter(email=subscription.user_email).first()
+            user = Account.objects.filter(
+                email=subscription.user_email).first()
 
             if user:
-                self.data['userFullName'] = user.get_full_name()
+                self.data = {
+                    'userFullName': user.get_full_name(),
+                    **json.loads(self.data)
+                }
 
             message = Message(
                 message=self.data,
@@ -103,8 +111,9 @@ class Subscription(models.Model):
 
 
 class Message(models.Model):
-    user_email = models.CharField(max_length=255)
-    external_id = models.CharField(max_length=64, db_index=True, unique=True, blank=True, null=True)
+    user_email = models.TextField()
+    external_id = models.CharField(
+        max_length=64, db_index=True, unique=True, blank=True, null=True)
     task_id = models.CharField(max_length=50, blank=True, editable=False)
     type = models.CharField(max_length=255)
     customization = models.CharField(max_length=255, default='default')
@@ -136,7 +145,8 @@ class Message(models.Model):
             if 'queue' in settings.NOTIFICATIONS_CONFIG[self.type]:
                 queue_name = settings.NOTIFICATIONS_CONFIG[self.type]['queue']
 
-            result = send_email.apply_async(args=[self.id, queue_name], queue=queue_name)
+            result = send_email.apply_async(
+                args=[self.id, queue_name], queue=queue_name)
             self.task_id = result.task_id
         else:
             send_email(self.id)
@@ -172,7 +182,8 @@ class Feedback(models.Model):
             'asset': self.asset_name,
             'message': self.message
         }
-        event = Event.objects.create(type=self.type, object=self.target_asset.id, data=data)
+        event = Event.objects.create(
+            type=self.type, object=self.target_asset.id, data=data)
         event.send()
 
         # Send email to the contact email for an integration.
@@ -187,18 +198,22 @@ class Feedback(models.Model):
         if contact_email:
             emails.append(contact_email)
 
-        msg = Message.objects.create(user_email=json.dumps(emails),
-                                     type=self.type,
-                                     customization=settings.CUSTOMIZATION,
-                                     message=data,
-                                     event=event)
+        msg = Message.objects.create(
+            user_email=json.dumps(emails),
+            type=self.type,
+            customization=settings.CUSTOMIZATION,
+            message=data,
+            event=event
+        )
         msg.send()
 
 
-class MessageStatusSerializer(serializers.ModelSerializer):  # model to use when checking on message status
+# model to use when checking on message status
+class MessageStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ('external_id', 'task_id', 'type', 'customization', 'created_date', 'send')
+        fields = ('external_id', 'task_id', 'type',
+                  'customization', 'created_date', 'send')
 
 
 class CloudNotification(models.Model):
@@ -263,9 +278,11 @@ class PushDevice(GCMDevice):
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
-    provider = models.IntegerField(choices=PROVIDERS, default=PROVIDERS.firebase_legacy)
+    provider = models.IntegerField(
+        choices=PROVIDERS, default=PROVIDERS.firebase_legacy)
     arn = models.CharField(max_length=255, blank=True)
-    baidu_user_id = models.CharField(max_length=255, blank=True)  # userId from baidu push service
+    # userId from baidu push service
+    baidu_user_id = models.CharField(max_length=255, blank=True)
 
     objects = PushDeviceManager()
 
@@ -291,7 +308,8 @@ class PushNotification(models.Model):
                             ('failure', 'Failure'))
 
     title = models.CharField(max_length=255, blank=True)
-    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)], blank=True)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[
+                            MaxLengthValidator(SIZE_LIMIT)], blank=True)
     payload = models.TextField(
         max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
     )
@@ -301,19 +319,22 @@ class PushNotification(models.Model):
     raw_system_id = models.CharField(max_length=255, default='')
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
-    customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
+    customization = models.ForeignKey(
+        Customization, blank=True, null=True, on_delete=models.SET_NULL)
     count = models.IntegerField(default=0)
 
     created_date = models.DateTimeField(auto_now_add=True)
     send_date = models.DateTimeField(null=True, blank=True)
-    state = models.CharField(choices=RESULT_STATES, default=RESULT_STATES.open, max_length=20)
+    state = models.CharField(choices=RESULT_STATES,
+                             default=RESULT_STATES.open, max_length=20)
 
     def __str__(self):
         return self.title or 'Untitled Notification'
 
     def clean(self):
-        if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
-            raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
+        if len(self.title + self.body + (self.payload or '')) > self.SIZE_LIMIT:
+            raise ValidationError(
+                f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
         super(PushNotification, self).clean()
 
     def save(self, *args, **kwargs):
@@ -324,7 +345,8 @@ class PushNotification(models.Model):
         match = RELAY_GUID_PATTERN.search(url)
         if match:
             system_id = match.groups()[0]
-            relay_host = settings.TRAFFIC_RELAY_HOST.replace('{systemId}', system_id)
+            relay_host = settings.TRAFFIC_RELAY_HOST.replace(
+                '{systemId}', system_id)
             url = url.replace(system_id, relay_host)
         return url
 
@@ -356,8 +378,10 @@ class PushNotification(models.Model):
         if device_ids:
             devices = PushDevice.objects.filter(id__in=device_ids)
 
-        firebase_legacy_devices = devices.filter(provider=PushDevice.PROVIDERS.firebase_legacy)
-        sns_devices = devices.filter(~Q(provider=PushDevice.PROVIDERS.firebase_legacy))
+        firebase_legacy_devices = devices.filter(
+            provider=PushDevice.PROVIDERS.firebase_legacy)
+        sns_devices = devices.filter(
+            ~Q(provider=PushDevice.PROVIDERS.firebase_legacy))
 
         title = self.title or None
         body = self.body or None
@@ -370,22 +394,28 @@ class PushNotification(models.Model):
         options = json.loads(self.options) if self.options else {}
 
         # Firebase Legacy
-        notification_devices = firebase_legacy_devices.filter(type=PushDevice.TYPES.notification)
-        data_devices = firebase_legacy_devices.filter(type=PushDevice.TYPES.data)
+        notification_devices = firebase_legacy_devices.filter(
+            type=PushDevice.TYPES.notification)
+        data_devices = firebase_legacy_devices.filter(
+            type=PushDevice.TYPES.data)
 
-        notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+        notification_response = notification_devices.send_message(
+            body, title=title, extra=payload, **options)
 
         data_payload = payload.copy()
         data_payload['caption'] = title or ''
         data_payload['description'] = body or ''
 
-        data_response = data_devices.send_message(None, title=None, extra=data_payload, **options)
+        data_response = data_devices.send_message(
+            None, title=None, extra=data_payload, **options)
 
         # SNS
-        sns_messages = self.generate_provider_specific_messages(title, body, payload, options, data_payload)
+        sns_messages = self.generate_provider_specific_messages(
+            title, body, payload, options, data_payload)
         sns_client = get_sns_client()
         retry_device_ids = []
         for device in sns_devices:
-            send_sns_push(device, sns_client, sns_messages, retry_device_ids, self)
+            send_sns_push(device, sns_client, sns_messages,
+                          retry_device_ids, self)
 
         return (notification_response, data_response), retry_device_ids
