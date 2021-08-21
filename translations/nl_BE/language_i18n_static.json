@@ -161,7 +161,7 @@
         "systemServerError": "Interne Server Fout",
         "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Systeem lijkt niet meer te reageren. Herlaad alstublieft de pagina.",
         "unknown": "Onbekend",
         "vendor": "Fabrikant",
         "model": "Model",
@@ -279,21 +279,21 @@
             },
             "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
             "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverAtUrl": "server op {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Geen toegang tot het {targetSystem} systeem.</p><p>Zorg ervoor dat de opgegeven server online is en probeer het opnieuw.</p>",
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
+            "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
+            "systemOffline": "Systeem {targetSystem} is offline en kan niet worden samengevoegd met de huidige",
+            "systemOfflineUrl": "{targetSystem} is ontoegankelijk",
+            "systemsIncompatible": "Deze server heeft een incompatibele softwareversie. Update beide systemen naar het {downloadHTML}.",
+            "systemVersionOld": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update %targetSystem% naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "systemVersionNew": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "systemVersionsNotMatch": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
         },
         "message": {
             "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
@@ -308,22 +308,22 @@
             },
             "sent": "Bericht is verzonden.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration_feedback": "Feedback voor integratie {asset}",
+                "ipvd_feedback_device": "Feedback over {asset}",
                 "ipvd_feedback_page": "Feedback voor camera's pagina",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Verkoopaanvraag voor {asset}",
+                "technical_inquiry": "Technisch onderzoek voor {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration": "Neem contact op met {companyName}",
+                "ipvd_feedback_device": "Feedback over {asset}",
                 "ipvd_feedback_page": "Feedback voor camera's pagina"
             }
         },
         "removeSystem": {
             "action": "Verbinding verbreken",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "U staat op het punt dit systeem te verwijderen uit uw account. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
+            "title": "Systeem loskoppelen?"
         },
         "titles": {
             "error": "Fout",
@@ -333,9 +333,9 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen?",
-            "serversDetach": "Detach server \"{ title }\" from current system?",
-            "serversReset": "Reset server \"{ title }\" to defaults?",
-            "serversRestart": "Restart server \"{ title }\"?",
+            "serversDetach": "Ontkoppel server \"{ title }\" van het huidige systeem?",
+            "serversReset": "Server \"{ title }\" resetten naar standaard?",
+            "serversRestart": "Herstart server \"{ title }\"?",
             "changePasswordFor": "Wachtwoord wijzigen voor gebruiker \"{username}\""
         },
         "tooltips": {
@@ -418,28 +418,28 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
         "EmailAlreadyExists": "Dit Email is al geregistreerd",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "FAIL": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "Systeem <strong>{failedSystem}</strong> is momenteel onbereikbaar.<br>Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
         "This user does not exist.": "Deze gebruiker bestaat niet.",
         "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
         "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-        "fail": "{failedSystem} is inaccessible.",
+        "fail": "{failedSystem} is niet toegankelijk.",
         "incompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
         "unknown_error": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",
         "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
         "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
-        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
+        "accountNotActivatedAlternate": "Account is niet geactiveerd. Log in op <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> en volg de instructies.",
         "alreadyExists": "Deze account bestaat al",
         "brokenAccount": "Onverwacht probleem met account. <a href=\"/restore_password\"> account herstellen</a>",
         "cantActivatePrefix": "Kan uw account niet activeren",
         "cantAddYourOwnEmail": "Je eigen e-mailadres toevoegen is niet toegestaan",
         "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
         "cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
-        "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantDeleteAccountOwningSystems": "Kan het account dat eigen systemen heeft niet verwijderen",
         "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
         "cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
         "cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
@@ -456,16 +456,16 @@
         "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
         "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
-        "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "lostConnection": "Verbinding met {systemName} verloren",
+        "mergedSystemIsOffline": "Systeem <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Wachtwoord onjuist",
-        "badUsername": "Account not found",
+        "badUsername": "Account niet gevonden",
         "notFound": "Niet gevonden",
         "ok": "ok",
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
-        "systemUnavailable": "{failedSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{failedSystem} is momenteel onbereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "het systeem",
         "unknownError": "Onverwachte fout opgetreden",
         "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -476,9 +476,9 @@
         "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
         "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
         "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
-        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "networkConnection": "Kan geen verbinding maken met %CLOUD_NAME%, controleer je netwerkverbinding.",
+        "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -488,9 +488,9 @@
         "Health Monitor": "Server monitor",
         "Storage": "Opslag",
         "myIntegrationsLabel": "Mijn",
-        "requirements": "{name} Requirements",
-        "testedVersionLabel": "Tested by the developer with {vmsName} version:",
-        "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
+        "requirements": "{name} Vereisten",
+        "testedVersionLabel": "Getest door de ontwikkelaar met {vmsName} versie:",
+        "testedVersionsLabel": "Getest door de ontwikkelaar met {vmsName} versies:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
@@ -534,8 +534,8 @@
         "b_Link": "een aanvraag indienen",
         "c_Info": "voor aanvullende vragen / opmerkingen over ondersteunde apparaten."
     },
-    "ipvdTopXByVolume": "Top {value} by volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdTopXByVolume": "Top {value} door volume:",
+    "ipvdDisclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {vmsName} waar gebruikers automatisch rapporteren van apparaatspecificaties naar {companyName} toestaan. Er worden geen persoonlijke gegevens verzameld en elke gebruiker blijft volledig anoniem.",
     "menu": {
         "titles": {
             "cameras": "Camera's",
@@ -576,8 +576,8 @@
     },
     "pageDescriptions": {
         "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrationSetup": "Instructies voor het instellen van {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} voor {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "te algemeen",
@@ -600,11 +600,11 @@
             "message": "Zorg ervoor dat uw servers online zijn en probeer het opnieuw."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Dit systeem wordt samengevoegd met {systemName}.",
             "message": {
                 "dependingOnSize": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
                 "untilFinished": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "Als het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in het {systemName} -systeem, en dit systeem zal worden verwijderd."
             }
         },
         "server": {
@@ -614,7 +614,7 @@
     },
     "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Hier vindt u het {INTEGRATION_COMPANY} privacybeleid <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\"></a>. Het privacybeleid van %COMPANY_NAME% met instructies over het opnemen van uw toestemming, is hier beschikbaar <a href=\"%PRIVACY_LINK%\" target=\"_blank\"></a>.",
         "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {
@@ -627,8 +627,8 @@
         },
         "finishingMerge": "Samenvoegen van systemen voltooid",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Accepteren",
+            "reject": "Weigeren",
             "backToEditText": "Terug naar de bewerkingsinterfaces",
             "previewRibbon": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie.",
             "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
@@ -643,12 +643,12 @@
         "analyticsSelected": "analytics evenementen",
         "filter applied": "filter toegepast",
         "filters applied": "filters toegepast",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} toegepast",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
         "minResolution": "Minimale resolutie",
         "search_ipvd": "Zoeken op model of fabrikant",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# geselecteerd} one{# geselecteerd} other{# geselecteerd}}",
         "vendor": "Fabrikant",
         "vendors": "Fabrikanten"
     },
@@ -678,9 +678,9 @@
         "successRename": "Servernaam opgeslagen."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Weergave",
+        "Settings": "Instellingen",
+        "Information": "Informatie"
     },
     "system": {
         "connected": "Verbonden",
