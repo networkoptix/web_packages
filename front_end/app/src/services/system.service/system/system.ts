@@ -222,7 +222,7 @@ export class NxSystem extends System {
 
     updateToken(force = true) {
         const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
-        if (!force && accessToken) {
+        if (this.CONFIG.isLocal || !force && accessToken) {
             return Promise.resolve(true);
         }
 
@@ -345,7 +345,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = this.mediaserver.unauthorizedCallback(false).then(() => {
+            this.infoPromise = (!this.CONFIG.isLocal && this.mediaserver.unauthorizedCallback(false) || Promise.resolve(true)).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });
