@@ -42,14 +42,14 @@ export class NxSystemService {
         return this.system;
     }
 
-    /**
-        * Factory that creates NxSystem instances
-    */
-    async createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         const id = systemId || serverId;
-        const { reply: { version } } = await this.systemApiService.createConnection(currentUserEmail, systemId, serverId, Promise.resolve)
-            .getModuleInfo().toPromise()
-            .catch(() => { return { reply: { version: 0 } }; });
+        const cloudSystemInfo: any = (this.systemsService.systems || []).filter((system) => system.id === id)?.shift();
+        let useRest = false;
+        if (cloudSystemInfo) {
+            // TODO: Once clouddb has versions for system use that instead of capabilities
+            useRest = Object.keys(cloudSystemInfo.capabilities).some((key) => key.includes('4_3'));
+        }
         if (id in this.systemsCache) {
             this.system = this.systemsCache[id];
         } else {
@@ -65,8 +65,8 @@ export class NxSystemService {
                 currentUserEmail,
                 systemId,
                 serverId,
-                '',
-                <string> version
+                undefined,
+                useRest
             );
             this.systemsCache[id] = this.system;
         }
@@ -92,12 +92,12 @@ export class NxSystemService {
                 '',
                 '',
                 userId,
-                NxSystemRestAPI.supportedVersion,
+                true,
                 this.appState
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.system.update();
+            this.system.update().catch(() => {});
         }
 
         if (this.system.subscriberCount === 0) {

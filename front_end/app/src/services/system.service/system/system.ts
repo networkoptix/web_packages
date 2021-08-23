@@ -64,10 +64,7 @@ export class NxSystem extends System {
     systemIdInit: string;
     serverIdInit: string;
     userIdInit: string;
-
-    /** Used for determining whether to use NxSystemAPI or NxSystemRestAPI */
-    #apiVersion = new BehaviorSubject(0);
-    apiVersionResolved$ = this.#apiVersion.pipe(filter(version => !!version), take(1))
+    useRest: boolean;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -75,15 +72,6 @@ export class NxSystem extends System {
     licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
-
-    /** The #apiVersion private property is used for determining whether to instantiate NxSystemAPI or NxSystemRestAPI  */
-    setApiVersion(version: string | number) {
-        this.#apiVersion.next(typeof version === 'string' ? parseFloat(version) : version);
-    }
-
-    get useRest() {
-        return this.#apiVersion.value >= NxSystemRestAPI.supportedVersion;
-    }
 
     get subscriberCount() {
         return this._subscribersCount.getValue();
@@ -94,7 +82,7 @@ export class NxSystem extends System {
     }
 
     get isAvailable() {
-        return this._isAvailable && !!this.#apiVersion.value;
+        return this._isAvailable;
     }
 
     set isAvailable(value) {
@@ -139,15 +127,15 @@ export class NxSystem extends System {
         systemId?: string,
         serverId?: string,
         userId?: string,
-        version?: string|number,
+        useRest?: boolean,
         private appState?: NxAppStateService
     ) {
         super();
 
         this.CONFIG = CONFIG;
         this.LANG = LANG;
+        this.useRest = useRest;
         this.lostConnection = false;
-        this.setApiVersion(version);
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
 
@@ -161,7 +149,7 @@ export class NxSystem extends System {
         }
     }
 
-    async initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
         this.systemIdInit = systemId;
         this.serverIdInit = serverId;
         this.userIdInit = userId;
@@ -208,7 +196,7 @@ export class NxSystem extends System {
     }
 
     updateSystemAuth(force = true) {
-        if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
+        if (this.CONFIG.isLocal || !force && this.mediaserver?.authGet) { // no need to update
             return Promise.resolve(true);
         }
 
@@ -474,7 +462,7 @@ export class NxSystem extends System {
             return this.authPromise;
         }
 
-        if (!force && (this.mediaserver.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken)) {
+        if (!force && (this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken)) {
             return Promise.resolve(true);
         }
 

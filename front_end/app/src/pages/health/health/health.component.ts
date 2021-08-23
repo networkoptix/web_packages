@@ -138,13 +138,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             const systemId = params.systemId;
             // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
             let infoPromise = Promise.resolve();
-            this.accountService.get().then(async(account) => {
+            this.accountService.get().then((account) => {
                 this.healthService.ready = false;
                 this.hasServerError = false;
                 this.outdatedVersion = false;
                 if (account && typeof account !== 'undefined') {
                     this.account = account;
-                    this.system = await this.systemService.createSystem(account.email, systemId);
+                    this.system = this.systemService.createSystem(account.email, systemId);
                     this.menu.base = this.sourceService.getMenuBase(this.system);
                     infoPromise = this.system.getInfo();
                 } else {

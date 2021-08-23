@@ -1,5 +1,5 @@
 import { IConfig }                                          from '../../../nx-config';
-import { NxSystemAPI }                                      from '../../../system-api.service';
+import {NxSystemAPI, NxSystemRestAPI} from '../../../system-api.service';
 import { NxUtilsService }                                   from '../../../utils.service';
 import { LanguageI18NStaticTypes }                          from '@app/language_i18n_static_types';
 import { NxSystemRole, NxSystemUser, SystemPermissions }    from './user-manager-types';
@@ -8,7 +8,7 @@ export class UserManager {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private mediaserver: NxSystemAPI;
+    private mediaserver: NxSystemAPI | NxSystemRestAPI;
     private _ownerEmail: string;
     private _accessRole: string = '';
     private _userId: string;
@@ -19,7 +19,7 @@ export class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI, currentUserEmail: string, userId: string) {
+    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI | NxSystemRestAPI, currentUserEmail: string, userId: string) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;

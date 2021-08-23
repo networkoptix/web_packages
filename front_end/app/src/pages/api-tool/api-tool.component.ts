@@ -144,8 +144,8 @@ export class NxApiToolComponent implements OnInit {
 
     }
 
-    async onSystemChange(system) {
-        this.system = await this.systemService.createSystem('', system.value, '', true);
+    onSystemChange(system) {
+        this.system = this.systemService.createSystem('', system.value, '', true);
         this.selectedSystem = { value: system.value, name: system.name };
 
         this.getServersInfo();
