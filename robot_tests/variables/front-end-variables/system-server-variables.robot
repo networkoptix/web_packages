@@ -134,9 +134,10 @@ ${AS MODAL PASSWORD INVALID}        ${AS MODAL PASSWORD INPUT}/parent::div/follo
 ${AS MODAL SUBMIT BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button
 ${AS MODAL CANCEL BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
 ${AS FAILED TO ADD TOAST}           //app-toasts//ngb-toast/div[@class="toast-body"]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
-${AS MODAL STORAGE USED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//p[contains(text(), "${STORAGE PATH ALREADY USED TEXT}")]
-${AS MODAL NOT RECOMMENEDED}        ${ADD STORAGE MODAL}//p[contains(text(), "${NOT RECOMMENDED DIFFERENT SERVERS TEXT}")]
-${AS MODAL ADD ANYWAY}              ${ADD STORAGE MODAL}//p[contains(text(), "${ADD THIS STORAGE ANYWAY TEXT}")]
+${AS MODAL STORAGE ADDED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY ADDED TEXT}")]
+${AS MODAL STORAGE USED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY USED TEXT}")]
+${AS MODAL NOT RECOMMENEDED}        ${ADD STORAGE MODAL}//*[contains(text(), "${NOT RECOMMENDED DIFFERENT SERVERS TEXT}")]
+${AS MODAL ADD ANYWAY}              ${ADD STORAGE MODAL}//*[contains(text(), "${ADD THIS STORAGE ANYWAY TEXT}")]
 ${AS MODAL BACK BUTTON}             ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]//button[contains(text(), "${BACK TEXT}")]
 
 ${STORAGE REINDEXING BLOCK}         //nx-block//div[contains(@class, "reindex-container")]

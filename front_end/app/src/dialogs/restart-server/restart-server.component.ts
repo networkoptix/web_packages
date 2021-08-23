@@ -56,7 +56,7 @@ export class RestartServerModalContent {
             .createProcess(() => {
                 const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
                 if (!haveOnlineServers) {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
                 return this.system.restartServer(this.serverId);
@@ -95,7 +95,7 @@ export class RestartServerModalContent {
                                 return this.system.getInfo(true, false)
                                     .then(() => {
                                         if (!this.system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                                             throw Error('system is offline still');
                                         }
                                     })
@@ -109,7 +109,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                                         }
                                     }),
                                     delayWhen(() => timer(4000))

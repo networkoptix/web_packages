@@ -1,3 +1,13 @@
+<nx-alert-block
+    *ngIf="storagesOutdated"
+    type="warning"
+    id="storages-outdated"
+    [line1]="'Storages outdated. Reload page to update.' | translate"
+    [btnIconSrc]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+    [btnCaption]="'Reload' | translate"
+    (onAction)="window.location.reload()">
+</nx-alert-block>
+
 <nx-standard-server-component
     *ngIf="system"
     (loaded)="serverLoaded = $event"

@@ -107,7 +107,7 @@ Passes email from email input to Restore password page, even without clicking 'L
 Shows non-activated user message when not activated at login; Resend activation button sends email
     [tags]    email    C41865    
     Go To    ${url}/register
-    ${random email}    get random email    ${BASE EMAIL}
+    ${random email}    get random email    ${BASE EMAIL}    extra=sendemail
     Register    'mark'    'hamill'    ${random email}    ${password}
     Wait Until Elements are Visible
     ...    ${ACCOUNT CREATION SUCCESS}

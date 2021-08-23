@@ -41,7 +41,6 @@ export class NxRibbonService {
             return;
         }
         if (systemOnly && !(this.headerService.currentLocation.isSystem && this.headerService.currentLocation.path !== '/systems')) {
-            this.hide();
             return;
         }
         actions.forEach(action => {

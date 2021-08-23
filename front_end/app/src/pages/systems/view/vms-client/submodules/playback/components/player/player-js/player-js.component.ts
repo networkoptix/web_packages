@@ -73,7 +73,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('abort', (err) => {
-            this.videoError.emit(err);
+            !this.paused && this.videoError.emit(err);
         });
     }
 
@@ -81,7 +81,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
-        if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl)) {
+        if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)) {
             this.transport = this.sourceUrl && this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm' || '';
             this._calculateRotation();
             this._reactOnPlaybackStateChange(prevMode);
@@ -116,7 +116,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 break;
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
-                if (this.player && prevMode !== this.mode) {
+                if (this.player && prevMode !== this.mode && !this.paused) {
                     this._startPlayback();
                 }
                 if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {

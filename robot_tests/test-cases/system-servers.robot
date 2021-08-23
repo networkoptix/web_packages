@@ -384,6 +384,8 @@ Check status
     Click Button    ${CHECK STATUS BUTTON}
     Wait Until Element is Visible    ${CHECKING BANNER}
     Wait Until Element Is Not Visible    ${CHECKING BANNER}
+    Wait Until Element Is Not Visible    ${CHECK STATUS BUTTON}
+    Element Should Be Enabled    ${RESTART SERVER BUTTON}
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}    300
     Stop Docker Server    ${server 2}[id]  
 

@@ -159,7 +159,7 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Log in to system
-    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${True}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]
@@ -1152,8 +1152,9 @@ Verify Horizontal Scrollbar Exists
     
 Delete All Text
     [Arguments]    ${input}
-    ${text}=   Get Element Attribute    ${input}    value
-    ${text}=   Run Keyword If    ${text}==${None}    Get Element Attribute    ${input}    innertext
+    ${value}=   Get Element Attribute    ${input}    value
+    ${innertext}=    Get Element Attribute    ${input}    innertext
+    ${text}=   Set Variable If    '${value}'=='${None}'    ${innertext}    ${value}
     ${length}=   Get Length    ${text}
     ${length}=   Evaluate    ${length} + 1
     Click Element    ${input}

@@ -89,7 +89,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraDetailColumns: InfoBlockColumns;
     canSeeInfo = false;
     editMode = false;
-    show404 = false;
     recordingSettings: IRecordingSettings;
 
     motionGridChangeWatcher = new Watcher<boolean>();
@@ -412,7 +411,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         if (!this.system.isOnline || !this.system.isAvailable) {
                             this.alertsLoaded = true;
                             this.canSeeInfo = false;
-                            this.showPreloader = false;
                         } else {
                             this.canSeeInfo = this.system.canViewInfo();
                             if (this.canSeeInfo) {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angula
 import { ActivatedRoute, Params }        from '@angular/router';
 import { Location }                      from '@angular/common';
 import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
-import { BehaviorSubject }               from 'rxjs';
+import { BehaviorSubject, timer }        from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
@@ -15,6 +15,7 @@ import { NxUtilsService }                from '../../../../services/utils.servic
 import { NxUriService }                  from '../../../../services/uri.service';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxProcessService }              from '../../../../services/process.service';
+import { WINDOW }                        from '@services/window-provider';
 
 @UntilDestroy()
 @Component({
@@ -35,6 +36,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     params: Params;
     isOffline = false;
     serverLoaded = false;
+    storagesOutdated = false;
 
     private setupDefaults() {
         this.menuService.section = 'servers';
@@ -50,6 +52,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private uriService: NxUriService,
         private location: Location,
+        @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
@@ -78,6 +81,11 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             this.menuService.detail = this.serverIdFromParams;
 
             this.setServer(true);
+
+            // remove when storages update with normal 30 second poll
+            timer(60000).subscribe(() => {
+                this.storagesOutdated = true;
+            });
         });
 
         this.applyService.initPageWatcher(this.applyContainerRef);

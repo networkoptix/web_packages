@@ -72,7 +72,7 @@ Test Password Invalid
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${new pw}
     #Check New Password Badge    ${new pw}
-    Check Password Badge    ${new pw}    //label[@for="newPassword"]
+    Check Password Badge    ${new pw}    ${SAVE PASSWORD}
     Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
     Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    newPassword
 
