@@ -97,6 +97,11 @@
                 background : transparent;
             }
 
+            opacity: 0%;
+            &.visible {
+                opacity: 100%;
+            }
+
             &.shown {
                 @include bootstrap.media-breakpoint-down(sm) {
                     right : 0;

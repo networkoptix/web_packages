@@ -107,9 +107,9 @@
       </ng-template>
     </div>
 
-    <div class="controls-wrapper" *ngIf="showElementsInFSM">
+    <div class="controls-wrapper">
       <div class="controls-toggling-ear-outer-wrapper">
-        <div class="controls-toggling-ear--wrapper" [ngClass]="{ shown: controlsShown }">
+        <div class="controls-toggling-ear--wrapper" [ngClass]="{ visible: controlsShown || showElementsInFSM, shown: controlsShown }">
           <div class="controls-toggling-ear"  (click)="handleControlsTogglingEarClick()"></div>
         </div>
       </div>

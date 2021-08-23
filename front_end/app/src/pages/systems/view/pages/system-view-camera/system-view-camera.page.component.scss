@@ -365,6 +365,11 @@ $border-color: $light6;
           background : transparent;
         }
 
+        opacity: 0%;
+        &.visible {
+          opacity: 100%;
+        }
+
         &.shown {
           @include bootstrap.media-breakpoint-down(md) {
             right : 0;

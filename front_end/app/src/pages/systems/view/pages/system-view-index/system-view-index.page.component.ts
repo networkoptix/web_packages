@@ -27,6 +27,7 @@ import { NxDialogsService }                      from '../../../../../dialogs/di
 import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
 import { NxRibbonService }                       from '../../../../../components/ribbon';
+import fullscreenInactivityCfg from '../fullscreenInactivity.cfg'
 
 @UntilDestroy()
 @Component({
@@ -89,7 +90,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             clearTimeout(this.onMoveShowElements);
             this.onMoveShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, 3000);
+            }, fullscreenInactivityCfg.delayMs);
         }
     }
 
@@ -194,7 +195,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.fullscreenToggle = true;
             this.onShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, 3000);
+            }, fullscreenInactivityCfg.delayMs);
         } else {
             clearTimeout(this.onShowElements);
             clearTimeout(this.onMoveShowElements);
