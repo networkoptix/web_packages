@@ -159,7 +159,7 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Log in to system
-    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${False}
+    [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${True}
     ${url}=   Set Variable If
     ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system}[cloud id]
     ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system}[port]

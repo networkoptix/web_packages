@@ -168,6 +168,7 @@ ${AUDIT TRAIL PERIOD DAYS INPUT}            //input[@id='auditTrailPeriodDays']
 ${AUDIT TRAIL PERIOD DAYS LABEL}            //div[text()='${AUDIT TRAIL PERIOD DAYS TEXT}']
 ${BACKUP SETTINGS INPUT}                    //input[@id='backupSettings']
 ${BACKUP QUALITIES LABEL}                   //div[text()='${BACKUP QUALITIES TEXT}']
+${BACKUP QUALITIES INPUT}                   //input[@id='backupQualities']
 ${BACKUP SETTINGS DEFAULT TEXT}             {"backupNewCameras":true,"id":"{00000000-1111-0000-0000-000000000000}","quality":"CameraBackupBoth"}
 ${CLIENT STATISTICS RELATIVE URL INPUT}     //input[@id='clientStatisticsSettingsUrl']
 ${CLIENT STATISTICS RELATIVE URL LABEL}     //div[text()='${CLIENT STATISTICS RELATIVE URL TEXT}']

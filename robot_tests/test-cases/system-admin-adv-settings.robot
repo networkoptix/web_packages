@@ -73,22 +73,29 @@ Audit trail, backup and statistics section
     Log    Step 1
     Changing input setting changes it on server    ${ADDITIONAL LOCAL FS TYPES INPUT}    additionalLocalFsTypes    test Settings changed
 
-    Log    Step 2   
+    Log    Step 2
     Changing setting changes it on server    ${ARECONT RTSP ENABLED CHECKBOX}     arecontRtspEnabled    advanced=True
 
-    Log    Step 4
+    Log    Step 3
     Changing input setting changes it on server    ${AUDIT TRAIL PERIOD DAYS INPUT}    auditTrailPeriodDays    150
     
-    Log    Step 6
+    Log    Step 4
     Changing setting changes it on server    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     autoDiscoveryResponseEnabled    advanced=True
     
-    Log    Step 7    
+    Log    Step 5
     Changing setting changes it on server    ${AUTO UPDATE THUMBNAILS CHECKBOX}     autoUpdateThumbnails    advanced=True
     
-    Log    Step 8
-    Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
+    Log    Step 6
 
-    Log    Step 9
+    IF    '${IMAGE}'=='4.3_test'
+        Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
+    ELSE
+        Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=True
+        Log    Step 7
+        Changing input setting changes it on server    ${BACKUP QUALITIES INPUT}    backupQualities    CameraBackupHighQuality
+    END
+
+    Log    Step 8
     Changing input setting changes it on server    ${CLIENT STATISTICS RELATIVE URL INPUT}    clientStatisticsSettingsUrl    https://www.google.com
 
 Cloud connect and video codec
@@ -317,10 +324,11 @@ RTP, Rtsp, scene items, archive sync, HTTP
     Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
 
     Log    Step 5
-    Run Keyword If    '${IMAGE}'=='4.3_test'    Run Keyword
-    ...    Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
-    ...    ELSE    Run Keyword
-    ...    Changing input setting changes it on server    ${MAX WEBM TRANSFER}    maxWebMTranscoders    1
+    IF    '${IMAGE}'=='4.3_test'
+        Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
+    ELSE
+        Changing input setting changes it on server    ${MAX WEBM TRANSFER}    maxWebMTranscoders    1
+    END
 
 Meta data storage, OS time change, proxy connection timeout, push notification language
     [Tags]    C78380
