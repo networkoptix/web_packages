@@ -115,7 +115,7 @@ export class NxApiToolComponent implements OnInit {
                     this.content.selectedSection = selection;
                     this.content = { ...this.content }; // trigger onChange
                     if (typeof selection === 'string') {
-                        this.getMenuTitle(selection);
+                        this.setMenuTitle(selection);
                     }
                     this.initSwagger(this.content.selectedSection);
                 }
@@ -135,12 +135,16 @@ export class NxApiToolComponent implements OnInit {
             if (this.content) {
                 this.content.selectedSubSection = selection;
                 if (typeof selection === 'string') {
-                    this.getMenuTitle(selection);
+                    this.setMenuTitle(selection);
                 }
                 this.content = { ...this.content };
                 this.initSwagger(this.content.selectedSubSection);
             }
         });
+    }
+
+    setMenuTitle(selection: string) {
+        this.swaggerMenuTitle = selection.slice(0, -2);
     }
 
     ngOnInit() {
@@ -157,15 +161,6 @@ export class NxApiToolComponent implements OnInit {
         } else {
             this.getSystem();
         }
-    }
-
-    getMenuTitle(selection: string) {
-        let title = selection;
-        // Deprecated or Legacy titles have to be modified
-        if (selection.indexOf('-L') !== -1  || selection.indexOf('-D') !== -1) {
-            title  = selection.slice(0, -2);
-        }
-        this.swaggerMenuTitle = title;
     }
 
     async getSystem() {
@@ -246,6 +241,7 @@ export class NxApiToolComponent implements OnInit {
                                     // extend filtering options
                                     // TODO: remove once https://networkoptix.atlassian.net/browse/CLOUD-6573 is done
                                         const modApi = this.modifyPathTags(response);
+                                        this.modifyTagNames(modApi, 'main');
                                         this.setRequestUrl(modApi, server.id);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
@@ -421,8 +417,8 @@ export class NxApiToolComponent implements OnInit {
                 return '-D';
             case 'legacy':
                 return '-L';
-            default:
-                return '';
+            case 'main':
+                return '-M';
         }
     }
 
@@ -474,7 +470,7 @@ export class NxApiToolComponent implements OnInit {
                 const categoryNode = {
                     id     : tag.name,
                     svg    : 'arrow_expand',
-                    label  : tag.name,
+                    label  : tag.name.slice(0, -2),
                     path   : '',
                     level2 : [],
                     level3 : []
