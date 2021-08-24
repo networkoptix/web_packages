@@ -20,7 +20,7 @@ import { NxMenuService }             from '@src/menu';
 import { NxUtilsService }            from '@services/utils.service';
 import { NxSystemsService, NxSystemWithUserInfo }          from '@services/systems.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { APIDocVersion } from '@services/system-rest-api.service';
+import { APIDocVersion, NxSystemRestAPI } from '@services/system-rest-api.service';
 
 enum requestTypes {
     GET = 'get',
@@ -45,7 +45,8 @@ interface APIDoc {
                         [key: string] : any
                     }
                 }
-            }
+            },
+    servers?: { url: string}[]
 }
 
 type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
@@ -142,15 +143,6 @@ export class NxApiToolComponent implements OnInit {
         });
     }
 
-    getMenuTitle(selection: string) {
-        let title = selection;
-        // Deprecated or Legacy titles have to be modified
-        if (selection.indexOf('-L') !== -1  || selection.indexOf('-D') !== -1) {
-            title  = selection.slice(0, -2);
-        }
-        this.swaggerMenuTitle = title;
-    }
-
     ngOnInit() {
         this.systems = this.systemsService.systems || [];
 
@@ -165,6 +157,15 @@ export class NxApiToolComponent implements OnInit {
         } else {
             this.getSystem();
         }
+    }
+
+    getMenuTitle(selection: string) {
+        let title = selection;
+        // Deprecated or Legacy titles have to be modified
+        if (selection.indexOf('-L') !== -1  || selection.indexOf('-D') !== -1) {
+            title  = selection.slice(0, -2);
+        }
+        this.swaggerMenuTitle = title;
     }
 
     async getSystem() {
@@ -245,6 +246,7 @@ export class NxApiToolComponent implements OnInit {
                                     // extend filtering options
                                     // TODO: remove once https://networkoptix.atlassian.net/browse/CLOUD-6573 is done
                                         const modApi = this.modifyPathTags(response);
+                                        this.setRequestUrl(modApi, server.id);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
                                                 value        : server.id,
@@ -362,12 +364,54 @@ export class NxApiToolComponent implements OnInit {
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
-                spec             : this.selectedServer.apiDocFull,
-                filter           : filter,
-                docExpansion     : expand,
-                maxDisplayedTags : expand === 'full' ? 1 : undefined
+                spec                   : this.selectedServer.apiDocFull,
+                filter                 : filter,
+                docExpansion           : expand,
+                supportedSubmitMethods : this.getSupportedMethods(),
+                maxDisplayedTags       : expand === 'full' ? 1 : undefined,
+                requestInterceptor     : (request) => {
+                    this.authenticateRequest(request);
+                    return request;
+                }
             });
         });
+    }
+
+    private setRequestUrl(api: APIDoc, serverID) {
+        // servers.url currently only has a single item which determines the route that API requests go to.
+        api.servers[0].url = this.system.serverManager.mediaserverConnections[serverID].urlBase;
+    }
+
+    private authenticateRequest (request) {
+        const headers = this.system.serverManager.mediaserverConnections[this.selectedServer.value].generateHeaders();
+        if (headers) {
+            // 4.3 and up
+            for (const key of headers.keys()) {
+                request.headers[key] = headers.get(key);
+            }
+        } else {
+            // Below 4.3
+            this.setAuthParam(request);
+        }
+    }
+
+    private setAuthParam = (request) => {
+        const Url = new URL(request.url);
+        const authParam = request.method === 'GET' ? 'authGet' : 'authPost';
+        let potentialAmpersand = '';
+        if (Url.search) potentialAmpersand = '&';
+        Url.search += potentialAmpersand + 'auth=' + this.system.serverManager.mediaserverConnections[this.selectedServer.value][authParam];
+        request.url = Url.toString();
+    }
+
+    isRestAPI() {
+        return this.system.serverManager.mediaserverConnections[this.selectedServer.value] instanceof NxSystemRestAPI;
+    }
+
+    getSupportedMethods = () => {
+        return this.isRestAPI()
+            ? ['get', 'put', 'post', ' delete', 'options', 'head', 'patch']
+            : ['get', 'post', 'delete', 'options', 'head', 'patch'];
     }
 
     // Add onto tag Ids to differentiate the different API files in swagger

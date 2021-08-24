@@ -49,7 +49,7 @@ export class NxSystemAPI {
      * TODO (v 3.2): Support websocket connection to server as well
      * */
     authGet: string;
-    protected authPost: string;
+     authPost: string;
     protected authPlay: string;
 
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
@@ -64,7 +64,7 @@ export class NxSystemAPI {
     protected currentUser: any;
     protected userEmail: string;
     protected userRequest: Promise<t.NormalResponse<User>>;
-    protected urlBase: string;
+    urlBase: string;
     unauthorizedCallback: (params: unknown) => Promise<any>;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
@@ -139,6 +139,10 @@ export class NxSystemAPI {
                     .replace('{systemId}', this.systemId);
         }
         return urlBase;
+    }
+
+    generateHeaders() {
+        return false;
     }
 
     protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {

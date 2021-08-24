@@ -250,6 +250,19 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    generateHeaders (): any {
+        let headers = new HttpHeaders();
+        // if (!environment.isLocal && this.authGet) {
+        //     params.auth = this.authGet;
+        // }
+        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+        if (this.serverId) {
+            headers = headers.set('X-Server-Guid', this.serverId);
+        }
+
+        return headers;
+    }
+
     protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
