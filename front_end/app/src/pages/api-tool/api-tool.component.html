@@ -42,40 +42,16 @@
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
                 <nx-pre-loader *ngIf="!apiDoc"></nx-pre-loader>
 
-                <div *ngIf="this.content && this.content.selectedSection !== 'api_information'">
-                    <div style="padding: 0 1rem 1rem">
-                        <h2>{{this.content?.selectedSection}}</h2>
-                        <p class="mt-3">Section description not yet provided by backend</p>
+                <ng-container *ngIf="this.content">
+                    <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else placeHolderTemplate">
+                        <div style="padding: 0 1rem 1rem">
+                            <h2>{{ swaggerMenuTitle }}</h2>
+                            <p class="mt-3">Section description not yet provided by backend</p>
+                        </div>
+                        <div id="swagger-ui" ></div>
                     </div>
-                    <div id="swagger-ui" ></div>
-                </div>
+                </ng-container> 
 
-                <div *ngIf="this.content?.selectedSection === 'api_information'">
-                    <h2>API Information</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis ex nec velit dictum
-                        elementum sed eget odio. Vivamus placerat tincidunt enim, a rutrum urna feugiat nec. Maecenas
-                        dapibus posuere tellus. Proin ut posuere ante. In a rhoncus quam. Integer posuere ex quis mauris
-                        rhoncus mattis. Aenean interdum ante magna, eget pellentesque tortor vehicula vel. Aliquam
-                        placerat justo eros. Vivamus vitae iaculis lorem, a accumsan odio. Vivamus ac libero aliquet,
-                        vestibulum tellus quis, vestibulum augue. Phasellus vestibulum metus quis elit ullamcorper, sed
-                        blandit leo condimentum. Sed ac ipsum aliquam, ullamcorper tortor nec, congue ante. Suspendisse
-                        potenti. Nulla mattis ligula sit amet tincidunt dignissim. Aliquam volutpat tempor eros, non
-                        cursus ipsum tempor nec. Mauris dictum, ligula eget vulputate auctor, libero magna lobortis
-                        mauris, eu faucibus ipsum mauris sit amet ex.
-                    </p>
-
-                    <h2>API Changes</h2>
-                    <p>Nulla at risus id sem mollis eleifend vitae eu eros. Phasellus egestas eros diam, at aliquam sem
-                        imperdiet eget. Curabitur tempor, massa in vulputate commodo, arcu magna accumsan diam, ut
-                        mattis magna turpis eget ante. Donec aliquam euismod tempus. Phasellus eros mauris, faucibus
-                        tempus consectetur a, dictum id nunc. Suspendisse porttitor ante non turpis feugiat lobortis. In
-                        a ante nulla. Aliquam gravida mauris et erat mattis, eu viverra ex sodales. Integer id orci
-                        volutpat, egestas nisi at, cursus nisl. Pellentesque vel fringilla leo. Curabitur neque nisi,
-                        condimentum eget bibendum sed, placerat in eros. Nulla aliquam nunc et neque ornare condimentum.
-                        Fusce sed scelerisque ligula. Fusce et tincidunt ligula, non cursus nulla. Ut sed ex at elit
-                        consectetur mollis sit amet a nibh.
-                    </p>
-                </div>
             </div>
         </div>
     </div>
@@ -88,4 +64,31 @@
             <a routerLink="/" translate>Go to Main Page</a>
         </button>
     </nx-page-placeholder>
+</ng-template>
+
+<ng-template #placeHolderTemplate>
+    <h2> {{ placeHolderContent[this.content.selectedSection] || 'API Information'}} </h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis ex nec velit dictum
+        elementum sed eget odio. Vivamus placerat tincidunt enim, a rutrum urna feugiat nec. Maecenas
+        dapibus posuere tellus. Proin ut posuere ante. In a rhoncus quam. Integer posuere ex quis mauris
+        rhoncus mattis. Aenean interdum ante magna, eget pellentesque tortor vehicula vel. Aliquam
+        placerat justo eros. Vivamus vitae iaculis lorem, a accumsan odio. Vivamus ac libero aliquet,
+        vestibulum tellus quis, vestibulum augue. Phasellus vestibulum metus quis elit ullamcorper, sed
+        blandit leo condimentum. Sed ac ipsum aliquam, ullamcorper tortor nec, congue ante. Suspendisse
+        potenti. Nulla mattis ligula sit amet tincidunt dignissim. Aliquam volutpat tempor eros, non
+        cursus ipsum tempor nec. Mauris dictum, ligula eget vulputate auctor, libero magna lobortis
+        mauris, eu faucibus ipsum mauris sit amet ex.
+    </p>
+
+    <h2>API Changes</h2>
+    <p>Nulla at risus id sem mollis eleifend vitae eu eros. Phasellus egestas eros diam, at aliquam sem
+        imperdiet eget. Curabitur tempor, massa in vulputate commodo, arcu magna accumsan diam, ut
+        mattis magna turpis eget ante. Donec aliquam euismod tempus. Phasellus eros mauris, faucibus
+        tempus consectetur a, dictum id nunc. Suspendisse porttitor ante non turpis feugiat lobortis. In
+        a ante nulla. Aliquam gravida mauris et erat mattis, eu viverra ex sodales. Integer id orci
+        volutpat, egestas nisi at, cursus nisl. Pellentesque vel fringilla leo. Curabitur neque nisi,
+        condimentum eget bibendum sed, placerat in eros. Nulla aliquam nunc et neque ornare condimentum.
+        Fusce sed scelerisque ligula. Fusce et tincidunt ligula, non cursus nulla. Ut sed ex at elit
+        consectetur mollis sit amet a nibh.
+    </p>
 </ng-template>

@@ -19,6 +19,13 @@ import { NxStorageService }     from '@services/storage.service';
 import { WINDOW }               from '@services/window-provider';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
+export type APIDocVersion = 'main' | 'legacy' | 'deprecated'
+enum APIDocURL {
+    main =  '/swagger-ui/openapi_v1.json',
+    legacy = '/swagger-ui/openapi_legacy.json',
+    deprecated = '/swagger-ui/openapi_deprecated.json'
+}
+
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
  *
@@ -404,8 +411,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
-    getApiDoc() {
-        return this.get('/swagger-ui/openapi_v1.json').toPromise();
+    getApiDoc(type: APIDocVersion = 'main') {
+        return this.get(APIDocURL[type]).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {

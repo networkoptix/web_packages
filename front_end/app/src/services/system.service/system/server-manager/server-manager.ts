@@ -5,7 +5,7 @@ import { NxCloudApiService }                                from '../../../nx-cl
 import { NxSystemAPIService, NxSystemAPI, ResourceParam }   from '../../../system-api.service';
 import { NxUtilsService }                                   from '../../../utils.service';
 import { NxSystemServer, ModuleInfo, IParams }              from '../system-types';
-import { NxSystemRestAPI }                                  from '@services/system-rest-api.service';
+import { APIDocVersion, NxSystemRestAPI }                                  from '@services/system-rest-api.service';
 import { NxSystem }                                         from '../system';
 export class ServerManager {
     mediaserverConnections: {
@@ -192,8 +192,8 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
-    getApiDoc(serverId: string) {
-        return this.mediaserverConnections[serverId].getApiDoc();
+    getApiDoc(serverId: string, type: APIDocVersion = 'main') {
+        return this.mediaserverConnections[serverId].getApiDoc(type);
     }
 
     getStorages(serverId, useCache = false, customTimeout = 8000) {

@@ -17,6 +17,7 @@ import { NxHealthService }                     from '../pages/health/health.serv
 import { IParams, ResourceParam }              from './system-api.service';
 import { User }                                from './system-api.types';
 import { environment }                         from '@environments/environment';
+import { APIDocVersion } from './system-rest-api.service';
 
 export class NxSystemAPI {
     /*
@@ -383,10 +384,12 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    getApiDoc() {
+    getApiDoc(type: APIDocVersion) {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
-        return this.get<JSON>('/static/openapi_legacy.json').toPromise();
+        if (type === 'main') {
+            return this.get<JSON>('/static/openapi_legacy.json').toPromise();
+        }
     }
 
     login(

@@ -157,8 +157,8 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
             }
 
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
+            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
-
             this.transition = false;
 
             if (changes.content.currentValue.selectedSection && this.autoFit && this.scrollArea) {
@@ -286,7 +286,6 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
                 return !this.CONFIG || subSection.id !== this.CONFIG.menus.systemSettings.buttons.id;
             });
         }
-
         return levelItems;
     }
 
@@ -299,6 +298,10 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
         // so we need to update both states
         this.menuContent[idx].toggle = state;
         this.contentToggle.emit({ idx, state });
+    }
+
+    toggleSubItem(state, idx, subIdx) {
+        this.menuContent[idx].level2[subIdx].toggle = state;
     }
 
     @HostListener('mousemove', ['$event'])

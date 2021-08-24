@@ -7,6 +7,7 @@ import { ComponentsModule }     from '../../components/components.module';
 import { NxApiToolComponent }   from './api-tool.component';
 import { MenuApiModule }        from './menu/menu.module';
 import { FormsModule }          from '@angular/forms';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: NxApiToolComponent }
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
+        PipesModule,
         RouterModule.forChild(appRoutes),
         MenuApiModule,
         FormsModule

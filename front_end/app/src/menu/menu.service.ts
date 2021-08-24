@@ -61,6 +61,14 @@ export class NxMenuService implements OnDestroy {
         this.selectedDetailsSection.next(section);
     }
 
+    set subSection(section) {
+        this.selectedSubSectionSubject.next(section);
+    }
+
+    get subSection() {
+        return this.selectedSubSectionSubject.getValue();
+    }
+
     setSubSection(section) {
         this.selectedSubSectionSubject.next(section);
     }

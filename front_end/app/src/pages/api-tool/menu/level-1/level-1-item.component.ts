@@ -11,11 +11,11 @@ import { NxMenuService }            from '../../../../menu';
  */
 
 @Component({
-    selector    : 'nx-level-1-item',
+    selector    : 'nx-api-level-1-item',
     templateUrl : 'level-1-item.component.html',
     styleUrls   : ['level-1-item.component.scss']
 })
-export class NxLevel1ItemComponent implements OnInit, OnChanges {
+export class NxApiLevel1ItemComponent implements OnInit, OnChanges {
     @Input() searchMode: boolean;
     @Input() base: any = {};
     @Input() item: any = {};
@@ -63,6 +63,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         if (!this.searchMode) {
             this.menuService.section = sectionId;
             this.menuService.detail = '';
+            this.menuService.subSection = [];
             this.toggleNode();
             if (this.itemPath) {
                 this.router

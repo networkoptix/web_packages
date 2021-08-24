@@ -20,6 +20,35 @@ import { NxMenuService }             from '@src/menu';
 import { NxUtilsService }            from '@services/utils.service';
 import { NxSystemsService, NxSystemWithUserInfo }          from '@services/systems.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { APIDocVersion } from '@services/system-rest-api.service';
+
+enum requestTypes {
+    GET = 'get',
+    POST = 'post',
+    TRACE = 'trace',
+    PUT = 'put',
+    DELETE = 'delete',
+    PATCH = 'patch'
+}
+
+// Could make this type more accurate, but have to watch out for different/older versions of the API
+interface APIDoc {
+    tags  : {
+                name: string,
+                [key:string]: any
+            }[],
+    paths : {
+                [key: string]: {
+                    [key in requestTypes]: {
+                        tags: string[],
+                        parameters: [{[key:string]: any}],
+                        [key: string] : any
+                    }
+                }
+            }
+}
+
+type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,10 +73,14 @@ export class NxApiToolComponent implements OnInit {
     selectedServer: any = {};
     serversLoaded: boolean;
     noSystemError = false;
+    gettingLegacyAPI: boolean;
+    swaggerMenuTitle: string;
+    placeHolderContent: { [key in placeHolderSelections]: string } = { api_information: 'API Information', legacy: 'Legacy API', deprecated: 'Deprecated Endpoints' }
 
     private resizeSubscription: Subscription;
     private menuSectionSubscription: Subscription;
     private menuSelectedDetailsSubscription: Subscription;
+    private menuSubsectionSubscription: Subscription;
     private systemSubscription: Subscription;
     private serverSubscription: Subscription;
 
@@ -80,6 +113,9 @@ export class NxApiToolComponent implements OnInit {
                 if (this.content) {
                     this.content.selectedSection = selection;
                     this.content = { ...this.content }; // trigger onChange
+                    if (typeof selection === 'string') {
+                        this.getMenuTitle(selection);
+                    }
                     this.initSwagger(this.content.selectedSection);
                 }
             });
@@ -93,6 +129,26 @@ export class NxApiToolComponent implements OnInit {
                     this.initSwagger(this.content.selectedDetailsSection, 'full');
                 }
             });
+
+        this.menuSubsectionSubscription = this.menuService.selectedSubSectionSubject.subscribe((selection: any) => {
+            if (this.content) {
+                this.content.selectedSubSection = selection;
+                if (typeof selection === 'string') {
+                    this.getMenuTitle(selection);
+                }
+                this.content = { ...this.content };
+                this.initSwagger(this.content.selectedSubSection);
+            }
+        });
+    }
+
+    getMenuTitle(selection: string) {
+        let title = selection;
+        // Deprecated or Legacy titles have to be modified
+        if (selection.indexOf('-L') !== -1  || selection.indexOf('-D') !== -1) {
+            title  = selection.slice(0, -2);
+        }
+        this.swaggerMenuTitle = title;
     }
 
     ngOnInit() {
@@ -135,9 +191,9 @@ export class NxApiToolComponent implements OnInit {
         }
     }
 
-    getAPIDoc(serverId: string) {
+    getAPIDoc(serverId: string, type: APIDocVersion) {
         return this.system.serverManager
-            .getApiDoc(serverId);
+            .getApiDoc(serverId, type);
     }
 
     onServerChange(event) {
@@ -184,11 +240,11 @@ export class NxApiToolComponent implements OnInit {
                         this.serversDropdown = [];
                         this.system.serverManager.servers.forEach((server) => {
                             if (server.status !== 'Offline') {
-                                this.getAPIDoc(server.id)
-                                    .then((response) => {
+                                this.getAPIDoc(server.id, 'main')
+                                    .then((response: APIDoc) => {
                                     // extend filtering options
                                     // TODO: remove once https://networkoptix.atlassian.net/browse/CLOUD-6573 is done
-                                        const modApi = this.modifiedApi(response);
+                                        const modApi = this.modifyPathTags(response);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
                                                 value        : server.id,
@@ -210,7 +266,7 @@ export class NxApiToolComponent implements OnInit {
                                                 incompatible : true
                                             });
                                         }
-                                    }).finally(() => {
+                                    }).finally(async () => {
                                         this.selectedServer = this.serversDropdown[0];
                                         this.serversDropdown.some((server) => {
                                             if (!server.incompatible) {
@@ -220,6 +276,7 @@ export class NxApiToolComponent implements OnInit {
                                         });
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
                                             this.createMenuContent(this.selectedServer.apiDocFull);
+                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
                                             this.menuService.section = 'api_information';
                                             if (this.serverSubscription) {
                                                 this.serverSubscription.unsubscribe();
@@ -244,12 +301,50 @@ export class NxApiToolComponent implements OnInit {
         }
     }
 
+    // Handles legacy API scenarios where there are multiple requests to the same path but with a different request type (GET, POST .. etc)
+    getLegacyMenuText(endpoint: string, includeTypeOfRequest: boolean, requestType: string) {
+        if (includeTypeOfRequest) {
+            return endpoint + ' - ' + requestType.toUpperCase();
+        }
+        return endpoint;
+    }
+
+    async getLegacyAPIDocs(serverID, apiDocFull: APIDoc) {
+        let legacyAPI;
+        let deprecatedAPI;
+
+        // Optional chaining here because getApiDoc returns undefined if system version is below 4.3
+        const legacyAPICall = this.getAPIDoc(serverID, 'legacy')?.then(response => {
+            this.modifyTagNames(response, 'legacy');
+            legacyAPI = this.modifyPathTags(response, 'legacy');
+        });
+        const deprecatedAPICall = this.getAPIDoc(serverID, 'deprecated')?.then(response => {
+            this.modifyTagNames(response, 'deprecated');
+            deprecatedAPI =  this.modifyPathTags(response, 'deprecated');
+        });
+
+        await legacyAPICall;
+        await deprecatedAPICall;
+
+        if (legacyAPI) {
+            apiDocFull.tags = [...apiDocFull.tags, ...legacyAPI.tags];
+            apiDocFull.paths = Object.assign(apiDocFull.paths,  legacyAPI.paths);
+            this.addSubMenuApi(legacyAPI,
+                this.content, 'legacy');
+        }
+        if (deprecatedAPI) {
+            apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
+            apiDocFull.paths = Object.assign(apiDocFull.paths,  deprecatedAPI.paths);
+            this.addSubMenuApi(deprecatedAPI, this.content, 'deprecated');
+        }
+    }
+
     setHeaderHeight() {
         this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight : this.CONFIG.headerHeight;
     }
 
     private initSwagger(filter, expand = 'list') {
-        if (filter === '') {
+        if (filter === '' || filter?.length === 0) {
             return;
         }
         if (this.content.selectedSection === 'api_information') {
@@ -275,26 +370,43 @@ export class NxApiToolComponent implements OnInit {
         });
     }
 
-    getLegacyMenuText(endpoint: string, includeTypeOfRequest: boolean, requestType: string) {
-        if (includeTypeOfRequest) {
-            return endpoint + ' - ' + requestType.toUpperCase();
+    // Add onto tag Ids to differentiate the different API files in swagger
+    getTagModifier(type: APIDocVersion) {
+        switch (type) {
+            case 'deprecated':
+                return '-D';
+            case 'legacy':
+                return '-L';
+            default:
+                return '';
         }
-        return endpoint;
     }
 
-    private modifiedApi(api) {
+    private modifyPathTags(api: APIDoc, type: APIDocVersion = 'main') {
+        // We have to change the tags on sub-apis so that swagger can properly differentiate tags with the same name coming from multiple different API files
+        const tagModifier = this.getTagModifier(type);
+
         Object.keys(api.paths).forEach(endpoint => {
             const endpointObj = Object.entries(api.paths[endpoint]);
             const includeTypeOfRequest = endpointObj.length > 1;
             endpointObj.forEach((method: any) => {
+                const modifiedTag = api.paths[endpoint][method[0]].tags[0] + tagModifier;
+                api.paths[endpoint][method[0]].tags[0] = modifiedTag;
+                // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
                 api.paths[endpoint][method[0]].tags.push(method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]));
             });
         });
-
         return api;
     }
 
-    private createMenuContent(response) {
+    modifyTagNames(api: APIDoc, type: APIDocVersion) {
+        api.tags.forEach((tag: any) => {
+            tag.name = tag.name + this.getTagModifier(type);
+        });
+        return api;
+    }
+
+    private createMenuContent(response: APIDoc) {
         const _content = {
             searchable         : false,
             selectedSection    : '', // updated by selectedSectionSubject
@@ -364,5 +476,54 @@ export class NxApiToolComponent implements OnInit {
         });
 
         this.content = _content;
+    }
+
+    private addSubMenuApi(legacyApi: APIDoc, baseContent, type: 'legacy' | 'deprecated') {
+        const title = type[0].toUpperCase() + type.slice(1);
+        const apiContent = baseContent;
+        apiContent.level1.push({
+            id     : type,
+            svg    : 'arrow_expand',
+            label  : title,
+            path   : '',
+            level2 : [],
+            level3 : []
+        });
+
+        const _content = apiContent.level1.find(item => item.id === type);
+
+        if (Object.keys(legacyApi || {}).length) {
+            legacyApi.tags.forEach(tag => {
+                const categoryNode = {
+                    id     : tag.name,
+                    svg    : 'arrow_expand',
+                    label  : tag.name.slice(0, -2),
+                    path   : '',
+                    level2 : [],
+                    level3 : []
+                };
+                _content.level2.push(categoryNode);
+                _content.searchable = true;
+            });
+
+            let categoryNode:any = [];
+            Object.keys(legacyApi.paths).forEach(endpoint => {
+                const endpointObj = Object.entries(legacyApi.paths[endpoint]);
+                const includeTypeOfRequest = endpointObj.length > 1;
+                endpointObj.forEach((method: any) => {
+                    categoryNode = _content.level2.find((node) => {
+                        return node.id === method[1].tags[0]; // if more tags?
+                    });
+                    categoryNode.level3.push({
+                        additionalLabel : '',
+                        id              : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        isEnabled       : true, // is proprietary?
+                        label           : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        path            : '',
+                        svgIcon         : ''
+                    });
+                });
+            });
+        }
     }
 }
