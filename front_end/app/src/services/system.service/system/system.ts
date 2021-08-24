@@ -218,8 +218,8 @@ export class NxSystem extends System {
             return false;
         }
         return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
-            (this.isAdmin && this.systemInfo.cloudStorageSystemEnabled) ||
-            (this.systemInfo.cloudStorageCapable && this.isMine);
+            (this.isAdmin && this.systemInfo?.cloudStorageSystemEnabled) ||
+            (this.systemInfo?.cloudStorageCapable && this.isMine);
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
