@@ -202,7 +202,7 @@ export class NxApiToolComponent implements OnInit {
     }
 
     onSystemChange(system) {
-        this.system = this.systemService.createSystem('', system.value, '', true);
+        this.system = this.systemService.createSystem('', system.value);
         this.selectedSystem = { value: system.value, name: system.name };
 
         this.getServersInfo();
