@@ -52,7 +52,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private uriService: NxUriService,
         private location: Location,
-        @Inject(WINDOW) private window: Window,
+        @Inject(WINDOW) public window: Window,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
