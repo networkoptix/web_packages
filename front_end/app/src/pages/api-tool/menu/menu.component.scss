@@ -14,7 +14,8 @@
     border-radius  : 0 0 2px 2px;
     display        : flex;
     flex-direction : column;
-    overflow       : hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 190px);
 
     &::-webkit-scrollbar-track {
         background-color : $light6;
