@@ -9264,7 +9264,11 @@
 
 .swagger-ui .opblock .opblock-summary-path {
 	flex-shrink : 0;
-	max-width   : calc(100% - 110px - 15rem)
+	max-width: calc(100% - 10rem);
+	@media screen and (max-width: 670px) {
+		max-width: calc(100% - 40px -  14rem) !important;
+		min-width: 200px;
+	}
 }
 
 .swagger-ui .opblock .opblock-summary-path a{
@@ -9282,10 +9286,14 @@
 
 .swagger-ui .opblock .opblock-summary-description {
 	font-size   : 13px;
-	flex        : 1 1 auto;
+	// flex        : 1 1 auto;
 	word-break  : break-word;
 	font-family : sans-serif;
-	color       : #3b4151
+	color       : #3b4151;
+	padding-right: 20px;
+	@media screen and (max-width: 670px) {
+		max-width: calc(100% - 18rem);
+	}
 }
 
 .swagger-ui .opblock .opblock-summary {
@@ -10686,27 +10694,22 @@
 	min-width : 6em;
 }
 
-.swagger-ui .parameters-col_description {
-	width         : 99%;
-	margin-bottom : 2em
-}
 
 .swagger-ui .parameters-col_description input[type=text] {
 	width     : 100%;
-	max-width : 340px
+	max-width : 450px;
 }
 
 .swagger-ui .parameters-col_description select {
-	border-width : 1px
+	border-width : 1px;
+	height: 100%;
+	width: 100%;
 }
 
 .swagger-ui .parameter__name {
 	@include typography.bold13dark9;
 }
 
-.swagger-ui .parameter__name.required {
-	//font-weight : 700
-}
 
 .swagger-ui .parameter__name.required span {
 	color : red
@@ -10749,8 +10752,6 @@
 	width: 100%
 }
 
-.swagger-ui .response-col_description {
-}
 
 .swagger-ui .response-col_links {
 	min-width : 6em;
