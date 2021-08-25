@@ -589,9 +589,13 @@ Save Media Server Attributes
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Add Virtual Camera
-    [Arguments]    ${server url}    ${auth}    ${camera name}
+    [Arguments]    ${server url}    ${auth}    ${camera name}    ${image}=${IMAGE}
     ${data}=   Create Dictionary    name=${camera name}
 
     Create Digest Session    Add Camera Session    ${server url}    auth=${auth}     disable_warnings=1
-    ${resp}=   Post Request    Add Camera Session   /api/virtualCamera/add   json=${data}     timeout=10
+    IF    '4.3' in $image
+        ${resp}=   Post Request    Add Camera Session   /api/virtualCamera/add   json=${data}     timeout=10
+    ELSE
+        ${resp}=   Post Request    Add Camera Session   /api/wearableCamera/add?name=${camera name}     timeout=10
+    END
     Should Be Equal As Strings    ${resp.status_code}    200
