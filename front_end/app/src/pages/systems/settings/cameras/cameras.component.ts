@@ -399,6 +399,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
+                    if (!this.system.isOnline) {
+                        this.showPreloader = false;
+                    }
 
                     (
                         this.CONFIG.isLocal
