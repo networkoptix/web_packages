@@ -37,7 +37,12 @@ require('./scripts/vendor/protocolcheck');
         <div class="outerContainer"
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.appContainerHeight }">
-            <div class="mainContainer" [ngClass]="{altMainBackground: appStateService.altBackground, 'full-screen': appStateService.authorizing}" nxScrollHelper #mainContainer>
+            <div class="mainContainer" [ngClass]="{
+                altMainBackground: appStateService.altBackground,
+                'full-screen': appStateService.authorizing,
+                desktopBackground: viewType === 'desktop',
+                mobileBackground: viewType === 'mobile'
+            }" nxScrollHelper #mainContainer>
                 <nx-cookie-banner></nx-cookie-banner>
                 <router-outlet></router-outlet>
             </div>
@@ -55,6 +60,7 @@ export class AppComponent {
     isInIframe: boolean;
     newSystem: boolean;
     loading: boolean;
+    viewType: string; // 'desktop' | 'mobile' | 'web'
 
     CONFIG: IConfig;
 
@@ -90,6 +96,10 @@ export class AppComponent {
                     ev.url.includes('activate') ||
                     ev.url.includes('restore_password') ||
                     ev.url.includes('redirect-oauth');
+
+                this.viewType = ev.url.includes('?') && new URLSearchParams(
+                    ev.url.match(/.*(\?.*)/i)[1]
+                ).get('view_type') || 'web';
             });
 
         /* No real need to update often unless some browser have major upgrade

@@ -338,8 +338,21 @@
                     color: $light4 !important;
                 }
 
-                &:-webkit-autofill {
-                    transition-delay: 7200s;
+                input {
+                    color: $light4;
+                    background-color: $dark4;
+                    &:focus {
+                        background-color: $dark3;
+                        border: 1px solid $dark1;
+                        box-shadow: inset 0 1px 0 0 $dark1;
+                    }
+                    &::selection {
+                        background-color: var(--brand-core);
+                    }
+
+                    &:-webkit-autofill {
+                        transition-delay: 7200s;
+                    }
                 }
             }
 

@@ -7,7 +7,14 @@ nx-app {
 
     .altMainBackground {
         background-color: $light1 !important;
+    }
 
+    .desktopBackground {
+        background-color: $dark5 !important;
+    }
+
+    .mobileBackground {
+        background-color: $dark4 !important;
     }
 
     .placeholder {
