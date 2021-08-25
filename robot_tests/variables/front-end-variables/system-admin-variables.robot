@@ -575,7 +575,7 @@ ${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-resu
 ${VIEW SEARCH BOX}                //div[contains(@class, "search-box")]
 ${VIEW SEARCH INPUT}              ${VIEW SEARCH BOX}//input[@placeholder="Search"]
 ${VIEW SEARCH DETAILS TOGGLER}    //div[contains(@class, "search-box")]//div[contains(@class, "details-toggler")]
-${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[contains(text(), "%SERVER NAME%")]/following-sibling::div[contains(@class, "ip-info")]
+${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[contains(text(), "%SERVER NAME%")]/following-sibling::span[contains(@class, "ip-info")]
 
 ${CAMERA NAME}    VirtualCamera
 ${CAMERA IP}      172.17.0.1

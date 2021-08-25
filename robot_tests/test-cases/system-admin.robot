@@ -353,9 +353,14 @@ Left menu search: Position and style
     Click Element    ${VIEW TAB}
     Run keyword and continue on failure    Validate Search Input    view page=True
 
-#    Log    Step 7
-#    Click Element    ${VIEW SEARCH DETAILS TOGGLER}
-#    Wait Until Element Is Visible    ${VIEW SEARCH SERVER IP INFO}
+    Log    Step 7
+    Click Element    ${VIEW SEARCH DETAILS TOGGLER}
+    ${server info}=   Replace String    ${VIEW SEARCH SERVER IP INFO}    %SERVER NAME%    Server ${system}[id]
+    Wait Until Element Is Visible    ${server info}
+
+    Log    Step 8
+    Click Element    ${INFORMATION TAB}
+    Wait Until Element Is Not Visible    ${SEARCH INPUT}
 
 Left menu search: Search menu for offline system
     [Tags]    C81761    cloud    search
@@ -375,7 +380,13 @@ Left menu search: Search menu for offline system
     Log    Step 4
     Click Link    ${VIEW TAB}
     Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
-    Wait Until element Is Not Visible    ${SEARCH INPUT}
+    Wait Until Element Is Not Visible    ${SEARCH INPUT}
+
+    Log    Step 5
+    Click Link    ${INFORMATION TAB}
+    Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
+    Wait Until Element Is Not Visible    ${SEARCH INPUT}
+
     Start Docker Server    ${system}[id]
 
 Left menu search: Availability for different users
@@ -422,7 +433,7 @@ Left menu search: Search mechanics
     #TODO:  figure out failure
 #    Wait until element is visible    //span[contains(text(), "${system}[cloud users]")]
 #    Click Link     //span[contains(text(), "${system}[cloud users]")]/../..
-#    Wait until element is visible    //h2[contains(text(), "$${system}[cloud users]")]
+#    Wait until element is visible    //h2[contains(text(), "${system}[cloud users]")]
 
 Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    cloud    search
