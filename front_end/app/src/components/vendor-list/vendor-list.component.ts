@@ -46,7 +46,6 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     public debug: boolean;
     public filters: any = [];
     public allVendors;
-    public remainingVendors: number;
 
     private readonly uriPath: string;
     private filter: any = {};
@@ -164,8 +163,6 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.vendors) {
             this.allVendors = changes.vendors.currentValue;
-            this.remainingVendors = changes.vendors.currentValue.length - this.CONFIG.ipvd.vendorsShown;
-
             this.setVendorsShown(changes.vendors.currentValue);
         }
     }
