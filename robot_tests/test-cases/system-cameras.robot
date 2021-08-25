@@ -231,9 +231,12 @@ Camera status match server
 
 Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416    threaded
+    Log    Step 1
     Verify on Cameras Page
+    Select Camera By Name    good cam
     Toggle Recording
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Log    Step 2
     Click Link    ${SERVERS LINK}
     Wait Until Elements are Visible
     ...    ${APPLY CHANGES BUTTON}     
@@ -241,6 +244,65 @@ Warning dialog appears when changes are made on navigating away and works correc
     ...    ${CANCEL CHANGES BUTTON}
     ...    ${APPLY CHANGES CLOSE BUTTON}
     ...    ${APPLY CHANGES QUESTION}  
+    Log    Step 3
+    Click Button    ${APPLY CHANGES CLOSE BUTTON}
+    Wait Until Elements Are Not Visible  
+    ...    ${APPLY CHANGES BUTTON}     
+    ...    ${DISCARD CHANGES BUTTON}   
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON}
+    ...    ${APPLY CHANGES QUESTION}  
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    ${status}=   Get Camera Attribute By Camera Name    ${local auth}    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    Should Be Equal    ${status}    ${False}
+    Log    Step 4
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements are Visible
+    ...    ${APPLY CHANGES BUTTON}     
+    ...    ${DISCARD CHANGES BUTTON}   
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON}
+    ...    ${APPLY CHANGES QUESTION}  
+    Click Button    ${DISCARD CHANGES BUTTON}   
+    Verify on Servers Page
+    Go to System Administration
+    Go To Cameras
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    ${status}=   Get Camera Attribute By Camera Name    ${local auth}    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    Should Be Equal    ${status}    ${False}
+    Log    Step 5
+    Toggle Recording
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements are Visible
+    ...    ${APPLY CHANGES BUTTON}     
+    ...    ${DISCARD CHANGES BUTTON}   
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON}
+    ...    ${APPLY CHANGES QUESTION}  
+    Click Button    ${CANCEL CHANGES BUTTON}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    ${status}=   Get Camera Attribute By Camera Name    ${local auth}    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    Should Be Equal    ${status}    ${False}
+    Log    Step 6
+    Click Link    ${SERVERS LINK}
+    Wait Until Elements are Visible
+    ...    ${APPLY CHANGES BUTTON}     
+    ...    ${DISCARD CHANGES BUTTON}   
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON}
+    ...    ${APPLY CHANGES QUESTION}  
+    Click Button    ${APPLY CHANGES BUTTON}  
+    sleep    5
+    ${status}=   Get Camera Attribute By Camera Name    ${local auth}    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    Should Be Equal    ${status}    ${True}
+    Log    Step 7
+    Go to System Administration
+    Go To Cameras
+    Select Camera By Name    good cam
+    Verify Recording Controls Are Open
+
+
 
 
 Rename Camera

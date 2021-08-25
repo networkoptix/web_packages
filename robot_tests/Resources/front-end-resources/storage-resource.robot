@@ -104,7 +104,7 @@ Turn on Recording
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Toggle Recording
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Verify Recording Options are Visible
+    Verify Recording Controls Are Open
     Click Element    ${RECORD ALWAYS RADIO BUTTON}/..
     Wait Until Element is Visible    ${SAVE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
