@@ -1003,6 +1003,18 @@ Create Docker Server
 
 Create Base System
     [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}
+    [Documentation]    Creates a docker server, and optionally connects to cloud, creates users, and adds storage.
+    ...
+    ...                Returned keys and value types:
+    ...                cloud auth: []
+    ...                cloud id: ""
+    ...                cloud users: {}
+    ...                id: ""
+    ...                local auth: []
+    ...                local users: {}
+    ...                name: ""
+    ...                owner: ""
+    ...                port: ""
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1

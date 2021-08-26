@@ -788,6 +788,7 @@ Enable/disable motion detection with recording off
 
 Enable/disable motion detection with recording on
     [Tags]    C76398
+    Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
     Click Button    ${SYSTEM SAVE}
