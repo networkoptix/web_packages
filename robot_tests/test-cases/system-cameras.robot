@@ -786,9 +786,11 @@ Enable/disable motion detection with recording off
     ...    ${CANVAS}
     ...    ${DOT-MENU}
 
-Enable/disable motion detection with recording ones
+Enable/disable motion detection with recording on
     [Tags]    C76398
     Select Camera By Name    good cam
+    Toggle Recording
+    Click Button    ${SYSTEM SAVE}
     Verify on Cameras Page
     Wait Until Element Is Visible    ${DOT-MENU}
     Click Button    ${DOT-MENU}
