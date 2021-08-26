@@ -129,7 +129,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         token = token.toLocaleLowerCase();
         this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
             const cameras = ms.cameras.filter(c => c.name.toLocaleLowerCase().includes(token) || c.url.toLocaleLowerCase().includes(token));
-            if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.url.toLocaleLowerCase().includes(token)) {
+            if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.ip.toLocaleLowerCase().includes(token)) {
                 acc.push({ ...ms, cameras });
             }
             return acc;
