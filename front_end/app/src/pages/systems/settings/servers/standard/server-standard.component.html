@@ -123,7 +123,7 @@
                                   translate>Server port is required</span>
                         </div>
                     </div>
-                    <ng-container *ngIf="showAnalytics && dropdownStorages.length && !storagesLoading || storagesLoading">
+                    <ng-container *ngIf="showAnalytics && ((dropdownStorages.length && !storagesLoading) || storagesLoading)">
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
                         <nx-select
                             id="system"
