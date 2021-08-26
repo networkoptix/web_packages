@@ -32,115 +32,127 @@ export function getModuleInformation() {
 
 export function getLocalSettings() {
     return {
-        companyLink     : 'http://networkoptix.com',
-        companyName     : 'Network Optix',
-        copyrightYear   : '2020',
-        defaultLanguage : 'en_US',
-        dynamicMenus    : [
-            {
-                name  : 'footer',
-                nodes : [
-                    {
-                        enabled   : true,
-                        name      : 'Download %VMS_NAME%',
-                        newWindow : false,
-                        url       : '{{CLOUD_HOST}}/download'
-                    },
-                    {
-                        enabled   : true,
-                        name      : 'Support',
-                        newWindow : true,
-                        url       : 'https://support.networkoptix.com'
-                    },
-                    {
-                        enabled   : true,
-                        name      : 'API Documentation',
-                        newWindow : true,
-                        url       : '/swagger-ui/index.html'
-                    },
-                    {
-                        enabled   : true,
-                        name      : 'Download SDK',
-                        newWindow : true,
-                        url       : '{{CLOUD_HOST}}/download/sdk'
-                    }
-                ]
+        description: {
+            vmsName         : 'VMS',
+            cloudName       : 'Nx Cloud',
+            companyLink     : 'http://networkoptix.com',
+            companyName     : 'Network Optix',
+            copyrightYear   : '2020',
+            defaultLanguage : 'en_US',
+            contact         : {
+                supportAddress: 'No address'
+            },
+            desktop: {
+                trialLicenseKey: '0000-0000-0000-0000'
             }
-        ],
-        licenseTypes: [
-            {
-                deactivationsAllowed : 3,
-                name                 : 'time',
-                title                : 'Time'
-            },
-            {
-                deactivationsAllowed : 0,
-                name                 : 'trial',
-                title                : 'Trial'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'digital',
-                title                : 'Professional'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'analog',
-                title                : 'Analog'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'edge',
-                title                : 'Edge'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'vmax',
-                title                : 'VMAX'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'videowall',
-                title                : 'Video Wall'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'analogencoder',
-                title                : 'Analog Encoder'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'starter',
-                title                : 'Starter'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'iomodule',
-                title                : 'IO Module'
-            },
-            {
-                deactivationsAllowed : 3,
-                name                 : 'bridge',
-                title                : 'Bridge'
-            },
-            {
-                deactivationsAllowed : 0,
-                name                 : 'nvr',
-                title                : 'NVR'
-            }
-        ],
-        supportedLanguages: [
-            'en_US',
-            'en_GB',
-            'fr_FR',
-            'de_DE',
-            'ru_RU',
-            'es_ES',
-            'ja_JP',
-            'ko_KR',
-            'zh_CN',
-            'zh_TW'
-        ]
+        },
+        webadminConfig  : {
+            dynamicMenus: [
+                {
+                    name: 'footer',
+                    nodes: [
+                        {
+                            enabled: true,
+                            name: 'Download %VMS_NAME%',
+                            newWindow: false,
+                            url: '{{CLOUD_HOST}}/download'
+                        },
+                        {
+                            enabled: true,
+                            name: 'Support',
+                            newWindow: true,
+                            url: 'https://support.networkoptix.com'
+                        },
+                        {
+                            enabled: true,
+                            name: 'API Documentation',
+                            newWindow: true,
+                            url: '/swagger-ui/index.html'
+                        },
+                        {
+                            enabled: true,
+                            name: 'Download SDK',
+                            newWindow: true,
+                            url: '{{CLOUD_HOST}}/download/sdk'
+                        }
+                    ]
+                }
+            ],
+            licenseTypes: [
+                {
+                    deactivationsAllowed: 3,
+                    name: 'time',
+                    title: 'Time'
+                },
+                {
+                    deactivationsAllowed: 0,
+                    name: 'trial',
+                    title: 'Trial'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'digital',
+                    title: 'Professional'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'analog',
+                    title: 'Analog'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'edge',
+                    title: 'Edge'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'vmax',
+                    title: 'VMAX'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'videowall',
+                    title: 'Video Wall'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'analogencoder',
+                    title: 'Analog Encoder'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'starter',
+                    title: 'Starter'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'iomodule',
+                    title: 'IO Module'
+                },
+                {
+                    deactivationsAllowed: 3,
+                    name: 'bridge',
+                    title: 'Bridge'
+                },
+                {
+                    deactivationsAllowed: 0,
+                    name: 'nvr',
+                    title: 'NVR'
+                }
+            ],
+            supportedLanguages: [
+                'en_US',
+                'en_GB',
+                'fr_FR',
+                'de_DE',
+                'ru_RU',
+                'es_ES',
+                'ja_JP',
+                'ko_KR',
+                'zh_CN',
+                'zh_TW'
+            ]
+        }
     };
 }
 

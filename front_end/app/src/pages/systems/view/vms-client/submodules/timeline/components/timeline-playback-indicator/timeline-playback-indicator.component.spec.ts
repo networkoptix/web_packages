@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import TimelinePlaybackIndicatorComponent from './timeline-playback-indicator.component';
 
-describe('TimelinePlaybackIndicatorComponent', () => {
+xdescribe('TimelinePlaybackIndicatorComponent', () => {
     let component: TimelinePlaybackIndicatorComponent;
     let fixture: ComponentFixture<TimelinePlaybackIndicatorComponent>;
 

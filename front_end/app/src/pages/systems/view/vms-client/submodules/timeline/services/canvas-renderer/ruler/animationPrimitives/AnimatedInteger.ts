@@ -1,17 +1,19 @@
-import IAnimated from './IAnimated';
+import IAnimated     from './IAnimated';
 import AnimatedFloat from './AnimatedFloat';
+import { EASING }    from '@pages/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/animationPrimitives/easing-functions';
 
 type int = number
 type durationMs = number
 
 export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
-    static DEFAULT_VALUE = 0
-    static DEFAULT_ANIMATION_DURATION = 200
+    static DEFAULT_VALUE = 0;
+    static DEFAULT_ANIMATION_DURATION = 200;
+    static DEFAULT_EASING: EASING = 'linear';
 
     constructor(
         initialValue: int = AnimatedInteger.DEFAULT_VALUE,
         protected _animationDuration: durationMs = AnimatedInteger.DEFAULT_ANIMATION_DURATION,
-        protected _easing: 'linear' = AnimatedInteger.DEFAULT_EASING
+        protected _easing: EASING = AnimatedInteger.DEFAULT_EASING
     ) {
         super(initialValue, _animationDuration, _easing);
     }

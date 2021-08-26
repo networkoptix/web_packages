@@ -29,7 +29,7 @@ describe('AnimatedFloat', () => {
         expect(AnimatedFloat.DEFAULT_ANIMATION_DURATION).toBeCloseTo(200.0);
 
         expect(n.easing).toEqual(AnimatedFloat.DEFAULT_EASING);
-        expect(AnimatedFloat.DEFAULT_EASING).toEqual('linear');
+        expect(AnimatedFloat.DEFAULT_EASING).toEqual('ease-in-out-sine');
 
         expect(n.lastChange).toBeCloseTo(0.0);
     });

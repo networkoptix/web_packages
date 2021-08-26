@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import PlaybackControlsComponent from './playback-controls.component';
 
-describe('PlaybackControlsComponent', () => {
+xdescribe('PlaybackControlsComponent', () => {
     let component: PlaybackControlsComponent;
     let fixture: ComponentFixture<PlaybackControlsComponent>;
 
@@ -19,7 +19,7 @@ describe('PlaybackControlsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    xit('should create', () => {
         expect(component).toBeTruthy();
     });
 });

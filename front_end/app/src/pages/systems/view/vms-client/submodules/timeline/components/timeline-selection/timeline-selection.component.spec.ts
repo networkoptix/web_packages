@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import TimelineSelectionComponent from './timeline-selection.component';
 
-describe('TimelineSelectionComponent', () => {
+xdescribe('TimelineSelectionComponent', () => {
     let component: TimelineSelectionComponent;
     let fixture: ComponentFixture<TimelineSelectionComponent>;
 

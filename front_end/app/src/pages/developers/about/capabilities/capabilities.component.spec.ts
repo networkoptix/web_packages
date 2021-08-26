@@ -9,6 +9,7 @@ import { capabilitiesNode } from '../../../../_mocks/knowledge_base_landing.mock
 import { MockProvider } from '../../../../_mocks/helpers.test';
 import { CommonModule } from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+import { NxSafePipe } from '../../../../pipes/nx-safe';
 
 describe('For Developers Landing - Capabilities Node', () => {
     const capability = capabilitiesNode.nodes[0];
@@ -33,7 +34,7 @@ describe('For Developers Landing - Capabilities Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxCapabilitiesComponent, RouterLinkDirectiveStub],
+                declarations : [NxCapabilitiesComponent, RouterLinkDirectiveStub, NxSafePipe],
                 imports      : [CommonModule],
                 providers    : [
                     new MockProvider(NxConfigService, configMock),
