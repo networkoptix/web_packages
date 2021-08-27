@@ -630,13 +630,21 @@ export class CustomClientAPI {
         this.apiBase = this.config.apiBase + '/custom_clients/';
     }
 
-    create = (name: string, values: Record<string, string> = {}) => {
+    create = (name: string, baseVms?, values: Record<string, string> = {}) => {
         if (!Object.keys(values).length) {
             const id = uuid();
-            this.consoleService.unsavedAssets[id] = { name, id, unsaved: true, values: {} };
+            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
             return Promise.reject(id);
         }
-        return this.http.post<t.CustomClient>(this.apiBase, Object.entries(values).length ? { name, values } : { name });
+        const body: any = { name };
+        if (Object.entries(values).length) {
+            body.values = values;
+        }
+
+        if (baseVms) {
+            body.base_vms = baseVms;
+        }
+        return this.http.post<t.CustomClient>(this.apiBase, body);
     }
 
     retrieve = (id) => {

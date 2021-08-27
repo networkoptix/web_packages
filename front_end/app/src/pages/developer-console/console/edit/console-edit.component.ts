@@ -143,7 +143,7 @@ export class NxDevConsoleEditComponent {
             return this.cloudApi[subAPI][method];
         };
         this.saveContext = this.processService.createProcess(
-            () => this.asset.unsaved ? getMethod('create')(this.asset.name, this.asset.values) : getMethod('save')(this.asset.id, this.asset.name, this.asset),
+            () => this.asset.unsaved ? getMethod('create')(this.asset.name, this.asset.base_vms, this.asset.values) : getMethod('save')(this.asset.id, this.asset.name, this.asset),
             { ignoreError: true },
             (res) => {
                 const tempId = this.asset.id;

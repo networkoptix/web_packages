@@ -116,7 +116,7 @@ export class EditModalContent implements ModalContent {
             delay     : this.CONFIG.alertTimeout
         };
 
-        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name),
+        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name, this.values.base_vms),
             { ignoreError: true },
             _ => {
                 // Need spec for saving message

@@ -283,8 +283,8 @@ export interface ContentSettings {
 export interface ContentManifest {
     manifest: {
         contexts: ContextManifest[]
-    },
-    settings?: ContentSettings
+        settings?: ContentSettings
+    }
 }
 
 export interface DocBlock {

@@ -243,7 +243,7 @@ export class NxConsoleTableComponent {
                 this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
-                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.settings);
+                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.manifest.settings);
                 this.showSearch ||= !!search;
                 const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);
                 if (!isNaN(perPageFromParam)) {
@@ -337,7 +337,7 @@ export class NxConsoleTableComponent {
             modal       : ModalType.CLIENT_CREATE,
             manifest    : this.manifest,
             heading     : this.translate.instant('devConsole.create'),
-            settings    : this.contentManifest.settings,
+            settings    : this.contentManifest.manifest.settings,
             contextList : this.contextList
         };
 
