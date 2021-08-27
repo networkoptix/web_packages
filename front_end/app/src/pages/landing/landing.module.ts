@@ -13,7 +13,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports : [
+    imports: [
         CommonModule,
         TranslateModule,
         ComponentsModule,
@@ -21,12 +21,12 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxLandingComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxLandingComponent
     ]
 })

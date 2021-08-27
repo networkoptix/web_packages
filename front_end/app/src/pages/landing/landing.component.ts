@@ -7,7 +7,6 @@ import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxLandingService } from '@pages/new-landing/landing.service';
 
 @Component({
     selector    : 'landing-component',

@@ -7,14 +7,12 @@ import { DownloadHistoryModule }     from './download-history/download-history.m
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
-import { LandingModule }             from './landing/landing.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
-import { NxOAuthRedirectModule }     from './oauth-redirect/oauth-redirect.module';
 import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
@@ -27,6 +25,11 @@ const lazyRoutes: Routes = [
     {
         path         : 'doc/developers/api-tool',
         loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+    },
+    {
+        path         : '',
+        loadChildren : () => import('./new-landing/landing-routing.module').then(m => m.LandingRoutingModule),
+        pathMatch    : 'full'
     },
     {
         path         : 'systems/:systemId/view',
@@ -81,11 +84,6 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./ipvd/ipvd.module').then(m => m.IpvdModule)
     },
     {
-        path         : '',
-        pathMatch    : 'full',
-        loadChildren : () => import('./landing/landing.module').then(m => m.LandingModule)
-    },
-    {
         path         : 'login',
         loadChildren : () => import('./landing/landing.module').then(m => m.LandingModule)
     },
@@ -105,10 +103,6 @@ const lazyRoutes: Routes = [
         path         : 'agreement',
         loadChildren : () => import('./content/content.module').then(m => m.ContentModule)
     },
-    // {
-    //     path         : 'new_landing',
-    //     loadChildren : () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule)
-    // },
     {
         path         : '404',
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
@@ -135,7 +129,6 @@ const lazyRoutes: Routes = [
         NxRestoreModule,
         PushNotificationsModule,
         Angular2CsvModule,
-        LandingModule,
         NxAccountModule,
         NxDebugModule,
         Nx500Module,
@@ -163,7 +156,6 @@ const lazyRoutes: Routes = [
         NxRestoreModule,
         PushNotificationsModule,
         Angular2CsvModule,
-        LandingModule,
         NxDebugModule,
         Nx500Module,
         Nx503Module,

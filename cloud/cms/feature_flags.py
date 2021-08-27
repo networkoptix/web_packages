@@ -56,7 +56,7 @@ class FLAGS(metaclass=_FlagType):
 
 
 class SWITCHES(metaclass=_FlagType):
-    pass
+    landing_page = ('Landing Page', 'landingPage')
 
 
 class SAMPLES(metaclass=_FlagType):

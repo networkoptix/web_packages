@@ -3,16 +3,14 @@ import { CommonModule }         from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
-
 import { ComponentsModule }     from '../../components/components.module';
 import { DirectivesModule }     from '../../directives/directives.module';
-import { NxLandingComponent }   from '../landing/landing.component';
 import { NxContentComponent }   from './content.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: '', component: NxContentComponent },
-    { path: ':article_param', component: NxContentComponent },
+    { path: ':article_param', component: NxContentComponent }
 ];
 
 @NgModule({
@@ -28,8 +26,8 @@ const appRoutes: Routes = [
     declarations : [
         NxContentComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxContentComponent
     ]
 })

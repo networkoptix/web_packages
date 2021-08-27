@@ -6,7 +6,6 @@ import { TranslateModule }               from '@ngx-translate/core';
 import { InputTrimModule }               from 'ng2-trim-directive';
 
 import { ComponentsModule }              from '../../components/components.module';
-import { LandingModule }                 from '../landing/landing.module';
 import { DirectivesModule }              from '../../directives/directives.module';
 import { NxRegisterComponent }           from './register.component';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -40,7 +39,6 @@ const appRoutes: Routes = [
         CommonModule,
         ComponentsModule,
         FormsModule,
-        LandingModule,
         DirectivesModule,
         PipesModule,
         RouterModule.forChild(appRoutes),
@@ -55,7 +53,7 @@ const appRoutes: Routes = [
         NxRegisterComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxRegisterComponent
     ]
 })

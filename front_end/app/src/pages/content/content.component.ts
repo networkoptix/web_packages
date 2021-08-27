@@ -2,7 +2,7 @@ import {
     Component, OnInit, Inject
 } from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
 import { SessionStorageService }     from 'ngx-webstorage';
 
