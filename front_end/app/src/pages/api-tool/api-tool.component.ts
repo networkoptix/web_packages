@@ -9,7 +9,7 @@ import { NxSystem, NxSystemService } from '@services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     delay, distinctUntilChanged,
-    map, retryWhen
+    filter, map, retryWhen
 }                                    from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import SwaggerUI                     from 'swagger-ui';
@@ -18,9 +18,17 @@ import { NxAppStateService }         from '@services/nx-app-state.service';
 import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
 import { NxMenuService }             from '@src/menu';
 import { NxUtilsService }            from '@services/utils.service';
-import { NxSystemsService, NxSystemWithUserInfo }          from '@services/systems.service';
-import { NxHeaderService } from '@services/nx-header.service';
-import { APIDocVersion, NxSystemRestAPI } from '@services/system-rest-api.service';
+import {
+    NxSystemsService,
+    NxSystemWithUserInfo
+}                                    from '@services/systems.service';
+import { NxHeaderService }           from '@services/nx-header.service';
+import {
+    APIDocVersion,
+    NxSystemRestAPI
+}                                    from '@services/system-rest-api.service';
+import { NxAccountService }          from '@services/account.service';
+import { Router }                    from '@angular/router';
 
 enum requestTypes {
     GET = 'get',
@@ -29,6 +37,11 @@ enum requestTypes {
     PUT = 'put',
     DELETE = 'delete',
     PATCH = 'patch'
+}
+
+interface SystemDropdownItem {
+    name: string,
+    value: string
 }
 
 // Could make this type more accurate, but have to watch out for different/older versions of the API
@@ -49,6 +62,31 @@ interface APIDoc {
     servers?: { url: string}[]
 }
 
+interface ServerDropdownItem {
+    value        : string,
+    name         : string,
+    apiDocFull   : APIDoc | {},
+    incompatible : boolean
+}
+
+interface Level1Item {
+    id     : string,
+    svg    : string,
+    label  : string,
+    path   : string,
+    level2 : any[],
+    level3 : any[]
+}
+interface Content {
+        searchable             : boolean,
+        selectedSection        : string,
+        selectedSubSection     : string, // updated by selectedSubSectionSubject
+        selectedDetailsSection : string,
+        system                 : object,
+        base                   : string, // no base - no navigation
+        level1                 : Level1Item[]
+}
+
 type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
 
 @UntilDestroy({ checkProperties: true })
@@ -62,18 +100,17 @@ export class NxApiToolComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
-    apiDocFull: any = {};
-    apiDoc: any;
-    content : any;
+    content: Content;
     headerHeight: number;
     swagger: SwaggerUI;
     systems: NxSystemWithUserInfo[];
-    systemsDropdown: any = [];
-    selectedSystem: any = {};
-    serversDropdown: any = [];
-    selectedServer: any = {};
+    systemsDropdown: SystemDropdownItem[] = [];
+    selectedSystem: SystemDropdownItem;
+    serversDropdown: ServerDropdownItem[] = [];
+    selectedServer: ServerDropdownItem;
     serversLoaded: boolean;
     noSystemError = false;
+    mediaServerUpdating = false;
     gettingLegacyAPI: boolean;
     swaggerMenuTitle: string;
     placeHolderContent: { [key in placeHolderSelections]: string } = { api_information: 'API Information', legacy: 'Legacy API', deprecated: 'Deprecated Endpoints' }
@@ -94,7 +131,9 @@ export class NxApiToolComponent implements OnInit {
         private scrollMechanicsService: NxScrollMechanicsService,
         private menuService: NxMenuService,
         private systemsService: NxSystemsService,
-        private headerService: NxHeaderService
+        private headerService: NxHeaderService,
+        private accountService: NxAccountService,
+        private router: Router
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -110,7 +149,7 @@ export class NxApiToolComponent implements OnInit {
 
         this.menuSectionSubscription = this.menuService
             .selectedSectionSubject
-            .subscribe(selection => {
+            .pipe(filter(value => value !== '')).subscribe(selection => {
                 if (this.content) {
                     this.content.selectedSection = selection;
                     this.content = { ...this.content }; // trigger onChange
@@ -164,15 +203,24 @@ export class NxApiToolComponent implements OnInit {
     }
 
     async getSystem() {
-        this.systemsDropdown = this.systems.map(system => {
-            const sysName = (system.stateOfHealth !== 'online') ? system.name + ' - Offline' : system.name;
-            return { value: system.id, name: sysName };
+        this.systems.forEach(system => {
+            if (system.name !== undefined) {
+                const sysName = (system.stateOfHealth !== 'online') ? system.name + ' - Offline' : system.name;
+                this.systemsDropdown.push({ value: system.id, name: sysName });
+            }
         });
 
-        const localSystem = this.systemService.getCurrentSystem();
-
-        if (localSystem) {
-            this.system = localSystem;
+        const cachedSystem = this.systemService.getCurrentSystem();
+        if (this.CONFIG.isLocal) {
+            await this.accountService.get().then((account) => {
+                if (!account) {
+                    this.router.navigate(['/']);
+                }
+                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                this.getServersInfo();
+            });
+        }  else if (cachedSystem) {
+            this.system = cachedSystem;
             this.selectedSystem = { value: this.system.id, name: this.system.info.name };
             this.updateMediaServers();
         } else {
@@ -197,6 +245,7 @@ export class NxApiToolComponent implements OnInit {
     }
 
     onSystemChange(system) {
+        this.content = undefined;
         this.system = this.systemService.createSystem('', system.value);
         this.selectedSystem = { value: system.value, name: system.name };
 
@@ -213,8 +262,9 @@ export class NxApiToolComponent implements OnInit {
                 map(system => {
                     if (system) {
                         this.selectedSystem = { value: system.id, name: system.info.name };
+                        return system;
                     }
-                    if (!system.serverManager.servers || system.serverManager.servers.length === 0) {
+                    if (!system || !system.serverManager.servers || system.serverManager.servers.length === 0) {
                         throw system;
                     }
                 }),
@@ -223,11 +273,14 @@ export class NxApiToolComponent implements OnInit {
                 })
             )
             .subscribe((system) => {
-                this.updateMediaServers();
+                if (!this.mediaServerUpdating) {
+                    this.updateMediaServers();
+                }
             });
     }
 
     private updateMediaServers() {
+        this.mediaServerUpdating = true;
         if (this.system.currentServerNotBusy) {
             if (this.system?.serverManager.servers?.length) {
                 this.system.serverManager
@@ -273,12 +326,13 @@ export class NxApiToolComponent implements OnInit {
                                             return !server.incompatible;
                                         });
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
-                                            this.createMenuContent(this.selectedServer.apiDocFull);
-                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
+                                            this.createMenuContent(this.selectedServer.apiDocFull as APIDoc);
+                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull as APIDoc);
                                             this.menuService.section = 'api_information';
                                             if (this.serverSubscription) {
                                                 this.serverSubscription.unsubscribe();
                                             }
+                                            this.mediaServerUpdating = false;
                                             this.serversLoaded = true;
                                         }
                                     });
@@ -293,8 +347,11 @@ export class NxApiToolComponent implements OnInit {
                         });
                     })
                     .catch(error => {
+                        this.mediaServerUpdating = false;
                         console.error(error);
                     });
+            } else {
+                this.mediaServerUpdating = false;
             }
         }
     }
@@ -345,9 +402,8 @@ export class NxApiToolComponent implements OnInit {
         if (filter === '' || filter?.length === 0) {
             return;
         }
-        if (this.content.selectedSection === 'api_information') {
+        if (this.placeHolderContent[this.content.selectedSection] && !this.content.selectedSubSection.length) {
             this.swagger = undefined;
-            this.apiDoc = {};
             return;
         }
 
@@ -448,12 +504,13 @@ export class NxApiToolComponent implements OnInit {
 
     private createMenuContent(response: APIDoc) {
         const _content = {
-            searchable         : false,
-            selectedSection    : '', // updated by selectedSectionSubject
-            selectedSubSection : '', // updated by selectedSubSectionSubject
-            system             : {}, // updated by getSystemInfo
-            base               : '', // no base - no navigation
-            level1             : [
+            searchable             : false,
+            selectedSection        : 'api_information', // updated by selectedSectionSubject
+            selectedSubSection     : '', // updated by selectedSubSectionSubject
+            selectedDetailsSection : '',
+            system                 : {}, // updated by getSystemInfo
+            base                   : '', // no base - no navigation
+            level1                 : [
                 {
                     id     : 'api_information',
                     svg    : '',

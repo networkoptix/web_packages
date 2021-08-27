@@ -8,9 +8,14 @@ import { NxApiToolComponent }   from './api-tool.component';
 import { MenuApiModule }        from './menu/menu.module';
 import { FormsModule }          from '@angular/forms';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { AuthGuard } from '@guards/authGuard';
 
 const appRoutes: Routes = [
-    { path: '', component: NxApiToolComponent }
+    {
+        path        : '',
+        component   : NxApiToolComponent,
+        canActivate : [AuthGuard]
+    }
 ];
 
 @NgModule({

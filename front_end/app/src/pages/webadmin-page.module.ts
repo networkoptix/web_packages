@@ -35,6 +35,10 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./health/health.module').then(m => m.NxHealthModule)
     },
     {
+        path         : 'api-tool',
+        loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+    },
+    {
         path         : '404',
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
     },

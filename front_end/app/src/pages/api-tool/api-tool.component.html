@@ -12,7 +12,7 @@
                             [stillLoading]="!serversLoaded"
                             [items]="systemsDropdown"
                             (onSelected)="onSystemChange($event)"
-                            [selected]="selectedSystem">
+                            [selected]="selectedSystem || {}">
                     </nx-select>
 
                     <nx-select
@@ -21,10 +21,10 @@
                             [stillLoading]="!serversLoaded"
                             [items]="serversDropdown"
                             (onSelected)="onServerChange($event)"
-                            [selected]="selectedServer">
+                            [selected]="selectedServer || {}">
                     </nx-select>
 
-                    <div *ngIf="selectedServer.incompatible" class="mt-2"
+                    <div *ngIf="selectedServer?.incompatible" class="mt-2"
                          style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center">
                         The system uses the old API version. We recommend that you update the system
                         to the new version in order to get
@@ -40,7 +40,7 @@
             </div>
             <!-- Offset for the fixed menu -->
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
-                <nx-pre-loader *ngIf="!apiDoc"></nx-pre-loader>
+                <nx-pre-loader *ngIf="!this.content"></nx-pre-loader>
 
                 <ng-container *ngIf="this.content">
                     <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else placeHolderTemplate">
