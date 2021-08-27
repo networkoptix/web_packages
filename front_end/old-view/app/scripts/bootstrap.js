@@ -76,8 +76,18 @@ setTimeout(function LanguageDetect(){
             fetchJson('/static/lang_' + userLang + '/language.json')
                 .then(processLang)
                 .catch(function() {
-                    angular.bootstrap(document, ['webadminApp']);
-                    console.error("Can't get language.json");
+                    // Catch for local dev.
+                    fetchJson('/language.json').then(function(res) {
+                        L = res;
+                        return fetchJson('/web_common/commonLanguage.json');
+                    }).then(function(res) {
+                        L.common = res;
+                        Config.viewsDirCommon = '/web_common/views/';
+                    }).catch(function() {
+                        console.error("Can't get language.json");
+                    }).finally(function() {
+                        angular.bootstrap(document, ['webadminApp']);
+                    });
                 });
         });
 });

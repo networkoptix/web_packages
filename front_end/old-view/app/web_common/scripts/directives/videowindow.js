@@ -1,9 +1,9 @@
 import * as Hls from 'hls.js';
 
 (function () {
-    
+
     'use strict';
-    
+
     /**
      * This is smart video-plugin.
      * 1. It gets list of possible video-sources in different formats (each requires mime-type)
@@ -23,17 +23,18 @@ import * as Hls from 'hls.js';
      *
      */
     var flashPlayer = '';
-    
+
     angular.module('nxCommon')
-        .directive('videowindow', ['$interval', '$timeout', 'animateScope', '$sce', '$log', '$http', '$window',
-            function ($interval, $timeout, animateScope, $sce, $log, $http, $window) {
-                
+        .directive('videowindow', ['$interval', '$timeout', 'animateScope', '$sce', '$log', '$http', '$window', 'systemAPI',
+            function ($interval, $timeout, animateScope, $sce, $log, $http, $window, systemAPI) {
+
                 return {
                     restrict: 'E',
                     scope: {
                         vgUpdateTime: '&',
                         vgPlayerReady: '&',
                         playerId: '=',
+                        cameraId: '=',
                         vgSrc: '=',
                         player: '=',
                         activeFormat: '=',
@@ -41,7 +42,7 @@ import * as Hls from 'hls.js';
                         playerHandler: '='
                     },
                     templateUrl: Config.viewsDirCommon + 'components/videowindow.html',// ???
-                    
+
                     link: function (scope, element/*, attrs*/) {
                         var mimeTypes = {
                             'hls': 'application/x-mpegURL',
@@ -56,9 +57,11 @@ import * as Hls from 'hls.js';
                         scope.videoFlags = {};
                         scope.error = {};
                         scope.loading = false; // Initiate state - not loading (do nothing)
-                        
+
+                        var handlingError = false;
+                        var iosErrorTimeout = undefined;
                         var videowindow = element.find('.videowindow');
-                        
+
                         function getFormatSrc(mediaformat) {
                             var src = _.find(scope.vgSrc, function (src) {
                                 return src.type === mimeTypes[mediaformat];
@@ -71,7 +74,7 @@ import * as Hls from 'hls.js';
                             //return 'http://184.72.239.149/vod/smil:BigBuckBunny.smil/playlist.m3u8';
                             return src ? src.src : null;
                         }
-                        
+
                         function detectBestFormat() {
                             //1. Hide all informers
                             scope.videoFlags = {
@@ -86,15 +89,15 @@ import * as Hls from 'hls.js';
                                 errorCode: '',
                                 errorDescription: ''
                             };
-                            
+
                             if (scope.debugMode && scope.activeFormat !== 'Auto') {
                                 return scope.activeFormat;
                             }
-                            
+
                             //This function gets available sources for camera and chooses the best player for this browser
-                            
+
                             //return 'rtsp'; // To debug some format - force it to work
-                            
+
                             //We have options:
                             // webm - for good desktop browsers
                             // webm-codec - for IE. Detectf
@@ -104,7 +107,7 @@ import * as Hls from 'hls.js';
                             // activex-rtsp - for some browsers - not supported yet
                             // flashls - for desktop browsers
                             // jshls - for desktop browsers - not supported yet
-                            
+
                             function canPlayNatively(type) {
                                 var res = false;
                                 var v = document.createElement('video');
@@ -113,7 +116,7 @@ import * as Hls from 'hls.js';
                                 }
                                 return res;
                             }
-                            
+
                             var weHaveWebm = _.find(scope.vgSrc, function (src) {
                                 return src.type === mimeTypes['webm'];
                             });
@@ -121,7 +124,7 @@ import * as Hls from 'hls.js';
                                 return src.type === mimeTypes['hls'];
                             });
                             var jsHlsSupported = Hls.isSupported();
-                            
+
                             // No native support
                             //Presume we are on desktop:
                             switch ($window.jscd.browser) {
@@ -150,7 +153,7 @@ import * as Hls from 'hls.js';
                                         return false;
                                     }
                                     break;
-                                
+
                                 case 'Firefox':
                                 case 'Chrome':
                                 case 'Opera':
@@ -171,27 +174,28 @@ import * as Hls from 'hls.js';
                                             return false;
                                         }
                                     }
-                                    
+
                                     if (weHaveWebm && canPlayNatively('webm')) {
                                         return 'webm';
                                     }
                             }
-                            
+
                             if (weHaveHls) {
                                 scope.videoFlags.flashRequired = true;
                             } else {
-                                scope.videoFlags.noFormat = true;
+                                playerErrorHandler(true);
+                                // scope.videoFlags.noFormat = true;
                             }
                             return false; // IE9 - No supported formats
                         }
-                        
+
                         // TODO: Create common interface for each player, html5 compatible or something
                         // TODO: move supported info to config
                         // TODO: Support new players
-                        
+
                         var makingPlayer = false;
                         var nativePlayerLoadError = null;
-                        
+
                         function resetPlayer() {
                             if (scope.vgApi) {
                                 scope.vgApi.kill();
@@ -204,7 +208,7 @@ import * as Hls from 'hls.js';
                             scope.flashls = false;
                             scope.jsHls = false;
                         }
-                        
+
                         //For the native player. Handles webm's long loading times
                         function loadingTimeout() {
                             scope.videoFlags.errorLoading = true;
@@ -212,14 +216,14 @@ import * as Hls from 'hls.js';
                             nativePlayerLoadError = null;
                             resetPlayer();
                         }
-                        
+
                         function cancelTimeoutNativeLoad() {
                             if (nativePlayerLoadError) {
                                 $timeout.cancel(nativePlayerLoadError);
                                 nativePlayerLoadError = null;
                             }
                         }
-                        
+
                         function resetTimeout(event) {
                             if (nativePlayerLoadError) {
                                 scope.loading = true;
@@ -227,69 +231,83 @@ import * as Hls from 'hls.js';
                                 nativePlayerLoadError = $timeout(loadingTimeout, Config.webclient.nativeTimeout);
                             }
                         }
-                        
+
                         function playerErrorHandler(error) {
-                            scope.loading = false; // Some error happended - stop loading
+                            function handlerCameraError(response) {
+                                scope.videoFlags.errorLoading = true;
+                                scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
+                                scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
+                            }
+
+                            if (handlingError) {
+                                return;
+                            }
+
+                            handlingError = true;
+                            scope.loading = false; // Some error happened - stop loading
                             resetPlayer();
-                            
+
                             scope
                                 .playerHandler(error)
-                                .then(function (response) {
+                                .then((response) => {
                                     scope.videoFlags.errorLoading = response;
-                                    
-                                    if (scope.videoFlags.errorLoading) {
-                                        $http
-                                            .get(error.url || error.frag.url)
-                                            .then(function (response) {
-                                                scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
-                                                scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
-                                            });
+                                    if (!error && window.jscd.os !== 'iOS') {
+                                        return;
                                     }
-                                    
-                                }, function (error) {
+
+                                    iosErrorTimeout = $timeout(() => {
+                                        $http.get(systemAPI.hlsUrl(scope.cameraId, undefined, 'lo'))
+                                            .then(handlerCameraError, () => {
+                                                $http.get(systemAPI.webmUrl(scope.cameraId, undefined, 'lo'))
+                                                    .then(handlerCameraError);
+                                            });
+                                    }, 100);
+                                }, (error) => {
                                     scope.videoFlags.errorLoading = error;
+                                }).finally(() => {
+                                    handlingError = false;
                                 });
                         }
-                        
+
                         function playerReadyHandler(api) {
                             makingPlayer = false;
                             scope.vgApi = api;
                             if (scope.vgSrc) {
                                 scope.vgApi.load(getFormatSrc('hls'));
-                                
+
                                 scope.vgApi.addEventListener('loadeddata', function () {
                                     scope.loading = false;  // Video is ready - disable loading
                                     scope.playerHandler();
                                 });
-                                
+
                                 scope.vgApi.addEventListener('timeupdate', function (event) {
                                     var video = event.srcElement || event.originalTarget;
                                     scope.vgUpdateTime({$currentTime: video.currentTime, $duration: video.duration});
                                 });
-                                
+
                                 scope.vgApi.addEventListener('ended', function (event) {
                                     scope.vgUpdateTime({$currentTime: null, $duration: null});
                                 });
                             }
                             scope.vgPlayerReady({$API: api});
                         }
-                        
+
                         function initNativePlayer(nativeFormat) {
-                            
+
                             scope.native = true;
                             scope.flashls = false;
                             scope.jsHls = false;
-                            
+
                             $timeout(function () {
                                 var nativePlayer = new $window.NativePlayer();
                                 nativePlayer.init(element.find('.videoplayer'), function (api) {
                                     makingPlayer = false;
                                     scope.vgApi = api;
                                     cancelTimeoutNativeLoad();
-                                    
+
                                     if (scope.vgSrc) {
                                         scope.vgApi.load(getFormatSrc(nativeFormat), mimeTypes[nativeFormat]);
-                                        
+
                                         scope.vgApi.addEventListener('timeupdate', function (event) {
                                             var video = event.srcElement || event.originalTarget;
                                             scope.vgUpdateTime({
@@ -297,27 +315,27 @@ import * as Hls from 'hls.js';
                                                 $duration: video.duration
                                             });
                                         });
-                                        
+
                                         scope.vgApi.addEventListener('loadeddata', function (event) {
                                             scope.loading = false; // Video is playing - disable loading
                                             scope.playerHandler();
                                             cancelTimeoutNativeLoad();
                                         });
-                                        
+
                                         scope.vgApi.addEventListener('ended', function (event) {
                                             scope.vgUpdateTime({$currentTime: null, $duration: null});
                                         });
-                                        
+
                                         scope.vgApi.addEventListener('loadstart', function (event) {
                                             if (nativePlayerLoadError) {
                                                 $timeout.cancel(nativePlayerLoadError);
                                             }
                                             nativePlayerLoadError = $timeout(loadingTimeout, Config.webclient.nativeTimeout);
                                         });
-                                        
+
                                         //If we are still downloading the video reset the timer
                                         scope.vgApi.addEventListener('progress', resetTimeout);
-                                        
+
                                         //If the player stalls give it a chance to recover
                                         scope.vgApi.addEventListener('stalled', resetTimeout);
                                         scope.vgApi.addEventListener('error', function (e) {
@@ -327,44 +345,44 @@ import * as Hls from 'hls.js';
                                                     // (switch to another camera)
                                                     return;
                                                 }
-                                                
+
                                                 var target = e.target;
                                                 if (target.error.url === undefined) {
                                                     target.error.url = target.currentSrc;
                                                 }
-                                                
+
                                                 // sometimes Error is thrown with currentSrc as host URL (Firefox)
                                                 if (target.error.url === window.location.origin + window.location.pathname) {
                                                     return;
                                                 }
-                                                
+
                                                 playerErrorHandler(target.error);
                                             });
                                         });
                                     }
-                                    
+
                                     scope.vgPlayerReady({$API: scope.vgApi});
                                 });
                             });
                         }
-                        
+
                         function initFlashls() {
                             scope.flashls = true;
                             scope.native = false;
                             scope.jsHls = false;
-                            
+
                             var playerId = scope.playerId;
                             if (!playerId) {
                                 playerId = 'player0';
                             }
-                            
+
                             scope.flashSource = Config.webclient.staticResources + Config.webclient.flashChromelessPath;
                             if (scope.debugMode) {
                                 scope.flashSource = Config.webclient.staticResources + Config.webclient.flashChromelessDebugPath;
                             }
-                            
+
                             var flashlsAPI = new $window.FlashlsAPI(null);
-                            
+
                             if (flashlsAPI.ready()) {
                                 flashlsAPI.kill();
                                 scope.flashls = false; // Destroy it!
@@ -387,12 +405,12 @@ import * as Hls from 'hls.js';
                                 });
                             }
                         }
-                        
+
                         function initJsHls() {
                             scope.flashls = false;
                             scope.native = false;
                             scope.jsHls = true;
-                            
+
                             $timeout(function () {
                                 var jsHlsAPI = new $window.JsHlsAPI();
                                 jsHlsAPI.init(element.find('.videoplayer'),
@@ -403,11 +421,11 @@ import * as Hls from 'hls.js';
                                 );
                             });
                         }
-                        
+
                         element.bind('contextmenu', function () {
                             return !!scope.debugMode;
                         }); // Kill context menu
-                        
+
                         function initNewPlayer() {
                             if (makingPlayer) {
                                 return;
@@ -417,45 +435,48 @@ import * as Hls from 'hls.js';
                                 case 'flashls':
                                     initFlashls();
                                     break;
-                                
+
                                 case 'jshls':
                                     initJsHls();
                                     break;
-                                
+
                                 case 'native-hls':
                                     initNativePlayer('hls');
                                     break;
-                                
+
                                 case 'webm':
                                 default:
                                     initNativePlayer(scope.player);
                                     break;
                             }
                         }
-                        
+
                         function updateWidth() {
                             if (!scope.rotation || scope.rotation === 0 || scope.rotation === 180) {
                                 return;
                             }
-                            
+
                             element.find('.videoplayer').css('width', videowindow.height());
-                            
+
                             // manuall $digest required as resize event
                             // is outside of angular
                             $timeout(function () {
                                 scope.$digest();
                             });
                         }
-                        
+
                         function srcChanged() {
+                            if (iosErrorTimeout) {
+                                $timeout.cancel(iosErrorTimeout);
+                            }
                             scope.loading = true; // source changed - start loading
                             scope.videoFlags.errorLoading = false;
-                            
+
                             if (scope.vgSrc) {
                                 scope.preview = getFormatSrc('jpeg');
                                 scope.player = detectBestFormat();
                                 resetPlayer();
-                                
+
                                 if (!scope.player) {
                                     scope.loading = false; // no supported format - no loading
                                     scope.preview = null;
@@ -465,10 +486,10 @@ import * as Hls from 'hls.js';
                                 $timeout(updateWidth);
                             }
                         }
-                        
+
                         scope.initFlash = function () {
                             var playerId = !scope.playerId ? 'player0' : scope.playerId;
-                            
+
                             if (!flashPlayer) {
                                 $http({
                                     url: Config.viewsDirCommon + 'components/flashPlayer.html',
@@ -484,7 +505,7 @@ import * as Hls from 'hls.js';
                                 scope.flashPlayer = $sce.trustAsHtml(flashPlayer);
                             }
                         };
-                        
+
                         scope.getRotation = function () {
                             if (scope.player === 'webm') {
                                 return '';
@@ -500,15 +521,15 @@ import * as Hls from 'hls.js';
                                     return '';
                             }
                         };
-                        
+
                         var jqWindow = $(window);
                         jqWindow.resize(updateWidth);
-                        
+
                         if (scope.debugMode) {
                             scope.$watch('activeFormat', srcChanged);
                         }
                         scope.$watch('vgSrc', srcChanged, true);
-                        
+
                         scope.$on('$destroy', function () {
                             resetPlayer();
                         });
