@@ -71,6 +71,12 @@ export interface ModalManifest {
     fields: ColumnConfig[]
 }
 
+export enum OptionalFeatures {
+    FILTER='filter',
+    SEARCH='search',
+    PER_PAGE='perPage'
+}
+
 export interface ConsoleManifest {
     // intro?: {
     //     title: string,
@@ -82,10 +88,10 @@ export interface ConsoleManifest {
     icon: string
     perPage: number,
     pagesToShow: number,
-    searchable: boolean,
     searchSubheading: string,
     noResultsMessage: string,
     minItemsAdvanced: number,
+    disabled: Record<OptionalFeatures, boolean>,
     perPageOptions: DropdownItem[],
     excludeFromSearch: string[],
     contexts: ColumnConfig[],
@@ -182,6 +188,7 @@ export class NxConsoleTableComponent {
     CONFIG: IConfig;
     CONFIG_TYPE = ConfigType;
     CONSOLE_MODE = ConsoleMode;
+    OPTIONAL_FEATURES = OptionalFeatures;
     base = '/developers';
     noResultsHeight = 0;
     noResultsWidth = 0;

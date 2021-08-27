@@ -17,6 +17,8 @@
 }
 
 .tooltip {
+    pointer-events: none !important;
+
     &.bs-tooltip-top {
         & > .arrow {
             left : calc(50% - 1rem); // move it to the center

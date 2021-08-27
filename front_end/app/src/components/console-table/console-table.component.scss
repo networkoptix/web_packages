@@ -199,12 +199,14 @@ tr.data-row {
     line-height: 16px;
     padding-top: 8px;
     padding-bottom: 8px;
+    white-space: nowrap;
 }
 
 .cdk-cell {
     border: 1px none;
     border-left: 1px solid $light3;
     border-right: 1px solid $light3;
+    white-space: nowrap;
 }
 
 .cdk-row:nth-child(even) {
@@ -221,6 +223,7 @@ nx-paginator {
     button {
         background: transparent;
         color: $light16;
+        height: 1.5em !important;
 
         &.search-active {
             background: $light16;
@@ -272,4 +275,13 @@ button.reset-search {
     nx-select {
         margin-left: 8px;
     }
+}
+
+.console-table-wrapper {
+    overflow-x: auto;
+    border: none;
+}
+
+table {
+    min-width: 100%;
 }

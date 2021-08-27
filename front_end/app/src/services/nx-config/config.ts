@@ -1,6 +1,6 @@
 import { IConfig }                               from './config-types';
 import { environment }                           from '@environments/environment';
-import { ConfigType, ConsoleSection, ModalType } from '@components/console-table/console-table.component';
+import { ConfigType, ConsoleSection, ModalType, OptionalFeatures } from '@components/console-table/console-table.component';
 import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
 import { GroupingOptions, SortOptions }          from '@pages/developer-console/console/edit/console-edit.component';
 
@@ -269,8 +269,13 @@ export const nxConfig: IConfig = {
             searchSubheading : 'Search works in all columns',
             noResultsMessage : 'No Custom Clients found matching search',
             minItemsAdvanced : 10,
-            perPage          : 10,
-            perPageOptions   : [
+            disabled         : {
+                [OptionalFeatures.FILTER]   : true,
+                [OptionalFeatures.SEARCH]   : true,
+                [OptionalFeatures.PER_PAGE] : true
+            },
+            perPage        : 10,
+            perPageOptions : [
                 { name: '5', value: '5' },
                 { name: '10', value: '10' },
                 { name: '25', value: '25' },
@@ -278,7 +283,6 @@ export const nxConfig: IConfig = {
                 { name: 'All', value: '10000' }
             ],
             pagesToShow       : 4,
-            searchable        : true,
             excludeFromSearch : ['last_modified', 'downloadLink', 'settingsModal'],
             contexts          : [
                 {
