@@ -455,7 +455,7 @@ class Customization(models.Model):
                 for asset in assets_with_all_enabled:
                     asset.customizations.add(new_customization)
                 for menu_node in menu_nodes_with_all_enabled:
-                    menu_node.enabled.add(new_customization)  
+                    menu_node.enabled.add(new_customization)
 
 
 class AssetType(models.Model):
@@ -1164,7 +1164,8 @@ class DataStructure(models.Model):
                     value = {}
                 else:
                     value = []
-            else:
+            # Only parse as json if str
+            elif type(value) is str:
                 value = json.loads(value)
 
             if data_structure.type == DataStructure.DATA_TYPES.multiselect:
