@@ -74,7 +74,7 @@ Portal - Share to not registered user
     ...    ${SERVERS LINK}
     ...    ${DISCONNECT FROM MY ACCOUNT}
     ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
+    ...    //h2[contains(text(), "${system users}[name]")]
     ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${email users}")]
     Wait Until Element Is Not Visible    ${MERGE BUTTON SYSTEM}
     Log Out
@@ -140,7 +140,7 @@ Portal - Share to registered user
     ...    ${ACCOUNT DROPDOWN}
     ...    ${DISCONNECT FROM MY ACCOUNT}
     ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
-    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
+    ...    //h2[contains(text(), "${system users}[name]")]
     ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${email users}")]
     Wait Until Elements Are Not Visible
     ...    ${RENAME SYSTEM}
@@ -212,7 +212,7 @@ Client - Share to not registered user
     ...    ${SERVERS LINK}
     ...    ${DISCONNECT FROM MY ACCOUNT}
     ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-    ...    //h2[contains(@class,"system-name") and contains(text(), "${system users}[name]")]
+    ...    //h2[contains(text(), "${system users}[name]")]
     ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${email users}")]
     Wait Until Element Is Not Visible    ${MERGE BUTTON SYSTEM}
     Log Out
@@ -274,4 +274,5 @@ Client - Share to registered user
     Log Out
 
     ${users systems}=   Get Account Systems    ${ENV}    ${email existing user2}    ${password}
-    Should Contain    ${users systems}    ${system users}[cloud id]
+    ${ids}=   Evaluate    [sys['id'] for sys in $users_systems]
+    Should Contain    ${ids}    ${system users}[cloud id]

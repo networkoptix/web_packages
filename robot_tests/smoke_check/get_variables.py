@@ -18,6 +18,6 @@ def get_variables(env, vms):
     vars = {}
 
     tag = get_tag(env)
-    vars["IMAGE"] = f'{vms}_{tag}'
+    vars["IMG"] = f'{vms}_{tag}'
 
     return vars

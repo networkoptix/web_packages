@@ -17,13 +17,13 @@ ${new password}            QWEasd!@#
 ${restored password}       qweasd777$
 ${email password}          QWEasd!@#
 
-${ssh host ip}        10.1.5.238
-@{ssh auth}           test_runner    qweasd 123
+${ssh host ip}        10.1.5.241
+@{ssh auth}           qaburbank    QABurbank777$
 ${system users port}  7711
 ${system vms port}    7712
 ${merge 1 port}       7713
 ${merge 2 port}       7714
 
-${ENV}      https://test.cloud.hdw.mx
-${VMS}      4.1
-${IMAGE}    4.1_test
+${ENV}    https://cloud-test.hdw.mx
+${VMS}    4.2
+${IMG}    4.2_test

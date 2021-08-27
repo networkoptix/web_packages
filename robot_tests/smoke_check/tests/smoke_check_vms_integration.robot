@@ -43,7 +43,7 @@ Connect System To Cloud - Client
     ...    ${CAMERAS LINK}
     ...    ${USERS LIST LINK}
     ...    ${SERVERS LINK}
-    ...    //span[@class="system-owner"]//span[contains(text(), "${YOU TEXT}")]
+    ...    //span[contains(@class, "system-owner")]//span[contains(text(), "${YOU TEXT}")]
     ...    //form[@id="systemSettingsForm"]
     ...    //form[@id="securitySettingsForm"]
     Log Out
@@ -63,11 +63,12 @@ Check System State On Cloud Portal
     Restart Server    https://${system vms}[ip]:${system vms}[port]    ${local auth}
 
     Log    Step 2: Check System Status
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    timeout=20
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}    timeout=20
 
     Log    Steps 3, 4: Check System Status after it's back online
     Reload Page
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
+    Wait Until Element Is Not Visible    ${SYSTEM OFFLINE}    timeout=60
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
     Log Out
 
 Disconnect System From Cloud - Portal
@@ -114,7 +115,7 @@ Disconnect System From Cloud - Portal
 Disconnect System From Cloud - Client
     [Tags]    C30444    C30654    vms
 
-    ${system id}=   Connect System to Cloud    ${local auth}    https://${system vms}[ip]:${system vms}[port]    ${system vms}    ${email vms}   ${password}
+    ${system id}=   Connect System to Cloud    ${local auth}    https://${system vms}[ip]:${system vms}[port]    ${system vms}[name]    ${email vms}   ${password}
     Go To    ${ENV}/systems/${system id}
     Log In    ${email vms}    ${password}    validate=${False}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
