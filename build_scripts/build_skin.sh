@@ -3,6 +3,8 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
+REPO_PATH=$2
+
 TARGET_DIR="../cloud/static/_source"
 SKIN=$1
 if [ -z "$SKIN" ]
@@ -142,6 +144,11 @@ dir=../skins/$SKIN
 
     pushd $TARGET_DIR/$SKIN
     python ../../../../build_scripts/generate_languages_json.py
+    popd
+
+    echo Building the old webclient
+    pushd $REPO_PATH/front_end/old-view
+        ./build.sh $SKIN
     popd
 
     rm -rf $TARGET_DIR/$SKIN/static/views

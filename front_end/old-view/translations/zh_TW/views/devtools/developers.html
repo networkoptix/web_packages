@@ -1,0 +1,74 @@
+<div class="container">
+    <ng-include src="Config.viewsDir + 'devtools/feedback.html'"></ng-include>
+    <div ng-if="developersFeedbackForm">
+        <h2>開發者工具</h2>
+        <p>
+            有好建議改善我們的開發者工具或是想與我們對話嗎?
+            若有任何問題或想了解更多整合相關訊息?
+        </p>
+        <p ng-if="developersFeedbackForm"><a ng-href="{{developersFeedbackForm}}" target="_blank">開發者論壇</a></p>
+        <p ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">研發知識庫</a></p>
+    </div>
+
+    <div>
+        <h3>通用事件生成器</h3>
+        <p>
+            通用事件是將事件從第三方系統發送到系統的方法，
+            可用於在事件規則引擎中觸發系統動作。
+            通用事件生成器是一個可幫助開發和整合人員的構建工具，
+            並可測試建立HTTP通用事件。
+        </p>
+        <p><a href="#/developers/events">通用事件生成器</a></p>
+    </div>
+    <div>
+        <h3>伺服器 API</h3>
+        <p>
+            REST API 能讓開發人員擁有幾乎所有系統功能的權限，
+            客戶端：查詢/管理系統資源（伺服器，攝影機，使用者，權限), 
+            從系統中索取即時影像或錄影資料, 生成事件，建立規則，操控PTZ攝影機以及更多功能。
+        </p>
+        <p>
+            <a href="#/developers/api"><b> API測試工具（新）</b></a>
+- API測試互動式文件和工具<br>
+<a href="#/developers/changelog">API變更日誌</a>
+- 上次更新後的API重大更新列表<br>
+<a id="api-doc" href="api.xml" target="_blank">API文檔</a>
+- 可用伺服器API的完整列表<br>
+        </p>
+
+    </div>
+    <div>
+        <h3>攝影機詳細資訊面板</h3>
+        <p>
+            在 Web 管理介面的瀏覽分頁上顯示對各個攝影機的友善附加開發人員訊息.
+        </p>
+        <ul>
+            <li>攝影機 ID</li>
+            <li>所有可用的影像流的連結</li>
+            <li>從瀏覽器直接匯出影像</li>
+        </ul>
+        <p>
+            要開啟攝影機詳細訊息面板 - 到 Web 管理界面, 選擇 <a href="#/view">瀏覽</a>, 
+            選擇攝影機, 點擊設定圖示(齒輪), 然後選擇“攝影機詳細訊息”
+        </p>
+        <p><a href="#/view/?cameraLinks">開啟攝影機詳細資訊面板</a></p>
+    </div>
+    <div>
+        <h3>影像來源SDK</h3>
+        <p>
+            影像來源SDK提供了能把幾乎任何即時或錄製的影像來源（網路攝影機，NVRs，DVRs等）整合到系統中的功能，並可用於發現、顯示、分析和錄影。 還允許整合I/O 埠和設備，以及從第三方設備擷取位移偵測
+            信息。
+        </p>
+        <p><a id="sdk-video" ng-href="#/sdkeula/sdk" >取得 SDK</a></p>
+    </div>
+
+    <div>
+        <h3>儲存裝置 SDK</h3>
+        <p>
+            儲存裝置SDK能使開發人員讀取或寫入任何儲存裝置包括本機, 遠端或甚至雲端. 建立儲存插件需要實行標準功能，例如：I / O串流，如果檔案
+            存在，刪除檔案，資料夾中的檔案清單等。 儲存裝置 SDK包含使用FTP
+            伺服器作為存儲位置的範例。
+        </p>
+        <p><a id="sdk-storage" ng-href="#/sdkeula/storage_sdk" >取得 SDK</a></p>
+    </div>
+</div>

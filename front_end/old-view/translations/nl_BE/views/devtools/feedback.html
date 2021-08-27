@@ -1,0 +1,11 @@
+<uib-alert ng-if="developersFeedbackForm && !session.hideDevelopersFeedbackForm"
+       type="success" close="session.hideDevelopersFeedbackForm=true">
+    <p><b>Ben je een Developer?</b></p>
+    <p>Ons dev team is voortdurend geïnteresseerd in feedback van ontwikkelaars die integraties maken met behulp van onze SDK's en API's.
+        Als je suggesties hebt over hoe je de ontwikkelaarservaring kunt verbeteren - of gewoon hi wilt zeggen tegen het team -
+        neem dan deel aan ons ontwikkelaarsforum! Of bekijk onze online kennisbank voor meer informatie,
+        best practices en tips & tricks
+    </p>
+    <p class="text-right"><a ng-href="{{developersFeedbackForm}}" target="_blank">Ontwikkelaars forum</a></p>
+    <p class="text-right" ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">Kennisbank voor ontwikkelaars</a></p>
+</uib-alert>

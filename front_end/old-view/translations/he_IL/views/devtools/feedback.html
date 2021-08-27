@@ -1,0 +1,11 @@
+<uib-alert ng-if="developersFeedbackForm && !session.hideDevelopersFeedbackForm"
+       type="success" close="session.hideDevelopersFeedbackForm=true">
+    <p><b>האם אתה מפתח?</b></p>
+    <p>צוות הפיתוח שלנו מעוניין במשוב ממפתחים העושים שימוש ב- SDK וב- API שלנו.
+        אם יש לך הצעות לשיפור חוויית הפיתוח - או סתם ברצונך לומר שלום לצוות -
+        הצטרף לפורום המפתחים שלנו! לחלופין, תוכל לבדוק את מאגר המידע המקוון שלנו כדי למצוא מידע נוסף,
+        שיטות עבודה מומלצות וטיפים וטריקים
+    </p>
+    <p class="text-right"><a ng-href="{{developersFeedbackForm}}" target="_blank">פורום מפתחים</a></p>
+    <p class="text-right" ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">מאגר מידע למפתחים</a></p>
+</uib-alert>

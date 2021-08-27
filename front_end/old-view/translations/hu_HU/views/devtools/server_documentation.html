@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <h1>
+        Szerver dokumentáció
+    </h1>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">Ezek a beállítások a következő címen érhetők el:</h2>
+        </div>
+        <div class="panel-body">
+            <p>
+                Windows rendszerleíró kulcs:
+                HKEY_LOCAL_MACHINE\SOFTWARE\{VMS Vendor}\{VMS Vendor} Media Server
+            </p>
+            <p>
+                Az összes többi platform esetében egy konfigurációs fájlba kerül:
+                /opt/{vmsvendor}/mediaserver/etc/mediaserver.conf. Néhány
+                beállítás ideiglenes megjegyzéséhez vegye fel az aláhúzás szimbólumot ("_") a neve elejére, pl.
+                "absolutRtcpTimestamps = hamis" írja át "_absoluteRtcpTimestamps = hamis" értékre.
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default table-responsive">
+        <div class="panel-heading">
+            <h2 class="panel-title">Szerver beállítások</h2>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <rt>
+                        <th>Név</th>
+                        <th>&Leírás</th>
+                        <th>Alapértelmezett érték</th>
+                    </rt>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="setting in settings">
+                        <td>{{setting.name}}</td>
+                        <td>{{setting.description}}</td>
+                        <td>{{setting.defaultValue}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

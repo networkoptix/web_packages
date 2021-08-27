@@ -46,6 +46,10 @@ export class NxConfigService {
         return nxConfig.isLocal;
     }
 
+    static get useNewPlayer() {
+        return nxConfig.useNewPlayer;
+    }
+
     static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
         return NxConfigService.isLocal ? local : cloud;
     }

@@ -1,0 +1,100 @@
+@import 'native-theme/main';
+
+@import 'master';
+
+
+.master .horisontal-line-text .line {
+  border-top-color:$dark12;
+}
+
+
+body.inline-webadmin{
+  padding:0 !important;
+  margin:0 !important;
+  height:100% !important;
+  overflow:hidden;
+  background-color: $window;
+}
+
+.inline-webadmin .panel{
+  height:100%;
+  width:100%;
+  padding-bottom: 58px;
+}
+
+.inline-webadmin .panel-body{
+  position:relative;
+  height:100%;
+}
+
+.inline-webadmin .panel-footer{
+  position:absolute;
+  bottom:0;
+  width:100%;
+}
+
+.inline-webadmin .panel-body-big{
+  margin-top: 60px;
+}
+
+.hint{
+  border: 1px solid $dark5;
+  color: $light5;
+  background-color: $dark10;
+}
+
+.checkbox {
+  margin-left : 22px;
+  .text {
+    color : $light;
+  }
+
+  & input:hover ~ .checkmark {
+    svg polygon.box,
+    svg polyline.box {
+      stroke : $light_l2;
+    }
+
+    & ~ .text {
+      color : $light_l2;
+    }
+  }
+
+  & input:active ~ .checkmark {
+    svg polygon.box,
+    svg polyline.box {
+      stroke : $buttonText !important;
+    }
+
+    & ~ .text {
+      color : $buttonText !important;
+    }
+  }
+
+  & input:checked ~ .checkmark {
+    svg polygon.box,
+    svg polyline.tick,
+    svg polyline.box {
+      stroke : $buttonText !important;
+    }
+
+    & ~ .text {
+      color : $buttonText !important;
+    }
+  }
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  & svg polygon.box {
+    stroke            : $light;
+  }
+
+  & svg polyline.box {
+    stroke            : $light;
+  }
+
+  & svg polyline.tick {
+    stroke            : $light;
+  }
+}

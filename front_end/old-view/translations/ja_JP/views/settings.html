@@ -1,0 +1,226 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <system-info></system-info>
+        </div>
+        <div class="col-md-8 col-md-pull-4">
+            <uib-alert type="danger" ng-if="settings.flags.noHDD">
+                このデバイスは、インストールされているハード ディスク ドライブで動作するものです<br>デバイスをオフにして、ハード ディスク ドライブを取り付けます
+            </uib-alert>
+            <uib-alert type="danger" ng-if="!settings.flags.noHDD && settings.flags.noNetwork">
+                このデバイスにはネットワーク接続が必要です<br>ローカルネットワークやインターネットに接続してください
+            </uib-alert>
+            <uib-alert type="danger" ng-if="!settings.flags.noHDD && !settings.flags.noNetwork && settings.flags.wrongNetwork">
+                このデバイスは、不適切なネットワーク構成です<br> IP アドレスを設定しネットワークに接続してください
+            </uib-alert>
+
+
+            <uib-tabset ng-hide="settings.flags.brokenSystem || settings.flags.cleanSystem">
+                <uib-tab heading="{{L.settings.tabs.server}}" active="active.server">
+                    <div ng-if="user.isOwner">
+                        <form novalidate name="settingsForm" class="form-horizontal" role="form" >
+                            <h3>ポート</h3>
+                            <div class="form-group" ng-class="{'has-error':!settingsForm.port.$valid}">
+                                <div class="col-xs-6">
+                                    <input type="number" class="form-control" id="port" placeholder="ポート" name="port" ng-model="settings.port"
+                                           min="1"  max="65000"
+                                           pattern ="^\d*$" required>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <button type="button" class="btn btn-primary" ng-disabled="!settingsForm.$valid" ng-click="save()">ポートを変更</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3>サーバーをリセット</h3>
+                        <p>この操作は、このサーバーをデフォルトに戻します(データベースのクリアと構成のリセット)。
+                            サーバーは現在のシステムから切り離されます。 ビデオのアーカイブはそのまま残ります。</p>
+                        <p><button type="button" class="btn btn-default" ng-click="openRestoreDefaultsDialog()">工場出荷時の状態に戻します</button></p>
+                    </div>
+                    <div ng-if="user.isOwner">
+                        <h3>システムからサーバーを切離す</h3>
+                        <p>このアクションは、データベース、ローカルユーザーおよび設定を保持しているシステムからサーバーを切り離します。
+                            ビデオのアーカイブはそのまま残ります。 <b>クラウドユーザーは削除されます。 </b></p>
+                        <p><button class="btn btn-default" ng-click="disconnectFromSystem()">システムからサーバーを切離す</button></p>
+                    </div>
+                    <div>
+                        <h3>再起動</h3>
+                        <p><button type="button" class="btn btn-default" ng-click="restart()">サーバー再起動</button>                            
+<button type="button" class="btn btn-default" ng-if="canHardwareRestart" ng-click="hardwareRestart()">再起動</button></p>
+                    </div>
+                    <div ng-if="user.isOwner">
+                        <form novalidate name="rootPasswordForm" class="form-horizontal" role="form">
+                            <h3>Adminパスワードの変更</h3>
+                            <p>クラウドに接続されていない場合、ユーザー"admin"のパスワード、およびリカバリーパスワード (root、一部環境のみ) が変更されます。<br>
+それ以外はリカバリーパスワードのみを変更します。</p>
+                            <div class="col-sm-6">
+                                <password-input auto-focus="false" ng-model="settings.rootPassword"></password-input>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <button type="button" class="btn btn-primary" ng-disabled="!rootPasswordForm.$valid"
+                                        ng-click="changePassword()">パスワードの変更</button>
+                            </div>
+                        </form>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="{{L.settings.tabs.system}}" active="active.system">
+                    <div>
+                        <h3>名前</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" ng-model="settings.systemName">
+                            </div>
+
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-default" ng-click="renameSystem()">システム名を変更</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="canMerge" >
+                        <form class="form-horizontal" >
+                            <h3>システム統合</h3>
+                            <p><button type="button" class="btn btn-default" ng-click="openJoinDialog()">システム統合</button></p>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3>{{Config.cloud.productName}}</h3>
+
+                        <div ng-if="cloudSystemID">
+                            <p>このシステムは {{Config.cloud.productName}}にリンクされています。システムオーナー: <b>{{cloudAccountName}}</b></p>
+                            <p ng-if="canConnectToCloud"><button class="btn btn-default" ng-click="disconnectFromCloud()">{{Config.cloud.productName}}から切断</button></p>
+                            <p><a ng-if="!mode.liteClient"
+                                  ng-href="{{Config.cloud.portalUrl}}{{Config.cloud.portalSystemUrl.replace('{systemId}',cloudSystemID) + Config.cloud.webadminContext}}"
+                                  target="_blank">{{Config.cloud.productName}} ポータルに移動</a></p>
+                        </div>
+
+                        <div ng-if="!cloudSystemID">
+                            <uib-alert type="warning">このシステムは、{{Config.cloud.productName}}にリンクされていません
+<a ng-if="!mode.liteClient"
+                                   ng-href="{{Config.cloud.portalUrl}}"
+                                   target="_blank">詳細情報</a></uib-alert>
+                            <uib-alert type="danger" ng-if="!hasInternetOnServer">{{Config.cloud.productName}}の設定を行うためには、サーバーをインターネットに接続してください。</uib-alert>
+                            <uib-alert type="danger" ng-if="hasInternetOnServer && !hasInternetOnClient">システムを{{Config.cloud.productName}}に接続するのにインターネット接続が必要です</uib-alert>
+                            <p ng-if="canConnectToCloud"><button
+                                    class="btn btn-default"
+                                    ng-click="connectToCloud()" ng-disabled="!hasInternetOnServer || !hasInternetOnClient">{{Config.cloud.productName}} への接続</button>                                
+<a ng-if="!mode.liteClient"  class="btn btn-default"
+                                   ng-href="{{Config.cloud.portalUrl + Config.cloud.portalRegisterUrl + Config.cloud.webadminContext}}"
+                                   target="_blank">{{Config.cloud.productName}} アカウントを作成します</a></p>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <h3>トラフィックの暗号化</h3>
+                        <form novalidate name="trafficSettingsForm" class="form-horizontal" role="form" >
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           ng-model="trafficSettings.trafficEncryptionForced"
+                                           ng-change="checkTrafficEncryption()">
+                                    <span class="checkmark">
+                                        <svg viewbox="0 0 20 16">
+                                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="text">強制的にトラフィックを暗号化する</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           ng-disabled="!trafficSettings.trafficEncryptionForced"
+                                           ng-model="trafficSettings.videoTrafficEncryptionForced">
+                                    <span class="checkmark">
+                                        <svg viewbox="0 0 20 16">
+                                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                                            <polyline class="box"
+                                                      points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="text">強制的にビデオトラフィックを暗号化する</span>
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-click="saveTrafficSettings()">保存</button>
+                        </form>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="{{L.settings.tabs.device}}" active="active.device" ng-if="controlDevice">
+                    <div ng-if="settings.flags.canSetupNetwork">
+                        <h3>デバイス ネットワーク設定</h3>
+                        <network-settings settings="networkSettings[0]" ng-if="networkSettings"></network-settings>
+                        <button class="btn btn-default" ng-click="saveNetworkSettings()">設定を保存してデバイスを再起動する</button>
+                    </div>
+                    <div ng-if="settings.flags.canSetupTime">
+                        <h3>日付と時刻</h3>
+                        <form name="timeSettings">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><label for="timeZone">タイムゾーン</label></td>
+                                        <td><label for="date">日付</label></td>
+                                        <td><label for="time">時間</label></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><select class="form-control"
+                                                    ng-options="zone.id as zone.name for zone in timeZones"
+                                                    id="timeZone"
+                                                    name="timeZone"
+                                                    ng-model="dateTimeSettings.timeZone"
+                                                    required></select></td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       id="date" name="date"
+                                                       class="form-control"
+                                                       uib-datepicker-popup="{{Config.dateSettingsFormat}}"
+                                                       ng-model="dateTimeSettings.dateTime"
+                                                       required
+ is-open="dateTimeSettings.openDate"
+                                                       close-text="Close" />
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            class="btn btn-default"
+                                                            ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div ng-model="dateTimeSettings.dateTime" uib-timepicker></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        <button class="btn btn-default" ng-click="saveDateTime()">日付と時刻を保存</button>
+                    </div>
+                    <div ng-if="(canRestoreSettings || canRestoreSettingsNotNetwork)">
+                        <h3>デフォルトの設定を復元</h3>
+                        <p><button type="button" class="btn btn-default" ng-if="canRestoreSettings" ng-click="restoreSettings()">完全リストア</button>                            
+<button type="button" class="btn btn-default" ng-if="canRestoreSettingsNotNetwork" ng-click="restoreSettingsNotNetwork()">ネットワーク設定以外すべてをリストア</button></p>
+                    </div>
+                    <div ng-if="canRunClient || canStopClient">
+                        <h3>サーバー上のクライアント アプリケーションを実行</h3>
+                        <p><button type="button" class="btn btn-default" ng-if="canRunClient" ng-click="runClient()">クライアントを実行</button>                            
+<button type="button" class="btn btn-default" ng-if="canStopClient" ng-click="stopClient()">クライアントを停止</button></p>
+                        <p>キーボード/マウス、またはモバイル アプリケーションを使用して制御します。</p>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>

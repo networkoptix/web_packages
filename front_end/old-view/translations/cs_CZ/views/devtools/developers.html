@@ -1,0 +1,76 @@
+<div class="container">
+    <ng-include src="Config.viewsDir + 'devtools/feedback.html'"></ng-include>
+    <div ng-if="developersFeedbackForm">
+        <h2>Vývojářské nástroje</h2>
+        <p>
+            Máte představu o tom, jak vylepšit naše nástroje pro vývojáře nebo chcete jen začít konverzaci?
+            Chcete se zeptat, nebo najít další informace o integraci?
+        </p>
+        <p ng-if="developersFeedbackForm"><a ng-href="{{developersFeedbackForm}}" target="_blank">Fórum vývojářů</a></p>
+        <p ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">Znalostní databáze pro vývojáře</a></p>
+    </div>
+
+    <div>
+        <h3>Generátor všeobecných událostí</h3>
+        <p>
+            Všeobecná událost je metoda odesílání událostí ze systémů třetích stran do systému,
+            který může být použit k spuštění systémových akcí v nástroji Akce a pravidla.
+            Generátor všeobecných událostíje nástroj, který vývojářům a integrátorům pomáhá vytvářet
+            a testovat upozornšní všeobecných událostí HTTP.
+        </p>
+        <p><a href="#/developers/events">Generátor všeobecných událostí</a></p>
+    </div>
+    <div>
+        <h3>Server API</h3>
+        <p>
+            REST API, které vývojářům poskytuje přístup k téměř všem funkcím systému dostupným v běžném
+            klientovi: dotazování / správa systémových prostředků (servery, kamery, uživatelé, oprávnění), stahování živého nebo nahraného videa
+            ze systému, generování událostí, vytváření pravidla, ovládání PTZ kamer a další.
+        </p>
+        <p>
+            <a href="#/developers/api"><b> Nástroj pro testování API (nový) </b></a>
+            - interaktivní dokumentace a nástroje pro testování volání API <br>
+            <a href="#/developers/changelog"> API Changelog </a>
+            - seznam zásadních změn v API od poslední dokumentace <br>
+            <a id="api-doc" href="api.xml" target="_blank"> API </a>
+            - úplný seznam dostupných volání API serveru<br>
+        </p>
+
+    </div>
+    <div>
+        <h3>Panel podrobností o kameře</h3>
+        <p>
+            Zobrazí další vývojářský důležité informace o kamerách ve webovém rozhraní administrátora:
+        </p>
+        <ul>
+            <li>ID kamery</li>
+            <li>Odkazy pro všechny dostupné video streamy</li>
+            <li>Přímý export videa z prohlížeče</li>
+        </ul>
+        <p>
+            Chcete-li otevřít panel Podrobnosti o kameře - přejděte do webového rozhraní administrátora, zvolte <a href="#/view"> Zobrazit </a>,
+            vyberte požadovanou kameru, klikněte na ikonu nastavení (ozubené kolo) a poté zvolte "Detaily kamery"
+        </p>
+        <p><a href="#/view/?cameraLinks">otevřít panel detaily o kameře</a></p>
+    </div>
+    <div>
+        <h3>SDK zdroje videa</h3>
+        <p>
+            SDK poskytuje možnost integrovat téměř jakýkoli živý nebo zaznamenaný video zdroj (IP kamery,
+            NVR, DVR atd.) Do systému a umožňuje vytvářet metody pro objevování, zobrazování, analýzu
+            a nahrávání videa. To také umožňuje integrovat I / O porty a zařízení, stejně jako informace o detekci pohybu
+            údaje ze zařízení 3. stran.
+        </p>
+        <p><a id="sdk-video" ng-href="#/sdkeula/sdk" >získat SDK</a></p>
+    </div>
+
+    <div>
+        <h3>SDK pro úložiště</h3>
+        <p>
+            Úložiště SDK umožňuje vývojářům číst nebo zapisovat do libovolného umístění úložiště: místního, vzdáleného a dokonce
+            cloudového. Vytvoření zásuvného modulu úložiště vyžaduje implementaci standardních funkcí, jako například: I / O stream, pokud existuje soubor, smazat soubor, seznam souborů ve složce atd. Úložiště SDK obsahuje příklad použití serveru FTP
+            jako umístění úložiště.
+        </p>
+        <p><a id="sdk-storage" ng-href="#/sdkeula/storage_sdk" >získat SDK</a></p>
+    </div>
+</div>
