@@ -10,8 +10,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -25,7 +23,7 @@ from api import models
 from api.controllers.cloud_api import Account, Auth
 from api.account_backend import get_ip
 from api.helpers.exceptions import (
-    APIRequestException, APINotAuthorisedException,
+    APIRequestException, APINotAuthorisedException, APILogicException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session)
 from api.views.account_serializers import (
@@ -53,13 +51,6 @@ code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_S
 
 # Swagger Responses
 account__response = openapi.Response('Account info.', AccountSerializer)
-
-
-def extract_tokens(token):
-    return {
-        'access_token': token['access_token'],
-        'refresh_token': token['refresh_token']
-    }
 
 
 def kill_tokens(request):
@@ -110,14 +101,15 @@ def register(request):
     data['IP'] = get_ip(request)
 
     account = models.Account.objects.filter(email=data['email']).first()
-    if not account or account.is_active:
-        models.AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
+    if not account:
         serializer = CreateAccountSerializer(data=data)
         if not serializer.is_valid():
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
         logger.debug('/api/account/register calling serializer.save')
         serializer.save()
+    elif account.is_active:
+        raise APILogicException('User already registered', ErrorCodes.account_exists)
     else:
         models.AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
 
@@ -174,21 +166,21 @@ def login(request):
     return login_helper(request, token, user)
 
 
-@api_view(["POST"])
-@permission_classes((AllowAny, ))
-def login_with_code(request):
-    require_params(request, ["code"])
-    ip = get_ip(request)
-    token = Auth.get_access_token(request.data.get("code"), ip)
-    validate_token = Auth.validate_token(token['access_token'])
-
-    try:
-        user = models.Account.objects.get(email=validate_token['username'])
-    except models.Account.DoesNotExist:
-        raise APINotFoundException("User not in cloud")
-
-    request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-    return login_helper(request, token, user)
+# @api_view(["POST"])
+# @permission_classes((AllowAny, ))
+# def login_with_code(request):
+#     require_params(request, ["code"])
+#     ip = get_ip(request)
+#     token = Auth.get_access_token(request.data.get("code"), ip)
+#     validate_token = Auth.validate_token(token['access_token'])
+#
+#     try:
+#         user = models.Account.objects.get(email=validate_token['username'])
+#     except models.Account.DoesNotExist:
+#         raise APINotFoundException("User not in cloud")
+#
+#     request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+#     return login_helper(request, token, user)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
@@ -398,7 +390,6 @@ def activate(request):
         user = models.Account.objects.get(email=email)
         user.activated_date = timezone.now()
         user.save(update_fields=['activated_date'])
-        return api_success()
     elif 'user_email' in request.data:
         user_email = request.data['user_email'].lower()
         Account.reactivate(user_email)
@@ -459,10 +450,10 @@ def restore_password(request):
 def check_account_in_portal(request):
     require_params(request, ('email',))
     email = request.data['email']
-    email_exists = models.AccountManager.is_email_in_portal(email)
+    account = models.Account.objects.filter(email=email).first()
     return api_success({
-        'active': email_exists and models.Account.objects.get(email=email).activated_date != None,
-        'emailExists': email_exists
+        'active': bool(account) and account.activated_date is not None,
+        'emailExists': bool(account)
     })
 
 
@@ -534,6 +525,7 @@ class PermissionsAutocomplete(autocomplete.Select2QuerySetView):
 
     def get_selected_result_label(self, item):
         return item.name
+
 
 class AccountCustomPropertyView(APIView):
     """

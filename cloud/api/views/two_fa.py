@@ -9,11 +9,11 @@ from api.controllers.cloud_api import Auth
 from api.helpers.exceptions import api_success
 
 
-class TwoFactorPermissionsMixin(APIView):
+class TwoFactorPermissionsMixin:
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return super().get_permissions()
+        return self.get_permissions()
 
 
 class BackupCodeSerializer(serializers.Serializer):
@@ -31,7 +31,7 @@ class VerificationSerializer(serializers.Serializer):
     verification_code = serializers.CharField(required=True)
 
 
-class TwoFactorVerification(TwoFactorPermissionsMixin):
+class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = None
 
@@ -52,7 +52,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin):
         return api_success(Auth.generate_2fa_key(request))
 
 
-class BackupCode(TwoFactorPermissionsMixin):
+class BackupCode(TwoFactorPermissionsMixin, APIView):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = None
 

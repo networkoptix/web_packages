@@ -196,13 +196,15 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             'NAME': cloud_db['database'],
             'OPTIONS': {
                 'sql_mode': 'TRADITIONAL',
-                'charset': 'utf8mb4',
                 'init_command': 'SET \
                     character_set_server=utf8mb4,\
                     collation_server = utf8mb4_unicode_ci'
             }
         }
     }
+
+    if not LOCAL_ENVIRONMENT and not TESTING:
+        DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'
 
     if '--test-live-db' in sys.argv or '-tld' in sys.argv and INSTANCE not in ('prod', 'stage'):
         DATABASES['default']['TEST'] = {'NAME': cloud_db['database']}
@@ -703,7 +705,8 @@ LINKS_LIVE_TIMEOUT = 300  # Five minutes
 PASSWORD_REQUIREMENTS = {
     'minLength': 8,
     'requiredRegex': re.compile("^[\x21-\x7E]|[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$"),
-    'commonList': 'static/_source/blue/static/scripts/commonPasswordsList.json'
+    'commonList': 'static/_source/blue/static/scripts/commonPasswordsList.json',
+    'common_passwords': {}
 }
 
 common_list_file = PASSWORD_REQUIREMENTS['commonList']

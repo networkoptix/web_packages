@@ -176,28 +176,28 @@ def authenticate(request):
     return api_success(data)
 
 
-@swagger_auto_schema(method="GET", auto_schema=None,
-                     operation_description="Login using existing session",
-                     manual_parameters=[client_id_param, redirect_uri_param, response_type_param],
-                     responses={
-                         200: successful_authenticate_response
-                     })
-@api_view(["GET"])
-@permission_classes((IsAuthenticated, ))
-def authenticate_with_session(request):
-    require_params(request, ("redirect_uri", "response_type"))
-    if request.query_params["response_type"] != Auth.RESPONSE_TYPE.code:
-        raise APIRequestException("Invalid value for response_type. It must be code.")
-
-    ip = get_ip(request)
-    redirect_uri = request.query_params["redirect_uri"]
-    state = request.query_params.get("state")
-    code = Auth.get_code(grant_type=Auth.GRANT_TYPE.refresh_token,
-                         refresh_token=request.session.get("refresh_token"),
-                         ip=ip,
-                         redirect_uri=redirect_uri)
-
-    return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
+# @swagger_auto_schema(method="GET", auto_schema=None,
+#                      operation_description="Login using existing session",
+#                      manual_parameters=[client_id_param, redirect_uri_param, response_type_param],
+#                      responses={
+#                          200: successful_authenticate_response
+#                      })
+# @api_view(["GET"])
+# @permission_classes((IsAuthenticated, ))
+# def authenticate_with_session(request):
+#     require_params(request, ("redirect_uri", "response_type"))
+#     if request.query_params["response_type"] != Auth.RESPONSE_TYPE.code:
+#         raise APIRequestException("Invalid value for response_type. It must be code.")
+#
+#     ip = get_ip(request)
+#     redirect_uri = request.query_params["redirect_uri"]
+#     state = request.query_params.get("state")
+#     code = Auth.get_code(grant_type=Auth.GRANT_TYPE.refresh_token,
+#                          refresh_token=request.session.get("refresh_token"),
+#                          ip=ip,
+#                          redirect_uri=redirect_uri)
+#
+#     return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(code, state))}")
 
 
 @swagger_auto_schema(methods=["POST"],  # auto_schema=None,
