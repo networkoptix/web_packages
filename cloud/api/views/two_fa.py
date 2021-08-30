@@ -1,4 +1,5 @@
 from django.utils.decorators import method_decorator
+from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import decorators, serializers
@@ -13,10 +14,14 @@ class TwoFactorPermissionsMixin:
     def get_permissions(self):
         if self.request.method == "GET":
             return [AllowAny()]
-        return self.get_permissions()
+        return super().get_permissions()
 
 
-class BackupCodeSerializer(serializers.Serializer):
+class CreateBackupCodeSerializer(serializers.Serializer):
+    count = serializers.IntegerField(required=False, default=8, min_value=1)
+
+
+class DeleteBackupCodeSerializer(serializers.Serializer):
     backup_codes = serializers.CharField()
 
     @staticmethod
@@ -66,18 +71,42 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         data = verificationSerializer.validated_data
         return api_success(Auth.verify_backup_code(data["verification_code"], data["access_code"]))
 
+    @method_decorator(swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "count": openapi.Schema(type=openapi.TYPE_INTEGER, default=8)
+            }
+        ),
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_ARRAY,
+                items=openapi.Items(type=openapi.TYPE_OBJECT)
+            )
+        }
+    ))
     def post(self, request, *args, **kwargs):
         """
         Generates and save a new backup code for the user.
         """
-        return api_success(Auth.generate_backup_code(request))
+        count = CreateBackupCodeSerializer(request.data).data.get("count")
+        old_codes = ",".join(map(lambda x: x["backup_code"], Auth.get_active_backup_codes(request)))
+        Auth.delete_backup_codes(request, codes=old_codes)
 
-    @method_decorator(swagger_auto_schema(request_body=BackupCodeSerializer))
+        return api_success(Auth.generate_backup_code(request, count))
+
+    @method_decorator(swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "backup_codes": openapi.Schema(type=openapi.TYPE_STRING)
+        },
+        required=["backup_codes"]
+    )))
     def delete(self, request, *args, **kwargs):
         """
         Codes should be separated by “,“. If no codes specified, all codes will be deleted for the user.
         """
-        backupCodeSerializer = BackupCodeSerializer(data=request.data)
+        backupCodeSerializer = DeleteBackupCodeSerializer(data=request.data)
         backupCodeSerializer.is_valid()
         data = backupCodeSerializer.validated_data
         return api_success(Auth.delete_backup_codes(request, data["backup_codes"]))

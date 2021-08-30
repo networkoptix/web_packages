@@ -790,8 +790,8 @@ class Auth(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def generate_backup_code(request, headers=None):
-        return post_wrapper(f"{CLOUD_2FA_URL}/backupCodes/", headers=headers)
+    def generate_backup_code(request, count, headers=None):
+        return post_wrapper(f"{CLOUD_2FA_URL}/backupCodes/", json={"count": count}, headers=headers)
 
     @staticmethod
     @validate_response
