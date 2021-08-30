@@ -11,6 +11,7 @@ ${PORT INPUT}                       //div/span[contains(text(),"${PORT TEXT}")]/
 ${CHECK STATUS BUTTON}              //nx-alert-block//button/span[contains(text(),"${CHECK STATUS TEXT}")]/..
 ${SERVER DETAILED INFO BUTTON}      //div[contains(@class, "server-info")]//header//button/span[contains(text(),"${DETAILED INFO TEXT}")]/..
 ${SERVER 1 LIST MENU NAME}          //nx-level-3-item//a//span[contains(text(),"server 1")]
+${SERVER OFFLINE ALERT}             //nx-alert-block//span[contains(text(),'${SERVER OFFLINE TEXT}')]
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..
 ${RESTART SERVER FORM}              //form[@name="restartServerForm"]

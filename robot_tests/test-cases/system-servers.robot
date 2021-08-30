@@ -435,13 +435,19 @@ Online two servers
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     
-Offline two servers
-    [Tags]    C70955    threaded    deb
+Server1 is online Server2 is offline
+    [Tags]    C70955    threaded
+    Select Server By Name    server 1
+    Element Should be Enabled    ${PORT INPUT}
+    Element Should be Enabled    ${RESTART SERVER BUTTON}
+    Element Should be Visible    ${SERVER DETAILED INFO BUTTON}
+    stop docker server    ${server 2}[id]
     Select Server By Name    server 2
     Wait Until Element is Visible    ${CHECK STATUS BUTTON}
-    Element Should be Disabled    ${PORT INPUT}
     Element Should be Disabled    ${RESTART SERVER BUTTON}
-    Element Should Not be Visible    ${SYSTEM NAME OFFLINE}
+    Element Should be Visible    ${SERVER DETAILED INFO BUTTON}
+    Element Should be Disabled    ${PORT INPUT}
+    Element Text Should Be    ${SERVER OFFLINE ALERT}    ${SERVER OFFLINE TEXT}
 
 Owner/Admin has Access
     [Tags]    C69853    C70927    threaded
