@@ -41,7 +41,7 @@ export interface DataStructureMeta {
     options?: Record<any, any>,
     icon?: string,
     tooltip?: string,
-    styles? : string
+    styles? : string,
     filter? : DataStructureFilter
 }
 

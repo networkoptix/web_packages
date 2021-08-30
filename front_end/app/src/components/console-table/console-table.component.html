@@ -26,7 +26,7 @@
             <div>{{selectedManifest.searchSubheading}}</div>
         </div>
     </nx-section>
-    <div class="console-table-wrapper">
+    <div *ngIf="!noClients" class="console-table-wrapper">
         <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48">
             <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
                 <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative">
@@ -75,8 +75,10 @@
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ASYNC_HANDLER">
                         <td cdk-cell *cdkCellDef="let element"
-                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                            [style.width.px]="fixedWidths[field.name] || 60"
+                            [class]="'dynamic-size type-' + field.type + ' ' + (field.meta?.styles || '')">
                             <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])"
+                                (resize)="updateFixedWidth(field.name, $event, field.meta?.options?.defaultWidth)"
                                 [ngClass]="asyncInProgress[element[field.name].lookupKey]
                                     ? 'in-progress-wrapper'
                                     : asyncErrors[element[field.name].lookupKey]
@@ -186,7 +188,7 @@
             <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>
         </div>
     </nx-section>
-    <nx-section [nonPadded]="true">
+    <div>
         <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')">{{action.title}}</button>
-    </nx-section>
+    </div>
 </nx-block>

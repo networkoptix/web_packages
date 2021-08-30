@@ -196,7 +196,9 @@ export class NxConsoleTableComponent {
     showSearch = false;
     activeFilter: string | false = false;
     update$ = new BehaviorSubject(null);
-    filterStates: Record<string, FilterState> = {}
+    filterStates: Record<string, FilterState> = {};
+    fixedWidths = {};
+    noClients = false;
 
     selectedManifest: ConsoleManifest;
     selectedData: TableDataSource;
@@ -244,6 +246,7 @@ export class NxConsoleTableComponent {
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
                 const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.manifest.settings);
+                this.noClients = !data.length;
                 this.showSearch ||= !!search;
                 const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);
                 if (!isNaN(perPageFromParam)) {
@@ -300,6 +303,10 @@ export class NxConsoleTableComponent {
         if (!this.route.snapshot.queryParams.search || !this.showSearch) {
             this.showSearch = !this.showSearch;
         }
+    }
+
+    updateFixedWidth(column, event, defaultWidth = 0) {
+        this.fixedWidths[column] = Math.max(defaultWidth, Math.round(event.width + 24), this.fixedWidths[column] || 0);
     }
 
     filterUpdaterFactory = (fieldName: string) => (payload: FilterUpdatePayload) => {

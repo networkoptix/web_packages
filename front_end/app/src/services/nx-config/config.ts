@@ -315,6 +315,9 @@ export const nxConfig: IConfig = {
                     name  : 'downloadAsync',
                     label : '',
                     meta  : {
+                        options: {
+                            defaultWidth: 148
+                        },
                         icon    : 'download.svg',
                         tooltip : 'Download'
                     }

@@ -15,7 +15,7 @@ section.card {
     padding: 16px;
 }
 
-table, td, .table-content-placeholder {
+td {
     border: 1px solid $light4;
 }
 
@@ -284,4 +284,8 @@ button.reset-search {
 
 table {
     min-width: 100%;
+}
+
+.dynamic-size {
+    overflow-x: hidden;
 }
