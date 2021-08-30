@@ -10,7 +10,10 @@
     <div class="modal-body">
         <ng-container *ngFor="let structure of manifest.fields">
             <section *ngIf="!structure?.hidden">
-                <label>{{structure.label}}</label>
+                <label>
+                    <span>{{structure.label}}</span>
+                    <span *ngIf="structure.meta?.options?.required" class="pl-1 pr-3" [ngbTooltip]="'This field is required' | translate">*</span>
+                </label>
                 <ng-container [ngSwitch]="structure.type">
                     <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
                         [selected]="dropdownLookup[structure.name]?.selected"

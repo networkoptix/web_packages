@@ -13,6 +13,8 @@ import { ConfigType, ConsoleSection }   from '@components/console-table/console-
 import { NxHeaderService }              from '@services/nx-header.service';
 import { NxConsoleService }             from '@pages/developer-console/console/console.service';
 import { ConsoleMode }                  from '../console.component';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
 
 export enum DataStructureType {
     TEXT='text',
@@ -112,6 +114,7 @@ export class NxDevConsoleEditComponent {
 
     INPUT_TYPE = ConfigType;
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     saveContext: Process;
     context: ContextManifest;
     errors: Record<string, string[]> = {};
@@ -120,6 +123,7 @@ export class NxDevConsoleEditComponent {
 
     constructor(
         configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private router: Router,
         private processService: NxProcessService,
@@ -130,6 +134,7 @@ export class NxDevConsoleEditComponent {
         private location: Location
     ) {
         this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

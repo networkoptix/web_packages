@@ -340,7 +340,12 @@ export const nxConfig: IConfig = {
                         name        : 'name',
                         label       : 'Internal Name',
                         placeholder : 'Custom VMS Client Name',
-                        description : 'Name is hidden from external users'
+                        description : 'Name is hidden from external users',
+                        meta        : {
+                            options: {
+                                required: true
+                            }
+                        }
                     },
                     {
                         type  : ConfigType.DROPDOWN,

@@ -36,3 +36,13 @@ section {
         @include typography.regular13light10;
     }
 }
+
+.apply-wrapper {
+    background: $additional_light2;
+    border-top: 1px solid $light4;
+    margin: -1px 0 -16px 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    padding: 16px 0;
+}

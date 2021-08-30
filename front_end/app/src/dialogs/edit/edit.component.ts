@@ -17,6 +17,7 @@ import { NxHeaderService }                  from '@services/nx-header.service';
 import { NxConsoleService }                 from '@pages/developer-console/console/console.service';
 import { Router }                           from '@angular/router';
 import { ConsoleMode }                      from '@pages/developer-console/console/console.component';
+import { TranslateService }                 from '@ngx-translate/core';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {
@@ -64,6 +65,7 @@ export class EditModalContent implements ModalContent {
         private toastService: NxToastService,
         private cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
+        private translate: TranslateService,
         private router: Router,
         private consoleService: NxConsoleService
     ) {
@@ -72,9 +74,11 @@ export class EditModalContent implements ModalContent {
     }
 
     ngOnInit() {
-        if (!this.values) {
-            this.values = this.manifest.fields.reduce((values, { name }) => ({ ...values, [name]: '' }), {});
-        }
+        this.values = this.values
+            ? { ...this.values }
+            : this.manifest.fields.reduce((
+                values, { name }
+            ) => ({ ...values, [name]: '' }), {});
 
         const getMethod = (action: string) => {
             const [subAPI, method] = ({
@@ -116,31 +120,58 @@ export class EditModalContent implements ModalContent {
             delay     : this.CONFIG.alertTimeout
         };
 
-        this.createContext = this.processService.createProcess(() => getMethod('create')(this.values.name, this.values.base_vms),
+        const updateErrors = () => {
+            for (const { name, meta } of this.manifest.fields) {
+                const required = meta?.options?.required;
+                const missingValue = required && !this.values[name];
+                if (missingValue) {
+                    const existingErrors = this.errors[name] || [];
+                    this.errors[name] = [...existingErrors, this.translate.instant('This field is required')];
+                }
+            }
+        };
+
+        const createHandler = () => {
+            updateErrors();
+            if (Object.entries(this.errors).length) {
+                return Promise.reject();
+            }
+            return getMethod('create')(this.values.name, this.values.base_vms);
+        };
+
+        this.createContext = this.processService.createProcess(createHandler,
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
                 // this.toastService.show('Custom Client Created', options);
                 // this.close({ id: this.values.id, action: 'create' });
-            }, err => {
+            }, id => {
                 switch (this.modal) {
                     case ModalType.CLIENT_CREATE:
-                        const id = err;
-                        const asset = this.consoleService.unsavedAssets[id];
-                        this.close();
-                        const [currentRoute, params = ''] = this.router.url.split('?');
-                        const baseEditUrl = `${currentRoute}/${ConsoleMode.EDIT}`;
-                        const assetEditUrl = `${baseEditUrl}/${id}`;
-                        this.router.navigateByUrl(`${assetEditUrl}${params ? '?' + params : ''}`);
+                        if (id) {
+                            this.close();
+                            const [currentRoute, params = ''] = this.router.url.split('?');
+                            const baseEditUrl = `${currentRoute}/${ConsoleMode.EDIT}`;
+                            const assetEditUrl = `${baseEditUrl}/${id}`;
+                            this.router.navigateByUrl(`${assetEditUrl}${params ? '?' + params : ''}`);
+                        }
                         break;
 
                     default:
-                        console.error(err);
+                        console.error(id);
                         break;
                 }
             });
 
-        this.saveContext = this.processService.createProcess(() => getMethod('save')(this.values.id, this.values.name, this.values),
+        const updateHandler = () => {
+            updateErrors();
+            if (Object.entries(this.errors).length) {
+                return Promise.reject();
+            }
+            return getMethod('save')(this.values.id, this.values.name, this.values);
+        };
+
+        this.saveContext = this.processService.createProcess(updateHandler,
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
