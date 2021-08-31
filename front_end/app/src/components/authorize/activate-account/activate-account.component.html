@@ -8,7 +8,7 @@
                 [svgStyle]="{'width.px': '36', 'height.px': '36'}"
                 [applyClass]="true"></svg-icon>
         </button>
-        <h3 class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
+        <h3 *ngIf="!(activated$ | async)" class="authorize-header">{{ LANG.authorize.activateHeader() }}</h3>
     </div>
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"

@@ -79,7 +79,9 @@ describe('NxAccountSecurityComponent', () => {
                     permissions: [],
                     is_superuser: false,
                     id: 'test',
-                    email: 'test@test.com'
+                    email: 'test@test.com',
+                    is_authenticated        : false,
+                    cookie_reviewed         : true
                 };
                 fixture.detectChanges();
             }));

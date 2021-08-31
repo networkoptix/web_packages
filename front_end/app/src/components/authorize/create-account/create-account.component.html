@@ -18,8 +18,8 @@
     </ng-container>
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-    [ngStyle]="{ 'height': 'calc(100% - ' + createHeader.offsetHeight + 'px)' }">
-    <form #createAccountForm="ngForm" class="form" [ngClass]="{'hide-errors': hideErrors}">
+    *ngIf="createHeader" [ngStyle]="{ 'height': 'calc(100% - ' + createHeader.offsetHeight + 'px)' }">
+    <form #createAccountForm="ngForm" class="form">
         <div class="create-row" *ngIf="!existingEmail">
             <div class="email d-flex flex-column" [ngClass]="{ 'hasError': createAccountEmail.invalid && ((createAccountEmail.dirty && !createAccountEmail.errors?.pattern) || createAccountEmail.touched) }">
                 <label for="createEmail" translate>Email</label>
@@ -27,7 +27,6 @@
                     name="email"
                     componentId="email"
                     class="form-component"
-                    [hideErrors]="hideErrors"
                     [(ngModel)]="createEmail"
                     [lockEmail]="false"
                     [readonly]="createAccountProcess?.processing"
@@ -76,12 +75,11 @@
             </div>
         </div>
         <div class="create-row">
-            <div class="password" [ngClass]="{ 'hasError': !hideErrors || weakPassword }">
+            <div class="password" [ngClass]="{ 'hasError': weakPassword }">
                 <label for="password" translate>Password</label>
                 <nx-password-input
                     name="createAccountPassword"
                     componentId="createAccountPassword"
-                    [hideErrors]="hideErrors"
                     [hasError]="weakPassword"
                     class="form-component"
                     [(ngModel)]="createPassword"
@@ -94,7 +92,6 @@
                 <div class="mt-2">
                     <nx-password-input-validation
                         [forElement]="createAccountPassword"
-                        [hideErrors]="hideErrors"
                         [value]="createPassword"
                         (updateWeakPassword)="weakPassword = $event">
                     </nx-password-input-validation>

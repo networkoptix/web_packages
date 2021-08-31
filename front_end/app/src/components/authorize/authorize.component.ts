@@ -238,8 +238,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (this.initialData.redirect_url === 'redirect-oauth') {
             const { client_id, client_type } = this.initialData;
             this.router.navigate(['redirect-oauth'], {
-                queryParams: { code, client_id, client_type, view_type: this.viewType }}
-            );
+                queryParams: { code, client_id, client_type, view_type: this.viewType }
+            });
         } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
             this.initialData.redirect_url = link;
             this.currentState = AuthorizeState.confirm;

@@ -1,13 +1,15 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement, NgModule }                  from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { DebugElement, ElementRef, NgModule }      from '@angular/core';
 import { HttpClientTestingModule }                 from '@angular/common/http/testing';
 import { TranslateModule }                         from '@ngx-translate/core';
 import { By }                                      from '@angular/platform-browser';
-import { ActivatedRoute }                          from '@angular/router';
+import { ActivatedRoute, Router }                  from '@angular/router';
 import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
 import { AngularSvgIconModule }                    from 'angular-svg-icon';
+import { DirectivesModule }                        from '@directives/directives.module';
 import { CommonModule }                            from '@angular/common';
 import { of }                                      from 'rxjs';
+import { LocalStorageService }                     from 'ngx-webstorage';
 
 import { AuthorizeState, ClientType, NxAuthorizeComponent } from './authorize.component';
 import { NxAuthorizeEmailComponent }            from './email/email.component';
@@ -15,13 +17,19 @@ import { NxAuthorizePasswordComponent }         from './password/password.compon
 import { NxAuthorizeCreateAccountComponent }    from './create-account/create-account.component';
 import { NxAuthorizeActivateAccountComponent }  from './activate-account/activate-account.component';
 import { NxAuthorizeConfirmationComponent }     from './confirmation/confirmation.component';
+import { NxAuthorizeResetPasswordComponent }    from './reset-password/reset-password.component';
+import { NxAuthorizeResetRequestComponent }     from './reset-request/reset-request.component';
 import { NxAuthorizeConnectErrorComponent }     from './connect-error/connect-error.component';
+import { NxAuthorizeAuthCodeComponent }         from './auth-code/auth-code.component';
+import { NxAuthorizeBackupCodeComponent }       from './backup-code/backup-code.component';
 
 import { NxConfigService }           from '@services/nx-config';
 import { nxConfig }                  from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService }          from '@services/process.service';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxAccountService }          from '@services/account.service';
+import { WINDOW }                    from '@services/window-provider';
 import { ComponentsModule }          from '@components/components.module';
 
 @NgModule({
@@ -30,7 +38,7 @@ import { ComponentsModule }          from '@components/components.module';
 })
 class TranslateTestingModule {}
 
-describe('OAuth Test Suite', () => {
+fdescribe('OAuth Test Suite', () => {
     let component: NxAuthorizeComponent;
     let fixture: ComponentFixture<NxAuthorizeComponent>;
     let el: DebugElement;
@@ -53,66 +61,77 @@ describe('OAuth Test Suite', () => {
                 loginSystemSubheader    : () => 'With your %CLOUD_NAME% Account',
                 toAccountSubheader      : () => 'To {accountEmail}',
                 asAccountSubheader      : () => 'As {accountEmail}',
+                passwordDisconnect      : () => 'to disconnect system from %CLOUD_NAME%',
+                passwordMerge           : () => 'to merge systems',
+                createAccountHeader     : () => 'Create %CLOUD_NAME% Account',
                 loginErrorAdditional    : () => 'Please try again or login to the system directly with your local account.',
                 connectErrorAdditional  : () => 'Please try again later.',
-                setupErrorAdditional    : () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>'
+                setupErrorAdditional    : () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
+                passResetHeader         : () => 'Reset Password',
+                newPassHeader           : () => 'Set New Password'
             }
         }
     };
     nxConfig.dynamicMenus.authorizeFooter = {
-        title : 'Demo',
+        title       : 'Demo',
         description : 'demo',
-        nodes : [
+        nodes       : [
             {
-                name              : 'About %CLOUD_NAME% Cloud',
-                url               : '/content/about',
-                asset_id          : null,
-                authentication    : null,
-                display_name      : 'About %CLOUD_NAME% Cloud',
-                icon              : '',
-                new_window        : false,
-                next_item         : false,
-                breadcrumbs       : null,
-                related_asset_ids : [],
-                urlified          : '',
-                subtitle          : '',
-                name_raw          : ''
+                name                : 'About %CLOUD_NAME% Cloud',
+                url                 : '/content/about',
+                asset_id            : null,
+                authentication      : null,
+                display_name        : 'About %CLOUD_NAME% Cloud',
+                icon                : '',
+                new_window          : false,
+                next_item           : false,
+                breadcrumbs         : null,
+                related_asset_ids   : [],
+                urlified            : '',
+                subtitle            : '',
+                name_raw            : '',
+                queryParamsHandling : '',
+                nodes               : []
             },
             {
-                name              : 'Terms',
-                url               : '/content/eula',
-                asset_id          : null,
-                authentication    : null,
-                display_name      : 'Terms',
-                icon              : '',
-                new_window        : false,
-                next_item         : false,
-                breadcrumbs       : null,
-                related_asset_ids : [],
-                urlified          : '',
-                subtitle          : '',
-                name_raw          : ''
+                name                : 'Terms',
+                url                 : '/content/eula',
+                asset_id            : null,
+                authentication      : null,
+                display_name        : 'Terms',
+                icon                : '',
+                new_window          : false,
+                next_item           : false,
+                breadcrumbs         : null,
+                related_asset_ids   : [],
+                urlified            : '',
+                subtitle            : '',
+                name_raw            : '',
+                queryParamsHandling : '',
+                nodes               : []
             },
             {
-                name              : 'Privacy Policy',
-                url               : 'https://www.networkoptix.com/privacy-policy',
-                asset_id          : null,
-                authentication    : null,
-                display_name      : 'Privacy Policy',
-                icon              : '',
-                new_window        : false,
-                next_item         : false,
-                breadcrumbs       : null,
-                related_asset_ids : [],
-                urlified          : '',
-                subtitle          : '',
-                name_raw          : ''
+                name                : 'Privacy Policy',
+                url                 : 'https://www.networkoptix.com/privacy-policy',
+                asset_id            : null,
+                authentication      : null,
+                display_name        : 'Privacy Policy',
+                icon                : '',
+                new_window          : false,
+                next_item           : false,
+                breadcrumbs         : null,
+                related_asset_ids   : [],
+                urlified            : '',
+                subtitle            : '',
+                name_raw            : '',
+                queryParamsHandling : '',
+                nodes               : []
             }
         ]
     };
     const configMock = { getConfig: () => nxConfig };
     const processMock = {
-        classVariables: 'put value here'
+        createProcess: () => Promise.resolve()
     };
     const routeMock = {
         queryParams: of({
@@ -120,11 +139,34 @@ describe('OAuth Test Suite', () => {
             grant_type    : 'password',
             response_type : 'code',
             scope         : 'anythingElse'
-        })
+        }),
+        snapshot: { data: { action: '' } }
     };
 
     const cloudMock = {
         getCommonPasswords: () => of()
+    };
+
+    const accountMock = {
+        get: () => ({
+            can_publish_integration : false,
+            name                    : 'Test',
+            first_name              : 'Test',
+            isCloud                 : false,
+            is_staff                : false,
+            language                : 'en_US',
+            last_name               : '1234',
+            permissions             : [],
+            is_superuser            : false,
+            id                      : 'test',
+            email                   : 'test@test.com',
+            is_authenticated        : false,
+            cookie_reviewed         : true
+        })
+    };
+
+    const localStorageMock = {
+        retrieve: () => {}
     };
 
     beforeEach(waitForAsync(() => {
@@ -136,19 +178,28 @@ describe('OAuth Test Suite', () => {
                 NxAuthorizeCreateAccountComponent,
                 NxAuthorizeActivateAccountComponent,
                 NxAuthorizeConfirmationComponent,
-                NxAuthorizeConnectErrorComponent
+                NxAuthorizeResetPasswordComponent,
+                NxAuthorizeResetRequestComponent,
+                NxAuthorizeConnectErrorComponent,
+                NxAuthorizeAuthCodeComponent,
+                NxAuthorizeBackupCodeComponent
             ],
             imports: [
                 CommonModule, ReactiveFormsModule, FormsModule,
                 AngularSvgIconModule.forRoot(), HttpClientTestingModule,
-                TranslateTestingModule, ComponentsModule
+                TranslateTestingModule, ComponentsModule, DirectivesModule
             ],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: ActivatedRoute, useValue: routeMock },
                 { provide: NxCloudApiService, useValue: cloudMock },
-                { provide: NxProcessService, useValue: processMock }
+                { provide: NxProcessService, useValue: processMock },
+                { provide: NxAccountService, useValue: accountMock },
+                { provide: Router, useValue: {} },
+                { provide: ElementRef, useValue: {} },
+                { provide: LocalStorageService, useValue: localStorageMock },
+                { provide: WINDOW, useValue: window }
             ]
         }).compileComponents()
             .then(() => {
@@ -160,12 +211,27 @@ describe('OAuth Test Suite', () => {
     }));
 
     it('should create the component', () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
-    it('should have 3 footer items', () => {
+    it('should have 3 footer items when large', () => {
+        fixture.detectChanges();
+        component.windowLargeEnough = true;
         fixture.detectChanges();
         expect(component.footerItems.length).toBe(3);
+        const links = el.nativeElement.querySelectorAll('a');
+        expect(links.length).toBe(3);
+        expect(links[0].innerHTML).toBe('About %CLOUD_NAME% Cloud');
+        expect(links[1].innerHTML).toBe('Terms');
+        expect(links[2].innerHTML).toBe('Privacy Policy');
+    });
+
+    it('should have no footer when window is smaller', () => {
+        fixture.detectChanges();
+        expect(component.footerItems.length).toBe(3);
+        const links = el.nativeElement.querySelectorAll('a');
+        expect(links.length).toBe(0);
     });
 
     it('should set up default states', () => {
@@ -173,11 +239,11 @@ describe('OAuth Test Suite', () => {
         expect(component.clientType).toBe('loginToCloud');
         expect(component.currentState).toBe('email');
         expect(component.initialData).toEqual({
-            client_id     : 'someId',
+            client_id     : 'cloud',
             grant_type    : 'password',
             response_type : 'code',
             scope         : 'anythingElse',
-            redirect_url  : 'someUrl'
+            redirect_url  : ''
         });
     });
 
@@ -196,22 +262,15 @@ describe('OAuth Test Suite', () => {
         const emailHeader = el.nativeElement.querySelector('h3');
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('Create Account');
         expect(spans.length).toBe(1);
-    });
-
-    it('should load loginSystem email component', () => {
-        fixture.detectChanges();
-        component.clientType = ClientType.loginSystem;
-        fixture.detectChanges();
-        const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
-        const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginSystemHeader());
-        const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.loginSystemSubheader());
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0]).toBeFalsy();
+        expect(spans[0].innerHTML).toBe('Create Account');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Create Account');
+        expect(buttons[1].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
+        // click on next button, get enter email error message
     });
 
     it('should load connectSystemToCloud email component', () => {
@@ -224,9 +283,14 @@ describe('OAuth Test Suite', () => {
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
         expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('Create Account');
-        expect(spans.length).toBe(1);
+        const inputMessage = el.nativeElement.querySelector('p');
+        expect(inputMessage.innerText).toBe('This account will get owner access level');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Create Account');
+        expect(buttons[1].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
     });
 
     it('should load setupWizard email component', () => {
@@ -239,9 +303,14 @@ describe('OAuth Test Suite', () => {
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
         expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('Setup Non-cloud System');
-        expect(spans.length).toBe(1);
+        const inputMessage = el.nativeElement.querySelector('p');
+        expect(inputMessage.innerText).toBe('This account will get owner access level');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Setup Non-cloud System');
+        expect(buttons[1].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(2);
     });
 
     it('should load renewSessionDesktop email component', () => {
@@ -254,8 +323,11 @@ describe('OAuth Test Suite', () => {
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
         expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0]).toBeFalsy();
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(2);
     });
 
     it('should load renewSessionWeb email component', () => {
@@ -268,9 +340,12 @@ describe('OAuth Test Suite', () => {
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
         expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('Create Account');
-        expect(spans.length).toBe(1);
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Create Account');
+        expect(buttons[1].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
     });
 
     it('should load loginCloud password component', () => {
@@ -281,29 +356,62 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans[2].innerHTML).toBe('Back');
-        expect(spans.length).toBe(3);
+        expect(spans.length).toBe(5);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Forgot Password?');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(4);
     });
 
-    it('should load loginSystem password component', () => {
+    it('should load confirm password disconnect from system component', () => {
         fixture.detectChanges();
+        component.clientType = ClientType.passwordDisconnect;
+        component.emailLocked = true;
         component.currentState = AuthorizeState.password;
-        component.clientType = ClientType.loginSystem;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginSystemHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans[2].innerHTML).toBe('Back');
         expect(spans.length).toBe(3);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const disconnectMessage = el.nativeElement.querySelectorAll('p');
+        expect(disconnectMessage.length).toBe(1);
+        expect(disconnectMessage[0].innerHTML).toBe('to disconnect system from %CLOUD_NAME%');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(2);
+    });
+
+    it('should load confirm password merge systems component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordMerge;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans.length).toBe(3);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const disconnectMessage = el.nativeElement.querySelectorAll('p');
+        expect(disconnectMessage.length).toBe(1);
+        expect(disconnectMessage[0].innerText).toBe('to merge systems');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(2);
     });
 
     it('should load connect password component', () => {
@@ -315,12 +423,16 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans[2].innerHTML).toBe('Back');
-        expect(spans.length).toBe(3);
+        expect(spans.length).toBe(5);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Forgot Password?');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(4);
     });
 
     it('should load setupWizard password component', () => {
@@ -332,12 +444,16 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans[2].innerHTML).toBe('Back');
-        expect(spans.length).toBe(3);
+        expect(spans.length).toBe(5);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Forgot Password?');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(4);
     });
 
     it('should load renew session desktop password component', () => {
@@ -349,11 +465,15 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans.length).toBe(2);
+        expect(spans.length).toBe(4);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Forgot Password?');
+        expect(buttons[1].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
     });
 
     it('should load renew session web password component', () => {
@@ -365,11 +485,59 @@ describe('OAuth Test Suite', () => {
         expect(labels[0].innerHTML).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
-        const passwordSubHeader = el.nativeElement.querySelector('h4');
-        expect(passwordSubHeader.innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Forgot Password?');
-        expect(spans.length).toBe(2);
+        expect(spans.length).toBe(4);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Forgot Password?');
+        expect(buttons[1].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
+    });
+
+    it('should load 2fa code request component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.auth;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Authentication code');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans.length).toBe(4);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('No access to authentication app?');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
+    });
+
+    it('should load 2fa backup code request component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.backup;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Backup code');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans.length).toBe(5);
+        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[2].innerHTML).toBe('Need help?');
+        const links = el.nativeElement.querySelectorAll('a');
+        expect(links.length).toBe(1);
+        expect(links[0].innerHTML).toBe('Contact support');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Use authentication code');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
     });
 
     it('should load createAccount component', () => {
@@ -377,31 +545,45 @@ describe('OAuth Test Suite', () => {
         component.currentState = AuthorizeState.create;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels.length).toBe(6);
         expect(labels[0].innerHTML).toBe('Email');
         expect(labels[1].innerHTML).toBe('First Name');
         expect(labels[2].innerHTML).toBe('Last Name');
         expect(labels[3].innerHTML).toBe('Password');
-        expect(labels.length).toBe(5);
         const createHeader = el.nativeElement.querySelector('h3');
-        expect(createHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(createHeader.innerHTML).toBe(component.LANG.authorize.createAccountHeader());
         const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[3].innerHTML).toBe('Log In');
-        expect(spans[4].innerHTML).toBe('Back');
-        expect(spans.length).toBe(5);
-        // changed how existingEmail works, will revisit later
-        // component.existingEmail = 'create@example.co';
-        // fixture.detectChanges();
-        // const existingEmailSpans = el.nativeElement.querySelectorAll('span');
-        // expect(existingEmailSpans[0].innerHTML).toBe('For');
-        // expect(existingEmailSpans[1].innerHTML).toBe('create@example.co');
-        // expect(existingEmailSpans.length).toBe(7);
+        expect(spans.length).toBe(6);
+        expect(spans[2].innerHTML).toBe('I agree to the');
+        expect(spans[3].innerHTML).toBe('and');
+        const links = el.nativeElement.querySelectorAll('a');
+        expect(links.length).toBe(2);
+        expect(links[0].innerHTML).toBe('Terms and Conditions');
+        expect(links[1].innerHTML).toBe('Privacy policy');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Log In');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Create Account');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(4);
     });
 
-    it('should load activateAccount component', () => {
+    // it('should load createAccount with existing email for setup wizard clientType', () => {
+    //     const testEmail = 'create@example.co';
+    //     component.clientType = ClientType.setup;
+    //     component.loginEmail = testEmail;
+    //     fixture.detectChanges();
+    //     component.currentState = AuthorizeState.create;
+    //     fixture.detectChanges();
+    // });
+
+    it('should load activateAccount component', fakeAsync(() => {
         fixture.detectChanges();
         component.currentState = AuthorizeState.activate;
         // activated = false; fromEmail = false;
         fixture.detectChanges();
+        tick();
         let activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
         expect(activateHeaders[0].innerHTML).toBe(component.LANG.authorize.activateHeader());
@@ -409,10 +591,13 @@ describe('OAuth Test Suite', () => {
         let contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.createdAdditional());
-        let spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[0].innerHTML).toBe('Log In');
-        expect(spans[1].innerHTML).toBe('Back');
-        expect(spans.length).toBe(2);
+        let buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('Log In');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Next');
+        let icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
         // activated = true; fromEmail = false;
         component.activated$.next(true);
         fixture.detectChanges();
@@ -422,16 +607,60 @@ describe('OAuth Test Suite', () => {
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerHTML).toBeFalsy();
-        spans = el.nativeElement.querySelectorAll('span');
-        expect(spans.length).toBe(2);
+        buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
         // activated = true; fromEmail = true;
         component.fromEmail$.next(true);
         fixture.detectChanges();
+        activateHeaders = el.nativeElement.querySelectorAll('h3');
+        expect(activateHeaders.length).toBe(1);
+        expect(activateHeaders[0].innerHTML).toBe(component.LANG.authorize.activatedText());
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.activatedAdditional());
-        spans = el.nativeElement.querySelectorAll('span');
-        expect(spans.length).toBe(0);
+        buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(1);
+    }));
+
+    it('should load reset password request component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.request;
+        fixture.detectChanges();
+        const emailLabel = el.nativeElement.querySelectorAll('label');
+        expect(emailLabel[0].innerHTML).toBe('Email');
+        const emailHeader = el.nativeElement.querySelector('h3');
+        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.passResetHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans.length).toBe(1);
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].innerText).toBe('Back');
+        expect(buttons[1].innerText).toBe('Reset Password');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(1);
+    });
+
+    it('should load reset password component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.reset;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Password');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.newPassHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        console.log('spans', spans);
+        expect(spans.length).toBe(3);
+        expect(spans[0].innerHTML).toBe('For');
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].innerText).toBe('Next');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(2);
     });
 
     it('should load confirmation component', () => {
@@ -452,9 +681,6 @@ describe('OAuth Test Suite', () => {
         const additionalTexts = el.nativeElement.querySelectorAll('p');
         expect(additionalTexts[0].innerHTML).toBe(component.LANG.authorize.loginErrorAdditional());
         expect(additionalTexts.length).toBe(1);
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Back');
-        expect(spans.length).toBe(2);
     });
 
     it('should load connectSystemToCloud cloud connect error component', () => {
@@ -467,9 +693,6 @@ describe('OAuth Test Suite', () => {
         const additionalTexts = el.nativeElement.querySelectorAll('p');
         expect(additionalTexts[1].innerHTML).toBe(component.LANG.authorize.connectErrorAdditional());
         expect(additionalTexts.length).toBe(2);
-        const spans = el.nativeElement.querySelectorAll('span');
-        expect(spans[1].innerHTML).toBe('Back');
-        expect(spans.length).toBe(2);
     });
 
     it('should load setupWizard cloud connect error component', () => {
@@ -484,8 +707,7 @@ describe('OAuth Test Suite', () => {
         expect(additionalTexts.length).toBe(4);
         const spans = el.nativeElement.querySelectorAll('span');
         expect(spans[1].innerHTML).toBe('Setup Non-cloud System');
-        expect(spans[2].innerHTML).toBe('Back');
-        expect(spans.length).toBe(3);
+        expect(spans.length).toBe(2);
     });
 
     it('should load loginToWebadmin cloud connect error component', () => {
@@ -502,4 +724,6 @@ describe('OAuth Test Suite', () => {
         expect(spans[0].innerHTML).toBe('Back');
         expect(spans.length).toBe(1);
     });
+
+    // test links that can start with 'http', '?code=', and 'redirect-oauth'
 });

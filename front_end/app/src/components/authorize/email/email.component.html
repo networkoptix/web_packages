@@ -8,7 +8,7 @@
     <h4 *ngIf="subHeader" class="authorize-subheader">{{ subHeader }}</h4>
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-    [ngStyle]="{ 'height': 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }">
+    *ngIf="emailHeader" [ngStyle]="{ 'height': 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }">
     <form #emailForm="ngForm" name="emailForm" class="form">
         <ng-container *ngIf="!CONFIG.isLocal; else webadmin">
             <label for="authorizeEmail" class="mb-2" translate>Email</label>

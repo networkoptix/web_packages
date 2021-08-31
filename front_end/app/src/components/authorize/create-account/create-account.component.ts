@@ -48,7 +48,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
-    weakPassword = false;
+    weakPassword = null;
     termsAndConditions = false;
 
     @Input() createAccountProcess: Process;

@@ -57,7 +57,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.errorCode.currentValue) {
+        if (changes.errorCode?.currentValue) {
             this.emailForm?.controls.email.setErrors({ [changes.errorCode.currentValue]: true });
         }
 

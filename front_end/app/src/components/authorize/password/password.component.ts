@@ -95,14 +95,14 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
                 subHeader
             },
             confirmPasswordDisconnect: {
-                header: auth.loginCloudHeader(),
+                header          : auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix: auth.passwordDisconnect()
+                subHeaderSuffix : auth.passwordDisconnect()
             },
             confirmPasswordMerge: {
-                header: auth.loginCloudHeader(),
+                header          : auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix: auth.passwordMerge()
+                subHeaderSuffix : auth.passwordMerge()
             },
             connectSystemToCloud : connect,
             setupWizard          : connect,

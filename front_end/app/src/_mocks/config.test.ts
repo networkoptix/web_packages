@@ -270,7 +270,7 @@ export function setupConfig(): IConfig {
                 icon: 'servers.svg',
                 perPage: 4,
                 pagesToShow: 4,
-                searchable: true,
+                disabled: undefined,
                 excludeFromSearch: ['last_modified', 'downloadLink', 'settingsModal'],
                 contexts: [
                     {
@@ -359,7 +359,11 @@ export function setupConfig(): IConfig {
                         title: 'Create',
                         modal: ModalType.CLIENT_CREATE
                     }
-                ]
+                ],
+                searchSubheading : '',
+                noResultsMessage : '',
+                minItemsAdvanced : 0,
+                perPageOptions   : []
             }
         },
         maxServers                   : 100, // The maximum amount of server that can be in a system
