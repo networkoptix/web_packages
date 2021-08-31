@@ -1,6 +1,6 @@
+from django.http.request import QueryDict
 from cms.feature_flags import FLAGS, check_feature_flag
 import time
-from cms.controllers.zendesk import sync_menu
 from api.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
 from django.conf import settings
 
@@ -23,6 +23,8 @@ def get_menu(request, name):
 @permission_classes((IsSuperuser,))
 @check_feature_flag(FLAGS.zendesk_sync)
 def menu_force_sync(request):
+    from cms.controllers.zendesk import sync_menu
+
     menu_id = request.data.get('menu_id')
     menu = Menu.objects.filter(id=menu_id).first()
     customizations = request.data.get('customizations')
@@ -43,7 +45,7 @@ def menu_force_sync(request):
 @permission_classes((IsSuperuser,))
 @check_feature_flag(FLAGS.zendesk_sync)
 def menu_cancel_sync(request):
-    log_id = request.data.get('log_id')
+    log_id = request.data.get('log_id', None)
     sync_log = ZendeskSyncLog.objects.filter(id=log_id).first()
     if not log_id:
         raise APIRequestException(f'Payload must contain menu_id property', ErrorCodes.wrong_parameters)
@@ -60,9 +62,10 @@ def menu_cancel_sync(request):
 @check_feature_flag(FLAGS.zendesk_sync)
 def menu_clean_zd(request):
     from cms.controllers.zendesk import ZendeskMapper
-    customization = request.data.pop('customization', '')
+    data = request.data.dict() if isinstance(request.data, QueryDict) else request.data
+    customization = data.pop('customization', '')
     mapper = ZendeskMapper(customization_name=customization)
-    mapper.clean_zd(request.data)
+    mapper.clean_zd(data)
     return api_success('Cleaning Zendesk started')
 
 

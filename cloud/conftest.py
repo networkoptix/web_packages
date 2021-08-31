@@ -320,3 +320,7 @@ def check_against_expected_meta(target_class, expected_meta):
         for attribute, expected in meta.items():
             check_meta(field, attribute, expected)
 
+
+@pytest.fixture()
+def disable_feature_flags(mocker):
+    mocker.patch('waffle.flag_is_active', return_value=True)

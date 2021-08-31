@@ -54,7 +54,6 @@ class FLAGS(metaclass=_FlagType):
         return dict(FLAGS).get(name)
 
 
-
 class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
 
@@ -102,11 +101,12 @@ def check_feature_flag(flags, custom_validator=None, error_class=PermissionError
         custom_validator (function, optional): Optionally accepts function to run custom validation in addition to checking flags. Should error message if validation failed. Defaults to None.
         error_class ([Exception], optional): Exception to raise if either flag is not active or custom_validator returns False. Defaults to PermissionError.
     """
-    from waffle import flag_is_active
 
     def flag_checker(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            from waffle import flag_is_active
+
             request = get_request_argument(*args, **kwargs)
             flags_to_check = [flags] if isinstance(flags, str) else flags
             for flag in flags_to_check:
