@@ -365,40 +365,44 @@
         disableSubmitButtons(false);
     });
 
+    const uploadImage = (image_upload_url, file, options={}, successCB=console.log) => {
+        imagesBeingUploaded++
+        disableSubmitButtons(true)
+        const body = new FormData()
+        const headers = new Headers()
+
+        body.append('file', file)
+        body.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').attr('value'));
+        headers.append('X-CSRFToken', document.cookie.split('csrftoken=')[1].split(' ')[0]);
+
+        fetch(image_upload_url, { method: 'POST', headers, body}).then(
+            res => res.json()
+        ).then(
+            ({ location }) => location
+        ).then(location => {
+            if (options.editor && options.imageSrc) {
+                const currentContent = options.editor.getContent()
+                const updatedContent = currentContent.replace(options.imageSrc, location)
+                options.editor.setContent(updatedContent)
+            }
+            imagesBeingUploaded--
+            disableSubmitButtons(!!imagesBeingUploaded)
+            successCB(location)
+        })
+    }
+
     function paste_handle_images(clipContent, file, textOrHtml, files, editor, image_upload_url) {
         const uploadFile = (file) => {
             if (file) {
                 const srcAttr = /src="(.*?)"/igm.exec(clipContent)
                 const imageSrc = srcAttr ? srcAttr[1] : '';
                 const pastedImg = $(editor.getBody()).find(`img[src="${imageSrc}"]`);
-                const uploadImage = () => {
-                    imagesBeingUploaded++
-                    disableSubmitButtons(true)
-                    const body = new FormData()
-                    const headers = new Headers()
-
-                    body.append('file', file)
-                    body.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').attr('value'));
-                    headers.append('X-CSRFToken', document.cookie.split('csrftoken=')[1].split(' ')[0]);
-
-                    fetch(image_upload_url, { method: 'POST', headers, body}).then(
-                        res => res.json()
-                    ).then(
-                        ({ location }) => location
-                    ).then(location => {
-                        const currentContent = editor.getContent()
-                        const updatedContent = currentContent.replace(imageSrc, location)
-                        editor.setContent(updatedContent)
-                        imagesBeingUploaded--
-                        disableSubmitButtons(!!imagesBeingUploaded)
-                    })
-                }
                 if (!pastedImg.length) {
                     // CSP or something else blocked it, so we reinsert the image without the URL this time
                     const newContent = clipContent.replace(/(.*src=")(.*?)(".*)/igm, '$1' + imageSrc + '$3');
                     editor.insertContent(newContent);
                 }
-                uploadImage()
+                uploadImage(image_upload_url, file, { editor, imageSrc })
             }
         }
         if (textOrHtml) {
@@ -477,11 +481,18 @@
             closed : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
             protect: [/<svg.*\/svg>/],
             relative_urls: false,
-            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
+            images_upload_url: "{% url 'upload_image' asset.id data_structure.id %}",
+            images_reuse_filename: true,
+            images_upload_handler: function (blobInfo, success, failure) {
+                const imageUploadUrl = "{% url 'upload_image' asset.id data_structure.id %}"
+                const file = blobInfo.blob()
+                uploadImage(imageUploadUrl, file, {}, success)
+            },
+            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview image',
             menubar: false,
             resize: 'both',
             theme: 'silver',
-            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists',
+            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists, image',
             theme_advanced_resizing: true,
             init_instance_callback : function(editor) {
                 $(editor.getElement())
