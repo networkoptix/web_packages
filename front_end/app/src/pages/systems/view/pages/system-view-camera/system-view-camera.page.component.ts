@@ -420,7 +420,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _extractPeriodsFromServerResponse (response) {
-        return response.reply[0]?.periods || []
+        if (!response?.reply.length) {
+            return [];
+        }
+        return response.reply
+            .reduce((records, { periods }) => {
+                records.splice(-1, 0, ...periods);
+                return records;
+            }, [])
+            .sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
     public ngAfterViewInit () {
