@@ -166,21 +166,21 @@ def login(request):
     return login_helper(request, token, user)
 
 
-# @api_view(["POST"])
-# @permission_classes((AllowAny, ))
-# def login_with_code(request):
-#     require_params(request, ["code"])
-#     ip = get_ip(request)
-#     token = Auth.get_access_token(request.data.get("code"), ip)
-#     validate_token = Auth.validate_token(token['access_token'])
-#
-#     try:
-#         user = models.Account.objects.get(email=validate_token['username'])
-#     except models.Account.DoesNotExist:
-#         raise APINotFoundException("User not in cloud")
-#
-#     request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
-#     return login_helper(request, token, user)
+@api_view(["POST"])
+@permission_classes((AllowAny, ))
+def login_with_code(request):
+    require_params(request, ["code"])
+    ip = get_ip(request)
+    token = Auth.get_access_token(request.data.get("code"), ip)
+    validate_token = Auth.validate_token(token['access_token'])
+
+    try:
+        user = models.Account.objects.get(email=validate_token['username'])
+    except models.Account.DoesNotExist:
+        raise APINotFoundException("User not in cloud")
+
+    request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+    return login_helper(request, token, user)
 
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
