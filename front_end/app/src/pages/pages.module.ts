@@ -19,6 +19,7 @@ import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
 import { PipesModule }               from '@src/pipes/pipes.module';
 import { NxConfigService }           from '@services/nx-config';
+import { DeviceDetectorService }     from 'ngx-device-detector';
 
 const lazyRoutes: Routes = [
     {
@@ -28,9 +29,10 @@ const lazyRoutes: Routes = [
     {
         path         : 'systems/:systemId/view',
         loadChildren : () => {
-            // Before release remove this logic and load only NxOldViewModule ...
-            // ... or enhance the logic to load new player only if desktop Chrome (TBD) -- TT
-            if (NxConfigService.useNewPlayer || new URLSearchParams(document.location.search).get('player') === 'new') {
+            const deviceService = new DeviceDetectorService(undefined);
+            // @ts-ignore
+            const useNew = !!window.chrome && !(deviceService.isMobile() || deviceService.isTablet());
+            if (useNew || NxConfigService.useNewPlayer || new URLSearchParams(document.location.search).get('player') === 'new') {
                 return import('./systems/view/view.module').then(m => m.NxSystemViewModule);
             }
             return import('./systems/old-view/old-view.module').then(m => m.NxOldViewModule);
