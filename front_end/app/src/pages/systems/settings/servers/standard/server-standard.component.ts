@@ -70,7 +70,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     selectedStorage: Partial<DropdownStorage>;
     checkingForDataAnalytics = false;
     storagesLoading = true;
-    showAnalytics = true;
+    showAnalytics = false;
 
     betaMode: boolean;
     renameDisabled: boolean;

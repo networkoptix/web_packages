@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
+Test Teardown     Restart
 Suite Teardown    Close All Browsers
 Force Tags        Threaded    Customizations
 
@@ -13,8 +13,9 @@ ${503 URL}           ${url}/static/503.html
 
 *** Keywords ***
 Restart
-    Common Restart Logout    ${url}
-    
+    Close All Browsers
+    Open Browser and go to URL    ${url}
+
 *** Test Cases ***
 Verify List of Available Languages
     [Tags]    C43008
@@ -47,10 +48,10 @@ Verify Download VMS Name
     Wait Until Element is Visible    ${WELCOME CAPTION}
     Element Text Should Be    ${WELCOME CAPTION}    ${PRODUCT NAME}
     Wait Until Element is Visible    ${FOOTER ABOUT LINK}
-    Element Text Should Be    ${DOWNLOAD LINK}      ${DOWNLOAD TITLE TEXT}         
+    Element Text Should Be    ${DOWNLOAD LINK}      ${DOWNLOAD TITLE TEXT}
+
     Log    Step 2
     Click Link    ${DOWNLOAD LINK}
-    Run Keyword And Ignore Error    Log In    ${email}    ${password}    button=None
     ${os}=   Get OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Location Is    ${url}/download/${os}
@@ -59,14 +60,17 @@ Verify Download VMS Name
     ${version} =    Get Text    ${DOWNLOAD VERSION NUMBER} 
     Should Contain    ${link url}    ${os}
     Should Contain    ${link url}    ${version}
+
     Log    Step 3
     Click Link    ${WHATS NEW LINK}
     Wait Until Number Of Tabs Are Open    2
     Switch Window    NEW    
     Wait Until Location Is    ${RELEASE NOTES URL}
-    Log    With Hanwha The wollowing keyword only passes in headless:false mode. 
-    Run Keyword and Ignore Error   Wait Until Element is Visible    ${RELEASE NOTES LATEST}'${version}']
+
+    ${RELEASE NOTES LATEST}=   Replace String    ${RELEASE NOTES LATEST}    %version%    ${version}
+    Wait Until Element is Visible    ${RELEASE NOTES LATEST}
     Close Window
+
     Log    Step 4
     Switch Window    MAIN    
     ${itunes url} =    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href

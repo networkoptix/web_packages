@@ -12,7 +12,7 @@ About
     Click Link    ${FOOTER ABOUT LINK}
     Wait Until Location Contains    /content/about
     Wait Until Elements Are Visible
-    ...    ${LOGO LINK}
+    ...    ${LOGO ICON}
     ...    ${WELCOME CAPTION}
     ...    //landing-display-component
     ...    ${CREATE ACCOUNT BODY}
@@ -55,7 +55,8 @@ Download History
     [Tags]    C81199    pages
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     CLick Link    ${DOWNLOAD LINK}
-    Wait Until Element Is Not Visible    ${RELEASE HISTORY BUTTON}
+
+#    Wait Until Element Is Not Visible    ${RELEASE HISTORY BUTTON}
     Log In    ${email pages}    ${password}
     Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
     Click Link    ${RELEASE HISTORY BUTTON}
@@ -105,7 +106,7 @@ Integrations
     ...    AND    Click Link    ${FOOTER INTEGRATIONS LINK}
     ...    AND    Wait Until Location Contains    /integrations
     ...    AND    Wait Until Elements Are Visible
-                  ...    ${LOGO IMG}
+                  ...    ${LOGO ICON}
                   ...    ${INTEGRATIONS SEARCH}
                   ...    ${INTEGRATIONS SEARCH FILTER}
                   ...    ${INTEGRATIONS CATALOG}
@@ -116,7 +117,7 @@ Supported Devices
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Contains    ipvd
     Wait Until Elements Are Visible
-    ...    ${LOGO IMG}
+    ...    ${LOGO ICON}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANUFACTURERS PANE}

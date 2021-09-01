@@ -107,7 +107,7 @@ export class VideoManagementSystemService {
         As of 2021.06.14, Javascript Temporal is still not ready for production use,
         while simple Date is strictly bound to the local timezone.
 
-        Os, it's important to understand that it's a cheat of sorts:
+        So, it's important to understand that it's a cheat of sorts:
         we use timestamps that are not *fair*, but *tweaked* by adding some offset.
 
         Initally, timestamps themselves are timezone-agnostic,

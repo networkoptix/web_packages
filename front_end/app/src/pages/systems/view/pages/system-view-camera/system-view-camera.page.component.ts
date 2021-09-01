@@ -34,6 +34,8 @@ import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_s
 import Hls                               from 'hls.js';
 import { NxDialogsService }              from '../../../../../dialogs/dialogs.service';
 
+import fullscreenInactivityCfg from '../fullscreenInactivity.cfg'
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-view-camera-page',
@@ -137,7 +139,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             if (this.fullscreenMode) {
                 this.onShowElements = setTimeout(() => {
                     this.showElementsInFSM = false;
-                }, 3000);
+                }, fullscreenInactivityCfg.delayMs);
             } else {
                 clearTimeout(this.onShowElements);
                 clearTimeout(this.onMoveShowElements);
@@ -420,7 +422,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _extractPeriodsFromServerResponse (response) {
-        return response.reply[0]?.periods || []
+        if (!response?.reply.length) {
+            return [];
+        }
+        return response.reply
+            .reduce((records, { periods }) => {
+                records.splice(-1, 0, ...periods);
+                return records;
+            }, [])
+            .sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
     public ngAfterViewInit () {
@@ -631,7 +641,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             clearTimeout(this.onMoveShowElements);
             this.onMoveShowElements = setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, 3000);
+            }, fullscreenInactivityCfg.delayMs);
         }
     }
 }

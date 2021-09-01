@@ -1,0 +1,220 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-push-8">
+            <system-info></system-info>
+        </div>
+        <div class="col-md-8 col-md-pull-4">
+            <uib-alert type="danger" ng-if="settings.flags.noHDD">
+                מכשיר זה מיועד לעבודה עם דיסק קשיח מותקן. <br>יש לכבות את המכשיר ולהתקין דיסק קשיח.
+            </uib-alert>
+            <uib-alert type="danger" ng-if="!settings.flags.noHDD && settings.flags.noNetwork">
+                מכשיר זה צריך חיבור רשת כדי לעבוד. <br>יש לחבר אותו לרשת המקומית או לרשת האינטרנט
+            </uib-alert>
+            <uib-alert type="danger" ng-if="!settings.flags.noHDD && !settings.flags.noNetwork && settings.flags.wrongNetwork">
+                קונפיגורציית הרשת של מכשיר זה אינה תקינה. <br>יש לחבר את המכשיר לרשת ולהגדיר לו כתובת.
+            </uib-alert>
+
+
+            <uib-tabset ng-hide="settings.flags.brokenSystem || settings.flags.cleanSystem">
+                <uib-tab heading="{{L.settings.tabs.server}}" active="active.server">
+                    <div ng-if="user.isOwner">
+                        <form novalidate name="settingsForm" class="form-horizontal" role="form" >
+                            <h3>פורט</h3>
+                            <div class="form-group" ng-class="{'has-error':!settingsForm.port.$valid}">
+                                <div class="col-xs-6">
+                                    <input type="number" class="form-control" id="port" placeholder="פורט" name="port" ng-model="settings.port"
+                                           min="1"  max="65000"
+                                           pattern ="^\d*$" required>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <button type="button" class="btn btn-primary" ng-disabled="!settingsForm.$valid" ng-click="save()">שנה פורט</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3>אתחל שרת</h3>
+                        <p>פעולה זו תחזיר את השרת לברירות המחדל (תנקה את מסד הנתונים ותאפס את ההגדרות).
+                            השרת ינותק מהמערכת הנוכחית. ארכיון הווידאו יישאר שלם.</p>
+                        <p><button type="button" class="btn btn-default" ng-click="openRestoreDefaultsDialog()">שחזר להגדרות ברירת מחדל</button></p>
+                    </div>
+                    <div ng-if="user.isOwner">
+                        <h3>נתק את השרת מן המערכת</h3>
+                        <p>פעולה זו תנתק שרת מהמערכת תוך שמירה על מסד הנתונים, משתמשים מקומיים ותצורה.
+                            ארכיון הווידאו יישאר שלם. <b>כל משתמשי הענן יימחקו.</b></p>
+                        <p><button class="btn btn-default" ng-click="disconnectFromSystem()">נתק את השרת מן המערכת</button></p>
+                    </div>
+                    <div>
+                        <h3>איתחול</h3>
+                        <p><button type="button" class="btn btn-default" ng-click="restart()">הפעל מחדש את השרת</button>                             <button type="button" class="btn btn-default" ng-if="canHardwareRestart" ng-click="hardwareRestart()">אתחול מחדש</button></p>
+                    </div>
+                    <div ng-if="user.isOwner">
+                        <form novalidate name="rootPasswordForm" class="form-horizontal" role="form">
+                            <h3>שנה סיסמת מנהל מערכת</h3>
+                            <p>אם המערכת היא מקומית (לא מחוברת אל הענן) פעולה זו תשנה את הסיסמא עבור המשתמש "admin" ואת סיסמת השחזור (root) בשרתים מסוימים. <br>אחרת פעולה זו תשנה את סיסמת השחזור בלבד.</p>
+                            <div class="col-sm-6">
+                                <password-input auto-focus="false" ng-model="settings.rootPassword"></password-input>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <button type="button" class="btn btn-primary" ng-disabled="!rootPasswordForm.$valid"
+                                        ng-click="changePassword()">שינוי סיסמא</button>
+                            </div>
+                        </form>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="{{L.settings.tabs.system}}" active="active.system">
+                    <div>
+                        <h3>שם</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" ng-model="settings.systemName">
+                            </div>
+
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-default" ng-click="renameSystem()">שינוי שם מערכת</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="canMerge" >
+                        <form class="form-horizontal" >
+                            <h3>מיזוג מערכות</h3>
+                            <p><button type="button" class="btn btn-default" ng-click="openJoinDialog()">מיזוג מערכות</button></p>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3>{{Config.cloud.productName}}</h3>
+
+                        <div ng-if="cloudSystemID">
+                            <p>מערכת זו מקושרת אל {{Config.cloud.productName}}, בעל מערכת: <b>{{cloudAccountName}}</b></p>
+                            <p ng-if="canConnectToCloud"><button class="btn btn-default" ng-click="disconnectFromCloud()">התנתק מ {{Config.cloud.productName}}</button></p>
+                            <p><a ng-if="!mode.liteClient"
+                                  ng-href="{{Config.cloud.portalUrl}}{{Config.cloud.portalSystemUrl.replace('{systemId}',cloudSystemID) + Config.cloud.webadminContext}}"
+                                  target="_blank">פתח את פורטל {{Config.cloud.productName}}</a></p>
+                        </div>
+
+                        <div ng-if="!cloudSystemID">
+                            <uib-alert type="warning">מערכת זו מקושרת אל {{Config.cloud.productName}} <a ng-if="!mode.liteClient"
+                                   ng-href="{{Config.cloud.portalUrl}}"
+                                   target="_blank">מידע נוסף</a></uib-alert>
+                            <uib-alert type="danger" ng-if="!hasInternetOnServer">חבר את השרת לאינטרנט כדי לבצע התקנה {{Config.cloud.productName}}</uib-alert>
+                            <uib-alert type="danger" ng-if="hasInternetOnServer && !hasInternetOnClient">מחויב חיבור לאינטרנט בכדי לחבר מערכת אל {{Config.cloud.productName}}</uib-alert>
+                            <p ng-if="canConnectToCloud"><button
+                                    class="btn btn-default"
+                                    ng-click="connectToCloud()" ng-disabled="!hasInternetOnServer || !hasInternetOnClient">התחבר ל- {{Config.cloud.productName}}</button>                                 <a ng-if="!mode.liteClient"  class="btn btn-default"
+                                   ng-href="{{Config.cloud.portalUrl + Config.cloud.portalRegisterUrl + Config.cloud.webadminContext}}"
+                                   target="_blank">צור חשבון {{Config.cloud.productName}}</a></p>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <h3>הצפנת תעבורה</h3>
+                        <form novalidate name="trafficSettingsForm" class="form-horizontal" role="form" >
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           ng-model="trafficSettings.trafficEncryptionForced"
+                                           ng-change="checkTrafficEncryption()">
+                                    <span class="checkmark">
+                                        <svg viewbox="0 0 20 16">
+                                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="text"> כפה הצפנת תעבורה </span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox"
+                                           ng-disabled="!trafficSettings.trafficEncryptionForced"
+                                           ng-model="trafficSettings.videoTrafficEncryptionForced">
+                                    <span class="checkmark">
+                                        <svg viewbox="0 0 20 16">
+                                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                                            <polyline class="box"
+                                                      points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>
+                                        </svg>
+                                    </span>
+                                    <span class="text"> כפה הצפנת תעבורת וידאו </span>
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-click="saveTrafficSettings()">שמור</button>
+                        </form>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="{{L.settings.tabs.device}}" active="active.device" ng-if="controlDevice">
+                    <div ng-if="settings.flags.canSetupNetwork">
+                        <h3>הגדרות רשת להתקן</h3>
+                        <network-settings settings="networkSettings[0]" ng-if="networkSettings"></network-settings>
+                        <button class="btn btn-default" ng-click="saveNetworkSettings()">שמור הגדרות ואתחל את ההתקן</button>
+                    </div>
+                    <div ng-if="settings.flags.canSetupTime">
+                        <h3>תאריך ושעה</h3>
+                        <form name="timeSettings">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><label for="timeZone">אזור זמן</label></td>
+                                        <td><label for="date">תאריך</label></td>
+                                        <td><label for="time">זמן</label></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><select class="form-control"
+                                                    ng-options="zone.id as zone.name for zone in timeZones"
+                                                    id="timeZone"
+                                                    name="timeZone"
+                                                    ng-model="dateTimeSettings.timeZone"
+                                                    required></select></td>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       id="date" name="date"
+                                                       class="form-control"
+                                                       uib-datepicker-popup="{{Config.dateSettingsFormat}}"
+                                                       ng-model="dateTimeSettings.dateTime"
+                                                       required
+ is-open="dateTimeSettings.openDate"
+                                                       close-text="Close" />
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            class="btn btn-default"
+                                                            ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div ng-model="dateTimeSettings.dateTime" uib-timepicker></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        <button class="btn btn-default" ng-click="saveDateTime()">שמור תאריך ושעה</button>
+                    </div>
+                    <div ng-if="(canRestoreSettings || canRestoreSettingsNotNetwork)">
+                        <h3>שחזור הגדרות מערכת</h3>
+                        <p><button type="button" class="btn btn-default" ng-if="canRestoreSettings" ng-click="restoreSettings()">שחזור מלא</button>                             <button type="button" class="btn btn-default" ng-if="canRestoreSettingsNotNetwork" ng-click="restoreSettingsNotNetwork()">שחזר הכל למעט הגדרות רשת</button></p>
+                    </div>
+                    <div ng-if="canRunClient || canStopClient">
+                        <h3>הפעל יישום לקוח על השרת</h3>
+                        <p><button type="button" class="btn btn-default" ng-if="canRunClient" ng-click="runClient()">הפעל לקוח</button>                             <button type="button" class="btn btn-default" ng-if="canStopClient" ng-click="stopClient()">עצור לקוח</button></p>
+                        <p>השתמש במקלדת/עכבר או יישום נייד כדי לשלוט בו.</p>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>

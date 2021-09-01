@@ -9,6 +9,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import VmsState from '../../../vms/datatypes/VmsState';
+import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair'
+
 
 @Component({
     selector    : 'player',
@@ -37,6 +39,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private transportChangeByError: boolean = false;
 
+    public handleClick: (e: MouseEvent) => void
+
     constructor (
         translateService: NxLanguageProviderService,
         public http: HttpClient,
@@ -47,6 +51,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
+        this.handleClick = generateClickDubleClickPair((e) => this.onClick(e), (e) => this.onDblClick(e))
     }
 
     public ngOnInit (): void {

@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h3 class="modal-title">重启系统中...</h3>
+</div>
+
+<form class="form" role="form" id="restartDialog">
+    <div class="modal-body">
+        <p>系统重启可能需要一段时间。 之后页面将自动刷新。</p>
+        <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
+
+        <p>如果没有事情发生一段时间，请手动刷新页面</p>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary pull-left" name="button" ng-click="refresh()" ng-disabled="form.$invalid">刷新</button>
+    </div>
+
+</form>

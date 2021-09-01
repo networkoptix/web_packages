@@ -22,7 +22,6 @@ Reset
     ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 
-
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
@@ -371,8 +370,55 @@ Administrator cannot invite another administrator
         Log Out
     END
 
+Change role for Cloud User
+    [Tags]    C41900    web_admin
+    ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}
+    Log in to system    ${server 1}    ${server 1}[owner]
+    Verify In System    ${server 1}[name]
+
+    Log    Step 1
+    Go to Users List
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]
+    Wait until element is visible    ${user in left menu}
+    Click Element    ${user in left menu}
+    Wait until elements are visible
+        ...    ${USER EMAIL}
+        ...    ${ACCESS LEVEL DROPDOWN}
+        ...    ${NO UNSAVED CHANGES}
+        ...    ${REMOVE USER BUTTON}
+    ${email shown}=   Get Text    ${USER EMAIL}
+    ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
+    Should be equal as strings    ${email shown}    ${tmp user}
+    Should be equal as strings    ${role shown}    Viewer
+
+    Log    Step 2
+    Click Button    ${ACCESS LEVEL DROPDOWN}
+    Wait until element is visible    ${ACCESS LEVEL DROPDOWN MENU}
+    Click Element     ${ACCESS LEVEL DROPDOWN MENU}//span[text()='Administrator']
+    Wait until elements are visible
+        ...    ${SAVE BUTTON}
+        ...    ${CANCEL BUTTON}
+        ...    ${user in left menu}    # Role is not changed yet
+
+    Log    Step 3
+    Click Button    ${SAVE BUTTON}
+
+    Wait until elements are not visible
+       ...    ${SAVE BUTTON}
+       ...    ${CANCEL BUTTON}
+       ...    ${ACCESS LEVEL DROPDOWN MENU}
+
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]
+    Wait until elements are visible
+        ...    ${ACCESS LEVEL DROPDOWN}
+        ...    ${NO UNSAVED CHANGES}
+        ...    ${user in left menu}
+    ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
+    Should be equal as strings    ${role shown}    Administrator
+
 Edit permission works
-    [Tags]    C41900    C30657    C47041    web_admin
+    [Tags]    C30657    C47041    web_admin
     ${random email}=   Get Random Email    ${BASE EMAIL}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
@@ -553,6 +599,7 @@ Share with unregistered user - brings them to registration page with code with c
     Click Element    //span[contains(text(),"${random email}")]
     ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
     Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
+
 Share System with the same user twice
     [Tags]    C41892
     Open Mailbox

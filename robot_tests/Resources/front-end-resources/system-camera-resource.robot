@@ -26,14 +26,6 @@ Verify on Cameras Page
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
 
-Verify Recording Options are Visible
-    Wait Until Elements are Visible
-    ...    ${RECORD ALWAYS RADIO BUTTON}/..
-    ...    ${RECORD MOTION RADIO BUTTON}/..
-    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/..
-    ...    ${FPS INPUT}
-    ...    ${QUALITY DROPDOWN}
-
 Verify Authentication Form
     Wait Until Elements are Visible
     ...    ${EDIT CREDENTIALS LOGIN INPUT}
@@ -98,7 +90,7 @@ Get Camera Attribute By Camera Name
     [Arguments]    ${auth}    ${server url}    ${name}    ${attribute}
     ${cameras}=    Get Cameras    ${auth}    ${server url}
     FOR    ${camera}  IN  @{cameras}
-        Run Keyword If    '''${camera['name']}'''=='''${name}'''    Return From Keyword    ${camera['${attribute}']}
+        Run Keyword If    '''${camera['name']}'''=='''${name}'''    Return From Keyword    ${camera}[${attribute}]
     END
 
 Verify Recording Controls Are Open

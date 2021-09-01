@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h3 class="modal-title">S'està reiniciant el sistema...</h3>
+</div>
+
+<form class="form" role="form" id="restartDialog">
+    <div class="modal-body">
+        <p>El reinici del sistema pot trigar una estona. Després, la pàgina s'actualitzarà automàticament.</p>
+        <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
+
+        <p>Si no passa res durant un temps, actualitzeu la pàgina manualment</p>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary pull-left" name="button" ng-click="refresh()" ng-disabled="form.$invalid">Actualitza</button>
+    </div>
+
+</form>

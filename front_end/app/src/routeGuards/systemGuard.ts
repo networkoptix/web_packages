@@ -13,7 +13,6 @@ import { NxSettingsService }         from '@pages/systems/settings/settings.serv
 
 @Injectable()
 export class SystemGuard implements CanActivate {
-    private loading$ = new Subject<boolean>();
     public loading = false;
 
     constructor(
@@ -52,6 +51,7 @@ export class SystemGuard implements CanActivate {
                 advanced        : permissions.isAdmin || isOwner,
                 servers         : permissions.isAdmin || isOwner
             };
+
             return canViewChecks[currentRoute] || this.router.navigate(
                 [environment.isLocal ? '/settings/' : `/systems/${systemId}`]
             );
@@ -61,28 +61,27 @@ export class SystemGuard implements CanActivate {
             .get()
             .then((account) => {
                 if (account) {
-                    const currSystem = this.systemService.getCurrentSystem();
+                    let currSystem = this.systemService.getCurrentSystem();
                     if (!this.settingsService.system) {
                         this.settingsService.system = currSystem;
                     }
 
                     return new Promise((resolve) => {
                         if (currSystem) {
-                            resolve(checkPermissionsFor(currSystem));
+                            currSystem.getInfoAndPermissions().then(_ => {
+                                resolve(checkPermissionsFor(currSystem));
+                            });
                         } else {
-                            let systemPromise;
                             if (environment.isLocal) {
-                                systemPromise = Promise.resolve(this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email));
+                                currSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                             } else {
-                                systemPromise = this.systemService.createSystem(account.email, systemId, undefined, true);
+                                currSystem = this.systemService.createSystem(account.email, systemId, undefined, true);
                             }
-                            systemPromise.then(system => {
-                                this.settingsService.system = system;
 
-                                (<NxSystem> this.settingsService.system).update().then(_ => {
-                                    (<NxSystem> this.settingsService.system).getInfoAndPermissions().then(_ => {
-                                        resolve(checkPermissionsFor(this.settingsService.system));
-                                    });
+                            currSystem.update().then(_ => {
+                                currSystem.getInfoAndPermissions().then(_ => {
+                                    this.settingsService.system = currSystem;
+                                    resolve(checkPermissionsFor(currSystem));
                                 });
                             });
                         }

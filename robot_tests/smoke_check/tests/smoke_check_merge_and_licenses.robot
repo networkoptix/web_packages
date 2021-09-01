@@ -38,8 +38,9 @@ Merge Suite Setup
 
     # Verify systems are connected to cloud
     ${systems}=   Get Account Systems    ${ENV}    ${merge owner}    ${password}
-    ${sys 1 connected}=   Run keyword and return status    Should Contain    ${systems}    ${merge 1}[id]
-    ${sys 2 connected}=   Run keyword and return status    Should Contain    ${systems}    ${merge 2}[id]
+    ${ids}=   Evaluate    [sys['id'] for sys in $systems]
+    ${sys 1 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 1}[id]
+    ${sys 2 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 2}[id]
     Run Keyword Unless    $sys_1_connected and $sys_2_connected    Fatal Error    One or more system is not connected to cloud
     Sleep   90
 
@@ -147,9 +148,9 @@ Add and delete users
     ${new cloud user}=   Get Random Email    ${email base}
     Share    ${owner auth}    ${merge 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}
 
-    # Delete existing - relay
+    # Delete existing
     ${data}=   Create Dictionary    id=${del user id}
-    Create Digest Session    Remove User session    https://${merge 1}[id].${relay}    auth=${owner auth}    disable_warnings=1
+    Create Digest Session    Remove User session    https://${merge 1}[ip]:${merge 1}[port]    auth=${owner auth}    disable_warnings=1
     ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.json()}[id]    ${del user id}
 
@@ -189,7 +190,7 @@ Activate licenses on portal
     ...    ${SERVERS LINK}
 
     Click Link    ${LICENSES LINK}
-    Validate Licenses Page    several servers=True    trial left=False    clean=False
+    Validate Licenses Page    several servers=True    trial left=True    clean=False
     ${new perm}=   Generate Licenses    license_type=analogencoder   n_cameras=4
     Activate Key    ${new perm}
     ${activated}=   License Is Activated    ${local auth}    https://${merge 1}[ip]:${merge 1}[port]    ${new perm}

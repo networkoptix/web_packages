@@ -35,23 +35,23 @@ Advanced system settings for offline system
     Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
     Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
-    Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
+    Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
 
     Log    Get System back online and check advanced settings
     Start Docker Server    ${system}[id]
     Sleep    4
     Reload Page
-    Wait Until Advanced Settings Are Visible    timeout=180
+    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=180
 
 Hide Advanced Settings button functionality
     [Tags]    C76635    threaded
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
-    Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
+    Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
     Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
 
 Audit trail, backup and statistics section
     [Tags]    C78244
@@ -67,8 +67,7 @@ Audit trail, backup and statistics section
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=70
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=70
 
     Log    Step 1
     Changing input setting changes it on server    ${ADDITIONAL LOCAL FS TYPES INPUT}    additionalLocalFsTypes    test Settings changed
@@ -188,8 +187,7 @@ Recording and log
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    FOUR    timeout=60
 
     Log    Step 1
     Changing setting changes it on server    ${ENABLE EDGE RECORDING CHECKBOX}    enableEdgeRecording    advanced=True
@@ -309,7 +307,7 @@ RTP, Rtsp, scene items, archive sync, HTTP
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    EIGHT ${IMAGE}    timeout=60
 
     Log    Step 1
     Changing input setting changes it on server    ${MAX RTP RETRY COUNT INPUT}    maxRtpRetryCount    5
@@ -321,12 +319,13 @@ RTP, Rtsp, scene items, archive sync, HTTP
     Changing input setting changes it on server    ${MAX SCENE ITEMS INPUT}    maxSceneItems    1
 
     Log    Step 4
-    Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
-
-    Log    Step 5
     IF    '${IMAGE}'=='4.3_test'
+        Changing input setting changes it on server    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS INPUT}    maxVirtualCameraArchiveSynchronizationThreads    1
+        Log    Step 5
         Changing input setting changes it on server    ${MAX HTTP TRANSCODERS INPUT}    maxHttpTranscodingSessions    1
     ELSE
+        Changing input setting changes it on server    ${MAX WEARABLE ARCHIVE SYNC INPUT}    maxWearableArchiveSynchronizationThreads    1
+        Log    Step 5
         Changing input setting changes it on server    ${MAX WEBM TRANSFER}    maxWebMTranscoders    1
     END
 
@@ -361,7 +360,7 @@ Meta data storage, OS time change, proxy connection timeout, push notification l
     Changing input setting changes it on server    ${PUSH NOTIFICATION LANGUAGE INPUT}    pushNotificationsLanguage    Russian
 
 File URI, RTP timeout, rtsp buffer, Flir Onvif
-    [Tags]    C78385    C78386
+    [Tags]    C78385
     Log    Preconditions
     ${settings}=   Create Dictionary
        ...    resourceFileUri=http://resources.vmsproxy.com/resource_data.json
@@ -383,7 +382,18 @@ File URI, RTP timeout, rtsp buffer, Flir Onvif
     Log    Step 3
     Changing setting changes it on server    ${USE SEQUENCIAL FLIR CHECKBOX}    sequentialFlirOnvifSearcherEnabled    advanced=True
 
-    Log    Step added
+Server discovery timeout
+    [Tags]    C78386
+    Log    Preconditions
+    ${settings}=   Create Dictionary
+       ...    serverDiscoveryPingTimeoutSec=60
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
+    Log in to system    ${system}    ${system}[owner]
+    Show Advanced Settings
+
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    TEN    timeout=70
+
+    Log    Step 1
     Changing input setting changes it on server    ${SERVER DISCOVERY TIMEOUT INPUT}    serverDiscoveryPingTimeoutSec    50
 
 SMTP settings

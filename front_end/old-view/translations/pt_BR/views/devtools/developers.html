@@ -1,0 +1,77 @@
+<div class="container">
+    <ng-include src="Config.viewsDir + 'devtools/feedback.html'"></ng-include>
+    <div ng-if="developersFeedbackForm">
+        <h2>Ferramentas de Programador</h2>
+        <p>
+            Tem uma ideia de como melhorar nossas ferramentas para desenvolvedores ou apenas deseja iniciar uma conversa?
+            Quer fazer uma pergunta ou encontrar mais informações sobre a integração?
+        </p>
+        <p ng-if="developersFeedbackForm"><a ng-href="{{developersFeedbackForm}}" target="_blank">Fórum do desenvolvedor</a></p>
+        <p ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">Base de conhecimento em desenvolvimento</a></p>
+    </div>
+
+    <div>
+        <h3>Gerador de Eventos Genéricos</h3>
+        <p>
+            Um Evento Genérico é um método de envio de eventos de sistemas de terceiros para um Sistema
+            que pode ser usado para acionar ações do sistema no mecanismo Eventos e Regras.
+            O Gerador de Eventos Genéricos é uma ferramenta que ajuda desenvolvedores e integradores a construir
+            e testar chamadas de evento Genérico HTTP.
+        </p>
+        <p><a href="#/developers/events">Gerador de Eventos Genéricos</a></p>
+    </div>
+    <div>
+        <h3>API do Servidor</h3>
+        <p>
+            A API REST que dá aos desenvolvedores a capacidade de acessar quase todos os recursos de sistema disponíveis no regulares
+            cliente: query / gerenciar recursos do sistema (servidores, câmeras, usuários, permissões), puxe ao vivo ou gravado vídeo
+            fora do sistema, gerar eventos, criar regras, controle de câmeras PTZ e muito mais.
+        </p>
+        <p>
+            <a href="#/developers/api"><b> Ferramenta de teste da API (nova) </b></a>
+            - documentação e ferramentas interativas para testar chamadas de API <br>
+            <a href="#/developers/changelog"> Registro de alterações da API </a>
+            - uma lista de alterações recentes na API desde o último lançamento <br>
+            <a id="api-doc" href="api.xml" target="_blank"> Documentação da API </a>
+            - uma lista completa de chamadas disponíveis da API do servidor<br>
+        </p>
+
+    </div>
+    <div>
+        <h3>Painel de detalhes da câmera</h3>
+        <p>
+            Exibe informações adicionais amigáveis para o desenvolvedor para câmeras individuais na guia de visualização da Interface de Administração da Web:
+        </p>
+        <ul>
+            <li>ID da câmera</li>
+            <li>Links para todos os fluxos de vídeo disponíveis</li>
+            <li>Vídeo de exportação direto do navegador</li>
+        </ul>
+        <p>
+            Para abrir o painel Detalhes da câmera - navegue até a interface Web Admin, escolha <a href="#/view">Visualizar</a>,
+            selecione a câmera alvo, clique no ícone de configurações (engrenagem) e escolha "Detalhes da câmera"
+        </p>
+        <p><a href="#/view/?cameraLinks">painel de detalhes da câmera aberta</a></p>
+    </div>
+    <div>
+        <h3>Fonte de vídeo SDK</h3>
+        <p>
+            O SDK de Fonte de Vídeo fornece a capacidade de integrar quase qualquer fonte de vídeo ao vivo ou gravada (Câmaras IP,
+            NVRs, DVRs, etc) no sistema e permite criar métodos para descobrir, exibir, analisar
+            e gravar vídeo. Permite também integrar portas e dispositivos I/O, bem como puxar detecção de movimento
+            informações de dispositivos de terceiros.
+        </p>
+        <p><a id="sdk-video" ng-href="#/sdkeula/sdk" >obter o SDK</a></p>
+    </div>
+
+    <div>
+        <h3>SDK de armazenamento</h3>
+        <p>
+            O SDK de armazenamento permite que os desenvolvedores para ler ou escrever para qualquer local de armazenamento: local, remoto, e até mesmo
+            uma nuvem. A criação de um plug-in de armazenamento requer a implementação de funções padrão, como: fluxo de E / S, se o arquivo
+            existir, arquivo de exclusão, lista de arquivos na pasta, etc. O SDK de armazenamento contém um exemplo para usar um servidor FTP
+            como local de armazenamento.
+        </p>
+        <p><a id="sdk-storage" ng-href="#/sdkeula/storage_sdk" >obter o SDK</a></p>
+    </div>
+</div>

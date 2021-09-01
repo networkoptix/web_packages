@@ -457,7 +457,7 @@ Cancel changes in Security block
     Log    Step 4
     Click Button    ${CANCEL BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ENCRYPTING VIDEO WARNING}
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}

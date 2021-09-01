@@ -1,0 +1,11 @@
+<uib-alert ng-if="developersFeedbackForm && !session.hideDevelopersFeedbackForm"
+       type="success" close="session.hideDevelopersFeedbackForm=true">
+    <p><b>Ви розробник?</b></p>
+    <p>Нашій команді вкрай цікаві відгуки розробників, що створюють інтеграцію з використанням наших SDK і API.
+        Якщо у вас є пропозиції щодо покращення роботи розробника - або просто хочете привітатися з командою -
+        будь ласка, приєднуйтесь до нашого форуму розробника! Або ви можете ознайомитися з нашою базою знань і знайти більше інформації
+        найкращої практики, і підказки
+    </p>
+    <p class="text-right"><a ng-href="{{developersFeedbackForm}}" target="_blank">Форум розробника</a></p>
+    <p class="text-right" ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">База знань розробника</a></p>
+</uib-alert>

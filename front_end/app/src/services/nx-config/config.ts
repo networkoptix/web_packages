@@ -5,6 +5,7 @@ import { FeatureFlagStrings }                    from '@services/nx-config/base-
 import { GroupingOptions, SortOptions }          from '@pages/developer-console/console/edit/console-edit.component';
 
 export const nxConfig: IConfig = {
+    useNewPlayer           : false,
     alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
     pollingTimeout         : 30 * 1000,
     extendedRequestTimeout : 15 * 1000,

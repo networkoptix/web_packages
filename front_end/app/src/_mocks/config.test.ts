@@ -8,8 +8,7 @@ export function setupConfig(): IConfig {
         alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
         pollingTimeout         : 30 * 1000,
         extendedRequestTimeout : 15 * 1000,
-        apiRequestAttempts     : 4,
-
+        apiRequestAttempts     : 4,    // combined with extendedRequestTimeout this mean we'll give up after 1 min
         animations             : {
             carouselImage: {
                 enter: '0.25s ease-in',
@@ -106,7 +105,7 @@ export function setupConfig(): IConfig {
                 skd    : 'SDK'
             }
         },
-        
+
         healthMonitoring             : {
             staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
             valueFormats      : {
@@ -180,6 +179,7 @@ export function setupConfig(): IConfig {
                 { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
+            devTools             : '/static/images/icons/dev_tools/',
             backgrounds           : '/static/images/icons/backgrounds/',
             dir                   : '/static/images/icons/standard/',
             dirDevtools           : '/static/images/icons/dev_tools/',

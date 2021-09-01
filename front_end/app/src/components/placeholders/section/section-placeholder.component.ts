@@ -38,6 +38,7 @@ export class NxSectionPlaceholderComponent implements OnInit {
 
     ngOnInit() {
         this.height = this.height || '64';
+        this.width = this.width || '64';
         this.svgFileName = this.svgFileName || 'system_settings_placeholder';
     }
 }

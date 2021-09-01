@@ -1,0 +1,73 @@
+<div class="container">
+    <ng-include src="Config.viewsDir + 'devtools/feedback.html'"></ng-include>
+    <div ng-if="developersFeedbackForm">
+        <h2>Fejlesztői eszközök</h2>
+        <p>
+            Van valami ötlete a fejlesztői eszközök javításával kapcsolatban vagy csak szeretne megvitatni valamit?
+            Szeretne kérdést feltenni, vagy további információt találni az integrációról?
+        </p>
+        <p ng-if="developersFeedbackForm"><a ng-href="{{developersFeedbackForm}}" target="_blank">Fejlesztői fórum</a></p>
+        <p ng-if="developersKnowledgeBase"><a ng-href="{{developersKnowledgeBase}}" target="_blank">Fejlesztési tudásbázis</a></p>
+    </div>
+
+    <div>
+        <h3>Általános esemény generátor</h3>
+        <p>
+            Az általános esemény egy olyan módszer, amellyel eseményeket küldhet harmadik féltől származó rendszerektől a
+            rendszerbe, s amely meghatározható a rendszerműveletek indítására az Események és szabályok menüben.
+            A Általános Esemény Generátor egy olyan eszköz, amely segít a fejlesztőknek és az integrátoroknak a
+            verzió felépítésében és a HTTP általános eseményhívások tesztelésében.
+        </p>
+        <p><a href="#/developers/events">Általános esemény generátor</a></p>
+    </div>
+    <div>
+        <h3>Szerver API</h3>
+        <p>
+            Lehetőséget biztosít a fejlesztőknekminden a hagyományos kliensben elérhető jellemző hozzáféréséhez: rendszer források (szerverek, kamerák, felhasználók, engedélyek), élő és rögzített videók lekérésére, események létrehozására, szabályok írására, PTZ kamerák vezérlésére, stb.
+        </p>
+        <p>
+            <a href="#/developers/api"><b>API teszteszköz (új)</b></a>
+            - interaktív dokumentáció eszközökkel API hívások teszteléséhez<br>
+            <a href="#/developers/changelog">API változáslog</a>
+            - változások listája az API-ban<br>
+            <a id="api-doc" href="api.xml" target="_blank">API dokumentáció</a><br>
+        </p>
+
+    </div>
+    <div>
+        <h3>Kamera részletek panel</h3>
+        <p>
+            További fejlesztőbarát információkat jelenít meg a kamerákhoz a Web admin felületen:
+        </p>
+        <ul>
+            <li>Kamera azonosítója</li>
+            <li>Link az össze elérhető videó streamhez</li>
+            <li>Közvetlen videó exportálás a böngészőből</li>
+        </ul>
+        <p>
+            A kamera részletek panel megnyitásához - navigáljon a Web admin felülethez, válassza a <a href="#/view">Nézet</a>  pontot,
+            válassza ki a kívánt kamerát, kattintson a beállításikonra (fogaskerék), majd válassza a "Kamera részletek" pontot.
+        </p>
+        <p><a href="#/view/?cameraLinks">kamera részletek panel megnyitása</a></p>
+    </div>
+    <div>
+        <h3>Videó forráskód (SDK)</h3>
+        <p>
+            A Video Source SDK lehetővé teszi, hogy integráljon szinte bármilyen élő vagy rögzített videót (IP kamerák,
+            NVR, DVR, stb.) a rendszerhez, és lehetővé tegye, hogy létrehozzon módszereket a felderítésre, bemutatásra, elemzésre
+            és videofelvételre. Ezenkívül lehetővé teszi az I / O portok és eszközök integrálását, valamint a mozgás érzékelés információt a harmadik féltől.
+        </p>
+        <p><a id="sdk-video" ng-href="#/sdkeula/sdk" >sDK megszerzése</a></p>
+    </div>
+
+    <div>
+        <h3>Tároló SDK</h3>
+        <p>
+            A Storage SDK lehetővé teszi a fejlesztők számára, hogy bármely tárolóhelyről olvassanak vagy írhassanak: helyi, távoli és akár
+            felhőből is. Tároló bővítmény létrehozásához olyan standard funkciók végrehajtása szükséges, mint például: I / O adatfolyam, ha létezik
+            fájl, törölje a fájlt, a mappában lévő fájlok listáját stb. A Storage SDK példát tartalmaz egy FTP
+            szerver tárhelyként történő használatára.
+        </p>
+        <p><a id="sdk-storage" ng-href="#/sdkeula/storage_sdk" >sDK megszerzése</a></p>
+    </div>
+</div>

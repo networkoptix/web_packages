@@ -6,9 +6,9 @@ type int = number
 type durationMs = number
 
 export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
-    static DEFAULT_VALUE = 0
-    static DEFAULT_ANIMATION_DURATION = 200
-    static DEFAULT_EASING: EASING = 'ease-in-out-sine'
+    static DEFAULT_VALUE = 0;
+    static DEFAULT_ANIMATION_DURATION = 200;
+    static DEFAULT_EASING: EASING = 'linear';
 
     constructor(
         initialValue: int = AnimatedInteger.DEFAULT_VALUE,

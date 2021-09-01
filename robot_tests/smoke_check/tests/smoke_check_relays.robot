@@ -2,18 +2,19 @@
 Resource      ../smoke_check_resource.robot
 Suite Setup    Relays Suite Setup
 Suite Teardown    Relays Suite Teardown
+Force Tags    relays
 
 *** Keywords ***
 Relays Suite Setup
-    ${system}=   Setup Docker System    image=4.1_prod    cloud email=${email relay}
+    ${system}=   Create Base System    test_relays    image=${IMG}    owner=${email relay}    add users=${False}
     Set Suite Variable    ${system}
     ${relays}=   Get Relays     auth=${cloud auth}
     Set Suite Variable    ${relays}
     Sleep    60
 
 Relays Suite Teardown
-    Run keyword and ignore error    Disconnect    ${ENV}    ${email relay}    ${password}    ${system}[id]
-    Run keyword and ignore error    Delete Docker Server     ${system}[cont]
+    Delete Base System     ${system}
+
 
 *** Test Cases ***
 Check All Relays

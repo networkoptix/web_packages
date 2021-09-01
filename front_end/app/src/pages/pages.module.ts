@@ -1,6 +1,5 @@
 import { NgModule }                  from '@angular/core';
 import { Angular2CsvModule }         from 'angular2-csv';
-
 import { DirectivesModule }          from '@directives/directives.module';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
@@ -20,6 +19,7 @@ import { AuthGuard }                 from '@guards/authGuard';
 import { FeatureGuard }              from '@src/routeGuards';
 import { PipesModule }               from '@src/pipes/pipes.module';
 import { FeatureFlagStrings }        from '@services/nx-config/base-config';
+import { NxConfigService }           from '@services/nx-config';
 
 const lazyRoutes: Routes = [
     {
@@ -33,7 +33,14 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'systems/:systemId/view',
-        loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
+        loadChildren : () => {
+            // Before release remove this logic and load only NxOldViewModule ...
+            // ... or enhance the logic to load new player only if desktop Chrome (TBD) -- TT
+            if (NxConfigService.useNewPlayer || new URLSearchParams(document.location.search).get('player') === 'new') {
+                return import('./systems/view/view.module').then(m => m.NxSystemViewModule);
+            }
+            return import('./systems/old-view/old-view.module').then(m => m.NxOldViewModule);
+        }
     },
     {
         path         : 'health-report',

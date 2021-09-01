@@ -2,6 +2,7 @@
 Resource    ../smoke_check_resource.robot
 Suite Setup      Customizations Suite Setup
 Suite Teardown   Close Browser
+Force Tags    customizations
 
 *** Keywords ***
 Customizations Suite Setup

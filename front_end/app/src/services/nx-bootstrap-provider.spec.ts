@@ -55,13 +55,15 @@ describe('Bootstrap Provider', () => {
         CONFIG.isLocal = true;
         bootstrapService.setSettings(resultSettings);
 
-        expect(CONFIG.company.copyrightYear).toBe(resultSettings.copyrightYear);
-        expect(CONFIG.company.links.website).toBe(resultSettings.companyLink);
-        expect(CONFIG.company.name).toBe(resultSettings.companyName);
-
-        expect(CONFIG.defaultLanguage).toBe(resultSettings.defaultLanguage);
-        expect(CONFIG.licenseTypes).toEqual(resultSettings.licenseTypes);
-        expect(CONFIG.supportedLanguages).toEqual(resultSettings.supportedLanguages);
+        expect(CONFIG.company.copyrightYear).toBe(resultSettings.description.copyrightYear);
+        expect(CONFIG.company.links.website).toBe(resultSettings.description.contact.supportAddress);
+        expect(CONFIG.company.name).toBe(resultSettings.description.companyName);
+        expect(CONFIG.cloudName).toBe(resultSettings.description.cloudName);
+        expect(CONFIG.vmsName).toBe(resultSettings.description.vmsName);
+        expect(CONFIG.trialLicenseKey).toBe(resultSettings.description.desktop.trialLicenseKey);
+        expect(CONFIG.defaultLanguage).toBe(resultSettings.description.defaultLanguage);
+        expect(CONFIG.licenseTypes).toEqual(resultSettings.webadminConfig.licenseTypes);
+        expect(CONFIG.supportedLanguages).toEqual(resultSettings.webadminConfig.supportedLanguages);
     });
 
     it('should set local settings from "moduleInformation"', () => {
@@ -76,7 +78,7 @@ describe('Bootstrap Provider', () => {
         expect(CONFIG.cloudHost).toBe(cloudHost);
         expect(CONFIG.cloudSystemId).toBe(resultSettings.cloudSystemId);
         expect(CONFIG.localSystemId).toBe(resultSettings.localSystemId);
-        expect(CONFIG.system.name).toBe(resultSettings.name);
+        expect(CONFIG.system.name).toBe(resultSettings.systemName || resultSettings.name);
         expect(CONFIG.localServerId).toBe(resultSettings.id);
     });
 

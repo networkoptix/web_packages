@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h3 class="modal-title">El servidor està desconnectat</h3>
+</div>
+<form class="form" role="form" id="restartDialog">
+    <div class="modal-body">
+        <p>El servidor no pot gestionar sol·licituds en aquest moment. S'està intentant accedir-hi novament.</p>
+        <uib-progressbar class="progress-striped active" type="info" value="100" id="restartingProgress">{{state}}</uib-progressbar>
+        <p>Si no passa res durant un temps, podeu comprovar l'estat del servidor manualment o actualitzar la pàgina</p>
+    </div>
+</form>

@@ -72,6 +72,84 @@ Remove Temporary Users
     # Run Keyword And Continue On Failure     Delete All Local Users    //span[contains(text(),"ocal+")]
     # Close Browser
 
+
+Edit User Permissions In Systems
+    [arguments]    ${user email address}    ${permissions}
+    Wait Until Element Is Not Visible    ${ADD USER MODAL}
+    Select user in Users List    ${user email address}
+    Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
+    Element Text Should Be    ${USER EMAIL}    ${user email address}
+    Sleep    3
+    Change User Permissions    ${permissions}
+    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    3
+    Wait Until Element Is Not Visible    ${ACCOUNT SAVE}
+
+Check User Permissions
+    [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
+    ${original timeout}=   Set Selenium Timeout    ${timeout}
+
+    Select user in Users List    ${user email address}
+
+    ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
+    Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
+
+    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
+    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
+    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
+    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT VIEWER}
+    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
+    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
+
+    Set Selenium Timeout    ${original timeout}
+
+
+Change User Permissions
+    [Arguments]    ${permissions}
+    Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
+    Click Button    ${ACCESS LEVEL DROPDOWN}
+    Sleep    1
+    ${p}=   Set Variable    ${ACCESS LEVEL DROPDOWN}/..${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a[contains(@class, "dropdown-item")]/span[text()='${permissions}']/..
+    Wait Until Element Is Visible    ${p}
+    Sleep    1
+    Click Link    ${p}
+    Sleep    1
+
+Remove User Permissions
+    [Arguments]    ${user email address}
+    ${User In List}=   Select user in Users List    ${user email address}
+    Wait Until Element Is Visible    ${REMOVE USER BUTTON}
+    Click Button    ${REMOVE USER BUTTON}
+    Wait Until Element Is Visible    ${REMOVE BUTTON}
+    Click Button    ${REMOVE BUTTON}
+#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
+    Wait Until Element Is Not Visible    ${User In List}
+
+Select user in Users List
+    [Arguments]    ${user email address}
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
+    Run Keyword Unless    ${status}   Go To Users List
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
+    Click Link    ${User In List}
+    Wait Until Element Is Visible    ${USER EMAIL}
+    Wait Until Element Contains    ${USER EMAIL}    ${user email address}
+    [Return]    ${user email address}
+
 Check Special Hint
     [Arguments]    ${type}
     Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}

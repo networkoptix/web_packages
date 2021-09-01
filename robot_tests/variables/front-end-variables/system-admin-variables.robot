@@ -67,6 +67,7 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    maxSceneItems=0
 ...    maxVirtualCameraArchiveSynchronizationThreads=-1
 ...    maxHttpTranscodingSessions=2
+...    maxWearableArchiveSynchronizationThreads=-1
 ...    rtspBufferSizeKb=64
 ...    metadataStorageChangePolicy=keep
 ...    osTimeChangeCheckPeriodMs=1000
@@ -182,7 +183,7 @@ ${AUTO UPDATE THUMBNAILS LABEL}                 //div[text()='${AUTO UPDATE THUM
 ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}       //*[@id='backupNewCamerasByDefault']
 ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMERAS BY DEFAULT TEXT}']
 
-@{ADVANCED SETTING ELEMENT BLOCK ONE}
+@{ADVANCED SETTING ELEMENT BLOCK ONE 4.3_test}
 ...    ${ADDITIONAL LOCAL FS TYPES INPUT}
 ...    ${ADDITIONAL LOCAL FS TYPES LABEL}
 ...    ${AUDIT TRAIL PERIOD DAYS INPUT}
@@ -196,8 +197,22 @@ ${BACKUP NEW CAMERAS BY DEFAULT LABEL}          //div[text()='${BACKUP NEW CAMER
 ...    ${AUTO DISCOVERY RESPONSE ENABLED LABEL}
 ...    ${AUTO UPDATE THUMBNAILS CHECKBOX}${visible}
 ...    ${AUTO UPDATE THUMBNAILS LABEL}
-#...    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}${visible}
-#...    ${BACKUP NEW CAMERAS BY DEFAULT LABEL}
+
+@{ADVANCED SETTING ELEMENT BLOCK ONE 4.2_test}
+...    ${ADDITIONAL LOCAL FS TYPES INPUT}
+...    ${ADDITIONAL LOCAL FS TYPES LABEL}
+...    ${AUDIT TRAIL PERIOD DAYS INPUT}
+...    ${AUDIT TRAIL PERIOD DAYS LABEL}
+...    ${CLIENT STATISTICS RELATIVE URL INPUT}
+...    ${CLIENT STATISTICS RELATIVE URL LABEL}
+...    ${ARECONT RTSP ENABLED CHECKBOX}${visible}
+...    ${ARECONT RTSP ENABLED LABEL}
+...    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}${visible}
+...    ${AUTO DISCOVERY RESPONSE ENABLED LABEL}
+...    ${AUTO UPDATE THUMBNAILS CHECKBOX}${visible}
+...    ${AUTO UPDATE THUMBNAILS LABEL}
+...    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}${visible}
+...    ${BACKUP NEW CAMERAS BY DEFAULT LABEL}
 
 
 ${CLOUD CONNECT RELAYING ENABLED CHECKBOX}                //*[@id='cloudConnectRelayingEnabled']
@@ -385,8 +400,10 @@ ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}  //div[text()='${MAX VIRTUAL CAM A
 ${MAX HTTP TRANSCODERS INPUT}                   //input[@id='maxHttpTranscodingSessions']
 ${MAX HTTP TRANSCODERS LABEL}                   //div[text()='${MAX HTTP TRANSCODERS TEXT}']
 ${MAX WEBM TRANSFER}                            //input[@id='maxWebMTranscoders']
+${MAX WEARABLE ARCHIVE SYNC INPUT}              //input[@id='maxWearableArchiveSynchronizationThreads']
+${MAX WEARABLE ARCHIVE SYNC LABEL}              //div[text()='maxWearableArchiveSynchronizationThreads']
 
-@{ADVANCED SETTING ELEMENT BLOCK EIGHT}
+@{ADVANCED SETTING ELEMENT BLOCK EIGHT 4.3_test}
 ...    ${MAX RTP RETRY COUNT INPUT}
 ...    ${MAX RTP RETRY COUNT LABEL}
 ...    ${MAX RTSP CONNECT DURATION INPUT}
@@ -397,6 +414,19 @@ ${MAX WEBM TRANSFER}                            //input[@id='maxWebMTranscoders'
 ...    ${MAX VIRTUAL CAM ARCHIVE SYNC THREADS LABEL}
 ...    ${MAX HTTP TRANSCODERS INPUT}
 ...    ${MAX HTTP TRANSCODERS LABEL}
+
+
+@{ADVANCED SETTING ELEMENT BLOCK EIGHT 4.2_test}
+...    ${MAX RTP RETRY COUNT INPUT}
+...    ${MAX RTP RETRY COUNT LABEL}
+...    ${MAX RTSP CONNECT DURATION INPUT}
+...    ${MAX RTSP CONNECT DURATION LABEL}
+...    ${MAX SCENE ITEMS INPUT}
+...    ${MAX SCENE ITEMS LABEL}
+...    ${MAX WEARABLE ARCHIVE SYNC INPUT}
+...    ${MAX WEARABLE ARCHIVE SYNC LABEL}
+...    ${MAX WEARABLE ARCHIVE SYNC INPUT}
+...    ${MAX WEARABLE ARCHIVE SYNC LABEL}
 
 
 ${RTSP BUFFER SIZE INPUT}                       //input[@id='rtspBufferSizeKb']
@@ -575,7 +605,7 @@ ${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-resu
 ${VIEW SEARCH BOX}                //div[contains(@class, "search-box")]
 ${VIEW SEARCH INPUT}              ${VIEW SEARCH BOX}//input[@placeholder="Search"]
 ${VIEW SEARCH DETAILS TOGGLER}    //div[contains(@class, "search-box")]//div[contains(@class, "details-toggler")]
-${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[contains(text(), "%SERVER NAME%")]/following-sibling::div[contains(@class, "ip-info")]
+${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[contains(text(), "%SERVER NAME%")]/following-sibling::span[contains(@class, "ip-info")]
 
 ${CAMERA NAME}    VirtualCamera
 ${CAMERA IP}      172.17.0.1
