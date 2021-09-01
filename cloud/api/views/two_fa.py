@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import api_success
+from api.helpers.exceptions import api_success, require_params
 
 
 class TwoFactorPermissionsMixin:
@@ -119,3 +119,22 @@ def get_active_backup_codes(request):
     Returns a list of all of the users backup codes.
     """
     return api_success(Auth.get_active_backup_codes(request))
+
+
+@swagger_auto_schema(method="POST",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "verification_code": openapi.Schema(description="A 2fa code from your 2fa app.", type=openapi.TYPE_STRING)
+                         },
+                         required=["verification_code"]
+                     ))
+@decorators.api_view(["POST"])
+@decorators.permission_classes((IsAuthenticatedOrTokenHasScope,))
+def add_2fa_to_session(request):
+    """
+    Verifies the current user's access_token using a 2fa code.
+    """
+    require_params(request, ("verification_code", ))
+    verification_code = request.data.get("verification_code")
+    return api_success(Auth.verify_2fa_code(verification_code, request.session.get("access_token")))

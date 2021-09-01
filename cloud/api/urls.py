@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^2fa/verification$', two_fa.TwoFactorVerification.as_view()),
     url(r'^2fa/backup$',       two_fa.BackupCode.as_view()),
     url(r'^2fa/backup/codes$', two_fa.get_active_backup_codes),
-
+    url(r'^2fa/updateSession$', two_fa.add_2fa_to_session),
 
     url(r'^storage/create',     storage.create),
     url(r'^storage/delete',     storage.delete),
