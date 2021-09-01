@@ -119,10 +119,6 @@
 
     .drop-container {
         max-width: 992px;
-    
-        @include media-breakpoint-down(sm) {
-            flex-direction : column !important;
-        }
 
         .drop {
             padding: 0 1rem 0 0;
