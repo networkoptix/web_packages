@@ -129,11 +129,15 @@ Log In Cloud
     Sleep    0.5
 
 Log In Web Admin
-    [arguments]    ${login}    ${password}
+    [arguments]    ${login}    ${password}    ${validate}=${True}
     Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     Input Text    //input[@id="login_email"]    ${login}
     Input Text    //input[@id="login_password"]    ${password}
     Click Button    //button[@type="submit"]
+    IF    ${validate} == ${True}
+        Validate Log In    ${login}    password=${password}
+    END
+    Sleep    1
 
 
 Log In With Remember Me
@@ -200,6 +204,7 @@ Log Out Web Admin
     Click Button    //header//button[@id="accountSettingsSelect"]
     Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
     Click Link    //header//a/span[text()="Log Out"]/..
+    Close Modal If There  # need to remove once CLOUD-7859 will be solved
     Validate Log Out Web Admin
 
 Validate Log Out
