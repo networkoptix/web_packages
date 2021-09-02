@@ -479,7 +479,7 @@ export class NxApiToolComponent implements OnInit {
     }
 
     private modifyPathTags(api: APIDoc, type: APIDocVersion = 'main') {
-        // We have to change the tags on sub-apis so that swagger can properly differentiate tags with the same name coming from multiple different API files
+        // We have to change the tags on apis so that swagger can properly differentiate tags with the same name coming from multiple different API files
         const tagModifier = this.getTagModifier(type);
 
         Object.keys(api.paths).forEach(endpoint => {

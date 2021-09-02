@@ -9572,6 +9572,10 @@
 	flex-direction : column
 }
 
+.swagger-ui select.content-type {
+	pointer-events: none;
+}
+
 .swagger-ui .body-param-options .body-param-edit {
 	padding : 10px 0
 }
