@@ -1018,18 +1018,24 @@ Stop Docker Server
     [Arguments]    ${name}
     Execute Command Remotely    docker stop ${name}
 
-Restart Docker Server
-    [Arguments]    ${port}    ${name}    ${auth}
-    Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
-    Sleep    10
-    Acquire Lock   restart_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${port info}=   Execute Command    docker container port ${name}
-    ${port info}=   Split String    ${port info}    :::
-    Close Connection
-    Release Lock   restart_server_lock
-    [Return]    ${port info}[1]
+Restart Docker Servers
+    [Arguments]    @{names}
+    FOR    ${name}    IN    @{names}
+        Execute Command Remotely    docker restart ${name}
+        Sleep    1
+    END
+    
+    # [Arguments]    ${port}    ${name}    ${auth}
+    # Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    # Sleep    10
+    # Acquire Lock   restart_server_lock
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # ${port info}=   Execute Command    docker container port ${name}
+    # ${port info}=   Split String    ${port info}    :::
+    # Close Connection
+    # Release Lock   restart_server_lock
+    # [Return]    ${port info}[1]
 
 Get container port by name
     [Arguments]    ${name}

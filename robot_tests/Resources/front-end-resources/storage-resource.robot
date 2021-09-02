@@ -88,13 +88,16 @@ Verify Storages
     [Arguments]    ${owner}    ${system}    ${storages number}
     Log in to user and system    ${owner}     ${system}
     Go To Servers
-    Verify on Servers Page    timeout=95
+    Sleep    5
+    ${load} =    Run Keyword and Return Status    Verify on Servers Page    #timeout=95
+    Run Keyword If    ${load} == ${FALSE}    Reload Page
+    Run Keyword If    ${load} == ${FALSE}    Verify on Servers Page    #timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
     Log Out
-    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG      console=${console}
+    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
     [Arguments]    ${owner}    ${system}
@@ -115,7 +118,7 @@ Turn on Recording
     Log    recording turned on ..... | PASS |    DEBUG      console=${console}
 
 Set Default Storage Config
-    [Arguments]    ${server url}    ${disabled}    ${backups}
+    [Arguments]    ${server url}    ${disabled}    ${backups}    ${range}=${drives}
     ${storages} =    Get Storages via API    ${server url}
     Should Not Be Empty    ${storages}
     ${storages string} =    Convert To String    ${storages}
@@ -123,7 +126,7 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
-    FOR    ${n}    IN RANGE    5
+    FOR    ${n}    IN RANGE    ${range}
         ${url} =    Set variable    ${storages dict[${n}]['url']}
         ${disabled disk} =    Run Keyword And Return Status    Should Contain Any    ${url}    @{disabled}
         ${backup} =    Run Keyword And Return Status    Should Contain Any   ${url}    @{backups}
@@ -295,9 +298,9 @@ Start Server
 Initialize Backup for User and System
     [Arguments]    ${user}    ${system}
     Log in to user and system    ${user}    ${system}
-    Wait Until Element is Visible with Retry    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    Go To servers
     Verify on Servers Page
+    Select Server By Name    ${server 1['id']}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     # Click Element    ${ARCHIVE BACKUP CHECK BOX}
     Enable Archive Backup
@@ -310,10 +313,12 @@ Initialize Backup for User and System
     
 Enable Archive Backup
     Click Element    ${ARCHIVE BACKUP CHECK BOX}
-    ${status} =    Run Keyword And Return Status    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=5
+    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Click Button    ${SAVE BUTTON}
+    # ${status} =    Run Keyword And Return Status    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=5
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Run Keyword Unless    ${status}    Click Element    ${ARCHIVE BACKUP CHECK BOX}
-    Run Keyword and Continue on Failure    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=15
+    # Run Keyword Unless    ${status}    Click Element    ${ARCHIVE BACKUP CHECK BOX}
+    # Run Keyword and Continue on Failure    Wait Until Element Is Visible    ${ARCHIVE BACKUP SWITCH ENABLED}    timeout=15
     
 Cleanup External Drive
     Log    Cleanup
@@ -355,8 +360,8 @@ Cleanup External Drive
     ...    ${DELETE STORAGE DELETE BUTTON}    
     Click Button    ${DELETE STORAGE DELETE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Wait Until Element Is Visible    ${ALERT}
-    Wait Until Element Is Visible    ${STORAGE LOCATIONS BLOCK} 
+    # Wait Until Element Is Visible    ${ALERT}
+    Wait Until Element Is Visible With Retry    ${STORAGE LOCATIONS BLOCK}    15
     Wait Until Element Is Not Visible    ${SMB STORAGE DELETE BUTTON} 
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot  
     Log To Console   networkdisk deleted ....... | PASS |
