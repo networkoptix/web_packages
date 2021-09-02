@@ -130,10 +130,10 @@ Owner/admin Has Access to Health Monitoring
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
-Admin Has Access to Health Monitoring
+Administrator Has Access to Health Monitoring
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][cloudAdmin]
-    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][1]
+    ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][cloudAdmin][login]
     Sleep    1
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -171,7 +171,7 @@ Json Upload Works on Offline System
 Advanced Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][advancedViewer]
-    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][0]
+    ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][advancedViewer][login]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
@@ -180,7 +180,7 @@ Advanced Viewer Does Not Have Access To Health Monitor
 Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][viewer]
-    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][4]   
+    ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][viewer][login]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
@@ -189,7 +189,7 @@ Viewer Does Not Have Access To Health Monitor
 Live Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][liveViewer]
-    ...    ELSE    Health Monitor Test Setup    user=local+${server 1}[local users][3]   
+    ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][liveViewer][login]
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}    10
     ${location}=   Get location
     Go To    ${location}/health/Alerts
