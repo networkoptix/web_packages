@@ -172,6 +172,7 @@ export class TimelineService {
         this._visibleRange.end = this._fullRange.end;
         this._targetScrollMs = undefined;
         this._emit();
+        // console.log('full zoom out')
     }
 
     protected _sanitizeScrollStartTimeAim (targetT: ms): ms {

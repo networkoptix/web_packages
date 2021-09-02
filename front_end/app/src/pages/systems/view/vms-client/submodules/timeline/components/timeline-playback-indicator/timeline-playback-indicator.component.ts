@@ -122,7 +122,11 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public onTimelineSubjectChange (s: TimelineServiceStatus) {
-        if (this.visible) {
+        const ps = this.playback.state
+        if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
+            this.timeMs = ps.currentTime // prevents the weired jitter
+            const ho = this.honestOffset
+            const vo = this.visibleOffset
             this.honestOffset = this.timeline.timeToDomOffsetX(this.timeMs);
             this.visibleOffset = Math.max(
                 MARGIN + PRIMARY_WIDTH / 2,
@@ -131,7 +135,9 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                     (this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) - (MARGIN + PRIMARY_WIDTH / 2)
                 )
             );
-            // console.log('timeline change', this.timeMs, this.honestOffset, this.visibleOffset)
+            // if (Math.abs(this.honestOffset - ho) > 1) {
+            //     console.log('jump', Date.now(), 'time', this.timeMs, new Date(this.timeMs), 'honest', ho, '->', this.honestOffset, 'visible', vo, '->', this.visibleOffset)
+            // }
             this.self.nativeElement.style.left = `${Math.round(this.visibleOffset)}px`;
             for (const klass in this.edgeCaseClasses) {
                 if (this.edgeCaseClasses[klass]) {
@@ -145,6 +151,9 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public onPlaybackSubjectChange (s: PlaybackState) {
+        // if (s.mode === PLAYBACK_MODE.ARCHIVE && s.started) {
+        //     console.log('playback change', s.currentTime - this.timeMs, s.currentTime, new Date(s.currentTime))
+        // }
         switch (s.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.visible = false;
@@ -162,7 +171,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 this.date = dateformat(tweakedT, DATE_FORMAT);
 
                 // a hack to keep the indicator in place while timeline animates a jump over the gap between records
-                this.timeMs -= (this.timeline.targetScrollMs - this.timeline.visibleRange.start);
+                // this.timeMs -= (this.timeline.targetScrollMs - this.timeline.visibleRange.start);
                 break;
             default:
                 assertNever(s);

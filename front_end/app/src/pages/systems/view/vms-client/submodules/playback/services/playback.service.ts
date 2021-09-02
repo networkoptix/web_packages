@@ -90,6 +90,7 @@ export class PlaybackService implements OnDestroy {
 
     protected _emit (): void {
         this._subject.next(this.state);
+        // console.log('playback emit', this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.currentTime)
     }
 
     public get subject (): BehaviorSubject<PlaybackState> {
