@@ -401,6 +401,11 @@
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+        },
+        "twoFactor": {
+            "action": "Login",
+            "message": "Two factor authentication is enabled for this account. Please login.",
+            "title": "Two factor is required!"
         }
     },
     "downloads": {

@@ -21,6 +21,7 @@
                    id="login_email" name="login_email" #login_email="ngModel"
                    [ngModel]="auth.email"
                    (ngModelChange)="setEmail($event);"
+                   [readOnly]="readOnly"
                    pattern="{{ CONFIG.credentialsValidation.emailRegex }}" maxlength="255"
                    required nxFocusMe>
             <ng-container *ngIf="login_email.invalid">
@@ -44,7 +45,7 @@
             <input type="password" class="form-control"
                    name="login_password" id="login_password" #login_password="ngModel"
                    [(ngModel)]="password"
-                   (ngModelChange)="resetForm()"
+                   [readOnly]="readOnly"
                    maxlength="255"
                    required>
             <ng-container *ngIf="login_password.invalid">

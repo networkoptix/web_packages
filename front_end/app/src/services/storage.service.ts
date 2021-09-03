@@ -92,4 +92,20 @@ export class NxStorageService {
     set refreshToken(token) {
         this.storage.store('refreshToken', token);
     }
+
+    get cloudApiAccessToken(): string {
+        return this.storage.retrieve('cloudApiAccessToken') || undefined;
+    }
+
+    set cloudApiAccessToken(token) {
+        this.storage.store('cloudApiAccessToken', token);
+    }
+
+    get cloudApiRefreshToken(): string {
+        return this.storage.retrieve('cloudApiRefreshToken') || undefined;
+    }
+
+    set cloudApiRefreshToken(token) {
+        this.storage.store('cloudApiRefreshToken', token);
+    }
 }

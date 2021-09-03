@@ -264,6 +264,11 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
     if (!errorCode) {
         return lang.errorCodes.unknownError();
     }
+
+    if (error.errorText === 'second_factor_required' && lang.dialogs?.message?.twoFactor) {
+        return lang.dialogs.message.twoFactor.required();
+    }
+
     if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
         if (typeof (errorCodes[errorCode]) === 'function') {
             const result = (errorCodes[errorCode])(error) || false;

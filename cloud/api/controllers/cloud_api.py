@@ -130,6 +130,8 @@ class TempLogin:
         tokens = Auth.get_token(email, password)
         self.access_token = tokens['access_token']
         self.refresh_token = tokens['refresh_token']
+        if error := tokens.get('error'):
+            raise APINotAuthorisedException(error, ErrorCodes.not_authorized.value)
 
     def __enter__(self):
         return self

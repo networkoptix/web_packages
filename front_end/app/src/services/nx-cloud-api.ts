@@ -1,7 +1,7 @@
 import { Injectable, Injector }                  from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams }   from '@angular/common/http';
 import { Router }                                from '@angular/router';
-import { catchError, concatMap, switchMap, map } from 'rxjs/operators';
+import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 import { EMPTY, of, from, BehaviorSubject }      from 'rxjs';
 import { v4 as uuid }                            from 'uuid';
 
@@ -16,6 +16,9 @@ import { NxAccountService }         from '@services/account.service';
 import { ConsoleSection }           from '@components/console-table/console-table.component';
 import { PackageStatus }            from '@dialogs/download-async/download-async.component';
 import { NxConsoleService }         from '@pages/developer-console/console/console.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxDialogsService }         from '@dialogs/dialogs.service';
+import { OauthService }             from '@services/oauth.service';
 
 export const DOC_TYPES = {
     knowledgebase : 'kb',
@@ -101,7 +104,8 @@ export class NxCloudApiService {
         private router: Router,
         private nxSwCacheService: NxSwCacheService,
         private injector: Injector,
-        private consoleService: NxConsoleService
+        private consoleService: NxConsoleService,
+        private oauthService: OauthService
     ) {
         this.CONFIG = configService.getConfig();
         setTimeout(_ => {
@@ -152,11 +156,22 @@ export class NxCloudApiService {
 
     @swClear('cloudSystemAPI', '/systems', true)
     connect(systemName, email, password) {
+        const accessToken = this.oauthService.cloudApiAccessToken;
+        let headers = new HttpHeaders();
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
             name     : systemName,
             email    : email,
             password : password
-        }).toPromise();
+        }, { headers }).pipe(
+            tap(() => {
+                if (accessToken) {
+                    return this.oauthService.logoutTokens();
+                }
+            })
+        ).toPromise();
     }
 
     verify(password) {
@@ -615,6 +630,40 @@ export class NxCloudApiService {
 
     getMenu(menuName: string) {
         return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
+    }
+
+    /* Webadmin functions */
+    getTokensFromCloud(code: string) {
+        const params = {
+            code,
+            grant_type    : 'authorization_code',
+            response_type : 'token'
+        };
+        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params }).toPromise().then((tokens) => {
+            this.oauthService.setTokens(tokens);
+        });
+    }
+
+    reauthenticate(state?: string, email?: string) {
+        const dialogService = this.injector.get(NxDialogsService);
+        const LANG = this.injector.get(NxLanguageProviderService).translations;
+        const { action, message, title } = LANG.dialogs?.twoFactor;
+        return from(
+            dialogService.confirm(message?.(), title?.(), action?.()).then((res) => {
+                if (!res) {
+                    return;
+                }
+                this.oauthService.redirectOauth(state, email);
+            })
+        );
+    }
+
+    validateToken() {
+        const token = this.oauthService.cloudApiAccessToken;
+        if (token) {
+            return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } }).toPromise();
+        }
+        return Promise.reject(new Error('No token was present'));
     }
 }
 

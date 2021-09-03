@@ -261,6 +261,7 @@ export interface Dialogs {
     renewAuth:     RemoveSystem;
     titles:        DialogsTitles;
     tooltips:      Tooltips;
+    twoFactor:     RemoveSystem;
 }
 
 export interface AddUser {
@@ -1300,6 +1301,7 @@ const typeMap: any = {
         { json: "renewAuth", js: "renewAuth", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
+        { json: "twoFactor", js: "twoFactor", typ: r("RemoveSystem") },
     ], false),
     "AddUser": o([
         { json: "alreadyExists", js: "alreadyExists", typ: "any" },

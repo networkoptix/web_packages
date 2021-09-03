@@ -39,6 +39,7 @@ export class CloudConnectModalContent implements OnInit {
     wrongPassword: boolean;
     accountBlocked: boolean;
     hideErrors = true;
+    readOnly = false;
 
     @ViewChild('connectForm', { static: true }) connectForm: HTMLFormElement;
 
@@ -95,6 +96,11 @@ export class CloudConnectModalContent implements OnInit {
             this.next = nextUrl[1];
         }
         this.password = '';
+        this.account.cloudApi.validateToken().then((res) => {
+            this.setEmail(res.username);
+            this.password = '********';
+            this.readOnly = true;
+        }).catch(() => {});
 
         this.connectProcess = this.processService.createProcess(() => {
             this.connectForm.controls.login_email.setErrors(undefined);
@@ -163,6 +169,8 @@ export class CloudConnectModalContent implements OnInit {
             if (error?.resultCode === 'portalError') {
                 // close dialog ... process will show toaster
                 this.close();
+            } else {
+                setTimeout(() => this.account.cloudApi.reauthenticate('connect', this.auth.email), 2000);
             }
         });
     }

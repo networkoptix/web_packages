@@ -213,16 +213,17 @@ def authenticate(request):
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
 def logout(request):
-    require_params(request, ("accessToken", "cloudAccessToken", "refreshToken"))
+    require_params(request, ("cloudAccessToken", "refreshToken"))
     request.session["access_token"] = request.data["cloudAccessToken"]
     request.session["refresh_token"] = request.data["refreshToken"]
 
     # If this fails that means the refresh and cloud access token expired.
     # If one or the other is valid logout should work.
-    try:
-        Auth.delete_token(request, request.data["accessToken"])
-    except (APILogicException, APINotAuthorisedException):
-        raise APINotAuthorisedException("Invalid cloud access and refresh token", ErrorCodes.not_authorized)
+    if access_token := request.data.get("accessToken"):
+        try:
+            Auth.delete_token(request, access_token)
+        except (APILogicException, APINotAuthorisedException):
+            raise APINotAuthorisedException("Invalid cloud access and refresh token", ErrorCodes.not_authorized)
 
     # At this point the access_token is valid and the refresh might be valid
     try:
