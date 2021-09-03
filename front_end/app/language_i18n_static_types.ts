@@ -96,6 +96,11 @@ export interface Authorize {
     forAccountSubheader:        any;
     passwordDisconnect:         any;
     passwordMerge:              any;
+    passwordBackup:             any;
+    passwordRestore:            any;
+    passwordReset:              any;
+    passwordRestart:            any;
+    passwordDetach:             any;
     expiredAccountSubheader:    any;
     createAccountHeader:        any;
     activateHeader:             any;
@@ -1142,6 +1147,11 @@ const typeMap: any = {
         { json: "forAccountSubheader", js: "forAccountSubheader", typ: "any" },
         { json: "passwordDisconnect", js: "passwordDisconnect", typ: "any" },
         { json: "passwordMerge", js: "passwordMerge", typ: "any" },
+        { json: "passwordBackup", js: "passwordBackup", typ: "any" },
+        { json: "passwordRestore", js: "passwordRestore", typ: "any" },
+        { json: "passwordReset", js: "passwordReset", typ: "any" },
+        { json: "passwordRestart", js: "passwordRestart", typ: "any" },
+        { json: "passwordDetach", js: "passwordDetach", typ: "any" },
         { json: "expiredAccountSubheader", js: "expiredAccountSubheader", typ: "any" },
         { json: "createAccountHeader", js: "createAccountHeader", typ: "any" },
         { json: "activateHeader", js: "activateHeader", typ: "any" },

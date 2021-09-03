@@ -104,6 +104,31 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
                 subHeader,
                 subHeaderSuffix : auth.passwordMerge()
             },
+            confirmPasswordCreateBackup: {
+                header          : auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix : auth.passwordBackup()
+            },
+            confirmPasswordRestoreBackup: {
+                header          : auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix : auth.passwordRestore()
+            },
+            confirmPasswordResetServer: {
+                header          : auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix : auth.passwordReset()
+            },
+            confirmPasswordRestartServer: {
+                header          : auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix : auth.passwordRestart()
+            },
+            confirmPasswordDetachServer: {
+                header          : auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix : auth.passwordDetach()
+            },
             connectSystemToCloud : connect,
             setupWizard          : connect,
             renewSessionDesktop  : renew,

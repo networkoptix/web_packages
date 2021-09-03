@@ -465,7 +465,7 @@
     }
 
     .auth-overlay {
-        background-color: $additional_light2;
+        background-color: $light1;
         position: fixed;
         top: 0;
         left: 0;
@@ -477,9 +477,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        .auth-window {
-            margin-bottom: 140px;
-        }
     }
 
     .auth-footer {
