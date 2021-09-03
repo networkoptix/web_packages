@@ -387,8 +387,10 @@ Change role for Cloud User
         ...    ${ACCESS LEVEL DROPDOWN}
         ...    ${NO UNSAVED CHANGES}
         ...    ${REMOVE USER BUTTON}
+    ${name shown}=   Get Text    ${USER NAME}
     ${email shown}=   Get Text    ${USER EMAIL}
     ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
+    Should be equal as strings    ${name shown}    Tmp Viewer
     Should be equal as strings    ${email shown}    ${tmp user}
     Should be equal as strings    ${role shown}    Viewer
 
