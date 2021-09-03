@@ -18,8 +18,6 @@ import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
 import { PipesModule }               from '@src/pipes/pipes.module';
-import { NxConfigService }           from '@services/nx-config';
-import { DeviceDetectorService }     from 'ngx-device-detector';
 
 const lazyRoutes: Routes = [
     {
@@ -28,15 +26,7 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'systems/:systemId/view',
-        loadChildren : () => {
-            const deviceService = new DeviceDetectorService(undefined);
-            // @ts-ignore
-            const useNew = !!window.chrome && !(deviceService.isMobile() || deviceService.isTablet());
-            if (useNew || NxConfigService.useNewPlayer || new URLSearchParams(document.location.search).get('player') === 'new') {
-                return import('./systems/view/view.module').then(m => m.NxSystemViewModule);
-            }
-            return import('./systems/old-view/old-view.module').then(m => m.NxOldViewModule);
-        }
+        loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },
     {
         path         : 'health-report',

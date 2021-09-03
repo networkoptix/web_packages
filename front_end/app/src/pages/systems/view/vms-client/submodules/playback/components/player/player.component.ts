@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter, ElementRef } from '@angular/core';
 import PlaybackService from '../../services/playback.service';
-import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
+import { ArchivePlaybackState, PlaybackState, PLAYBACK_MODE, LivePlaybackState } from '../../datatypes/PlaybackState';
 import { Subscription } from 'rxjs';
 import { PlaybackTransport } from '@pages/systems/view/view.types';
 import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
@@ -86,10 +86,19 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rotateDeg = this.vms.selectedCamera?.rotation || 0;
     }
 
-    public onBufferingChange (s: boolean) {
+    public onBufferingChange (s: number) {
+        /*
+        s is the timeout value for when the player waits.
+        s === 0 means we loaded and need the overlay.
+        s === 1 means we started playing.
+        s > 1 means the player fired a waiting event and we need to move the time back by that much.
+         */
         this._log('on buffering change', s, this.playback.state);
-        setTimeout(() => { this.showOverlay = s; }, 0);
-        if (!s) {
+        setTimeout(() => { this.showOverlay = s === 0; }, 0);
+        if (s > 1 && 'currentTime' in this.playback.state) {
+            this.playback.pause();
+            setTimeout(() => this.playback.playArchive((<ArchivePlaybackState|LivePlaybackState> this.playback.state).currentTime - s));
+        } else if (s === 1) {
             switch (this.playback.state.mode) {
                 case PLAYBACK_MODE.LIVE:
                 case PLAYBACK_MODE.ARCHIVE:
