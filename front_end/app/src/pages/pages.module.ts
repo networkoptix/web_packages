@@ -19,7 +19,6 @@ import { AuthGuard }                 from '@guards/authGuard';
 import { FeatureGuard }              from '@src/routeGuards';
 import { PipesModule }               from '@src/pipes/pipes.module';
 import { FeatureFlagStrings }        from '@services/nx-config/base-config';
-import { NxConfigService }           from '@services/nx-config';
 
 const lazyRoutes: Routes = [
     {
@@ -33,14 +32,7 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'systems/:systemId/view',
-        loadChildren : () => {
-            // Before release remove this logic and load only NxOldViewModule ...
-            // ... or enhance the logic to load new player only if desktop Chrome (TBD) -- TT
-            if (NxConfigService.useNewPlayer || new URLSearchParams(document.location.search).get('player') === 'new') {
-                return import('./systems/view/view.module').then(m => m.NxSystemViewModule);
-            }
-            return import('./systems/old-view/old-view.module').then(m => m.NxOldViewModule);
-        }
+        loadChildren : () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },
     {
         path         : 'health-report',

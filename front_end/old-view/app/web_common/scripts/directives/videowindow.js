@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as Hls from 'hls.js';
 
 (function () {
@@ -25,8 +26,8 @@ import * as Hls from 'hls.js';
     var flashPlayer = '';
 
     angular.module('nxCommon')
-        .directive('videowindow', ['$interval', '$timeout', 'animateScope', '$sce', '$log', '$http', '$window', 'systemAPI',
-            function ($interval, $timeout, animateScope, $sce, $log, $http, $window, systemAPI) {
+        .directive('videowindow', ['$rootScope', '$interval', '$timeout', 'animateScope', '$sce', '$log', '$http', '$window', 'systemAPI',
+            function ($rootScope, $interval, $timeout, animateScope, $sce, $log, $http, $window, systemAPI) {
 
                 return {
                     restrict: 'E',
@@ -39,7 +40,8 @@ import * as Hls from 'hls.js';
                         player: '=',
                         activeFormat: '=',
                         rotation: '=',
-                        playerHandler: '='
+                        playerHandler: '=',
+                        status: '<'
                     },
                     templateUrl: Config.viewsDirCommon + 'components/videowindow.html',// ???
 
@@ -67,7 +69,7 @@ import * as Hls from 'hls.js';
                                 return src.type === mimeTypes[mediaformat];
                             });
                             if (scope.debugMode) {
-                                console.info('playing', src ? src.src : null);
+                                console.warn('playing', src ? src.src : null);
                             }
                             //return 'http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8';
                             //return 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
@@ -76,7 +78,7 @@ import * as Hls from 'hls.js';
                         }
 
                         function detectBestFormat() {
-                            //1. Hide all informers
+                            // 1. Hide all informers
                             scope.videoFlags = {
                                 flashRequired: false,
                                 flashOrWebmRequired: false,
@@ -87,18 +89,18 @@ import * as Hls from 'hls.js';
                                 ieWin10: false,
                                 ubuntuNX: false,
                                 errorCode: '',
-                                errorDescription: ''
+                                errorDescription: '',
+                                status: scope.status
                             };
 
                             if (scope.debugMode && scope.activeFormat !== 'Auto') {
                                 return scope.activeFormat;
                             }
 
-                            //This function gets available sources for camera and chooses the best player for this browser
+                            // This function gets available sources for camera and chooses the best player for this browser
+                            // return 'rtsp'; // To debug some format - force it to work
 
-                            //return 'rtsp'; // To debug some format - force it to work
-
-                            //We have options:
+                            // We have options:
                             // webm - for good desktop browsers
                             // webm-codec - for IE. Detectf
                             // native-hls - for mobile browsers
@@ -126,7 +128,7 @@ import * as Hls from 'hls.js';
                             var jsHlsSupported = Hls.isSupported();
 
                             // No native support
-                            //Presume we are on desktop:
+                            // Presume we are on desktop:
                             switch ($window.jscd.browser) {
                                 case 'Microsoft Internet Explorer':
                                     // Check version here
@@ -144,10 +146,12 @@ import * as Hls from 'hls.js';
                                         if ($window.jscd.osVersion < 10) {
                                             if (weHaveHls) {
                                                 scope.videoFlags.flashOrWebmRequired = true;
-                                            } else {
+                                            }
+                                            else {
                                                 scope.videoFlags.ieNoWebm = true;
                                             }
-                                        } else {
+                                        }
+                                        else {
                                             scope.videoFlags.ieWin10 = true;
                                         }
                                         return false;
@@ -209,7 +213,7 @@ import * as Hls from 'hls.js';
                             scope.jsHls = false;
                         }
 
-                        //For the native player. Handles webm's long loading times
+                        // For the native player. Handles webm's long loading times
                         function loadingTimeout() {
                             scope.videoFlags.errorLoading = true;
                             scope.loading = false;
@@ -267,10 +271,14 @@ import * as Hls from 'hls.js';
                                 }).finally(() => {
                                     handlingError = false;
                                 });
+
+                            // console.error(error);
                         }
 
                         function playerReadyHandler(api) {
                             makingPlayer = false;
+                            cancelTimeoutNativeLoad();
+                            nativePlayerLoadError = $timeout(loadingTimeout, Config.webclient.nativeTimeout);
                             scope.vgApi = api;
                             if (scope.vgSrc) {
                                 scope.vgApi.load(getFormatSrc('hls'));
@@ -284,6 +292,24 @@ import * as Hls from 'hls.js';
                                     var video = event.srcElement || event.originalTarget;
                                     scope.vgUpdateTime({$currentTime: video.currentTime, $duration: video.duration});
                                 });
+
+                                scope.vgApi.addEventListener('playing', function (event) {
+                                    // I experienced a missing event "loadeddata" (WebM?)
+                                    // this is to continue playing -- TT
+                                    scope.loading = false;
+
+                                    $rootScope.$emit('nx.player.playing');
+                                });
+                                scope.vgApi.addEventListener('play', function() {
+                                    if (nativePlayerLoadError) {
+                                        $timeout.cancel(nativePlayerLoadError);
+                                        nativePlayerLoadError = undefined;
+                                    }
+                                });
+
+                                //If the player stalls give it a chance to recover
+                                scope.vgApi.addEventListener('progress', resetTimeout);
+                                scope.vgApi.addEventListener('stalled', resetTimeout);
 
                                 scope.vgApi.addEventListener('ended', function (event) {
                                     scope.vgUpdateTime({$currentTime: null, $duration: null});
@@ -299,7 +325,7 @@ import * as Hls from 'hls.js';
                             scope.jsHls = false;
 
                             $timeout(function () {
-                                var nativePlayer = new $window.NativePlayer();
+                                var nativePlayer = new window.NativePlayer();
                                 nativePlayer.init(element.find('.videoplayer'), function (api) {
                                     makingPlayer = false;
                                     scope.vgApi = api;
@@ -309,6 +335,7 @@ import * as Hls from 'hls.js';
                                         scope.vgApi.load(getFormatSrc(nativeFormat), mimeTypes[nativeFormat]);
 
                                         scope.vgApi.addEventListener('timeupdate', function (event) {
+                                            scope.loading = false;
                                             var video = event.srcElement || event.originalTarget;
                                             scope.vgUpdateTime({
                                                 $currentTime: video.currentTime,
@@ -320,6 +347,18 @@ import * as Hls from 'hls.js';
                                             scope.loading = false; // Video is playing - disable loading
                                             scope.playerHandler();
                                             cancelTimeoutNativeLoad();
+                                        });
+
+                                        scope.vgApi.addEventListener('playing', function (event) {
+                                            // I experienced a missing event "loadeddata" (WebM?)
+                                            // this is to continue playing -- TT
+                                            scope.loading = false;
+
+                                            $rootScope.$emit('nx.player.playing');
+                                        });
+
+                                        scope.vgApi.addEventListener('waiting', function (event) {
+                                            scope.loading = true;
                                         });
 
                                         scope.vgApi.addEventListener('ended', function (event) {
@@ -338,8 +377,8 @@ import * as Hls from 'hls.js';
 
                                         //If the player stalls give it a chance to recover
                                         scope.vgApi.addEventListener('stalled', resetTimeout);
-                                        scope.vgApi.addEventListener('error', function (e) {
-                                            $timeout(function () {
+                                        scope.vgApi.addEventListener('error', (e) => {
+                                            $timeout(() => {
                                                 if (e.target === null) {
                                                     // this is a special case - interrupted video
                                                     // (switch to another camera)
@@ -347,7 +386,7 @@ import * as Hls from 'hls.js';
                                                 }
 
                                                 var target = e.target;
-                                                if (target.error.url === undefined) {
+                                                if (target.error && target.error.url === undefined) {
                                                     target.error.url = target.currentSrc;
                                                 }
 
@@ -430,6 +469,7 @@ import * as Hls from 'hls.js';
                             if (makingPlayer) {
                                 return;
                             }
+
                             makingPlayer = true;
                             switch (scope.player) {
                                 case 'flashls':
@@ -461,7 +501,7 @@ import * as Hls from 'hls.js';
                             // manuall $digest required as resize event
                             // is outside of angular
                             $timeout(function () {
-                                scope.$digest();
+                               scope.$digest();
                             });
                         }
 
@@ -482,8 +522,8 @@ import * as Hls from 'hls.js';
                                     scope.preview = null;
                                     return;
                                 }
-                                $timeout(initNewPlayer);
-                                $timeout(updateWidth);
+                                $timeout(() => { initNewPlayer() });
+                                $timeout(() => { updateWidth() });
                             }
                         }
 

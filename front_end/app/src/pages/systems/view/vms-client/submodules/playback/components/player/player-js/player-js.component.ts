@@ -25,7 +25,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Input() sourceUrl: string;
     @Input() transportError: boolean;
 
-    @Output() bufferingChange = new EventEmitter<boolean>();
+    @Output() bufferingChange = new EventEmitter<number>();
     @Output() videoEnded = new EventEmitter<boolean>();
     @Output() videoError = new EventEmitter<any>();
 
@@ -38,29 +38,36 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     constructor() {}
 
     initPlayer(): void {
+        let playerHasPlayed = false;
         let stallTimer;
+        const waitingTime = 4 * 1000;
         const options = {
-            autoplay           : true,
-            maxPlaylistRetries : 3,
-            inactivityTimeout  : 0,
+            autoplay          : true,
+            inactivityTimeout : 0
         };
         this.player = videojs(this.videoView.nativeElement, options);
-
 
         this.player.on('ready', () => {
             this.player.play();
         });
 
         this.player.on('playing', () => {
-            stallTimer && clearTimeout(stallTimer);
-            this.bufferingChange.emit(false);
+            playerHasPlayed = true;
+            this.bufferingChange.emit(1);
         });
 
         this.player.on('waiting', () => {
             stallTimer && clearTimeout(stallTimer);
-            stallTimer = setTimeout(() => {
-                this._startPlayback();
-            }, 10 * 1000);
+            if (playerHasPlayed) {
+                playerHasPlayed = false;
+                stallTimer = setTimeout(() => {
+                    this.bufferingChange.emit(waitingTime);
+                }, waitingTime);
+            }
+        });
+
+        this.player.on('timeupdate', () => {
+            stallTimer && clearTimeout(stallTimer);
         });
 
         this.player.on('ended', () => {
@@ -73,6 +80,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('abort', (err) => {
+            playerHasPlayed = false;
             !this.paused && this.videoError.emit(err);
         });
     }
@@ -112,7 +120,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                     !isPaused && this.player.pause();
                 }
                 this._log('react on stopped');
-                this.bufferingChange.emit(false);
+                this.bufferingChange.emit(1);
                 break;
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
@@ -122,7 +130,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {
                     !isPaused && this.player.pause();
                     this._log('react on pause');
-                    this.bufferingChange.emit(false);
+                    this.bufferingChange.emit(1);
                 }
                 break;
             default:
@@ -157,7 +165,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this._log('correct source format', sourceUrl);
         if ([1, 2].includes(this.mode)) {
             this._log('setting source (1-ARCHIVE, 2-LIVE)', this.mode);
-            this.bufferingChange.emit(true);
+            this.bufferingChange.emit(0);
             this.player.src(source);
             this.player.poster(posterUrl);
             if (this.player.paused()) {

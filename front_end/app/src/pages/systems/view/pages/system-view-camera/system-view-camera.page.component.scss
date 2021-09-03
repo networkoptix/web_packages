@@ -365,9 +365,9 @@ $border-color: $light6;
           background : transparent;
         }
 
-        opacity: 0%;
+        opacity: 0;
         &.visible {
-          opacity: 100%;
+          opacity: 1;
         }
 
         &.shown {

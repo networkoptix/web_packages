@@ -119,7 +119,7 @@ ${SYSTEM STORAGE LINK}                //a[@id='cloudStorage']
 ${MENU LEVEL 3 LINK}                  //a[contains(@class, "menu-level-3")]
 
 ${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2
-${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
+${USER NAME}                          ${SYSTEM USER DETAILS}//header//span[contains(@class,'user-name')]
 ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${EMAIL OWNER}")]

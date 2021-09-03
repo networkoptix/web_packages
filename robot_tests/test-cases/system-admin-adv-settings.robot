@@ -50,7 +50,12 @@ Hide Advanced Settings button functionality
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
     Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
-    Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
+    IF    '${mode}' == 'cloud'
+        Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
+    ELSE
+        ${location}=   Get Location
+        Go to    ${location}
+    END
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
 
 Audit trail, backup and statistics section

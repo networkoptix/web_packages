@@ -6,4 +6,10 @@
 			border-color : $error !important;
 		}
 	}
+
+	input:disabled::-webkit-outer-spin-button,
+	input:disabled::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }

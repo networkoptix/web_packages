@@ -129,11 +129,15 @@ Log In Cloud
     Sleep    0.5
 
 Log In Web Admin
-    [arguments]    ${login}    ${password}
+    [arguments]    ${login}    ${password}    ${validate}=${True}
     Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]
     Input Text    //input[@id="login_email"]    ${login}
     Input Text    //input[@id="login_password"]    ${password}
     Click Button    //button[@type="submit"]
+    IF    ${validate} == ${True}
+        Validate Log In    ${login}    password=${password}
+    END
+    Sleep    1
 
 
 Log In With Remember Me
@@ -200,6 +204,7 @@ Log Out Web Admin
     Click Button    //header//button[@id="accountSettingsSelect"]
     Wait Until Element Is Visible    //header//a/span[text()="Log Out"]
     Click Link    //header//a/span[text()="Log Out"]/..
+    Close Modal If There  # need to remove once CLOUD-7859 will be solved
     Validate Log Out Web Admin
 
 Validate Log Out
@@ -1018,18 +1023,24 @@ Stop Docker Server
     [Arguments]    ${name}
     Execute Command Remotely    docker stop ${name}
 
-Restart Docker Server
-    [Arguments]    ${port}    ${name}    ${auth}
-    Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
-    Sleep    10
-    Acquire Lock   restart_server_lock
-    Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    ${port info}=   Execute Command    docker container port ${name}
-    ${port info}=   Split String    ${port info}    :::
-    Close Connection
-    Release Lock   restart_server_lock
-    [Return]    ${port info}[1]
+Restart Docker Servers
+    [Arguments]    @{names}
+    FOR    ${name}    IN    @{names}
+        Execute Command Remotely    docker restart ${name}
+        Sleep    1
+    END
+    
+    # [Arguments]    ${port}    ${name}    ${auth}
+    # Restart Server    https://${QA BURBANK IP}:${port}   ${auth}
+    # Sleep    10
+    # Acquire Lock   restart_server_lock
+    # Open Connection    ${QA BURBANK IP}
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    # ${port info}=   Execute Command    docker container port ${name}
+    # ${port info}=   Split String    ${port info}    :::
+    # Close Connection
+    # Release Lock   restart_server_lock
+    # [Return]    ${port info}[1]
 
 Get container port by name
     [Arguments]    ${name}

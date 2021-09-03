@@ -379,7 +379,7 @@ Change role for Cloud User
 
     Log    Step 1
     Go to Users List
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]/..
     Wait until element is visible    ${user in left menu}
     Click Element    ${user in left menu}
     Wait until elements are visible
@@ -387,8 +387,10 @@ Change role for Cloud User
         ...    ${ACCESS LEVEL DROPDOWN}
         ...    ${NO UNSAVED CHANGES}
         ...    ${REMOVE USER BUTTON}
+    ${name shown}=   Get Text    ${USER NAME}
     ${email shown}=   Get Text    ${USER EMAIL}
     ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
+    Should be equal as strings    ${name shown}    Tmp Viewer
     Should be equal as strings    ${email shown}    ${tmp user}
     Should be equal as strings    ${role shown}    Viewer
 
@@ -409,7 +411,7 @@ Change role for Cloud User
        ...    ${CANCEL BUTTON}
        ...    ${ACCESS LEVEL DROPDOWN MENU}
 
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]/..
     Wait until elements are visible
         ...    ${ACCESS LEVEL DROPDOWN}
         ...    ${NO UNSAVED CHANGES}
