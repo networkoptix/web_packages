@@ -1,6 +1,6 @@
 <div
   [ngClass]="{
-    'active': canPlayLive,
+    'active': canPlayLive && enabled,
     'playing': isPlaying,
     'recording': isRecording
   }"

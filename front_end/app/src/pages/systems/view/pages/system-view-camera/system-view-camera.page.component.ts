@@ -27,7 +27,7 @@ import { NxUtilsService }                from '@services/utils.service';
 import fullscreen                        from './fullscreen';
 import { LoggerDecorator }               from '../../vms-client/utils';
 import PlaybackState, { PLAYBACK_MODE }  from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import { filter, takeUntil }             from 'rxjs/operators';
+import { distinctUntilChanged, filter, takeUntil }             from 'rxjs/operators';
 import { UntilDestroy }                  from '@ngneat/until-destroy';
 import { NxLanguageProviderService }     from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_static_types';
@@ -531,7 +531,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get enableControls (): boolean {
-        return this.camera && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
+        return this.camera && !this.cameraError && ((this.camera.isOnline && !this.camera.isUnauthorized) || (this.camera.hasArchive && this.canViewArchives));
     }
 
     protected _initSelectedCamera () {
@@ -540,13 +540,24 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.resetQuality();
 
         this.unsub$.next('done');
-        this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
-            this.cameraCurrentState = state;
-            this.cameraError = state.error;
-            // Moved into a function to detect camera's state change Offline<->Online ..etc.
-            this.showPlayerSection = state.error === '' && (this.camera?.isAuthorized && this.camera?.isOnline && (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE) ||
-                this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
-        });
+        this.playback.subject
+            .pipe(
+                takeUntil(this.unsub$)
+            )
+            .subscribe((state: PlaybackState) => {
+                this.cameraCurrentState = state;
+                this.cameraError = state.error;
+
+                if (state.error !== '' && this.playback.state.mode === PLAYBACK_MODE.LIVE) {
+                    this.playback.stop(state.error);
+                }
+                // Moved into a function to detect camera's state change Offline<->Online ..etc.
+                this.showPlayerSection = state.error === '' &&
+                    (this.camera?.isAuthorized && this.camera?.isOnline &&
+                        (state.mode === PLAYBACK_MODE.STOPPED ||
+                         state.mode === PLAYBACK_MODE.LIVE) ||
+                         this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE);
+            });
 
         if (this.camera?.hasArchive) {
             this._log('timeline reset time', this.camera);

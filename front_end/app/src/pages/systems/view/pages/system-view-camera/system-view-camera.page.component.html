@@ -123,7 +123,7 @@
             <div class="no-archive-message"><span *ngIf="canViewArchives" translate>No Archive</span></div>
           </ng-template>
         </ng-template>
-        <playback-state-indicator></playback-state-indicator>
+        <playback-state-indicator [enabled]="enableControls"></playback-state-indicator>
       </div>
     </div>
   </div>

@@ -194,12 +194,13 @@ export class PlaybackService implements OnDestroy {
         this._emit();
     }
 
-    public stop () {
-        this._log('PLAYBACK.STOP()');
+    public stop (withError: string = '') {
+        this._log('PLAYBACK.STOP()', withError);
         this._state = createInitialStoppedState(
             this._state.quality,
             this._state.transport
         );
+        this._state.error = withError;
         this._emit();
     }
 

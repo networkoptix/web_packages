@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { PlaybackState, PLAYBACK_MODE, LivePlaybackState } from '../../datatypes/PlaybackState';
 import PlaybackService from '../../services/playback.service';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,8 @@ import VideoManagementSystemService from '../../../vms/services/vms.service';
 export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
     protected subscription: Subscription
     public state: PlaybackState
+
+    @Input() enabled: boolean;
 
     public get isLive () {
         return this.vms.selectedCamera.isLive;
@@ -45,7 +47,7 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public handleLiveClick () {
-        if (this.playback.canPlayLive) {
+        if (this.playback.canPlayLive && this.enabled) {
             this.playback.playLive();
         }
     }
