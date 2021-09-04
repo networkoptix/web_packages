@@ -10,7 +10,6 @@
 import { MenuNode } from '../menus.service';
 
 export interface BaseConfig {
-    useNewPlayer?: boolean,
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;
