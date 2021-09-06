@@ -49,6 +49,7 @@ interface SystemDropdownItem {
 interface APIDoc {
     tags  : {
                 name: string,
+                description?: string,
                 [key:string]: any
             }[],
     paths : {
@@ -66,7 +67,7 @@ interface APIDoc {
 interface ServerDropdownItem {
     value        : string,
     name         : string,
-    apiDocFull   : APIDoc | {},
+    apiDocFull   : APIDoc,
     incompatible : boolean
 }
 
@@ -114,6 +115,7 @@ export class NxApiToolComponent implements OnInit {
     mediaServerUpdating = false;
     gettingLegacyAPI: boolean;
     swaggerMenuTitle: string;
+    swaggerMenuDescription = ''
     placeHolderContent: { [key in placeHolderSelections]: string } = { api_information: 'API Information', legacy: 'Legacy API', deprecated: 'Deprecated Endpoints' }
 
     private resizeSubscription: Subscription;
@@ -185,6 +187,7 @@ export class NxApiToolComponent implements OnInit {
 
     setMenuTitle(selection: string) {
         this.swaggerMenuTitle = selection.slice(0, -2);
+        this.swaggerMenuDescription = this.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || '';
     }
 
     ngOnInit() {
@@ -316,7 +319,7 @@ export class NxApiToolComponent implements OnInit {
                                             this.serversDropdown.push({
                                                 value        : server.id,
                                                 name         : server.name + ' - ' + typeOfError,
-                                                apiDocFull   : {},
+                                                apiDocFull   : {} as APIDoc,
                                                 incompatible : true
                                             });
                                         }
@@ -329,8 +332,8 @@ export class NxApiToolComponent implements OnInit {
                                             return !server.incompatible;
                                         });
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
-                                            this.createMenuContent(this.selectedServer.apiDocFull as APIDoc);
-                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull as APIDoc);
+                                            this.createMenuContent(this.selectedServer.apiDocFull);
+                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
                                             this.menuService.section = 'api_information';
                                             if (this.serverSubscription) {
                                                 this.serverSubscription.unsubscribe();
@@ -343,7 +346,7 @@ export class NxApiToolComponent implements OnInit {
                                 this.serversDropdown.push({
                                     value        : server.id,
                                     name         : server.name + ' - Offline',
-                                    apiDocFull   : {},
+                                    apiDocFull   : {} as APIDoc,
                                     incompatible : true
                                 });
                             }

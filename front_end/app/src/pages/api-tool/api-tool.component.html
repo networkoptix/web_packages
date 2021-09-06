@@ -46,7 +46,7 @@
                     <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else placeHolderTemplate">
                         <div style="padding: 0 1rem 1rem">
                             <h2>{{ swaggerMenuTitle }}</h2>
-                            <p class="mt-3">Section description not yet provided by backend</p>
+                            <p class="mt-3" *ngIf="swaggerMenuDescription">{{ swaggerMenuDescription }}</p>
                         </div>
                         <div id="swagger-ui" ></div>
                     </div>
