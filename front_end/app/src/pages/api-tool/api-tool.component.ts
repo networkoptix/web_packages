@@ -36,7 +36,8 @@ enum requestTypes {
     TRACE = 'trace',
     PUT = 'put',
     DELETE = 'delete',
-    PATCH = 'patch'
+    PATCH = 'patch',
+    OPTIONS = 'options'
 }
 
 interface SystemDropdownItem {
@@ -293,14 +294,16 @@ export class NxApiToolComponent implements OnInit {
                                     .then((response: APIDoc) => {
                                     // extend filtering options
                                     // TODO: remove once https://networkoptix.atlassian.net/browse/CLOUD-6573 is done
-                                        const modApi = this.modifyPathTags(response);
-                                        this.modifyTagNames(modApi, 'main');
-                                        this.setRequestUrl(modApi, server.id);
+                                        let APIDoc = response;
+                                        if (!this.isRestAPI(server.id)) {
+                                            APIDoc = this.removeProprietaryEndpoints(APIDoc);
+                                        }
+                                        APIDoc = this.prepareSwaggerAPIDoc(APIDoc, server.id);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
                                                 value        : server.id,
                                                 name         : server.name,
-                                                apiDocFull   : modApi,
+                                                apiDocFull   : APIDoc,
                                                 incompatible : false
                                             });
                                         }
@@ -370,10 +373,12 @@ export class NxApiToolComponent implements OnInit {
 
         // Optional chaining here because getApiDoc returns undefined if system version is below 4.3
         const legacyAPICall = this.getAPIDoc(serverID, 'legacy')?.then(response => {
+            this.removeProprietaryEndpoints(response);
             this.modifyTagNames(response, 'legacy');
             legacyAPI = this.modifyPathTags(response, 'legacy');
         });
         const deprecatedAPICall = this.getAPIDoc(serverID, 'deprecated')?.then(response => {
+            this.removeProprietaryEndpoints(response);
             this.modifyTagNames(response, 'deprecated');
             deprecatedAPI =  this.modifyPathTags(response, 'deprecated');
         });
@@ -396,6 +401,25 @@ export class NxApiToolComponent implements OnInit {
 
     setHeaderHeight() {
         this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight : this.CONFIG.headerHeight;
+    }
+
+    private removeProprietaryEndpoints(api: APIDoc) {
+        Object.keys(api.paths).forEach(path => {
+            const apiPath = api.paths[path];
+            Object.keys(apiPath).forEach(requestType => {
+                if (apiPath[requestType].description?.slice(0, 17) === '<p><b>Proprietary') {
+                    delete apiPath[requestType];
+                }
+            });
+        });
+        return api;
+    }
+
+    private prepareSwaggerAPIDoc(APIDoc: APIDoc, serverID: string) {
+        this.modifyPathTags(APIDoc);
+        this.modifyTagNames(APIDoc, 'main');
+        this.setRequestUrl(APIDoc, serverID);
+        return APIDoc;
     }
 
     private initSwagger(filter, expand = 'list') {
@@ -456,8 +480,8 @@ export class NxApiToolComponent implements OnInit {
         request.url = Url.toString();
     }
 
-    isRestAPI() {
-        return this.system.serverManager.mediaserverConnections[this.selectedServer.value] instanceof NxSystemRestAPI;
+    isRestAPI(serverID = this.selectedServer.value) {
+        return this.system.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
     getSupportedMethods = () => {
@@ -591,16 +615,18 @@ export class NxApiToolComponent implements OnInit {
 
         if (Object.keys(legacyApi || {}).length) {
             legacyApi.tags.forEach(tag => {
-                const categoryNode = {
-                    id     : tag.name,
-                    svg    : 'arrow_expand',
-                    label  : tag.name.slice(0, -2),
-                    path   : '',
-                    level2 : [],
-                    level3 : []
-                };
-                _content.level2.push(categoryNode);
-                _content.searchable = true;
+                if (!tag.name.includes('Proprietary')) {
+                    const categoryNode = {
+                        id     : tag.name,
+                        svg    : 'arrow_expand',
+                        label  : tag.name.slice(0, -2),
+                        path   : '',
+                        level2 : [],
+                        level3 : []
+                    };
+                    _content.level2.push(categoryNode);
+                    _content.searchable = true;
+                }
             });
 
             let categoryNode:any = [];
