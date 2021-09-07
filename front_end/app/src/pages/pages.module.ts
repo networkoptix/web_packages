@@ -8,22 +8,27 @@ import { NonSupportedBrowserModule } from './non-supported-browser/non-supported
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
 import { LandingModule }             from './landing/landing.module';
-import { NxAccountModule }           from './account/account.module';
-import { NxRestoreModule }           from './restore/restore.module';
-import { NxDebugModule }             from './debug/debug.module';
-import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
-import { Nx500Module }               from './500/500.module';
-import { Nx503Module }               from './503/503.module';
-import { RouterModule, Routes }      from '@angular/router';
-import { QuicklinkStrategy }         from 'ngx-quicklink';
-import { ApplyGuard }                from '@guards/applyGuard';
-import { AuthGuard }                 from '@guards/authGuard';
-import { PipesModule }               from '@src/pipes/pipes.module';
+import { NxAccountModule }         from './account/account.module';
+import { NxRestoreModule }         from './restore/restore.module';
+import { NxDebugModule }           from './debug/debug.module';
+import { PushNotificationsModule } from './push-notifications/push-notifications.module';
+import { Nx500Module }             from './500/500.module';
+import { Nx503Module }             from './503/503.module';
+import { RouterModule, Routes }    from '@angular/router';
+import { QuicklinkStrategy }       from 'ngx-quicklink';
+import { ApplyGuard }              from '@guards/applyGuard';
+import { AuthGuard }               from '@guards/authGuard';
+import { PipesModule }             from '@src/pipes/pipes.module';
+import { NxSettingsModule }        from './systems/settings/settings.module';
 
 const lazyRoutes: Routes = [
     {
         path         : 'doc/developers/api-tool',
         loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+    },
+    {
+        path         : 'systems/:systemId/advanced',
+        loadChildren : () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
         path         : 'systems/:systemId/view',

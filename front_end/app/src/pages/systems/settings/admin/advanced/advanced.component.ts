@@ -54,8 +54,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit() {
         this.settingsService.footerSubject.next(true);
@@ -112,7 +111,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         });
 
         this.formWatcher = this.applyService.createFormWatcher(
-            null,
+            'systemSettingsForm',
             this.systemSettingsForm,
             this.saveSettings
         );

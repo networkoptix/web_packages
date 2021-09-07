@@ -4,6 +4,7 @@ import {
     ElementRef
 }                                   from '@angular/core';
 import {
+    ActivationEnd,
     ActivationStart, Event,
     GuardsCheckEnd, GuardsCheckStart,
     Router
@@ -168,8 +169,8 @@ export class AppComponent {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: Event) => event instanceof ActivationStart || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
-            ).subscribe((event: ActivationStart | GuardsCheckStart | GuardsCheckEnd) => {
+                filter((event: Event) => event instanceof ActivationStart || event instanceof ActivationEnd || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
+            ).subscribe((event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
                 if (event instanceof GuardsCheckStart) {
                     this.loading = true;
                     return;
