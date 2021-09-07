@@ -1,4 +1,5 @@
 --suite Test-Cases.Cloud-Merge
+--suite Test-Cases.Storage
 --suite Test-Cases.Licenses
 --suite Test-Cases.Account
 --suite Test-Cases.Activate
