@@ -91,7 +91,6 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    statisticsReportUpdateDelay=${EMPTY}
 ...    syncTimeEpsilon=200
 ...    syncTimeExchangePeriod=600000
-...    systemName=Advanced Settings
 ...    takeCameraOwnershipWithoutLock=true
 ...    timeSynchronizationEnabled=true
 ...    updateNotificationsEnabled=true

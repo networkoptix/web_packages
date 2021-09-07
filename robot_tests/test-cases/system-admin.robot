@@ -160,12 +160,14 @@ Should open System page by link to not authorized user and show it, after owner 
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    cloud
+    ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Log In    ${email noperm}    ${base password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    cloud
+    ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${email noperm}    ${base password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
@@ -187,7 +189,7 @@ User can rename System: change in web -> check server
     Log    Step 3 & 4
     Change System Name    ${new system name}    save=False
     Log    Step 5
-    Click Button    ${CANCEL BUTTON}    
+    Click Button    ${CANCEL BUTTON}
     Wait until elements are not visible    ${CANCEL BUTTON}    ${SAVE BUTTON}
     Wait until element is visible    ${NO UNSAVED CHANGES}
     ${actual name}=   Get Text    ${SYSTEM NAME}
@@ -264,8 +266,11 @@ Correct items are shown for owner
         ...    ${SYSTEM SETTINGS FORM}
         ...    ${SECURITY FORM}
     Validate Header Button Text    ${system}[name]    systems=False
-    Run keyword If    '''${mode}'''=='''cloud'''    Title Should Be    ${system}[name] - ${PRODUCT NAME}
-    ...    ELSE IF    '''${mode}'''=='''webadmin'''    Title Should Be    ${system}[name] - webadmin
+    IF    '${mode}'=='cloud'
+        Title Should Be    ${system}[name] - ${PRODUCT NAME}
+    ELSE IF    '${mode}'=='webadmin'
+        Title Should Be    ${system}[name] - webadmin
+    END
     Go To Users List
     Wait Until Elements Are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
@@ -323,6 +328,7 @@ Correct items are shown for advanced viewer and below
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Log Out
     END
+    Remove User By Email    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${custom role}
 
 
 # Left search
