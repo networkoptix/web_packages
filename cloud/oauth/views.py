@@ -97,7 +97,7 @@ SYSTEM_PATTERN = re.compile(r"cloudSystemId=([\w\d]{8}-[\w\d]{4}-[\w\d]{4}-[\w\d
 
 
 def check_signature(signature, scope, redirect_uri):
-    system_id = SYSTEM_PATTERN.match(scope)
+    system_id = SYSTEM_PATTERN.search(scope)
     if not system_id:
         raise APIRequestException("Scope is missing a valid system id", error_code=ErrorCodes.bad_request)
     try:
