@@ -112,7 +112,7 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
             responses = notification_object.send_notifications(device_ids=device_ids)
         fcm_responses, resend_device_ids = responses
         # Process fcm legacy responses
-        resend_device_ids = notifications_api.process_fcm_push_response(fcm_responses, notification_object)
+        resend_device_ids += notifications_api.process_fcm_push_response(fcm_responses, notification_object)
 
         if resend_device_ids:
             if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
@@ -137,6 +137,8 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
                     kwargs={'request_data': request_data, 'device_ids': device_ids, 'count': count + 1},
                     queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
                 )
+            else:
+                notification_object.state = PushNotification.RESULT_STATES.failure
         elif 'resend_device_ids' not in locals():
             notification_object.state = PushNotification.RESULT_STATES.failure
             log_push_result(
@@ -148,6 +150,7 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR, stack_trace=True)
     else:
         notification_object.send_date = timezone.now()
+    finally:
         notification_object.save()
 
 

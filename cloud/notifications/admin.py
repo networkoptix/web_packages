@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from django_celery_results.models import TaskResult
+import json
 import pystache
 import pytz
 import re
@@ -220,6 +221,7 @@ class PushNotificationAdmin(admin.ModelAdmin):
     list_display = ('short_title', 'customization', 'state', 'raw_targets_formatted', 'raw_system_id',
                     'created_date_formatted', 'send_date_formatted', 'delivery_interval', 'result_errors')
     date_hierarchy = 'created_date'
+    readonly_fields = ('log',)
 
     def raw_targets_formatted(self, obj):
         if len(obj.raw_targets) > 80:
@@ -248,16 +250,23 @@ class PushNotificationAdmin(admin.ModelAdmin):
     def result_errors(self, obj):
         result = obj.result_data
         if result:
-            error = re.search(r'[^"\']{0,30}([Ee]rror|[Ww]arning)[^"]{0,100}', result)
+            error = re.search(r'[^"\']{0,30}([Ee]rror|[Ww]arning|Exception)[^"]{0,100}', result)
             if error:
                 return f'{error.group(0)}...'
+        return ''
+
+    def log(self, obj):
+        result = obj.result_data
+        if result:
+            result = json.loads(result)
+            return format_html(result.get('log', '').replace('\n', '<br>'))
         return ''
 
     def get_readonly_fields(self, request, obj=None):
         return list(set(
             [field.name for field in self.opts.local_fields] +
             [field.name for field in self.opts.local_many_to_many]
-        ))
+        )) + list(self.readonly_fields)
 
 
 @admin.register(PushDevice)

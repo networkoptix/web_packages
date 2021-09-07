@@ -93,9 +93,10 @@ def _write_push_result(notification_object, result_data):
 
 def log_push_result(notification_object, message, level=logging.INFO, device_token=None, device_id=None, stack_trace=False):
     result_data = _read_push_result(notification_object)
-    log_message = f'Push Notification: {notification_object.id}, {message}'
+    message = f'Attempt: {notification_object.count}, {message}'
     if stack_trace:
-        log_message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
+        message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
+    log_message = f'Push Notification: {notification_object.id}, {message}'
     logger.log(level, log_message)
 
     if device_token:
