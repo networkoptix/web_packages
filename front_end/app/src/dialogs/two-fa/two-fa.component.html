@@ -3,11 +3,11 @@
 
 <ng-template #code>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Backup code</h1>
+        <h1 class="modal-title" translate>Backup codes</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="close()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -15,13 +15,18 @@
         <span translate>If you ever lose access to your mobile authentication app, you can use this code to verify your identity.</span>
 
         <div class="code-area">
-            <div class="code-area-code">{{ newCode }}</div>
-            <button class="btn btn-text code-area-copy" (click)="copyToClipboard()">
+            <div class="code-area-code" *ngFor="let code of newCodes; let idx=index;">
+                <span class="code-area-code-idx">{{scrambledIndexes[idx]}}</span>{{ code }}
+            </div>
+        </div>
+        <div class="code-area-copy">
+            <button class="btn btn-text" (click)="copyToClipboard()">
                 <svg-icon
-                    nx-add-svg-src
-                    [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
-                    [svgStyle]="{'width.px': '28', 'height.px': '28'}"
-                    [applyClass]="true"></svg-icon>
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
+                        [svgStyle]="{'width.px': '22', 'height.px': '22'}"
+                        [applyClass]="true"></svg-icon>
+                <span translate>Copy all</span>
             </button>
         </div>
     </div>
@@ -33,13 +38,46 @@
     </div>
 </ng-template>
 
+<ng-template #wizardWarning>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarning({ count: incompatibleSystems.length })"></span></div>
+        <div class="my-3">
+            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">
+                <svg-icon nx-add-svg-src
+                        class="d-inline-block"
+                        [src]="CONFIG.icons.dir + 'system.svg'"
+                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"
+                        [applyClass]="true"></svg-icon>
+                <span class="system-name">{{system.name}}</span>
+            </div>
+        </div>
+        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr()"></span></div>
+    </div>
+
+    <div class="modal-footer justify-end">
+        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">
+            <span translate>Next</span>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
+        </button>
+    </div>
+</ng-template>
+
 <ng-template #wizardLogin>
     <div class="modal-header">
         <h1 class="modal-title" translate>Two-factor authentication</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="closeWizard()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -53,7 +91,7 @@
                        #loginPassword="ngModel"
                        maxlength="255"
                        [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
-                       required>
+                       required autofocus>
                 <ng-container *ngIf="loginPassword.invalid">
                     <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
@@ -83,7 +121,7 @@
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="closeWizard()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -124,7 +162,7 @@
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="closeWizard()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -138,7 +176,7 @@
                        [(ngModel)]="tfaCode"
                        autocomplete="off"
                        maxlength="255"
-                       required>
+                       required autofocus>
             </div>
         </form>
     </div>
@@ -159,7 +197,7 @@
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="close()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -169,15 +207,21 @@
         <div class="lineStrong mt-3" translate>Save this single-use backup code in a safe place.</div>
 
         <div class="code-area">
-            <div class="code-area-code">{{ newCode }}</div>
-            <button class="btn btn-text code-area-copy" (click)="copyToClipboard()">
+            <div class="code-area-code" *ngFor="let code of newCodes; let idx=index;">
+                <span class="code-area-code-idx">{{scrambledIndexes[idx]}}</span>{{ code }}
+            </div>
+        </div>
+        <div class="code-area-copy">
+            <button class="btn btn-text" (click)="copyToClipboard()">
                 <svg-icon
                         nx-add-svg-src
                         [src]="CONFIG.icons.dirTextButtons + 'copy.svg'"
-                        [svgStyle]="{'width.px': '28', 'height.px': '28'}"
+                        [svgStyle]="{'width.px': '22', 'height.px': '22'}"
                         [applyClass]="true"></svg-icon>
+                <span translate>Copy all</span>
             </button>
         </div>
+
         <div class="code-area-note" translate>This backup code lets you login to %CLOUD_NAME% if you don't have access to your mobile authentication app.</div>
     </div>
 

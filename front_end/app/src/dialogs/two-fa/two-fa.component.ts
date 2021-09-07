@@ -2,24 +2,26 @@ import {
     Component, OnInit,
     Input, ViewChild, Renderer2,
     TemplateRef, AfterViewInit
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxProcessService, Process }            from '@services/process.service';
-import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
-import { Account, NxAccountService }            from '@services/account.service';
+}                                                 from '@angular/core';
+import { NgbActiveModal }                         from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }              from '@services/nx-language-provider';
+import { NxConfigService, IConfig }               from '@services/nx-config';
+import { NxProcessService, Process }              from '@services/process.service';
+import { LanguageI18NStaticTypes }                from '@app/language_i18n_static_types';
+import { Account, NxAccountService }              from '@services/account.service';
 import {
     InfoBlockLine, InfoBlockSection,
     InfoBlockSize
-}                                               from '@components/info-block/info-block.component';
-import { NxToastService }                       from '@dialogs/toast.service';
-import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
-import { CloudResponse }                        from '@services/nx-cloud-api.types';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+}                                                 from '@components/info-block/info-block.component';
+import { NxToastService }                         from '@dialogs/toast.service';
+import { ClipboardService, IClipboardResponse }   from 'ngx-clipboard';
+import { UntilDestroy, untilDestroyed }           from '@ngneat/until-destroy';
+import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxUtilsService }                         from '@services/utils.service';
 
 export enum T_FA_STEPS {
     Code,
+    WizardWarning,
     WizardLogin,
     WizardQR,
     WizardCode,
@@ -43,10 +45,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     account: Account;
     currentStep: T_FA_STEPS;
+    incompatibleSystems: NxSystemWithUserInfo[] = [];
 
     public templateType: TemplateRef<any>;
     public title: string;
-    public newCode: string;
+    public newCodes: string[];
+    public scrambledIndexes: number[] = [1, 5, 2, 6, 3, 7, 4, 8];
     public password: string;
     public loginProcess: Process;
     public qrProcess: Process;
@@ -68,13 +72,14 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('codeForm') codeForm: HTMLFormElement;
 
     @ViewChild('code', { static: true }) codeTemplate: TemplateRef<any>;
+    @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<any>;
     @ViewChild('wizardLogin', { static: true }) wizardLoginTemplate: TemplateRef<any>;
     @ViewChild('wizardQR', { static: true }) wizardQRTemplate: TemplateRef<any>;
     @ViewChild('wizardCode', { static: true }) wizardCodeTemplate: TemplateRef<any>;
     @ViewChild('wizardFinish', { static: true }) wizardFinishTemplate: TemplateRef<any>;
 
     private resetDefaults() {
-        this.newCode = '';
+        this.newCodes = [];
         this.password = '';
         this.tfaCode = '';
     }
@@ -95,6 +100,21 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.toastService.show(this.LANG.common.copiedToClipboard(), options);
                 }
             });
+
+        this.systemsService.systemsSubject
+            .pipe(untilDestroyed(this))
+            .subscribe((systems: NxSystemWithUserInfo[]) => {
+                systems.forEach(system => {
+                    const isVersion43 = Object.keys(system.capabilities).some((capability) => {
+                        return capability.includes('4_3');
+                    });
+
+                    if (!isVersion43) {
+                        system.name = NxUtilsService.htmlToEntity(system.name);
+                        this.incompatibleSystems.push(system);
+                    }
+                });
+            });
     }
 
     constructor(
@@ -105,7 +125,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private accountService: NxAccountService,
         public activeModal: NgbActiveModal,
         private toastService: NxToastService,
-        private clipboardService: ClipboardService
+        private clipboardService: ClipboardService,
+        private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -120,6 +141,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             this.accountBlocked = false;
 
             if (this.password === '') {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
@@ -184,9 +206,29 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
         this.codeProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'missingParam' });
             }
-            return this.accountService.toggle2fa(this.password, this.tfaCode);
+            // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
+            return this.accountService.get2FaBackupCode().then((response: any) => {
+                if (response.errorText !== undefined) {
+                    // eslint-disable-next-line prefer-promise-reject-errors
+                    return Promise.reject({ resultCode: 'noBackupCodes' });
+                }
+                this.newCodes = response.map(code => code.backup_code);
+
+                return this.refreshSession()
+                    .then((result) => {
+                        if (result.resultCode === 'ok') {
+                            return this.accountService.toggle2fa(this.password, this.tfaCode);
+                        }
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        return Promise.reject({ resultCode: result.errorText });
+                    }, (error) => {
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        return Promise.reject({ resultCode: error });
+                    });
+            });
         }, {
             ignoreUnauthorized : true,
             ignoreError        : true,
@@ -200,14 +242,18 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.codeForm.controls.tfaCodeInput.markAsTouched();
                     this.codeForm.controls.tfaCodeInput.setErrors({ required: true });
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
+                },
+                noBackupCodes: () => {
+                    const options = {
+                        classname : this.CONFIG.toast.danger,
+                        autohide  : true,
+                        delay     : this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show(this.LANG.common.generalError(), options);
                 }
             }
         }, (response) => {
             if (response.account2faEnabled) {
-                // request single use code
-                this.accountService.get2FaBackupCode().then((response: any) => {
-                    this.newCode = response.backup_code;
-                });
                 this.setTemplate(T_FA_STEPS.WizardFinish);
             }
 
@@ -223,6 +269,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         switch (step) {
             case T_FA_STEPS.Code:
                 this.templateType = this.codeTemplate;
+                break;
+            case T_FA_STEPS.WizardWarning:
+                this.templateType = this.wizardWarningTemplate;
                 break;
             case T_FA_STEPS.WizardLogin:
                 this.templateType = this.wizardLoginTemplate;
@@ -244,9 +293,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             this.accountService
                 .get2FaBackupCode()
                 .then((response: any) => {
-                    this.newCode = response.backup_code;
+                    this.newCodes = response.map(code => code.backup_code);
                     this.setTemplate(T_FA_STEPS.Code);
-                }, (error) => {
+                }, () => {
                     this.activeModal.close();
                     const options = {
                         classname : this.CONFIG.toast.danger,
@@ -256,8 +305,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.toastService.show(this.LANG.common.generalError(), options);
                 });
         } else {
-            this.setTemplate(T_FA_STEPS.WizardLogin);
+            this.incompatibleSystems.length ? this.setTemplate(T_FA_STEPS.WizardWarning) : this.setTemplate(T_FA_STEPS.WizardLogin);
         }
+    }
+
+    refreshSession() {
+        return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
     close() {
@@ -272,6 +325,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     next() {
         switch (this.currentStep) {
+            case T_FA_STEPS.WizardWarning:
+                this.setTemplate(T_FA_STEPS.WizardLogin);
+                break;
             case T_FA_STEPS.WizardLogin:
                 this.loginProcess.run();
                 break;
@@ -294,6 +350,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     copyToClipboard() {
-        this.clipboardService.copy(this.newCode);
+        this.clipboardService.copy(this.newCodes.join('\n'));
     }
 }

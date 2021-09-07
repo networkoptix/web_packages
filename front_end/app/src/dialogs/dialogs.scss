@@ -1,5 +1,5 @@
-@use '../styles/typography';
-@use '../../../app/styles/theme_variables' as *;
+@use "../styles/typography";
+@use "../../../app/styles/theme_variables" as *;
 
 
 @keyframes slide-down-fade-in {
@@ -136,6 +136,14 @@ nx-modal-wizard {
             margin          : 0 !important;
             padding         : 0 !important;
             border-radius   : 25px !important;
+    
+            &:before, &:after {
+                position         : absolute;
+                content          : " ";
+                height           : 16px;
+                width            : 1px;
+                background-color : $dark9;
+            }
 
             .close-content {
                 border-radius : 25px !important;

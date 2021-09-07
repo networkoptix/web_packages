@@ -200,6 +200,12 @@ export class NxCloudApiService {
         return this.http.get(uri).toPromise();
     }
 
+    updateSessionWith2fa(verificationCode) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/updateSession', {
+            verification_code: verificationCode
+        }).toPromise();
+    }
+
     getStaticLanding() {
         const httpOptions = {
             headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),

@@ -29,10 +29,6 @@ export class NxAccountSecurityComponent implements OnInit {
 
     private setupDefaults() {
         this.menuService.detail = 'security';
-        this.tfauth = {
-            on      : false,
-            enabled : false
-        };
     }
 
     constructor(
@@ -53,8 +49,10 @@ export class NxAccountSecurityComponent implements OnInit {
         this.pageService.pageTitle = this.LANG.pageTitles.security;
         this.account = this.accountService.account;
 
-        // check for "account2faEnabled" in Account or if endpoint is provided
-        // current "tfauth" is false...
+        this.tfauth = {
+            on      : !!this.account.account2faEnabled,
+            enabled : !!this.account.account2faEnabled
+        };
     }
 
     enabled2FA(enabled) {

@@ -233,6 +233,10 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.verify2FaKey(accessCode, verificationCode);
     }
 
+    updateSessionWith2fa(verificationCode) {
+        return this.cloudApi.updateSessionWith2fa(verificationCode);
+    }
+
     sendMessage(subject, asset, message, userName, userEmail) {
         return this.cloudApi.sendMessage(subject, asset, message, userName, userEmail).toPromise();
     }

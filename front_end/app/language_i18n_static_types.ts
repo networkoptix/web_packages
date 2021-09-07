@@ -251,6 +251,7 @@ export interface DevConsole {
 }
 
 export interface Dialogs {
+    twoFa:         TwoFa;
     addUser:       AddUser;
     buttons:       Buttons;
     cloudStorage:  CloudStorage;
@@ -444,6 +445,11 @@ export interface DialogsTitles {
 
 export interface Tooltips {
     deleteAccount: any;
+}
+
+export interface TwoFa {
+    wizardWarning:      any;
+    wizardWarningDescr: any;
 }
 
 export interface Downloads {
@@ -1291,6 +1297,7 @@ const typeMap: any = {
         { json: "create", js: "create", typ: "any" },
     ], false),
     "Dialogs": o([
+        { json: "twoFa", js: "twoFa", typ: r("TwoFa") },
         { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
@@ -1465,6 +1472,10 @@ const typeMap: any = {
     ], false),
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
+    ], false),
+    "TwoFa": o([
+        { json: "wizardWarning", js: "wizardWarning", typ: "any" },
+        { json: "wizardWarningDescr", js: "wizardWarningDescr", typ: "any" },
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },

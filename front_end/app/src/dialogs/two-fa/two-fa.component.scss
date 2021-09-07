@@ -37,26 +37,40 @@
     
     .modal-body {
         .lineStrong {
-            font-family: "robotobold", Roboto, Helvetica, sans-serif;
+            font-family: $font-family-bold;
+        }
+    
+        .system-name {
+            font-family : $font-family-medium;
+            margin-left : 0.5rem;
         }
     
         .code-area {
-            display          : flex;
-            justify-content  : center;
-            align-items      : center;
-            width            : 100%;
-            background-color : $additional_light1;
-            border           : 1px solid $light3;
-            height           : 48px;
-            margin-top       : 1rem;
+            display               : grid;
+            grid-template-columns : 1fr 1fr;
+            width                 : 100%;
+            background-color      : $light2;
+            border                : 1px solid $light4;
+            padding               : 1rem;
+            margin-top            : 1rem;
         
             &-code {
                 font-family : robotomonoregular, monospace;
                 font-size   : $h3-font-size;
+                text-align  : center;
+                user-select : none;
+                
+                &-idx {
+                    color        : $light10;
+                    margin-right : 0.5rem;
+                }
             }
     
             &-copy {
-                padding-left : 4px !important;
+                display         : flex;
+                align-content   : center;
+                justify-content : center;
+                margin-top      : 0.5rem;
             }
         
             &-note {

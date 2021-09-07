@@ -26,6 +26,7 @@ export class Account {
     is_authenticated: boolean;
     // eslint-disable-next-line camelcase
     cookie_reviewed: boolean;
+    account2faEnabled: boolean;
 
     constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
         this.email = email;
