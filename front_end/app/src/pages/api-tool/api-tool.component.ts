@@ -450,6 +450,9 @@ export class NxApiToolComponent implements OnInit {
                 maxDisplayedTags       : expand === 'full' ? 1 : undefined,
                 requestInterceptor     : (request) => {
                     this.authenticateRequest(request);
+                    if (this.CONFIG.isLocal) {
+                        request.curlOptions = ['--insecure'];
+                    }
                     return request;
                 }
             });
