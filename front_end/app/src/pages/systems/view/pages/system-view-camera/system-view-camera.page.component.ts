@@ -538,6 +538,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('_initSelectedCamera');
         this.resetTransport();
         this.resetQuality();
+        this.playback.setError('');
 
         this.unsub$.next('done');
         this.playback.subject
