@@ -163,12 +163,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
-    private resetServer(password?: string, serverId?: string) {
-        return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`).pipe(
-            retryWhen((request) => this.handleOldToken(request))
-        );
-    }
-
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string) {
         const params: any = {
             grant_type    : 'refresh_token',
@@ -442,7 +436,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     detachFromSystem(currentPassword?: string, serverId?: string) {
-        return this.resetServer(currentPassword, serverId);
+        return this.post(`/rest/v1/servers/${serverId || 'this'}/detach`).pipe(
+            retryWhen((request) => this.handleOldToken(request))
+        );
     }
 
     disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
@@ -513,7 +509,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     restoreFactorySettings(password?: string, serverId?: string) {
-        return this.resetServer(password, serverId);
+        return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`).pipe(
+            retryWhen((request) => this.handleOldToken(request))
+        );
     }
 
     saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {
