@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 #Resource    ../special-cases/qa-user-creation.robot
 Suite Setup       Users Suite Setup
-#Test Setup        Users Test Setup
+Test Setup        Skip If Irrelevant
 Test Teardown     Users Test Tear Down
 Suite Teardown    users Teardown
 Force Tags        system    Threaded
@@ -24,7 +24,7 @@ Reset
 
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
-    [Tags]    C41884
+    [Tags]    C41884    cloud
     ${random user}=    Register and activate account with random email    mark    hamil    ${password}
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
     Log in to user and system    ${random user}    ${server 1['cloud id']}
@@ -61,7 +61,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Should Not Be True    ${is there}
 
 Owner / Admin can unlink offline System from Cloud / Account
-    [Tags]    C41897    C41898
+    [Tags]    C41897    C41898    cloud
     Log    Prepare offline system with owner and viewer
     #${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user 1}=   Register and activate account with random email    firstName    lastName    ${password}
@@ -116,12 +116,13 @@ Owner / Admin can unlink offline System from Cloud / Account
     # ${port info}=   Split String    ${results}    :
     Close Connection
     # Set To Dictionary    ${system 2}    port=${port info[1]}
+    Sleep   3
     ${sysId2}=   Connect System to Cloud    ${server 2['local auth']}    https://${QA BURBANK IP}:${server 2['port']}    usertest2    ${server 1['owner']}    ${BASE PASSWORD}
     Set To Dictionary    ${server 2}    cloud id=${sysId2}
 
 
 Should display same user data as user provided during registration
-    [Tags]    email
+    [Tags]    email    cloud
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
     Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
@@ -136,7 +137,7 @@ Should display same user data as user provided during registration
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 Should display same user data as shown in user account
-    [Tags]    C41884
+    [Tags]    C41884    cloud
     ${random user}    Register and activate account with random email    mark    hamil    ${password}
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
     Log in to user and system    ${random user}    ${server 1['cloud id']}
@@ -174,9 +175,9 @@ Should display same user data as shown in user account
     Should Not Be True    ${is there}
 
 Share button - opens dialog
-    [Tags]    C41888    web_admin
+    [Tags]    C41888    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
-    ...    ELSE    Create List    ${server 1['owner']}    admin
+    ...    ELSE    Create List    admin    ${server 1['owner']}
     FOR    ${user}  IN  @{list}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -192,7 +193,7 @@ Share button - opens dialog
     END
 
 Check Cancel and 'X' buttons
-    [Tags]    C78228    web_admin
+    [Tags]    C78228    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     ${random user}=   Get Random Email    ${BASE EMAIL}
@@ -221,7 +222,7 @@ Check Cancel and 'X' buttons
     END
 
 Sharing roles are ordered: more access is on top of the list with options
-    [Tags]    web_admin
+    [Tags]    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}  IN  @{list}  
@@ -240,7 +241,7 @@ Sharing roles are ordered: more access is on top of the list with options
     END
 
 When user selects role - special hint appears
-    [Tags]    C41901    web_admin
+    [Tags]    C41901    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}  IN  @{list}  
@@ -261,7 +262,7 @@ When user selects role - special hint appears
     END
 
 Cloud Admin/administrator cannot delete or edit self
-    [Tags]    C41904    web_admin
+    [Tags]    C41904    webadmin    cloud
     log    ${server 1['local users']}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${server 1['cloud users']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin]
@@ -275,7 +276,7 @@ Cloud Admin/administrator cannot delete or edit self
     END
 
 Admin and owner cannot edit self and other users via share
-    [Tags]    web_admin    C41904
+    [Tags]    webadmin    cloud    C41904
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    admin    ${server 1['local users']}[cloudAdmin]
     FOR    ${user}    IN    @{list}
@@ -324,7 +325,7 @@ Admin and owner cannot edit self and other users via share
     END
 
 Admin cannot delete or edit other admins or owner
-    [Tags]    C41905    web_admin
+    [Tags]    C41905    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${server 1['cloud users']}[cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -348,7 +349,7 @@ Admin cannot delete or edit other admins or owner
     END
 
 Administrator cannot invite another administrator
-    [Tags]    C41905    web_admin
+    [Tags]    C41905    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List     ${server 1['cloud users']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -371,7 +372,7 @@ Administrator cannot invite another administrator
     END
 
 Change role for Cloud User
-    [Tags]    C41900    web_admin
+    [Tags]    C41900    webadmin    cloud
     ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
     Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}
     Log in to system    ${server 1}    ${server 1}[owner]
@@ -379,7 +380,7 @@ Change role for Cloud User
 
     Log    Step 1
     Go to Users List
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]/..
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]/preceding-sibling::span
     Wait until element is visible    ${user in left menu}
     Click Element    ${user in left menu}
     Wait until elements are visible
@@ -411,7 +412,7 @@ Change role for Cloud User
        ...    ${CANCEL BUTTON}
        ...    ${ACCESS LEVEL DROPDOWN MENU}
 
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]/..
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]/preceding-sibling::span
     Wait until elements are visible
         ...    ${ACCESS LEVEL DROPDOWN}
         ...    ${NO UNSAVED CHANGES}
@@ -420,7 +421,7 @@ Change role for Cloud User
     Should be equal as strings    ${role shown}    Administrator
 
 Edit permission works
-    [Tags]    C30657    C47041    web_admin
+    [Tags]    C30657    C47041    webadmin    cloud
     ${random email}=   Get Random Email    ${BASE EMAIL}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
@@ -446,7 +447,7 @@ Edit permission works
     END
 
 Delete user works
-    [Tags]    email    C41903    web_admin
+    [Tags]    email    C41903    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -472,16 +473,17 @@ Delete user works
     END
 
 Share with registered user works and sends him notification
-    [Tags]    email    C41888
+    [Tags]    email    C41888    cloud
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
     Append to List    ${TMP USERS}    ${random email}
     Verify In System    ${server 1['name']}
-    ${random email}    Register and activate account with random email    mark     hamil    ${password}
-    Share To    ${random email}    ${ADMIN TEXT}
+    ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
+    Share To    ${user}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
-    ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
+    ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${user}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     Sleep    10
 
@@ -504,7 +506,7 @@ Share with registered user works and sends him notification
     # ...    ${BASE HOST}
     # ...    ${BASE PORT}
     # Delete Email    ${emailID}
-    ${emailID}    Wait For Email    recipient=${random email}    timeout=120
+    ${emailID}    Wait For Email    recipient=${user}    timeout=120
     Check Email Subject
     ...    ${emailID}
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
@@ -515,11 +517,11 @@ Share with registered user works and sends him notification
     Delete Email    ${emailID}
     Close Mailbox
 
-    ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
+    ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${user}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 Share with registered user gives user access to system
-    [Tags]    email    C41888
+    [Tags]    email    C41888    cloud
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}
     Log in to user and system    ${random email}    ${server 1['cloud id']}
@@ -532,7 +534,7 @@ Share with registered user gives user access to system
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
-    [Tags]    email    C41889
+    [Tags]    email    C41889    cloud
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
@@ -603,7 +605,7 @@ Share with unregistered user - brings them to registration page with code with c
     Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
 
 Share System with the same user twice
-    [Tags]    C41892
+    [Tags]    C41892    cloud
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
@@ -621,9 +623,9 @@ Share System with the same user twice
     Close Mailbox
 
 Check share email for registered user
-    [Tags]    C47297
+    [Tags]    C47297    cloud
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
-    Register And Activate Account    Mark    Hamill    ${random email}    ${password}
+    Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     Open Mailbox
     ...    host=${BASE HOST}
@@ -649,7 +651,7 @@ Check share email for registered user
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
     ...    ${server 1['name']}
-    ${email}    Wait For Email    recipient=${random email}    timeout=120
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Subject
@@ -673,7 +675,7 @@ Check share email for registered user
     Close Mailbox
 
 Users should be able to disconnect themselves from cloud
-    [Tags]
+    [Tags]    cloud
     ${roles}=   Get Dictionary Values    ${ACCESS ROLES}
     FOR    ${role}    IN    @{roles}
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
@@ -690,7 +692,7 @@ Users should be able to disconnect themselves from cloud
     Open Browser and go to URL    ${url}
 
 User with client custom settings has access to system
-    [Tags]    web_admin
+    [Tags]    webadmin    cloud
     @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${server 1['port']}    ${server 1}[local auth]
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
@@ -717,8 +719,9 @@ User with client custom settings has access to system
     END
 
 User can be invited with client custom permissions
-    [Tags]    web_admin
-    ${random email}=   Get Random Email    ${BASE EMAIL}
+    [Tags]    webadmin    cloud
+    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${server 1['owner']}
     ...    '''${mode}''' != '''cloud'''    admin
@@ -740,7 +743,7 @@ User can be invited with client custom permissions
 
 
 Disable enable User correctly affects the User
-    [Tags]    C63390    C76245    web_admin
+    [Tags]    C63390    C76245    webadmin    cloud
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${server 1['owner']}
     ...    '''${mode}''' != '''cloud'''    admin
     Log in    ${user}    ${password}
@@ -783,7 +786,7 @@ Disable enable User correctly affects the User
     # ELSE     WRONG LOGIN OR PASSWORD SHOULD BE DETECTED
         
 Administrator can add, disable and enable Viewer
-    [Tags]    C63391    web_admin
+    [Tags]    C63391    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    admin    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -862,7 +865,7 @@ Administrator can add, disable and enable Viewer
 #    END
     
 Cloud Owner Can Change Local User Full Name
-    [Tags]    local_user    C76244    web_admin
+    [Tags]    local_user    C76244    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
@@ -880,7 +883,7 @@ Cloud Owner Can Change Local User Full Name
     END
 
 Cloud Owner Can Change Local User Email
-    [Tags]    local_user    C76244    web_admin
+    [Tags]    local_user    C76244    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
 
@@ -899,7 +902,7 @@ Cloud Owner Can Change Local User Email
     END
 
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local_user    C76243    web_admin
+    [Tags]    local_user    C76243    webadmin    cloud
     Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
@@ -919,7 +922,7 @@ Cloud Owner Can Change Local User Permissions
 
 
 Cloud Owner Can Change Local User Password
-    [Tags]    local_user    C76246    web_admin
+    [Tags]    local_user    C76246    webadmin    cloud
     Log    Same test as testrail "Cloud owner can change local user password (positive)"
    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
@@ -937,7 +940,7 @@ Cloud Owner Can Change Local User Password
     END
 
 Cloud owner can change local users' information
-    [Tags]    local_user    C76239    web_admin
+    [Tags]    local_user    C76239    webadmin    cloud
      @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
@@ -952,7 +955,7 @@ Cloud owner can change local users' information
     END
 
 Cloud administrator cannot change local administrator's or owner's information
-    [Tags]    local_user    C76240    web_admin
+    [Tags]    local_user    C76240    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
@@ -974,7 +977,7 @@ Cloud administrator cannot change local administrator's or owner's information
     END
 
 Local User Removed on Server is Removed From UI
-    [Tags]    local_user    web_admin
+    [Tags]    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{local users} =    Reset Local Users    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
@@ -996,7 +999,7 @@ Local User Removed on Server is Removed From UI
     END
 
 Verify Local Users Deleted On Server
-    [Tags]    local_user    C76242    web_admin
+    [Tags]    local_user    C76242    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
@@ -1015,7 +1018,7 @@ Verify Local Users Deleted On Server
 
 
 Adding New Local User Appears on Cloud Portal
-    [Tags]    C76237    local_user    web_admin
+    [Tags]    C76237    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
@@ -1032,7 +1035,7 @@ Adding New Local User Appears on Cloud Portal
     END
 
 Cloud/local owner cannot change local/cloud owner's information
-    [Tags]    C76238    local_user    web_admin
+    [Tags]    C76238    local_user    webadmin    cloud
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${server 1['owner']}
     ...    '''${mode}''' != '''cloud'''    admin
     ${user2}=   Set Variable If    '''${mode}'''=='''cloud'''    admin
@@ -1048,7 +1051,7 @@ Cloud/local owner cannot change local/cloud owner's information
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}    ${ADD USER PERMISSIONS DROPDOWN}
     
 Unsaved changes are not sent to the server
-    [Tags]    C76241    local_user    web_admin
+    [Tags]    C76241    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     Log    Preconditions
@@ -1140,7 +1143,7 @@ Unsaved changes are not sent to the server
 #    END
 
 Local User name field can be left blank
-    [Tags]    C76249    local_user    web_admin
+    [Tags]    C76249    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
@@ -1168,7 +1171,7 @@ Local User name field can be left blank
     END
 
 Local User email field can be left blank
-    [Tags]    C76250    local_user    web_admin
+    [Tags]    C76250    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
@@ -1194,7 +1197,7 @@ Local User email field can be left blank
     END
 
 User list is available for owner and administrator
-    [Tags]    C76233    local_user    web_admin
+    [Tags]    C76233    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    ${server 1['cloud users']}[cloudAdmin]    ${server 1}[local users][cloudAdmin][login]    admin
     FOR    ${user}    IN    @{list}
@@ -1209,7 +1212,7 @@ User list is available for owner and administrator
     END
 
 User list is not available for advanced viewer & lower
-    [Tags]    C76462    web_admin
+    [Tags]    C76462    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][liveViewer]   ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][custom]
     ...    ELSE    Create List    ${server 1}[cloud users][viewer]    ${server 1}[cloud users][liveViewer]   ${server 1}[cloud users][advancedViewer]    ${server 1}[cloud users][custom]    ${server 1}[local users][viewer][login]    ${server 1}[local users][liveViewer][login]    ${server 1}[local users][advancedViewer][login]    ${server 1}[local users][custom][login]
     FOR    ${user}    IN    @{list}
@@ -1224,7 +1227,7 @@ User list is not available for advanced viewer & lower
     END
 
 Cloud Administrator Can Delete Local User(positive)
-    [Tags]    C76524    local_user    web_admin
+    [Tags]    C76524    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
@@ -1251,7 +1254,7 @@ Cloud Administrator Can Delete Local User(positive)
     END
         
 Administrator can change local user's login permissions, name and email (positive)
-    [Tags]    C76526    C76525    local_user    web_admin
+    [Tags]    C76526    C76525    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
@@ -1273,7 +1276,7 @@ Administrator can change local user's login permissions, name and email (positiv
     END
 
 Cloud administrator can enable/disable any viewer local user (positive)
-    [Tags]    C76527    local_user    web_admin
+    [Tags]    C76527    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
@@ -1316,7 +1319,7 @@ Cloud administrator can enable/disable any viewer local user (positive)
     END
 
 Cloud administrator can change local user password (positive)
-    [Tags]    C76530    local_user    web_admin
+    [Tags]    C76530    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1}[local users][cloudAdmin][login]    ${server 1}[cloud users][cloudAdmin]    
     FOR    ${user}    IN    @{list}
@@ -1353,7 +1356,7 @@ Cloud administrator can change local user password (positive)
     END
 
 Changes made in thick client appear on cloud portal
-    [Tags]    C76251    local_user    web_admin
+    [Tags]    C76251    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     FOR    ${user}    IN    @{list}
@@ -1376,7 +1379,7 @@ Changes made in thick client appear on cloud portal
         ...    ${BASE PASSWORD}    
         ...    user id=${id}    
         ...    is cloud=${False}    
-        Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=45
+        Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=65
         Log    Step 5
         Save User    
         ...    ${server 1}[local auth]    
@@ -1467,7 +1470,7 @@ Changes made in thick client appear on cloud portal
     END
 
 Local user list is not available for offline system
-    [Tags]    C76234    local_user    System-offline
+    [Tags]    C76234    local_user    System-offline    cloud
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
     Log    Preconditions
