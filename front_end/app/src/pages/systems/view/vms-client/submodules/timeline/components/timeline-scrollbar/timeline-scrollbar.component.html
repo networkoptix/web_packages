@@ -3,7 +3,7 @@
   [ngClass]="{ enabled: canScrollLeft }"
   (mousedown)="buttonLeftMouseDownHandler()"
   (touchstart)="buttonLeftMouseDownHandler()"
-  (dblclick)="buttonLeftDblClickHandler()" >
+  (mouseup)="buttonLeftHandleMouseUp()" >
   <svg-icon nx-add-svg-src [src]="CONFIG.images.dir + 'timeline_scroll.svg'"></svg-icon>
 </div>
 <div class="background"
@@ -20,7 +20,7 @@
     class="bar"
     #bar
     (touchstart)="barMouseDownHandler($event)"
-    (dblclick)="barDblClickHandler($event)"
+    (mouseup)="barHandleMouseUp($event)"
     (mousedown)="barMouseDownHandler($event)"
     [ngClass]="{ 'grabbed': isBarGrabbed }"
     [ngStyle]="{ 'left.px': barLeftPx, 'width.px': barWidthPx }">
@@ -42,6 +42,6 @@
   [ngClass]="{ enabled: canScrollRight }"
   (mousedown)="buttonRightMouseDownHandler()"
   (touchstart)="buttonRightMouseDownHandler()"
-  (dblclick)="buttonRightDblClickHandler()" >
+  (mouseup)="buttonRightHandleMouseUp()" >
   <svg-icon nx-add-svg-src [src]="CONFIG.images.dir + 'timeline_scroll.svg'"></svg-icon>
 </div>

@@ -236,6 +236,30 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.scrollbarRelative.handleButtonRightMouseDown();
     }
 
+    protected _prevMouseUpTime: number
+    protected _doubleClickDelay: number = 300 // ms
+    public buttonLeftHandleMouseUp () {
+        const now = Date.now()
+        if (now - this._prevMouseUpTime < this._doubleClickDelay) {
+            this.buttonLeftDblClickHandler()
+        }
+        this._prevMouseUpTime = now
+    }
+    public buttonRightHandleMouseUp () {
+        const now = Date.now()
+        if (now - this._prevMouseUpTime < this._doubleClickDelay) {
+            this.buttonRightDblClickHandler()
+        }
+        this._prevMouseUpTime = now
+    }
+    public barHandleMouseUp (e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
+        const now = Date.now()
+        if (now - this._prevMouseUpTime < this._doubleClickDelay) {
+            this.barDblClickHandler(e)
+        }
+        this._prevMouseUpTime = now
+    }
+
     public buttonLeftDblClickHandler () {
         this.scrollbarRelative.handleButtonLeftDblClick();
     }
