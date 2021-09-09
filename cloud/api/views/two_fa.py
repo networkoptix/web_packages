@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import api_success, require_params
+from api.helpers.exceptions import APIInternalException, APIRequestException, ErrorCodes, api_success, require_params
 
 
 class TwoFactorPermissionsMixin:
@@ -48,7 +48,11 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer = VerificationSerializer(data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
-        return api_success(Auth.verify_2fa_code(data["verification_code"], data["access_code"]))
+        try:
+            res = Auth.verify_2fa_code(data["verification_code"], data["access_code"])
+        except APIInternalException:
+            raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
+        return api_success(res)
 
     def post(self, request, *args, **kwargs):
         """
@@ -69,7 +73,11 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer = VerificationSerializer(data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
-        return api_success(Auth.verify_backup_code(data["verification_code"], data["access_code"]))
+        try:
+            res = Auth.verify_backup_code(data["verification_code"], data["access_code"])
+        except APIInternalException:
+            raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
+        return api_success(res)
 
     @method_decorator(swagger_auto_schema(
         request_body=openapi.Schema(

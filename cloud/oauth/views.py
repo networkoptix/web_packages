@@ -144,7 +144,7 @@ def set_params_for_redirect(code, state):
 def authenticate(request):
     require_params(request, ("client_id", "email", "password", "response_type"))
     if get_param(request, "response_type") != Auth.RESPONSE_TYPE.code:
-        raise APIRequestException("Invalid value for response_type. It must be code.")
+        raise APIRequestException("Invalid value for response_type. It must be code.", error_code=ErrorCodes.bad_request)
 
     ip = get_ip(request)
     redirect_uri = get_param(request, "redirect_uri")
