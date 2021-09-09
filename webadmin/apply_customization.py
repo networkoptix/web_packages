@@ -28,6 +28,8 @@ def apply_customization(webadmin_package, customization_package, output_package)
 
         with customization_zip.open("description.json", "r") as file:
             skin = json.load(file).get("skin", "blue").replace(r"dark_", "").replace("gray_", "")
+            if skin not in ["blue", "green", "orange"]:
+                skin = "blue"
 
         webadmin_zip.extractall(path=temp_dir)
 

@@ -219,7 +219,7 @@ function build_webadmin_locally() {
     cp webadmin/apply_customization.py $BUILD_DIR
     pushd $BUILD_DIR
         . "$REPO/webadmin/build.sh"
-        . ./apply_customization.py
+        ./apply_customization.py
     popd
 }
 
