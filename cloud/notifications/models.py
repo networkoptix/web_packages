@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor, wait, as_completed
 import json
 import re
 
@@ -7,7 +8,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
-from django.db.models import Q
+from django.db.models import Q, F, Value
+from django.db.models.functions import Concat
 from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice, GCMDeviceQuerySet
@@ -350,38 +352,19 @@ class PushNotification(models.Model):
             url = url.replace(system_id, relay_host)
         return url
 
-    @staticmethod
-    def generate_provider_specific_messages(title, body, payload, options, data_payload):
-        apns_message = {
-            'aps': {
-                'alert': {'title': title, 'body': body},
-                **{key.replace('_', '-'): val for key, val in options.items()}
-            },
-            **payload
-        }
-        return {
-            PushDevice.PROVIDERS.apn: json.dumps({'APNS': json.dumps(apns_message)}),
-            PushDevice.PROVIDERS.apn_sandbox: json.dumps({'APNS_SANDBOX': json.dumps(apns_message)}),
-            PushDevice.PROVIDERS.firebase: json.dumps({'GCM': json.dumps({
-                'notification': {'title': None, 'body': None},
-                'data': {**data_payload, **options}
-            })}),
-            PushDevice.PROVIDERS.baidu: json.dumps({'BAIDU': json.dumps({
-                'msg': {'title': None, 'description': None},
-                'custom_content': {**data_payload},
-                **options
-            })})
-        }
-
     def send_notifications(self, device_ids=None, devices=None):
-        from .engines.sns_push import send_sns_push
+        from .engines.sns_push import send_sns_push, generate_provider_specific_messages
+        if device_ids is None and devices is None:
+            raise ValueError('Either device_ids or devices must be passed as an argument')
+
         if device_ids:
             devices = PushDevice.objects.filter(id__in=device_ids)
 
-        firebase_legacy_devices = devices.filter(
-            provider=PushDevice.PROVIDERS.firebase_legacy)
-        sns_devices = devices.filter(
-            ~Q(provider=PushDevice.PROVIDERS.firebase_legacy))
+        devices = devices.annotate(
+            targets=Concat(Value('["'), F('user__email'), Value('"]'))
+        )
+        firebase_legacy_devices = devices.filter(provider=PushDevice.PROVIDERS.firebase_legacy)
+        sns_devices = devices.filter(~Q(provider=PushDevice.PROVIDERS.firebase_legacy))
 
         title = self.title or None
         body = self.body or None
@@ -390,7 +373,6 @@ class PushNotification(models.Model):
         if image_url:
             payload['imageUrl'] = self.sub_traffic_relay(image_url)
         payload['systemId'] = self.raw_system_id
-        payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
 
         # Firebase Legacy
@@ -399,23 +381,32 @@ class PushNotification(models.Model):
         data_devices = firebase_legacy_devices.filter(
             type=PushDevice.TYPES.data)
 
-        notification_response = notification_devices.send_message(
-            body, title=title, extra=payload, **options)
+        # Multithreading to deal with lots of network I/O delay
+        with ThreadPoolExecutor() as executor:
+            futures = [
+                executor.submit(device.send_message, body, title=title, extra={**payload, 'targets': device.targets}, **options)
+                for device in notification_devices
+            ]
+            notification_responses = [future.result() for future in as_completed(futures)]
 
-        data_payload = payload.copy()
-        data_payload['caption'] = title or ''
-        data_payload['description'] = body or ''
+            data_payload = payload.copy()
+            data_payload['caption'] = title or ''
+            data_payload['description'] = body or ''
 
-        data_response = data_devices.send_message(
-            None, title=None, extra=data_payload, **options)
+            futures = [
+                executor.submit(device.send_message, None, title=None, extra={**payload, 'targets': device.targets}, **options)
+                for device in data_devices
+            ]
+            data_responses = [future.result() for future in as_completed(futures)]
 
-        # SNS
-        sns_messages = self.generate_provider_specific_messages(
-            title, body, payload, options, data_payload)
-        sns_client = get_sns_client()
-        retry_device_ids = []
-        for device in sns_devices:
-            send_sns_push(device, sns_client, sns_messages,
-                          retry_device_ids, self)
+            # SNS
+            sns_client = get_sns_client()
+            retry_device_ids = []
 
-        return (notification_response, data_response), retry_device_ids
+            futures = []
+            for device in sns_devices:
+                sns_messages = generate_provider_specific_messages(title, body, {**payload, 'targets': device.targets}, options, data_payload)
+                futures.append(executor.submit(send_sns_push, device, sns_client, sns_messages, retry_device_ids, self))
+            wait(futures)
+
+        return (notification_responses, data_responses), retry_device_ids

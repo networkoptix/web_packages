@@ -95,9 +95,11 @@ Open Share Dialog
     # Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     # Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Sleep    .25
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Sleep    .25
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Element Is Visible    ${ADD USER BUTTON MODAL}
 

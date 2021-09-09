@@ -1,4 +1,5 @@
 from enum import Enum
+import json
 import logging
 
 import botocore
@@ -41,6 +42,29 @@ class SNSErrors(Enum):
     ENDPOINT_DISABLED = 'EndpointDisabled'
     ENDPOINT_INVALID = ('InvalidParameter', 'Invalid parameter: TargetArn Reason: ARN specifies an invalid endpointId')
     ENDPOINT_NOT_EXIST = ('InvalidParameter', 'Invalid parameter: TargetArn Reason: No endpoint found for the target arn specified')
+
+
+def generate_provider_specific_messages(title, body, payload, options, data_payload):
+    apns_message = {
+        'aps': {
+            'alert': {'title': title, 'body': body},
+            **{key.replace('_', '-'): val for key, val in options.items()}
+        },
+        **payload
+    }
+    return {
+        PushDevice.PROVIDERS.apn: json.dumps({'APNS': json.dumps(apns_message)}),
+        PushDevice.PROVIDERS.apn_sandbox: json.dumps({'APNS_SANDBOX': json.dumps(apns_message)}),
+        PushDevice.PROVIDERS.firebase: json.dumps({'GCM': json.dumps({
+            'notification': {'title': None, 'body': None},
+            'data': {**data_payload, **options}
+        })}),
+        PushDevice.PROVIDERS.baidu: json.dumps({'BAIDU': json.dumps({
+            'msg': {'title': None, 'description': None},
+            'custom_content': {**data_payload},
+            **options
+        })})
+    }
 
 
 def create_platform_endpoint(device, client):

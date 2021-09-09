@@ -139,14 +139,14 @@ do
             rm -f /tmp/*.pid
 
             echo $'\n'Broadcast notifications started: Version $VERSION$'\n'
-            exec celery worker -Q broadcast-notifications -A notifications -l info -B --concurrency=1 --pidfile=/tmp/celery-w1.pid
+            exec celery worker -Q broadcast-notifications -A notifications -l info -B --concurrency=1 --pidfile=/tmp/celery-broadcast-w1.pid
             ;;
         push_notifications)
             write_my_cnf
             rm -f /tmp/*.pid
 
             echo $'\n'Push Notifications started: Version $VERSION$'\n'
-            exec celery worker -A notifications -Q push-notification -l info --pidfile=/tmp/celery-w1.pid
+            exec celery worker -A notifications -Q push-notification -l info --pidfile=/tmp/celery-push-w1.pid
             ;;
         *)
             echo Usage: cloud_portal '[web|broadcast_notifications|push_notifications|celery|celery_beat|config|copystatic|migratedb]'

@@ -255,7 +255,10 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
 
     @HostListener('window:resize', ['$event'])
     public onResize (): void {
-        this.scrollbarAbsolute.backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width;
+        setTimeout(() => {
+            // wait native element to actually resize ... otherwise we're measuring old size -- TT
+            this.scrollbarAbsolute.backgroundWidth = this.backgroundView.nativeElement.getBoundingClientRect().width;
+        });
     }
 }
 

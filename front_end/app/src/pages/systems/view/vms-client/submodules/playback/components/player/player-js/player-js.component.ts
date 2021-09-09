@@ -38,6 +38,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     constructor() {}
 
     initPlayer(): void {
+        let videoJsAutoRetry = 0;
         let playerHasPlayed = false;
         let stallTimer;
         const waitingTime = 4 * 1000;
@@ -82,6 +83,14 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this.player.on('abort', (err) => {
             playerHasPlayed = false;
             !this.paused && this.videoError.emit(err);
+        });
+
+        this.player.tech(true).on('retryplaylist', () => {
+            ++videoJsAutoRetry;
+            if (videoJsAutoRetry > 2) {
+                this.bufferingChange.emit(2);
+                videoJsAutoRetry = 0;
+            }
         });
     }
 

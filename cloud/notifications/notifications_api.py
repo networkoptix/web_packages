@@ -93,9 +93,10 @@ def _write_push_result(notification_object, result_data):
 
 def log_push_result(notification_object, message, level=logging.INFO, device_token=None, device_id=None, stack_trace=False):
     result_data = _read_push_result(notification_object)
-    log_message = f'Push Notification: {notification_object.id}, {message}'
+    message = f'Attempt: {notification_object.count}, {message}'
     if stack_trace:
-        log_message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
+        message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
+    log_message = f'Push Notification: {notification_object.id}, {message}'
     logger.log(level, log_message)
 
     if device_token:
@@ -195,15 +196,10 @@ def process_fcm_push_response(responses, notification_object, dry_run=False):
     return list(PushDevice.objects.filter(registration_id__in=resend_tokens).values_list('id', flat=True))
 
 
-def set_subscriptions_from_targets(notification_object, request_data):
+def get_push_devices_from_targets(notification_object, system_users):
     targets = set(json.loads(notification_object.raw_targets))
     system_id = notification_object.raw_system_id
-    system = get_system_with_users(notification_object, request_data)
-
-    if not system:
-        return False
-
-    targets = targets.intersection(system['users'])
+    targets = targets.intersection(system_users)
     target_accounts = Account.objects.filter(email__in=targets).distinct()
 
     for account in target_accounts:
@@ -215,11 +211,6 @@ def set_subscriptions_from_targets(notification_object, request_data):
         log_push_result(notification_object, f'User {target} not found', logging.ERROR)
 
     return PushDevice.objects.filter(
-        subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
+        subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts, user__is_active=True,
         application_id=notification_object.customization.name, active=True
     ).distinct()
-    # notification_object.devices.set(matching_devices)
-
-    # return matching_devices.values_list('id', flat=True)
-
-

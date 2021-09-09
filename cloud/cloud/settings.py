@@ -553,7 +553,8 @@ if LOCAL_ENVIRONMENT:
 SNS_CLIENT = {
     'service_name': 'sns',
     'config': Config(
-        region_name=os.getenv('SNS_REGION', 'us-east-1')
+        region_name=os.getenv('SNS_REGION', 'us-east-1'),
+        max_pool_connections=25
     )
 }
 # Uncomment if trying to use SNS from local env with credentials different from ~/.aws/credentials
@@ -613,7 +614,7 @@ CELERY_WORKER_SEND_TASK_EVENTS = False
 CELERY_WORKER_PREFETCH_MULTIPLIER = 0
 CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 if PUSH_WORKER:
-    CELERY_WORKER_CONCURRENCY = 2
+    CELERY_WORKER_CONCURRENCY = 4
     CELERY_WORKER_PREFETCH_MULTIPLIER = 30
     CELERY_RESULT_BACKEND = None
 

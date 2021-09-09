@@ -7,7 +7,6 @@ export function generateClickDubleClickPair (onClick, onDblClick, dblClickDelayM
         if (scheduledHandler) {
             const timePassed = now - prevClickTime
             if (timePassed < dblClickDelayMs) {
-                console.log(timePassed)
                 clearTimeout(scheduledHandler)
                 scheduledHandler = null
                 onDblClick()
