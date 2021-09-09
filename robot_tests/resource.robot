@@ -110,7 +110,7 @@ Set Language Anonymous
 Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
-    ...    ELSE    Log In Web Admin    ${user}    ${password}
+    ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}=${validate}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
@@ -125,7 +125,9 @@ Log In Cloud
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True}    Validate Log In    ${email}    password=${password}
+    IF    ${validate} == ${True}
+        Validate Log In    ${email}    password=${password}
+    END
     Sleep    0.5
 
 Log In Web Admin
