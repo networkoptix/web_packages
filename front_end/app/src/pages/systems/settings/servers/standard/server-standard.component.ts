@@ -172,7 +172,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         this.applyService.setVisible(false);
         this.serverLoaded = false;
-        this.showAnalytics = true;
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port: serverPort } = this.selectedServer;
