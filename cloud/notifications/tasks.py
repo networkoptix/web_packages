@@ -11,7 +11,7 @@ from django.utils import timezone
 from api.models import Account
 from notifications import notifications_api
 from notifications.engines import email_engine
-from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
+from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from notifications.models import Message, PushNotification
 from util.helpers import get_language_for_email
 
@@ -100,7 +100,8 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
 
     try:
         if device_ids is None:
-            devices = set_subscriptions_from_targets(notification_object, request_data)
+            system = get_system_with_users(notification_object, request_data) or {}
+            devices = get_push_devices_from_targets(notification_object, system['users']) if 'users' in system else None
             if not devices:
                 log_push_result(notification_object, 'No matching subscriptions found')
                 notification_object.send_date = timezone.now()
