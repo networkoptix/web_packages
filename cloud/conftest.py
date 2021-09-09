@@ -14,6 +14,9 @@ from cms.models import *
 from api.models import Account
 
 from rest_framework.test import APIRequestFactory
+from rest_framework.test import APIClient
+from django_mock_queries.query import MockSet
+
 
 def generateJSON():
     return json.dumps({
@@ -314,11 +317,17 @@ def check_meta_factory(target_class):
 
     return check_meta
 
+
 def check_against_expected_meta(target_class, expected_meta):
     check_meta = check_meta_factory(target_class)
     for field, meta in expected_meta.items():
         for attribute, expected in meta.items():
             check_meta(field, attribute, expected)
+
+
+@pytest.fixture
+def mock_set():
+    return MockSet
 
 
 @pytest.fixture()

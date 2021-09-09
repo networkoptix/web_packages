@@ -14,7 +14,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System, TempLogin
+from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
 from api.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
 )
@@ -64,6 +64,8 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
                 raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
+                    from api.controllers.cloud_api import TempLogin
+
                     with TempLogin(user, password) as credentials:
                         system_response = Clouddb_System.get(credentials.tokens, user)
                     if 'systems' in system_response and system_response['systems'][0]:
@@ -161,11 +163,10 @@ class DeviceSubscriptionListView(RetrieveAPIView):
         return PushDevice.objects.filter(user=self.request.user)
 
     def get(self, request, *args, **kwargs):
-        devices = {}
-        for device in self.get_queryset():
-            serializer = self.get_serializer(device)
-            devices[device.registration_id] = serializer.data
-        return Response(devices)
+        return Response({
+            device.registration_id: self.get_serializer(device).data
+            for device in self.get_queryset()
+        })
 
 
 class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):

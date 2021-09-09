@@ -6,9 +6,9 @@ from notifications.views.push_notification import push_notification, Subscriptio
     DeviceSubscriptionListView
 
 public_patterns = [
-    url(r'^push_notification$', push_notification),
-    path('subscriptions/<str:deviceToken>', Subscriptions.as_view()),
-    path('subscriptions', DeviceSubscriptionListView.as_view())
+    url(r'^push_notification$', push_notification, name='push_notification'),
+    path('subscriptions/<str:deviceToken>', Subscriptions.as_view(), name='subscriptions'),
+    path('subscriptions', DeviceSubscriptionListView.as_view(), name='subscriptions')
 ]
 
 urlpatterns = [
