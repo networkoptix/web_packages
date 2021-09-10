@@ -9,11 +9,11 @@ Force Tags        system
 System Offline Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
     ${rand}=   Generate Random String
-    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${system}
     Stop Docker Server    ${system}[id]
 
-    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE 4.3}    owner=${owner}
+    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${extra system}
     Sleep    30
     Open browser and go to URL    ${ENV}
@@ -196,3 +196,5 @@ System changes state to offline if all its Servers goes offline
     Start Docker Server    ${extra system}[id]
     Reload Page
     Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}
+    log to console    ${system}[owner]
+    sleep    500

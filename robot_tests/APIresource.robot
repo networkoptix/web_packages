@@ -593,7 +593,7 @@ Add Virtual Camera
     ${data}=   Create Dictionary    name=${camera name}
 
     Create Digest Session    Add Camera Session    ${server url}    auth=${auth}     disable_warnings=1
-    IF    '4.3' in $image
+    IF    '5.0' in $image
         ${resp}=   Post Request    Add Camera Session   /api/virtualCamera/add   json=${data}     timeout=10
     ELSE
         ${resp}=   Post Request    Add Camera Session   /api/wearableCamera/add?name=${camera name}     timeout=10

@@ -88,6 +88,7 @@ Camera Suite Setup
     Open Browser and go to URL    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup
+    Log To Console    ${system}[port]
 
 Camera Test Setup    
     [Arguments]    ${user}=${system}[owner]    ${system}=${system}[cloud id]
