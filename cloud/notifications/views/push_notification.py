@@ -64,10 +64,7 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
                 raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
-                    from api.controllers.cloud_api import TempLogin
-
-                    with TempLogin(user, password) as credentials:
-                        system_response = Clouddb_System.get(credentials.tokens, user)
+                    system_response = Clouddb_System.basic_get(user, password, user)
                     if 'systems' in system_response and system_response['systems'][0]:
                         request.data['system'] = system_response['systems'][0]
                         authentication_cache.set(f'{user}:{password}', request.data['system'])
@@ -102,7 +99,7 @@ class CloudSessionAuthentication(SessionAuthentication):
             account = getattr(request._request, 'user', None)
             if request.session and 'access_token' in request.session and 'refresh_token' in request.session:
                 clouddb_account = Clouddb_Account.get(request)
-                credentials = Clouddb_Account.create_temporary_credentials(request)
+                credentials = Clouddb_Account.create_temporary_credentials(request, credential_type='short')
                 request.session['login'] = credentials['login']
                 request.session['password'] = credentials['password']
             elif request.session and 'login' in request.session and 'password' in request.session:

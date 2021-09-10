@@ -251,12 +251,31 @@ class System(object):
 
     @staticmethod
     @validate_response
+    @lower_case_email
+    def basic_get(email, password, system_id):
+
+        params = {
+            'systemId': system_id
+        }
+        return get_wrapper(System.get_request_url(), params=params, auth={'email': email, 'password': password})
+
+    @staticmethod
+    @validate_response
     @auto_refresh_token
     def users(request, system_id, headers=None):
         params = {
             'systemId': system_id
         }
         return get_wrapper(System.get_request_url('getCloudUsers'), params=params, headers=headers)
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
+    def basic_users(email, password, system_id):
+        params = {
+            'systemId': system_id
+        }
+        return get_wrapper(System.get_request_url('getCloudUsers'), params=params, auth={'email': email, 'password': password})
 
     @staticmethod
     @validate_response
