@@ -500,9 +500,10 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def toggle_2fa(request, password, totp, tfa_enabled, headers=None):
+    def toggle_2fa(request, password, totp, digest_enabled, tfa_enabled, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
+            "httpDigestAuthEnabled": digest_enabled,
             "password": password,
             "totp": totp
         }
@@ -781,7 +782,7 @@ class Auth(object):
     def delete_backup_codes(request, codes=None, headers=None):
         if not codes:
             codes = ""
-        return delete_wrapper(f"{CLOUD_2FA_URL}/backupCodes/{codes}", headers=headers)
+        return delete_wrapper(f"{CLOUD_2FA_URL}/backup-codes/{codes}", headers=headers)
 
     @staticmethod
     @validate_response
@@ -793,13 +794,13 @@ class Auth(object):
     @validate_response
     @auto_refresh_token
     def generate_backup_code(request, count, headers=None):
-        return post_wrapper(f"{CLOUD_2FA_URL}/backupCodes/", json={"count": count}, headers=headers)
+        return post_wrapper(f"{CLOUD_2FA_URL}/backup-codes/", json={"count": count}, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def get_active_backup_codes(request, headers=None):
-        return get_wrapper(f"{CLOUD_2FA_URL}/backupCodes/", headers=headers)
+        return get_wrapper(f"{CLOUD_2FA_URL}/backup-codes/", headers=headers)
 
     @staticmethod
     @validate_response
@@ -809,4 +810,4 @@ class Auth(object):
     @staticmethod
     @validate_response
     def verify_backup_code(backup_code, access_code):
-        return get_wrapper(f"{CLOUD_2FA_URL}/backupCode/{backup_code}", params={'token': access_code})
+        return get_wrapper(f"{CLOUD_2FA_URL}/backup-code/{backup_code}", params={'token': access_code})

@@ -291,6 +291,7 @@ def toggle2fa(request):
         Account.toggle_2fa(request,
                            request.data.get("password"),
                            request.data.get("totp"),
+                           not account.get("httpDigestAuthEnabled"),
                            not account.get('account2faEnabled')
                            )
     )

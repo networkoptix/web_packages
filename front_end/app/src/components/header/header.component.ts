@@ -443,19 +443,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    login() {
-        const { url } = this.router;
-        const redirect = this.CONFIG.redirect.paths.some((path) => {
-            return path === '/' ? url === '/' : url.includes(path);
-        });
-        // Handling promise to satisfy the linter.
-        this.dialogs
-            .login(this.accountService, !redirect)
-            .then(() => {});
-
-        return false;
-    }
-
     logout() {
         this.accountService.logout(true);
     }
