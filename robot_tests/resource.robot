@@ -110,7 +110,7 @@ Set Language Anonymous
 Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
-    ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}=${validate}
+    ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
