@@ -49,6 +49,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     private readonly isMobile: boolean;
     private readonly isChrome: boolean;
+    public readonly isMobileSafari: boolean;
     public id: string
     public camera: ICamera
     public system: NxSystem
@@ -111,6 +112,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.showElementsInFSM = true;
         this.isMobile = utilsService.isMobile() || utilsService.isTablet();
         this.isChrome = utilsService.isChrome();
+        this.isMobileSafari = utilsService.isSafari() && utilsService.isMobile();
     }
 
     private onFSC = e => {

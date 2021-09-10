@@ -186,6 +186,10 @@ export class NxUtilsService {
         return this.deviceService.browser === 'Chrome';
     }
 
+    public isSafari() {
+        return this.deviceService.browser === 'Safari';
+    }
+
     /**
      * Return IPv4 address or IPv6 address if none
      */
