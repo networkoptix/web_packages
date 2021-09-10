@@ -177,7 +177,12 @@ Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    '''${mode}''' == '''cloud'''    Check Language Logged In    ${email}    ${password}
+    IF    '${mode}' == 'cloud'
+        Check Language Logged In    ${email}    ${password}
+    ELSE IF    '${mode}' == 'webadmin'
+        Wait Until Element Is Visible    ${CLOUD NAME}
+        Sleep    1
+    END    
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
