@@ -164,6 +164,7 @@
 	background-color: #fafbfc;
 }
 
+
 .swagger-ui input {
 	display          : block;
 	height           : 32px;
@@ -177,6 +178,14 @@
 	transition       : none;
 	box-shadow       : none;
 	padding          : 5px 10px;
+	&::placeholder {
+		color: #fff
+	}
+	&:disabled {
+		&::placeholder {
+			color: #fafafa;
+		}
+	}
 }
 
 .swagger-ui button, .swagger-ui input {
@@ -9562,6 +9571,8 @@
 	text-align : right
 }
 
+
+
 .swagger-ui .execute-wrapper .btn {
 	width   : 100%;
 	padding : 8px 40px
@@ -10701,7 +10712,7 @@
 
 .swagger-ui .parameters-col_description input[type=text] {
 	width     : 100%;
-	max-width : 450px;
+	max-width : 340px;
 }
 
 .swagger-ui .parameters-col_description select {
