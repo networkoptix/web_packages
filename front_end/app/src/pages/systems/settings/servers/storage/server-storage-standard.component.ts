@@ -148,7 +148,8 @@ export class NxSystemStorageComponent implements OnInit {
             const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
             if (
                 sources.every(loaded => loaded) &&
-                !this.updatingModes.length
+                !this.updatingModes.length &&
+                !this.applyService.locked
             ) {
                 if ((!state.locations.length && this.currentStorageState?.locations.length) || this.applyService.locked) {
                     return;
