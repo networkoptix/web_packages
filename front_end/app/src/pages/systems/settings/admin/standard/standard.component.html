@@ -70,7 +70,7 @@
     </nx-section-placeholder>
 
     <ng-template #systemSettings>
-        <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+        <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
         <nx-section *ngIf="settingsWatchersSet">
             <div class="m-0">
                 <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
@@ -141,7 +141,7 @@
             [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity()">
     </nx-section-placeholder>
     <ng-template #securitySettings>
-        <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+        <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
         <nx-section *ngIf="settingsWatchersSet">
             <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
                 <div class="form-check p-0 mr-4">
