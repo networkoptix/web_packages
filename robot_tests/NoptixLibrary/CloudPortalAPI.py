@@ -16,7 +16,8 @@ class CloudPortalAPI(object):
     def log_in(self, env, email, password):
         s = requests.session()
         r = s.post(f'{env}/api/account/login', json={'email': email, 'password': password})
-        assert r.status_code == 200, "Log In Failed"
+        
+        assert r.status_code == 200, f"Log In Failed {r.status_code}"
         s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
 
         return s

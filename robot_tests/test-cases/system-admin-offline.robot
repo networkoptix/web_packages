@@ -19,10 +19,8 @@ System Offline Suite Setup
     Open browser and go to URL    ${ENV}
 
 System Offline Suite Teardown
-    Run keyword and ignore error    Disconnect    ${ENV}    ${extra system}[owner]    ${base password}    ${extra system}[cloud id]
     Delete Base System    ${system}
     Delete Base System    ${extra system}
-    Delete Docker Server  ${extra system}[id]
     Close All Browsers
 
 Restart
@@ -107,18 +105,20 @@ Offline system should open System page by link to not authorized user and show i
 
 Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded    system_offline
+    ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
-    Log In    ${email noperm}    ${base password}
+    Log In    ${random email}    ${base password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
-    Slow   Click Button    ${TAKE ME HOME}    timeout=0.5
+    Slow   Click Link    ${TAKE ME HOME}
     Wait Until Location Is    ${ENV}/systems
 
 Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded    system_offline
+    ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
-    Log In    ${email noperm}    ${base password}    button=None
+    Log In    ${random email}    ${base password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
 
 #See CLOUD-6592: offline system cannot be renamed
@@ -196,5 +196,3 @@ System changes state to offline if all its Servers goes offline
     Start Docker Server    ${extra system}[id]
     Reload Page
     Wait Until Element Is Not Visible    ${SYSTEM NAME OFFLINE}
-    log to console    ${system}[owner]
-    sleep    500
