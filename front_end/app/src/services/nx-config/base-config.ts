@@ -411,6 +411,7 @@ export interface Icons {
 export interface Images {
     dir: string;
     dirDevelopers: string;
+    dirDevelopersDevtools: string;
     dirLanding: string;
     dirLandingGraphic: string;
 }

@@ -192,10 +192,11 @@ export const nxConfig: IConfig = {
         dirLandingIcons       : '/static/images/landing/block_icons/'
     },
     images: {
-        dir               : '/static/images/',
-        dirDevelopers     : '/static/images/developers/',
-        dirLanding        : '/static/images/landing/',
-        dirLandingGraphic : '/static/images/landing/main_screen/'
+        dir                   : '/static/images/',
+        dirDevelopers         : '/static/images/developers/',
+        dirDevelopersDevtools : '/static/images/developers/dev_tools/',
+        dirLanding            : '/static/images/landing/',
+        dirLandingGraphic     : '/static/images/landing/main_screen/'
     },
     integration: {
         adminLink            : '/admin/cms/asset/%ID%/pages/',
