@@ -205,8 +205,8 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.reactivate(email);
     }
 
-    disconnect(systemId, userPassword) {
-        return this.cloudApi.disconnect(systemId, userPassword).toPromise();
+    disconnect(systemId) {
+        return this.cloudApi.disconnect(systemId).toPromise();
     }
 
     connect(systemName, userEmail, userPassword) {

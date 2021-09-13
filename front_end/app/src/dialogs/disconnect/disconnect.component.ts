@@ -1,15 +1,12 @@
-import {
-    Component, Input,
-    Renderer2, ViewChild
-}                         from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { of }             from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal }   from '@ng-bootstrap/ng-bootstrap';
+import { of }               from 'rxjs';
 
 import { environment }                     from '@environments/environment';
 import { NxLanguageProviderService }       from '@services/nx-language-provider';
 import { NxConfigService, IConfig }        from '@services/nx-config';
 import { NxProcessService }                from '@services/process.service';
-import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
+import { NxSystemAPIService, NxSystemRestAPI } from '@services/system-api.service';
 import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
@@ -27,24 +24,24 @@ export class DisconnectModalContent {
     isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    password: string;
-    wrongPassword: boolean;
-    auth = {
-        username : '',
-        password : ''
-    };
+    // password: string;
+    // wrongPassword: boolean;
+    // auth = {
+    //     username : '',
+    //     password : ''
+    // };
 
-    hideErrors = true;
-    mediaServerApi: NxSystemAPI;
+    // hideErrors = true;
+    mediaServerApi: Partial<NxSystemRestAPI>;
 
-    @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
+    // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        private renderer: Renderer2,
+        // private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService
     ) {
@@ -54,38 +51,38 @@ export class DisconnectModalContent {
     }
 
     ngOnInit() {
-        const passwordError = () => {
-            this.wrongPassword = true;
-            this.auth.password = '';
+        // const passwordError = () => {
+        //     this.wrongPassword = true;
+        //     this.auth.password = '';
 
-            this.renderer.selectRootElement('#password').focus();
-            return true;
-        };
-        this.auth.password = '';
-        this.account
-            .get()
-            .then((account) => {
-                if (account) {
-                    this.auth.username = this.isLocal ? account.first_name : account.email;
-                }
-            });
+        //     this.renderer.selectRootElement('#password').focus();
+        //     return true;
+        // };
+        // this.auth.password = '';
+        // this.account
+        //     .get()
+        //     .then((account) => {
+        //         if (account) {
+        //             this.auth.username = this.isLocal ? account.first_name : account.email;
+        //         }
+        //     });
 
         this.disconnect = this.processService.createProcess(() => {
-            this.disconnectForm.controls.password.setErrors(undefined);
-            this.wrongPassword = false;
+            // this.disconnectForm.controls.password.setErrors(undefined);
+            // this.wrongPassword = false;
 
             if (this.isLocal) {
-                return this.disconnectLocal(this.auth.password);
+                return this.disconnectLocal();
             }
-            return this.account.disconnect(this.system.id, this.auth.password);
+            return this.account.disconnect(this.system.id);
         }, {
             ignoreError        : true,
-            ignoreUnauthorized : true,
-            errorCodes         : {
-                'Wrong password.' : passwordError,
-                wrongPassword     : passwordError
-            },
-            errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix()
+            ignoreUnauthorized : true
+            // errorCodes         : {
+            //     'Wrong password.' : passwordError,
+            //     wrongPassword     : passwordError
+            // },
+            // errorPrefix        : this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
             this.activeModal.close(true);
             const options = {
@@ -101,10 +98,10 @@ export class DisconnectModalContent {
         this.activeModal.close();
     }
 
-    private disconnectLocal(password) {
+    private disconnectLocal() {
         this.mediaServerApi = this.systemApiService
-            .createConnection(undefined, undefined, undefined, () => of(''), true);
+            .createConnection(undefined, undefined, undefined, () => of(''));
 
-        return this.mediaServerApi.disconnectFromCloud(password);
+        return this.mediaServerApi.disconnectFromCloud();
     }
 }

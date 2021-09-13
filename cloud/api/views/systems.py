@@ -225,19 +225,19 @@ def access_roles(request, system_id):
                              "password": password__body,
                              "system_id": system_id__body
                          },
-                         required=["password", "system_id"]
+                         required=["system_id"]
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def disconnect(request):
-    require_params(request, ('system_id', 'password'))
+    require_params(request, ('system_id',))
 
     try:
         if request.user.is_authenticated:
             cloud_api.System.unbind(request, request.data['system_id'])
         else:
-            require_params(request, ('email',))
+            require_params(request, ('email', 'password'))
             with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
                 cloud_api.System.unbind(credentials.tokens, request.data['system_id'])
     except APINotAuthorisedException:

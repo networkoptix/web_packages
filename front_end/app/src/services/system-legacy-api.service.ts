@@ -465,21 +465,6 @@ export class NxSystemAPI {
         return { cloudSystemID, cloudAccountName };
     }
 
-    disconnectFromCloud(
-        currentPassword: string,
-        newAdminLogin: string = 'admin',
-        newAdminPassword?: string
-    ) {
-        const [login, password] = [newAdminLogin, newAdminPassword];
-        const params = newAdminPassword
-            ? { currentPassword, login, password }
-            : { currentPassword };
-
-        return NxConfigService.isLocal
-            ? this.post('/web/api/detachFromCloud', params).toPromise()
-            : this.post('/api/detachFromCloud', params).toPromise();
-    }
-
     setupCloudSystem(
         systemName: string,
         cloudSystemID: string,

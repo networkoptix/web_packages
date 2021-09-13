@@ -441,8 +441,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
-        return this.post('/rest/v1/system/cloudUnbind', { password: currentPassword }).pipe(
+    disconnectFromCloud() {
+        return this.post('/rest/v1/system/cloudUnbind', { password: '' }).pipe(
             retryWhen((request) => this.handleOldToken(request))
         ).toPromise();
     }

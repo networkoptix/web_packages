@@ -147,10 +147,9 @@ export class NxCloudApiService {
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
-    disconnect(systemId: string, password: string) {
+    disconnect(systemId: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
-            system_id: systemId,
-            password
+            system_id: systemId
         });
     }
 
