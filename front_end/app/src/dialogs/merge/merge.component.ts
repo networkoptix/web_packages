@@ -386,7 +386,7 @@ export class MergeModalContent {
                                 this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
                             }
                             this.machine.transition(this.confirmMerge);
-                        } else if (!Object.keys(res).length || res.error === '0') {
+                        } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
                             if (this.serverUrlInputExists) {
                                 this.machine.transition('adminPassword');
                             } else {

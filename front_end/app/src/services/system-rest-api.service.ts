@@ -143,8 +143,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    protected postProxy(protocol, serverAddress, requestUrl, data) {
-        return this.post(`/proxy/${protocol}/${serverAddress}/${requestUrl}`, data);
+    protected proxy(method, protocol, serverAddress, requestUrl, data) {
+        const url = `/proxy/${protocol}/${serverAddress}/${requestUrl}`;
+        if (method === 'get') {
+            return this.get(url, data);
+        } else if (method === 'post') {
+            return this.post(url, data);
+        }
+        throwError(new Error('Invalid http method type was passed.'));
     }
 
     private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
@@ -449,7 +455,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
-        return this.http.get(`//${remoteEndpoint}/rest/v1/servers/this/info`).pipe(
+        const request = remoteServerId ? of({ id: remoteServerId, cloudId: '' }) : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
+        return request.pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
             switchMap((data : any) => {
                 if (!remoteServerId) {
@@ -468,7 +475,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             .pipe(map((res: any) => ({ token: res.access_token })));
                     } else if (password) {
                         const data = { username: 'admin', password, remember: false };
-                        return this.postProxy('https', remoteEndpoint, 'rest/v1/login/sessions', data);
+                        return this.proxy('post', 'https', remoteEndpoint, 'rest/v1/login/sessions', data);
                     }
                 }
                 return of(info);
