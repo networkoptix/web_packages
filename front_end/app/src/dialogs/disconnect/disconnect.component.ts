@@ -6,7 +6,7 @@ import { environment }                     from '@environments/environment';
 import { NxLanguageProviderService }       from '@services/nx-language-provider';
 import { NxConfigService, IConfig }        from '@services/nx-config';
 import { NxProcessService }                from '@services/process.service';
-import { NxSystemAPIService, NxSystemRestAPI } from '@services/system-api.service';
+import { NxSystemAPI, NxSystemAPIService, NxSystemRestAPI } from '@services/system-api.service';
 import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
@@ -32,7 +32,7 @@ export class DisconnectModalContent {
     // };
 
     // hideErrors = true;
-    mediaServerApi: Partial<NxSystemRestAPI>;
+    mediaServerApi: Partial<NxSystemAPI|NxSystemRestAPI>;
 
     // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
@@ -102,6 +102,6 @@ export class DisconnectModalContent {
         this.mediaServerApi = this.systemApiService
             .createConnection(undefined, undefined, undefined, () => of(''));
 
-        return this.mediaServerApi.disconnectFromCloud();
+        return (this.mediaServerApi as NxSystemRestAPI).disconnectFromCloud();
     }
 }

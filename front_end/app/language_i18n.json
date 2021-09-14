@@ -161,6 +161,7 @@
     "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.",
     "Enter your account password to continue": "Enter your account password to continue",
     "Enter your password to verify it's really you": "Enter your password to verify it's really you",
+    "Error during loading. Please try reloading the page.": "Error during loading. Please try reloading the page.",
     "Event rule setup in progress...": "Event rule setup in progress...",
     "Export all to CSV": "Export all to CSV",
     "External Links": "External Links",
