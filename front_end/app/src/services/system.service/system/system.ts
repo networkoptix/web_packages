@@ -556,6 +556,10 @@ export class NxSystem extends System {
         return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
     }
 
+    public getBookmarks() {
+        return this.mediaserver.getBookmarks?.();
+    }
+
     public getPlaybackUrl (cameraId, transport, resolution, position) {
         return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }

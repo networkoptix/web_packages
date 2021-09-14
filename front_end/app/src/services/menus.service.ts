@@ -65,7 +65,7 @@ export class NxMenusService implements OnDestroy {
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
     private unsub$ = new Subject();
 
-    endpoint: Partial<{ view: boolean, settings: boolean, information: boolean }> = {};
+    endpoint: Partial<{ view: boolean, settings: boolean, information: boolean, bookmarks: boolean }> = {};
 
     constructor(
         configService: NxConfigService,
@@ -199,29 +199,25 @@ export class NxMenusService implements OnDestroy {
     }
 
     getUrl(systemId: string, endpoint = this.endpoint, home = false) {
-        let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        const url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
         if (home) {
             return url;
         }
 
-        if (!this.CONFIG.isLocal && systemId) {
-            if (endpoint.view) {
-                url += '/view';
-            }
-
-            if (endpoint.information) {
-                url += '/health';
-            }
-        } else {
-            if (endpoint.view) {
-                url = '/view';
-            }
-
-            if (endpoint.information) {
-                url = '/health';
-            }
+        let segment = '';
+        if (endpoint.view) {
+            segment = '/view';
         }
-        return url;
+
+        if (endpoint.information) {
+            segment = '/health';
+        }
+
+        if (endpoint.bookmarks) {
+            segment = '/bookmarks';
+        }
+
+        return (!this.CONFIG.isLocal && systemId) ? url + segment : segment;
     }
 
     updateActiveSystemMenu(activeSystem, isLocalAdmin?) {
@@ -260,6 +256,16 @@ export class NxMenusService implements OnDestroy {
                 this.endpoint.information || false
             );
             nodes.push(informationNode);
+        }
+
+        if (this.CONFIG.cloudCapabilities.bookmarksEnabled) {
+            const bookmarksNode = new MenuNode(
+                'Bookmarks',
+                this.getUrl(activeSystem.id, { bookmarks: true }),
+                this.LANG?.serverTabTitles.Bookmarks(),
+                this.endpoint.bookmarks || false
+            );
+            nodes.push(bookmarksNode);
         }
 
         const activeSystemMenu = new MenuNode(

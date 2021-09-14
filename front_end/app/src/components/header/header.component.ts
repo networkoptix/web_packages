@@ -239,8 +239,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
     }
 
-    private isActive(val) {
-        return this.router.url.indexOf(val) >= 0;
+    private isActive(val: string) {
+        return this.router.url.includes(val);
     }
 
     private systemIdUpdate(id) {
@@ -453,7 +453,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active.register = this.isActive('/register');
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
-        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+        this.active.bookmarks = this.isActive('/bookmarks');
+        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health') && !this.isActive('/bookmarks');
         this.navVisible = true;
     }
 

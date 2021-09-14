@@ -19,8 +19,9 @@ import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
 import { FeatureGuard }              from '@src/routeGuards';
-import { PipesModule }               from '@src/pipes/pipes.module';
 import { FeatureFlagStrings }        from '@services/nx-config/base-config';
+import { BookmarksGuard }            from '@guards/bookmarksGuard';
+import { PipesModule }               from '@src/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {
@@ -47,6 +48,11 @@ const lazyRoutes: Routes = [
     {
         path         : 'systems/:systemId/health',
         loadChildren : () => import('./health/health.module').then(m => m.NxHealthModule)
+    },
+    {
+        path         : 'systems/:systemId/bookmarks',
+        loadChildren : () => import('./systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
+        canActivate  : [BookmarksGuard]
     },
     {
         path         : 'integrations/:id',

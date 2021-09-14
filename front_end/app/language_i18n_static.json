@@ -755,7 +755,8 @@
     "serverTabTitles": {
         "View": "View",
         "Settings": "Settings",
-        "Information": "Information"
+        "Information": "Information",
+        "Bookmarks": "Bookmarks"
     },
     "system": {
         "connected": "Connected",

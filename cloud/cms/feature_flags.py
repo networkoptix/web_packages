@@ -49,6 +49,7 @@ class FLAGS(metaclass=_FlagType):
     custom_clients = ('Custom Clients', 'customClients', '%PUBLIC_CUSTOM_CLIENTS%')
     zendesk_sync = ('Zendesk Sync', 'zendeskSync', '%ZENDESK_SYNC%')
     alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
+    bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
 
     def __getattribute__(self, name):
         return dict(FLAGS).get(name)

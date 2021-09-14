@@ -162,7 +162,7 @@ export class NxBootstrapProvider {
                 name: companyName
             };
 
-            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false, featureFlags = {} } = data;
+            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false, bookmarksEnabled = false, featureFlags = {} } = data;
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
@@ -172,7 +172,8 @@ export class NxBootstrapProvider {
                 cloudStorageEnabled,
                 cloudStorageSize,
                 customClientsEnabled,
-                alexaIntegrationEnabled : featureFlags.alexaIntegration && alexaIntegrationEnabled
+                alexaIntegrationEnabled : featureFlags.alexaIntegration && alexaIntegrationEnabled,
+                bookmarksEnabled        : featureFlags.bookmarks && bookmarksEnabled
             };
 
             const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;

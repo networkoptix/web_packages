@@ -1,0 +1,49 @@
+@use '../../../../styles/typography';
+@use '../../../../../styles/theme_variables' as *;
+
+.feed .bookmark-card {
+    width: 100%;
+    background-color: $light1;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    header {
+        background-color: $additional_light1;
+        padding: 18px 20px 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-radius: 10px 10px 0 0;
+        .name {
+            font-family: $font-family-bold;
+            font-size: $font-size-lg;
+        }
+    }
+    main {
+        min-height: 400px;
+        min-width: 700px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            object-fit: contain;
+            width: 100%;
+        }
+    }
+    footer {
+        padding: 20px 20px 10px 20px;
+        nx-tag {
+            margin-right: 10px;
+            &:last-of-type {
+                margin-right: 0 !important;
+            }
+        }
+    }
+}
+
+.bookmark-card:last-of-type {
+    margin-bottom: 0 !important;
+}
+
+.preload-div {
+    margin-top: 150px;
+}

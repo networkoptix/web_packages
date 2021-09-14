@@ -36,7 +36,7 @@ import { DirectivesModule }                    from '@directives/directives.modu
 import { PipesModule }                         from '@src/pipes/pipes.module';
 import { initializeApp }                       from '@pages/push-notifications/push-notifications.module';
 import {
-    AuthGuard, SystemGuard, DevelopersGuard, ManualAccessGuard
+    AuthGuard, SystemGuard, DevelopersGuard, ManualAccessGuard, BookmarksGuard
 }                                              from './src/routeGuards';
 import { NxConfigService }                     from '@services/nx-config';
 import { ServiceModule }                       from '@services/services.module';
@@ -137,6 +137,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         DevelopersGuard,
         SystemGuard,
         ManualAccessGuard,
+        BookmarksGuard,
         DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true },

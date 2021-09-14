@@ -54,6 +54,7 @@ def get_settings_from_cache():
         'cloudName': customization_cache.get('cloud_name', ''),
         'vmsName': customization_cache.get('vms_name', ''),
         'alexaIntegrationEnabled': customization_cache.get('alexa_integration_enabled', False),
+        'bookmarksEnabled': customization_cache.get('bookmarks_enabled', False),
         'cloudStorageEnabled': customization_cache.get('cloud_storage_enabled', False),
         'cloudStorageSize': customization_cache.get('cloud_storage_size', '53687091200'),
         'copyrightYear': customization_cache.get('copyright_year', ''),

@@ -222,6 +222,7 @@ export interface CloudCapabilities {
     cloudStorageSize: number;
     customClientsEnabled: boolean;
     alexaIntegrationEnabled: boolean;
+    bookmarksEnabled: boolean;
 }
 
 export interface Company {

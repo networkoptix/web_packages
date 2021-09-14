@@ -1342,6 +1342,10 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
 
+    getBookmarks() {
+        throw new Error('should only be using rest version');
+    }
+
     getEventRules() {
         return this.get<t.EventRule[]>('/ec2/getEventRules');
     }

@@ -261,10 +261,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         let headers = new HttpHeaders();
         params = params || {};
 
-        if (!environment.isLocal && this.authGet) {
-            params.auth = this.authGet;
-        }
-
         headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
 
         if (this.serverId) {
@@ -295,10 +291,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         Object.keys(paramsToAdd).forEach((key) => {
             params = params.append(key, paramsToAdd[key]);
         });
-
-        if (!environment.isLocal && this.authGet) {
-            params = params.append('auth', this.authPost);
-        }
 
         if (this.serverId) {
             headers = headers.set(this.token, this.serverId);
@@ -531,5 +523,73 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     setupLocalSystem(systemName: string, password: string, systemSettings: t.SystemConfigSettings) {
         return this.setupSystem(systemName, systemSettings, undefined, undefined, undefined, password);
+    }
+
+    getBookmarks(params = {
+        order        : 'desc',
+        column       : 'creationTime',
+        deviceId     : '*',
+        _keepDefault : 'true',
+        _orderBy     : 'creationTimeMs'
+    }) {
+        return this.get('/rest/v1/devices/*/bookmarks', params);
+    }
+
+    previewUrl(
+        cameraId: string,
+        time?: number,
+        width?: number,
+        height?: number,
+        rotate?: number
+    ) {
+        const data: {
+            cameraId: string;
+            time?: number | string;
+            width?: number;
+            height?: number;
+            rotate?: number;
+            auth?: string;
+        } = {
+            cameraId: this.cleanId(cameraId)
+        };
+        let endpoint = '/ec2/cameraThumbnail';
+
+        if (time) {
+            data.time = time;
+        } else {
+            endpoint += '?ignoreExternalArchive';
+            data.time = 'LATEST';
+        }
+
+        if (width) {
+            data.width = width;
+        }
+
+        if (height) {
+            data.height = height;
+        }
+
+        if (rotate !== null) {
+            data.rotate = rotate;
+        }
+
+        return this.generateGetUrl(endpoint, data);
+    }
+
+    protected generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
+        let params = new HttpParams();
+        Object.keys(data).forEach((key: string) => {
+            params = params.set(key, data[key]);
+        });
+        if (absUrl) {
+            const proto = window.location.protocol;
+            const hostName = window.location.hostname;
+            const usePort = window.location.port;
+            const port = usePort ? `:${usePort}` : '';
+            url = `${proto}//${hostName}${port}${url}`;
+        } else {
+            url = `${this.urlBase}${url}`;
+        }
+        return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 }

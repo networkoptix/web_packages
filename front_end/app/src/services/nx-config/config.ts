@@ -540,6 +540,7 @@ export const nxConfig: IConfig = {
     // Dynamic from cloud_portal
     cloudCapabilities: {
         alexaIntegrationEnabled   : false,
+        bookmarksEnabled          : false,
         developersEnabled         : false,
         feedbackEnabled           : false,
         healthMonitor             : '',

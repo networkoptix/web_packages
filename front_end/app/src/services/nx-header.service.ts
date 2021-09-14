@@ -9,7 +9,8 @@ import { ContextManifest }          from './nx-cloud-api.types';
 enum systemRoutes {
     SETTINGS='settings',
     VIEW='view',
-    HEALTH='health'
+    HEALTH='health',
+    BOOKMARKS='bookmarks'
 }
 
 type createButtonType = 'default' | 'primary'
@@ -150,7 +151,8 @@ export class NxHeaderService {
         } else if (url.startsWith(settingsBase) ||
             (environment.isLocal && (
                 url.startsWith('/view') ||
-                url.startsWith('/health')
+                url.startsWith('/health') ||
+                url.startsWith('/bookmarks')
             ))
         ) {
             bestMatch.isSystem = true;
@@ -159,12 +161,16 @@ export class NxHeaderService {
             const systemUrl = `${settingsBase}${environment.isLocal ? '' : '/'}${systemId}`;
             const viewUrl = environment.isLocal ? '/view' : systemUrl + '/view';
             const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
+            const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
                 bestMatch.path = viewUrl;
             } else if (url.startsWith(healthUrl)) {
                 this.menusService.endpoint = { information: true };
                 bestMatch.path = healthUrl;
+            } else if (url.startsWith(bookmarkUrl)) {
+                this.menusService.endpoint = { bookmarks: true };
+                bestMatch.path = bookmarkUrl;
             } else if (url.startsWith(systemUrl)) {
                 this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;

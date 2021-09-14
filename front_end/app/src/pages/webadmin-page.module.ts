@@ -44,6 +44,10 @@ const lazyRoutes: Routes = [
         loadChildren : () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {
+        path         : 'bookmarks',
+        loadChildren : () => import('./systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
+    },
+    {
         path         : '404',
         loadChildren : () => import('./404/404.module').then(m => m.Nx404Module)
     },
