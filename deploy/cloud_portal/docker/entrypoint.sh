@@ -124,8 +124,15 @@ do
             write_my_cnf
             rm -f /tmp/*.pid
 
+            # On non-prod instances run celery as with debug logging
+            if [ "$INSTANCE_NAME" != "prod" ] && [ "$INSTANCE_NAME" != "stage" ]; then
+              LOG_LEVEL="debug"
+            else
+              LOG_LEVEL="info"
+            fi
+
             echo $'\n'Notifications started: Version $VERSION$'\n'
-            exec celery worker -A notifications -l info --concurrency=1 --pidfile=/tmp/celery-w1.pid
+            exec celery worker -A notifications -l $LOG_LEVEL --concurrency=1 --pidfile=/tmp/celery-w1.pid
             ;;
         celery_beat)
             write_my_cnf
