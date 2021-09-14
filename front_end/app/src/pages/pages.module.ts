@@ -8,6 +8,7 @@ import { NonSupportedBrowserModule } from './non-supported-browser/non-supported
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
 import { NxAccountModule }           from './account/account.module';
+import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
@@ -30,6 +31,10 @@ const lazyRoutes: Routes = [
         path         : '',
         loadChildren : () => import('./new-landing/landing-routing.module').then(m => m.LandingRoutingModule),
         pathMatch    : 'full'
+    },
+    {
+        path         : 'systems/:systemId/advanced',
+        loadChildren : () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
         path         : 'systems/:systemId/view',

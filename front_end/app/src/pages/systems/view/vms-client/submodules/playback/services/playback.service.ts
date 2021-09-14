@@ -429,7 +429,7 @@ export class PlaybackService implements OnDestroy {
     }
 
     private _jumpOverTheGapIfNeeded () {
-        if (this.vms.selectedCamera && this._state.mode === PLAYBACK_MODE.ARCHIVE) {
+        if (this.vms.selectedCamera && this._state.mode === PLAYBACK_MODE.ARCHIVE && !this._state.paused) {
             const state = this._state as ArchivePlaybackState;
 
             if (!this.vms.selectedCamera.isThereRecord(state.currentTime)) {

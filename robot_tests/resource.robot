@@ -110,7 +110,7 @@ Set Language Anonymous
 Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
-    ...    ELSE    Log In Web Admin    ${user}    ${password}
+    ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
@@ -125,7 +125,9 @@ Log In Cloud
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True}    Validate Log In    ${email}    password=${password}
+    IF    ${validate} == ${True}
+        Validate Log In    ${email}    password=${password}
+    END
     Sleep    0.5
 
 Log In Web Admin
@@ -175,7 +177,12 @@ Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    '''${mode}''' == '''cloud'''    Check Language Logged In    ${email}    ${password}
+    IF    '${mode}' == 'cloud'
+        Check Language Logged In    ${email}    ${password}
+    ELSE IF    '${mode}' == 'webadmin'
+        Wait Until Element Is Visible    ${CLOUD NAME}
+        Sleep    1
+    END    
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
@@ -916,7 +923,7 @@ Create Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Run Keyword If    '4.3' not in $image   Set Local Variable   ${vms}    old
+    Run Keyword If    '5.0' not in $image   Set Local Variable   ${vms}    old
     ...    ELSE   Set Local Variable    ${vms}    new
     ${port}=   Get Random Available Port
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} ${storage string} ${image}

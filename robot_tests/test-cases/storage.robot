@@ -477,11 +477,11 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Click Link    ${CS MODAL SUPPORT LINK}
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
-    Select Window    ${tabs}[1]
+    Switch Window    ${tabs}[1]
     Wait Until Location Contains    ${SUPPORT URL}
     Log    Step 4 - C81775
     Close Window
-    Select Window    ${tabs}[0]
+    Switch Window    ${tabs}[0]
     Wait Until Element is Visible    ${CS MODAL CLOSE BUTTON}
     Click Button    ${CS MODAL CLOSE BUTTON}
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
@@ -748,6 +748,7 @@ Enable storage: Not in use -> Backup
 
     Log    Step 4
     Sleep    2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Click Button    ${SAVE BUTTON}
     Run Keyword and Continue on Failure     Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
     Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
@@ -1431,20 +1432,21 @@ Cancel deleting storage
     Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     
 Delete Inaccessible storage
-    [Tags]    C81573    deleting    
+    [Tags]    C81573    deleting    deb
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     Wait Until Element Is Enabled    ${INACCESSIBLE STORAGE DELETE BUTTON}
+    Sleep    .25
     Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     Wait Until Elements Are Visible
     ...    ${DELETE STORAGE MODAL}            
     ...    ${DELETE STORAGE CLOSE BUTTON}     
     ...    ${DELETE STORAGE CANCEL BUTTON}      
     ...    ${DELETE STORAGE DELETE BUTTON}    
-    Sleep    1
+    Sleep    .25
     Click Button    ${DELETE STORAGE DELETE BUTTON}
     Wait Until Element Is Visible    ${ALERT}
     Element Text Should Be    ${ALERT}     ${INNACCESSIBLE STORAGE DELETED TOAST TEXT}
@@ -1452,9 +1454,8 @@ Delete Inaccessible storage
     Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON}
     Set Suite Variable    ${drives}    4
     
-  
 Backup settings block availability for owner, administrator and other users
-    [Tags]    C81804    archive    
+    [Tags]    C81804    archive    deb
     Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
     FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        

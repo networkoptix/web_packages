@@ -1,19 +1,22 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import PlaybackService from '../../services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
-import SelectionService from '../../../timeline/services/timeline.selection.service';
-import { Subscription } from 'rxjs';
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
+import { Component, Input, OnInit }     from '@angular/core';
+import PlaybackService                  from '../../services/playback.service';
+import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
+import SelectionService                 from '../../../timeline/services/timeline.selection.service';
+import { Subscription }                 from 'rxjs';
+import { LoggerDecorator }              from '@pages/systems/view/vms-client/utils';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
+import { distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
 
 type BtnClassesEnum = 'play' | 'pause'
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'playback-controls',
     templateUrl : './playback-controls.component.html',
     styleUrls   : ['./playback-controls.component.scss']
 })
 @LoggerDecorator('PLAYBACK CONTROLS ::', true)
-export class PlaybackControlsComponent implements OnInit, OnDestroy {
+export class PlaybackControlsComponent implements OnInit {
     _log: Function
     _warn: Function
 
@@ -43,20 +46,27 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
         public playback: PlaybackService,
         protected selection: SelectionService
     ) {
-        this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     public ngOnInit (): void {
-        this.subscription = this.playback.subject.subscribe(this.onSubjectChange);
-    }
-
-    public ngOnDestroy (): void {
-        this.subscription.unsubscribe();
+        this.subscription = this.playback.subject
+            .pipe(distinctUntilChanged((prev, curr) => {
+                // we're only interested in state mode ... avoiding useless chatter
+                // this.state is used instead of "prev" because when in ARCHIVE mode "pause" is
+                // same for both objects (weird) ... hence -> this.state = { ...s };
+                // not using function reference as I need "this" -- TT
+                // @ts-ignore
+                return this.state?.mode === curr.mode && (curr.paused === undefined || this.state?.paused === curr.paused);
+            }))
+            .subscribe((state) => {
+                this.onSubjectChange(state);
+            });
     }
 
     public onSubjectChange (s: PlaybackState) {
-        this.state = s;
-        switch (s.mode) {
+        this.state = { ...s };
+
+        switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.btnClass = 'play'; // optimistic approach
                 // a pessimistic approach would be to check if we can play anything,
@@ -67,7 +77,7 @@ export class PlaybackControlsComponent implements OnInit, OnDestroy {
                 // this.btnClass = s.started ? 'pause' : 'play' // pessimistic approach
                 break;
             case PLAYBACK_MODE.ARCHIVE:
-                this.btnClass = s.paused ? 'play' : 'pause'; // optimistic approach
+                this.btnClass = this.state.paused ? 'play' : 'pause'; // optimistic approach
                 // this.btnClass = s.started ? s.paused ? 'play' : 'pause' : 'play' // pessimistic approach
                 break;
         }

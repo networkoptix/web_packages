@@ -30,7 +30,6 @@ Advanced system settings for offline system
     [Tags]    C76634
     Remove Tags    webadmin
     Skip If Irrelevant
-
     Stop Docker Server    ${system}[id]
     Log in to user and system    ${system}[owner]    ${system}[cloud id]${ADVANCED SETTINGS}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
@@ -54,7 +53,7 @@ Hide Advanced Settings button functionality
         Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}
     ELSE
         ${location}=   Get Location
-        Go to    ${location}
+        Go to    ${location}${ADVANCED SETTINGS}
     END
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
 

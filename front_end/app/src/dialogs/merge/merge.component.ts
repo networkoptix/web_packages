@@ -146,6 +146,7 @@ export class MergeModalContent {
                     }
                 })
             );
+            this.resetSystemServiceToPrimary();
             if (this.systems.length === 0 && this.peerSystems.length === 0) {
                 this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
                 this.secondarySystem = this.targetSystem;
@@ -373,6 +374,9 @@ export class MergeModalContent {
             }, { ignoreError: true })
             .then(
                 res => {
+                    if (this.targetSystemService) {
+                        this.resetSystemServiceToPrimary();
+                    }
                     if (res !== 'canceled') {
                         this.checking = false;
                         // covers case where system (cloud & non-cloud) is not set up yet
@@ -394,6 +398,9 @@ export class MergeModalContent {
                     }
                 },
                 err => {
+                    if (this.targetSystemService) {
+                        this.resetSystemServiceToPrimary();
+                    }
                     if (err !== 'canceled') {
                         this.checking = false;
                         if (err.message === 'Timeout has occurred') {
@@ -606,6 +613,11 @@ export class MergeModalContent {
                 this.activeModal.dismiss(err);
                 this.clearTemplate();
             });
+    }
+
+    resetSystemServiceToPrimary() {
+        this.targetSystemService?.stopPoll();
+        this.systemService.createSystem(this.account.email, this.primarySystem.id);
     }
 
     deprecatedMergeSystems(password: string, takeRemoteSettings = false) {

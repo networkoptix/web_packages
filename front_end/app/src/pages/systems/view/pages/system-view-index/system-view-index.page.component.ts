@@ -22,12 +22,11 @@ import { UntilDestroy, untilDestroyed }          from '@ngneat/until-destroy';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { NxUtilsService }                        from '@services/utils.service';
 import sidebarLayout                             from '../sidebarLayout.cfg';
-import { NxToastService }                        from '../../../../../dialogs/toast.service';
 import { NxDialogsService }                      from '../../../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
 import { NxRibbonService }                       from '../../../../../components/ribbon';
-import fullscreenInactivityCfg from '../fullscreenInactivity.cfg'
+import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
 
 @UntilDestroy()
 @Component({
@@ -154,7 +153,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.systems = systems;
                 }
                 if (!this.system) {
-                    this._log('systemsService -> initSystem', [ ...systems ]);
+                    this._log('systemsService -> initSystem', [...systems]);
                     this._initSystem();
                 }
             });
@@ -228,12 +227,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.system = undefined;
         this.hasCameras = false;
         this._setInitializationState(false, false);
-        this.vms.reset()
+        this.vms.reset();
 
         // reset subscription to get values immediately and not waiting for next update
         this.setSystemSubscription();
     }
-
 
     protected _initSystem () {
         this._log('initSystem entered');
@@ -257,7 +255,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this._setInitializationState(false, false);
                     this.ribbonService.hide();
 
-                    this.system = this.systemService.createSystem(account.email, this.systemId, undefined, true);
+                    this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     return this.system.update();
                 }
 
@@ -316,6 +314,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     if (!this.system.isOnline) {
                         this._setInitializationState(true, true);
                         return;
+                    } else if (this.initializedWithError) {
+                        this._setInitializationState(true, false);
                     }
 
                     const mediaServers = await this.system.getMediaServersAndCameras(true);
@@ -413,6 +413,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 });
         }).catch(e => {
             this._warn(`system ${this.system?.id || this.systemId} view initialization failed`, e);
+            processingMediaServers = false;
             setTimeout(() => this._setInitializationState(true, true));
         });
     }

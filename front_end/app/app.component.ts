@@ -3,7 +3,7 @@ import {
     ViewEncapsulation, ViewChild, ElementRef
 }                                                  from '@angular/core';
 import {
-    ActivatedRoute, ActivationStart, Event,
+    ActivationEnd, ActivatedRoute, ActivationStart, Event,
     GuardsCheckEnd, GuardsCheckStart, NavigationEnd, Router
 }                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
@@ -190,8 +190,8 @@ export class AppComponent {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: Event) => event instanceof ActivationStart || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
-            ).subscribe((event: ActivationStart | GuardsCheckStart | GuardsCheckEnd) => {
+                filter((event: Event) => event instanceof ActivationStart || event instanceof ActivationEnd || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
+            ).subscribe((event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
                 if (event instanceof GuardsCheckStart) {
                     this.loading = true;
                     return;

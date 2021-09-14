@@ -25,6 +25,7 @@ Verify on Cameras Page
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
     ...    ${RECORDING CHECK BOX}
+    ...    timeout=65
 
 Verify Authentication Form
     Wait Until Elements are Visible

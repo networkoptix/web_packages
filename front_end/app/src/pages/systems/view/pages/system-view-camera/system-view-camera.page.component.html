@@ -32,7 +32,7 @@
             c-4.2,0-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6s7.6,3.4,7.6,7.6S22.2,25.6,18,25.6z"/>
           </svg>
       </div>
-      <div class="fullscreen-toggler"
+      <div *ngIf="!isMobileSafari" class="fullscreen-toggler"
            (click)="toggleFullScreen($event)">
         <svg-icon nx-add-svg-src
                   *ngIf="!fullscreenMode"

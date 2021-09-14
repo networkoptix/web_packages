@@ -73,16 +73,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setupDefaults() {
-        this.advanced = (this.route.snapshot.routeConfig.path === 'advanced');
+        this.advanced = (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced');
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
 
         this.route.queryParams.subscribe((params) => {
-            this.advanced = (this.route.snapshot.routeConfig.path === 'advanced' || params.advanced !== undefined);
-            if (this.CONFIG.isLocal && params.advanced !== undefined) {
-                this.router.navigate(['settings/advanced']);
+            this.advanced = (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced' || params.advanced !== undefined);
+            if (params.advanced !== undefined) {
+                this.CONFIG.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
+                !this.CONFIG.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
             } else if (this.CONFIG.isLocal && (params.code || params.state)) {
                 let loginPromise: Promise<any> = Promise.resolve(true);
                 if (params.code) {
@@ -447,13 +448,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     hideAdvancedSettings() {
-        const queryParams: Params = {};
-        queryParams.advanced = undefined;
-
-        this.uriService
-            .updateURI(this.uriService.getURL(), queryParams, true)
-            .then(() => {
-                this.advanced = false;
-            });
+        if (this.router.url.includes('/advanced')) {
+            this.CONFIG.isLocal && this.router.navigate(['settings']) || this.router.navigate([`systems/${this.system.id}`]);
+        }
     }
 }

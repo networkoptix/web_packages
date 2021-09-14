@@ -49,6 +49,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     private readonly isMobile: boolean;
     private readonly isChrome: boolean;
+    public readonly isMobileSafari: boolean;
     public id: string
     public camera: ICamera
     public system: NxSystem
@@ -111,7 +112,28 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.showElementsInFSM = true;
         this.isMobile = utilsService.isMobile() || utilsService.isTablet();
         this.isChrome = utilsService.isChrome();
+        this.isMobileSafari = utilsService.isSafari() && utilsService.isMobile();
     }
+
+    private onFSC = e => {
+        const fse = fullscreen.getElement();
+        this._log('fullscreenchange', e, fse);
+        this.fullscreenMode = !!fse;
+        if (this.fullscreenMode) {
+            this.onShowElements = setTimeout(() => {
+                this.showElementsInFSM = false;
+            }, fullscreenInactivityCfg.delayMs);
+        } else {
+            clearTimeout(this.onShowElements);
+            clearTimeout(this.onMoveShowElements);
+            this.showElementsInFSM = true;
+        }
+
+        if (this.ux.state.isFullScreen !== !!fse) {
+            this.ux.isFullScreen = !!fse;
+            this.$self.classList.remove('is-full-screen');
+        }
+    };
 
     public handleControlsTogglingEarClick () {
         this.ux.isTimelineShown = !this.ux.state.isTimelineShown;
@@ -132,29 +154,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._animationFrameRequestHandler =
             requestAnimationFrame(() => this._onAnimationFrame());
 
-        const onFSC = e => {
-            const fse = fullscreen.getElement();
-            this._log('fullscreenchange', e, fse);
-            this.fullscreenMode = !!fse;
-            if (this.fullscreenMode) {
-                this.onShowElements = setTimeout(() => {
-                    this.showElementsInFSM = false;
-                }, fullscreenInactivityCfg.delayMs);
-            } else {
-                clearTimeout(this.onShowElements);
-                clearTimeout(this.onMoveShowElements);
-                this.showElementsInFSM = true;
-            }
-
-            if (this.ux.state.isFullScreen !== !!fse) {
-                this.ux.isFullScreen = !!fse;
-                this.$self.classList.remove('is-full-screen');
-            }
-        };
-
-        document.addEventListener('fullscreenchange', onFSC);
-        document.addEventListener('webkitfullscreenchange', onFSC);
-        document.addEventListener('mozfullscreenchange', onFSC);
+        this.document.addEventListener('fullscreenchange', this.onFSC);
+        this.document.addEventListener('webkitfullscreenchange', this.onFSC);
+        this.document.addEventListener('mozfullscreenchange', this.onFSC);
 
         this._updateAvailableTransportsAndResolutions();
 
@@ -343,7 +345,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.playback.restore(false);
         } else {
             this.system.getCameraRecords(this.id, 0, now, 1).then(async(ar) => {
-                const records = this._extractPeriodsFromServerResponse(ar)
+                const records = this._extractPeriodsFromServerResponse(ar);
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('empty archive', ar);
@@ -370,7 +372,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 }
             }).then(() => {
                 this._initSelectedCamera();
-                this._log('polling started')
+                this._log('polling started');
                 this.startPollingForNewlyRecordedChunks();
                 this.getRecordsInProgress = undefined;
             });
@@ -388,9 +390,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             const since = this.vms.selectedCamera.archiveRange.end;
             const now = Date.now();
             const cameraId = this.id;
-            this._log('requesting new records', since, now, cameraId, now - since)
+            this._log('requesting new records', since, now, cameraId, now - since);
             this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
-                const records = this._extractPeriodsFromServerResponse(ar)
+                const records = this._extractPeriodsFromServerResponse(ar);
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('no newly recorded', ar);
                 } else {
@@ -405,14 +407,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                                 ? now
                                 : start + duration
                         );
-                        this._log('record candidate', r, start, duration, tr)
-                        return tr
+                        this._log('record candidate', r, start, duration, tr);
+                        return tr;
                     }).filter(tr => tr.duration > 0);
                     if (prepared.length > 0) {
-                        this._log('adding records', prepared)
+                        this._log('adding records', prepared);
                         this.vms.addRecordsToSelectedCamera(cameraId, prepared);
                     } else {
-                        this._log('no records to add', prepared)
+                        this._log('no records to add', prepared);
                     }
                 }
             }, () => {
@@ -448,6 +450,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._routeSubscription?.unsubscribe();
         this._vmsStateSubscription?.unsubscribe();
         this._uxStateSubscription?.unsubscribe();
+        this.document.removeEventListener('fullscreenchange', this.onFSC);
+        this.document.removeEventListener('webkitfullscreenchange', this.onFSC);
+        this.document.removeEventListener('mozfullscreenchange', this.onFSC);
 
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
