@@ -1123,7 +1123,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
         if zendesk_sync_feature_enabled:
             extra_context['zendesk_sync_url'] = reverse("admin:menu_sync", args=(menu.id,))
             extra_context['sync_states'] = menu.zendesk_sync_state
-            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(self.chosen_customization,))
+            extra_context['zendesk_mapping_url'] = reverse("admin:zendesk_mapping", args=(getattr(self, 'chosen_customization', settings.CUSTOMIZATION),))
         extra_context['preview_url_review'] = menu.preview_url('pending')
         extra_context['asset_info'] = json.dumps(prepare_asset_info_for_menu(request, object_id))
         extra_context['label_lookup'] = Menu.LABEL_LOOKUP

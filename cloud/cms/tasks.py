@@ -166,7 +166,7 @@ def async_zendesk_sync(menu_id, customization_name, log_id, force_update=True):
     if site and menu:
         sync_log = ZendeskSyncLog.objects.get(id=log_id)
         update_customization_structure(
-            menu, site, customization_name, sync_log, force_update)
+            menu, site, sync_log, force_update)
 
 
 @shared_task
