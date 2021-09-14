@@ -117,6 +117,8 @@ export class NxApiToolComponent implements OnInit {
     swaggerMenuTitle: string;
     swaggerMenuDescription = ''
     placeHolderContent: { [key in placeHolderSelections]: string } = { api_information: 'API Information', legacy: 'Legacy API', deprecated: 'Deprecated Endpoints' }
+    RTSPRequestShowing = false;
+    uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
     private resizeSubscription: Subscription;
     private menuSectionSubscription: Subscription;
@@ -453,10 +455,28 @@ export class NxApiToolComponent implements OnInit {
                     if (this.CONFIG.isLocal) {
                         request.curlOptions = ['--insecure'];
                     }
+                    // System APIs before 4.3 only have one trace request which is the RTSP request
+                    if ((!this.isRestAPI() && request.method === 'TRACE') || this.isRTSPRoute(request)) {
+                        this.RTSPRequestShowing = true;
+                        this.handleRTSPRequest(request);
+                    } else {
+                        this.RTSPRequestShowing = false;
+                    }
                     return request;
                 }
             });
         });
+    }
+
+    isRTSPRoute = (request) => {
+        // The only route that starts with a uuid is the RTSP route.
+        const requestWithBaseUrlRemoved = request.url.slice(this.selectedServer.apiDocFull.servers[0].url.length + 1);
+
+        return this.uuidRegex.test(requestWithBaseUrlRemoved);
+    }
+
+    private handleRTSPRequest = (request) => {
+        request.url = 'rtsp' + request.url.slice(5);
     }
 
     private setRequestUrl(api: APIDoc, serverID) {
@@ -491,9 +511,11 @@ export class NxApiToolComponent implements OnInit {
     }
 
     getSupportedMethods = () => {
+        // Trace requests are not truly supported, but in the APIs that are below 4.3 there is only a single trace request that is handled differently
+        // and the try it out button needs to be enabled for this handling
         return this.isRestAPI()
             ? ['get', 'put', 'post', ' delete', 'options', 'head', 'patch']
-            : ['get', 'post', 'delete', 'options', 'head', 'patch'];
+            : ['get', 'trace', 'post', 'delete', 'options', 'head', 'patch'];
     }
 
     // Add onto tag Ids to differentiate the different API files in swagger

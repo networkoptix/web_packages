@@ -9682,8 +9682,22 @@
 	color : $light1 !important;
 }
 
+.RTSP-request{
+	.curl-command {
+		display: none;
+	}
+	.responses-inner {
+		h4:nth-child(3) {
+			display: none;
+		}
+	}
+	.responses-table.live-responses-table {
+		display:none;
+	}
+}
+
 .swagger-ui .curl-command {
-	position : relative
+	position : relative;
 }
 
 .swagger-ui .download-contents {
