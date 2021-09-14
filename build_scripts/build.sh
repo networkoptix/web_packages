@@ -48,8 +48,10 @@ else
 fi
 
 echo "pip install requirements"
-[ ! -d "env" ] && virtualenv env -p python3
+[ ! -d "env" ] && python3 -m venv env
 . ./env/bin/activate
+pip install setuptools==56.0.0
+pip install wheel==0.37.0
 pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
 
