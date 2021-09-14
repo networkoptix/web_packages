@@ -381,7 +381,11 @@ class PushNotification(models.Model):
 
             futures = []
             for device in sns_devices:
-                sns_messages = generate_provider_specific_messages(title, body, {**payload, 'targets': device.targets}, options, data_payload)
+                sns_messages = generate_provider_specific_messages(
+                    title=title, body=body, options=options,
+                    payload={**payload, 'targets': device.targets},
+                    data_payload={**data_payload, 'targets': device.targets}
+                )
                 futures.append(executor.submit(send_sns_push, device, sns_client, sns_messages, retry_device_ids, self))
             wait(futures)
 
