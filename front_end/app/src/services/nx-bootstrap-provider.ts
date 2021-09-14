@@ -112,7 +112,7 @@ export class NxBootstrapProvider {
     setSettings(data) {
         if (this.CONFIG.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
-            const { description, webadminConfig } = data;
+            const { description, webadminConfig, supportedLanguages } = data;
             this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
                     title       : name,
@@ -132,9 +132,13 @@ export class NxBootstrapProvider {
             };
             this.CONFIG.defaultLanguage = description.defaultLanguage;
             this.CONFIG.licenseTypes = webadminConfig.licenseTypes;
+            // Fallback in case licenseTypes from webadmin_config.json is made a string in the cms
+            if (typeof webadminConfig.licenseTypes === 'string') {
+                this.CONFIG.licenseTypes = JSON.parse(webadminConfig.licenseTypes);
+            }
             this.CONFIG.trialLicenseKey = description.desktop.trialLicenseKey;
 
-            let languages = [description.defaultLanguage];
+            let languages = supportedLanguages.length ? supportedLanguages : [description.defaultLanguage];
             if (description?.customLanguages?.length) {
                 languages = description.customLanguages;
             } else if (webadminConfig?.supportedLanguages?.length) {

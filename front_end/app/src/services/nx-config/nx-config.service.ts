@@ -33,8 +33,9 @@ export class NxConfigService {
         if (environment.isLocal) {
             const webadminConfigRequest = this.http.get('/static/customization/webadmin_config.json').toPromise();
             const descriptionRequest = this.http.get('/static/customization/description.json').toPromise();
-            return Promise.all([webadminConfigRequest, descriptionRequest])
-                .then(([webadminConfig, description]) => ({ webadminConfig, description }));
+            const supportedLanguagesRequest = this.http.get('/static/languages.json').toPromise();
+            return Promise.all([webadminConfigRequest, descriptionRequest, supportedLanguagesRequest])
+                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, Object[]]) => ({ supportedLanguages: supportedLanguages.map((lang: any) => lang.language), webadminConfig, description }));
         } else {
             return this.http.get('/api/utils/settings').toPromise();
         }
