@@ -29,12 +29,12 @@ Restart
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
 
 *** Test Cases ***
-The page is opened and shows the user list to owner
+1. The page is opened and shows the user list to owner
     [Tags]    C41881    Threaded    system_offline
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
 
-Should confirm, if owner deletes system
+2. Should confirm, if owner deletes system
     [Tags]    Threaded    system_offline
     Click Button    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
@@ -42,7 +42,7 @@ Should confirm, if owner deletes system
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Page Does Not Contain Element    ${BACKDROP}
 
-Offline system should confirm, if not owner deletes system
+3. Offline system should confirm, if not owner deletes system
     [Tags]    Threaded    system_offline
     Log Out
     Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
@@ -55,7 +55,7 @@ Offline system should confirm, if not owner deletes system
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${MODAL DIALOG}
 
-Share and Merge buttons should be disabled
+4. Share and Merge buttons should be disabled
     [Tags]    C41881    Threaded    system_offline
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
     Click Link    ${USERS LIST LINK}
@@ -73,11 +73,11 @@ Share and Merge buttons should be disabled
 #    Click Element    ${SYSTEMS DROPDOWN}
 #    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
 
-Should show offline next to system name
+5. Should show offline next to system name
     [Tags]    C41881    Threaded    system_offline
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
 
-Should not be able to delete/edit users
+6. Should not be able to delete/edit users
     [Tags]    Threaded    system_offline    CLOUD-6615
     Click Link    ${USERS LIST LINK}
     ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloud users][viewer]']
@@ -87,7 +87,7 @@ Should not be able to delete/edit users
     Element Should Be Disabled    ${ACCESS LEVEL DROPDOWN}
     Element Should Be Disabled    ${REMOVE USER BUTTON}
 
-Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
+7. Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    Threaded    system_offline
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
@@ -96,14 +96,14 @@ Offline system should open System page by link to not authorized user and redire
     Wait Until Element Is Visible    ${JUMBOTRON}
     Wait Until Location Contains    ${ENV}
 
-Offline system should open System page by link to not authorized user and show it, after owner logs in
+8. Offline system should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded    system_offline
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]    ${base password}    button=None
     Wait until element is visible    //h2[contains(text(), "${system}[name]")]
 
-Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
+9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded    system_offline
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
@@ -113,7 +113,7 @@ Offline system should open System page by link to user without permission and sh
     Slow   Click Link    ${TAKE ME HOME}
     Wait Until Location Is    ${ENV}/systems
 
-Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
+10. Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded    system_offline
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
     Log Out
@@ -142,7 +142,7 @@ Offline system should open System page by link to not authorized user, and show 
 #    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[cloud id]
 #    Should be equal as strings    ${system info}[name]     ${system}[name]
 
-Does not show Share button to viewer, advanced viewer, live viewer
+11. Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]    threaded    system_offline
     Log Out
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
@@ -152,7 +152,7 @@ Does not show Share button to viewer, advanced viewer, live viewer
         Log Out
     END
 
-Your permissions is shown for non-owners
+12. Your permissions is shown for non-owners
     [Tags]    threaded    C41881    system_offline
     Log Out
     ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
@@ -168,7 +168,7 @@ Your permissions is shown for non-owners
         Log Out
     END
 
-Should show (you) for owner and (owner's name & email) for non-owners
+13. Should show (you) for owner and (owner's name & email) for non-owners
     [Tags]    C41881    threaded    system_offline
     ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
@@ -178,7 +178,7 @@ Should show (you) for owner and (owner's name & email) for non-owners
     ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
     Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
-System changes state to offline if all its Servers goes offline
+14. System changes state to offline if all its Servers goes offline
     [Tags]    C41894    system_offline
     Log Out
 

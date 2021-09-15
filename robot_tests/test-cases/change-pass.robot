@@ -59,7 +59,7 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 *** Test Cases ***
-Can be accessed via dropdown or direct link
+1. Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
     # note: user below requires a system for verification purposes but no interaction with the system nor any modifications to the account are made - thats why original account used here.
@@ -77,7 +77,7 @@ Can be accessed via dropdown or direct link
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
 
-password can be changed
+2. password can be changed
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
@@ -88,7 +88,7 @@ password can be changed
     Wait Until Elements Are Not Visible    ${CHANGE PASSWORD BUTTON}    ${CANCEL PASSWORD CHANGES BUTTON}
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     
-password is actually changed, so login works with new password
+3. password is actually changed, so login works with new password
     [tags]    C41576
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
@@ -105,7 +105,7 @@ password is actually changed, so login works with new password
     CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
 
-password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
+4. password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     [tags]    C41834
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
@@ -121,7 +121,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
-password with space in the middle is valid
+5. password with space in the middle is valid
     [tags]    C41835
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
@@ -137,7 +137,7 @@ password with space in the middle is valid
     CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
-more than 255 symbols can be entered in new password field and then are cut to 255
+6. more than 255 symbols can be entered in new password field and then are cut to 255
     [Tags]    Threaded
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${300CHARS}
@@ -146,14 +146,14 @@ more than 255 symbols can be entered in new password field and then are cut to 2
     Textfield Should Contain    ${NEW PASSWORD INPUT}    ${255CHARS}
     Click Button    ${ACCOUNT CANCEL}
 
-pressing Enter key saves data
+7. pressing Enter key saves data
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Press Keys    ${NEW PASSWORD INPUT}    ENTER
     Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
 
-pressing Tab key moves focus to the next element
+8. pressing Tab key moves focus to the next element
     [tags]    C41841
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
@@ -164,7 +164,7 @@ pressing Tab key moves focus to the next element
     Element Should Be Focused    ${CHANGE PASSWORD BUTTON}
     Click Button    ${ACCOUNT CANCEL}
     
-displays password masked, shows password and changes eye icon when clicked
+9. displays password masked, shows password and changes eye icon when clicked
     [tags]    C41576
     Log In To Change Password Page
     ${input type}    Get Element Attribute    ${CURRENT PASSWORD INPUT}    type
@@ -180,7 +180,7 @@ displays password masked, shows password and changes eye icon when clicked
     ${input type}    Get Element Attribute    ${NEW PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-Password can't be changed if current password is not provided or incorrect
+10. Password can't be changed if current password is not provided or incorrect
     [tags]    C41577
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${EMPTY}
@@ -193,7 +193,7 @@ Password can't be changed if current password is not provided or incorrect
     Go To  ${url}
     CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
 
-should open change password page in anonymous state
+11. should open change password page in anonymous state
     [tags]    anonymous
     Open page anonymously    ${url}/account/password    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}

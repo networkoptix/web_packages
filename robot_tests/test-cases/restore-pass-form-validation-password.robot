@@ -14,56 +14,56 @@ ${existing email}       ${EMAIL VIEWER}
 ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]//input
 
 *** Test Cases ***                                    NEW PW
-Empty New Password                                    ${EMPTY}
+1. Empty New Password                                    ${EMPTY}
     [tags]    C26260    Password
-Password Too Short asdfghj                            ${7char password}
+2. Password Too Short asdfghj                            ${7char password}
     [tags]    C41876    Password
-Common Password qweasd123                             ${common password}
+3. Common Password qweasd123                             ${common password}
     [tags]    C41876    Password
-Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}
+4. Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}
     [tags]    C41876    Password
-Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                  ${SMILEY TEXT}
+5. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                  ${SMILEY TEXT}
     [tags]    C41876    Password
-Glyph Password 您都可以享受源源不絕的好禮及優惠          ${GLYPH TEXT}
+6. Glyph Password 您都可以享受源源不絕的好禮及優惠          ${GLYPH TEXT}
     [tags]    C41876    Password
-TM Password qweasdzxc123®™                            ${TM TEXT}
+7. TM Password qweasdzxc123®™                            ${TM TEXT}
     [tags]    C41876    Password
-Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    ${symbol password}
+8. Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    ${symbol password}
     [tags]    C41876    Password
-Leading Space Password                                ${SPACE}${BASE PASSWORD}
+9. Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876    Password
-Trailing Space Password                               ${BASE PASSWORD}${SPACE}
-    [tags]    C41876    Password
-
-Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
-    [tags]    C41876    Password
-Weak 2 Uppercase Password ADRHARTJAD                  ${uppercase password}
-    [tags]    C41876    Password
-Weak 3 Numbers Password 13462344                      ${numbers password}
-    [tags]    C41876    Password
-Weak 4 Symbol only Password !@#$%^&*()_-+=            ${symbol only password}
+10. Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876    Password
 
-Fair 1 Lower and Uppercase                            ${lower upper password}
+11. Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
     [tags]    C41876    Password
-Fair 2 Lowercase and numbers                          ${lower number password}
+12. Weak 2 Uppercase Password ADRHARTJAD                  ${uppercase password}
     [tags]    C41876    Password
-Fair 3 Lowercase and Symbols                          ${lower symbol password}
+13. Weak 3 Numbers Password 13462344                      ${numbers password}
     [tags]    C41876    Password
-Fair 4 Uppercase and numbers                          ${upper number password}
-    [tags]    C41876    Password
-Fair 5 Uppercase and Symbols                          ${upper symbol password}
-    [tags]    C41876    Password
-Fair 6 Numbers and Symbols                            ${number symbol password}
+14. Weak 4 Symbol only Password !@#$%^&*()_-+=            ${symbol only password}
     [tags]    C41876    Password
 
-Good 1 qweASD123                                      ${lower uppper number password}
+15. Fair 1 Lower and Uppercase                            ${lower upper password}
     [tags]    C41876    Password
-Good 2 qweASD!@#                                      ${lower upper symbol password}
+16. Fair 2 Lowercase and numbers                          ${lower number password}
     [tags]    C41876    Password
-Good 3 qwe123!@#                                      ${lower number symbol password}
+17. Fair 3 Lowercase and Symbols                          ${lower symbol password}
     [tags]    C41876    Password
-Good 4 QWE123!@#                                      ${upper number symbol password}
+18. Fair 4 Uppercase and numbers                          ${upper number password}
+    [tags]    C41876    Password
+19. Fair 5 Uppercase and Symbols                          ${upper symbol password}
+    [tags]    C41876    Password
+20. Fair 6 Numbers and Symbols                            ${number symbol password}
+    [tags]    C41876    Password
+
+21. Good 1 qweASD123                                      ${lower uppper number password}
+    [tags]    C41876    Password
+22. Good 2 qweASD!@#                                      ${lower upper symbol password}
+    [tags]    C41876    Password
+23. Good 3 qwe123!@#                                      ${lower number symbol password}
+    [tags]    C41876    Password
+24. Good 4 QWE123!@#                                      ${upper number symbol password}
     [tags]    C41876    Password
 
 *** Keywords ***

@@ -123,14 +123,14 @@ Health Monitor Suite Teardown
     Delete Base System    ${server 2}
 
 *** Test Cases ***
-Owner/admin Has Access to Health Monitoring
+1. Owner/admin Has Access to Health Monitoring
     [Tags]    cloud    webadmin
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
-Administrator Has Access to Health Monitoring
+2. Administrator Has Access to Health Monitoring
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][cloudAdmin][login]
@@ -139,7 +139,7 @@ Administrator Has Access to Health Monitoring
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
 
-Going to Health Monitor when System is Offline Shows Offline Message
+3. Going to Health Monitor when System is Offline Shows Offline Message
     [Tags]    cloud
     [Setup]    Health Monitor Test Setup    server=${server 2}    verify=${False}
     Sleep    5
@@ -147,7 +147,7 @@ Going to Health Monitor when System is Offline Shows Offline Message
     Click Link    ${HM INFORMATION TAB LINK}
     Wait Until Elements Are Visible    ${HM SYSTEM OFFLINE}    ${HM SYSTEM CANNOT BE ACCESSED}
 
-Json Upload Works
+4. Json Upload Works
     [Tags]    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -156,7 +156,7 @@ Json Upload Works
     # More elements need to be added here when JSON files are finalized like system name and stuff
     #Wait Until Elements Are Visible    ${HM IMPORTED REPORT RIBBON}
 
-Json Upload Works on Offline System
+5. Json Upload Works on Offline System
     [Tags]    cloud
     [Setup]    Health Monitor Test Setup    server=${server 2}
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
@@ -168,7 +168,7 @@ Json Upload Works on Offline System
 
 
 
-Advanced Viewer Does Not Have Access To Health Monitor
+6. Advanced Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][advancedViewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][advancedViewer][login]
@@ -177,7 +177,7 @@ Advanced Viewer Does Not Have Access To Health Monitor
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
-Viewer Does Not Have Access To Health Monitor
+7. Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][viewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][viewer][login]
@@ -186,7 +186,7 @@ Viewer Does Not Have Access To Health Monitor
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
-Live Viewer Does Not Have Access To Health Monitor
+8. Live Viewer Does Not Have Access To Health Monitor
     [Tags]    cloud    webadmin
     [Setup]    Run Keyword If    '''${mode}'''=='''cloud'''    Health Monitor Test Setup    user=${server 1}[cloud users][liveViewer]
     ...    ELSE    Health Monitor Test Setup    user=${server 1}[local users][liveViewer][login]
@@ -195,7 +195,7 @@ Live Viewer Does Not Have Access To Health Monitor
     Go To    ${location}/health/Alerts
     Run Keyword and Expect Error    *    Wait Until Element Is Visible    ${HM ALERTS PAGE LINK}    10
 
-No Alerts Message Shows When There Are No Alerts
+9. No Alerts Message Shows When There Are No Alerts
     [Tags]    cloud    webadmin
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
@@ -204,7 +204,7 @@ No Alerts Message Shows When There Are No Alerts
     Upload Json    no-alerts
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
-Can Close Out of Json Imported Mode
+10. Can Close Out of Json Imported Mode
     [Tags]    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -217,7 +217,7 @@ Can Close Out of Json Imported Mode
     Page Should Not Contain    ${HM IMPORTED REPORT RIBBON}
     Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
 
-Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
+11. Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
     [Tags]    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -229,7 +229,7 @@ Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header 
     Validate Uploaded Alerts Page
     Count All Alerts and Validate Totals Shown
 
-Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
+12. Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     [Tags]    C69785    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -246,7 +246,7 @@ Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     Count All Alerts and Validate Totals Shown
     Set Window Size    1920    1080
 
-Hardware Types with Only One Item Should Show Tiles and not Show Tables
+13. Hardware Types with Only One Item Should Show Tiles and not Show Tables
     [Tags]    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
@@ -283,7 +283,7 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
-Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
+14. Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     [Tags]    cloud    webadmin
     Wait Until Element Is Visible    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}

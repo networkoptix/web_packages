@@ -14,21 +14,21 @@ ${good password}              ${BASE PASSWORD}
 ${bad password}               adrhartjad
 
 *** Test Cases ***            EMAIL                         PASS
-Empty Email and Password      ${EMPTY}                      ${EMPTY}
+1. Empty Email and Password      ${EMPTY}                      ${EMPTY}
     [tags]    C24212
-Empty Email                   ${EMPTY}                      ${good password}
-Empty Password                ${good email}                 ${EMPTY}
-Invalid Email 1               noptixqagmail.com             ${good password}
-Invalid Email 2               @gmail.com                    ${good password}
-Invalid Email 3               noptixqa@gmail..com           ${good password}
-Invalid Email 4               noptixqa@192.168.1.1.0        ${good password}
-Invalid Email 5               noptixqa.@gmail.com           ${good password}
-Invalid Email 6               noptixq..a@gmail.c            ${good password}
-Invalid Email 7               noptixqa@-gmail.com           ${good password}
-Invalid Password              ${good email}                 ${bad password}
+2. Empty Email                   ${EMPTY}                      ${good password}
+3. Empty Password                ${good email}                 ${EMPTY}
+4. Invalid Email 1               noptixqagmail.com             ${good password}
+5. Invalid Email 2               @gmail.com                    ${good password}
+6. Invalid Email 3               noptixqa@gmail..com           ${good password}
+7. Invalid Email 4               noptixqa@192.168.1.1.0        ${good password}
+8. Invalid Email 5               noptixqa.@gmail.com           ${good password}
+9. Invalid Email 6               noptixq..a@gmail.c            ${good password}
+10. Invalid Email 7               noptixqa@-gmail.com           ${good password}
+11. Invalid Password              ${good email}                 ${bad password}
     [tags]    C41869
-Invalid Email and Password    noptixqagmail.com             ${bad password}
-Valid Email Unregistered      ${good email unregistered}    ${good password}
+12. Invalid Email and Password    noptixqagmail.com             ${bad password}
+13. Valid Email Unregistered      ${good email unregistered}    ${good password}
     [tags]    C41868
 
 *** Keywords ***

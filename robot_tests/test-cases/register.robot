@@ -27,13 +27,13 @@ Clear Register Fields
     Clear Element Text    ${REGISTER EMAIL INPUT}
 
 *** Test Cases ***
-Should open register page in anonymous state by clicking Register button on top right corner
+1. Should open register page in anonymous state by clicking Register button on top right corner
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
     Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
-Should open register page from register success page by clicking Register button on top right corner
+2. Should open register page from register success page by clicking Register button on top right corner
     [Tags]    email
     ${email}    Get Random Email        ${BASE EMAIL}
     Register    'mark'    'hamill'    ${email}    ${password}
@@ -42,7 +42,7 @@ Should open register page from register success page by clicking Register button
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
 
-Should open register page in anonymous state by clicking Register button on homepage
+3. Should open register page in anonymous state by clicking Register button on homepage
     Close Browser
     Open Browser and go to URL    ${url}
     Wait Until Element Is Visible    ${CREATE ACCOUNT BODY}
@@ -50,25 +50,25 @@ Should open register page in anonymous state by clicking Register button on home
     Wait Until Location Is    ${url}/register
 
 #I am assuming this means directly going to the /register url and not clicking a button
-Should open register page in anonymous state
+4. Should open register page in anonymous state
     [tags]    C24211    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
     Check Log In
 
-Should register user with correct credentials
+5. Should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
 
-Should allow !#$%&'*+-/=?^_`{|}~ in email field
+6. Should allow !#$%&'*+-/=?^_`{|}~ in email field
     [documentation]    This is here because testing activation with the '&' freaks out Python's imaplib so we test that our form accepts it.
     [tags]
     ${email}    Get Random Symbol Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
 
-With valid inputs no errors are displayed
+7. With valid inputs no errors are displayed
     [tags]    C41557
     ${email}    Get Random Email    ${BASE EMAIL}
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
@@ -89,7 +89,7 @@ With valid inputs no errors are displayed
             Element Should Not Be Visible    ${element}
     END
 
-Displays password masked, shows password and changes eye icon when clicked
+8. Displays password masked, shows password and changes eye icon when clicked
     [tags]    C24211
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${REGISTER PASSWORD INPUT}    ${REGISTER EYE ICON CLOSED}
@@ -104,7 +104,7 @@ Displays password masked, shows password and changes eye icon when clicked
     ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-Should respond to Enter key and save data
+9. Should respond to Enter key and save data
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
@@ -116,7 +116,7 @@ Should respond to Enter key and save data
     Press Keys    ${REGISTER PASSWORD INPUT}    ENTER
     Validate Register Success
 
-Should respond to Tab key
+10. Should respond to Tab key
     [tags]    C41867
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
@@ -163,7 +163,7 @@ Should respond to Tab key
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 
-Should open Terms and conditions in a new page
+11. Should open Terms and conditions in a new page
     [tags]    C41558
     Go To    ${url}/register
     Wait Until Element Is Visible    ${TERMS AND CONDITIONS LINK}
@@ -173,7 +173,7 @@ Should open Terms and conditions in a new page
     Switch Window    ${tabs}[1]
     Location Should Be    ${url}/content/eula
 
-Should open Privacy Policy in a new page
+12. Should open Privacy Policy in a new page
     [tags]    C41558
     Go To    ${url}/register
     Wait Until Element Is Visible    ${PRIVACY POLICY LINK}
@@ -183,7 +183,7 @@ Should open Privacy Policy in a new page
     Switch Window    ${windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
-Should suggest user to create new account, if he was logged in and goes to registration link
+13. Should suggest user to create new account, if he was logged in and goes to registration link
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
@@ -195,32 +195,32 @@ Should suggest user to create new account, if he was logged in and goes to regis
     Click Button    ${LOGGED IN NEW ACCOUNT BUTTON}
     Validate on Register Page
 
-Should display promo-block, if user goes to registration from native app
+14. Should display promo-block, if user goes to registration from native app
     Go To    ${url}/register?from=client
     Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/register?from=mobile
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-Should not display promo-block, if user goes to registration not from native app
+15. Should not display promo-block, if user goes to registration not from native app
     Go To    ${url}/register
     Wait Until Element Is Visible    ${REGISTER FIRST NAME INPUT}
     Element Should Not Be Visible    ${JUMBOTRON}
 
-Should remove promo-block on registration form successful submitting form when from=client
+16. Should remove promo-block on registration form successful submitting form when from=client
     [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=client
     Validate Register Success    ${url}/register/success?from=client
     Element Should Not Be Visible    ${JUMBOTRON}
 
-Should remove promo-block on registration form successful submitting form when from=mobile
+17. Should remove promo-block on registration form successful submitting form when from=mobile
     [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=mobile
     Validate Register Success    ${url}/register/success?from=mobile
     Element Should Not Be Visible    ${JUMBOTRON}
 
-Should not allow to access /register/success /activate/success by direct input
+18. Should not allow to access /register/success /activate/success by direct input
     Close Browser
     Open Browser and go to URL    ${url}/register/success
     Wait Until Element Is Visible    ${JUMBOTRON}
@@ -229,21 +229,21 @@ Should not allow to access /register/success /activate/success by direct input
     Wait Until Element Is Visible    ${JUMBOTRON}
     Location Should Be    ${url}/
 
-Cannot register email that is already registered
+19. Cannot register email that is already registered
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
-Cannot register email that is already activated
+20 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
     Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
-Check registration email links, colors, cloud name, and user name
+21. Check registration email links, colors, cloud name, and user name
     [tags]    C24211    C43021    Customizations
     ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Check Language Anonymous
@@ -268,7 +268,7 @@ Check registration email links, colors, cloud name, and user name
     Delete Email    ${email}
     Close Mailbox
 
-Check automatic logout when registering new account while logged in
+22. Check automatic logout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL OWNER}     ${BASE PASSWORD}
     Go To    ${ENV}/register

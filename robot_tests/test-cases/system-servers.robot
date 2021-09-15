@@ -190,7 +190,7 @@ Web Admin Test Teardown
 #    Change server name via API    ${server auth}    server 1    ${server 1["serverId"]}    https://${QA BURBANK IP}:${server 1["port"]}
 #    Element Text Should Be    ${SERVER NAME}    server 1
 
-Server name can be changed
+1. Server name can be changed
     [Tags]    C71000    threaded
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
@@ -204,7 +204,7 @@ Server name can be changed
     Reload Page
     Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
 
-Server name changed via API updates on cloud
+2. Server name changed via API updates on cloud
     [Tags]    C70961    threaded
     Verify on Servers Page
     Sleep    1
@@ -222,7 +222,7 @@ Server name changed via API updates on cloud
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
 
-Restart close button works
+3. Restart close button works
     [Tags]    C70968    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -231,7 +231,7 @@ Restart close button works
     Click Button    ${RESTART DIALOG CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
-Restart cancel button works
+4. Restart cancel button works
     [Tags]    C70968    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -240,7 +240,7 @@ Restart cancel button works
     Click Button    ${RESTART DIALOG CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
-Restart server as owner
+5. Restart server as owner
     [Tags]    C70968
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -258,7 +258,7 @@ Restart server as owner
            ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]    AND
            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
-Restart server as administrator
+6. Restart server as administrator
     [Tags]    C70968
     [Setup]    Server Settings Test Setup    user=${admin}
     Verify on Servers Page
@@ -276,13 +276,13 @@ Restart server as administrator
             ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}    AND
             ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
-Change port is only available for owner
+7. Change port is only available for owner
     [Tags]    C70927    threaded
     [Setup]    Server Settings Test Setup    user=${admin}
     Verify on Servers Page
     Element Should Be Disabled    ${PORT INPUT}
 
-Port field validation
+8. Port field validation
     [Tags]    C70929    threaded
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -342,7 +342,7 @@ Port field validation
     ${current port}=    Get Value    ${PORT INPUT}
     Should Be Equal    ${current port}    ${before port}
 
-Change port
+9. Change port
     [Tags]    C70975
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -356,7 +356,7 @@ Change port
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1}[port]
 
 # Waiting to hear back from server team about proper error code
-Administrator cannot change port via API
+10. Administrator cannot change port via API
     [Tags]    C70927    threaded
     Verify on Servers Page
     ${loc}=   Get Location
@@ -367,7 +367,7 @@ Administrator cannot change port via API
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}
     Should Be True    ${status is correct}
 
-Check status
+11. Check status
     [Tags]    C70957
     Verify on Servers Page
     Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}
@@ -389,7 +389,7 @@ Check status
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}    300
     Stop Docker Server    ${server 2}[id]  
 
-Detailed info 1 server
+12. Detailed info 1 server
     [Tags]   C70923    threaded
     [Setup]    Server Settings Test Setup    server=${server 3}
     Verify on Servers Page
@@ -401,7 +401,7 @@ Detailed info 1 server
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
-Detailed info 2 servers
+13. Detailed info 2 servers
     [Tags]    C70923    threaded    deb
     Execute Command Remotely   docker container start ${server 2}[id]
     Select Server By Name    server 1
@@ -414,7 +414,7 @@ Detailed info 2 servers
     Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
     Execute Command Remotely    docker container stop ${server 2}[id]
 
-Offline system 1 server settings
+14. Offline system 1 server settings
     [Tags]    C70950    threaded    deb
     [Setup]    Server Settings Test Setup    server=${server 3}
     Execute Command Remotely    docker container stop ${server 3}[id]
@@ -428,14 +428,14 @@ Offline system 1 server settings
     Element Should not be Visible    ${RESTART SERVER BUTTON}
     Element Should not be Visible    ${SERVER DETAILED INFO BUTTON}
 
-Online two servers
+15. Online two servers
     [Tags]    C701205    threaded
     Verify on Servers Page
     Select Server By Name    server 1
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     
-Server1 is online Server2 is offline
+16. Server1 is online Server2 is offline
     [Tags]    C70955    threaded
     Select Server By Name    server 1
     Element Should be Enabled    ${PORT INPUT}
@@ -449,13 +449,13 @@ Server1 is online Server2 is offline
     Element Should be Disabled    ${PORT INPUT}
     Element Text Should Be    ${SERVER OFFLINE ALERT}    ${SERVER OFFLINE TEXT}
 
-Owner/Admin has Access
+17. Owner/Admin has Access
     [Tags]    C69853    C70927    threaded
     Wait Until Element is Visible    ${SERVERS LINK}
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
-Administrator has Access
+18. Administrator has Access
     [Tags]    C69853    C70927    threaded
     [Setup]    Server Settings Test Setup    ${server 1}    ${admin}
     Wait Until Element is Visible    ${SERVERS LINK}
@@ -463,22 +463,22 @@ Administrator has Access
     Verify on Servers Page
     Element Should Be Disabled    ${PORT INPUT}
 
-Viewer does not have Access
+19. Viewer does not have Access
     [Tags]    C69853    threaded
     [Setup]    Server Settings Test Setup    ${server 1}    ${viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
-Advanced Viewer does not have Access
+20. Advanced Viewer does not have Access
     [Tags]    C69853    threaded
     [Setup]    Server Settings Test Setup    ${server 1}    ${adv viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
-Live Viewer does not have Access
+21. Live Viewer does not have Access
     [Tags]    C69853    threaded
     [Setup]    Server Settings Test Setup    ${server 1}    ${live viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
-Custom User does not have Access
+22. Custom User does not have Access
     [Tags]    C69853    threaded
     [Setup]    Server Settings Test Setup    ${server 1}    ${custom}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}

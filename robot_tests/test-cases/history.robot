@@ -66,7 +66,7 @@ loop links
     # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
     # Register Keyword To Run On Failure    Failure Tasks
 
-History link is in the downloads page for user with access and takes you to /downloads/releases
+1. History link is in the downloads page for user with access and takes you to /downloads/releases
     [tags]    Passing_19.2
     Log In If Needed    ${email}    ${password}
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
@@ -106,7 +106,7 @@ History link is in the downloads page for user with access and takes you to /dow
     # Wait Until Location is    ${url}/404
 
 #Make sure each tab changes to a unique release number
-Make sure expandable sections show options
+2. Make sure expandable sections show options
     Log in to downloads/history
     
     Wait Until Element Is Visible    ${PATCHES TAB}

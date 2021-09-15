@@ -105,7 +105,7 @@ Set Radio Value
     ${current value}=   Get Element Attribute    ${element}    value
 
 *** Test Cases ***
-Camera settings is available to owner admin and custom with permission
+1. Camera settings is available to owner admin and custom with permission
     [Tags]    C76252     threaded
     Verify on Cameras Page
     Log Out
@@ -140,7 +140,7 @@ Camera settings is available to owner admin and custom with permission
     #...    ${EDIT CREDENTIALS BUTTON}
     #...    ${RECORDING CHECK BOX}
 
-Camera settings is not available to any viewers
+2. Camera settings is not available to any viewers
     [Tags]    C76253    threaded
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
@@ -158,7 +158,7 @@ Camera settings is not available to any viewers
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-Camera settings is not available by direct link to any viewers
+3. Camera settings is not available by direct link to any viewers
     [Tags]    C76255    threaded
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    id
@@ -186,7 +186,7 @@ Camera settings is not available by direct link to any viewers
     Element should not be visible    ${CAMERAS LINK}
     Log Out
 
-Camera settings are not available by direct url to unauthorized user
+4. Camera settings are not available by direct url to unauthorized user
     [Tags]    C79007    Threaded
     [Setup]    Log in    ${no perm}    ${password}
     ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    id
@@ -198,7 +198,7 @@ Camera settings are not available by direct url to unauthorized user
     END        
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    //div[normalize-space()\="${THIS LINK IS BROKEN TEXT}"]    //button//a[@href\='/']/..
 
-No cameras placeholder
+5. No cameras placeholder
     [Tags]    C76257    threaded
     [Setup]    Camera Test Setup    user=${system2}[owner]    system=${system2}[cloud id]
 
@@ -207,7 +207,7 @@ No cameras placeholder
     ...    ${NO CAMERAS TITLE}            
     ...    ${NO CAMERAS MESSAGE}       
 
-Camera status match server
+6. Camera status match server
     [Tags]    C76256    Threaded
     @{auth}=   Create List    admin    ${BASE PASSWORD}
 
@@ -229,7 +229,7 @@ Camera status match server
     ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
     ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
 
-Warning dialog appears when changes are made on navigating away and works correctly
+7. Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416    threaded
     Log    Step 1
     Verify on Cameras Page
@@ -305,7 +305,7 @@ Warning dialog appears when changes are made on navigating away and works correc
 
 
 
-Rename Camera
+8. Rename Camera
     [Tags]    C76259
     Verify on Cameras Page
     Select Camera by Name    good cam
@@ -357,7 +357,7 @@ Rename Camera
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam name changed 3    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
-Name change in client changes in cloud
+9. Name change in client changes in cloud
     [Tags]    C76261    threaded
     Verify on Cameras Page
     Select Camera by Name    good cam
@@ -369,7 +369,7 @@ Name change in client changes in cloud
     Element Attribute Value Should Be    ${EDITABLE TITLE}    innertext    api name
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
-View button
+10. View button
     [Tags]    C76262    threaded
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     Verify on Cameras Page
@@ -400,7 +400,7 @@ View button
     Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/view/${camera id}
 
 
-Detailed Info
+11. Detailed Info
     [Tags]    C76274    ThreadedRAS LINK}
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
@@ -414,7 +414,7 @@ Detailed Info
     Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/health
     Log Out
 
-Aspect Ratio
+12. Aspect Ratio
     [Tags]    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -432,7 +432,7 @@ Aspect Ratio
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
 
 
-Rotation
+13. Rotation
     [Tags]    Threaded
     Select Camera By Name    good cam
     Verify on Cameras Page
@@ -449,7 +449,7 @@ Rotation
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
 
-Audio enable Disabled
+14. Audio enable Disabled
     [Tags]    C76378    threaded
     Verify on Cameras Page
     Select Camera by Name    good cam
@@ -468,7 +468,7 @@ Audio enable Disabled
     Reload Page
     Audio Enabled Should Be    True
 
-Audio unavailable
+15. Audio unavailable
     [Tags]     C76376    threaded
     Go To Cameras
     Verify on Cameras Page
@@ -477,7 +477,7 @@ Audio unavailable
     Select Camera by Name    no audio cam
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
 
-No image placeholder shows for offline and unauthorized cameras
+16. No image placeholder shows for offline and unauthorized cameras
     [Tags]    C76275    threaded
     Verify on Cameras Page
     Select Camera by Name    unauth cam
@@ -494,7 +494,7 @@ No image placeholder shows for offline and unauthorized cameras
     ...    ${CAMERA ERROR TEXT}
     Element Text Should Be    ${CAMERA ERROR TEXT}    ${CAMERA OFFLINE TEXT}    
 
-Edit credentials form Close and Cancel buttons
+17. Edit credentials form Close and Cancel buttons
     [Tags]    C78236    threaded
     Verify on Cameras Page
 
@@ -508,7 +508,7 @@ Edit credentials form Close and Cancel buttons
     Click Button    ${EDIT CREDENTIALS CANCEL BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
-Changes made in Image settings in thick client appear correctly on cloud portal
+18. Changes made in Image settings in thick client appear correctly on cloud portal
     [Tags]    C76374    Theaded
     Select Camera by Name    good cam
     Verify on Cameras Page
@@ -523,7 +523,7 @@ Changes made in Image settings in thick client appear correctly on cloud portal
     Element Should Contain    ${ASPECT RATIO DROPDOWN}    1:1
     Element Should Contain    ${ROTATION DROPDOWN}    90˚
 
-Recording toggle shows correct options
+19. Recording toggle shows correct options
     [Tags]    C76401    threaded
     Verify on Cameras Page
     Select Camera by Name    offline cam
@@ -557,7 +557,7 @@ Recording toggle shows correct options
     ${checked}    Get Element Attribute    ${RECORD MOTION RADIO BUTTON}    value
     Should Be Equal    ${checked}    2
 
-Recording Status
+20. Recording Status
     [Tags]    C76391    Threaded
     [Setup]    Camera Test Setup    user=${system2}[owner]    system=${system2}[cloud id] 
     Select Camera by Name    no license cam
@@ -583,7 +583,7 @@ Recording Status
     Should Be Equal As Strings    ${state}    True
     Verify recording controls are open
     
-Record Always
+21. Record Always
     [Tags]    C76408    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -607,7 +607,7 @@ Record Always
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
-Record Motion
+22. Record Motion
     [Tags]    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -635,7 +635,7 @@ Record Motion
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
-Record Motion + Low Quality
+23. Record Motion + Low Quality
     [Tags]    C76408    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -656,7 +656,7 @@ Record Motion + Low Quality
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
-Check recording triple state
+24. Check recording triple state
     [Tags]    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Verify on Cameras Page
@@ -666,7 +666,7 @@ Check recording triple state
     ...    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
     ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
 
-Recording Mode functionality (with recording schedule set)
+25. Recording Mode functionality (with recording schedule set)
     [Tags]    C78982
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Verify on Cameras Page
@@ -687,7 +687,7 @@ Recording Mode functionality (with recording schedule set)
     Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
 
 
-Disabled Motion With Recording
+26. Disabled Motion With Recording
     [Tags]    C78983    Threaded
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
@@ -713,7 +713,7 @@ Disabled Motion With Recording
     Should Be Equal As Strings    ${state}    True
     Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
     
-Change FPS
+27. Change FPS
     [Tags]    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -729,7 +729,7 @@ Change FPS
     ${fps}    Get Element Attribute    ${FPS INPUT}    value
     Should Be Equal As Numbers    ${fps}    20
 
-Erasing current FPS has placeholder
+28. Erasing current FPS has placeholder
     [Tags]    C76409    Threaded
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -743,7 +743,7 @@ Erasing current FPS has placeholder
     Element Attribute Value Should Be    ${FPS INPUT}    placeholder    30 - ${CURRENT TEXT}
     Click Button    ${SYSTEM CANCEL}
 
-Change Quality
+29. Change Quality
     [Tags]    C76410    Threaded
     Verify on Cameras Page
     Select Camera By Name    no audio cam
@@ -757,7 +757,7 @@ Change Quality
     Reload Page
     Wait Until Element Contains    ${QUALITY DROPDOWN}    ${BEST TEXT}
 
-Enable/disable motion detection with recording off
+30. Enable/disable motion detection with recording off
     [Tags]    C78981
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -786,7 +786,7 @@ Enable/disable motion detection with recording off
     ...    ${CANVAS}
     ...    ${DOT-MENU}
 
-Enable/disable motion detection with recording on
+31. Enable/disable motion detection with recording on
     [Tags]    C76398
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -819,7 +819,7 @@ Enable/disable motion detection with recording on
 
 #Record motion and record motion low quality radio buttons should be disabled
 
-Placeholder shows when system is offline
+32. Placeholder shows when system is offline
     [Tags]    C76254    threaded
     [Setup]    Camera Test Setup    user=${system}[owner]    system=${system2}[cloud id]
     Wait Until Elements are Visible
@@ -837,7 +837,7 @@ Placeholder shows when system is offline
     ...    ${OFFLINE MESSAGE}
     Log Out
 
-Motion sensitivity block for cameras with different statuses
+33. Motion sensitivity block for cameras with different statuses
     [Tags]    C76418    Threaded
     Verify on Cameras Page
     Select Camera By Name    offline cam
@@ -852,7 +852,7 @@ Motion sensitivity block for cameras with different statuses
     Verify on Cameras Page
     Element Should Not Be Visible    ${MOTION SENSITIVITY IMAGE}
 
-Recording Quality dropdown menu functionality for camera with schedule
+34. Recording Quality dropdown menu functionality for camera with schedule
     [Tags]    C76417    Threaded
     [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Verify on Cameras Page
@@ -878,7 +878,7 @@ Recording Quality dropdown menu functionality for camera with schedule
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
-UDP stream settings
+35. UDP stream settings
     [Tags]    C79005    Threaded
     Verify on Cameras Page
     Select Camera By Name    UDP cam
@@ -937,7 +937,7 @@ UDP stream settings
     Should Be Equal As Strings    ${UDP json['motionType']}    0    
     Wait Until Element Is Visible    ${DOT-MENU}
 
-RTSP stream settings
+36. RTSP stream settings
     [Tags]    C79002    Threaded
     Verify on Cameras Page
     Select Camera By Name    RTSP cam
@@ -996,7 +996,7 @@ RTSP stream settings
     Should Be Equal As Strings    ${RSTP json['motionType']}    0    
     Wait Until Element Is Visible    ${DOT-MENU}
 
-HTTP stream settings
+37. HTTP stream settings
     [Tags]    C79092    Threaded
     Verify on Cameras Page
     Select Camera By Name    HTTP cam
@@ -1057,7 +1057,7 @@ HTTP stream settings
 
 
 
-Changing credentials from invalid ones to valid ones makes the camera authorized
+38. Changing credentials from invalid ones to valid ones makes the camera authorized
     [Tags]    C76390
     Verify on Cameras Page
     Select Camera By Name    unauth cam

@@ -14,14 +14,14 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Test Cases ***
-Integration Store title and URL are correct
+1. Integration Store title and URL are correct
     [Tags]    C54622
     Go To Integrations Page
     Wait Until Location Is    ${url}
     Title Should Be    ${title}
     Validate Integrations Landing Page
 
-Integration Store catalog
+2. Integration Store catalog
     [Tags]    C54622
     Go To Integrations Page
     Wait Until Element Is Visible    ${INTEGRATION TILE}
@@ -33,7 +33,7 @@ Integration Store catalog
     END
 #    Validate Random Tile N times    ${integration tiles}    3
 
-Changing page should change the layout to a max of four colunmns
+3. Changing page should change the layout to a max of four colunmns
     [Tags]    C54622
     Go To Integrations Page
     Set Window Size    5000    1080
@@ -61,7 +61,7 @@ Changing page should change the layout to a max of four colunmns
 
     Set Window Size    1920    1080
 
-Integration Store Search
+4. Integration Store Search
     [Tags]    	C54620
     Go To Integrations Page
     Wait Until Element is Visible    ${INTEGRATION TILE}
@@ -135,7 +135,7 @@ Integration Store Search
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go To Integrations Page
 
-Integration Store Integration Details Required Fields
+5. Integration Store Integration Details Required Fields
     [Tags]    C54623
     Go To Integrations Page
     Wait Until Element Is Visible    ${INTEGRATION TILE}
@@ -143,14 +143,14 @@ Integration Store Integration Details Required Fields
     Validate Integration Details Page    all=False
     Go To Integrations Page
 
-Integration Store Integration Details All Fields
+6. Integration Store Integration Details All Fields
     [Tags]    C54623
     Go To Integrations Page
     Wait Until Element Is Visible    ${INTEGRATION TILE}
     CLick Element    ${INTEGRATION TILE}//h3[text()="${INTEGRATION ALL FIELDS}"]/ancestor::a/..
     Validate Integration Details Page
 
-Send messages using Integration Contact "Get in touch" form
+7. Send messages using Integration Contact "Get in touch" form
     [Tags]    C54681
     Go To Integrations Page
     Click Element    ${INTEGRATION TEST INTEGRATION LINK}/..
@@ -173,7 +173,7 @@ Send messages using Integration Contact "Get in touch" form
     ${privacy link href}=   Get Element Attribute    ${privacy links}[1]    href
     Should Contain    ${privacy link href}    ${PRIVACY POLICY URL HREF}
 
-Integration store shows nothing found when there are no published integrations
+8. Integration store shows nothing found when there are no published integrations
     [Tags]    C55073
     ${loc}=   get location    
     ${dw}=   Replace String    ${loc}    https://    https://dw.
@@ -182,7 +182,7 @@ Integration store shows nothing found when there are no published integrations
     # Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
-Anonymous and basic user does not see disabled integration store
+9. Anonymous and basic user does not see disabled integration store
     [Tags]    C54635
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
@@ -198,7 +198,7 @@ Anonymous and basic user does not see disabled integration store
     Sleep    1
 
 
-Developer user can see disabled integration store
+10. Developer user can see disabled integration store
     [Tags]    C54633
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
@@ -213,7 +213,7 @@ Developer user can see disabled integration store
     Log Out
     Sleep    1
 
-Portal manager user can see disabled integration store
+11. Portal manager user can see disabled integration store
     [Tags]    C54632	
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
@@ -228,7 +228,7 @@ Portal manager user can see disabled integration store
     Log Out
     Sleep    1
     
-Superuser can see disabled integration store
+12. Superuser can see disabled integration store
     [Tags]    C54669	
     ${loc}=   get location    
     ${hanwha}=   Replace String    ${loc}    https://    https://hanwha.
@@ -244,7 +244,7 @@ Superuser can see disabled integration store
     Log Out
     Sleep    1
 
-Anonymous and basic user can access enabled integration store
+13. Anonymous and basic user can access enabled integration store
     [Tags]    C54631
     Wait Until Element Is Visible    ${FOOTER INTEGRATIONS LINK}
     Click Link    ${FOOTER INTEGRATIONS LINK}
@@ -263,7 +263,7 @@ Anonymous and basic user can access enabled integration store
     Log Out
     Sleep    1
 
-Developer user can see enabled integration store and their own integrations
+14. Developer user can see enabled integration store and their own integrations
     [Tags]    C54629
     Log In    ${EMAIL FACE REC DEV}    ${BASE PASSWORD}
     Wait Until Element Is Visible    ${FOOTER INTEGRATIONS LINK}
@@ -272,7 +272,7 @@ Developer user can see enabled integration store and their own integrations
     Log Out
     Sleep    1
 
-Portal manager user can see enabled integration store and integrations in review
+15. Portal manager user can see enabled integration store and integrations in review
     [Tags]    C54628
     Log In    ${EMAIL PORTAL MANAGER}    ${BASE PASSWORD}
     Wait Until Element Is Visible    ${FOOTER INTEGRATIONS LINK}
@@ -282,7 +282,7 @@ Portal manager user can see enabled integration store and integrations in review
     Log Out
     Sleep    1
 
-Super user can see enabled integration store and integrations in draft
+16. Super user can see enabled integration store and integrations in draft
     [Tags]    C54668
     Log In    ${EMAIL SUPER USER}    ${BASE PASSWORD}
     Wait Until Element Is Visible    ${FOOTER INTEGRATIONS LINK}

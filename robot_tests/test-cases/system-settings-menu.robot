@@ -58,13 +58,13 @@ System Settings Menu Suite Teardown
     Close All Browsers
 
 *** Test Cases ***
-Should login as "viewer" and should have no ability to "search" in left menu
+1. Should login as "viewer" and should have no ability to "search" in left menu
     Log Out
     Log in to system    ${system 1}    ${system 1}[cloud users][viewer]
     Wait Until Page Contains Element            ${LEFT MENU}
     Wait Until Page Does Not Contain Element    ${LEFT MENU SEARCH INPUT}
 
-Should have selected LEVEL-1 node (check specs)
+2. Should have selected LEVEL-1 node (check specs)
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Page Contains Element    ${LEFT MENU LEVEL1 ADMIN}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR LIGHT5 RGB}
@@ -75,14 +75,14 @@ Should have selected LEVEL-1 node (check specs)
     Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ADMIN}       font-family         ${FONT MEDIUM}
     Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ICON}        color               ${COLOR DARK9 RGB}
 
-Should have LEVEL-3 node (check specs)
+3. Should have LEVEL-3 node (check specs)
     Wait Until Page Contains Element    ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL1 USERS}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 USERS}       background-color    ${COLOR ALIGHT3 RGB}
     Click Element                       ${LEFT MENU LEVEL1 USERS}
     Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR ALIGHT2 RGB}
 
-Should have LEVEL-3 selected node (check specs)
+4. Should have LEVEL-3 selected node (check specs)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Page Contains Element    ${LEFT MENU LEVEL3 USER1}
@@ -94,7 +94,7 @@ Should have LEVEL-3 selected node (check specs)
     Wait Until Element Contains Style   ${LEFT MENU LEVEL3 USER1}       font-family         ${FONT MEDIUM}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1 EXT}   color               ${COLOR LIGHT1 RGB}
 
-Should have LEVEL-3 selected node (check specs - hover)
+5. Should have LEVEL-3 selected node (check specs - hover)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL3 USER1}
@@ -102,14 +102,14 @@ Should have LEVEL-3 selected node (check specs - hover)
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       color               ${COLOR LIGHT1 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1 EXT}   color               ${COLOR LIGHT1 RGB}
 
-Should have LEVEL-3 not selected node (check specs)
+6. Should have LEVEL-3 not selected node (check specs)
     [Tags]    wdeb    cdeb
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT5 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
 
-Should have LEVEL-3 not selected node (check specs - hover)
+7. Should have LEVEL-3 not selected node (check specs - hover)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL3 USER2}
@@ -117,11 +117,11 @@ Should have LEVEL-3 not selected node (check specs - hover)
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
 
-Should have search component
+8. Should have search component
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU SEARCH INPUT}
 
-Should have search component (check specs)
+9. Should have search component (check specs)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR TRANSPARENT RGB}
@@ -132,27 +132,27 @@ Should have search component (check specs)
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       padding-right       ${SEARCH PRIGHT}
     Wait Until Element Contains Style   ${LEFT MENU SEARCH INPUT}       font-family         ${FONT REGULAR}
 
-Shoud allow search input chars
+10. Shoud allow search input chars
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR LIGHT1 RGB}
     Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       color               ${COLOR DARK9 RGB}
 
-Should have button CLEAR for search
+11. Should have button CLEAR for search
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Page Contains Element    ${LEFT MENU SEARCH CLEAR}
     Wait Until Element Has Style        ${LEFT MENU SEARCH CLEAR}       height              ${SEARCH HEIGHT}
 
-Should clear search input
+12. Should clear search input
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Element Is Visible       ${LEFT MENU SEARCH CLEAR}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
     Textfield Should Contain            ${LEFT MENU SEARCH INPUT}       ${EMPTY}
 
-Should display Nothing found
+13. Should display Nothing found
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${impossible search}
     ${count}=   Get Element Count       ${LEFT MENU}/div[contains(@class,'nx-menu')]/div
@@ -160,7 +160,7 @@ Should display Nothing found
     Element Text Should Be              ${LEFT MENU NO RESULT}          ${nothing found}    ignore_case=True
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
-Should hide menu buttons on search
+14. Should hide menu buttons on search
     Wait Until Page Contains Element    ${LEFT MENU}
     Click Element                       ${LEFT MENU LEVEL1 USERS}
     Wait Until Page Contains Element    ${LEFT MENU BUTTONS}
@@ -168,7 +168,7 @@ Should hide menu buttons on search
     Wait Until Page Does Not Contain Element    ${LEFT MENU BUTTONS}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
-Should perform search with single criteria
+15. Should perform search with single criteria
     Wait Until Page Contains Element            ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
@@ -179,14 +179,14 @@ Should perform search with single criteria
         ...    Should Be Equal As Strings    ${text}    ${simple criteria}    ignore_case=True
     END
 
-Should perform search with 'AND' criteria
+16. Should perform search with 'AND' criteria
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${and criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Check if Match AND Criteria         ${LEFT MENU MATCHES CONTENT}    ${and criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
-Should perform search with 'OR' criteria
+17. Should perform search with 'OR' criteria
     [Tags]    cdeb
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
@@ -194,7 +194,7 @@ Should perform search with 'OR' criteria
     Check if Match OR Criteria          ${LEFT MENU MATCHES CONTENT}    ${or criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
-Should navigate with up/down arrows when search criteria is entered
+18. Should navigate with up/down arrows when search criteria is entered
     [Tags]    wdeb    cdeb
     Wait Until Page Contains Element    ${LEFT MENU}
     Click Element                       ${LEFT MENU LEVEL1 ADMIN}

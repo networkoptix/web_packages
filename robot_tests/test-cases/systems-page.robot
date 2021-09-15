@@ -6,7 +6,7 @@ Suite Teardown    Systems Page Suite Teardown
 Force Tags        system    cloud
 
 *** Test Cases ***
-System tiles represent actual information
+1. System tiles represent actual information
     [Tags]    C41893    threaded
     Log in    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -17,19 +17,19 @@ System tiles represent actual information
     END
     Verify Number Of Tiles Is Correct    9
 
-Should show the no systems connected message when you have no systems
+2. Should show the no systems connected message when you have no systems
     [Tags]    C41866    threaded
     Log In    ${no sys user}    ${base password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
     Validate Header Button Text    0
 
-Should show the system page instead of all systems when user only has one
+3. Should show the system page instead of all systems when user only has one
     [Tags]    C41878    threaded
     Log In    ${extra system}[owner]    ${base password}
     Wait until Location Is    ${ENV}/systems/${extra system}[cloud id]
     Validate Header Button Text    ${extra system}[name]    systems=False
 
-Should open system page when clicked on system
+4. Should open system page when clicked on system
     [Tags]    C41893    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -37,14 +37,14 @@ Should open system page when clicked on system
     Verify In System    ${system}[name]
     Validate Header Button Text    ${system}[name]    systems=False
 
-Should show your system for owner and owner name for non-owners
+5. Should show your system for owner and owner name for non-owners
     [Tags]    C41893    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
     Validate Tile    ${system}[name]    ${YOUR SYSTEM TEXT}
     Validate Tile    ${extra system}[name]    Another Owner
 
-Search should highlight system name
+6. Search should highlight system name
     [Tags]    C41891    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -64,7 +64,7 @@ Search should highlight system name
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${extra system}[name]"]
     Verify Number Of Tiles Is Correct    1
 
-Search should highlight owner name
+7. Search should highlight owner name
     [Tags]    C41891    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -72,7 +72,7 @@ Search should highlight owner name
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="Another Owner"]
     Verify Number Of Tiles Is Correct    1
 
-Search can be cleared by x button
+8. Search can be cleared by x button
     [Tags]    C41891    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -88,7 +88,7 @@ Search can be cleared by x button
     Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
     Verify Number Of Tiles Is Correct    9
 
-Searching for owner email should only show systems with that owner
+9. Searching for owner email should only show systems with that owner
     [Tags]    C41891    threaded
     Log In    ${system}[owner]    ${base password}
     Validate on Systems Page
@@ -96,13 +96,13 @@ Searching for owner email should only show systems with that owner
     Verify Number Of Tiles Is Correct    8
     Run Keyword and Expect Error    *    Validate Tile    ${extra system}[name]    Another Owner
 
-Should open systems page in anonymous state
+10. Should open systems page in anonymous state
     [Tags]    threaded
     Go To    ${ENV}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Log In    ${system}[owner]    ${base password}    button=None
 
-Should update owner name in systems list, if it's changed
+11. Should update owner name in systems list, if it's changed
     [Tags]    threaded
     Set Account Name    ${ENV}    ${extra system}[owner]    ${base password}    newFirstName    newLastName
 
@@ -111,7 +111,7 @@ Should update owner name in systems list, if it's changed
     Validate on Systems Page
     Validate Tile    ${extra system}[name]    newFirstName newLastName
 
-Search should only be visible with 9 or more systems
+12. Search should only be visible with 9 or more systems
     [Tags]    C41890
     Disconnect from account    ${ENV}    ${system}[owner]    ${base password}    ${extra system}[cloud id]
     Log In    ${system}[owner]    ${base password}

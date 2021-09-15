@@ -7,7 +7,7 @@ Suite Teardown    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
-Advanced system settings availability
+1. Advanced system settings availability
     [Tags]    C76633    advanced settings
     Log    Step 1, 2 - advanced block is available for admins
     FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
@@ -26,7 +26,7 @@ Advanced system settings availability
         Log Out
     END
 
-Advanced system settings for offline system
+2. Advanced system settings for offline system
     [Tags]    C76634
     Remove Tags    webadmin
     Skip If Irrelevant
@@ -42,7 +42,7 @@ Advanced system settings for offline system
     Reload Page
     Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=180
 
-Hide Advanced Settings button functionality
+3. Hide Advanced Settings button functionality
     [Tags]    C76635    threaded
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
@@ -57,7 +57,7 @@ Hide Advanced Settings button functionality
     END
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE ${IMAGE}    timeout=60
 
-Audit trail, backup and statistics section
+4. Audit trail, backup and statistics section
     [Tags]    C78244
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -101,7 +101,7 @@ Audit trail, backup and statistics section
     Log    Step 8
     Changing input setting changes it on server    ${CLIENT STATISTICS RELATIVE URL INPUT}    clientStatisticsSettingsUrl    https://www.google.com
 
-Cloud connect and video codec
+5. Cloud connect and video codec
     [Tags]    C78259
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -147,7 +147,7 @@ Cloud connect and video codec
     Log    Step 8
     Changing input setting changes it on server    ${SYSTEM ALIVE INTERVAL INPUT}    ec2AliveUpdateIntervalSec    75
     
-Connection and email
+6. Connection and email
     [Tags]    C78260
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -178,7 +178,7 @@ Connection and email
     Log    Step 5
     Changing input setting changes it on server    ${SUPPORT EMAIL INPUT}    emailSupportEmail    http://support.networkoptix.testing.com
 
-Recording and log
+7. Recording and log
     [Tags]    C78262
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -211,7 +211,7 @@ Recording and log
     Log    Step 6
     Changing input setting changes it on server    ${LAST MERGE SLAVEID INPUT}    lastMergeSlaveId    slaveId
 
-LDAP and license server
+8. LDAP and license server
     [Tags]    C78263
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -244,7 +244,7 @@ LDAP and license server
     Log    Step 6
     Changing input setting changes it on server    ${LICENSE SERVER INPUT}    licenseServer    https://licensing.vmsproxy.testing.com
 
-Screen quality, time settings and event log
+9. Screen quality, time settings and event log
     [Tags]    C78264
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -270,7 +270,7 @@ Screen quality, time settings and event log
     Log    Step 4
     Changing input setting changes it on server    ${MAX EVENT LOG RECORDS INPUT}    maxEventLogRecords    90000
 
-Max P2P, record queue size, and remote archive
+10. Max P2P, record queue size, and remote archive
     [Tags]    C78265
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -299,7 +299,7 @@ Max P2P, record queue size, and remote archive
     Log    Step 5
     Changing input setting changes it on server    ${MAX REMOTE ARCHIVE SYNC THREADS INPUT}    maxRemoteArchiveSynchronizationThreads    1
 
-RTP, Rtsp, scene items, archive sync, HTTP
+11. RTP, Rtsp, scene items, archive sync, HTTP
     [Tags]    C78379
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -333,7 +333,7 @@ RTP, Rtsp, scene items, archive sync, HTTP
         Changing input setting changes it on server    ${MAX WEBM TRANSFER}    maxWebMTranscoders    1
     END
 
-Meta data storage, OS time change, proxy connection timeout, push notification language
+12. Meta data storage, OS time change, proxy connection timeout, push notification language
     [Tags]    C78380
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -363,7 +363,7 @@ Meta data storage, OS time change, proxy connection timeout, push notification l
     Log    Step 4
     Changing input setting changes it on server    ${PUSH NOTIFICATION LANGUAGE INPUT}    pushNotificationsLanguage    Russian
 
-File URI, RTP timeout, rtsp buffer, Flir Onvif
+13. File URI, RTP timeout, rtsp buffer, Flir Onvif
     [Tags]    C78385
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -386,7 +386,7 @@ File URI, RTP timeout, rtsp buffer, Flir Onvif
     Log    Step 3
     Changing setting changes it on server    ${USE SEQUENCIAL FLIR CHECKBOX}    sequentialFlirOnvifSearcherEnabled    advanced=True
 
-Server discovery timeout
+14. Server discovery timeout
     [Tags]    C78386
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -400,7 +400,7 @@ Server discovery timeout
     Log    Step 1
     Changing input setting changes it on server    ${SERVER DISCOVERY TIMEOUT INPUT}    serverDiscoveryPingTimeoutSec    50
 
-SMTP settings
+15. SMTP settings
     [Tags]    C78387
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -433,7 +433,7 @@ SMTP settings
     Log    Step 6
     Changing input setting changes it on server    ${SMTP USER INPUT}    smtpUser    networkoptixtesting123
 
-Specific features, statistics report
+16. Specific features, statistics report
     [Tags]    C78388
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -471,7 +471,7 @@ Specific features, statistics report
     Log    Step 6
     Changing input setting changes it on server    ${STATISTICS REPORT UPDATE DELAY INPUT}    statisticsReportUpdateDelay    86400
 
-Sync time epsilon, sync time exchange period, system name
+17. Sync time epsilon, sync time exchange period, system name
     [Tags]    C78393
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -493,7 +493,7 @@ Sync time epsilon, sync time exchange period, system name
     Log    Step 3
     Changing input setting changes it on server    ${SYSTEM NAME INPUT}    systemName    Advanced Settings changed
 
-Camera ownership, update information
+18. Camera ownership, update information
     [Tags]    C78398
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -507,7 +507,7 @@ Camera ownership, update information
     Log    Step 1
     Changing setting changes it on server    ${TAKE CAMERA OWNERSHIP WITHOUT LOCK CHECKBOX}    takeCameraOwnershipWithoutLock    advanced=True
 
-Time synchronization, update notifications
+19. Time synchronization, update notifications
     [Tags]    C78399
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -525,7 +525,7 @@ Time synchronization, update notifications
     Log    Step 2
     Changing setting changes it on server    ${UPDATE NOTIFICATIONS ENABLED CHECKBOX}      updateNotificationsEnabled    advanced=True
 
-UPNP port mapping, plain-text emails, Windows line feed
+20. UPNP port mapping, plain-text emails, Windows line feed
     [Tags]    C78401
     Log    Preconditions
     ${settings}=   Create Dictionary
@@ -547,7 +547,7 @@ UPNP port mapping, plain-text emails, Windows line feed
     Log    Step 3
     Changing setting changes it on server    ${USE WINDOWS EMAIL LINE FEED CHECKBOX}      useWindowsEmailLineFeed    advanced=True
 
-Video traffic encryption, watermark settings, web sockets
+21. Video traffic encryption, watermark settings, web sockets
     [Tags]    C78402
     Log    Preconditions
     ${settings}=   Create Dictionary

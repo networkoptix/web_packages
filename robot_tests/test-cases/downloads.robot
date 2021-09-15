@@ -43,10 +43,10 @@ Check other packages
     END
 
 *** Test Cases ***
-Download link is in the footer
+1. Download link is in the footer
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
 
-Download link takes you to the /downloads page
+2. Download link takes you to the /downloads page
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     ${os}=   Get OS
@@ -55,7 +55,7 @@ Download link takes you to the /downloads page
     # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
 #    Wait Until Element Is Visible    ${LOG IN MODAL}
 
-Going to the downloads page anonymous asks for login and closing takes you back to home
+3. Going to the downloads page anonymous asks for login and closing takes you back to home
     [tags]    C42069
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
@@ -65,11 +65,11 @@ Going to the downloads page anonymous asks for login and closing takes you back 
     ...    Click Button    ${LOG IN CLOSE BUTTON}    AND
     ...    Wait Until Location Is    ${url}/
 
-Going to the downloads page anonymous asks for login and login shows downloads page
+4. Going to the downloads page anonymous asks for login and login shows downloads page
     [tags]    C42069
     Go to download page
 
-Going to the downloads page should show you the tab according to your OS
+5. Going to the downloads page should show you the tab according to your OS
     [tags]    C41550
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
@@ -80,7 +80,7 @@ Going to the downloads page should show you the tab according to your OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Element Is Visible    //a[@aria-selected="true" and @id="${os}"]
 
-Make sure each tab changes the text to show the corresponding OS and url
+6. Make sure each tab changes the text to show the corresponding OS and url
     Go to download page
     Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${WINDOWS TAB}
     Click Link    ${WINDOWS TAB}
@@ -92,32 +92,32 @@ Make sure each tab changes the text to show the corresponding OS and url
     Wait Until Location Is    ${url}/download/macos
     Wait Until Elements Are Visible    ${DOWNLOAD MAC OS VMS LINK}    ${MAC OS TAB}
 
-Validate the windows download links
+7. Validate the windows download links
     [tags]    C41552
     Go to download page
     Check for file by OS    WINDOWS
     Check other packages
 
-Validate the ubuntu download links
+8. Validate the ubuntu download links
     [tags]    C41552
     Go to download page
     Check for file by OS    LINUX
     Check other packages
 
-Validate the mac download links
+9. Validate the mac download links
     [tags]    C41552
     Go to download page
     Check for file by OS    MAC OS
     Check other packages
 
-Check Play Store Link
+10. Check Play Store Link
     [tags]    C41554
     Go to download page
     ${url}    Get Element Attribute    ${PLAY STORE DOWNLOAD BUTTON}    href
     Should Be Equal    ${url}    ${PLAY STORE LINK}
     Check File Exists    ${url}
 
-Check iTunes Store Link
+11. Check iTunes Store Link
     [tags]    C41554
     Go to download page
     ${url}    Get Element Attribute    ${ITUNES STORE DOWNLOAD BUTTON}    href

@@ -7,7 +7,7 @@ Suite Teardown    Merge Suite Teardown
 Force Tags        merge
 
 *** Test Cases ***
-Merge button availability
+1. Merge button availability
     [Tags]    C70976    C70977    should
     Log    C70976: "Merge with Another System" button is available only for owner
     Log    Test Setup
@@ -34,7 +34,7 @@ Merge button availability
     Log in to system    ${system}    ${owner email}
     Wait until element is visible    ${MERGE BUTTON SYSTEM DISABLED}
 
-Merge Dialog - Dropdown has three sections
+2. Merge Dialog - Dropdown has three sections
     [Tags]    C70979    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -85,7 +85,7 @@ Merge Dialog - Dropdown has three sections
 #    Log    Might give false negative(shows docker internal ip instead of external)
 #    Should Contain    ${sys 7 description}    (ServerName,${SPACE}${QA BURBANK IP}:${system 7}[port])
 
-Merge Dialog - Dropdown has two sections(no cloud systems)
+3. Merge Dialog - Dropdown has two sections(no cloud systems)
     [Tags]    C70980    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -130,7 +130,7 @@ Merge Dialog - Dropdown has two sections(no cloud systems)
     Input Text    ${MERGE FORM SERVER URL INPUT}    https://${QA BURBANK IP}:${system 2}[port]
     Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${OTHER SYSTEM}")]
 
-Merge Dialog - Dropdown has two sections(no local systems)
+4. Merge Dialog - Dropdown has two sections(no local systems)
     [Tags]    C70981    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -171,7 +171,7 @@ Merge Dialog - Dropdown has two sections(no local systems)
     Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "offline")]
     Element should not be visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]
 
-Merge Dialog - Dropdown has no valid systems
+5. Merge Dialog - Dropdown has no valid systems
     [Tags]    C76420    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -193,7 +193,7 @@ Merge Dialog - Dropdown has no valid systems
     Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "incompatible")]
     Element should not be visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 1}[name]")]
 
-Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge Cloud system
+6. Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge Cloud system
     [Tags]    C76480    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -226,7 +226,7 @@ Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge
     Click Button    ${MERGE NEXT BUTTON}
     Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
-Merge Dialog - Close X Button Checking
+7. Merge Dialog - Close X Button Checking
     [Tags]    C76574    merge_dialog
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
@@ -284,7 +284,7 @@ Merge Dialog - Close X Button Checking
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
 # Positive scenarios
-Positive scenario with selected cloud system (selected system is secondary)
+8. Positive scenario with selected cloud system (selected system is secondary)
     [Tags]    C70930    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -368,7 +368,7 @@ Positive scenario with selected cloud system (selected system is secondary)
         Wait Until Element Is Not Visible    //h2[contains(text(), "${system ${j}}[name]")]
     END
 
-Positive scenario with selected cloud system (selected system is primary)
+9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must
     Log    Test set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -437,7 +437,7 @@ Positive scenario with selected cloud system (selected system is primary)
     Go To    ${ENV}/systems/${system 1}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
-Positive scenario with selected local autodiscovered system not connected to the cloud
+10. Positive scenario with selected local autodiscovered system not connected to the cloud
     [Tags]    C70932    pos    must
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -489,7 +489,7 @@ Positive scenario with selected local autodiscovered system not connected to the
     Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
-Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
+11. Positive scenario with selected non-autodiscovered system (dropdown + Server URL input)
     [Tags]    C76220    pos    must
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -550,7 +550,7 @@ Positive scenario with selected non-autodiscovered system (dropdown + Server URL
     Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
     Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
-Positive scenario with selected non-autodiscovered system (only Server URL input)
+12. Positive scenario with selected non-autodiscovered system (only Server URL input)
     [Tags]    C76221    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -591,7 +591,7 @@ Positive scenario with selected non-autodiscovered system (only Server URL input
     ${s}=   Replace String    ${s}   %SERVER%    https://${QA BURBANK IP}:${system 2}[port]
     Run keyword and continue on failure    Check For Alert    ${s}
 
-Positive scenario with selected new system
+13. Positive scenario with selected new system
      Log    Commented out due to CLOUD-5439
 #    [Tags]    C76269    pos
 #    Log    Test set up
@@ -614,7 +614,7 @@ Positive scenario with selected new system
 #    Sleep    120    # To avoid false negative tests
 #    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=90
 
-Positive scenario with back button use (on choosing primary system)
+14. Positive scenario with back button use (on choosing primary system)
     [Tags]    C76270    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -676,7 +676,7 @@ Positive scenario with back button use (on choosing primary system)
     Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=0.25
     Validate Merge    ${system 1}[name]    ${system 2}[name]
 
-Different types of users in both Systems
+15. Different types of users in both Systems
     [Tags]    C76326    pos
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -774,7 +774,7 @@ Different types of users in both Systems
         Wait until element is visible    //div[@id="level3users"]//span[contains(text(), "${user}")]   timeout=1
     END
 
-Checking state for selected Cloud system - System offline / back online
+16. Checking state for selected Cloud system - System offline / back online
     [Tags]    C70983    C70987    state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -846,7 +846,7 @@ Checking state for selected Cloud system - System offline / back online
         Log Out
     END
 
-Checking state for selected Cloud system - systems have different versions
+17. Checking state for selected Cloud system - systems have different versions
     [Tags]    C70984    C70985   state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -898,7 +898,7 @@ Checking state for selected Cloud system - systems have different versions
     Wait until element is visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]/following-sibling::span[contains(text(), "incompatible")]
     Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
-Checking state for selected Cloud system - Duplicate servers
+18. Checking state for selected Cloud system - Duplicate servers
     [Tags]    C71004    state_cloud    state_cloud    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -927,7 +927,7 @@ Checking state for selected Cloud system - Duplicate servers
 
     Click Button    ${MERGE X BUTTON}
 
-Checking state for selected local system - Server URL is empty
+19. Checking state for selected local system - Server URL is empty
     [Tags]    C76223    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -958,7 +958,7 @@ Checking state for selected local system - Server URL is empty
     Wait until element has style    ${MERGE ENTER SERVER ADDRESS}    color    ${ERROR COLOR WITH OPACITY}
     Wait until element has style    ${MERGE FORM SERVER URL INPUT}    border-color    ${ERROR COLOR}
 
-Checking state for selected local system - No server is found for system 4.1+
+20. Checking state for selected local system - No server is found for system 4.1+
     [Tags]    C76223    C76224    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1042,7 +1042,7 @@ Checking state for selected local system - No server is found for system 4.1+
 #    Click Button    ${MERGE FAILED OK BUTTON}
 #    Wait until element is not visible    ${MERGE FAILED DIALOG}
 
-Checking state for selected local system - Selected server has an older software version
+21. Checking state for selected local system - Selected server has an older software version
     [Tags]    C76226    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1072,7 +1072,7 @@ Checking state for selected local system - Selected server has an older software
     Validate Check Merge Dialog
     Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
-Checking state for selected local system - Selected server has a newer software version
+22. Checking state for selected local system - Selected server has a newer software version
     [Tags]    C76396    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1103,7 +1103,7 @@ Checking state for selected local system - Selected server has a newer software 
     Validate Check Merge Dialog
     Wait until element is visible   ${MERGE CHECK MERGE FORM}//p[contains(@class,"error-label")]
 
-Checking state for selected local system - URL validation error
+23. Checking state for selected local system - URL validation error
     [Tags]    C76227    state_local    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1142,7 +1142,7 @@ Checking state for selected local system - URL validation error
     END
 
 # Password Validation
-Owner's of the selected system password validation
+24. Owner's of the selected system password validation
     [Tags]    C76265    C76266    password_valid
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1178,7 +1178,7 @@ Owner's of the selected system password validation
     Wait until element has style    ${MERGE PASSWORD INCORRECT}    color    ${ERROR COLOR WITH OPACITY}
     Wait until element has style    ${MERGE ADMIN FORM PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
-Current account's password validation
+25. Current account's password validation
     [Tags]    C76267    C76268    password_valid
     Log    Fails due to CLOUD-6451
     Log    Test Setup
@@ -1210,7 +1210,7 @@ Current account's password validation
     Wait until element has style    ${MERGE PASSWORD INCORRECT}    color    ${ERROR COLOR WITH OPACITY}
     Wait until element has style    ${MERGE PASSWORD INPUT}    border-color    ${ERROR COLOR}
 
-General errors - Duplicate servers
+26. General errors - Duplicate servers
     [Tags]    C76484    C76485    general_errors    neg    should
     Log    Test Set up
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1275,7 +1275,7 @@ General errors - Duplicate servers
     Click Button   ${MERGE NEXT BUTTON}
     Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
 
-General Errors - Selected server is already in this system
+27. General Errors - Selected server is already in this system
     [Tags]    C76466    general_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1311,7 +1311,7 @@ General Errors - Selected server is already in this system
     ...    ${MERGE SERVER APPEARS TO BE LISTING ITSELF}
     ...    ${MERGE REMOVE OFFLINE AND INCOMPATIBLE SERVERS}
 
-General Errors - System (server) offline after owner's of the selected system password validation
+28. General Errors - System (server) offline after owner's of the selected system password validation
     [Tags]    C76272    general_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1342,7 +1342,7 @@ General Errors - System (server) offline after owner's of the selected system pa
     ${s}=   Replace String    ${SYSTEM IS INACCESSIBLE TEXT}    %SYSTEM%   ${system 2}[name]
     Wait Until Element Is Visible    //p[contains(text(), "${s}")]
 
-General Errors - Different owners
+29. General Errors - Different owners
     [Tags]    C76225    C76464    general_errors    neg    should
     Log    Test Setup
     ${owner 1 email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1415,7 +1415,7 @@ General Errors - Different owners
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.5
     Validate Confirm Merge Dialog    ${system 1}[name]    server at https://${QA BURBANK IP}:${system 2}[port]
 
-Merge Errors - System (server) offline after current account's password validation
+30. Merge Errors - System (server) offline after current account's password validation
     [Tags]    C76273   merge_errors    neg    should
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1452,7 +1452,7 @@ Merge Errors - System (server) offline after current account's password validati
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE DIALOG}
 
-Merge Errors - Primary System becomes offline during merge process
+31. Merge Errors - Primary System becomes offline during merge process
     [Tags]    C76277    merge_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
@@ -1490,7 +1490,7 @@ Merge Errors - Primary System becomes offline during merge process
     Click Button    ${MERGE FAILED OK BUTTON}
     Wait until element is not visible    ${MERGE DIALOG}
 
-Merge Errors - Secondary System becomes offline during merge process
+32. Merge Errors - Secondary System becomes offline during merge process
     [Tags]    C76278    merge_errors    neg
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
