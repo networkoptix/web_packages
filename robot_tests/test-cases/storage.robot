@@ -59,7 +59,7 @@ Analytics DB Storage dropdown is not visible
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
     
 Disabling storage warnings aren't shown - Main storages
-    [Tags]    C81570    mode
+    [Tags]    C81570    mode    
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk1
@@ -362,7 +362,7 @@ No Size Tooltip when Inaccessble
     Element Should Not Be Visible    ${STORAGE INACCESSIBLE SIZE}/following-sibling::ngb-popover-window
 
 Storage Locations Table without control buttons
-    [Tags]    C81572
+    [Tags]    C81572    
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS FIRST ROW}
@@ -722,8 +722,8 @@ Enable storage: Not in use -> Main
     Should Be True    ${files 3 disk2} > ${files 2 disk2}
 
 Enable storage: Not in use -> Backup
-    [Tags]    C81544    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    [Tags]    C81544    mode    archive    
+    Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk1    disk2    disk3
     @{backups} =    Create List
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -754,10 +754,14 @@ Enable storage: Not in use -> Backup
     Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Storages Are Outdated and Refresh
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Enable Archive Backup
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Reload Page
     Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
-    ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     
     Log    Step 5
     Wait Until Elements Are Visible    
@@ -768,8 +772,10 @@ Enable storage: Not in use -> Backup
     ...    timeout=35
 
     Log    Step 6
+    ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    Sleep    20
     ${files 3 disk2} =    Verify Recorded Video Files   disk2
-    Should Be True    ${files 3 disk2} == ${files disk2} or ${files 3 disk2} < ${files 2 disk2}
+    Should Be True    ${files 3 disk2} == ${files 2 disk2} or ${files 3 disk2} < ${files 2 disk2}
 
     Log    Step 7
     # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -847,7 +853,7 @@ Disable storage: Main -> Not in use
 
 Disable storage: Backup -> Not in use
     [Tags]    C81546    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -964,7 +970,7 @@ Disabling storage warnings - Main storages
 
 Disabling storage warnings - Backup storages
     [Tags]    C81564    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1432,7 +1438,7 @@ Cancel deleting storage
     Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     
 Delete Inaccessible storage
-    [Tags]    C81573    deleting    deb
+    [Tags]    C81573    deleting
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1455,8 +1461,8 @@ Delete Inaccessible storage
     Set Suite Variable    ${drives}    4
     
 Backup settings block availability for owner, administrator and other users
-    [Tags]    C81804    archive    deb
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    [Tags]    C81804    archive
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
     FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        
         Log in to user and system    ${account}     ${server 1['cloud id']}
@@ -1476,7 +1482,7 @@ Backup settings block availability for owner, administrator and other users
     
 Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
     @{backups} =    Create List    
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
@@ -1487,7 +1493,7 @@ Backup settings block is not shown if no one storage is assigned “Backup” mo
 
 Backup off
     [Tags]    C81807    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     # @{disabled} =    Create List    disk3    disk2 
     # @{backups} =    Create List    disk1
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1501,7 +1507,7 @@ Backup off
     
 Backup on – default settings
     [Tags]    C81808    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1513,7 +1519,7 @@ Backup on – default settings
     
 Backup on – custom settings
     [Tags]    C81809    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1529,7 +1535,7 @@ Backup on – custom settings
     
 It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
     @{backups} =    Create List    
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
@@ -1566,7 +1572,7 @@ It is not necessary to apply changes to make the backup settings block appear
     
 Cancel Backup enabling
     [Tags]    C83183    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1585,7 +1591,7 @@ Cancel Backup enabling
     
 Cancel Backup disabling - default settings
     [Tags]    C83184    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1606,7 +1612,7 @@ Cancel Backup disabling - default settings
         
 Cancel Backup disabling - custom settings
     [Tags]    C83185    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1638,7 +1644,7 @@ Cancel Backup disabling - custom settings
      
 Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1682,7 +1688,7 @@ Cancel resetting backup settings for system of 1 server
     
 Reset backup settings for system of 1 server
     [Tags]    C83330    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1733,7 +1739,7 @@ Reindex archive block owerview: only Main storage
     
 Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page

@@ -366,3 +366,14 @@ Cleanup External Drive
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot  
     Log To Console   networkdisk deleted ....... | PASS |
     
+Skip If Image Is
+    [Arguments]    @{unsupported images}
+    FOR    ${item}    IN    @{unsupported images}
+        Skip If    '${IMAGE}' == '${item}'    Backup Archive not supported with ${IMAGE}
+    END
+    
+Wait Until Storages Are Outdated and Refresh
+    Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}
+    Click Element    ${RELOAD ICON} 
+    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN} 
+    
