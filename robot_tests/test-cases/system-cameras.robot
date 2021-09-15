@@ -21,7 +21,7 @@ Camera Suite Setup
     #Create Base Cloud System    cameras${random}
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    cameras-${random}    owner=${owner}
-    ${system2}    Create Base System    cameras2-${random}    add users=${False}    owner=${owner}
+    ${system2}    Create Base System    cameras2-${random}    owner=${owner}
     Set Suite Variable    ${system}
     Set Suite Variable    ${system2}
 
@@ -81,7 +81,7 @@ Camera Suite Setup
     Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
     Sleep    30
     Restart Docker Servers    ${system}[port]    ${system}[id]    ${system}[local auth]
-    
+    Stop Docker Server    ${system2}[id]
     ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
     Set Suite Variable    ${no perm}    ${no perm}
     Set Suite Variable    ${custom cameras}    ${custom cameras}
@@ -827,8 +827,8 @@ Placeholder shows when system is offline
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
-
-    Log in to user and system    ${system}[cloud users][cloudAdmin]    ${AUTO TESTS OFFLINE SYSTEM ID}
+    
+    Log in to user and system    ${system2}[cloud users][cloudAdmin]    ${system2}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
