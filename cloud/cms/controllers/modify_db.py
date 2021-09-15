@@ -9,7 +9,7 @@ import uuid
 from dataclasses import dataclass
 
 from django.contrib.auth.models import Permission
-from django.urls import reverse
+from django import urls
 from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
@@ -636,7 +636,7 @@ def asset_has_required_data(asset, version_id=None):
                 has_default_value = len(default_value) > 0
         if not datastructure.optional and not has_default_value and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label or datastructure.name
-            change_url = reverse('admin:change_page', kwargs={'asset_id': asset.id, 'context_id': datastructure.context.id})
+            change_url = urls.reverse('admin:change_page', kwargs={'asset_id': asset.id, 'context_id': datastructure.context.id})
             errors.append((
                 ds_name,
                 'This field cannot be blank. '

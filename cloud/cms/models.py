@@ -522,8 +522,20 @@ class AssetType(models.Model):
         cache.delete(f'ASSET_TYPE-{self.type}-CUSTOM_FIELDS')
 
 
-class Asset(models.Model):
+class AssetManager(models.Manager):
+    def create(self, *args, **kwargs):
+        """Auto generated asset names could be longer than 255 characters. Problem usually only encountered in when assets get indirectly created using baker.make, the asset name field should at some point be changed to a TextField instead of CharField. 
 
+        Returns:
+            Asset: Created Asset
+        """        
+        NAME = 'name'
+        max_length = getattr(Asset._meta.get_field(NAME), 'max_length', 255)
+        kwargs[NAME] = kwargs.get(NAME, '')[:max_length]
+        return super().create(*args, **kwargs)
+
+
+class Asset(models.Model):
     class Meta:
         permissions = (
             ("can_download_package", "Can Download Asset Package"),
@@ -544,6 +556,9 @@ class Asset(models.Model):
         Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
     protected = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
+    objects = AssetManager()
+
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:

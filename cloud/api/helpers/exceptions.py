@@ -2,6 +2,7 @@ import logging
 import json
 import time
 import traceback
+import functools
 from enum import Enum
 
 import django
@@ -107,7 +108,7 @@ def require_params(request, params_list):
     error_data = {}
     try:
         for param in params_list:
-            if request.method == "POST" and (param not in request.data or request.data[param] == ''):
+            if request.method == "POST" and (data := getattr(request, 'data', request.POST)) and not (data.get(param, '')):
                 error_data[param] = ['This field is required.']
             elif request.method == "GET" and (param not in request.GET):
                 error_data[param] = ['This field is required.']
@@ -415,7 +416,7 @@ def handle_exceptions(func):
     :param func:
     :return:
     """
-
+    @functools.wraps(func)
     def caller(*args, **kwargs):
         # noinspection PyBroadException
         try:
