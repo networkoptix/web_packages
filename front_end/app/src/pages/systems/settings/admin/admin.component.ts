@@ -6,12 +6,15 @@ import {
     Params, Router, ActivatedRoute
 }                                          from '@angular/router';
 import { UntilDestroy }                    from '@ngneat/until-destroy';
-import { Subscription }                    from 'rxjs';
-import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription, throwError }        from 'rxjs';
+import {
+    auditTime, catchError,
+    distinctUntilChanged, switchMap
+}                                          from 'rxjs/operators';
 import { NxRibbonService }                 from '@components/ribbon';
 import { NxConfigService, IConfig }        from '@services/nx-config';
 import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxProcessService }                from '@services/process.service';
+import { NxProcessService, Process }       from '@services/process.service';
 import { NxSystem, NxSystemUser }          from '@services/system.service';
 import { NxDialogsService }                from '@dialogs/dialogs.service';
 import { NxPageService }                   from '@services/page.service';
@@ -61,6 +64,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     currentMergeInfo: any = undefined;
     merging: boolean;
     editMode = false;
+    connectToCloudProcess: Process
 
     settingsForSystem;
 
@@ -78,6 +82,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
+
+        this.connectToCloudProcess = this.processService.createProcess(() => this.connectLocalToCloud(), { ignoreError: true }, (skip) => {
+            if (skip === true) {
+                return;
+            }
+            this.toastService.notify(this.LANG.toastMessage.system.cloudConnect.success(), 'success');
+            setTimeout(() => this.window.location.reload(), 2000);
+        }, (skip) => {
+            if (skip === true) {
+                return;
+            }
+            this.toastService.notify(this.LANG.toastMessage.system.cloudConnect.failed(), 'danger');
+        });
 
         this.route.queryParams.subscribe((params) => {
             this.advanced = (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced' || params.advanced !== undefined);
@@ -98,7 +115,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         .finally(() => {
                             switch (state) {
                                 case 'connect':
-                                    this.connectLocalToCloud();
+                                    this.connectToCloudProcess.run();
                                     break;
                                 default:
                                     break;
@@ -272,15 +289,23 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    connectLocalToCloud() {
-        this.dialogs
-            .connectLocalToCloud(this.accountService, this.system)
-            .then((result) => {
-                if (result) {
-                    // give the user chance to read the toaster
-                    setTimeout(() => this.window.location.reload(), 2000);
-                }
-            });
+    async connectLocalToCloud() {
+        if (!this.system.useRest) {
+            return;
+        }
+        const continueProcess = await this.system.mediaserver.ensureFreshSession().toPromise();
+        if (!continueProcess) {
+            return true;
+        }
+        // Check if we have a cloud session. If not redirect to oauth.
+        // Once there is a cloud session make a request to add the system to cloud.
+        // Lastly bind those cloud credentials to the mediaserver.
+        return this.cloudApiService.validateToken().pipe(
+            catchError(async () => this.cloudApiService.redirectOauth('connect')),
+            switchMap((res) => this.cloudApiService.connect(this.system.info.systemName, res.username, '')),
+            catchError(() => throwError(true)),
+            switchMap((res: any) => this.system.mediaserver.saveCloudSystemCredentials(res.id, res.authKey, res.ownerAccountEmail))
+        ).toPromise();
     }
 
     disconnectFromCloud() {

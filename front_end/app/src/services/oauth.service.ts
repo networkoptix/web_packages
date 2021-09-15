@@ -46,7 +46,7 @@ export class OauthService {
     redirectOauth(state?: string, email?: string) {
         const { href } = this.window.location;
         const clientTypes = {
-            connect : 'connectSystemToCloud',
+            connect : 'connect',
             login   : 'loginWebadmin'
         };
         const params = new URLSearchParams({
@@ -61,6 +61,7 @@ export class OauthService {
             email         : email
         });
         this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+        return false;
     }
 
     setTokens(tokens) {

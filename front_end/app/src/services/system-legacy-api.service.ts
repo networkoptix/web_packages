@@ -314,6 +314,10 @@ export class NxSystemAPI {
         return { authGet, authPost, authPlay };
     }
 
+    public ensureFreshSession(): Observable<any> {
+        throw Error('Not implemented in the legacy api');
+    }
+
     public getCurrentUser(forceReload?: boolean) {
         let customHeaders;
         if (forceReload) {
@@ -554,7 +558,7 @@ export class NxSystemAPI {
             cloudSystemID,
             cloudAuthKey,
             cloudAccountName
-        }).toPromise();
+        });
     }
 
     checkInternet(reload = true) {

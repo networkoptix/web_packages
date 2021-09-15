@@ -81,11 +81,9 @@
                 <div class="row m-0">
                     <div class="col-12 pl-0">
                         <div *ngIf="system.isMine && !CONFIG.cloudSystemId">
-                            <button [disabled]="settings.disconnectDisabled"
-                                    class="btn btn-default"
-                                    (click)="connectLocalToCloud()">
-                                <span class="ellipsis" translate>Connect to %CLOUD_NAME%</span>
-                            </button>
+                            <nx-process-button buttonText="{{ 'Connect to %CLOUD_NAME%' | translate }}"
+                                               [actionType]="'default'"
+                                               [process]="connectToCloudProcess"></nx-process-button>
                         </div>
                         <div *ngIf="CONFIG.cloudSystemId">
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>

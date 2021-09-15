@@ -2,7 +2,7 @@ import { Injectable, Injector }                  from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams }   from '@angular/common/http';
 import { Router }                                from '@angular/router';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
-import { EMPTY, of, from, BehaviorSubject }      from 'rxjs';
+import { EMPTY, of, from, BehaviorSubject, throwError, Observable } from 'rxjs';
 import { v4 as uuid }                            from 'uuid';
 
 import { NxConfigService, IConfig } from './nx-config';
@@ -153,7 +153,7 @@ export class NxCloudApiService {
         });
     }
 
-    @swClear('cloudSystemAPI', '/systems', true)
+    @swClear('cloudSystemAPI', '/systems', false)
     connect(systemName, email, password) {
         const accessToken = this.oauthService.cloudApiAccessToken;
         let headers = new HttpHeaders();
@@ -170,7 +170,7 @@ export class NxCloudApiService {
                     return this.oauthService.logoutTokens();
                 }
             })
-        ).toPromise();
+        );
     }
 
     verify(password) {
@@ -663,12 +663,16 @@ export class NxCloudApiService {
         );
     }
 
-    validateToken() {
+    redirectOauth(state?: string, email?: string) {
+        return this.oauthService.redirectOauth(state, email);
+    }
+
+    validateToken(): Observable<any> {
         const token = this.oauthService.cloudApiAccessToken;
         if (token) {
-            return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } }).toPromise();
+            return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
         }
-        return Promise.reject(new Error('No token was present'));
+        return throwError('No token was present');
     }
 }
 

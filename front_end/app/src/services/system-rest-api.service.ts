@@ -44,7 +44,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'X-Runtime-Guid';
     private readonly refreshToken = 'refreshToken';
-    private readonly oldToken = 'Unable to process owner\'s REST API request: session should not be older than 10m';
+    private readonly oldToken = 'Unable to process owner\'s REST API request: session should not be older than';
     private injector: Injector;
 
     constructor(
@@ -109,7 +109,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             (error.status === 401 ||
                             error.status === 403 ||
                             error.resultCode === 'forbidden') &&
-                            (error.errorString || error.error.errorString) === this.oldToken
+                            (error.errorString || error.error.errorString).includes(this.oldToken)
                         ) {
                             return this.reauthenticate(allSystems);
                         } else if (error.status === 503) {
@@ -337,7 +337,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 });
         } else if (environment.isLocal) { // Local system mode ???
             const endpoint = `/rest/v1/login/sessions/${this.cookieService.get(this.token)}`;
-            this.cacheService.addToCache(endpoint);
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result :any) => {
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
@@ -354,6 +353,16 @@ export class NxSystemRestAPI extends NxSystemAPI {
             this.userRequest = undefined; // Clear cache in case of errors
         });
         return this.userRequest;
+    }
+
+    public ensureFreshSession() {
+        return this.get(`/rest/v1/login/sessions/${this.cookieService.get(this.token)}`).pipe(
+            switchMap((res) => {
+                if (res.ageS >= 600) {
+                    return this.reauthenticate();
+                }
+                return of(res);
+            }));
     }
 
     loginToken(username: string, password: string, remember: boolean) {
@@ -520,8 +529,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 authKey  : cloudAuthKey,
                 owner    : cloudAccountName
             })
-            .pipe(retryWhen((request) => this.handleOldToken(request)))
-            .toPromise();
+            .pipe(retryWhen((request) => this.handleOldToken(request)));
     }
 
     setupCloudSystem(systemName: string, cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string, systemSettings: t.SystemConfigSettings) {

@@ -35,7 +35,6 @@ import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/clou
 import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
-import { CloudConnectModalContent }            from './cloud-connect/cloud-connect.component';
 import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
 import { AddStorageModalContent }              from './add-storage/add-storage.component';
 import { ChangeStorageModalContent }           from './change-storage/change-storage.component';
@@ -314,21 +313,6 @@ export class NxDialogsService {
         };
 
         return this.createModal(CloudStorageMoveModalContent, options, params);
-    }
-
-    connectLocalToCloud(account: NxAccountService, system: NxSystem) {
-        const options: IParams = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
-        };
-
-        const params: IParams = {
-            account,
-            system,
-            closable: true
-        };
-
-        return this.createModal(CloudConnectModalContent, options, params);
     }
 
     disconnect(account: NxAccountService, system: NxSystem) {
