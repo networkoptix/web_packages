@@ -42,7 +42,7 @@ export class NxSystemService {
         return this.system;
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
+    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean, skipSettingSystem?: boolean) {
         const id = systemId || serverId;
         const cloudSystemInfo: any = (this.systemsService.systems || []).filter((system) => system.id === id)?.shift();
         let useRest = false;
@@ -50,10 +50,11 @@ export class NxSystemService {
             // TODO: Once clouddb has versions for system use that instead of capabilities
             useRest = Object.keys(cloudSystemInfo.capabilities).some((key) => key.includes('4_3'));
         }
+        let system;
         if (id in this.systemsCache) {
-            this.system = this.systemsCache[id];
+            system = this.systemsCache[id];
         } else {
-            this.system = new NxSystem(
+            system = new NxSystem(
                 this.CONFIG,
                 this.LANG,
                 this.cloudApi,
@@ -68,8 +69,14 @@ export class NxSystemService {
                 undefined,
                 useRest
             );
-            this.systemsCache[id] = this.system;
+            this.systemsCache[id] = system;
         }
+
+        if (skipSettingSystem) {
+            return system;
+        }
+
+        this.system = system;
         this.system.lostConnection = false;
         if (!skipPoll) {
             this.system.startPoll(systemId);

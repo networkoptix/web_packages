@@ -123,7 +123,7 @@ export class MergeModalContent {
             await Promise.all(
                 this.systems.map(async system => {
                     if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
-                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id, undefined, true);
+                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id, undefined, true, true);
                         try {
                             const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
                             system.moduleInfo = moduleInfo.reply;
@@ -146,7 +146,6 @@ export class MergeModalContent {
                     }
                 })
             );
-            this.resetSystemServiceToPrimary();
             if (this.systems.length === 0 && this.peerSystems.length === 0) {
                 this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
                 this.secondarySystem = this.targetSystem;
@@ -374,9 +373,6 @@ export class MergeModalContent {
             }, { ignoreError: true })
             .then(
                 res => {
-                    if (this.targetSystemService) {
-                        this.resetSystemServiceToPrimary();
-                    }
                     if (res !== 'canceled') {
                         this.checking = false;
                         // covers case where system (cloud & non-cloud) is not set up yet
@@ -398,9 +394,6 @@ export class MergeModalContent {
                     }
                 },
                 err => {
-                    if (this.targetSystemService) {
-                        this.resetSystemServiceToPrimary();
-                    }
                     if (err !== 'canceled') {
                         this.checking = false;
                         if (err.message === 'Timeout has occurred') {
@@ -615,11 +608,6 @@ export class MergeModalContent {
             });
     }
 
-    resetSystemServiceToPrimary() {
-        this.targetSystemService?.stopPoll();
-        this.systemService.createSystem(this.account.email, this.primarySystem.id);
-    }
-
     deprecatedMergeSystems(password: string, takeRemoteSettings = false) {
         const adminPassword = this.serverUrl.slice(this.serverUrl.indexOf('//admin') + 8, this.serverUrl.lastIndexOf('@'));
         return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, password, adminPassword, takeRemoteSettings);
@@ -681,7 +669,7 @@ export class MergeModalContent {
                     return this.targetSystem.isNew ? isNew : res;
                 });
         } else {
-            this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id, undefined, true);
+            this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id, undefined, true, true);
             let targetSystem;
             try {
                 targetSystem = await this.targetSystemService.getInfo(true, false);
