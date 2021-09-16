@@ -139,7 +139,17 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
                 this.userSubscription = this.system.infoSubject.subscribe(() => {
                     this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                    if (!this.applyService.locked && this.paramUser === undefined || this.paramUser !== NxUtilsService.cleanId(this.selectedUser?.id)) {
+
+                    const updatedUser = this.system.userManager.users.find((user: any) => {
+                        return NxUtilsService.cleanId(user.id) === this.paramUser;
+                    });
+
+                    const cleanUser =  { ...this.selectedUser };
+                    delete cleanUser.role?.optionLabel;
+
+                    if (!this.applyService.locked && this.paramUser === undefined ||
+                        this.paramUser !== NxUtilsService.cleanId(this.selectedUser?.id) ||
+                        !NxUtilsService.isEqual(updatedUser, cleanUser)) {
                         this.setUser();
                     }
                 });
@@ -318,7 +328,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .changePassword(this.system, this.selectedUser);
     }
 
-    setPermission(role: NxSystemRole | any) {
+    setPermission(role: NxSystemRole) {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description()
