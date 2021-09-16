@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "No se recomienda utilizar una ubicación de grabación para diferentes servidores.",
     "ADD THIS STORAGE ANYWAY TEXT": "¿Añadir este almacenamiento de todos modos?",
     "BACK TEXT": "Anterior",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Almacenamiento /invalid/HD Witness Media eliminado"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Almacenamiento /invalid/HD Witness Media eliminado",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

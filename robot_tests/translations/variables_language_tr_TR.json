@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Farklı sunucular için tek bir kayıt konumu kullanılması önerilmez.",
     "ADD THIS STORAGE ANYWAY TEXT": "Bu depolama yinede eklensin mi?",
     "BACK TEXT": "Geri",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

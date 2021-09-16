@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Додати це сховище в будь-якому випадку?",
     "BACK TEXT": "Назад",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

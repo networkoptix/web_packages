@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Non è consigliabile utilizzare una posizione di registrazione per diversi server.",
     "ADD THIS STORAGE ANYWAY TEXT": "Aggiungi questo spazio comunque?",
     "BACK TEXT": "Indietro",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiviazione / non valido / supporto HD Witness elim Media eliminato"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiviazione / non valido / supporto HD Witness elim Media eliminato",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }
