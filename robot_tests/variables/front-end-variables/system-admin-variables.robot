@@ -605,6 +605,9 @@ ${VIEW SEARCH BOX}                //div[contains(@class, "search-box")]
 ${VIEW SEARCH INPUT}              ${VIEW SEARCH BOX}//input[@placeholder="Search"]
 ${VIEW SEARCH DETAILS TOGGLER}    //div[contains(@class, "search-box")]//div[contains(@class, "details-toggler")]
 ${VIEW SEARCH SERVER IP INFO}     //div[contains(@class, "server-name")]/span[contains(text(), "%SERVER NAME%")]/following-sibling::span[contains(@class, "ip-info")]
+${USERS EXPAND BUTTON}            ${USERS LINK}//div[contains(@class,'search-results ng-star-inserted')]
+${USERS RESULTS SUMMARY}          ${USERS LINK}//span[contains(text(),'result')]
+${USERS EXPAND RESULTS}           //*[@id="level3users"]
 
 ${CAMERA NAME}    VirtualCamera
 ${CAMERA IP}      172.17.0.1

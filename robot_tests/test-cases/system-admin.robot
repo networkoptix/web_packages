@@ -449,6 +449,12 @@ ${password}    ${BASE PASSWORD}
     Log    Step 1
     Search For    a
     Wait until elements are visible    ${SEARCH CLOSE BUTTON}    ${SEARCH ICON}
+    Log    Step 2
+    Click Element    ${USERS EXPAND BUTTON}
+    Wait Until Element Is Visible    ${USERS RESULTS SUMMARY}
+    Log    Step 3
+    Click Element    ${USERS EXPAND BUTTON}
+    Wait Until Element Is Visible    ${USERS EXPAND RESULTS}
 
 24. Left menu search: Placeholder
     [Tags]    C81772    webadmin    cloud    search
