@@ -132,7 +132,7 @@ class CustomClientSerializer(serializers.ModelSerializer):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.custom_fields = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
+            self.custom_fields = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms) if not settings.MIGRATING else {}
             self.custom_fields = {
                 key: value for key, value in self.custom_fields.items()
                 if self.custom_fields[key].get('source', '') == 'custom' and not (
