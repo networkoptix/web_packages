@@ -801,7 +801,7 @@ class Auth(object):
     def delete_backup_codes(request, codes=None, headers=None):
         if not codes:
             codes = ""
-        return delete_wrapper(f"{CLOUD_2FA_URL}/backup-codes/{codes}", headers=headers)
+        return delete_wrapper(f"{CLOUD_2FA_URL}/backup-code/{codes}", headers=headers)
 
     @staticmethod
     @validate_response
@@ -813,13 +813,13 @@ class Auth(object):
     @validate_response
     @auto_refresh_token
     def generate_backup_code(request, count, headers=None):
-        return post_wrapper(f"{CLOUD_2FA_URL}/backup-codes/", json={"count": count}, headers=headers)
+        return post_wrapper(f"{CLOUD_2FA_URL}/backup-code/", json={"count": count}, headers=headers)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
     def get_active_backup_codes(request, headers=None):
-        return get_wrapper(f"{CLOUD_2FA_URL}/backup-codes/", headers=headers)
+        return get_wrapper(f"{CLOUD_2FA_URL}/backup-code/", headers=headers)
 
     @staticmethod
     @validate_response
