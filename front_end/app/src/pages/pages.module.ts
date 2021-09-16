@@ -19,7 +19,6 @@ import { QuicklinkStrategy }       from 'ngx-quicklink';
 import { ApplyGuard }              from '@guards/applyGuard';
 import { AuthGuard }               from '@guards/authGuard';
 import { PipesModule }             from '@src/pipes/pipes.module';
-import { NxSettingsModule }        from './systems/settings/settings.module';
 
 const lazyRoutes: Routes = [
     {
