@@ -9,7 +9,6 @@ import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxMenuService }            from '@src/menu/menu.service';
 
-
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-api-level-3-item',
@@ -71,8 +70,12 @@ export class NxApiLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
         this.menuService.hoverItemId = item.id;
     }
 
-    menuClick(detailId) {
-        this.menuService.detail = detailId;
+    menuClick(item) {
+        if (this.item.subNode) {
+            this.menuService.detail = [item.id, item.subNode.id];
+        } else {
+            this.menuService.detail = item.id;
+        }
         if (this.itemPath) {
             this.router
                 .navigate([this.itemPath], { queryParams: { search: this.item.query } })

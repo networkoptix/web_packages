@@ -169,7 +169,14 @@ export class NxApiToolComponent implements OnInit {
             .selectedDetailsSection
             .subscribe(selection => {
                 if (this.content) {
-                    this.content.selectedDetailsSection = selection;
+                    if (selection instanceof Array) {
+                        const [detail, subNode] = selection;
+                        this.content.selectedDetailsSection = detail;
+                        this.content.selectedSubSection = subNode;
+                        this.setMenuTitle(subNode);
+                    } else {
+                        this.content.selectedDetailsSection = selection;
+                    }
                     this.content = { ...this.content }; // trigger onChange
                     this.initSwagger(this.content.selectedDetailsSection, 'full');
                 }

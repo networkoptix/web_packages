@@ -2,7 +2,7 @@
    [ngClass]="{'selected': selected, 'item-disabled': !isEnabled, 'focus': menuNavItemId === item.id}"
    tabindex="{{ selected ? '-1': undefined }}"
    [id]="item.id"
-   (click)="menuClick(item.id)"
+   (click)="menuClick(item)"
    (mouseover)="setNavIdx(item)">
 
     <div *ngIf="first" class="top-shadow-cover"></div>

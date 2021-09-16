@@ -146,7 +146,7 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
             }
 
             // Avoid unnecessary update and overwrite user choices
-            const filtered = this.menuService.fillerItemsBy(this.menuModel);
+            const filtered = this.menuService.filterItemsBy(this.menuModel, true);
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
             if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
                 this.menuContent = filtered;
@@ -155,7 +155,6 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
             if (this.selectedLevel1 !== changes.content.currentValue.selectedSection && this.autoFit) {
                 this.menuInit = true;
             }
-
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
             this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
@@ -251,7 +250,7 @@ export class NxMenuApiComponent implements OnInit, OnChanges {
         this.transition = true;
         this.menuModel = model;
 
-        this.menuContent = this.menuService.fillerItemsBy(model);
+        this.menuContent = this.menuService.filterItemsBy(model, true);
         this.transition = false;
 
         this.navItemIdx = -1;

@@ -33,14 +33,14 @@ export class NxContentContainerComponent implements AfterViewInit {
             {
                 title        : 'Connect to your systems from anywhere',
                 content      : 'Login to your Nx Witness System from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
-                url          : 'https://youtube.com',
+                url          : '',
                 externalLink : true,
                 svg          : 'camera'
             },
             {
                 title   : 'Simple user management',
                 content : 'Invite new users to the systems by email.\nUsers will get an invite link and be able to create an account.\n\nEach user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
-                url     : 'ss',
+                url     : '/docs/developers/knowledgebase',
                 svg     : 'knowledgebase'
             },
             {
@@ -54,7 +54,7 @@ export class NxContentContainerComponent implements AfterViewInit {
             {
                 title        : 'Viewing live and archive video',
                 content      : 's with the same credentials.\n \n Users can see the list of all accessible systems on one screen.',
-                url          : 'https://youtube.com',
+                url          : '',
                 externalLink : true,
                 svg          : 'camera'
             },

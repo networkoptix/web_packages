@@ -11,7 +11,7 @@ import { NxSearchService } from '@services/search.service';
 export class NxMenuService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject('');
     selectedSubSectionSubject = new BehaviorSubject([]);
-    selectedDetailsSection = new BehaviorSubject('');
+    selectedDetailsSection = new BehaviorSubject<string | string[]>('');
     contentSubject = new BehaviorSubject([]);
     navItemSubject = new BehaviorSubject('');
 
@@ -136,43 +136,26 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    fillerItemsBy(model) {
+    filterItemsBy(model, searchSubMenus = false) {
         let filteredContent = [];
         if (model.query) {
             this.setHighlightPattern(model);
 
             this.content.forEach((node) => {
-                if (node.level3?.length) {
-                    let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
-                    node.level3.forEach((item) => {
-                        if (item.id) { // skip separators
-                            const additional: string = this.getAdditionalText(item.additionalLabel);
-
-                            let searchAggregate = item.label || '';
-                            searchAggregate += (additional) ? ' ' + additional : '';
-                            searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
-
-                            if (this.searchService.findMatch(searchAggregate, model)) {
-                                if (!haveNode) {
-                                    haveNode = { ...node };
-                                    haveNode.level3 = []; // remove items so we can all only matches
-                                }
-                                const filteredItem = NxUtilsService.deepCopy(item);
-                                filteredItem.additionalText = additional;
-                                filteredItem.query = { search: model.query };
-
-                                haveNode.level3.push(this.highlighted(filteredItem));
+                if (searchSubMenus && node.level2?.length) {
+                    node.level2.forEach(subNode => {
+                        if (subNode.level3?.length) {
+                            const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node, subNode);
+                            if (haveNode?.level3?.length) {
+                                this.addHaveNodeToFilteredContent(haveNode, filteredContent);
                             }
-                        } else {
-                            haveNode?.level3.push(item);
                         }
                     });
+                }
+                if (node.level3?.length) {
+                    const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node);
                     if (haveNode?.level3?.length) {
-                        // remove separator if last in search result
-                        if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
-                            haveNode.level3.pop();
-                        }
-                        filteredContent.push(haveNode);
+                        this.addHaveNodeToFilteredContent(haveNode, filteredContent);
                     }
                 }
             });
@@ -181,6 +164,45 @@ export class NxMenuService implements OnDestroy {
         }
 
         return filteredContent;
+    }
+
+    addHaveNodeToFilteredContent(haveNode, filteredContent) {
+        // remove separator if last in search result
+        if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
+            haveNode.level3.pop();
+        }
+        filteredContent.push(haveNode);
+    }
+
+    filterNodesIntoHaveNode(model, filteredContent, node, subNode = undefined) {
+        let haveNode = filteredContent.find((filtered) => filtered.id === (subNode || node).id);
+        (subNode || node).level3.forEach(item => {
+            if (item.id) {
+                const additional: string = this.getAdditionalText(item.additionalLabel);
+
+                let searchAggregate = item.label || '';
+                searchAggregate += (additional) ? ' ' + additional : '';
+                searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
+
+                if (this.searchService.findMatch(searchAggregate, model)) {
+                    if (!haveNode) {
+                        haveNode = { ...node };
+                        haveNode.level3 = []; // remove items so we can all only matches
+                    }
+                    const filteredItem = NxUtilsService.deepCopy(item);
+                    filteredItem.additionalText = additional;
+                    filteredItem.subNode = subNode;
+                    filteredItem.query = { search: model.query };
+                    haveNode.level3.push(this.highlighted(filteredItem));
+                }
+            } else {
+                haveNode?.level3.push(item);
+            }
+        });
+        if (haveNode && subNode) {
+            haveNode.label = haveNode.label + ' - ' + subNode.label;
+        }
+        return haveNode;
     }
 
     sanitizeContent(content) {

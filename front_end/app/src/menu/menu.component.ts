@@ -159,7 +159,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuInit = true;
             }
             // Avoid unnecessary update and overwrite user choices
-            const filtered = this.menuService.cleanMenuContent(this.menuService.fillerItemsBy(this.menuModel));
+            const filtered = this.menuService.cleanMenuContent(this.menuService.filterItemsBy(this.menuModel));
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
             if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
                 this.menuContent = filtered;
@@ -312,7 +312,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.menuContent.forEach((node, index, arr) => {
                 this.toggleItem(false, node.id);
             });
-            this.menuContent = this.menuService.fillerItemsBy(model);
+            this.menuContent = this.menuService.filterItemsBy(model);
         }
 
         this.navItemIdx = -1;
