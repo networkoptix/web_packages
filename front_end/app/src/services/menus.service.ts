@@ -68,7 +68,7 @@ export class NxMenusService implements OnDestroy {
     endpoint: Partial<{ view: boolean, settings: boolean, information: boolean, bookmarks: boolean }> = {};
 
     constructor(
-        configService: NxConfigService,
+        public configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
@@ -258,7 +258,7 @@ export class NxMenusService implements OnDestroy {
             nodes.push(informationNode);
         }
 
-        if (this.CONFIG.cloudCapabilities.bookmarksEnabled) {
+        if (this.configService.flagsEnabled('bookmarks')) {
             const bookmarksNode = new MenuNode(
                 'Bookmarks',
                 this.getUrl(activeSystem.id, { bookmarks: true }),

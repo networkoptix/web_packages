@@ -8,14 +8,14 @@ export class BookmarksGuard implements CanActivate {
     CONFIG: IConfig;
 
     constructor(
-        configService: NxConfigService,
+        public configService: NxConfigService,
         private router: Router
     ) {
         this.CONFIG = configService.getConfig();
     }
 
     canActivate(): boolean {
-        if (this.CONFIG.cloudCapabilities.bookmarksEnabled) {
+        if (this.configService.flagsEnabled('bookmarks')) {
             return true;
         } else {
             this.router.navigate([this.CONFIG.redirect.page404]);

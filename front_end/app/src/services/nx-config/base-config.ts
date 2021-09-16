@@ -150,7 +150,8 @@ export interface Capabilities {
 // Feature flags go here
 const FeatureFlagKeys = [
     'customClients',
-    'landingPage'
+    'landingPage',
+    'bookmarks'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
