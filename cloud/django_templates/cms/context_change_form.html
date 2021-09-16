@@ -488,11 +488,11 @@
                 const file = blobInfo.blob()
                 uploadImage(imageUploadUrl, file, {}, success)
             },
-            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview image',
+            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview image, table',
             menubar: false,
             resize: 'both',
             theme: 'silver',
-            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists, image',
+            plugins: 'code,preview,-visualblocks,-advcode,paste,link,lists, image, table',
             theme_advanced_resizing: true,
             init_instance_callback : function(editor) {
                 $(editor.getElement())
