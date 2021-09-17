@@ -24,7 +24,7 @@
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
-                <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
+                <nx-pre-loader *ngIf="account && !menuVisible" [minHeight]="200"></nx-pre-loader>
                 <nx-menu *ngIf="menuVisible"
                          [ngStyle]="{'display' : _menuSearchMode ? 'contents': 'block'}"
                          [content]="content"
