@@ -504,5 +504,5 @@
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
     "BACK TEXT": "戻る",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "無効なストレージが削除されました",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "ストレージが古くなっています。ページを再読み込みして更新してください。"
 }
