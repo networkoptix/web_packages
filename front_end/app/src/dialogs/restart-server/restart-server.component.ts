@@ -53,15 +53,16 @@ export class RestartServerModalContent {
             delay     : this.CONFIG.alertTimeout
         };
         this.restartServer = this.processService
-            .createProcess(() => {
-                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
-                if (!haveOnlineServers) {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                }
-                this.applyService.isOnline$.next(haveOnlineServers);
-                return this.system.restartServer(this.serverId);
-            }, { ignoreError: true })
-            .then(
+            .createProcess(
+                () => {
+                    const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                    if (!haveOnlineServers) {
+                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                    }
+                    this.applyService.isOnline$.next(haveOnlineServers);
+                    return this.system.restartServer(this.serverId);
+                },
+                { ignoreError: true },
                 () => {
                     this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);

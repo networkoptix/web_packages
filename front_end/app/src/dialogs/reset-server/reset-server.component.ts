@@ -68,20 +68,20 @@ export class ResetServerModalContent {
         };
         const isResetingCurrentServer = (): boolean => {
             const currentServer = this.system.serverManager.servers.find(server => server.id === this.serverId);
-            return currentServer.networkAddresses.includes(this.document.location.host)
-                || this.system.info.name === currentServer.name;
-        }
+            return currentServer.networkAddresses.includes(this.document.location.host) ||
+                this.system.info.name === currentServer.name;
+        };
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
             const currentServerIndex = servers.findIndex(server => server.id === this.serverId);
             const nextServerId = NxUtilsService.cleanId(currentServerIndex === servers.length - 1
                 ? servers[0].id : servers[currentServerIndex + 1].id);
             this.router.navigate(['/settings', 'servers', nextServerId]);
-        }
+        };
 
         this.resetServer = this.processService
             .createProcess(() => {
-                return this.system.restoreFactorySettings(this.serverId, this.password).toPromise();
+                return this.system.serverManager.restoreFactorySettings(this.serverId, this.password).toPromise();
             }, {
                 ignoreError        : true,
                 ignoreUnauthorized : true,
@@ -107,7 +107,7 @@ export class ResetServerModalContent {
 
                 let moduleInfo: NormalResponse<ModuleInformationReply>;
                 try {
-                    moduleInfo = await this.system.getModuleInfo(this.serverId).toPromise();
+                    moduleInfo = await this.system.serverManager.getModuleInfo(this.serverId).toPromise();
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
@@ -118,9 +118,9 @@ export class ResetServerModalContent {
                     }
                 }
                 const { runtimeId: initialRuntimeId } = moduleInfo.reply;
-                return this.system.restartServer(this.serverId)
+                return this.system.serverManager.restartServer(this.serverId)
                     .then(() => {
-                        const serverSubscription = this.system.getModuleInfo(this.serverId)
+                        const serverSubscription = this.system.serverManager.getModuleInfo(this.serverId)
                             .pipe(
                                 map((res: any) => {
                                     if (res.reply.id !== this.serverId) {

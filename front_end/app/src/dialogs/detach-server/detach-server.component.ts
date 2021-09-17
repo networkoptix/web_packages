@@ -42,25 +42,25 @@ export class DetachServerModalContent {
             delay     : this.CONFIG.alertTimeout
         };
         this.detachServer = this.processService
-            .createProcess(() => {
-                return this.system.detachFromSystem(this.serverId, this.password).toPromise()
-            }, {
-                ignoreError: true
-            })
-            .then(() => {
-                this.system.currentServerNotBusy = true;
-                this.activeModal.close('success');
-                options.classname = this.CONFIG.toast.success;
-                this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
-                window.location.reload();
-                // may need to remove & update system eventually
-                // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
-                // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
-                // return this.system.update().subscribe()
-            }, () => {
-                this.system.currentServerNotBusy = true;
-                this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
-            });
+            .createProcess(
+                () => this.system.serverManager.detachFromSystem(this.serverId, this.password).toPromise(),
+                { ignoreError: true },
+                () => {
+                    this.system.currentServerNotBusy = true;
+                    this.activeModal.close('success');
+                    options.classname = this.CONFIG.toast.success;
+                    this.toastService.show(this.LANG.servers.detachSystemSuccess(), options);
+                    window.location.reload();
+                    // may need to remove & update system eventually
+                    // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
+                    // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
+                    // return this.system.update().subscribe()
+                },
+                () => {
+                    this.system.currentServerNotBusy = true;
+                    this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
+                }
+            );
     }
 
     close() {
