@@ -4,6 +4,7 @@ export interface NxSystemRole extends PredefinedRole {
     id?: string;
     isAdmin?: boolean;
     label?: string;
+    optionLabel?: string;
 }
 
 export interface NxSystemUser {

@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Het is niet aanbevolen om één opnamelocatie te gebruiken voor verschillende servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Deze opslag toch toevoegen?",
     "BACK TEXT": "Terug",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Opslag / ongeldige / HD Witness Media verwijderd"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Opslag / ongeldige / HD Witness Media verwijderd",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

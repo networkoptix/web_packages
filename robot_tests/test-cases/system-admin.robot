@@ -11,17 +11,17 @@ ${password}    ${BASE PASSWORD}
 
 *** Test Cases ***
 # WEBADMIN
-Cloud block is visible for owner
+1. Cloud block is visible for owner
     [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
 
-Cloud block is not visible for not owner
+2. Cloud block is not visible for not owner
     [Tags]    webadmin
     Log in to system    ${local system}    ${local system}[local users][viewer]
     Wait until element is not visible    ${CLOUD BLOCK}
 
-Connect To Cloud Form - email validation
+3. Connect To Cloud Form - email validation
     [Tags]    webadmin
     ${broken emails}=   Create List    qa    qa@    qa@test    qa@test.    qa@test.com@
     Log in to system    ${local system}    admin
@@ -36,7 +36,7 @@ Connect To Cloud Form - email validation
         Close Connect to Cloud modal
     END
 
-Connect To Cloud Form - negative scenarios
+4. Connect To Cloud Form - negative scenarios
     [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
@@ -77,7 +77,7 @@ Connect To Cloud Form - negative scenarios
     ${error text}=   Get Text    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
     Run Keyword and continue on failure    Should be equal as strings   ${error text}    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
 
-Connect To Cloud Form - cancel buttons works correctly
+5. Connect To Cloud Form - cancel buttons works correctly
     [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
@@ -93,7 +93,7 @@ Connect To Cloud Form - cancel buttons works correctly
     ${cloud id}=   Get Cloud System Id    https://${QABURBANK IP}:${local system}[port]    ${system}[local auth]
     Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
 
-Local owner can connect system to cloud
+6. Local owner can connect system to cloud
     [Tags]    webadmin
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
@@ -101,7 +101,7 @@ Local owner can connect system to cloud
     Connect To Cloud    ${system}[owner]    ${password}    success=True
     Validate Cloud Block    True
 
-Check UI for local not owner when connected to cloud
+7. Check UI for local not owner when connected to cloud
     [Tags]    webadmin
     Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
 
@@ -112,7 +112,7 @@ Check UI for local not owner when connected to cloud
        ...    ${CONNECTION STATUS}\[contains(text(), "CONNECTED")]
     Wait until element is not visible    ${DISCONNECT FROM NX}
 
-Local owner can disconnect system from cloud
+8. Local owner can disconnect system from cloud
     [Tags]    webadmin
     Connect system to cloud if not    ${local auth}    https://${QABURBANK IP}:${local system}[port]     ${local system}[name]    ${system}[owner]    ${password}
 
@@ -133,7 +133,7 @@ Local owner can disconnect system from cloud
 #    Check cloud - system is not there
 
 # CLOUD
-Should confirm, if not owner deletes system
+9. Should confirm, if not owner deletes system
     [Tags]    cloud
     Log in to system    ${system}    ${system}[cloud users][viewer]
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
@@ -145,27 +145,27 @@ Should confirm, if not owner deletes system
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
-Should open System page by link to not authorized user and redirect to homepage, if he does not log in
+10. Should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    cloud
     Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-Should open System page by link to not authorized user and show it, after owner logs in
+11. Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    cloud
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]   ${base password}    button=None
     Verify In System    ${system}[name]
 
-Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
+12. Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    cloud
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Log In    ${email noperm}    ${base password}
     Go To    ${ENV}/systems/${system}[cloud id]
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
-Should open System page by link not authorized user, and show alert if logs in and has no permission
+13. Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    cloud
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Go To    ${ENV}/systems/${system}[cloud id]
@@ -173,7 +173,7 @@ Should open System page by link not authorized user, and show alert if logs in a
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 # COMMON
-User can rename System: change in web -> check server
+14. User can rename System: change in web -> check server
     [Tags]    C41880    webadmin    cloud
     Log    Step 1
     Log In To System    ${system}    ${system}[owner]
@@ -228,7 +228,7 @@ User can rename System: change in web -> check server
     ${settings}=   Get Cloud System Settings    ${system}[cloud auth]    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
-User can rename System: change on server side -> check in web
+15. User can rename System: change on server side -> check in web
     [Tags]    C47019    C30678    webadmin    cloud
     Log    Rename System on server side and check it's changed in web
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${new system name}
@@ -248,7 +248,7 @@ User can rename System: change on server side -> check in web
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 # System Settings for different users
-Correct items are shown for owner
+16. Correct items are shown for owner
     [Tags]    C41560    webadmin    cloud
     Log in to system    ${system}    ${system}[owner]
     Wait Until Element Is Visible    ${USERS LIST LINK}
@@ -274,7 +274,7 @@ Correct items are shown for owner
     Go To Users List
     Wait Until Elements Are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
-Correct items are shown for admin
+17. Correct items are shown for admin
     [Tags]    C41561    webadmin    cloud
     Log in to system    ${system}    ${system}[cloud users][cloudAdmin]
     Wait Until Element Is Visible    ${USERS LIST LINK}
@@ -298,7 +298,7 @@ Correct items are shown for admin
     Go To Users List
     Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
-Correct items are shown for advanced viewer and below
+18. Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin    cloud
     ${custom role}=    Create And Add Custom Camera User Type and User
     ${viewers}=    Create List
@@ -332,7 +332,7 @@ Correct items are shown for advanced viewer and below
 
 
 # Left search
-Left menu search: Position and style
+19. Left menu search: Position and style
     [Tags]    C81759    webadmin    cloud    search
 
     Log    Step 1
@@ -368,7 +368,7 @@ Left menu search: Position and style
     Click Element    ${INFORMATION TAB}
     Wait Until Element Is Not Visible    ${SEARCH INPUT}
 
-Left menu search: Search menu for offline system
+20. Left menu search: Search menu for offline system
     [Tags]    C81761    cloud    search
     Stop Docker Server    ${system}[id]
     Log in to system    ${system}    ${system}[owner]
@@ -395,7 +395,7 @@ Left menu search: Search menu for offline system
 
     Start Docker Server    ${system}[id]
 
-Left menu search: Availability for different users
+21. Left menu search: Availability for different users
     [Tags]    C81760    webadmin    cloud    search
     FOR     ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
         Log in to system    ${system}    ${user}
@@ -409,7 +409,7 @@ Left menu search: Availability for different users
         Log Out
     END
 
-Left menu search: Search mechanics
+22. Left menu search: Search mechanics
     [Tags]    C81762    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
 
@@ -441,7 +441,7 @@ Left menu search: Search mechanics
 #    Click Link     //span[contains(text(), "${system}[cloud users]")]/../..
 #    Wait until element is visible    //h2[contains(text(), "${system}[cloud users]")]
 
-Left menu search: Collapsable tabs
+23. Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
     Validate Search Input
@@ -449,14 +449,20 @@ Left menu search: Collapsable tabs
     Log    Step 1
     Search For    a
     Wait until elements are visible    ${SEARCH CLOSE BUTTON}    ${SEARCH ICON}
+    Log    Step 2
+    Click Element    ${USERS EXPAND BUTTON}
+    Wait Until Element Is Visible    ${USERS RESULTS SUMMARY}
+    Log    Step 3
+    Click Element    ${USERS EXPAND BUTTON}
+    Wait Until Element Is Visible    ${USERS EXPAND RESULTS}
 
-Left menu search: Placeholder
+24. Left menu search: Placeholder
     [Tags]    C81772    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
     Search For    backup
     Wait until element is visible    ${SEARCH NOTHING FOUND}
 
-Left menu search: Searchable fields
+25. Left menu search: Searchable fields
     [Tags]    C81796    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
 
@@ -491,7 +497,7 @@ Left menu search: Searchable fields
 
 
 # Disconnect System from Cloud
-Disconnect dialog interface checks
+26. Disconnect dialog interface checks
     [Tags]    C48834    webadmin    cloud
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -531,7 +537,7 @@ Disconnect dialog interface checks
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
-Cloud Owner can disconnect System from Cloud
+27. Cloud Owner can disconnect System from Cloud
     [Tags]    C41883   C47020    webadmin    cloud
     ${local auth}=   Create List    admin    ${base password}
 

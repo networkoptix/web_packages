@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "ひとつの保存先を複数サーバーで使用することは推奨されません。",
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
     "BACK TEXT": "戻る",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "無効なストレージが削除されました"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "無効なストレージが削除されました",
+    "STORAGES OUTDATED WARNING TEXT": "ストレージが古くなっています。ページを再読み込みして更新してください。"
 }

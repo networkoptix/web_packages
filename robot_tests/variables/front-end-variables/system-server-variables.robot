@@ -157,6 +157,8 @@ ${CLOUD STORAGE INFO BLOCK}         //nx-cloud-storage/nx-block//h2[contains(tex
 ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") and @name="NO_SETTINGS"]
 ${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
 ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
+${OUTDATED BANNER}                   //div[@class="warning-margin"]/span[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
+${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/static/images/icons/reload.svg"]
 
 # ADVANCED
 # Storage Locations Block

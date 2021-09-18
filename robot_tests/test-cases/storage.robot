@@ -32,7 +32,7 @@ Restart
     Reset to Default Storage Config
 
 *** Test Cases ***
-Loading State of Storage Locations Block
+1. Loading State of Storage Locations Block
     [Tags]    C81803    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -41,7 +41,7 @@ Loading State of Storage Locations Block
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should Be Equal As Integers    ${height}    259
 
-Detailed Info in Storage Locations block
+2. Detailed Info in Storage Locations block
     [Tags]    C81534
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -51,14 +51,14 @@ Detailed Info in Storage Locations block
     Location Should Contain    health/storages
     Wait Until Element Is Visible    ${HM STORAGE TABLE}
     
-Analytics DB Storage dropdown is not visible
+3. Analytics DB Storage dropdown is not visible
     [Tags]    C81740    Analytics    
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
     
-Disabling storage warnings aren't shown - Main storages
+4. Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3
@@ -98,7 +98,7 @@ Disabling storage warnings aren't shown - Main storages
     ${files 3 disk2} =    Verify Recorded Video Files    disk2
     Should Be True    ${files 3 disk2} == 0
 
-Disabling storage warnings aren't shown - Backup storages
+5. Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     @{disabled} =    Create List    disk3    disk1
@@ -139,7 +139,7 @@ Disabling storage warnings aren't shown - Backup storages
     ${files 3 disk2} =    Verify Recorded Video Files    disk2
     Should Be True    ${files 3 disk2} == 0
 
-Scrolling on small resolutions in Storage Locations block
+6. Scrolling on small resolutions in Storage Locations block
     [Tags]    C81535
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -152,7 +152,7 @@ Scrolling on small resolutions in Storage Locations block
     Sleep    1
     Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
 
-Alphabetical sorting in Storage Locations Table
+7. Alphabetical sorting in Storage Locations Table
     [Tags]    C81537
     @{menu order}    Create List
     @{sorted}        Create List
@@ -168,7 +168,7 @@ Alphabetical sorting in Storage Locations Table
     Sort List    ${sorted}
     Lists Should Be Equal    ${menu order}    ${sorted}
 
-Enabled, disabled and inaccessible storages appearance
+8. Enabled, disabled and inaccessible storages appearance
     [Tags]    C81540
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -193,7 +193,7 @@ Enabled, disabled and inaccessible storages appearance
     Element Style Should Be    ${STORAGE ENABLED MAIN ICON}                color    ${COLOR DARK9 RGB}
     Element Style Should Be    ${STORAGE ENABLED MAIN ADDRESS}             color    ${COLOR DARK9 RGB}
 
-Width of mode column
+9. Width of mode column
     [Tags]    C81555
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -217,7 +217,7 @@ Width of mode column
     ${width 4}    ${height 4} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
     Should Be Equal As Integers    ${width}    ${width 4}
 
-Active Mode Lines
+10. Active Mode Lines
     [Tags]    C81557
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -319,7 +319,7 @@ Active Mode Lines
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
-Reserved System storage tooltip
+11. Reserved System storage tooltip
     [Tags]    C81566
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -327,7 +327,7 @@ Reserved System storage tooltip
     Mouse Over   ${STORAGE RESERVED TOOLTIP ICON}
     Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}
 
-Changing of reserved space is shown in the table
+12. Changing of reserved space is shown in the table
     [Tags]    C81569
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -353,7 +353,7 @@ Changing of reserved space is shown in the table
     ${reserved} =    Get Text    ${RESERVED SPACE}
     Should Contain  ${reserved}    5.0
 
-No Size Tooltip when Inaccessble
+13. No Size Tooltip when Inaccessble
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
@@ -361,7 +361,7 @@ No Size Tooltip when Inaccessble
     Sleep    1
     Element Should Not Be Visible    ${STORAGE INACCESSIBLE SIZE}/following-sibling::ngb-popover-window
 
-Storage Locations Table without control buttons
+14. Storage Locations Table without control buttons
     [Tags]    C81572
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
@@ -369,7 +369,7 @@ Storage Locations Table without control buttons
     ${count} =    Get Element Count    ${STORAGE LOCATIONS TABLE}//th
     Should Be Equal As Integers    ${count}    3
 
-Not able to load storage information
+15. Not able to load storage information
     [Tags]    C84518
     Log in to user and system    ${server 3['owner']}     ${server 3['cloud id']}
     Go to Servers
@@ -377,7 +377,7 @@ Not able to load storage information
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
     Should Be Equal As Integers    ${height}    259
 
-Storages order in "Analytics DB Storage" dropdown
+16. Storages order in "Analytics DB Storage" dropdown
     [Tags]    C81757    Analytics
     @{menu order}    Create List
     @{dropdown order}    Create List
@@ -402,7 +402,7 @@ Storages order in "Analytics DB Storage" dropdown
     END 
     Lists Should Be Equal    ${menu order}    ${dropdown order}
 
-Cancel Changing "Analytics DB Storage"
+17. Cancel Changing "Analytics DB Storage"
     [Tags]    C81778    Analytics
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -418,7 +418,7 @@ Cancel Changing "Analytics DB Storage"
     Wait Until Element is Visible     ${CANCEL BUTTON}
     Click Button    ${CANCEL BUTTON}
 
-Successful changing Analytics DB Storage plus confirmation dialog
+18. Successful changing Analytics DB Storage plus confirmation dialog
     [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755    
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk3
@@ -567,7 +567,7 @@ Successful changing Analytics DB Storage plus confirmation dialog
     Log To Console    C81777 ....... | PASS |
     Set Selenium Speed    ${normal}
 
-Change storage mode: Main -> Backup
+19. Change storage mode: Main -> Backup
     [Tags]    C81541    mode
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk2
@@ -629,7 +629,7 @@ Change storage mode: Main -> Backup
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
     Should Be True    ${files 3 disk1} == ${files 2 disk1} or ${files 3 disk1} < ${files 2 disk1}
 
-Change storage mode: Backup -> Main
+20. Change storage mode: Backup -> Main
     [Tags]    C81542    mode
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -688,7 +688,7 @@ Change storage mode: Backup -> Main
     ${files 4 disk1} =    Wait Until Files Are Recorded    disk1    100
     Should Be True    ${files 4 disk1} > ${files 3 disk1}
 
-Enable storage: Not in use -> Main
+21. Enable storage: Not in use -> Main
     [Tags]    C81543    mode    
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -721,7 +721,7 @@ Enable storage: Not in use -> Main
     ${files 3 disk2} =    Wait Until Files Are Recorded    disk2    100
     Should Be True    ${files 3 disk2} > ${files 2 disk2}
 
-Enable storage: Not in use -> Backup
+22. Enable storage: Not in use -> Backup
     [Tags]    C81544    mode    archive
     Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
     @{disabled} =    Create List    disk1    disk2    disk3
@@ -754,10 +754,14 @@ Enable storage: Not in use -> Backup
     Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Storages Are Outdated and Refresh
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Enable Archive Backup
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Reload Page
     Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
-    ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     
     Log    Step 5
     Wait Until Elements Are Visible    
@@ -768,8 +772,10 @@ Enable storage: Not in use -> Backup
     ...    timeout=35
 
     Log    Step 6
+    ${files 2 disk2} =    Verify Recorded Video Files    disk2
+    Sleep    20
     ${files 3 disk2} =    Verify Recorded Video Files   disk2
-    Should Be True    ${files 3 disk2} == ${files disk2} or ${files 3 disk2} < ${files 2 disk2}
+    Should Be True    ${files 3 disk2} == ${files 2 disk2} or ${files 3 disk2} < ${files 2 disk2}
 
     Log    Step 7
     # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -801,7 +807,7 @@ Enable storage: Not in use -> Backup
     Should Be True    ${files 2 disk0} > ${files disk0}
     Should Be True    ${files 6 disk2} > ${files 3 disk2}
 
-Disable storage: Main -> Not in use
+23. Disable storage: Main -> Not in use
     [Tags]    C81545    mode
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk2
@@ -845,9 +851,9 @@ Disable storage: Main -> Not in use
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
     Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
 
-Disable storage: Backup -> Not in use
+24. Disable storage: Backup -> Not in use
     [Tags]    C81546    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -892,7 +898,7 @@ Disable storage: Backup -> Not in use
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
     Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
 
-Changing mode state - reload page
+25. Changing mode state - reload page
     [Tags]    C81558    mode
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -916,7 +922,7 @@ Changing mode state - reload page
     Reload Page
     Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
 
-Disabling storage warnings - Main storages
+26. Disabling storage warnings - Main storages
     [Tags]    C81562    mode
     @{disabled} =    Create List    disk3
     @{backups} =    Create List     disk2
@@ -962,9 +968,9 @@ Disabling storage warnings - Main storages
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
     Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
 
-Disabling storage warnings - Backup storages
+27. Disabling storage warnings - Backup storages
     [Tags]    C81564    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1010,7 +1016,7 @@ Disabling storage warnings - Backup storages
     ${files 3 disk1} =    Verify Recorded Video Files    disk1
     Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
 
-Storage Location Table Space Legend Tooltip Shows
+28. Storage Location Table Space Legend Tooltip Shows
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1018,7 +1024,7 @@ Storage Location Table Space Legend Tooltip Shows
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
 
-Backup Option Disabled when only One Main Storage
+29. Backup Option Disabled when only One Main Storage
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1029,7 +1035,7 @@ Backup Option Disabled when only One Main Storage
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${BACKUP}"]
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
 
-Change Storage from Main to Backup
+30. Change Storage from Main to Backup
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk1
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -1045,7 +1051,7 @@ Change Storage from Main to Backup
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
 
-Change Storage from Backup to Not in Use
+31. Change Storage from Backup to Not in Use
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk1    disk2
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -1061,7 +1067,7 @@ Change Storage from Backup to Not in Use
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}
 
-Add Storage Close button works
+32. Add Storage Close button works
     [Tags]    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1073,7 +1079,7 @@ Add Storage Close button works
     Click Button    ${AS MODAL CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
-Add Storage Cancel button works
+33. Add Storage Cancel button works
     [Tags]    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1085,7 +1091,7 @@ Add Storage Cancel button works
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
-Detailed Info button works system has multiple storages
+34. Detailed Info button works system has multiple storages
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1093,7 +1099,7 @@ Detailed Info button works system has multiple storages
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
-Detailed Info button works (system has one storage)
+35. Detailed Info button works (system has one storage)
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1101,7 +1107,7 @@ Detailed Info button works (system has one storage)
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
 
-Add external storage: Close dialog and Cancel
+36. Add external storage: Close dialog and Cancel
     [Tags]    C81583    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1117,7 +1123,7 @@ Add external storage: Close dialog and Cancel
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-Add external storage: empty URL
+37. Add external storage: empty URL
     [Tags]    C81584    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1133,7 +1139,7 @@ Add external storage: empty URL
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-Add external storage: wrong URL
+38. Add external storage: wrong URL
     [Tags]    C81585    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1162,7 +1168,7 @@ Add external storage: wrong URL
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-Add external storage: Wrong login or password
+39. Add external storage: Wrong login or password
     [Tags]    C81589    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1202,7 +1208,7 @@ Add external storage: Wrong login or password
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-Add external storage: invalid storage path
+40. Add external storage: invalid storage path
     [Tags]    C81597    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1222,7 +1228,7 @@ Add external storage: invalid storage path
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-Failed to add external storage: server is offline
+41. Failed to add external storage: server is offline
     [Tags]    C81600    external
     Log in to user and system    ${server 1['owner']}     ${server 2['cloud id']}
     Go to Servers
@@ -1252,7 +1258,7 @@ Failed to add external storage: server is offline
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
 
-Add external storage: successful scenario with password
+42. Add external storage: successful scenario with password
     [Tags]    C81599    C81587    C81595    C81596    External    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1406,7 +1412,7 @@ Add external storage: successful scenario with password
     Log To Console    C81596 ....... | PASS |
     Cleanup External Drive
     
-Cancel deleting storage
+43. Cancel deleting storage
     [Tags]    C81573    deleting    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1431,7 +1437,7 @@ Cancel deleting storage
     Click Button      ${DELETE STORAGE CANCEL BUTTON}
     Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     
-Delete Inaccessible storage
+44. Delete Inaccessible storage
     [Tags]    C81573    deleting    deb
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1454,7 +1460,7 @@ Delete Inaccessible storage
     Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON}
     Set Suite Variable    ${drives}    4
     
-Backup settings block availability for owner, administrator and other users
+45. Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive    deb
     Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
@@ -1474,9 +1480,9 @@ Backup settings block availability for owner, administrator and other users
         Log Out
     END
     
-Backup settings block is not shown if no one storage is assigned “Backup” mode
+46. Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
     @{backups} =    Create List    
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
@@ -1485,9 +1491,9 @@ Backup settings block is not shown if no one storage is assigned “Backup” mo
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
 
-Backup off
+47. Backup off
     [Tags]    C81807    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     # @{disabled} =    Create List    disk3    disk2 
     # @{backups} =    Create List    disk1
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1499,9 +1505,9 @@ Backup off
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
-Backup on – default settings
+48. Backup on – default settings
     [Tags]    C81808    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1511,9 +1517,9 @@ Backup on – default settings
     Wait Until Elements Are Visible    ${ARCHIVE BACKUP CHECK BOX}    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     
-Backup on – custom settings
+49. Backup on – custom settings
     [Tags]    C81809    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1527,9 +1533,9 @@ Backup on – custom settings
     ...    ${BACKUP RESET BUTTON} 
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     
-It is not necessary to apply changes to make the backup settings block appear
+50. It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
     @{backups} =    Create List    
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
@@ -1564,9 +1570,9 @@ It is not necessary to apply changes to make the backup settings block appear
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     
-Cancel Backup enabling
+51. Cancel Backup enabling
     [Tags]    C83183    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1583,9 +1589,9 @@ Cancel Backup enabling
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
-Cancel Backup disabling - default settings
+52. Cancel Backup disabling - default settings
     [Tags]    C83184    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1604,9 +1610,9 @@ Cancel Backup disabling - default settings
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}     ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}   
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
         
-Cancel Backup disabling - custom settings
+53. Cancel Backup disabling - custom settings
     [Tags]    C83185    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1636,9 +1642,9 @@ Cancel Backup disabling - custom settings
     ...    ${BACKUP RESET BUTTON} 
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
      
-Cancel resetting backup settings for system of 1 server
+54. Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1680,9 +1686,9 @@ Cancel resetting backup settings for system of 1 server
     ...    ${BACKUP RESET BUTTON}   
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}       
     
-Reset backup settings for system of 1 server
+55. Reset backup settings for system of 1 server
     [Tags]    C83330    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1717,7 +1723,7 @@ Reset backup settings for system of 1 server
     
     ${files 3 disk1} =    Wait Until Files Are Recorded    disk1    100
     
-Reindex archive block owerview: only Main storage
+56. Reindex archive block owerview: only Main storage
     [Tags]    C81605    
     @{disabled} =    Create List    disk2    disk3     
     @{backups} =    Create List    
@@ -1731,9 +1737,9 @@ Reindex archive block owerview: only Main storage
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
     Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
     
-Reindex archive block owerview: Main and Backup storages
+57. Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive    
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+    Skip If Image Is    4.3_test    5.0_test
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page

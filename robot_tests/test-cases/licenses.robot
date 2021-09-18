@@ -6,7 +6,7 @@ Suite Teardown    LM Suite Teardown
 Force Tags    Threaded    Licenses
 
 *** Test Cases ***
-License Management availability for different users
+1. License Management availability for different users
     [Tags]    C76523
 
     # System Owner
@@ -45,7 +45,7 @@ License Management availability for different users
         Log Out
     END
 
-License Management availability for offline system
+2. License Management availability for offline system
     [Tags]    C76533    cloud
 #    Run Keyword If   '''${mode}'''=='''webadmin'''    Pass Execution     Not relevant in webadmin mode
     Skip If Irrelevant
@@ -60,7 +60,7 @@ License Management availability for offline system
     Sleep    30
     Log Out
 
-License Key Input
+3. License Key Input
     [Tags]    C76534
     Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -105,7 +105,7 @@ License Key Input
 
     Log Out
 
-Input validation errors
+4. Input validation errors
     [Tags]    C76535    C76536    C76537    C76538   C76539    C76540   C76541    input_errors
     Log in to system    ${system 1}    ${system 1}[cloud auth][0]
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -189,7 +189,7 @@ Input validation errors
 
     Log Out
 
-Server response errors: Failed to get response from license server
+5. Server response errors: Failed to get response from license server
     [Tags]    C76544    server_errors    CLOUD-7316
     Remove all keys from system    ${system 1}[port]
     Log in to system    ${system 1}    ${system 1}[cloud auth][0]
@@ -208,7 +208,7 @@ Server response errors: Failed to get response from license server
     Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system 1}[port]    ${LM HOST}
     Log Out
 
-Server response errors: License key is expired
+6. Server response errors: License key is expired
     [Tags]    server_errors
     Remove all keys from system    ${system 1}[port]
     Log in to system    ${system 1}    ${system 1}[cloud auth][0]
@@ -221,7 +221,7 @@ Server response errors: License key is expired
 
     Log Out
 
-Server response errors: Media server becomes offline during license activation
+7. Server response errors: Media server becomes offline during license activation
     [Tags]    C76545    server_errors    cloud
 
     Remove all keys from system    ${system 1}[port]
@@ -240,7 +240,7 @@ Server response errors: Media server becomes offline during license activation
     Start Docker Server    ${system 1}[id]
     Log Out
 
-Server response errors: Server offline(System has two servers)
+8. Server response errors: Server offline(System has two servers)
     [Tags]    C76532    C76542    server_errors
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 1}[cloud auth][0]
@@ -270,7 +270,7 @@ Server response errors: Server offline(System has two servers)
     Start Docker Server    ${system 3}[id]
     Log Out
 
-Successful scenarios
+9. Successful scenarios
     [Tags]    C76531    C76548    C76549    C76554    success
     Log    Test Set Up
     Remove all keys from system    ${system 1}[port]
@@ -338,7 +338,7 @@ Successful scenarios
 
     Log Out
 
-License Details Block: Purchase permanent keys
+10. License Details Block: Purchase permanent keys
     [Tags]    C76532    C76550    C76557    C76561    C76562    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -364,7 +364,7 @@ License Details Block: Purchase permanent keys
 
     Log Out
 
-License Details Block: SAAS keys
+11. License Details Block: SAAS keys
     [Tags]    C76560    C76561    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -388,7 +388,7 @@ License Details Block: SAAS keys
 
     Log Out
 
-License Details Block: Video Wall licenses
+12. License Details Block: Video Wall licenses
     [Tags]    C76561    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -406,7 +406,7 @@ License Details Block: Video Wall licenses
 
     Log Out
 
-License Details Block: License with date within 30 days
+13. License Details Block: License with date within 30 days
     [Tags]    C76565    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -433,7 +433,7 @@ License Details Block: License with date within 30 days
 
     Log Out
 
-License Details Block: Deactivated license
+14. License Details Block: Deactivated license
     [Tags]    C76566    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -466,7 +466,7 @@ License Details Block: Deactivated license
 
     Log Out
 
-License Details Block: License with expired status
+15. License Details Block: License with expired status
     [Tags]    C76563    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -489,7 +489,7 @@ License Details Block: License with expired status
     Validate License Info    ${key}    status=Expired    server num=2
     Log Out
 
-License Details Block: License with error status
+16. License Details Block: License with error status
     [Tags]    C76564    details
     Remove all keys from system    ${system 2}[port]
     Log in to system    ${system 2}    ${system 2}[cloud auth][0]
@@ -519,7 +519,7 @@ License Details Block: License with error status
 
     Log Out
 
-License Summary Block: Server goes offline
+17. License Summary Block: Server goes offline
     [Tags]    C76567    C76631    summary    cloud
     Skip If Irrelevant
     Remove all keys from system    ${system 2}[port]
@@ -556,7 +556,7 @@ License Summary Block: Server goes offline
     Start Docker Server    ${system 3}[id]
     Log Out
 
-License Summary Block: License key is expired
+18. License Summary Block: License key is expired
     [Tags]    C76567    C76632    summary
     Remove all keys from system    ${system 1}[port]
     Log in to system    ${system 1}    ${system 2}[cloud auth][0]
@@ -593,7 +593,7 @@ License Summary Block: License key is expired
 
     Log Out
 
-VMS integration
+19. VMS integration
     [Documentation]    Validate information on cloud for license keys activated/deactivated/removed in client
     [Tags]    C76568    C76569    C76570    vms
     Remove all keys from system    ${system 1}[port]

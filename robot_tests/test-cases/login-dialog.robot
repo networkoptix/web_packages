@@ -27,12 +27,12 @@ Restart
     Common Restart Logout    ${url}
 
 *** Test Cases ***
-Can be opened in anonymous state
+1. Can be opened in anonymous state
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${LOG IN MODAL}
 
-Can be closed by clicking on the X
+2. Can be closed by clicking on the X
     [tags]    C24212    
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -46,27 +46,27 @@ Can be closed by clicking on the X
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
 
-Allows to log in with existing credentials and to log out
+3. Allows to log in with existing credentials and to log out
     [tags]    C24212    C24213    
     Log In    ${login user}    ${password}
     Log Out
 
-Redirects to systems after log In
+4. Redirects to systems after log In
     Log In    ${login user}    ${password}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Location Should Be    ${url}/systems
 
-After log In, display user's email and menu in top right corner
+5. After log In, display user's email and menu in top right corner
     Set Window Size    1920    1080
     Log In    ${login user}    ${password}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}/span[text()="${login user}"]
 
-Allows log in with existing email in uppercase
+6. Allows log in with existing email in uppercase
     ${email uppercase}    Convert To Uppercase    ${login user}
     Log In    ${email uppercase}    ${password}    validate=${False}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
 
-Allows log in with 'Remember Me checkmark' switched off
+7. Allows log in with 'Remember Me checkmark' switched off
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Elements are Visible
@@ -78,7 +78,7 @@ Allows log in with 'Remember Me checkmark' switched off
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
     Log In    ${login user}    ${password}    button=None
 
-Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
+8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     Log In    ${login user}    'aderhgadehf'    validate=${False}
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
@@ -91,7 +91,7 @@ Contains 'I forgot password' link that leads to Restore Password page with pre-f
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
-Passes email from email input to Restore password page, even without clicking 'Log in' button
+9. Passes email from email input to Restore password page, even without clicking 'Log in' button
     [tags]    C41872    
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -104,7 +104,7 @@ Passes email from email input to Restore password page, even without clicking 'L
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
-Shows non-activated user message when not activated at login; Resend activation button sends email
+10. Shows non-activated user message when not activated at login; Resend activation button sends email
     [tags]    email    C41865    
     Go To    ${url}/register
     ${random email}    get random email    ${BASE EMAIL}    extra=sendemail
@@ -120,20 +120,20 @@ Shows non-activated user message when not activated at login; Resend activation 
     Activate    ${random email}
     Log In    ${random email}    ${password}
 
-Displays password masked
+11. Displays password masked
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${PASSWORD INPUT}
     ${input type}    Get Element Attribute    ${PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-Requires log In, if the user has just logged out and pressed back button in browser
+12. Requires log In, if the user has just logged out and pressed back button in browser
     Log In    ${login user}    ${password}
     Log Out
     Go Back
     Wait Until Element is Visible    ${LOG IN MODAL}
 
-Handles more than 255 symbols email and password
+13. Handles more than 255 symbols email and password
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}
@@ -142,12 +142,12 @@ Handles more than 255 symbols email and password
     Textfield Should Contain    ${EMAIL INPUT}    ${255CHARS}
     Textfield Should Contain    ${PASSWORD INPUT}    ${255CHARS}
 
-Logout refreshes page
+14. Logout refreshes page
     Log In    ${login user}    ${password}
     Log Out
 
 # We don't actually allow copy of the password field at log in.
-Allows copy-paste in input fields
+15. Allows copy-paste in input fields
     ${system} =    Evaluate    platform.system()    platform
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -158,7 +158,7 @@ Allows copy-paste in input fields
     Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
-Should respond to Esc key and close dialog
+16. Should respond to Esc key and close dialog
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${PASSWORD INPUT}
@@ -166,7 +166,7 @@ Should respond to Esc key and close dialog
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Element Should Not Be Visible    ${LOG IN MODAL}
 
-Should respond to Enter key and log in
+17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
@@ -176,7 +176,7 @@ Should respond to Enter key and log in
     Press Keys    ${PASSWORD INPUT}    ENTER
     Validate Log In    ${login user}
 
-Should respond to Tab key
+18. Should respond to Tab key
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -184,7 +184,7 @@ Should respond to Tab key
     Press Keys    ${EMAIL INPUT}    TAB
     Element Should Be Focused    ${PASSWORD INPUT}
 
-Should respond to Space key and toggle checkbox
+19. Should respond to Space key and toggle checkbox
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
@@ -194,7 +194,7 @@ Should respond to Space key and toggle checkbox
     Press Keys    None    SPACE
     Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
-Handles two tabs, updates second tab state if logout is done on first
+20. Handles two tabs, updates second tab state if logout is done on first
     Go To    ${url}/register
     Wait Until Elements are Visible
     ...    ${REGISTER FIRST NAME INPUT}
@@ -231,7 +231,7 @@ Handles two tabs, updates second tab state if logout is done on first
     Reload Page
     Wait Until Element is Visible    ${LOG IN MODAL}
 
-Log in more than 5 times
+21. Log in more than 5 times
     [tags]    C42075    
     Go To    ${url}/register
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -261,7 +261,7 @@ Log in more than 5 times
     Click Button    ${LOG IN BUTTON}
     Validate Log In    ${email}
 
-User is logged out of browser after a password change in another browser
+22. User is logged out of browser after a password change in another browser
     [tags]    C41837
     Log In    ${login user}    ${password}
     Open Browser and go to URL    ${url}

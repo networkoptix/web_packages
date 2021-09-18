@@ -8,14 +8,14 @@ Suite Teardown    Close All Browsers
 Force Tags        Threaded 
 
 *** Test Cases ***
-IPVD Page loads without Login
+1. IPVD Page loads without Login
     Go To IPVD Page
 
-IPVD Page loads while Logged in
+2. IPVD Page loads while Logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Go To IPVD Page
 
-IPVD landing page actions
+3. IPVD landing page actions
     [Tags]    C48791    CLOUD-7598
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
@@ -63,14 +63,14 @@ IPVD landing page actions
     Click Link    ${IPVD SUBMIT A REQUEST LINK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
-Text search correctly finds Manufacturers
+4. Text search correctly finds Manufacturers
     Go To IPVD Page
     IPVD Text Search    hanwha
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
     ...    Hanwha    #used to be "Hanwha Techwin (Samsung)" but last entry in the table is "Hanwha techwin" and it would fail.
 
-Request Form Basic Validations
+5. Request Form Basic Validations
     [Tags]    C48969
     Log    Step 1
     Go To IPVD Page
@@ -98,7 +98,7 @@ Request Form Basic Validations
     Wait until Element is Not Visible    ${IPVD FEEDBACK}
 
 
-Feedback Form Basic Validations
+6. Feedback Form Basic Validations
     [Tags]    C54182
     Log    Step 1
     # First step changed due to CLOUD-4773
@@ -134,7 +134,7 @@ Feedback Form Basic Validations
     Wait until Element is Not Visible    ${IPVD FEEDBACK}
     #TODO: Verify Table of devices and camera info panel did not change
 
-Text search
+7. Text search
     [Tags]    C48967
     Log    Step 1
     Go To IPVD Page
@@ -282,7 +282,7 @@ Text search
     ...    '${make2}' < '${make3}'
     ...    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
 
-Text in Search Input is kept after clicking X on Applied Features filter indicator
+8. Text in Search Input is kept after clicking X on Applied Features filter indicator
     [Tags]    C49362    CLOUD-7598
     Log    Step 1
     Go To IPVD Page
@@ -307,7 +307,7 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Should be Equal As Strings    ${filterText}    Axis
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
-Advanced search
+9. Advanced search
     [Tags]    C48968
     Log    Step 1
     Go To IPVD Page
@@ -477,7 +477,7 @@ Advanced search
 #     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 #     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
 
-Camera Info panel
+10. Camera Info panel
     [Tags]    C48973
     Log    Step 1
     Go To    ${ENV}/ipvd
@@ -516,7 +516,7 @@ Camera Info panel
 
 #Here should be tests for analytics events block on Camera panel, but it's not yet implemented
 
-Export to CSV
+11. Export to CSV
     [Tags]     C46930
     Go To    ${ENV}/ipvd?vendors=Hanwha%20Techwin%20(Samsung)&resolution=1310720&hardwareTypes=camera,encoder&tags=isTwAudioSupported&search=A&camera=PNF-9010RV
     Wait until element is visible    ${IPVD EXPORT TO CSV LINK}

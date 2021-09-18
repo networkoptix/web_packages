@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Не рекомендуется использовать один и тот же путь для записи на разных серверах.",
     "ADD THIS STORAGE ANYWAY TEXT": "Добавить это хранилище в любом случае?",
     "BACK TEXT": "Назад",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

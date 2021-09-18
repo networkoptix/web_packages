@@ -101,7 +101,7 @@ export class UserManager {
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         // TODO Need to figure out role type here
-        let role: any = roles.find((role: any) => {
+        let role: NxSystemRole = roles.find((role: NxSystemRole) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);

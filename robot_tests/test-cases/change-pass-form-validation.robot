@@ -14,59 +14,59 @@ ${CURRENT PASSWORD IS REQUIRED}
 ...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 
 *** Test Cases ***              OLD PW                    NEW PW
-Incorrect Old Password          ${7char password}         ${BASE PASSWORD}
+1. Incorrect Old Password          ${7char password}         ${BASE PASSWORD}
     [tags]    C41577    Password
-Empty Old password              ${EMPTY}                  ${BASE PASSWORD}
+2. Empty Old password              ${EMPTY}                  ${BASE PASSWORD}
     [tags]    C41577    Password
-Short New Password              ${BASE PASSWORD}          ${7char password}
+3. Short New Password              ${BASE PASSWORD}          ${7char password}
     [tags]    C41578    Password
-Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}
+4. Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}
     [tags]    C41578    Password
-Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}
+5. Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}
     [tags]    C41578    Password
-Glyph New Password              ${BASE PASSWORD}          ${GLYPH TEXT}
+6. Glyph New Password              ${BASE PASSWORD}          ${GLYPH TEXT}
     [tags]    C41578    Password
-TM New Password                 ${BASE PASSWORD}          ${TM TEXT}
+7. TM New Password                 ${BASE PASSWORD}          ${TM TEXT}
     [tags]    C41578    Password
-Leading Space New Password      ${BASE PASSWORD}          ${SPACE}${BASE PASSWORD}
+8. Leading Space New Password      ${BASE PASSWORD}          ${SPACE}${BASE PASSWORD}
     [tags]    C41578    Password
-Trailing Space New Password     ${BASE PASSWORD}          ${BASE PASSWORD}${SPACE}
+9. Trailing Space New Password     ${BASE PASSWORD}          ${BASE PASSWORD}${SPACE}
     [tags]    C41578    Password
-Empty New Password              ${BASE PASSWORD}          ${EMPTY}
+10. Empty New Password              ${BASE PASSWORD}          ${EMPTY}
     [tags]    C41832    Password
 # This is no longer testable with the current design
 #Empty Both                      ${EMPTY}                  ${EMPTY}
 #    [tags]    C41832    Password
 
-Weak 1 Lowercase Password adrhartjad           ${BASE PASSWORD}    ${lowercase password}
+11. Weak 1 Lowercase Password adrhartjad           ${BASE PASSWORD}    ${lowercase password}
     [tags]    C41578    Password
-Weak 2 Uppercase Password ADRHARTJAD           ${BASE PASSWORD}    ${uppercase password}
+12. Weak 2 Uppercase Password ADRHARTJAD           ${BASE PASSWORD}    ${uppercase password}
     [tags]    C41578    Password
-Weak 3 Numbers Password 13462344               ${BASE PASSWORD}    ${numbers password}
+13. Weak 3 Numbers Password 13462344               ${BASE PASSWORD}    ${numbers password}
     [tags]    C41578    Password
-Weak 4 Symbol only Password !@#$%^&*()_-+=     ${BASE PASSWORD}    ${symbol only password}
+14. Weak 4 Symbol only Password !@#$%^&*()_-+=     ${BASE PASSWORD}    ${symbol only password}
     [tags]    C41578    Password
 
-Fair 1 Lower and Uppercase                     ${BASE PASSWORD}    ${lower upper password}
+15. Fair 1 Lower and Uppercase                     ${BASE PASSWORD}    ${lower upper password}
     [tags]    C41578    Password
-Fair 2 Lowercase and numbers                   ${BASE PASSWORD}    ${lower number password}
+16. Fair 2 Lowercase and numbers                   ${BASE PASSWORD}    ${lower number password}
     [tags]    C41578    Password
-Fair 3 Lowercase and Symbols                   ${BASE PASSWORD}    ${lower symbol password}
+17. Fair 3 Lowercase and Symbols                   ${BASE PASSWORD}    ${lower symbol password}
     [tags]    C41578    Password
-Fair 4 Uppercase and numbers                   ${BASE PASSWORD}    ${upper number password}
+18. Fair 4 Uppercase and numbers                   ${BASE PASSWORD}    ${upper number password}
     [tags]    C41578    Password 
-Fair 5 Uppercase and Symbols                   ${BASE PASSWORD}    ${upper symbol password}
+19. Fair 5 Uppercase and Symbols                   ${BASE PASSWORD}    ${upper symbol password}
     [tags]    C41578    Password
-Fair 6 Numbers and Symbols                     ${BASE PASSWORD}    ${number symbol password}
+20. Fair 6 Numbers and Symbols                     ${BASE PASSWORD}    ${number symbol password}
     [tags]    C41578    Password
 
-Good 1 qweASD123                               ${BASE PASSWORD}    ${lower uppper number password}
+21. Good 1 qweASD123                               ${BASE PASSWORD}    ${lower uppper number password}
     [tags]    C41578    Password
-Good 2 qweASD!@#                               ${BASE PASSWORD}    ${lower upper symbol password}
+22. Good 2 qweASD!@#                               ${BASE PASSWORD}    ${lower upper symbol password}
     [tags]    C41578    Password
-Good 3 qwe123!@#                               ${BASE PASSWORD}    ${lower number symbol password}
+23. Good 3 qwe123!@#                               ${BASE PASSWORD}    ${lower number symbol password}
     [tags]    C41578    Password
-Good 4 QWE123!@#                               ${BASE PASSWORD}    ${upper number symbol password}
+24. Good 4 QWE123!@#                               ${BASE PASSWORD}    ${upper number symbol password}
     [tags]    C41578    Password
 
 *** Keywords ***

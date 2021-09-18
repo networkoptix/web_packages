@@ -25,7 +25,7 @@ Footer Test Teardown
     Close Browser
 
 *** Test Cases ***
-"API documentation" link leads to proper page
+1. "API documentation" link leads to proper page
     [Tags]    Threaded    webadmin
     Wait Until Element is Visible    ${FOOTER API DOCUMENTATION LINK}
     Sleep    1
@@ -34,7 +34,7 @@ Footer Test Teardown
     Switch Window    NEW
     Wait Until Location Contains   ${url}${REST API URL}
 
-"Download SDK" link leads to proper page
+2. "Download SDK" link leads to proper page
     [Tags]    Threaded    webadmin
     Wait Until Element is Visible    ${FOOTER DOWNLOAD SDK LINK}
     Sleep    1
@@ -43,7 +43,7 @@ Footer Test Teardown
     Switch Window    NEW
     Wait Until Location Contains   ${ENV}${SDK URL}
 
-Support leads to the proper support site
+3. Support leads to the proper support site
     [Tags]    C41544    Threaded    C30823    webadmin    cloud
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Sleep    1
@@ -52,7 +52,7 @@ Support leads to the proper support site
     Switch Window    NEW
     Wait Until Location Contains    ${SUPPORT URL}
 
-Copyright leads to the proper site
+4. Copyright leads to the proper site
     [Tags]    C41547    Threaded    webadmin    cloud
     Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
     Sleep    1
@@ -61,7 +61,7 @@ Copyright leads to the proper site
     Switch Window    NEW
     Wait Until Location Is    ${COPYRIGHT URL}
 
-About page is correctly displayed
+5. About page is correctly displayed
     [Tags]    C41541    Threaded    C30820    cloud
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
@@ -80,19 +80,19 @@ About page is correctly displayed
     ...    background-color
     ...    ${THEME COLOR RGB}
 
-Integrations leads to the proper support site
+6. Integrations leads to the proper support site
     [Tags]    Threaded    C57508    cloud
     Wait Until Element is Visible    ${FOOTER INTEGRATIONS LINK}
     Click Link    ${FOOTER INTEGRATIONS LINK}
     Wait Until Location Is    ${ENV}/integrations
 
-Supported devices leads to the proper page
+7. Supported devices leads to the proper page
     [Tags]    Threaded    C57509    cloud
     Wait Until Element is Visible    ${FOOTER SUPPORTED DEVICES LINK}
     Click Link    ${FOOTER SUPPORTED DEVICES LINK}
     Wait Until Location Is    ${ENV}/ipvd
 
-Terms leads to the proper EULA site
+8. Terms leads to the proper EULA site
     [Tags]    C41545    Threaded    C30824     cloud
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
@@ -101,7 +101,7 @@ Terms leads to the proper EULA site
     Switch Window    NEW
     Wait Until Location Is    ${ENV}${TERMS URL}
 
-Privacy leads to the proper page
+9. Privacy leads to the proper page
     [Tags]    C41546    Threaded    C34452    cloud
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1

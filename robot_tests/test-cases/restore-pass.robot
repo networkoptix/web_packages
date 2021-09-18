@@ -44,14 +44,14 @@ Get Restore Code and Open the Link
     [Return]    ${code}
 
 *** Test Cases ***
-Restores password
+1. Restores password
     [Tags]    email    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
     Location Should Be    ${url}/restore_password/sent
 
-Can still log in if you don't finish the process
+2. Can still log in if you don't finish the process
     [Tags]    C41873
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
@@ -60,19 +60,19 @@ Can still log in if you don't finish the process
     Get Restore Code and Open the Link    ${email}
     Log In    ${email}    ${password}
 
-Should not allow to access /restore_password/sent /restore_password/success by direct input
+3. Should not allow to access /restore_password/sent /restore_password/success by direct input
     Go To    ${url}/restore_password/sent
     Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/restore_password/success
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-Should be able to set new password (which is same as old), redirect
+4. Should be able to set new password (which is same as old), redirect
     [Tags]    email    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
-Should set new password, login with new password
+5. Should set new password, login with new password
     [Tags]    email    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
@@ -83,7 +83,7 @@ Should set new password, login with new password
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     Log In    ${email}    ${ALT PASSWORD}    button=None
 
-Displays password masked, shows password and changes eye icon when clicked
+6. Displays password masked, shows password and changes eye icon when clicked
     [Tags]    C26260    
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
@@ -100,7 +100,7 @@ Displays password masked, shows password and changes eye icon when clicked
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-Should not allow to use one restore link twice
+7. Should not allow to use one restore link twice
     [Tags]    email    C42079
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
@@ -112,7 +112,7 @@ Should not allow to use one restore link twice
     Click Button    ${SAVE PASSWORD}
     Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}:${SPACE}${CODE USED/INCORRECT}
 
-Should make not-activated user active by restoring password
+8. Should make not-activated user active by restoring password
     [Tags]    email    C41871    
     ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/register
@@ -123,7 +123,7 @@ Should make not-activated user active by restoring password
     Click Link    ${RESET SUCCESS LOG IN LINK}
     Log In    ${email}    ${ALT PASSWORD}    button=None
 
-Should allow logged in user visit restore password page
+9. Should allow logged in user visit restore password page
     [Tags]    email
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
@@ -133,7 +133,7 @@ Should allow logged in user visit restore password page
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
-Should prompt log user out if he visits restore password link from email
+10. Should prompt log user out if he visits restore password link from email
     [Tags]    email    C63394
     ${email}=   Register Random User
     Log In    ${email}    ${password}
@@ -158,7 +158,7 @@ Should prompt log user out if he visits restore password link from email
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 
-Should handle click I forgot my password link at restore password page
+11. Should handle click I forgot my password link at restore password page
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -166,7 +166,7 @@ Should handle click I forgot my password link at restore password page
     Click Link    ${FORGOT PASSWORD}
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
-Check restore password email links, colors, cloud name, and open link in new tab
+12. Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail

@@ -65,7 +65,7 @@ Account Suite Tear Down
     Close All Browsers
     
 *** Test Cases ***
-Can access the account page from dropdown
+1. Can access the account page from dropdown
     [Tags]
     Log In    ${no perm}    ${password}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
@@ -75,13 +75,13 @@ Can access the account page from dropdown
     Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Verify in account page
 
-Can access the account page from direct link while logged in
+2. Can access the account page from direct link while logged in
     [Tags]
     Log In    ${no perm}    ${password}
     Go To    ${url}/account
     Verify in account page
 
-Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page
+3. Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page
     [Tags]
     Go To    ${url}/account
     Wait Until Element is Visible    ${LOG IN CLOSE BUTTON}
@@ -89,14 +89,14 @@ Accessing the account page from a direct link while logged out asks for login, c
     Validate Log Out
     Location Should Be    ${url}/
 
-Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
+4. Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
     [Tags]
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Go To    ${url}/account
     Verify in account page
 
-Admin and Owner can access account settings by selecting themselves in users List
+5. Admin and Owner can access account settings by selecting themselves in users List
     [Tags]
     Go To    ${url}
     Log In    ${server 1}[owner]    ${password}
@@ -107,7 +107,7 @@ Admin and Owner can access account settings by selecting themselves in users Lis
     Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
     Verify in Account Page
 
-Changing first name and saving maintains that setting
+6. Changing first name and saving maintains that setting
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -130,7 +130,7 @@ Changing first name and saving maintains that setting
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
-Changing last name and saving maintains that setting
+7. Changing last name and saving maintains that setting
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -150,7 +150,7 @@ Changing last name and saving maintains that setting
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
-First name is required
+8. First name is required
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -166,7 +166,7 @@ First name is required
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 
-Last name is required
+9. Last name is required
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -181,7 +181,7 @@ Last name is required
     Element Should Be Visible    ${ACCOUNT SAVE}
     Element Should Be Visible    ${ACCOUNT CANCEL}
 
-Change first and last name shows in system
+10. Change first and last name shows in system
     [Tags]    C41573    C30655    
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
@@ -215,7 +215,7 @@ Change first and last name shows in system
     END
     Set Account Name    ${url}    ${server 1}[cloud users][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
 
-SPACE for first name is not valid
+11. SPACE for first name is not valid
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -226,7 +226,7 @@ SPACE for first name is not valid
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
-SPACE for last name is not valid
+12. SPACE for last name is not valid
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -238,7 +238,7 @@ SPACE for last name is not valid
     Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
-Email field is un-editable
+13. Email field is un-editable
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -246,7 +246,7 @@ Email field is un-editable
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
 
-Should respond to tab and go in the correct order
+14. Should respond to tab and go in the correct order
     [Tags]    C41838
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -267,7 +267,7 @@ Should respond to tab and go in the correct order
     Element Should Be Focused    ${ACCOUNT SAVE}
     Press Keys   None    ENTER
 
-Language is changeable on the account page
+15. Language is changeable on the account page
     [Tags]    C41574
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
@@ -305,7 +305,7 @@ Language is changeable on the account page
     Verify in Account Page
     Wait Until Element is Visible    //header/span[text()='${ACCOUNT INFORMATION}']
 
-Language change affects emails
+16. Language change affects emails
     [Tags]    C41575
     # Open Mailbox
     # ...    host=${BASE HOST}
@@ -363,7 +363,7 @@ Language change affects emails
     Close Mailbox
     Check Language Logged In    ${random email}    ${password}
 
-Language change is new default
+17. Language change is new default
     [Tags]    C41574
     ${lang dict} =    Get Lang List
     ${ja_JP account info} =    Get From Dictionary    ${lang dict}[ja_JP]    ACCOUNT INFORMATION
@@ -394,13 +394,13 @@ Language change is new default
     ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${de_DE account info}']
     Check Language Logged In    ${no perm}    ${password}
 
-Should open account page in anonymous state
+18. Should open account page in anonymous state
     [tags]    anonymous    
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
-User who owns a system cannot remove themselves
+19. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
     Log In    ${server 1}[owner]    ${password}    button=None
@@ -409,7 +409,7 @@ User who owns a system cannot remove themselves
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
 
-Delete account button is enabled
+20. Delete account button is enabled
     [Tags]    C69854        delete account
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None
@@ -422,7 +422,7 @@ Delete account button is enabled
     Verify in Account Page
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
-Delete account button becomes enabled
+21. Delete account button becomes enabled
     [Tags]    C69856        delete_account
     Go To    ${url}/account
     Log In    ${server 4}[owner]    ${password}    button=None
@@ -441,7 +441,7 @@ Delete account button becomes enabled
     Wait Until Element Is Visible    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Enabled    ${DELETE ACCOUNT BUTTON}
 
-Account Deletion is cancelled
+22. Account Deletion is cancelled
     [Tags]    C69858    C69857        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
@@ -457,7 +457,7 @@ Account Deletion is cancelled
     Click Button    ${DELETE ACCOUNT CLOSE BUTTON}
     Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
 
-Password is required to delete account
+23. Password is required to delete account
     [Tags]    C69859        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
@@ -472,7 +472,7 @@ Password is required to delete account
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
 
-Correct password is required to delete account
+24. Correct password is required to delete account
     [Tags]    C69860        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
@@ -489,7 +489,7 @@ Correct password is required to delete account
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
 
-User can delete their own account
+25. User can delete their own account
     [Tags]    C69861        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
@@ -503,7 +503,7 @@ User can delete their own account
     Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
 
-After account deletion user is deleted from all systems that were shared with this user
+26. After account deletion user is deleted from all systems that were shared with this user
     [Tags]    C69862        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}
@@ -536,7 +536,7 @@ After account deletion user is deleted from all systems that were shared with th
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
-After account deletion user can create account with the same email again
+27. After account deletion user can create account with the same email again
     [Tags]    C69864        delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
@@ -555,7 +555,7 @@ After account deletion user can create account with the same email again
     Activate    ${random email}
     Log In    ${random email}    ${password}
 
-Deletion attempt when Delete Account button is disabled (via API)
+28. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account
     Delete Account    ${ENV}    ${server 1}[owner]    ${password}
     Log In    ${server 1}[owner]    ${password}

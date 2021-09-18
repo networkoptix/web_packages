@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "不建議將同一個錄影位置用於不同伺服器上.",
     "ADD THIS STORAGE ANYWAY TEXT": "仍要新增此儲存裝置?",
     "BACK TEXT": "返回",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "存儲/無效/ HD Witness Media 已刪除"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "存儲/無效/ HD Witness Media 已刪除",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

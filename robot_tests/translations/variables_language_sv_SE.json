@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Det rekommenderas inte att använda samma inspelningsplats för olika servrar.",
     "ADD THIS STORAGE ANYWAY TEXT": "Lägg till den här lagringen ändå?",
     "BACK TEXT": "Tillbaka",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Lagring /ogiltig/HD Witness Media borttagen"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Lagring /ogiltig/HD Witness Media borttagen",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

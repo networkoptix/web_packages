@@ -503,5 +503,6 @@
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Nie zaleca się używać wspólnego archiwum dla różnych serwerów.",
     "ADD THIS STORAGE ANYWAY TEXT": "Czy mimo to dodać to archiwum?",
     "BACK TEXT": "Wstecz",
-    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiwum /nieprawidłowe/HD Witness Media usunięte"
+    "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiwum /nieprawidłowe/HD Witness Media usunięte",
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
 }

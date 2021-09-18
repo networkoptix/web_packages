@@ -53,7 +53,7 @@ Server Advanced Settings Suite Teardown
     Delete Base System    ${server}
 
 *** Test Cases ***
-Advanced server settings availability
+1. Advanced server settings availability
     [Tags]    C76558    threaded    cloud    webadmin
     Log    Step 1
     Elements Should Not Be Visible
@@ -102,7 +102,7 @@ Advanced server settings availability
     ...    @{LOG SETTINGS BLOCK}
 
 
-"Hide Advanced Settings" button is available and functional
+2. "Hide Advanced Settings" button is available and functional
     [Tags]    C76571    threaded    cloud    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
@@ -123,7 +123,7 @@ Advanced server settings availability
     ...    @{STORAGE LOCATIONS BLOCK ITEMS}
     ...    @{LOG SETTINGS BLOCK}
 
-Toggle switch functionality
+3. Toggle switch functionality
     [Tags]    C76572    threaded    cloud    webadmin
     ${location} =    Get Location
     ##sleep    5
@@ -156,7 +156,7 @@ Toggle switch functionality
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
     Press Keys    None    ESC
 
-Reserved space dropdown menu functionality
+4. Reserved space dropdown menu functionality
     [Tags]    C76576    threaded    cloud    webadmin
     ${location} =    Get Location
     ##sleep    5
@@ -227,7 +227,7 @@ Reserved space dropdown menu functionality
     Run Keyword If    '${bytes 2}' == 'TB'   Should Be Equal    ${value}    ${times 1024}
     ...    ELSE IF    '${bytes 2}' == 'GB'   Should Be Equal    ${value}    ${divide 1024}
 
-Log settings functionality
+5. Log settings functionality
     [Tags]    C76573    threaded    cloud    webadmin
     ${location} =    Get Location
     Go To    ${location}${ADVANCED SETTINGS}
@@ -247,7 +247,7 @@ Log settings functionality
        Reload Page
     END
 
-Advanced server settings for offline system
+6. Advanced server settings for offline system
     [Tags]    C76559    threaded    cloud
     Log    Preconditions
     Verify on Servers Page

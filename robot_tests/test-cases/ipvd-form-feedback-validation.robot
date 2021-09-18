@@ -13,19 +13,19 @@ ${message}              This is an automated test message.
 
 
 *** Test Cases ***                   Expect Success     Your Name       Email                  Message
-Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
+1. Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
     [tags]    C54182    Valid    IPVD
-Invalid email with all required data 1    False         ${name}         myemail                ${message}
+2. Invalid email with all required data 1    False         ${name}         myemail                ${message}
     [tags]    C54182    Invalid    IPVD
-Invalid email with all required data 2    False         ${name}         myemail@               ${message}
+3. Invalid email with all required data 2    False         ${name}         myemail@               ${message}
     [tags]    C54182    Invalid    IPVD
-Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
+4. Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
     [tags]    C54182    Invalid    IPVD
-Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
+5. Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
     [tags]    C54182    Invalid    IPVD
-Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
+6. Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
     [tags]    C54182    Invalid    IPVD
-Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
+7. Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
     [tags]    C54182    Invalid    IPVD
 
 
