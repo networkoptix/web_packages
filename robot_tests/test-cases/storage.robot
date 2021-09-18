@@ -68,7 +68,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
     ${files disk0} =    Verify Recorded Video Files    disk0
 
     Log    Step 2
@@ -78,13 +78,14 @@ Restart
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
     Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Sleep    2
+    Sleep    4
+
+    Element Should Not Be Visible    ${RECORDING STOP WARNING}
     ${files 2 disk0} =    Verify Recorded Video Files    disk2
     Log    ${files 2 disk0}
-    Element Should Not Be Visible    ${RECORDING STOP WARNING}
-
+    
     Log    Step 3
-    Sleep    2
+    # Sleep    2
     Click Button    ${SAVE BUTTON}
     Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
     Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
@@ -96,7 +97,7 @@ Restart
     Should Be True    ${files 3 disk0} > ${files disk0}
     Sleep    15
     ${files 3 disk2} =    Verify Recorded Video Files    disk2
-    Should Be True    ${files 3 disk2} == 0
+    Should Be True    ${files 3 disk2} == 0 or ${files 3 disk2} == ${files 2 disk0}
 
 5. Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
@@ -108,7 +109,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
     ${files disk0} =    Verify Recorded Video Files    disk0
 
     Log    Step 2
@@ -223,7 +224,7 @@ Restart
     Go to Servers
 
     Log    Step 1
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
 
     Log    Step 2
     Click Button    ${STORAGE ENABLED MAIN}/parent::button
@@ -331,7 +332,7 @@ Restart
     [Tags]    C81569
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
@@ -347,7 +348,7 @@ Restart
     Click Button    ${SAVE BUTTON}
     Sleep    2
     Reload Page
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
@@ -356,7 +357,7 @@ Restart
 13. No Size Tooltip when Inaccessble
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
     Mouse Over    ${STORAGE INACCESSIBLE SIZE}
     Sleep    1
     Element Should Not Be Visible    ${STORAGE INACCESSIBLE SIZE}/following-sibling::ngb-popover-window
@@ -365,7 +366,7 @@ Restart
     [Tags]    C81572
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS FIRST ROW}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS FIRST ROW}
     ${count} =    Get Element Count    ${STORAGE LOCATIONS TABLE}//th
     Should Be Equal As Integers    ${count}    3
 
@@ -576,7 +577,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
     ${files disk0} =    Wait Until Files Are Recorded    disk0    100
@@ -634,7 +635,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
     Log    Step 2
     ${files disk0} =    Verify Recorded Video Files    disk0
@@ -816,7 +817,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
     ${files disk0} =    Wait Until Files Are Recorded    disk0    100
@@ -857,7 +858,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
     Run Keyword If    ${status}    Run Keywords
@@ -903,7 +904,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
     Log    Step 2
     Click Button      ${STORAGE ENABLED BACKUP}/parent::button
@@ -931,7 +932,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
     ${files disk0} =    Wait Until Files Are Recorded    disk0    100
@@ -974,7 +975,7 @@ Restart
     Log    Step 1
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
     Run Keyword If    ${status}    Run Keywords
@@ -1420,6 +1421,7 @@ Restart
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON}
     Wait Until Element Is Enabled    ${INACCESSIBLE STORAGE DELETE BUTTON}
+    Sleep    .25
     Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     Wait Until Elements Are Visible
     ...    ${DELETE STORAGE MODAL}            

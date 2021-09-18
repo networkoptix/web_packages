@@ -503,6 +503,12 @@ Wait Until Elements Are Visible
     FOR     ${element}  IN  @{elements}
         Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
     END
+    
+Wait Until Elements Are Visible with Retry
+    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    FOR     ${element}  IN  @{elements}
+        Run Keyword And Continue On Failure    Wait Until Element is Visible With Retry    ${element}    ${timeout}
+    END
 
 Wait Until Elements Are Enabled
     [Arguments]    @{elements}    ${timeout}=5
@@ -1088,8 +1094,8 @@ Execute Command Remotely
 
 Wait Until Element is Visible with Retry
     [Arguments]    ${element}    ${timeout}=120
-    ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
-    Run Keyword If    ${load} == ${FALSE}    Reload Page
+    ${load} =    Run Keyword and Warn On Failure    Wait Until Element is Visible    ${element}    timeout=${timeout}
+    Run Keyword Unless    ${load} == ('PASS', None)    Reload Page
     Wait Until Element is Visible    ${element}   timeout=${timeout}
     
 Verify No Horizontal Scrollbar

@@ -4,7 +4,7 @@ Library    SeleniumLibrary
 *** Keywords ***
 Verify on Servers Page
     [Arguments]    ${timeout}=${selenium_timeout}
-    Wait Until Elements are Visible
+    Wait Until Elements Are Visible with Retry
     #...    ${PORT INPUT}
     ...    ${RESTART SERVER BUTTON}
     ...    ${SERVER DETAILED INFO BUTTON}
@@ -21,7 +21,9 @@ Verify Server Buttons Are Enabled
 Log in to user and system
     [Arguments]    ${user}    ${system id}    ${verify}=True    ${password}=${BASE PASSWORD}
     Log in    ${user}    ${password}
+    Sleep    1
     Go To    ${ENV}/systems/${system id}
+    Sleep    1
     #Run Keyword If    '${user}'=='${EMAIL OWNER}' and ${verify}==True    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     #Run Keyword If    '${user}'=='${EMAIL ADMIN}' and ${verify}==True   Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     #Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
