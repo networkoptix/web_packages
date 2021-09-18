@@ -7,6 +7,7 @@ import {
 import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
+import { NxSystemRole }              from '@services/system.service';
 
 @Component({
     selector      : 'nx-permissions-select',
@@ -21,7 +22,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     @Input() roles;
     @Input() system;
     @Input() selected;
-    @Output() onSelected = new EventEmitter<string>();
+    @Output() onSelected = new EventEmitter<NxSystemRole>();
 
     selection: string;
     message: string;
