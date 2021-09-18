@@ -118,9 +118,13 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public videoErrorEventHandler (event: any) {
         const { player } = event.target;
-        if (player?.error()?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+        const toggleTransport = () => {
             this.transportChangeByError = true;
             this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
+        };
+        const errorCode = player?.error()?.code;
+        if ([MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED, MediaError.MEDIA_ERR_NETWORK].includes(errorCode) && !this.transportChangeByError) { // code: 4
+            toggleTransport();
         } else if (player && ['abort', 'error'].includes(event.type)) {
             if (event.type === 'error' && this.transportChangeByError) {
                 this.playback.setError(this.LANG.common.cameraStates.noFormat());
@@ -132,6 +136,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
                         case '4':
                             if (response.errorString === 'Cannot decrypt media') {
                                 this.playback.unplayableArchive();
+                            } else if (!this.transportChangeByError) {
+                                toggleTransport();
                             } else {
                                 this.playback.setError(response.errorString);
                             }

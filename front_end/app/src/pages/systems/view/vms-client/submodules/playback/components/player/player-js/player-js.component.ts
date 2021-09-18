@@ -134,6 +134,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
                 if (this.player && prevMode !== this.mode && !this.paused) {
+                    this.player.reset();
                     this._startPlayback();
                 }
                 if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {
