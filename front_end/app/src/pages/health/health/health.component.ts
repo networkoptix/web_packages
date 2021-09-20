@@ -115,7 +115,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             ]
         };
 
-
         this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
             if (this.menu.selectedSection !== selection) {
                 this.menu.selectedSection = selection;
@@ -144,7 +143,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.outdatedVersion = false;
                 if (account && typeof account !== 'undefined') {
                     this.account = account;
-                    this.system = this.systemService.createSystem(account.email, systemId);
+                    if (this.CONFIG.isLocal) {
+                        this.system = this.systemService.createLocalSystem(
+                            this.accountService.mediaServerApi, account.id, account.email
+                        );
+                    } else {
+                        this.system = this.systemService.createSystem(account.email, systemId);
+                    }
                     this.menu.base = this.sourceService.getMenuBase(this.system);
                     infoPromise = this.system.getInfo();
                 } else {

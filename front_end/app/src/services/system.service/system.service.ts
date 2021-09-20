@@ -72,7 +72,7 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
 
-        if (skipSettingSystem) {
+        if (this.CONFIG.isLocal || skipSettingSystem) {
             return system;
         }
 
