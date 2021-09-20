@@ -429,17 +429,18 @@ ${password}    ${BASE PASSWORD}
     ...    ${SEARCHABLE MENU}
     ...    ${SEARCH RESULT ARROW}
 
-    Log    Step 4
+    
     ${viewer info}=   Get Account Info    ${system}[cloud users][viewer]
     ${viewer id}=   Set Variable    ${viewer info}[id]
     Set Suite Variable    ${viewer id}
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
     Should Be Equal As Numbers    ${num users found}    6
-    #TODO:  figure out failure
-#    Wait until element is visible    //span[contains(text(), "${system}[cloud users]")]
-#    Click Link     //span[contains(text(), "${system}[cloud users]")]/../..
-#    Wait until element is visible    //h2[contains(text(), "${system}[cloud users]")]
+    
+    Log    Step 4
+    ${name} =    Get Text    ${all users found}[0]
+    Click Element    ${all users found}[0]
+    Wait until element is visible    //h2[contains(text(), "${name}")]
 
 23. Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    cloud    search
