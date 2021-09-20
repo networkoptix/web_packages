@@ -1,22 +1,22 @@
-//@mixin icon {
-//    display          : inline-block;
-//    background-size  : 144px 80px;
-//    width            : 16px;
-//    height           : 16px;
-//    margin-right     : 5px;
-//    background-image : url('/static/images/sprite_common.png');
-//    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-//        background-image : url('/static/images/sprite_common@2x.png');
-//    }
-//}
-//
-//@mixin kill-glyphicon {
-//    @include icon;
-//    &:before {
-//        content : none;
-//    }
-//}
-//
+@mixin icon {
+   display          : inline-block;
+   background-size  : 144px 80px;
+   width            : 16px;
+   height           : 16px;
+   margin-right     : 5px;
+   background-image : url('/static/images/sprite_common.png');
+   @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+       background-image : url('/static/images/sprite_common@2x.png');
+   }
+}
+
+@mixin kill-glyphicon {
+   @include icon;
+   &:before {
+       content : none;
+   }
+}
+
 //.glyphicon-login {
 //    @include kill-glyphicon;
 //    width               : 24px;
@@ -59,17 +59,17 @@
 //    background-position : -48px -55px;
 //}
 //
-//.glyphicon-cloud {
-//    @include kill-glyphicon;
-//    width               : 100%;
-//    height              : 100%;
-//    background-position : -75px -135px;
-//
-//    &.item-disabled {
-//        background-position : -99px -55px;
-//    }
-//}
-//
+.glyphicon-cloud {
+   @include kill-glyphicon;
+   width               : 100%;
+   height              : 100%;
+   background-position : -75px -135px;
+
+   &.item-disabled {
+       background-position : -99px -55px;
+   }
+}
+
 //.glyphicon-menu-hamburger {
 //    @include kill-glyphicon;
 //    width               : 20px;
