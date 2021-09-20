@@ -104,6 +104,7 @@ System Settings Menu Suite Teardown
 
 6. Should have LEVEL-3 not selected node (check specs)
     [Tags]    wdeb    cdeb
+    Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT5 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
@@ -207,6 +208,7 @@ System Settings Menu Suite Teardown
 
     Log     Keyboard navigation to next item
     Press keys                          NONE                            ARROW_DOWN
+    Sleep    1
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 LIC}         background-color    ${COLOR LIGHT8 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 LIC}         color               ${COLOR DARK9 RGB}
 
@@ -214,8 +216,8 @@ System Settings Menu Suite Teardown
     Press keys                          NONE                            ENTER
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 LIC}         background-color    ${COLOR LIGHT16 RGB}
     Wait Until Element Has Style        ${LEFT MENU LEVEL3 LIC}         color               ${COLOR LIGHT1 RGB}
-
-    Log     Keyboard focus should move to next item
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     background-color    ${COLOR LIGHT8 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     color               ${COLOR DARK9 RGB}
+    # Storage option is not implemented yet, comment it out
+    #Log     Keyboard focus should move to next item
+    #Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     background-color    ${COLOR LIGHT8 RGB}
+    #Wait Until Element Has Style        ${LEFT MENU LEVEL3 STORAGE}     color               ${COLOR DARK9 RGB}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
