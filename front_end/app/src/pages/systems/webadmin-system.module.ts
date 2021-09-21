@@ -24,59 +24,68 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 export const localSettingsRoutes: Routes = [
     {
-        path        : '',
-        component   : NxSystemSettingsComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path                  : '',
+        component             : NxSystemSettingsComponent,
+        canActivate           : [AuthGuard],
+        runGuardsAndResolvers : 'always',
+        children              : [
             {
                 path          : '',
                 component     : NxSystemAdminComponent,
                 canDeactivate : [ApplyGuard]
             },
             {
-                path          : 'advanced',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path                  : 'advanced',
+                component             : NxSystemAdminComponent,
+                canDeactivate         : [ApplyGuard],
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'users',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path                  : 'users',
+                component             : NxSystemUsersComponent,
+                canDeactivate         : [ApplyGuard],
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'users/:userId',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path                  : 'users/:userId',
+                component             : NxSystemUsersComponent,
+                canDeactivate         : [ApplyGuard],
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'servers',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path                  : 'servers',
+                component             : NxSystemServersComponent,
+                canDeactivate         : [ApplyGuard],
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'servers/:serverId',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path                  : 'servers/:serverId',
+                component             : NxSystemServersComponent,
+                canDeactivate         : [ApplyGuard],
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'cameras',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path                  : 'cameras',
+                component             : NxCamerasComponent,
+                canDeactivate         : [ApplyGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path          : 'cameras/:cameraId',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path                  : 'cameras/:cameraId',
+                component             : NxCamerasComponent,
+                canDeactivate         : [ApplyGuard],
+                runGuardsAndResolvers : 'always'
             },
             {
-                path        : 'licenses',
-                component   : NxSystemLicensesComponent,
-                canActivate : [SystemGuard]
+                path                  : 'licenses',
+                component             : NxSystemLicensesComponent,
+                canActivate           : [SystemGuard],
+                runGuardsAndResolvers : 'always'
             }
         ]
     }
@@ -98,8 +107,8 @@ export const localSettingsRoutes: Routes = [
         RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],
-    providers: [],
-    declarations: [
+    providers    : [],
+    declarations : [
     ],
     bootstrap: [
     ],

@@ -56,6 +56,7 @@ const appRoutes: Routes = [
                 path: ':metric', component: NxSystemMetricsComponent
             }
         ]
+        // FIXME: runGuardsAndResolvers : 'always' breaks /health/
     }
 ];
 

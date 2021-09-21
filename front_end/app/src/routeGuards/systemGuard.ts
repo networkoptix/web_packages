@@ -68,7 +68,7 @@ export class SystemGuard implements CanActivate {
 
                     return new Promise((resolve) => {
                         if (currSystem) {
-                            currSystem.getInfoAndPermissions().then(_ => {
+                            currSystem.update().then(_ => {
                                 resolve(checkPermissionsFor(currSystem));
                             });
                         } else {
@@ -79,10 +79,8 @@ export class SystemGuard implements CanActivate {
                             }
 
                             currSystem.update().then(_ => {
-                                currSystem.getInfoAndPermissions().then(_ => {
-                                    this.settingsService.system = currSystem;
-                                    resolve(checkPermissionsFor(currSystem));
-                                });
+                                this.settingsService.system = currSystem;
+                                resolve(checkPermissionsFor(currSystem));
                             });
                         }
                     });

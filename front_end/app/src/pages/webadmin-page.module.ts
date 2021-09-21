@@ -71,7 +71,8 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration : 'enabled',
             anchorScrolling           : 'enabled',
             enableTracing             : false,
-            preloadingStrategy        : QuicklinkStrategy
+            preloadingStrategy        : QuicklinkStrategy,
+            onSameUrlNavigation       : 'reload'
         })
     ],
     declarations: [
