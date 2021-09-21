@@ -1,5 +1,8 @@
-import { Component, ElementRef, Input, OnChanges, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Platform } from '@angular/cdk/platform';
+import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { WINDOW } from '@services/window-provider';
 import { NxLandingService } from '../landing.service';
 
 @UntilDestroy()
@@ -18,7 +21,7 @@ export class NxLearnMoreComponent implements OnChanges {
         screenHeight   : 690
     }
 
-    constructor(public landingService: NxLandingService) {}
+    constructor(public landingService: NxLandingService, private platform: Platform, private scrollMechanics: NxScrollMechanicsService, @Inject(WINDOW) private window: Window) {}
 
     ngOnInit(): void {
         this.visible = this.renderLearnMore();
@@ -31,7 +34,11 @@ export class NxLearnMoreComponent implements OnChanges {
 
     onClick() {
         if (this.landingService.contentStartRef) {
+            // Scroll behavior smooth not supported in safari... if smooth scroll is desired might need different implementation
             this.landingService.contentStartRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+            if (this.platform.SAFARI) {
+                this.scrollMechanics.windowScrollSubject.next(this.window.scrollY);
+            }
         }
     }
 

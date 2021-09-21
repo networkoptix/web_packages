@@ -25,6 +25,7 @@
       "@pages/*": ["src/pages/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
       "@src/*": ["src/*"],
       "@app/*": ["*"]
     },
