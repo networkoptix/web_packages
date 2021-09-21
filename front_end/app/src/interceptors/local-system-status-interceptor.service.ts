@@ -42,6 +42,9 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== errorStatus) {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
+        } else if (res instanceof HttpErrorResponse && status === 401) {
+            this.appState.lastErrorStatus$.next(status);
+            this.appState.systemAvailable$.next(false);
         } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
             this.appState.systemAvailable$.next(true);
 
