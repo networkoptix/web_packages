@@ -25,7 +25,12 @@ Server Settings Suite Setup
     Set Suite Variable    ${port 1}
     ${extra port}=  Get Random Available Port
     Set Suite Variable    ${extra port}
-    ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} ${IMAGE}
+    IF    '5.0' not in $image
+        Set Local Variable   ${vms}    old
+    ELSE
+        Set Local Variable    ${vms}    new
+    END
+    ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} -e VMS=${vms} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
 
     Sleep    5

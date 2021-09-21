@@ -929,8 +929,11 @@ Create Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Run Keyword If    '5.0' not in $image   Set Local Variable   ${vms}    old
-    ...    ELSE   Set Local Variable    ${vms}    new
+    IF    '5.0' not in $image
+        Set Local Variable   ${vms}    old
+    ELSE
+        Set Local Variable    ${vms}    new
+    END
     ${port}=   Get Random Available Port
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} ${storage string} ${image}
                   ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} ${storage string} ${image}
