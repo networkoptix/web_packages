@@ -23,6 +23,7 @@ import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxUtilsService }            from '@services/utils.service';
 import { NxToastService }            from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
 
 interface DropdownStorage {
     name: string,
@@ -127,6 +128,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
+        private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
         private route: ActivatedRoute,
         private dialogs: NxDialogsService,
@@ -138,6 +140,34 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.LANG = language.translations;
 
         this.setupDefaults();
+
+        this.route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
+            if (params.state) {
+                let loginPromise: Promise<any> = Promise.resolve(true);
+                if (this.CONFIG.isLocal && params.code) {
+                    loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
+                }
+                loginPromise.then(() => {
+                    const params = { ...this.uriService.queryParams };
+                    const state = params.state;
+                    params.code = undefined;
+                    params.state = undefined;
+                    this.uriService.updateURI(undefined, params, true)
+                        .finally(() => {
+                            switch (state) {
+                                case 'detach':
+                                    return this.detachServer();
+                                case 'reset':
+                                    return this.resetServer();
+                                case 'restart':
+                                    return this.restartServer();
+                                default:
+                                    break;
+                            }
+                        });
+                });
+            }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -348,7 +378,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    restartServer() {
+    async restartServer() {
+        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('restart').toPromise())) {
+            return;
+        }
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
@@ -364,11 +397,15 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             this.destroyRestartTake$.complete();
                             this.setStatus('');
                         }
-                    })
+                    });
             });
     }
 
-    detachServer() {
+    async detachServer() {
+        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('detach').toPromise()) ||
+            !this.system.servers.length) {
+            return;
+        }
         const { id, name } = this.selectedServer;
         const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
         const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
@@ -388,7 +425,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    resetServer() {
+    async resetServer() {
+        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('reset').toPromise())) {
+            return;
+        }
         const { id, name } = this.selectedServer;
         return this.dialogs
             .resetServer(this.system, id, name)

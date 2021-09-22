@@ -193,6 +193,16 @@ def logout(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns time since password was used in seconds.")
+@api_view(['GET'])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def time_since_password(request):
+    return api_success({
+        "timeSincePassword": Auth.validate_token(request.session.get("access_token")).get("time_since_password")
+    })
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns info about the current logged in user.",
                      responses={"200": account__response})
 @swagger_auto_schema(method="POST",  # auto_schema=None,

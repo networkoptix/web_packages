@@ -383,7 +383,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     public ensureFreshSession() {
         return this.get(`/rest/v1/login/sessions/${this.cookieService.get(this.token)}`).pipe(
             switchMap((res) => {
-                if (res.ageS >= 600) {
+                if (res.ageS >= this.CONFIG.sessionFreshnessSec) {
                     return this.reauthenticate();
                 }
                 return of(res);

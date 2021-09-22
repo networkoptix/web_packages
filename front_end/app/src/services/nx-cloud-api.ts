@@ -637,6 +637,21 @@ export class NxCloudApiService {
         return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
     }
 
+    ensureSessionFreshness(state?: string, email?: string) {
+        return this.getTimeSinceLogin().pipe(
+            switchMap((res) => {
+                if (res.timeSincePassword >= this.CONFIG.sessionFreshnessSec) {
+                    return this.reauthenticate(state, email || this.currentAccount.email);
+                }
+                return of(true);
+            })
+        );
+    }
+
+    getTimeSinceLogin() {
+        return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
+    }
+
     /* Webadmin functions */
     getTokensFromCloud(code: string) {
         const params = {
@@ -652,13 +667,13 @@ export class NxCloudApiService {
     reauthenticate(state?: string, email?: string) {
         const dialogService = this.injector.get(NxDialogsService);
         const LANG = this.injector.get(NxLanguageProviderService).translations;
-        const { action, message, title } = LANG.dialogs?.twoFactor;
+        const { action, message, title } = LANG.dialogs?.renewAuth;
         return from(
             dialogService.confirm(message?.(), title?.(), action?.()).then((res) => {
                 if (!res) {
-                    return;
+                    return false;
                 }
-                this.oauthService.redirectOauth(state, email);
+                return this.logout().then(() => this.oauthService.redirectOauth(state, email));
             })
         );
     }

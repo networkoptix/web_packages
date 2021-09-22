@@ -91,6 +91,7 @@ export interface BaseConfig {
     headerHeight: number;
     ribbonHeight: number;
     browserNotSupported: boolean;
+    sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
 }
 

@@ -101,9 +101,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             if (params.advanced !== undefined) {
                 this.CONFIG.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
                 !this.CONFIG.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
-            } else if (this.CONFIG.isLocal && (params.code || params.state)) {
+            } else if (params.code || params.state) {
                 let loginPromise: Promise<any> = Promise.resolve(true);
-                if (params.code) {
+                if (this.CONFIG.isLocal && params.code) {
                     loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
                 }
                 loginPromise.then(() => {
@@ -117,6 +117,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 case 'connect':
                                     this.connectToCloudProcess.run();
                                     break;
+                                case 'disconnect':
+                                    return this.disconnectFromCloud();
                                 default:
                                     break;
                             }
@@ -308,7 +310,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         ).toPromise();
     }
 
-    disconnectFromCloud() {
+    async disconnectFromCloud() {
+        if (!this.system) {
+            return setTimeout(() => this.disconnectFromCloud(), 500);
+        }
         const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
             .then((result) => {
                 if (result) {
@@ -322,6 +327,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
 
         if (this.system.userManager.isMine) {
+            if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('disconnect').toPromise())) {
+                return;
+            }
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }

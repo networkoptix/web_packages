@@ -509,8 +509,9 @@ export const nxConfig: IConfig = {
             checking   : 'checking'
         }
     },
-    supportedLanguages : [],
-    system             : {
+    sessionFreshnessSec : 600, // s or 10 minutes
+    supportedLanguages  : [],
+    system              : {
         flags: {
             newSystem: 'SF_NewSystem'
         },

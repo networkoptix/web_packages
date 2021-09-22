@@ -232,12 +232,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
+        const params = link.includes('?') && new URLSearchParams(
+            link.match(/.*(\?.*)/i)[1]
+        );
+
         if (!code && link) {
             // unit tests should look for: startsWith 'http', '?code=', and 'redirect-oauth'
             // match groups the ? + queryParams
-            code = link.includes('?') && new URLSearchParams(
-                link.match(/.*(\?.*)/i)[1]
-            ).get('code');
+            code = params.get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         if (this.initialData.redirect_url === 'redirect-oauth') {
@@ -261,7 +263,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     retryWhen(errors => errors.pipe(delay(500), take(10)))
                 )
                 .subscribe(() => {
-                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                    const route = link.replace(this.window.location.origin, '').split('?')[0];
+                    const queryParams = { state: params.get('state') };
+                    this.router.navigate([route], { queryParams });
                 });
         } else {
             this.redirect(link);
