@@ -69,19 +69,20 @@ describe('NxAccountSecurityComponent', () => {
 
                 fixture.detectChanges();
                 component.account = {
-                    can_publish_integration: false,
-                    name: 'test',
-                    first_name: 'Test',
-                    isCloud: false,
-                    is_staff: false,
-                    language: 'en_US',
-                    last_name: '1234',
-                    permissions: [],
-                    is_superuser: false,
-                    id: 'test',
-                    email: 'test@test.com',
+                    can_publish_integration : false,
+                    name                    : 'test',
+                    first_name              : 'Test',
+                    isCloud                 : false,
+                    is_staff                : false,
+                    language                : 'en_US',
+                    last_name               : '1234',
+                    permissions             : [],
+                    is_superuser            : false,
+                    id                      : 'test',
+                    email                   : 'test@test.com',
                     is_authenticated        : false,
-                    cookie_reviewed         : true
+                    cookie_reviewed         : true,
+                    account2faEnabled       : false
                 };
                 fixture.detectChanges();
             }));

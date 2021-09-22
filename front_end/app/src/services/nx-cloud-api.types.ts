@@ -299,3 +299,7 @@ export interface DocAsset {
     title: string,
     blocks: DocBlock[]
 }
+
+export interface TwoFactorBackupCodes {
+    backup_code: string
+}

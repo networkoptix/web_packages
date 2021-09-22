@@ -34,7 +34,7 @@ describe('NxPasswordComponent', () => {
         const spyApi = jasmine.createSpyObj('NxCloudApiService', ['getCommonPasswords']);
 
         TestBed.configureTestingModule({
-            imports      : [
+            imports: [
                 CommonModule,
                 FormsModule
             ],
@@ -45,7 +45,7 @@ describe('NxPasswordComponent', () => {
                 { provide: NxCloudApiService, useValue: spyApi }
             ]
         })
-        .compileComponents()
+            .compileComponents()
             .then(() => {
                 fixture = TestBed.createComponent(NxPasswordComponent);
                 component = fixture.componentInstance;
@@ -76,8 +76,8 @@ describe('NxPasswordComponent', () => {
         component.passwordToggle = true;
         fixture.detectChanges();
 
-        const toggle = fixture.debugElement.nativeElement.querySelector('span.input-group-addon span');
-        expect(toggle.className).toContain('glyphicon-eye-close');
+        const toggle = fixture.debugElement.nativeElement.querySelectorAll('span.input-group-addon svg-icon');
+        expect(toggle.length).toBe(1);
         expect(el.type).toBe('password');
     });
 
@@ -85,8 +85,8 @@ describe('NxPasswordComponent', () => {
         component.passwordToggle = false;
         fixture.detectChanges(); // apply changes
 
-        const toggle = fixture.debugElement.nativeElement.querySelector('span.input-group-addon span');
-        expect(toggle.className).toContain('glyphicon-eye-open');
+        const toggle = fixture.debugElement.nativeElement.querySelectorAll('span.input-group-addon svg-icon');
+        expect(toggle.length).toBe(1);
         expect(el.type).toBe('text');
     });
 

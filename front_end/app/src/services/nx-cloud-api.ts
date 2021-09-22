@@ -191,7 +191,7 @@ export class NxCloudApiService {
     }
 
     get2FaBackupCode() {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/backup', {}).toPromise();
+        return this.http.post<t.TwoFactorBackupCodes[]>(this.CONFIG.apiBase + '/2fa/backup', {}).toPromise();
     }
 
     verify2FaKey(accessCode, verificationCode) {

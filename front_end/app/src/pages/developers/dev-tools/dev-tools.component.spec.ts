@@ -1,20 +1,23 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { DebugElement }            from '@angular/core';
+import { AngularSvgIconModule }    from 'angular-svg-icon';
+import { of }                      from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CommonModule }            from '@angular/common';
 
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService }     from '@services/nx-config';
+import { nxConfig }            from '@services/nx-config/config';
 import { NxDevToolsComponent } from './dev-tools.component';
-import { WINDOW } from '../../../services/window-provider';
+import { WINDOW }              from '@services/window-provider';
 import {
     devToolsNode,
     docMenuMap
 } from '../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider } from '../../../_mocks/helpers.test';
-import { ActivatedRoute } from '@angular/router';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { NxAccountService } from '../../../services/account.service';
-import { CommonModule } from '@angular/common';
+import { MockProvider }      from '../../../_mocks/helpers.test';
+import { ActivatedRoute }    from '@angular/router';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxHeaderService }   from '@services/nx-header.service';
+import { NxAccountService }  from '@services/account.service';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
 describe('For Developers Landing - Dev Tools', () => {
@@ -30,28 +33,30 @@ describe('For Developers Landing - Dev Tools', () => {
             }
         }
     };
+    const cloudApiMock = {
+        getDocumentation: () => of(devToolsNode)
+    };
 
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations : [NxDevToolsComponent, RouterLinkDirectiveStub],
-                imports      : [CommonModule],
+                imports      : [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
                 providers    : [
                     new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxCloudApiService, {}),
+                    new MockProvider(NxCloudApiService, cloudApiMock),
                     new MockProvider(NxHeaderService, {}),
                     new MockProvider(NxAccountService, {}),
                     new MockProvider(ActivatedRoute, mockRoute),
                     new MockProvider(WINDOW, {})
                 ]
-            });
-
-            fixture = TestBed.createComponent(NxDevToolsComponent);
-            component = fixture.componentInstance;
-            component.devToolsNode = devToolsNode;
-            component.title = devToolsNode.title;
-            el = fixture.debugElement;
-            fixture.detectChanges();
+            }).compileComponents()
+                .then(() => {
+                    fixture = TestBed.createComponent(NxDevToolsComponent);
+                    component = fixture.componentInstance;
+                    el = fixture.debugElement;
+                    fixture.detectChanges();
+                });
         })
     );
 
@@ -60,6 +65,10 @@ describe('For Developers Landing - Dev Tools', () => {
     });
 
     it('should show the correct heading', () => {
+        devToolsNode.url = 'testUrl';
+        component.devToolsNode = devToolsNode;
+        component.title = devToolsNode.title;
+        fixture.detectChanges();
         const heading = el.nativeElement.querySelector('.heading-link').innerText;
         expect(heading).toBe(devToolsNode.title);
     });
@@ -70,7 +79,10 @@ describe('For Developers Landing - Dev Tools', () => {
     });
 
     it('should show the correct tool block heading', () => {
+        component.devToolsNode = devToolsNode;
+        fixture.detectChanges();
         const toolBlockHeading = el.nativeElement.querySelector('.tool-detail > h3').innerText;
+    
         expect(toolBlockHeading).toBe(devToolsNode.nodes[0].title);
     });
 

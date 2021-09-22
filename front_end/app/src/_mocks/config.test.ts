@@ -179,7 +179,7 @@ export function setupConfig(): IConfig {
                 { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
-            devTools             : '/static/images/icons/dev_tools/',
+            devTools              : '/static/images/icons/dev_tools/',
             backgrounds           : '/static/images/icons/backgrounds/',
             dir                   : '/static/images/icons/standard/',
             dirDevtools           : '/static/images/icons/dev_tools/',
@@ -193,11 +193,12 @@ export function setupConfig(): IConfig {
             dirDevCapabilities    : '/static/images/icons/dev_capabilities/',
             dirLandingIcons       : '/static/images/landing/block_icons/'
         },
-        images                       : {
-            dir          : '/static/images/',
-            dirDevelopers: '/static/images/developers/',
-            dirLanding        : '/static/images/landing/',
-            dirLandingGraphic : '/static/images/landing/main_screen/'
+        images: {
+            dir                   : '/static/images/',
+            dirDevelopers         : '/static/images/developers/',
+            dirDevelopersDevtools : '/static/images/developers/dev_tools/',
+            dirLanding            : '/static/images/landing/',
+            dirLandingGraphic     : '/static/images/landing/main_screen/'
         },
         integration                  : {
             adminLink           : '/admin/cms/asset/%ID%/pages/',
@@ -508,18 +509,19 @@ export function setupConfig(): IConfig {
         },
 
         // Dynamic from cloud_portal
-        cloudCapabilities     : {
+        cloudCapabilities: {
             alexaIntegrationEnabled   : false,
-            developersEnabled        : false,
-            feedbackEnabled          : false,
-            healthMonitor            : '',
-            integrationStore         : false,
-            publicDownloads          : false,
-            publicReleases           : false,
-            cloudStorageEnabled      : false,
-            cloudStorageSize         : 0,
+            bookmarksEnabled          : false,
+            developersEnabled         : false,
+            feedbackEnabled           : false,
+            healthMonitor             : '',
+            integrationStore          : false,
+            publicDownloads           : false,
+            publicReleases            : false,
+            cloudStorageEnabled       : false,
+            cloudStorageSize          : 0,
             customClientsEnabled      : false,
-            healthMonitorCacheTimeout: 60
+            healthMonitorCacheTimeout : 60
         },
         cloudName             : '',
         cloudHost             : '',

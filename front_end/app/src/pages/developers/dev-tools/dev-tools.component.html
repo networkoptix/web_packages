@@ -21,14 +21,14 @@
 </ng-template>
 
 <ng-template #blocks let-noMargin="noMargin">
-    <div *ngIf="this.devToolsNode" nxMatchHeight [classToMatch]="'tool-detail'" class="card-grid detail-blocks"[ngClass]="noMargin ? '' : 'stand-alone-blocks'">
+    <div *ngIf="devToolsNode" nxMatchHeight [classToMatch]="'tool-detail'" class="card-grid detail-blocks"[ngClass]="noMargin ? '' : 'stand-alone-blocks'">
         <ng-container *ngFor="let tool of devToolsNode.nodes; let last = last">
             <ng-container *ngTemplateOutlet="toolBlock;context{tool:tool, last: last}"></ng-container>
         </ng-container>
     </div>
 </ng-template>
 <!-- End of Templates -->
-<ng-container *ngIf="this.devToolsNode; else preloader">
+<ng-container *ngIf="devToolsNode; else preloader">
     <ng-container *ngIf="!errorManager.hasErrors; else showError">
         <section *ngIf="title; else blocks" class="dev-tools">
            <h2 class="heading-link" *ngIf="devToolsNode.url; else nonLinkHeader"  [routerLink]="devToolsNode.url">{{title}}</h2>

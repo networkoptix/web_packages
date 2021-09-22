@@ -179,6 +179,7 @@ export const nxConfig: IConfig = {
             { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
         ],
         backgrounds           : '/static/images/icons/backgrounds/',
+        devTools              : '/static/images/icons/dev_tools/',
         dir                   : '/static/images/icons/standard/',
         dirDevtools           : '/static/images/icons/dev_tools/',
         dirButtons            : '/static/images/icons/buttons/',

@@ -13,7 +13,11 @@ import { NxPageService }             from '@services/page.service';
 describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;
 
-    const configMock = { getConfig: () => nxConfig };
+    const configMock = {
+        getConfig   : () => nxConfig,
+        getSettings : []
+    };
+
     const translateMock = {
         translations: {
             system: {
@@ -63,7 +67,7 @@ describe('Bootstrap Provider', () => {
         expect(CONFIG.trialLicenseKey).toBe(resultSettings.description.desktop.trialLicenseKey);
         expect(CONFIG.defaultLanguage).toBe(resultSettings.description.defaultLanguage);
         expect(CONFIG.licenseTypes).toEqual(resultSettings.webadminConfig.licenseTypes);
-        expect(CONFIG.supportedLanguages).toEqual(resultSettings.webadminConfig.supportedLanguages);
+        expect(CONFIG.supportedLanguages).toEqual(resultSettings.supportedLanguages);
     });
 
     it('should set local settings from "moduleInformation"', () => {

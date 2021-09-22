@@ -139,20 +139,20 @@ export function getLocalSettings() {
                     name: 'nvr',
                     title: 'NVR'
                 }
-            ],
-            supportedLanguages: [
-                'en_US',
-                'en_GB',
-                'fr_FR',
-                'de_DE',
-                'ru_RU',
-                'es_ES',
-                'ja_JP',
-                'ko_KR',
-                'zh_CN',
-                'zh_TW'
             ]
-        }
+        },
+        supportedLanguages: [
+            'en_US',
+            'en_GB',
+            'fr_FR',
+            'de_DE',
+            'ru_RU',
+            'es_ES',
+            'ja_JP',
+            'ko_KR',
+            'zh_CN',
+            'zh_TW'
+        ]
     };
 }
 

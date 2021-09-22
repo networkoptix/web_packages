@@ -138,15 +138,4 @@ describe('For Developers Landing - Integrations Node', () => {
     it('should show the correct plugin icon', () => {
         expect(pluginsBlock.firstPlugin.iconSrc).toBe(firstPluginNode.asset.information.logo);
     });
-
-    it('should show correct tooltip on hover', async() => {
-        const block = el.nativeElement.querySelector('.integration-block');
-        block.dispatchEvent(new MouseEvent('mouseenter'));
-        await fixture.whenStable();
-        fixture.detectChanges();
-        const tooltip = el.nativeElement.querySelector('ngb-tooltip-window');
-        expect(tooltip.innerText).toBe(firstPluginNode.asset.information.shortDescription.trim());
-        block.dispatchEvent(new MouseEvent('mouseleave'));
-        await fixture.whenStable();
-    });
 });

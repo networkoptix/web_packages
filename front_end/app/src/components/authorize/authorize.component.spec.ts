@@ -38,7 +38,7 @@ import { ComponentsModule }          from '@components/components.module';
 })
 class TranslateTestingModule {}
 
-fdescribe('OAuth Test Suite', () => {
+describe('OAuth Test Suite', () => {
     let component: NxAuthorizeComponent;
     let fixture: ComponentFixture<NxAuthorizeComponent>;
     let el: DebugElement;
@@ -63,6 +63,11 @@ fdescribe('OAuth Test Suite', () => {
                 asAccountSubheader      : () => 'As {accountEmail}',
                 passwordDisconnect      : () => 'to disconnect system from %CLOUD_NAME%',
                 passwordMerge           : () => 'to merge systems',
+                passwordBackup          : () => 'to create backup',
+                passwordRestore         : () => 'to restore system from backup',
+                passwordReset           : () => 'to reset server',
+                passwordRestart         : () => 'to restart server',
+                passwordDetach          : () => 'to detach server',
                 createAccountHeader     : () => 'Create %CLOUD_NAME% Account',
                 loginErrorAdditional    : () => 'Please try again or login to the system directly with your local account.',
                 connectErrorAdditional  : () => 'Please try again later.',
@@ -412,6 +417,61 @@ fdescribe('OAuth Test Suite', () => {
         expect(buttons[0].innerText).toBe('Log In');
         const icons = el.nativeElement.querySelectorAll('svg-icon');
         expect(icons.length).toBe(2);
+    });
+
+    it('should load confirm password create backup component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordBackup;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to create backup');
+    });
+
+    it('should load confirm password restore system from backup component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordRestore;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to restore system from backup');
+    });
+
+    it('should load confirm password reset server component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordReset;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to reset server');
+    });
+
+    it('should load confirm password restart server component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordRestart;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to restart server');
+    });
+
+    it('should load confirm password detach server component', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.password;
+        component.emailLocked = true;
+        component.clientType = ClientType.passwordDetach;
+        fixture.detectChanges();
+        const message = el.nativeElement.querySelectorAll('p');
+        expect(message.length).toBe(1);
+        expect(message[0].innerText).toBe('to detach server');
     });
 
     it('should load connect password component', () => {

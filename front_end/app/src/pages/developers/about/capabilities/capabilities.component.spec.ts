@@ -44,6 +44,7 @@ describe('For Developers Landing - Capabilities Node', () => {
 
             fixture = TestBed.createComponent(NxCapabilitiesComponent);
             component = fixture.componentInstance;
+            capabilitiesNode.url = 'testUrl';
             component.capabilitiesNode = capabilitiesNode;
             el = fixture.debugElement;
             fixture.detectChanges();

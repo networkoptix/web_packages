@@ -27,13 +27,11 @@ describe('For Developers Landing - Capabilities Node', () => {
 
     const getFirstStepContent = (el) => {
         const detailBlock = el.nativeElement.querySelector('.detail-block');
-        const stepNum = detailBlock.querySelector('.step').innerText;
         const stepText = detailBlock.querySelector('.step-text');
         const title = stepText.querySelector('h3').innerText;
-        const subtitle = stepText.querySelector('span').innerText;
         const imageSrc = '/static' + detailBlock.querySelector('.step-image > img').src.split('static')[1];
 
-        return { stepNum, title, subtitle, imageSrc };
+        return { title, imageSrc };
     };
 
     beforeEach(
@@ -83,16 +81,8 @@ describe('For Developers Landing - Capabilities Node', () => {
         expect(numStepBlocks).toBe(numStepNodes);
     });
 
-    it('should show the correct step number', () => {
-        expect(stepContent.stepNum).toBe(stepToTest.toString());
-    });
-
     it('should show the correct step title', () => {
         expect(stepContent.title).toBe(step.title);
-    });
-
-    it('should show the correct step subtitle', () => {
-        expect(stepContent.subtitle).toBe(step.subtitle);
     });
 
     it('should show the correct step image', () => {

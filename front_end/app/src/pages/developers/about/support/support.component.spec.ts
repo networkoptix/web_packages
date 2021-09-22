@@ -1,17 +1,20 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
-import { NxSupportComponent } from './support.component';
-import { WINDOW } from '../../../../services/window-provider';
-import { getMockTranslations, MockProvider, sanitizerMock } from '../../../../_mocks/helpers.test';
-import { supportNode } from '../../../../_mocks/knowledge_base_landing.mock';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { DirectivesModule } from '../../../../directives/directives.module';
 import { CommonModule } from '@angular/common';
-import { RouterLinkDirectiveStub } from '@src/_testing';
+import { DomSanitizer } from '@angular/platform-browser';
+
+import { NxConfigService }           from '@services/nx-config';
+import { nxConfig }                  from '@services/nx-config/config';
+import { NxSupportComponent }        from './support.component';
+import { WINDOW }                    from '@services/window-provider';
+import {
+    getMockTranslations, MockProvider, sanitizerMock
+}                                    from '@src/_mocks/helpers.test';
+import { supportNode }               from '@src/_mocks/knowledge_base_landing.mock';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { DirectivesModule }          from '@directives/directives.module';
+import { RouterLinkDirectiveStub }   from '@src/_testing';
+import { ErrorStateManager }         from '../error-state/error-state-manager';
 
 describe('For Developers Landing - Support Node', () => {
     let component: NxSupportComponent;
@@ -25,8 +28,8 @@ describe('For Developers Landing - Support Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxSupportComponent, RouterLinkDirectiveStub],
-                imports: [
+                declarations : [NxSupportComponent, RouterLinkDirectiveStub],
+                imports      : [
                     CommonModule,
                     DirectivesModule
                 ],
@@ -34,7 +37,7 @@ describe('For Developers Landing - Support Node', () => {
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock),
                     new MockProvider(DomSanitizer, sanitizerMock),
-                    new MockProvider(WINDOW, {})
+                    new MockProvider(WINDOW, window)
                 ]
             });
 
@@ -50,6 +53,8 @@ describe('For Developers Landing - Support Node', () => {
                 }
             });
             el = fixture.debugElement;
+            fixture.detectChanges();
+            component.errorManager = new ErrorStateManager(window);
             fixture.detectChanges();
         })
     );
