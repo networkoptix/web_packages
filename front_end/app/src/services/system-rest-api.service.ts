@@ -263,6 +263,31 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return headers;
     }
 
+    protected delete<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
+        let headers = new HttpHeaders();
+        params = params || {};
+
+        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+
+        if (this.serverId) {
+            headers = headers.set('X-Server-Guid', this.serverId);
+        }
+
+        Object.entries(customHttpHeaders).forEach((entry) => {
+            headers = headers.set(...entry);
+        });
+        const fullUrl = `${this.urlBase}${url}`;
+        return this.http.delete<ResponseType>(fullUrl, { headers, params }).pipe(
+            retryWhen((request) => this.retryHandler(request)),
+            timeout(requestTimeout),
+            tap(undefined, (error) => {
+                if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                    this.appState.systemAvailable$.next(false);
+                }
+            })
+        );
+    }
+
     protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
         let headers = new HttpHeaders();
         params = params || {};
@@ -422,7 +447,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ).toPromise();
         }
         this.clearTokens();
-        return this.http.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
+        return this.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
     getApiDoc(type: APIDocVersion = 'main') {

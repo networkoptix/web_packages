@@ -31,12 +31,18 @@ export class ServerManager {
 
         if (this.servers.length) {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
-                const unauthorizedCallback = environment.isLocal
-                    ? () => Promise.resolve()
-                    : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                        this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                        return Promise.resolve(true);
-                    });
+                let unauthorizedCallback = () => Promise.resolve(true);
+                if (!environment.isLocal) {
+                    unauthorizedCallback = this.system.useRest
+                        ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then((tokens) => {
+                            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
+                            return Promise.resolve(true);
+                        })
+                        : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                            return Promise.resolve(true);
+                        });
+                }
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
