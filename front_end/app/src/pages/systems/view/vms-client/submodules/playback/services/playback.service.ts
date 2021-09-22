@@ -165,11 +165,16 @@ export class PlaybackService implements OnDestroy {
         }
         if (!paused) {
             const LAST_MINUTE_SIZE = 9e4 // 1.5 minutes
-            if (t > Date.now() - LAST_MINUTE_SIZE || (
-                !this.vms.selectedCamera.isThereRecord(t) &&
-                !this.vms.selectedCamera.getNextRecord(t)
-            )) {
+            const isThereRecord = this.vms.selectedCamera.isThereRecord(t);
+            const nextRecord = this.vms.selectedCamera.getNextRecord(t);
+            if (t > Date.now() - LAST_MINUTE_SIZE || (!isThereRecord && !nextRecord)) {
                 return this.playLive()
+            } else if (!isThereRecord) {
+                t = this.vms.selectedCamera.getNextRecord(t)?.start;
+                if (!t) {
+                    this.playLive()
+                    return
+                }
             }
         }
         const [width, height] = this.extractDimensions();

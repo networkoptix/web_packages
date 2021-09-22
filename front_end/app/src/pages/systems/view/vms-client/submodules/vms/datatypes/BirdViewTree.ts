@@ -358,7 +358,7 @@ export class BirdViewTreeNode {
                         this._zoomingRequiredCallback(this, 'left', nextMinGap);
                     }
 
-                    result = result.concat(this._records.filter(r => r.start < this._intervalCenterMs && r.end > startMs));
+                    result = result.concat(this._records.filter(r => r.start < endMs && r.end > startMs));
                 } else {
                     result = result.concat(this._leftChild.getRecords(Math.max(this._startMs, startMs), Math.min(endMs, this._intervalCenterMs), minGapMs));
                 }
@@ -372,7 +372,7 @@ export class BirdViewTreeNode {
                         this._zoomingRequiredCallback(this, 'right', nextMinGap);
                     }
 
-                    result = result.concat(this._records.filter(r => r.start < endMs && r.end > this._intervalCenterMs));
+                    result = result.concat(this._records.filter(r => r.start < endMs && r.end > startMs));
                 } else {
                     result = result.concat(this._rightChild.getRecords(Math.max(this._intervalCenterMs, startMs), Math.min(this._endMs, endMs), minGapMs));
                 }
