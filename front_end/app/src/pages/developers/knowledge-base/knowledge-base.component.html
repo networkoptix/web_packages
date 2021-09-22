@@ -12,14 +12,13 @@
     </div>
 </ng-template>
 
-<!-- These card types were on some original mock ups but it doesn't look like we're currently using them -->
-<!-- Could probably remove these if we don't end up using them -->
-
-<!-- <ng-template #contentCard let-node="node" let-index="index">
+<ng-template #contentCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
         <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
     </div>
-</ng-template> -->
+</ng-template>
+
+<!-- Doesn't appear to be currently used -->
 
 <!--<ng-template #outlinedCard let-node="node">-->
 <!--    <nx-block type="mt-3">-->
@@ -31,7 +30,7 @@
 <!--    </nx-block>-->
 <!--</ng-template>-->
 
-<!-- <ng-template #sideCard let-node="node" let-index="index">
+<ng-template #sideCard let-node="node" let-index="index">
     <nx-block type="mt-3" header-style="side">
         <header>
             <div *ngIf="node.cardIcon" class="heading-icon">
@@ -47,7 +46,7 @@
             <div [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"></div>
         </nx-section>
     </nx-block>
-</ng-template> -->
+</ng-template>
 
 
 <!-- End of Card Templates -->
