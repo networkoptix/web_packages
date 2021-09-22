@@ -123,7 +123,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
         };
         const errorCode = player?.error()?.code;
-        if ([MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED, MediaError.MEDIA_ERR_NETWORK].includes(errorCode) && !this.transportChangeByError) { // code: 4
+        if ([MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED, MediaError.MEDIA_ERR_DECODE].includes(errorCode) && !this.transportChangeByError) { // code: 4, 3
             toggleTransport();
         } else if (player && ['abort', 'error'].includes(event.type)) {
             if (event.type === 'error' && this.transportChangeByError) {
