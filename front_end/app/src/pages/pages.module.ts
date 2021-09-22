@@ -43,8 +43,8 @@ const lazyRoutes: Routes = [
     {
         path         : '',
         pathMatch    : 'full',
-        canActivate  : [RedirectGuard]
-        loadChildren : determineLandingPageRoutingStrategy(),
+        canActivate  : [RedirectGuard],
+        loadChildren : determineLandingPageRoutingStrategy()
     },
     {
         path         : 'systems/:systemId/advanced',
