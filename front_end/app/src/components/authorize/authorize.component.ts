@@ -35,7 +35,9 @@ export interface AuthorizeParams {
     client_type?: ClientType,
     view_type?: 'desktop' | 'mobile' | 'web',
     message?: 'passwordReset' | 'activated',
-    email?: string
+    email?: string,
+    access_code?: string,
+    access_token?: string
 };
 
 export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup'
@@ -65,7 +67,8 @@ export enum ClientType {
     connect = 'connectSystemToCloud',
     setup = 'setupWizard',
     renewDesktop = 'renewSessionDesktop',
-    renewWeb = 'renewSessionWeb'
+    renewWeb = 'renewSessionWeb',
+    openClient = 'openClientFromCloud'
 };
 
 @UntilDestroy({ checkProperties: true })
@@ -207,7 +210,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.initialData.response_type = 'code';
             }
 
-            if (action === 'restore_password') {
+            const { access_token, access_code, email, redirect_url } = this.initialData;
+            const skipTo2FaClientTypes = ['renewSessionDesktop', 'renewSessionWeb', 'openClientFromCloud'];
+            if (skipTo2FaClientTypes.includes(this.clientType) && (access_token || access_code)) {
+                this.loginEmail = email;
+                this.loginCode = access_token || access_code;
+                this.redirectLink = redirect_url;
+                this.currentState = AuthorizeState.auth;
+            } else if (action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
             } else if (action === 'activate') {
                 await this.cloudService.activate(this.codeFromRoute).catch(err => console.error(err));
@@ -215,7 +225,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;
             } else if (this.clientType.includes('Password')) {
-                this.loginEmail = this.initialData.email;
+                this.loginEmail = email;
                 this.emailLocked = true;
                 this.currentState = AuthorizeState.password;
             } else {

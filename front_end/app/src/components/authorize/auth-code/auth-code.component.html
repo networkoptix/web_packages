@@ -5,7 +5,7 @@
         [svgStyle]="{'width.px': '320', 'height.px': '80'}"
         [applyClass]="true"></svg-icon>
     <div class="for-small">
-        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && smallView"
+        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud'].includes(clientType) && smallView"
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('password')">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
@@ -14,7 +14,7 @@
         </button>
         <h3 class="authorize-header">{{ LANG.authorize.loginCloudHeader() }}</h3>
     </div>
-    <div class="authorize-subheader">
+    <div class="authorize-subheader" *ngIf="loginEmail">
         <span class="sub-header">{{ LANG.authorize.asAccountSubheader() }}</span>
         <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
     </div>
@@ -58,7 +58,7 @@
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop'].includes(clientType) && !smallView"
+            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud'].includes(clientType) && !smallView"
                 class="btn text-button" type="button" (click)="setCurrentState.emit('password')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
