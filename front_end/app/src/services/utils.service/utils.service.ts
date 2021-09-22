@@ -342,4 +342,14 @@ export class NxUtilsService {
         }
         return screenX;
     }
+
+    static highlight = (
+        text: string, start, end
+    ) => [0, start || 0, end || 0].map((
+        splitAt, curInd, fullText
+    ) => text.slice(
+        splitAt, fullText[curInd + 1]
+    )).reduce((
+        result, section, curInd
+    ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
 }

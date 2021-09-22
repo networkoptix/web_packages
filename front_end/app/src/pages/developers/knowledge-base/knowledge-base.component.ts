@@ -1,29 +1,30 @@
 /* eslint-disable camelcase */
 import {
     Component, OnInit, Renderer2, ViewChild, ElementRef, Inject, OnDestroy
-} from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router }                from '@angular/router';
-import { WINDOW }                                               from '@services/window-provider';
-import { UntilDestroy, untilDestroyed }                         from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, of } from 'rxjs';
-import { switchMap, tap, delay, map, filter, startWith, take } from 'rxjs/operators';
+}                                                                   from '@angular/core';
+import {
+    ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router
+}                                                                   from '@angular/router';
+import { WINDOW }                                                   from '@services/window-provider';
+import { UntilDestroy, untilDestroyed }                             from '@ngneat/until-destroy';
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of }    from 'rxjs';
+import { switchMap, tap, delay, map, filter, startWith }            from 'rxjs/operators';
 
-import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
-import { NxHeaderService }              from '@services/nx-header.service';
-import { NxMenusService, MenuNode }     from '@services/menus.service';
-
-import { MenuNodeWithParent, RelatedLinks } from '@components/left-menu/left-menu.component';
-import { SearchFilter }                 from '@components/search/search.component';
-import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxProcessService } from '../../../services/process.service';
-import { NxUriService } from '../../../services/uri.service';
-import { NxPageService } from '../../../services/page.service';
-import { NxAppStateService } from '@services/nx-app-state.service';
-import { query } from '@angular/animations';
-import { NxKnowledgebaseService } from './knowledge-base.service';
+import { NxConfigService, IConfig }             from '@services/nx-config';
+import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
+import { NxHeaderService }                      from '@services/nx-header.service';
+import { MenuNode }                             from '@services/menus.service';
+import { MenuNodeWithParent, RelatedLinks }     from '@components/left-menu/left-menu.component';
+import { SearchFilter }                         from '@components/search/search.component';
+import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';
+import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService }            from '@services/nx-language-provider';
+import { NxProcessService, Process }            from '@services/process.service';
+import { NxUriService }                         from '@services/uri.service';
+import { NxPageService }                        from '@services/page.service';
+import { NxAppStateService }                    from '@services/nx-app-state.service';
+import { NxKnowledgebaseService }               from './knowledge-base.service';
+import { NxUtilsService }                       from '@services/utils.service';
 
 export enum CardClasses {
     NORMAL='text',
@@ -105,15 +106,19 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(updated);
     }
 
+    private updateSearchResults = (results) => {
+        this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
+        this.loadingNext = false;
+    }
+
     fetchNext = () => {
         this.loadingNext = true;
         this.currentSearchResultPage += 1;
         this.fetchSearchHandler(
             { ...this.searchQuery$.value, page: this.currentSearchResultPage }
-        ).pipe(untilDestroyed(this)).subscribe((results) => {
-            this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
-            this.loadingNext = false;
-        });
+        ).pipe(
+            untilDestroyed(this)
+        ).subscribe(this.updateSearchResults);
     };
 
     fetchSearchHandler({ query, page }) {
@@ -127,7 +132,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
         private router: Router,
-        private menusService: NxMenusService,
         private renderer2: Renderer2,
         public ribbonService: NxRibbonService,
         private processService: NxProcessService,
@@ -149,28 +153,18 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     parseResults({ docs }) {
-        const highlight = (
-            text: string, start, end
-        ) => [0, start || 0, end || 0].map((
-            splitAt, curInd, fullText
-        ) => text.slice(
-            splitAt, fullText[curInd + 1]
-        )).reduce((
-            result, section, curInd
-        ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
-
         return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
             const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippet : content ? highlight(content, matchStart, matchEnd) : shortDescription,
-                title   : highlight(title, titleMatchStart, titleMatchEnd)
+                snippet : content ? NxUtilsService.highlight(content, matchStart, matchEnd) : shortDescription,
+                title   : NxUtilsService.highlight(title, titleMatchStart, titleMatchEnd)
             };
         });
     }
 
     showRibbon(id, state, reviewId?) {
-        const ribbonActions: RibbonActionInput[] = [
+        const draftActions: RibbonActionInput[] = [
             {
                 type     : 'link',
                 text     : this.LANG.ribbon.integration.backToEditText,
@@ -178,36 +172,53 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 external : true
             }
         ];
-        if (reviewId) {
-            const process = this.processService.createProcess(() => {
-                return this.cloudApi.acceptReview(reviewId);
-            }, {
-                successMessage: this.LANG.toastMessage.reviewAccepted?.()
-            }).then(() => {
-                const url = this.uriService.getURL();
-                this.router.navigateByUrl('/', { skipLocationChange: true }).then(_ => {
-                    this.router.navigateByUrl(url);
-                });
-                this.ribbonService.hide();
-            });
-            ribbonActions.unshift(
-                {
-                    type  : 'process-button',
-                    text  : this.LANG.ribbon.integration.accept?.(),
-                    value : process
-                },
-                {
-                    type     : 'link',
-                    text     : this.LANG.ribbon.integration.reject?.(),
-                    value    : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
-                    external : true
-                }
-            );
-        }
+        const message = state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon();
+        const ribbonActions = reviewId ? this.addReviewActions(reviewId, draftActions) : draftActions;
         this.ribbonService.show(
-            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
+            message,
             ribbonActions
         );
+    }
+
+    private acceptedReviewRedirect = () => {
+        const url = this.uriService.getURL();
+        this.router.navigateByUrl(
+            '/', { skipLocationChange: true }
+        ).then(_ => {
+            this.router.navigateByUrl(url);
+        });
+        this.ribbonService.hide();
+    }
+
+    private addReviewActions(reviewId: any, draftActions: RibbonActionInput[]) {
+        const process = this.processService.createProcess(() => {
+            return this.cloudApi.acceptReview(reviewId);
+        }, {
+            successMessage: this.LANG.toastMessage.reviewAccepted?.()
+        },
+        this.acceptedReviewRedirect
+        );
+
+        return [
+            ...this.getReviewActions(process, reviewId),
+            ...draftActions
+        ];
+    }
+
+    private getReviewActions(process: Process, reviewId: any): RibbonActionInput[] {
+        return [
+            {
+                type  : 'process-button',
+                text  : this.LANG.ribbon.integration.accept?.(),
+                value : process
+            },
+            {
+                type     : 'link',
+                text     : this.LANG.ribbon.integration.reject?.(),
+                value    : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
+                external : true
+            }
+        ];
     }
 
     findKBWithArticle(assetId, assetParam) {
@@ -222,147 +233,169 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             startWith(''),
-            switchMap(_ => {
-                let snapshot = this.route.snapshot;
-                while (!snapshot.paramMap.get('kb-name')) {
-                    snapshot = snapshot.parent;
-                }
-                this.kbService.kbName = snapshot.paramMap.get('kb-name') || this.kbService.kbName;
-                while (!snapshot.paramMap.get('name')) {
-                    snapshot = snapshot.parent;
-                }
-                this.kbService.basePath = snapshot.paramMap.get('name');
-                const isContentType = this.kbService.basePath === 'content';
-                this.appStateService.altBackground = !isContentType;
-                const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
-                if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
-                    this.kbService.menuName = menuName;
-                }
-                if (!this.kbService.menuName) {
-                    const assetParam = !isContentType ? snapshot.paramMap.get('level1') : snapshot.paramMap.get('kb-name');
-                    if (assetParam) {
-                        const assetId = parseInt(assetParam.split('-')[0]);
-                        if (Number.isInteger(assetId)) {
-                            if (snapshot.paramMap.get('level1')) {
-                                this.findKBWithArticle(assetId, assetParam);
-                            } else {
-                                this.kbService.contentAssetId = assetId;
-                            }
-                        }
-                    } else {
-                        // Navigate to 404 and replace failing url so going history back will load requesting page
-                        this.pageService.show404();
-                        return;
-                    }
-                } else {
-                    this.kbService.contentAssetId = null;
-                }
-                return this.route.url;
-            }),
-            switchMap(urlSegment => {
-                this.loading = true;
-                this.ribbonService.hide();
-                this.clearSearch();
-                const getFirstDoc = () => {
-                    const traverseToFirst = ([first, ...remaining]: MenuNode[] = []): MenuNode => !first ? undefined : ((first.asset_id && first) || traverseToFirst([...remaining, ...first.nodes]));
-                    if (this.kbService.contentAssetId) {
-                        return of(undefined);
-                    }
-                    return this.kbService.getMenuObservable().pipe(
-                        filter(menu => menu?.nodes.length > 0),
-                        tap(menu => {
-                            if (!this.kbService.assetIds.length) {
-                                const getAllIds = (nodes: MenuNode[]) => {
-                                    nodes.forEach(node => {
-                                        if (node.asset_id) {
-                                            this.kbService.assetIds.push(node.asset_id);
-                                        }
-                                        getAllIds(node.nodes);
-                                    });
-                                };
-                                this.kbService.assetIds = [];
-                                getAllIds(menu.nodes);
-                            }
-                        }),
-                        map(menu => traverseToFirst(menu.nodes))
-                    );
-                };
-                return getFirstDoc().pipe(
-                    switchMap((firstNode?) => {
-                        const assetParam = this.route.snapshot.paramMap.get('level1');
-                        let assetId;
-                        if (assetParam) {
-                            assetId = parseInt(assetParam.split('-')[0]);
-                        }
-
-                        const newAssetId = assetId || this.headerService.currentLocation.assetId || firstNode?.asset_id || this.kbService.contentAssetId;
-                        this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
-                        let state = this.route.snapshot.queryParamMap.get('state');
-                        if (!this.kbService.contentAssetId && !state && newAssetId === firstNode.asset_id && !assetId) {
-                            state = firstNode.state;
-                        }
-
-                        if (newAssetId && !this.route.snapshot.paramMap.get('level1') && !this.kbService.contentAssetId) {
-                            this.router.navigate(['docs', this.kbService.basePath, this.kbService.kbName, newAssetId], { replaceUrl: true, queryParams: { state: state } });
-                            return EMPTY;
-                        }
-
-                        this.kbService.activeAssetState = state;
-                        this.kbService.activeAssetId = newAssetId;
-                        if (!state && assetId && !this.kbService.assetIds.includes(assetId)) {
-                            this.findKBWithArticle(assetId, assetParam);
-                            return EMPTY;
-                        } else {
-                            if (!this.kbService.menuName && !this.kbService.activeAssetId) {
-                                this.pageService.show404();
-                                return EMPTY;
-                            }
-                            return this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, this.kbService.activeAssetId, state)
-                                .pipe(
-                                    tap(({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
-                                        const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
-                                        if (state || this.kbService.account?.is_superuser) {
-                                            this.showRibbon(this.kbService.activeAssetId, state, reviewId);
-                                        }
-                                        this.search = { ...this.search };
-                                        this.pageService.pageTitle = originalTitle;
-                                        this.pageService.pageDescription = shortDescription;
-                                        this.pageNode = KnowledgeNode.normalHeader(
-                                            title,
-                                            this.kbService.activeAssetId,
-                                            contentHTML,
-                                            CardClasses.NORMAL,
-                                            (blocks || []).map(({ contentHTML, title, type }) => {
-                                                return KnowledgeNode.normalHeader(
-                                                    title,
-                                                    '',
-                                                    contentHTML,
-                                                    type
-                                                );
-                                            }),
-                                            script
-                                        );
-                                        this.loading = false;
-                                        setTimeout(() => {
-                                            Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
-                                                this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
-                                            });
-                                            const myScript = this.renderer2.createElement('script');
-                                            myScript.type = 'text/javascript';
-                                            myScript.innerHTML = this.pageNode.script;
-                                            if (this.scriptDiv?.nativeElement) {
-                                                this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
-                                            }
-                                        });
-                                    })
-                                );
-                        }
-                    })
-                );
-            }),
+            switchMap(this.initializeMenu),
+            switchMap(this.updateDisplayedDoc),
             untilDestroyed(this)
         ).subscribe();
     }
+
+    private updateDisplayedDoc = (firstNode?) => {
+        const { state, assetId, assetParam } = this.parseAssetDetails(firstNode);
+
+        if (!state && assetId && !this.kbService.assetIds.includes(assetId)) {
+            this.findKBWithArticle(assetId, assetParam);
+        } else {
+            if (!this.kbService.menuName && !this.kbService.activeAssetId) {
+                this.pageService.show404();
+            }
+            return this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, this.kbService.activeAssetId, state)
+                .pipe(
+                    tap(this.renderDoc(state))
+                );
+        }
+    }
+
+    private renderDoc = (state) => ({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
+        const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
+        if (state || this.kbService.account?.is_superuser) {
+            this.showRibbon(this.kbService.activeAssetId, state, reviewId);
+        }
+        this.updatePageNode(originalTitle, shortDescription, title, contentHTML, blocks, script);
+        this.loading = false;
+        setTimeout(this.addCustomScripts);
+    }
+
+    private addCustomScripts = () => {
+        Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
+            this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
+        });
+        const myScript = this.renderer2.createElement('script');
+        myScript.type = 'text/javascript';
+        myScript.innerHTML = this.pageNode.script;
+        if (this.scriptDiv?.nativeElement) {
+            this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
+        }
+    }
+
+    private initializeMenu = () => {
+        const [snapshot, isContentType] = this.updateSelectedKBandGetSnapshot();
+        this.appStateService.altBackground = !isContentType;
+        this.updateSelectedMenu(snapshot, isContentType);
+        this.loading = true;
+        this.ribbonService.hide();
+        this.clearSearch();
+        return this.getFirstDoc();
+    }
+
+    private updatePageNode(originalTitle: any, shortDescription: any, title: any, contentHTML: any, blocks: any, script: any) {
+        this.search = { ...this.search };
+        this.pageService.pageTitle = originalTitle;
+        this.pageService.pageDescription = shortDescription;
+        this.pageNode = KnowledgeNode.normalHeader(
+            title,
+            this.kbService.activeAssetId,
+            contentHTML,
+            CardClasses.NORMAL,
+            (blocks || []).map(({ contentHTML, title, type }) => {
+                return KnowledgeNode.normalHeader(
+                    title,
+                    '',
+                    contentHTML,
+                    type
+                );
+            }),
+            script
+        );
+    }
+
+    private parseAssetDetails(firstNode: any) {
+        const assetParam = this.route.snapshot.paramMap.get('level1');
+        const assetId = assetParam && parseInt(assetParam.split('-')[0]);
+
+        const newAssetId = assetId || this.headerService.currentLocation.assetId || firstNode?.asset_id || this.kbService.contentAssetId;
+        this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
+        let state = this.route.snapshot.queryParamMap.get('state');
+        if (!this.kbService.contentAssetId && !state && newAssetId === firstNode.asset_id && !assetId) {
+            state = firstNode.state;
+        }
+        if (newAssetId && !this.route.snapshot.paramMap.get('level1') && !this.kbService.contentAssetId) {
+            this.router.navigate(['docs', this.kbService.basePath, this.kbService.kbName, newAssetId], { replaceUrl: true, queryParams: { state: state } });
+        }
+
+        this.kbService.activeAssetState = state;
+        this.kbService.activeAssetId = newAssetId;
+        return { state, assetId, assetParam };
+    }
+
+    private updateSelectedKBandGetSnapshot() {
+        let snapshot = this.route.snapshot;
+        while (!snapshot.paramMap.get('kb-name')) {
+            snapshot = snapshot.parent;
+        }
+        this.kbService.kbName = snapshot.paramMap.get('kb-name') || this.kbService.kbName;
+        while (!snapshot.paramMap.get('name')) {
+            snapshot = snapshot.parent;
+        }
+        this.kbService.basePath = snapshot.paramMap.get('name');
+        const isContentType = this.kbService.basePath === 'content';
+        return <[ActivatedRouteSnapshot, boolean]>[snapshot, isContentType];
+    }
+
+    private updateSelectedMenu(snapshot: ActivatedRouteSnapshot, isContentType: boolean) {
+        const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
+        if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
+            this.kbService.menuName = menuName;
+        }
+        if (!this.kbService.menuName) {
+            const assetParam = !isContentType ? snapshot.paramMap.get('level1') : snapshot.paramMap.get('kb-name');
+            if (assetParam) {
+                const assetId = parseInt(assetParam.split('-')[0]);
+                if (Number.isInteger(assetId)) {
+                    if (snapshot.paramMap.get('level1')) {
+                        this.findKBWithArticle(assetId, assetParam);
+                    } else {
+                        this.kbService.contentAssetId = assetId;
+                    }
+                }
+            } else {
+                // Navigate to 404 and replace failing url so going history back will load requesting page
+                this.pageService.show404();
+            }
+        } else {
+            this.kbService.contentAssetId = null;
+        }
+    }
+
+    private updateAssetIdsForMenu = (menu) => {
+        if (!this.kbService.assetIds.length) {
+            const getAllIds = (nodes: MenuNode[]) => {
+                nodes.forEach(node => {
+                    if (node.asset_id) {
+                        this.kbService.assetIds.push(node.asset_id);
+                    }
+                    getAllIds(node.nodes);
+                });
+            };
+            this.kbService.assetIds = [];
+            getAllIds(menu.nodes);
+        }
+    }
+
+    private getFirstDoc = () => {
+        const traverseToFirst = (
+            [first, ...remaining]: MenuNode[] = []
+        ): MenuNode => !first ? undefined : ((first.asset_id && first) || traverseToFirst([...remaining, ...first.nodes]));
+
+        if (this.kbService.contentAssetId) {
+            return of(undefined);
+        }
+
+        return this.kbService.getMenuObservable().pipe(
+            filter(menu => menu?.nodes.length > 0),
+            tap(this.updateAssetIdsForMenu),
+            map(menu => traverseToFirst(menu.nodes))
+        );
+    };
 
     ngOnInit() {
         this.relatedLinksFiltered$ = combineLatest([this.kbService.activeAssetIdSubject, this.relatedLinks$]).pipe(
@@ -425,44 +458,46 @@ export class KnowledgeNode {
         );
     }
 
-    static sideHeader(
-        title: string,
-        url: string,
-        content,
-        nodes: KnowledgeNode[],
-        script = '',
-        cardIcon: string,
-        cardLead: string
-    ) {
-        return new KnowledgeNode(
-            title,
-            url,
-            content,
-            nodes,
-            script,
-            CardClasses.SIDE,
-            cardIcon,
-            cardLead
-        );
-    }
+    // These additional card type nodes were on some original mockups
+    // Can probably be removed if we don't end up using
+    // static sideHeader(
+    //     title: string,
+    //     url: string,
+    //     content,
+    //     nodes: KnowledgeNode[],
+    //     script = '',
+    //     cardIcon: string,
+    //     cardLead: string
+    // ) {
+    //     return new KnowledgeNode(
+    //         title,
+    //         url,
+    //         content,
+    //         nodes,
+    //         script,
+    //         CardClasses.SIDE,
+    //         cardIcon,
+    //         cardLead
+    //     );
+    // }
 
-    static article(
-        title: string,
-        url: string,
-        content: string,
-        showHeader = true,
-        nodes = [],
-        script = ''
-    ) {
-        return new KnowledgeNode(
-            showHeader ? title : '',
-            url,
-            content,
-            nodes,
-            script,
-            CardClasses.ARTICLE,
-            '',
-            ''
-        );
-    }
+    // static article(
+    //     title: string,
+    //     url: string,
+    //     content: string,
+    //     showHeader = true,
+    //     nodes = [],
+    //     script = ''
+    // ) {
+    //     return new KnowledgeNode(
+    //         showHeader ? title : '',
+    //         url,
+    //         content,
+    //         nodes,
+    //         script,
+    //         CardClasses.ARTICLE,
+    //         '',
+    //         ''
+    //     );
+    // }
 }
