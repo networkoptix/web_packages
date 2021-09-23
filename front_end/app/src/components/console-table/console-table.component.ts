@@ -199,6 +199,7 @@ export class NxConsoleTableComponent {
     filterStates: Record<string, FilterState> = {};
     fixedWidths = {};
     noClients = false;
+    ignoreActive = false
 
     selectedManifest: ConsoleManifest;
     selectedData: TableDataSource;
@@ -422,6 +423,11 @@ export class NxConsoleTableComponent {
     updateTableSize({ width, height }) {
         this.noResultsHeight = height;
         this.noResultsWidth = width;
+    }
+
+    handleIgnoreActive(event, ignore) {
+        this.ignoreActive = ignore;
+        event.stopPropagation();
     }
 }
 

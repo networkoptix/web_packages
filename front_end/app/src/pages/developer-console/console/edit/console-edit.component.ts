@@ -119,6 +119,7 @@ export class NxDevConsoleEditComponent {
     context: ContextManifest;
     errors: Record<string, string[]> = {};
     downloadClick: boolean;
+    hasErrors = false;
     // watchers: {[key: string]: Watcher<any, NxDevConsoleEditComponent>} = {};
 
     constructor(
@@ -164,6 +165,7 @@ export class NxDevConsoleEditComponent {
             },
             ({ values: errors }) => {
                 this.errors = errors;
+                this.hasErrors = true;
             }
         );
     }
@@ -215,6 +217,11 @@ export class NxDevConsoleEditComponent {
         this.consoleService.targetState = { id: this.asset.id, download: false };
         const [_, params = ''] = this.router.url.split('?');
         this.router.navigateByUrl(`/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`);
+    }
+
+    clearErrors(structureName) {
+        delete this.errors[structureName];
+        this.hasErrors = !!Object.keys(this.errors).length;
     }
 
     // addWatchers = () => this.context?.fields.forEach(({ name }) => {

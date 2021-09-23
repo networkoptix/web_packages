@@ -39,7 +39,7 @@ tr.data-row {
         background: transparentize($brand_core, 0.9);
     }
 
-    &:active {
+    &:not(.ignore-active):active {
         & * {
             color: $light1 !important;
             fill: $light1 !important;
@@ -280,6 +280,7 @@ button.reset-search {
 .console-table-wrapper {
     overflow-x: auto;
     border: none;
+    border-bottom: 1px solid $light4;
 }
 
 table {
@@ -288,4 +289,16 @@ table {
 
 .dynamic-size {
     overflow-x: hidden;
+}
+
+.icon-modal-svg {
+    &:hover {
+        .st0 {
+            fill: $dark15 !important;
+        }
+    }
+}
+
+.action-buttons-row {
+    border-top: 1px solid $light4;
 }

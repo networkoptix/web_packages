@@ -23,6 +23,8 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() customButtonClass: any = '';
     @Input() svg;
     @Input() textOnly: boolean = false;
+    @Input() reverseButton = false;
+    @Input() removeMinWidth = false;
 
     buttonClass: string;
     CONFIG: IConfig;

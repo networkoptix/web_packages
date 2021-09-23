@@ -15,6 +15,7 @@ export class NxPaginatorComponent {
     @Input() numPages: number;
     @Input() pagesToShow: number;
     @Input() tempDisabled = false;
+    @Input() showPrevNext = false
 
     CONFIG: IConfig;
     page$: Observable<number>;

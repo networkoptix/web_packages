@@ -27,9 +27,13 @@ nx-process-button {
     	}
     }
 
+    .reverse-order {
+        flex-direction: row-reverse;
+    }
+
     .process-button {
         height : 32px; // IE11 cannot calculate it :(
-        display  : inline-block;
+        display  : inline-flex;
         position : relative;
 
         .btn + .btn {

@@ -75,6 +75,7 @@
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ASYNC_HANDLER">
                         <td cdk-cell *cdkCellDef="let element"
+                            (mousedown)="handleIgnoreActive($event, true)"
                             [style.width.px]="fixedWidths[field.name] || 60"
                             [class]="'dynamic-size type-' + field.type + ' ' + (field.meta?.styles || '')">
                             <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])"
@@ -127,12 +128,15 @@
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_MODAL">
-                        <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        <td cdk-cell *cdkCellDef="let element"
+                            (mousedown)="handleIgnoreActive($event, true)"
+                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
                             <a (click)="handleModal(element[field.name])">
                                 <svg-icon nx-add-svg-src
                                     [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
                                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
                                     [applyClass]="true"
+                                    class="icon-modal-svg"
                                     [ngbTooltip]="field.meta?.tooltip"></svg-icon>
                             </a>
                         </td>
@@ -158,7 +162,10 @@
                 <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
             </thead>
             <tbody>
-                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"
+                    (click)="handleIgnoreActive($event, false)"
+                    class="data-row"
+                    [ngClass]="{'ignore-active': ignoreActive}"></tr>
                 <tr class="data-row" *cdkNoDataRow>
                     <td class="data-row" colspan="9999">
                       <span>{{selectedManifest.noResultsMessage}}</span>
@@ -188,7 +195,7 @@
             <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>
         </div>
     </nx-section>
-    <div>
+    <div *ngIf="!noClients" class="action-buttons-row">
         <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')">{{action.title}}</button>
     </div>
 </nx-block>

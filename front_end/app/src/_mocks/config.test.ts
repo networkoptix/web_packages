@@ -277,10 +277,7 @@ export function setupConfig(): IConfig {
                     {
                         type: ConfigType.TEXT,
                         name: 'name',
-                        label: 'Internal Name',
-                        meta: {
-                            styles: 'font-italic'
-                        }
+                        label: 'Internal Name'
                     },
                     {
                         type: ConfigType.DATE,

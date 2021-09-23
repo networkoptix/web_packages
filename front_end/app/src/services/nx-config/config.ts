@@ -292,7 +292,6 @@ export const nxConfig: IConfig = {
                     name  : 'name',
                     label : 'Internal Name',
                     meta  : {
-                        styles : 'font-italic',
                         filter : {
                             sortable : SortOptions.TEXT,
                             grouping : GroupingOptions.TEXT
