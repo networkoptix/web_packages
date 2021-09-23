@@ -116,6 +116,9 @@ Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
+    IF    '${validate}' == 'True'
+        Check Language Logged In    ${email}    ${password}
+    END
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
@@ -177,9 +180,7 @@ Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    IF    '${mode}' == 'cloud'
-        Check Language Logged In    ${email}    ${password}
-    ELSE IF    '${mode}' == 'webadmin'
+    IF    '${mode}' == 'webadmin'
         Wait Until Element Is Visible    ${CLOUD NAME}
         Sleep    1
     END    
