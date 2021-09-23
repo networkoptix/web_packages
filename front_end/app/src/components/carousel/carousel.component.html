@@ -8,20 +8,20 @@
                 <img [alt]="screenshot.caption || (type + ' carousel image ' + (i + 1))" class="img-fluid" [src]="screenshot.value">
             </div>
         </div>
-        <span *ngIf="imageCount > 1" class="carousel-control-prev" role="button"
+        <div *ngIf="imageCount > 1" class="carousel-control-prev" role="button"
               (click)="previousElement()">
             <div class="nav-arrow left">
                 <span></span>
                 <span></span>
             </div>
-        </span>
-        <span *ngIf="imageCount > 1" class="carousel-control-next" role="button"
+        </div>
+        <div *ngIf="imageCount > 1" class="carousel-control-next" role="button"
               (click)="nextElement()">
             <div class="nav-arrow right">
                 <span></span>
                 <span></span>
             </div>
-        </span>
+        </div>
     </div>
 </div>
 
@@ -38,6 +38,4 @@
     </div>
 </div>
 
-<div class="carousel-item-caption"
-     *ngIf="caption"
-     [innerText]="caption"></div>
+<div class="carousel-item-caption" *ngIf="caption" [innerText]="caption"></div>
