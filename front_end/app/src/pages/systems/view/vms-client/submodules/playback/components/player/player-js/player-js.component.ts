@@ -41,11 +41,17 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         let videoJsAutoRetry = 0;
         let playerHasPlayed = false;
         let stallTimer;
-        const waitingTime = 4 * 1000;
+        const waitingTime = 8 * 1000;
         const options = {
             autoplay          : true,
             inactivityTimeout : 0
         };
+
+        const resetTimer = () => {
+            stallTimer && clearTimeout(stallTimer);
+            stallTimer = undefined;
+        };
+
         this.player = videojs(this.videoView.nativeElement, options);
 
         this.player.on('ready', () => {
@@ -58,9 +64,11 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('waiting', () => {
-            stallTimer && clearTimeout(stallTimer);
             if (playerHasPlayed) {
+                resetTimer();
                 playerHasPlayed = false;
+            }
+            if (!stallTimer) {
                 stallTimer = setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
@@ -68,7 +76,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('timeupdate', () => {
-            stallTimer && clearTimeout(stallTimer);
+            resetTimer();
         });
 
         this.player.on('ended', () => {
