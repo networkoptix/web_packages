@@ -7,7 +7,7 @@
     </div>
 
     <button *ngIf="!textOnly; else textButton"
-        class="btn {{buttonClass}} {{customButtonClass}} process-button"
+        class="btn {{buttonClass}} {{customButtonClass}}"
         [ngClass]="{'processing' : process && process.processing, 'reverse-order': reverseButton, 'min-w-120': !removeMinWidth}"
         [ngStyle]="{'cursor': buttonDisabled ? 'not-allowed' : 'pointer'}"
         [disabled]="buttonDisabled"

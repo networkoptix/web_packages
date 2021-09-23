@@ -7,10 +7,10 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
 import { Process }                  from '../../services/process.service';
 
 @Component({
-    selector     : 'nx-process-button',
-    templateUrl  : 'process-button.component.html',
-    styleUrls    : ['process-button.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-process-button',
+    templateUrl   : 'process-button.component.html',
+    styleUrls     : ['process-button.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;
