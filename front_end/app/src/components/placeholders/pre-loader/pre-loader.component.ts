@@ -7,13 +7,13 @@ import { Component, Input, OnInit } from '@angular/core';
 */
 
 @Component({
-    selector: 'nx-pre-loader',
-    templateUrl: 'pre-loader.component.html',
-    styleUrls: ['pre-loader.component.scss']
+    selector    : 'nx-pre-loader',
+    templateUrl : 'pre-loader.component.html',
+    styleUrls   : ['pre-loader.component.scss']
 })
 export class NxPreLoaderComponent implements OnInit {
     @Input() type: string;
-    @Input() minHeight = 0;
+    @Input() minHeight: number;
 
     constructor() {
     }
