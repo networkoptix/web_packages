@@ -177,6 +177,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy (): void {
         this.cancelPoll$.next('cancel');
+        this.ribbonService.hide();
     }
 
     protected _onUxStateChange (s: WebclientUxState) {
