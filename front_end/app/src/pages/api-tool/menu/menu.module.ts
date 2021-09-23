@@ -6,8 +6,8 @@ import { RouterModule }          from '@angular/router';
 import { FormsModule }           from '@angular/forms';
 import { AngularSvgIconModule }  from 'angular-svg-icon';
 
-import { ComponentsModule }      from '../../../components/components.module';
-import { DirectivesModule }      from '../../../directives/directives.module';
+import { ComponentsModule }      from '@components/components.module';
+import { DirectivesModule }      from '@directives/directives.module';
 import { NxMenuApiComponent }       from './menu.component';
 import { NxApiLevel1ItemComponent } from './level-1/level-1-item.component';
 import { NxApiLevel2ItemComponent } from './level-2/level-2-item.component';

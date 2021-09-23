@@ -8,8 +8,8 @@ import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }           from '@ngx-translate/core';
 import { NgxMaskModule }             from 'ngx-mask';
 
-import { DirectivesModule }          from '../../../../directives/directives.module';
-import { ComponentsModule }          from '../../../../components/components.module';
+import { DirectivesModule }          from '@directives/directives.module';
+import { ComponentsModule }          from '@components/components.module';
 import { NxLicenseNewComponent }     from './new/new.component';
 import { NxSystemLicensesComponent } from './licenses.component';
 import { NxLicenseTrialComponent }   from './trial/trial.component';

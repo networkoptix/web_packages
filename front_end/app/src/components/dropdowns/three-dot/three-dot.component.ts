@@ -5,8 +5,8 @@ import {
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 
 import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 /* Usage
  <nx-select

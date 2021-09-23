@@ -6,7 +6,7 @@ import {
 import { Injectable }               from '@angular/core';
 import { Observable }               from 'rxjs';
 
-import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Injectable()
 export class DevelopersGuard implements CanActivate {

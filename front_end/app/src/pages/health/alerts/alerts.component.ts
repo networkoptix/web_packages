@@ -9,13 +9,13 @@ import { UntilDestroy }           from '@ngneat/until-destroy';
 import { of, SubscriptionLike }   from 'rxjs';
 import { delay, throttleTime }    from 'rxjs/operators';
 
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxUriService }             from '../../../services/uri.service';
-import { NxMenuService }            from '../../../menu';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxUriService }             from '@services/uri.service';
+import { NxMenuService }            from '@src/menu';
 import { NxHealthService }          from '../health.service';
 import { NxHealthLayoutService }    from '../health-layout.service';
-import { NxUtilsService }           from '../../../services/utils.service';
-import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
+import { NxUtilsService }           from '@services/utils.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -23,9 +23,9 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-system-alerts-component',
-    templateUrl : 'alerts.component.html',
-    styleUrls : ['alerts.component.scss'],
+    selector      : 'nx-system-alerts-component',
+    templateUrl   : 'alerts.component.html',
+    styleUrls     : ['alerts.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {

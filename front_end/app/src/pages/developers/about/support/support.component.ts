@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 import { AboutNode } from '../about.component';
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUtilsService } from '@services/utils.service';
 import { DomSanitizer }        from '@angular/platform-browser';
 import { ErrorStateManager } from '../error-state/error-state-manager';

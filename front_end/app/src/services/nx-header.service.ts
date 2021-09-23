@@ -2,7 +2,7 @@ import { Injectable }               from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Router, NavigationStart }  from '@angular/router';
 
-import { environment }              from '../../environments/environment';
+import { environment }              from '@environments/environment';
 import { NxMenusService, MenuNode } from './menus.service';
 import { ContextManifest }          from './nx-cloud-api.types';
 

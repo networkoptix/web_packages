@@ -7,11 +7,11 @@ import {
 
 import {
     InfoBlockSection, InfoBlockSections, InfoBlockLine
-}                                   from '../../../../components/info-block/info-block.component';
+}                                   from '@components/info-block/info-block.component';
 import { NxHealthService }          from '../../health.service';
 import { NxHealthLayoutService }    from '../../health-layout.service';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 @Component({
     selector    : 'nx-dynamic-table-panel-component',
@@ -19,7 +19,6 @@ import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.
     styleUrls   : ['./dynamic-table-panel.component.scss']
 })
 export class NxDynamicTablePanelComponent implements AfterContentInit {
-
     @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 

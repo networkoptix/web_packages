@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../menu';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxPageService }                from '../../../../services/page.service';
+import { NxMenuService }                from '@src/menu';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxPageService }                from '@services/page.service';
 import { SubscriptionLike } from 'rxjs';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

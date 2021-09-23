@@ -3,10 +3,10 @@ import {
     BehaviorSubject, Observable, Subscription
 }                                    from 'rxjs';
 
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService, Account } from '../../services/account.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService, Account } from '@services/account.service';
 
 interface Platform {
     file: string;
@@ -57,7 +57,7 @@ export class IntegrationService implements OnDestroy {
                         plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
                         plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
-                        plugin.queryParams = plugin.state ? { state : plugin.state } : {};
+                        plugin.queryParams = plugin.state ? { state: plugin.state } : {};
                     });
                     this.pluginsSubject.next(plugins);
                 });

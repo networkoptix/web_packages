@@ -3,8 +3,8 @@ import {
     ViewEncapsulation
 }                                   from '@angular/core';
 
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { Process }                  from '../../services/process.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { Process }                  from '@services/process.service';
 
 @Component({
     selector      : 'nx-process-button',

@@ -5,16 +5,16 @@ import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxProcessService }          from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../services/systems.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxMenuService }             from '../../menu';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxUriService }              from '@services/uri.service';
+import { NxProcessService }          from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxMenuService }             from '@src/menu';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,7 +24,6 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 

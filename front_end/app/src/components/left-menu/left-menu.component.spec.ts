@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxLeftMenuComponent } from './left-menu.component';
 import { MockProvider } from '../../_mocks/helpers.test';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '@services/nx-config';
 import { CommonModule, Location } from '@angular/common';
 import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
 import { BehaviorSubject } from 'rxjs';
-import { WINDOW } from '../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
 import { docMenuMap } from '../../_mocks/knowledge_base_landing.mock';
-import { nxConfig } from '../../services/nx-config/config';
-import { DirectivesModule } from '../../directives/directives.module';
+import { nxConfig } from '@services/nx-config/config';
+import { DirectivesModule } from '@directives/directives.module';
 import { DebugElement } from '@angular/core';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
@@ -48,7 +48,7 @@ describe('Test NxLeftMenuComponent', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                imports      : [
+                imports: [
                     CommonModule,
                     DirectivesModule
                 ],

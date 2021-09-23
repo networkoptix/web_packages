@@ -6,8 +6,8 @@ import {
 import { Injectable }               from '@angular/core';
 import { Observable }               from 'rxjs';
 
-import { NxAccountService }         from '../services/account.service';
-import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxAccountService }         from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -13,7 +13,7 @@ import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '../pages/health/health.service';
+import { NxHealthService }                     from '@pages/health/health.service';
 import { IParams, ResourceParam }              from './system-api.service';
 import { User }                                from './system-api.types';
 import { environment }                         from '@environments/environment';

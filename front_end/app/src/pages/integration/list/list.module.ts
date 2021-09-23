@@ -4,8 +4,8 @@ import { RouterModule }    from '@angular/router';
 import { NgbModule }       from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }            from '../../../components/components.module';
-import { DirectivesModule }            from '../../../directives/directives.module';
+import { ComponentsModule }            from '@components/components.module';
+import { DirectivesModule }            from '@directives/directives.module';
 import { PipesModule }                 from '@src/pipes/pipes.module';
 import { NxIntegrationsListComponent } from './list.component';
 
@@ -19,12 +19,12 @@ import { NxIntegrationsListComponent } from './list.component';
         TranslateModule,
         ComponentsModule
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxIntegrationsListComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxIntegrationsListComponent
     ]
 })

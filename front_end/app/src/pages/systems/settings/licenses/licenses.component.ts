@@ -2,13 +2,13 @@ import { Component, OnInit }             from '@angular/core';
 import { forkJoin, SubscriptionLike }    from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSettingsService }         from '../settings.service';
-import { NxSystem, NxSystemServer }  from '../../../../services/system.service';
-import { NxMenuService }             from '../../../../menu/menu.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxUtilsService }            from '../../../../services/utils.service';
+import { NxSystem, NxSystemServer }  from '@services/system.service';
+import { NxMenuService }             from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxUtilsService }            from '@services/utils.service';
 
 @Component({
     selector    : 'nx-system-licenses',

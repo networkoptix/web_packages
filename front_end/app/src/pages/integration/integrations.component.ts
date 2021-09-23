@@ -6,19 +6,19 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
 import { IntegrationService }        from './integration.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUtilsService }            from '../../services/utils.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxUriService }              from '@services/uri.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'integrations-component',
+    selector    : 'integrations-component',
     templateUrl : 'integrations.component.html',
-    styleUrls : ['integrations.component.scss']
+    styleUrls   : ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
@@ -31,11 +31,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     params: any;
     account: any;
     selectors = {
-        access   : false,
-        analytics: false,
-        cameras  : false,
-        home     : false,
-        psim     : false
+        access    : false,
+        analytics : false,
+        cameras   : false,
+        home      : false,
+        psim      : false
     };
 
     private emptyFilter: any = {};

@@ -7,12 +7,12 @@ import {
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { LocalStorageService }             from 'ngx-webstorage';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxAppStateService }         from '../../services/nx-app-state.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxAccountService }          from '../../services/account.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxAppStateService }         from '@services/nx-app-state.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxAccountService }          from '@services/account.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 interface Server {
     name: string,

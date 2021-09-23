@@ -5,8 +5,8 @@ import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 import { InputTrimModule }               from 'ng2-trim-directive';
 
-import { ComponentsModule }              from '../../components/components.module';
-import { DirectivesModule }              from '../../directives/directives.module';
+import { ComponentsModule }              from '@components/components.module';
+import { DirectivesModule }              from '@directives/directives.module';
 import { NxRegisterComponent }           from './register.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 

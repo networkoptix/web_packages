@@ -6,9 +6,9 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 
-import { NxLanguageProviderService } from '../../../../../../services/nx-language-provider';
-import { NxUtilsService }            from '../../../../../../services/utils.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUtilsService }            from '@services/utils.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { Storage, STORAGE_STATUS }   from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })

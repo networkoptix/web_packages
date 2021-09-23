@@ -5,14 +5,14 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject }           from 'rxjs';
 
-import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxSystem }                  from '../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxModalGenericComponent }   from '../../generic/generic.component';
 
 @Component({

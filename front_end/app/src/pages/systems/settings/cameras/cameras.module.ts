@@ -6,8 +6,8 @@ import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { DirectivesModule }         from '../../../../directives/directives.module';
-import { ComponentsModule }         from '../../../../components/components.module';
+import { DirectivesModule }         from '@directives/directives.module';
+import { ComponentsModule }         from '@components/components.module';
 import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 import { NxCamerasComponent }       from './cameras.component';
 import { PipesModule } from '@src/pipes/pipes.module';

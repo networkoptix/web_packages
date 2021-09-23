@@ -1,9 +1,9 @@
 import { Component, Input, HostListener, OnInit, Output, EventEmitter, ViewChild, ElementRef, Inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed }                           from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AboutNode } from '../about.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { WINDOW } from '@services/window-provider';

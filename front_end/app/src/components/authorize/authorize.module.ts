@@ -11,7 +11,7 @@ import {
 }                               from '@angular/forms';
 // import {
 //     ApplyGuard, AuthGuard, SystemGuard
-// }                                    from '../../../routeGuards';
+// }                                    from '@src/routeGuards';
 
 import { NxAuthorizeComponent } from './authorize.component';
 import { NxAuthorizeEmailComponent } from './email/email.component';

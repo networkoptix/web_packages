@@ -5,8 +5,8 @@ import { AngularSvgIconModule }               from 'angular-svg-icon';
 
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';
 import { DebugElement } from '@angular/core';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService } from '../../../services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService } from '@services/nx-config';
 
 describe('NxSectionPlaceholderComponent', () => {
     let component: NxSectionPlaceholderComponent;
@@ -15,12 +15,13 @@ describe('NxSectionPlaceholderComponent', () => {
 
     beforeEach(async(() => {
         const translateSpy = { translate: jest.fn() };
-        const configSpy = { getConfig: jest.fn(() => {
+        const configSpy = {
+            getConfig: jest.fn(() => {
                 return {
                     icons: {
                         dirSectionPlaceholder: '/static/images/placeholders/section/'
                     }
-                }
+                };
             })
         };
         TestBed.configureTestingModule({
@@ -53,7 +54,7 @@ describe('NxSectionPlaceholderComponent', () => {
     it('should have default svgFilename', () => {
         fixture.detectChanges();
         expect(component.svgFileName).toBe('system_settings_placeholder');
-    })
+    });
 
     it('should set height', () => {
         const height = '24';

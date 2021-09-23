@@ -4,11 +4,11 @@ import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-import { ComponentsModule }              from '../../components/components.module';
-import { DirectivesModule }              from '../../directives/directives.module';
+import { ComponentsModule }              from '@components/components.module';
+import { DirectivesModule }              from '@directives/directives.module';
 import { NxActivateComponent }           from './activate.component';
-import { ManualAccessGuard }             from '@src/routeGuards/manualAccessGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { ManualAccessGuard }             from '@guards/manualAccessGuard';
+import { PipesModule }                   from '@src/pipes/pipes.module';
 
 @Injectable()
 export class ParamResolver implements Resolve<any> {
@@ -64,8 +64,8 @@ const appRoutes: Routes = [
     declarations: [
         NxActivateComponent
     ],
-    bootstrap       : [],
-    exports         : [
+    bootstrap : [],
+    exports   : [
         NxActivateComponent
     ]
 })

@@ -7,10 +7,10 @@ import { TranslateModule }        from '@ngx-translate/core';
 import { AngularSvgIconModule }   from 'angular-svg-icon';
 import { NgxFileDropModule }      from 'ngx-file-drop';
 
-import { MenuModule }             from '../../menu';
-import { ComponentsModule }       from '../../components/components.module';
-import { AuthGuard, SystemGuard } from '../../routeGuards';
-import { PipesModule }            from '../../pipes/pipes.module';
+import { MenuModule }             from '@src/menu';
+import { ComponentsModule }       from '@components/components.module';
+import { AuthGuard, SystemGuard } from '@src/routeGuards';
+import { PipesModule }            from '@src/pipes/pipes.module';
 
 import {
     NxHealthComponent, NxReportViewerComponent, NxSystemAlertsComponent,
@@ -18,7 +18,7 @@ import {
     NxDynamicTablePanelComponent, NxSingleEntityComponent,
     NxImageSectionComponent, NxSystemAlertCardComponent, NxUpdateInfoComponent
 }                                  from './';
-import { DirectivesModule }        from '../../directives/directives.module';
+import { DirectivesModule }        from '@directives/directives.module';
 import { NxHealthLayoutService }   from './health-layout.service';
 
 const appRoutes: Routes = [
@@ -89,12 +89,12 @@ const appRoutes: Routes = [
         NxSystemAlertCardComponent,
         NxUpdateInfoComponent
     ],
-    bootstrap       : [],
-    exports: [
+    bootstrap : [],
+    exports   : [
         NxHealthComponent,
         NxReportViewerComponent,
         NxSystemAlertsComponent,
-        NxSystemMetricsComponent,
+        NxSystemMetricsComponent
     ]
 })
 export class NxHealthModule {

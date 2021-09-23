@@ -1,10 +1,10 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { NxAccountService } from '../../../services/account.service';
-import { NxCloudApiService, DOC_TYPES } from '../../../services/nx-cloud-api';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxHeaderService } from '../../../services/nx-header.service';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 import { AboutNode } from '../about/about.component';
 import { takeWhile } from 'rxjs/operators';
 import { ErrorStateManager } from '../about/error-state/error-state-manager';

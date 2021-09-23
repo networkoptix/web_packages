@@ -4,14 +4,14 @@ import { DebugElement } from '@angular/core';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxIntegrationsComponent } from './integrations.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import {
     integrationsNode
 } from '../../../../_mocks/knowledge_base_landing.mock';
 import { getMockTranslations, MockProvider, sanitizerMock, TranslateTestingModule } from '../../../../_mocks/helpers.test';
 import { Router } from '@angular/router';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxCloudApiService } from '../../../../services/nx-cloud-api';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -75,7 +75,7 @@ describe('For Developers Landing - Integrations Node', () => {
                     NgbModule,
                     TranslateTestingModule
                 ],
-                providers    : [
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock),
                     new MockProvider(WINDOW, {}),

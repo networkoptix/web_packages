@@ -14,13 +14,13 @@ import { Subject }                          from 'rxjs';
 import { debounceTime }                     from 'rxjs/operators';
 import { isArray }                          from 'rxjs/internal-compatibility';
 
-import { NxLanguageProviderService }        from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }         from '../../services/nx-config';
-import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
-import { NxUriService }                     from '../../services/uri.service';
-import { NxUtilsService }                   from '../../services/utils.service';
-import { ButtonArrowType, NxSearchService } from '../../services/search.service';
-import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }        from '@services/nx-language-provider';
+import { NxConfigService, IConfig }         from '@services/nx-config';
+import { NxScrollMechanicsService }         from '@services/scroll-mechanics.service';
+import { NxUriService }                     from '@services/uri.service';
+import { NxUtilsService }                   from '@services/utils.service';
+import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 
 /* Usage
  <nx-search

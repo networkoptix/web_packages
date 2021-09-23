@@ -4,8 +4,8 @@ import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-import { ComponentsModule }   from '../../components/components.module';
-import { DirectivesModule }   from '../../directives/directives.module';
+import { ComponentsModule }   from '@components/components.module';
+import { DirectivesModule }   from '@directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 

@@ -9,7 +9,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, Subscription }        from 'rxjs';
 import { filter, takeUntil, tap }       from 'rxjs/operators';
-import { NxConfigService, IConfig }     from '../../../services/nx-config';
+import { NxConfigService, IConfig }     from '@services/nx-config';
 import { NxLanguageProviderService }    from '@services/nx-language-provider';
 import { NxProcessService, Process }    from '@services/process.service';
 import { NxDialogsService }             from '@dialogs/dialogs.service';

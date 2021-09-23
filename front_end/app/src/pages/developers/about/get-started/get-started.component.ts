@@ -1,8 +1,8 @@
 import { Component, Input, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy }             from '@ngneat/until-destroy';
 
-import { NxUtilsService } from '../../../../services/utils.service';
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { WINDOW } from '@services/window-provider';

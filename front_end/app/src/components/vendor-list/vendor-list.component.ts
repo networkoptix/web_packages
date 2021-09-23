@@ -9,11 +9,11 @@ import { UntilDestroy }                          from '@ngneat/until-destroy';
 import { Subscription }                          from 'rxjs';
 import { filter }                                from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUtilsService }            from '../../services/utils.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxUriService }              from '@services/uri.service';
+import { NxUtilsService }            from '@services/utils.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 /* USAGE
  <nx-vendor-list
@@ -25,14 +25,14 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector     : 'nx-vendor-list',
-    templateUrl  : 'vendor-list.component.html',
-    styleUrls    : ['vendor-list.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers    : [{
-        provide    : NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NxVendorListComponent),
-        multi      : true
+    selector      : 'nx-vendor-list',
+    templateUrl   : 'vendor-list.component.html',
+    styleUrls     : ['vendor-list.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [{
+        provide     : NG_VALUE_ACCESSOR,
+        useExisting : forwardRef(() => NxVendorListComponent),
+        multi       : true
     }]
 })
 export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {

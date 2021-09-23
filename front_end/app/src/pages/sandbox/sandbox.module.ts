@@ -4,12 +4,12 @@ import { RouterModule, Routes }             from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DialogsModule }        from '../../dialogs/dialogs.module';
-import { PipesModule }          from '../../pipes/pipes.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DialogsModule }        from '@dialogs/dialogs.module';
+import { PipesModule }          from '@src/pipes/pipes.module';
 import { NxGridLayoutModule }   from '../layout/layout.module';
-import { DirectivesModule }     from '../../directives/directives.module';
-import { AuthGuard }            from '../../routeGuards';
+import { DirectivesModule }     from '@directives/directives.module';
+import { AuthGuard }            from '@src/routeGuards';
 import { NxSandboxComponent }   from './sandbox.component';
 import { SectionApplyExampleComponent } from './section-apply-example/section-apply-example.component';
 import { FormApplyExampleComponent } from './form-apply-example/form-apply-example.component';

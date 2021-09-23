@@ -7,7 +7,7 @@ import { NxAppStateService }                   from './nx-app-state.service';
 import { NxSystemRestAPI }                     from './system-rest-api.service';
 import { NxSystemAPI }                         from './system-legacy-api.service';
 import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '../pages/health/health.service';
+import { NxHealthService }                     from '@pages/health/health.service';
 
 export interface IParams<Value = any> {
     [key: string]: Value;

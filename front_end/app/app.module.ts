@@ -37,7 +37,7 @@ import { PipesModule }                         from '@src/pipes/pipes.module';
 import { initializeApp }                       from '@pages/push-notifications/push-notifications.module';
 import {
     AuthGuard, SystemGuard, DevelopersGuard, ManualAccessGuard, BookmarksGuard
-}                                              from './src/routeGuards';
+}                                              from '@src/routeGuards';
 import { NxConfigService }                     from '@services/nx-config';
 import { ServiceModule }                       from '@services/services.module';
 import { WINDOWS_PROVIDERS }                   from '@services/window-provider';
@@ -47,10 +47,10 @@ import { WebadminPageModule }                  from '@pages/webadmin-page.module
 import { PagesModule }                         from '@pages/pages.module';
 import { NxAuthorizeModule }                   from '@components/authorize/authorize.module';
 import { NxUriCacheService }                   from '@services/uri-cache.service';
-import { NxUriCachingInterceptor }             from '@src/interceptors/uri-cache-interceptor.service';
-import { LocalSystemStatusInterceptor }        from '@src/interceptors/local-system-status-interceptor.service';
-import { CloudUnavailableInterceptor }         from '@src/interceptors/cloud-unavailable-interceptor';
-import { NxSwCacheInterceptor }                from '@src/interceptors/sw-cache-interceptor.interceptor';
+import { NxUriCachingInterceptor }             from '@interceptors/uri-cache-interceptor.service';
+import { LocalSystemStatusInterceptor }        from '@interceptors/local-system-status-interceptor.service';
+import { CloudUnavailableInterceptor }         from '@interceptors/cloud-unavailable-interceptor';
+import { NxSwCacheInterceptor }                from '@interceptors/sw-cache-interceptor.interceptor';
 import { ServiceWorkerModule }                 from '@angular/service-worker';
 
 // AoT requires an exported function for factories

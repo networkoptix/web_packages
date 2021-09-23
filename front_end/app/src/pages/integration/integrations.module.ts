@@ -4,9 +4,9 @@ import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-import { ComponentsModule }              from '../../components/components.module';
+import { ComponentsModule }              from '@components/components.module';
 import { IntegrationsListModule }        from './list/list.module';
-import { DirectivesModule }              from '../../directives/directives.module';
+import { DirectivesModule }              from '@directives/directives.module';
 import { NxIntegrationsComponent }       from './integrations.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -29,12 +29,12 @@ const appRoutes: Routes = [
         IntegrationsListModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxIntegrationsComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxIntegrationsComponent
     ]
 })

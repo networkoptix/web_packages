@@ -9,14 +9,14 @@ import {
 import { Subscription }              from 'rxjs';
 import { NgForm }                    from '@angular/forms';
 
-import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
+import { NxDialogsService }             from '@dialogs/dialogs.service';
 import { NxSettingsService }            from '../../settings.service';
-import { NxConfigService, IConfig }     from '../../../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process }    from '../../../../../services/process.service';
-import { NxSystem }                     from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
-import { FormWatcher, NxApplyService }  from '../../../../../services/apply.service';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { NxProcessService, Process }    from '@services/process.service';
+import { NxSystem }                     from '@services/system.service';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { FormWatcher, NxApplyService }  from '@services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -6,8 +6,8 @@ import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
 import { Angular2CsvModule }    from 'angular2-csv';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
 import { NxIpvdComponent }      from './ipvd.component';
 import { CamTableComponent }    from './cam-components/cam-table/cam-table.component';
 import { CamViewComponent }     from './cam-components/cam-view/cam-view.component';
@@ -35,18 +35,18 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         AngularSvgIconModule
     ],
-    providers      : [
+    providers: [
         IpvdSearchService
     ],
-    declarations   : [
+    declarations: [
         NxIpvdComponent,
         CamTableComponent,
         CamViewComponent,
         CsvButtonComponent,
         BoolIconComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxIpvdComponent
     ]
 })

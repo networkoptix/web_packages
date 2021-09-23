@@ -6,13 +6,13 @@ import { AngularSvgIconModule }       from 'angular-svg-icon';
 import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }            from '@ngx-translate/core';
 
-import { DirectivesModule }           from '../../../directives/directives.module';
-import { ComponentsModule }           from '../../../components/components.module';
+import { DirectivesModule }           from '@directives/directives.module';
+import { ComponentsModule }           from '@components/components.module';
 import { NxAccountSettingsComponent } from './settings.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         RouterModule,
         FormsModule,
@@ -23,12 +23,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
         PipesModule,
         AngularSvgIconModule.forRoot()
     ],
-    providers      : [],
-    declarations   : [
+    providers    : [],
+    declarations : [
         NxAccountSettingsComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxAccountSettingsComponent
     ]
 })

@@ -5,8 +5,8 @@ import {
 import { ActivatedRoute, Router }      from '@angular/router';
 import { fromEvent, SubscriptionLike } from 'rxjs';
 
-import { NxConfigService, IConfig }         from '../../../services/nx-config';
-import { NxMenuService }                    from '../../../menu';
+import { NxConfigService, IConfig }         from '@services/nx-config';
+import { NxMenuService }                    from '@src/menu';
 import { NxLanguageProviderService }        from '@services/nx-language-provider';
 import { NxUtilsService }                   from '@services/utils.service';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';

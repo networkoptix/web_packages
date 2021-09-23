@@ -1,11 +1,11 @@
-import { Component, ElementRef, Inject, Input, ViewChild }                 from '@angular/core';
+import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 
 import { BaseDropdown }              from '../../dropdowns/injDropdown';
-import { environment }               from '../../../../environments/environment';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxHeaderService }           from '../../../services/nx-header.service';
-import { WINDOW }                    from '../../../services/window-provider';
+import { environment }               from '@environments/environment';
+import { NxConfigService }           from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { WINDOW }                    from '@services/window-provider';
 
 @Component({
     selector    : 'nx-nav-dropdown',

@@ -3,15 +3,15 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-remove-user-content',
-    templateUrl: 'remove-user.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-remove-user-content',
+    templateUrl : 'remove-user.component.html',
+    styleUrls   : []
 })
 export class RemoveUserModalContent {
     @Input() system;

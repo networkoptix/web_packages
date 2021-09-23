@@ -82,7 +82,7 @@ describe('For Developers Landing - Dev Tools', () => {
         component.devToolsNode = devToolsNode;
         fixture.detectChanges();
         const toolBlockHeading = el.nativeElement.querySelector('.tool-detail > h3').innerText;
-    
+
         expect(toolBlockHeading).toBe(devToolsNode.nodes[0].title);
     });
 

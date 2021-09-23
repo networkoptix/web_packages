@@ -7,17 +7,17 @@ import { BehaviorSubject }           from 'rxjs';
 
 import {
     InfoBlockColumns, InfoBlockSection, InfoBlockLine
-}                                    from '../../../../components/info-block/info-block.component';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxProcessService, Process } from '../../../../services/process.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+}                                    from '@components/info-block/info-block.component';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../menu';
-import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
-import { NxUtilsService }            from '../../../../services/utils.service';
-import { NxSystem }                  from '../../../../services/system.service';
+import { NxMenuService }             from '@src/menu';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxSystem }                  from '@services/system.service';
 
 @Component({
     selector    : 'nx-cloud-storage',

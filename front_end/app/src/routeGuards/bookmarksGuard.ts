@@ -1,7 +1,7 @@
 import { CanActivate, Router } from '@angular/router';
 import { Injectable }          from '@angular/core';
 
-import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Injectable()
 export class BookmarksGuard implements CanActivate {

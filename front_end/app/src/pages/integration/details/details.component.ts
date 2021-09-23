@@ -6,21 +6,21 @@ import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { combineLatest, Subscription }  from 'rxjs';
 import { map }                          from 'rxjs/operators';
 
-import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }     from '../../../services/nx-config';
-import { NxAccountService, Account }    from '../../../services/account.service';
-import { NxPageService }                from '../../../services/page.service';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxAccountService, Account }    from '@services/account.service';
+import { NxPageService }                from '@services/page.service';
 import {
     NxRibbonService, RibbonActionInput
-}                                       from '../../../components/ribbon';
+}                                       from '@components/ribbon';
 import { IntegrationService }           from '../integration.service';
-import { NxMenuService }                from '../../../menu';
-import { NxDialogsService }             from '../../../dialogs/dialogs.service';
-import { MessageParams }                from '../../../dialogs/message/message.component';
-import { NxProcessService, Process }    from '../../../services/process.service';
-import { NxCloudApiService }            from '../../../services/nx-cloud-api';
-import { NxUriService }                 from '../../../services/uri.service';
-import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
+import { NxMenuService }                from '@src/menu';
+import { NxDialogsService }             from '@dialogs/dialogs.service';
+import { MessageParams }                from '@dialogs/message/message.component';
+import { NxProcessService, Process }    from '@services/process.service';
+import { NxCloudApiService }            from '@services/nx-cloud-api';
+import { NxUriService }                 from '@services/uri.service';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -129,7 +129,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.acceptProcess = this.processService.createProcess(() => {
                                             return this.cloudApiService.acceptReview(this.plugin.review_id);
                                         }, {
-                                            successMessage : this.LANG.account.agreementAccepted?.()
+                                            successMessage: this.LANG.account.agreementAccepted?.()
                                         }).then(() => {
                                             this.router.navigate([this.uriService.getURL()]);
                                             this.ribbonService.hide();

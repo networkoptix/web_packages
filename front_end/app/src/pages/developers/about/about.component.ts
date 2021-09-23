@@ -3,16 +3,16 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
-import { NxCloudApiService, DOC_TYPES }    from '../../../services/nx-cloud-api';
-import { NxHeaderService }      from '../../../services/nx-header.service';
+import { NxCloudApiService, DOC_TYPES }    from '@services/nx-cloud-api';
+import { NxHeaderService }      from '@services/nx-header.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { IConfig, NxConfigService } from '../../../services/nx-config';
-import { NxRibbonService, RibbonActionInput } from '../../../components/ribbon';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxMenusService } from '../../../services/menus.service';
-import { NxPageService } from '../../../services/page.service';
-import { NxAccountService, Account } from '../../../services/account.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxMenusService } from '@services/menus.service';
+import { NxPageService } from '@services/page.service';
+import { NxAccountService, Account } from '@services/account.service';
 import { filter } from 'rxjs/operators';
 
 export enum AboutTemplates {

@@ -1,11 +1,11 @@
 import { Component, ViewChild, ViewContainerRef }          from '@angular/core';
-import { NxApplyService, Watcher, SectionWatcher } from '../../../services/apply.service';
-import { NxProcessService, Process } from '../../../services/process.service';
+import { NxApplyService, Watcher, SectionWatcher } from '@services/apply.service';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
-    selector : 'section-apply-example',
+    selector    : 'section-apply-example',
     templateUrl : 'section-apply-example.component.html',
-    styleUrls : ['section-apply-example.component.scss']
+    styleUrls   : ['section-apply-example.component.scss']
 })
 export class SectionApplyExampleComponent {
     // Refs to use for rendering apply component instances

@@ -6,9 +6,9 @@ import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { By } from '@angular/platform-browser';
 
 import { NxGenericDropdown } from './dropdown.component';
-import { NxArrowNavDirective } from '../../../directives/nx-arrow-nav';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService } from '../../../services/nx-config';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService } from '@services/nx-config';
 
 describe('NxGenericDropdown', () => {
     let component: NxGenericDropdown;

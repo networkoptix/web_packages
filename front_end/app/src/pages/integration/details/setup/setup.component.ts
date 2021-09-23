@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../menu';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxPageService }                from '../../../../services/page.service';
-import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
+import { NxMenuService }                from '@src/menu';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxPageService }                from '@services/page.service';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
 import { SubscriptionLike }             from 'rxjs';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

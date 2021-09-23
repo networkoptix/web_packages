@@ -6,9 +6,9 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -16,9 +16,9 @@ interface IParams<Value = any> {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-modal-embed-content',
-    templateUrl: 'embed.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-embed-content',
+    templateUrl : 'embed.component.html',
+    styleUrls   : []
 })
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() systemId;

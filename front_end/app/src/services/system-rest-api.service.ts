@@ -6,7 +6,7 @@ import { CookieService }        from 'ngx-cookie-service';
 import { from, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
 
-import { NxHealthService }      from '../pages/health/health.service';
+import { NxHealthService }      from '@pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
 import { IConfig }              from './nx-config';
 import { NxSystemAPI }          from './system-legacy-api.service';

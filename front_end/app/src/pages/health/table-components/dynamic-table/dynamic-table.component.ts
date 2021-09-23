@@ -11,13 +11,13 @@ import { UntilDestroy }             from '@ngneat/until-destroy';
 import { SubscriptionLike }         from 'rxjs';
 import { delay }                    from 'rxjs/operators';
 
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxUriService }             from '../../../../services/uri.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxUriService }             from '@services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxHealthLayoutService }    from '../../health-layout.service';
-import { NxRibbonService }          from '../../../../components/ribbon';
-import { NxUtilsService }           from '../../../../services/utils.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { NxRibbonService }          from '@components/ribbon';
+import { NxUtilsService }           from '@services/utils.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;

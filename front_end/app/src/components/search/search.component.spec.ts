@@ -4,16 +4,16 @@ import { CommonModule, Location } from '@angular/common';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { getMockTranslations, MockProvider } from '../../_mocks/helpers.test';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { DirectivesModule } from '../../directives/directives.module';
-import { PipesModule } from '../../pipes/pipes.module';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxSearchComponent } from './search.component';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { ActivatedRoute } from '@angular/router';
-import { NxSearchService } from '../../services/search.service';
-import { NxUriService } from '../../services/uri.service';
+import { NxSearchService } from '@services/search.service';
+import { NxUriService } from '@services/uri.service';
 import { BehaviorSubject } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -55,7 +55,7 @@ describe('Search Component', () => {
                     PipesModule,
                     TranslateModule.forRoot()
                 ],
-                providers    : [
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock),
                     new MockProvider(ActivatedRoute, routeMock),

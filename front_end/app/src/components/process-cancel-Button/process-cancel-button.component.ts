@@ -3,7 +3,7 @@ import {
     ViewEncapsulation
 }                  from '@angular/core';
 
-import { Process } from '../../services/process.service';
+import { Process } from '@services/process.service';
 
 @Component({
     selector      : 'nx-cancel-button',

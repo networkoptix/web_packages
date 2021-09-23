@@ -10,12 +10,12 @@ import { UntilDestroy }                            from '@ngneat/until-destroy';
 import { Subject, Subscription, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay }                     from 'rxjs/operators';
 
-import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
-import { NxConfigService, IConfig }       from '../../../../services/nx-config';
-import { NxUriService }                   from '../../../../services/uri.service';
-import { NxUtilsService }                 from '../../../../services/utils.service';
-import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }      from '@services/nx-language-provider';
+import { NxConfigService, IConfig }       from '@services/nx-config';
+import { NxUriService }                   from '@services/uri.service';
+import { NxUtilsService }                 from '@services/utils.service';
+import { NxScrollMechanicsService }       from '@services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }        from '@app/language_i18n_static_types';
 
 interface Params {
     [key: string]: any;

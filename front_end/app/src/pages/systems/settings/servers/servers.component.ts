@@ -5,16 +5,16 @@ import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
 import { BehaviorSubject, timer }        from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }      from '../../../../services/nx-config';
-import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
+import { NxConfigService, IConfig }      from '@services/nx-config';
+import { NxLanguageProviderService }     from '@services/nx-language-provider';
 import { NxSettingsService }             from '../settings.service';
-import { NxApplyService }                from '../../../../services/apply.service';
-import { NxMenuService }                 from '../../../../menu';
-import { NxSystem }                      from '../../../../services/system.service';
-import { NxUtilsService }                from '../../../../services/utils.service';
-import { NxUriService }                  from '../../../../services/uri.service';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
-import { NxProcessService }              from '../../../../services/process.service';
+import { NxApplyService }                from '@services/apply.service';
+import { NxMenuService }                 from '@src/menu';
+import { NxSystem }                      from '@services/system.service';
+import { NxUtilsService }                from '@services/utils.service';
+import { NxUriService }                  from '@services/uri.service';
+import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
+import { NxProcessService }              from '@services/process.service';
 import { WINDOW }                        from '@services/window-provider';
 
 @UntilDestroy()

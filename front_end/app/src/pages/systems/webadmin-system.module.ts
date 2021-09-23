@@ -4,7 +4,7 @@ import { RouterModule, Routes }             from '@angular/router';
 import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }                  from '@ngx-translate/core';
 
-import { ComponentsModule }                 from '../../components/components.module';
+import { ComponentsModule }                 from '@components/components.module';
 import { NxSystemAdminModule }              from './settings/admin/admin.module';
 import { NxSystemUsersModule }              from './settings/users/users.module';
 import { NxSystemServersModule }            from './settings/servers/servers.module';
@@ -16,9 +16,9 @@ import { NxSystemUsersComponent }           from './settings/users/users.compone
 import { NxSystemServersComponent }         from './settings/servers/servers.component';
 import {
     ApplyGuard, AuthGuard, SystemGuard
-}                                           from '../../routeGuards';
+}                                           from '@src/routeGuards';
 import { NxCamerasComponent }               from './settings/cameras/cameras.component';
-import { MenuModule }                       from '../../menu';
+import { MenuModule }                       from '@src/menu';
 import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 

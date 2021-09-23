@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSupportedTechComponent } from './supported-tech.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import {
     routeLandingMock,
     supportedTechNode

@@ -11,7 +11,7 @@ import { AngularSvgIconModule }        from 'angular-svg-icon';
 
 import { ComponentsModule }            from '@components/components.module';
 import { DirectivesModule }            from '@directives/directives.module';
-import { PipesModule }                 from '../pipes/pipes.module';
+import { PipesModule }                 from '@src/pipes/pipes.module';
 import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
 import { AddUserModalContent }         from './add-user/add-user.component';

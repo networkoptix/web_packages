@@ -7,17 +7,17 @@ import { Subscription }              from 'rxjs';
 import { delay }                     from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxUriService }              from '../../../../services/uri.service';
-import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxUriService }              from '@services/uri.service';
+import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector   : 'nx-cam-view',
+    selector    : 'nx-cam-view',
     templateUrl : './cam-view.component.html',
-    styleUrls  : ['./cam-view.component.scss']
+    styleUrls   : ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() activeCamera;

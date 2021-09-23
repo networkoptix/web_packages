@@ -7,7 +7,7 @@ import { WINDOW }                                         from '@services/window
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     ConsoleSection, ModalContent, ModalManifest, ModalType
 }                                    from '@components/console-table/console-table.component';

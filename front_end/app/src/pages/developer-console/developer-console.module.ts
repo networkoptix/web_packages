@@ -6,11 +6,11 @@ import { TranslateModule }               from '@ngx-translate/core';
 import { AngularSvgIconModule }          from 'angular-svg-icon';
 import { NgbModule }                     from '@ng-bootstrap/ng-bootstrap';
 
-import { ComponentsModule }              from '../../components/components.module';
-import { DirectivesModule }              from '../../directives/directives.module';
-import { PipesModule }                   from '../../pipes/pipes.module';
-import { MenuModule }                    from '../../menu';
-import { ApplyGuard }                    from '../../routeGuards';
+import { ComponentsModule }              from '@components/components.module';
+import { DirectivesModule }              from '@directives/directives.module';
+import { PipesModule }                   from '@src/pipes/pipes.module';
+import { MenuModule }                    from '@src/menu';
+import { ApplyGuard }                    from '@src/routeGuards';
 import { NxDevConsoleComponent }         from './console/console.component';
 import { NxDevConsoleMenuComponent }     from './console/menu/console-menu.component';
 import { NxDevConsoleEditComponent }     from './console/edit/console-edit.component';

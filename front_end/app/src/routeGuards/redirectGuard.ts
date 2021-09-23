@@ -4,7 +4,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { NxAccountService, Account } from '../services/account.service';
+import { NxAccountService, Account } from '@services/account.service';
 
 @Injectable()
 export class RedirectGuard implements CanActivate {

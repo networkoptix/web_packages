@@ -4,12 +4,12 @@ import { DebugElement } from '@angular/core';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxCapabilitiesComponent } from './capabilities.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import { capabilitiesNode } from '../../../../_mocks/knowledge_base_landing.mock';
 import { MockProvider } from '../../../../_mocks/helpers.test';
 import { CommonModule } from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
-import { NxSafePipe } from '../../../../pipes/nx-safe';
+import { NxSafePipe } from '@src/pipes/nx-safe';
 
 describe('For Developers Landing - Capabilities Node', () => {
     const capability = capabilitiesNode.nodes[0];

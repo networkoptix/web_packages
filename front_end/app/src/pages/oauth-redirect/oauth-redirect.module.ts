@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
 import { NxOAuthRedirectComponent }   from './oauth-redirect.component';
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
 import { PipesModule }          from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
@@ -13,7 +13,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports : [
+    imports: [
         CommonModule,
         TranslateModule,
         ComponentsModule,
@@ -21,12 +21,12 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxOAuthRedirectComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxOAuthRedirectComponent
     ]
 })

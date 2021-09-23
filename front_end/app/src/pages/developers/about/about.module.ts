@@ -5,8 +5,8 @@ import { NgModule }             from '@angular/core';
 import { TranslateModule }      from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsModule }        from '../../../components/components.module';
-import { DirectivesModule }        from '../../../directives/directives.module';
+import { ComponentsModule }        from '@components/components.module';
+import { DirectivesModule }        from '@directives/directives.module';
 import { NxAboutComponent }        from './about.component';
 import { NxCapabilitiesComponent } from './capabilities/capabilities.component';
 import { NxDevToolsComponent }     from '../dev-tools/dev-tools.component';
@@ -19,7 +19,7 @@ import {
 }                                  from './supported-tech/supported-tech.component';
 import { NgbModule }               from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule }             from '@src/pipes/pipes.module';
-import { DevelopersGuard } from '../../../routeGuards';
+import { DevelopersGuard } from '@src/routeGuards';
 import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.component';
 
 const appRoutes: Routes = [

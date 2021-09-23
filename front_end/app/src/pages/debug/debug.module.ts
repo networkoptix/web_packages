@@ -4,10 +4,10 @@ import { FormsModule }          from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
 import { NxDebugComponent }     from './debug.component';
-import { AuthGuard }            from '../../routeGuards';
+import { AuthGuard }            from '@src/routeGuards';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [

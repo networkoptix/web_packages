@@ -7,12 +7,12 @@ import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
 import { NxModalGenericComponent }   from '../generic/generic.component';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxProcessService }          from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { NxStorageService }          from '../../services/storage.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxUtilsService }            from '@services/utils.service';
+import { NxProcessService }          from '@services/process.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxStorageService }          from '@services/storage.service';
 import { WINDOW }                    from '@services/window-provider';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 

@@ -1,4 +1,4 @@
-import { NxSystem } from '../services/system.service';
+import { NxSystem } from '@services/system.service';
 
 export function setupTestSystem() : NxSystem {
     return {

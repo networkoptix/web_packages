@@ -6,7 +6,7 @@ import { TranslateModule }           from '@ngx-translate/core';
 import { ComponentsModule }          from '@components/components.module';
 import {
     ApplyGuard, AuthGuard, SystemGuard
-}                                    from '../../../routeGuards';
+}                                    from '@src/routeGuards';
 import { MenuModule }                from '@src/menu';
 import { NxSystemLicensesComponent } from './licenses/licenses.component';
 import { NxSystemLicensesModule }    from './licenses/licenses.module';

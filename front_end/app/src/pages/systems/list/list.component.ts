@@ -7,24 +7,24 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { debounceTime }              from 'rxjs/operators';
 import { Subject, Subscription }     from 'rxjs';
 
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxHeaderService }           from '../../../services/nx-header.service';
-import { NxMenusService }            from '../../../services/menus.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxUriService }              from '@services/uri.service';
+import { NxSystemsService }          from '@services/systems.service';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { NxMenusService }            from '@services/menus.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
-import { NxUtilsService }            from '../../../services/utils.service';
+import { NxUtilsService }            from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'nx-systems-list-component',
+    selector    : 'nx-systems-list-component',
     templateUrl : 'list.component.html',
-    styleUrls : ['list.component.scss']
+    styleUrls   : ['list.component.scss']
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
@@ -168,7 +168,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     openSystem(system) {
         if (this.needToConfigureTwoFactor(system)) {
-            const { dialogs: { message: { twoFactor }, titles: { failedLoginTo }} } = this.LANG;
+            const { dialogs: { message: { twoFactor }, titles: { failedLoginTo } } } = this.LANG;
             this.genericModal.openConfirm(
                 `<p class="mb-0">${twoFactor.required()}</p><p>${twoFactor.configure()}&nbsp;<a href="/account/security">${twoFactor.accountLink()}</a>.</p>`,
                 NxLanguageProviderService.translate(failedLoginTo, { systemName: system.name }),

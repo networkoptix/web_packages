@@ -6,9 +6,9 @@ import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
 import { AngularSvgIconModule }   from 'angular-svg-icon';
 
-import { DirectivesModule }       from '../../../directives/directives.module';
-import { ComponentsModule }       from '../../../components/components.module';
-import { AuthGuard }              from '../../../routeGuards';
+import { DirectivesModule }       from '@directives/directives.module';
+import { ComponentsModule }       from '@components/components.module';
+import { AuthGuard }              from '@src/routeGuards';
 import { NxSystemsListComponent } from './list.component';
 import { NxNoSystemsComponent }   from '../no-systems/no-systems.component';
 import { PipesModule } from '@src/pipes/pipes.module';

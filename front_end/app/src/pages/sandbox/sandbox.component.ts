@@ -2,8 +2,8 @@ import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
-import { NxProcessService, Process }     from '../../services/process.service';
-import { NxDialogsService }              from '../../dialogs/dialogs.service';
+import { NxProcessService, Process }     from '@services/process.service';
+import { NxDialogsService }              from '@dialogs/dialogs.service';
 import { ISelect } from '@pages/systems/settings/cameras/cameras.component';
 
 @Component({

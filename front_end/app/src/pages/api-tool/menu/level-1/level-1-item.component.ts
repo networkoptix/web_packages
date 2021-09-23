@@ -4,8 +4,8 @@ import {
 } from '@angular/core';
 import { Router }                   from '@angular/router';
 
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxMenuService }            from '../../../../menu';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxMenuService }            from '@src/menu';
 
 /* Usage
  */

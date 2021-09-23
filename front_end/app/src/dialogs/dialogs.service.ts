@@ -48,7 +48,7 @@ import { ModalContent }                        from '@components/console-table/c
 import { DownloadAsyncModalContent }           from './download-async/download-async.component';
 import { StorageManager }                      from '@services/system.service/system/storage-manager/storage-manager';
 
-import './../dialogs/dialogs.scss';
+import '@dialogs/dialogs.scss';
 
 interface IParams<Value = any> {
     [key: string]: Value;

@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { AboutNode } from '../about.component';
-import { WINDOW } from '../../../../services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { Router } from '@angular/router';
 

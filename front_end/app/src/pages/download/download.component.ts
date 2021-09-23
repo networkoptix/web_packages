@@ -11,19 +11,19 @@ import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { filter }                       from 'rxjs/operators';
 import { Subscription }                 from 'rxjs';
 
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
-import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
-import { NxUriService }                 from '../../services/uri.service';
-import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxAccountService }             from '@services/account.service';
+import { NxPageService }                from '@services/page.service';
+import { NxCloudApiService }            from '@services/nx-cloud-api';
+import { NxUriService }                 from '@services/uri.service';
+import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'download-component',
+    selector    : 'download-component',
     templateUrl : 'download.component.html',
-    styleUrls : ['download.component.scss']
+    styleUrls   : ['download.component.scss']
 })
 
 export class DownloadComponent implements OnInit, OnDestroy {
@@ -118,10 +118,10 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 this.otherPackages = platform.files;
             } else {
                 // Ensures the first client found is always selected for the download button.
-                const client = platform.files.find(({appType}) => appType === 'client');
+                const client = platform.files.find(({ appType }) => appType === 'client');
                 this.downloadButton = client;
                 // Remove the download button from the other packages.
-                this.otherPackages = platform.files.filter(({fileName}) => fileName !== client.fileName);
+                this.otherPackages = platform.files.filter(({ fileName }) => fileName !== client.fileName);
             }
         }
     }

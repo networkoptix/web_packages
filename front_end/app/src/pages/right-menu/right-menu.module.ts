@@ -5,23 +5,23 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 
-import { NxRightMenuComponent } from './right-menu.component';
-
 import { TranslateModule }      from '@ngx-translate/core';
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
-import { PipesModule } from '../../pipes/pipes.module';
+
+import { NxRightMenuComponent } from './right-menu.component';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
-        path: 'right', component: NxRightMenuComponent,
+        path: 'right', component: NxRightMenuComponent
     }
 ];
 
 // TODO: Remove it after test
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -32,12 +32,12 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
-    declarations   : [
-        NxRightMenuComponent,
+    providers    : [],
+    declarations : [
+        NxRightMenuComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxRightMenuComponent
     ]
 })

@@ -5,8 +5,8 @@ import { NgbModule }                             from '@ng-bootstrap/ng-bootstra
 import { TranslateModule }                       from '@ngx-translate/core';
 import { EMPTY as empty }                        from 'rxjs';
 
-import { ComponentsModule }                      from '../../components/components.module';
-import { DirectivesModule }                      from '../../directives/directives.module';
+import { ComponentsModule }                      from '@components/components.module';
+import { DirectivesModule }                      from '@directives/directives.module';
 import { ReleaseComponent }                      from './release/release.component';
 import { DownloadHistoryComponent }              from './download-history.component';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -50,7 +50,7 @@ const appRoutes: Routes = [
         ReleaseComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         DownloadHistoryComponent
     ]
 })

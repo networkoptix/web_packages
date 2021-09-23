@@ -7,15 +7,15 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime, takeUntil }   from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxSystem }                  from '@services/system.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     NxApplyService, FormWatcher, Watcher
-}                                    from '../../../../../services/apply.service';
+}                                    from '@services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

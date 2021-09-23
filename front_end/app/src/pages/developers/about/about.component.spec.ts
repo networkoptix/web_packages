@@ -8,12 +8,12 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxRibbonService } from '../../../components/ribbon';
-import { NxAccountService } from '../../../services/account.service';
-import { NxMenusService } from '../../../services/menus.service';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { NxPageService } from '../../../services/page.service';
+import { NxRibbonService } from '.@components/ribbon';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxPageService } from '@services/page.service';
 import {
     landingRoute,
     docMenuMap,

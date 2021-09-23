@@ -5,12 +5,12 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }                    from '@angular/forms';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { WINDOW }                    from '../../services/window-provider';
-import { NxProcessService, Process } from '../../services/process.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { WINDOW }                    from '@services/window-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 export interface MessageParams {
     disclaimer: string;

@@ -9,13 +9,13 @@ import { NxSystemsListComponent } from './list.component';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxPageService } from '../../../services/page.service';
-import { NxSystemsService } from '../../../services/systems.service';
-import { NxAccountService } from '../../../services/account.service';
-import { NxProcessService } from '../../../services/process.service';
-import { NxUriService } from '../../../services/uri.service';
-import { NxHeaderService } from '../../../services/nx-header.service';
-import { NxMenusService } from '../../../services/menus.service';
+import { NxPageService } from '@services/page.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxAccountService } from '@services/account.service';
+import { NxProcessService } from '@services/process.service';
+import { NxUriService } from '@services/uri.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxMenusService } from '@services/menus.service';
 import { Router } from '@angular/router';
 
 describe('NxSystemsListComponent', () => {
@@ -24,11 +24,13 @@ describe('NxSystemsListComponent', () => {
     let el: DebugElement;
 
     beforeEach(waitForAsync(() => {
-        const translateSpy = { translations: {
-            pageTitles: {
-                systems: () => "Systems"
+        const translateSpy = {
+            translations: {
+                pageTitles: {
+                    systems: () => 'Systems'
+                }
             }
-        }};
+        };
         const configSpy = { getConfig: () => nxConfig };
         TestBed.configureTestingModule({
             imports      : [HttpClientTestingModule],

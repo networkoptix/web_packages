@@ -4,9 +4,9 @@ import { RouterModule, Routes }          from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
-import { ComponentsModule }              from '../../../components/components.module';
+import { ComponentsModule }              from '@components/components.module';
 import { BookmarksListModule }           from './list/list.module';
-import { DirectivesModule }              from '../../../directives/directives.module';
+import { DirectivesModule }              from '@directives/directives.module';
 import { NxBookmarksComponent }          from './bookmarks.component';
 import { PipesModule }                   from '@src/pipes/pipes.module';
 
@@ -29,12 +29,12 @@ const appRoutes: Routes = [
         BookmarksListModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxBookmarksComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         NxBookmarksComponent
     ]
 })

@@ -4,10 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
 import { PushComponent }        from './push-notifications.component';
-import { NxConfigService }      from '../../services/nx-config';
+import { NxConfigService }      from '@services/nx-config';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [

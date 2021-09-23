@@ -3,8 +3,8 @@ import { CommonModule }         from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 
-import { ComponentsModule }     from '../../components/components.module';
-import { DirectivesModule }     from '../../directives/directives.module';
+import { ComponentsModule }     from '@components/components.module';
+import { DirectivesModule }     from '@directives/directives.module';
 import { Nx503Component }       from './503.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -21,12 +21,12 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
-    declarations: [
+    providers    : [],
+    declarations : [
         Nx503Component
     ],
-    bootstrap      : [],
-    exports: [
+    bootstrap : [],
+    exports   : [
         Nx503Component
     ]
 })

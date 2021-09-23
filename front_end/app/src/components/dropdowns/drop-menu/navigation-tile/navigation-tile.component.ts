@@ -4,10 +4,10 @@ import { Router }           from '@angular/router';
 import { UntilDestroy }     from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
-import { NxSessionService }         from '../../../../services/session.service';
-import { NxHeaderService }          from '../../../../services/nx-header.service';
-import { Auth, MenuNode }           from '../../../../services/menus.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxSessionService }         from '@services/session.service';
+import { NxHeaderService }          from '@services/nx-header.service';
+import { Auth, MenuNode }           from '@services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

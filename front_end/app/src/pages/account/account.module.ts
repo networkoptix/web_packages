@@ -7,7 +7,7 @@ import { ComponentsModule }              from '@components/components.module';
 import { DirectivesModule }              from '@directives/directives.module';
 import { NxAccountSecurityComponent }    from '@pages/account/security/security.component';
 import { MenuModule }                    from '@src/menu';
-import { ApplyGuard, AuthGuard }         from '../../routeGuards';
+import { ApplyGuard, AuthGuard }         from '@src/routeGuards';
 import { NxAccountComponent }            from '@pages/account/account.component';
 import { NxAccountSettingsComponent }    from '@pages/account/settings/settings.component';
 import { NxAccountPasswordComponent }    from '@pages/account/password/password.component';
@@ -53,14 +53,14 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers      : [
+    providers: [
         TypeResolver
     ],
-    declarations   : [
+    declarations: [
         NxAccountComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxAccountComponent
     ]
 })

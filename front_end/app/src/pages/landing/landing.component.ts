@@ -1,12 +1,12 @@
 import { Component, OnInit }         from '@angular/core';
 import { Router }                    from '@angular/router';
 
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxAccountService }          from '@services/account.service';
+import { NxPageService }             from '@services/page.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector    : 'landing-component',

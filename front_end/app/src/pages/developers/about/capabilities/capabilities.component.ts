@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { WINDOW } from '@services/window-provider';
-import { IConfig, NxConfigService } from '../../../../services/nx-config';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 

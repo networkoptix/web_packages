@@ -2,8 +2,8 @@ import { EMPTY } from 'rxjs';
 import {
     AboutStructure,
     AboutTemplates
-} from '../pages/developers/about/about.component';
-import { MenuStructure } from '../services/nx-config/base-config';
+} from '@pages/developers/about/about.component';
+import { MenuStructure } from '@services/nx-config/base-config';
 
 export const getMockLanding = () => mockAboutNodes;
 

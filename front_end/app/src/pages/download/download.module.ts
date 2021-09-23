@@ -10,10 +10,10 @@ import { TranslateModule }       from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY as empty }        from 'rxjs';
 
-import { ComponentsModule }      from '../../components/components.module';
-import { DirectivesModule }      from '../../directives/directives.module';
+import { ComponentsModule }      from '@components/components.module';
+import { DirectivesModule }      from '@directives/directives.module';
 import { DownloadComponent }     from './download.component';
-import { NxConfigService }       from '../../services/nx-config';
+import { NxConfigService }       from '@services/nx-config';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 @Injectable()
@@ -68,7 +68,7 @@ const appRoutes: Routes = [
         DownloadComponent
     ],
     bootstrap : [],
-    exports: [
+    exports   : [
         DownloadComponent
     ]
 })

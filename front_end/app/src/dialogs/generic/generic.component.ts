@@ -5,13 +5,13 @@ import {
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
+import { NxLanguageProviderService }             from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }               from '@app/language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-generic-content',
-    templateUrl: 'generic.component.html',
-    styleUrls  : ['generic.component.scss']
+    selector    : 'nx-modal-generic-content',
+    templateUrl : 'generic.component.html',
+    styleUrls   : ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -43,10 +43,10 @@ export class GenericModalContent implements OnInit {
 }
 
 @Component({
-    selector     : 'nx-modal-general',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
+    selector      : 'nx-modal-general',
+    template      : '',
+    encapsulation : ViewEncapsulation.None,
+    styleUrls     : []
 })
 export class NxModalGenericComponent {
     modalRef: NgbModalRef;

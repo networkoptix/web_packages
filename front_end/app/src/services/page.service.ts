@@ -3,7 +3,7 @@ import { Title, Meta }              from '@angular/platform-browser';
 import { Router }                   from '@angular/router';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'

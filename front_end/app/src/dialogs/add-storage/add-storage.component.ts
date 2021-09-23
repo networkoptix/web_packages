@@ -13,7 +13,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem }                  from '@services/system.service';
 import { NxToastService }            from '../toast.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { filter, map, skip, take } from 'rxjs/operators';
 import { CurrentStorageState } from '@services/system.service/system/storage-manager/current-storage-state';
 import { NxUtilsService } from '@services/utils.service';

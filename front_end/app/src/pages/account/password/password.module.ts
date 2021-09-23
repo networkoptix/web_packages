@@ -5,14 +5,13 @@ import { FormsModule }                from '@angular/forms';
 import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }            from '@ngx-translate/core';
 
-import { DirectivesModule }           from '../../../directives/directives.module';
-import { ComponentsModule }           from '../../../components/components.module';
+import { DirectivesModule }           from '@directives/directives.module';
+import { ComponentsModule }           from '@components/components.module';
 import { NxAccountPasswordComponent } from './password.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
-
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         RouterModule,
         FormsModule,
@@ -22,12 +21,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
         DirectivesModule,
         PipesModule
     ],
-    providers      : [],
-    declarations   : [
+    providers    : [],
+    declarations : [
         NxAccountPasswordComponent
     ],
-    bootstrap      : [],
-    exports        : [
+    bootstrap : [],
+    exports   : [
         NxAccountPasswordComponent
     ]
 })

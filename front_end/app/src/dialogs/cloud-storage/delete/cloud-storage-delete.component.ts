@@ -5,12 +5,12 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject }           from 'rxjs';
 
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxSystem }                  from '../../../services/system.service';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem }                  from '@services/system.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-cloud-storage-delete-content',

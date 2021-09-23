@@ -17,7 +17,7 @@ import { MenuNode }                             from '@services/menus.service';
 import { MenuNodeWithParent, RelatedLinks }     from '@components/left-menu/left-menu.component';
 import { SearchFilter }                         from '@components/search/search.component';
 import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';
-import { LanguageI18NStaticTypes }              from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { NxLanguageProviderService }            from '@services/nx-language-provider';
 import { NxProcessService, Process }            from '@services/process.service';
 import { NxUriService }                         from '@services/uri.service';

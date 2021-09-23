@@ -5,8 +5,8 @@ import { NgbModule }                     from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }               from '@ngx-translate/core';
 import { AngularSvgIconModule }          from 'angular-svg-icon';
 import { PipesModule }                   from '@src/pipes/pipes.module';
-import { ComponentsModule }              from '../../../components/components.module';
-import { MenuModule }                    from '../../../menu/menu.module';
+import { ComponentsModule }              from '@components/components.module';
+import { MenuModule }                    from '@src/menu/menu.module';
 import { NxIntegrationDetailsComponent } from './details.component';
 import { NxOverviewComponent }           from './overview/overview.component';
 import { NxSetupComponent }              from './setup/setup.component';
@@ -35,7 +35,7 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         PipesModule
     ],
-    providers : [],
+    providers    : [],
     declarations : [
         NxIntegrationDetailsComponent,
         NxSetupComponent,
