@@ -1,0 +1,84 @@
+import {
+    waitForAsync, ComponentFixture, TestBed
+}                                          from '@angular/core/testing';
+import { DebugElement }                    from '@angular/core';
+import { CommonModule }                    from '@angular/common';
+import { NxConfigService }                 from '@services/nx-config';
+import { nxConfig }                        from '@services/nx-config/config';
+import { NxLanguageProviderService }       from '@services/nx-language-provider';
+import { NxEmailComponent }                from './email.component';
+
+describe('NxEmailComponent email input Unit Test', () => {
+    let component: NxEmailComponent;
+    let fixture: ComponentFixture<NxEmailComponent>;
+    let el: DebugElement;
+
+    const translateMock = { translations: {} };
+    const configMock = { getConfig: () => nxConfig };
+
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations : [NxEmailComponent],
+            imports      : [CommonModule],
+            providers    : [
+                { provide: NxConfigService, useValue: configMock },
+                { provide: NxLanguageProviderService, useValue: translateMock }
+            ]
+        }).compileComponents()
+            .then(() => {
+                fixture = TestBed.createComponent(NxEmailComponent);
+                component = fixture.componentInstance;
+                el = fixture.debugElement;
+            })
+            .catch(err => console.error(err));
+    }));
+
+    it('should create the component', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should show normal email input', () => {
+        fixture.detectChanges();
+        component.componentId = 'exampleId';
+        component.lockEmail = false;
+        fixture.detectChanges();
+        const input = el.nativeElement.querySelector('input');
+        expect(input.name).toBe('exampleId');
+        expect(input.className).toBe('form-control');
+        expect(input.type).toBe('email');
+        expect(el.nativeElement.querySelectorAll('.hide-errors').length).toBe(0);
+    });
+
+    it('should show email input with hide-errors class', () => {
+        fixture.detectChanges();
+        component.componentId = 'exampleId';
+        component.hideErrors = true;
+        fixture.detectChanges();
+        const input = el.nativeElement.querySelector('input');
+        expect(input.name).toBe('exampleId');
+        expect(input.className).toBe('hide-errors form-control');
+    });
+
+    it('should show non-web email input', () => {
+        fixture.detectChanges();
+        component.componentId = 'exampleId';
+        component.hideErrors = false;
+        component.web = false;
+        fixture.detectChanges();
+        const input = el.nativeElement.querySelector('input');
+        expect(input.name).toBe('exampleId');
+        expect(input.className).toBe('');
+    });
+
+    it('should show locked email input', () => {
+        fixture.detectChanges();
+        component.lockEmail = true;
+        component.web = true;
+        fixture.detectChanges();
+        const input = el.nativeElement.querySelector('input');
+        console.log('inputAH', input);
+        expect(input.name).toBe('registerEmailLocked');
+        expect(input.type).toBe('text');
+        expect(input.className).toBe('form-control');
+    });
+});

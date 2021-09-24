@@ -8,6 +8,7 @@ export function setupConfig(): IConfig {
         alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
         pollingTimeout         : 30 * 1000,
         extendedRequestTimeout : 15 * 1000,
+        sessionFreshnessSec    : 60 * 10,
         apiRequestAttempts     : 4,    // combined with extendedRequestTimeout this mean we'll give up after 1 min
         animations             : {
             carouselImage: {

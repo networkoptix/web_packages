@@ -4,6 +4,10 @@ import {
 }                                          from '@angular/core/testing';
 import { ActivatedRoute }                  from '@angular/router';
 import { DebugElement }                    from '@angular/core';
+import { CommonModule }                    from '@angular/common';
+import { HttpClientTestingModule }         from '@angular/common/http/testing';
+import { of }                              from 'rxjs';
+
 import { NxConfigService }                 from '@services/nx-config';
 import { nxConfig }                        from '@services/nx-config/config';
 import { NxLanguageProviderService }       from '@services/nx-language-provider';
@@ -14,27 +18,31 @@ import { NxMenuService }                   from '@src/menu';
 import { NxUriService }                    from '@services/uri.service';
 import { NxToastService }                  from '@dialogs/toast.service';
 import { NxSystemStandardServerComponent } from './server-standard.component';
-import { CommonModule } from '@angular/common';
-import { RouterLinkDirectiveStub } from '@src/_testing';
+import { RouterLinkDirectiveStub }         from '@src/_testing';
+import { NxCloudApiService }               from '@services/nx-cloud-api';
 
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;
     let fixture: ComponentFixture<NxSystemStandardServerComponent>;
     let el: DebugElement;
 
-    const translateMock = { translations: {}};
+    const translateMock = { translations: {} };
     const configMock = { getConfig: () => nxConfig };
+    const routeMock = {
+        queryParams: of({ state: undefined })
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations : [NxSystemStandardServerComponent, RouterLinkDirectiveStub],
-            imports      : [CommonModule],
+            imports      : [CommonModule, HttpClientTestingModule],
             providers    : [
-                { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
+                { provide: NxLanguageProviderService, useValue: translateMock },
                 NxApplyService,
+                { provide: NxCloudApiService, useValue: {} },
                 { provide: NxProcessService, useValue: {} },
-                { provide: ActivatedRoute, useValue: {} },
+                { provide: ActivatedRoute, useValue: routeMock },
                 { provide: NxDialogsService, useValue: {} },
                 NxMenuService,
                 { provide: NxUriService, useValue: {} },
@@ -99,7 +107,6 @@ describe('NxSystemStandardServerComponent', () => {
             ];
         });
 
-
         it('should pick only storage if only one storage in dropdown storages', () => {
             component.dropdownStorages = component.dropdownStorages.slice(1, 2);
             expect(component.selectDefaultStorage()).toEqual({
@@ -110,7 +117,7 @@ describe('NxSystemStandardServerComponent', () => {
                 isNotSystem: true,
                 freeSpace: 2
             });
-        })
+        });
 
         it('should pick storage with the most free space if all NON-SYSTEM storages', () => {
             expect(component.selectDefaultStorage()).toEqual({

@@ -556,8 +556,9 @@ describe('OAuth Test Suite', () => {
         expect(icons.length).toBe(3);
     });
 
-    it('should load 2fa code request component', () => {
+    it('should load 2fa code request component with email', () => {
         fixture.detectChanges();
+        component.loginEmail = 'test@email.co';
         component.currentState = AuthorizeState.auth;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
@@ -567,6 +568,25 @@ describe('OAuth Test Suite', () => {
         const spans = el.nativeElement.querySelectorAll('span');
         expect(spans.length).toBe(4);
         expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        const buttons = el.nativeElement.querySelectorAll('button');
+        expect(buttons.length).toBe(3);
+        expect(buttons[0].innerText).toBe('No access to authentication app?');
+        expect(buttons[1].innerText).toBe('Back');
+        expect(buttons[2].innerText).toBe('Log In');
+        const icons = el.nativeElement.querySelectorAll('svg-icon');
+        expect(icons.length).toBe(3);
+    });
+
+    it('should load 2fa code request component without email', () => {
+        fixture.detectChanges();
+        component.currentState = AuthorizeState.auth;
+        fixture.detectChanges();
+        const labels = el.nativeElement.querySelectorAll('label');
+        expect(labels[0].innerHTML).toBe('Authentication code');
+        const passwordHeader = el.nativeElement.querySelector('h3');
+        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        const spans = el.nativeElement.querySelectorAll('span');
+        expect(spans.length).toBe(2);
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('No access to authentication app?');
