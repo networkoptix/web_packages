@@ -46,6 +46,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
     canSeeHistory: boolean;
     tabsVisible: boolean;
     sortedPlatforms;
+    checkedDownloads = false;
+    // Placeholder should not appear while downloads are loading
     otherPackages;
     private routerSubscription: Subscription;
 
@@ -113,7 +115,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
         this.downloadButton = undefined;
         this.otherPackages = [];
-        if (platform !== 'undefined') {
+        if (platform !== undefined) {
             if (platform.name === 'sdk') {
                 this.otherPackages = platform.files;
             } else {
@@ -144,13 +146,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.cloudApi
             .getDownloads()
             .then((response: any) => {
+                // Response is null if no releases
                 this.downloadsData = response;
+
                 // Sorts platforms based on order defined in nx-config service
-                Object.keys(this.CONFIG.downloads.groups).forEach((key) => {
-                    const checkPlatform = this.CONFIG.downloads.groups[key];
-                    const platform = this.downloadsData.platforms.find((downloadsPlatform) => {
-                        return downloadsPlatform.name === checkPlatform.name;
-                    });
+                Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform) => {
+                    const platform = this.downloadsData?.platforms.find(
+                        (downloadsPlatform) => downloadsPlatform.name === checkPlatform.name
+                    );
                     if (platform) {
                         platform.files = platform.files.filter((installer) => {
                             return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
@@ -183,6 +186,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 }
                 this.calcDisplayedPackages(this.platform);
                 this.activePlatform = this.sortedPlatforms.find(platform => platform.name === this.platform);
+                this.checkedDownloads = true;
 
                 this.sub.unsubscribe();
             });

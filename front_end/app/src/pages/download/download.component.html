@@ -2,7 +2,7 @@
     <h1 class="old-h12" translate>Download</h1>
 
     <div class="p-0">
-        <div class="nx-tab-set">
+        <div class="nx-tab-set" *ngIf="sortedPlatforms.length">
             <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
                 <li class="nav-item" *ngFor="let platform of sortedPlatforms">
                     <a href="" class="nav-link"
@@ -62,6 +62,14 @@
             </div>
         </div>
 
+        <nx-section-placeholder
+            *ngIf="checkedDownloads && !sortedPlatforms.length"
+            svgFileName='error_placeholder'
+            height='150'
+            width='150'
+            [translatedMessage]="'No official releases yet' | translate"
+        ></nx-section-placeholder>
+
         <div class="clearfix">
             <div class="mobile-badge" *ngFor="let platform of downloads.mobile">
                 <a *ngIf="LANG.downloads.mobile[platform.name].link() != 'disabled'"
@@ -77,4 +85,3 @@
     </div>
     <nx-footer></nx-footer>
 </div>
-
