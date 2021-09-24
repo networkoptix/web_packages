@@ -1050,10 +1050,7 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     waffle_flag = FLAGS.custom_clients
 
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return CustomClient.objects.filter(created_customization__name=settings.CUSTOMIZATION)
-        else:
-            return self.request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
+        return self.request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
 
     def perform_create(self, serializer):
         from cms.models import get_vms_asset
