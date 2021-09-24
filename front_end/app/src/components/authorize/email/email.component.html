@@ -1,7 +1,7 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <svg-icon nx-add-svg-src
-        [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
+        [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'"
         [svgStyle]="{'width.px': '280', 'height.px': '120'}"
         [applyClass]="true"></svg-icon>
     <h3 class="authorize-header">{{ header }}</h3>
@@ -19,7 +19,6 @@
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty && email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
                 [(ngModel)]="loginEmail"
                 #email="ngModel"
-                autocomplete="off"
                 required
                 [readonly]="emailProcess.processing"
                 email
@@ -46,7 +45,6 @@
                 type="text"
                 id="authorizeLogin"
                 name="login"
-                autocomplete="off"
                 [(ngModel)]="loginEmail"
                 [ngClass]="{ 'invalid-state': login.errors?.required || login.errors?.accountNotAccessSystem }"
                 #login="ngModel"
@@ -63,6 +61,7 @@
                 <p *ngIf="login.errors.lockedOut" class="error-label" translate>Too many attempts. Try again in a minute.</p>
             </ng-container>
         </ng-template>
+        <input type="password" name="password" style="display: none;">
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="left">
