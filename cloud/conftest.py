@@ -8,7 +8,7 @@ from random import randint
 import model_bakery
 from model_bakery import baker
 
-from api.tests.utils import NxTestClient, NxAPIClient
+from api.tests.utils import NxTestClient, NxAPIClient, MockCache
 from cms.controllers.structure import read_structure_json
 from cms.models import *
 from api.models import Account
@@ -120,9 +120,20 @@ def active_user(db, django_user_model):
 
 @pytest.fixture
 def mock_cloud_portal_customization_cache(mocker):
-    def handler(**kwargs):
+    def handler(target: str = '', **kwargs):
+        """Patch cloud_portal_customization_cache
+
+        Args:
+            target (str): target module to patch (ex: 'api.views.storage')
+            **kwargs: values that make up return dict of function call
+
+        Returns:
+            None
+        """
         return mocker.patch(
-            'cms.models.cloud_portal_customization_cache', return_value=kwargs)
+            f'{target}.cloud_portal_customization_cache' if target else 'cms.models.cloud_portal_customization_cache',
+            return_value=kwargs
+        )
 
     return handler
 
@@ -333,3 +344,14 @@ def mock_set():
 @pytest.fixture()
 def disable_feature_flags(mocker):
     mocker.patch('waffle.flag_is_active', return_value=True)
+
+
+@pytest.fixture()
+def mock_cache(mocker):
+    def _mock(target):
+        dummy_cache = MockCache()
+        cache_mock = mocker.patch(target)
+        cache_mock.get.side_effect = dummy_cache.get
+        cache_mock.set.side_effect = dummy_cache.set
+        return cache_mock
+    return _mock

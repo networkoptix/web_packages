@@ -829,7 +829,7 @@ class TestModifyDB:
         state = RecordSaveState.new(request_files={match_key: content_file})
 
         assert upload_imported_image(state)(match_obj) is src
-        mock_upload_image.assert_called_once_with(content_file)
+        mock_upload_image.assert_called_once_with(content_file, state)
 
     def delete_abandoned_files(self):
         # TODO: Still need to add unit test
@@ -857,7 +857,7 @@ class TestModifyDB:
         mock_ds.meta_settings = {'upload_data_images': False}
         assert process_html(state)
         mock_delete_abandoned_files.assert_not_called()
-    
+
         mock_ds.meta_settings = {'upload_data_images': True}
         assert process_html(state)
         assert state.new_record_value == f'{transformed_data_image_src} {transformed_import_image_src}'

@@ -141,7 +141,6 @@ def handle_push_notification_send(notification_object, device_ids, request_data)
     Returns:
         tuple[responses, bool]: The first item in the tuple are the responses from sending, the second is to note if there were no subscriptions.
     """
-    from notifications.notifications_api import get_system_with_users, get_push_devices_from_targets, log_push_result
 
     if device_ids:
         return [notification_object.send_notifications(

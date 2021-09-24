@@ -447,10 +447,12 @@ class Customization(models.Model):
             cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
                                                 asset_type=asset_type)
             cloud_portal.customizations.set([self])
-             # Automatically add new customization to all assets and menu_nodes that have all other customizations enabled
+            # Automatically add new customization to all assets and menu_nodes that have all other customizations enabled
             all_customizations_count = Customization.objects.all().count() - 1
             if all_customizations_count > 0:
-                assets_with_all_enabled = Asset.objects.annotate(num_customizations=Count('customizations')).filter(num_customizations=all_customizations_count)
+                assets_with_all_enabled = Asset.objects.annotate(num_customizations=Count('customizations')).filter(
+                    num_customizations=all_customizations_count, asset_type__single_customization=False
+                )
                 menu_nodes_with_all_enabled = MenuNode.objects.annotate(num_customizations=Count('enabled')).filter(num_customizations=all_customizations_count)
                 new_customization = self
                 for asset in assets_with_all_enabled:

@@ -1,3 +1,4 @@
+from functools import wraps
 import logging
 import json
 import time
@@ -265,11 +266,13 @@ logic_errors = {
     ErrorCodes.not_authorized: APINotAuthorisedException
 }
 
+
 def validate_response(func):
     def validate_error(response_data):
         if 'resultCode' not in response_data or 'errorText' not in response_data:
             raise APIInternalException('No valid error message from cloud_db', ErrorCodes.cloud_invalid_response)
 
+    @wraps(func)
     def validator(*args, **kwargs):
         response = func(*args, **kwargs)
 

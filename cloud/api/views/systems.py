@@ -125,10 +125,7 @@ def get_auth(request, system_id):
     data = cloud_api.System.get_nonce(request, system_id)
     nonce = data["nonce"]
     realm = settings.CLOUD_CONNECT['password_realm']
-    cred = cloud_api.Account.create_temporary_credentials(request,
-                                                          expiration_period=0,
-                                                          auto_prolongation_enabled=False,
-                                                          prolongation_period=0)
+    cred = cloud_api.Account.create_temporary_credentials(request, credential_type='short')
     login = cred['login']
     password = cred['password']
     return api_success({

@@ -37,7 +37,7 @@ class TestStorageViews:
             return mocked_method, expected_return
 
         return handler
-    
+
     @pytest.fixture
     def assert_auth_required(self, request_factory):
         def handler(func, endpoint, data, get=False):
@@ -45,9 +45,8 @@ class TestStorageViews:
                 endpoint, data=data, get=get, authenticated=False)
             unauthenticated_response = func(unauthenticated_request)
             assert unauthenticated_response.status_code == status.HTTP_401_UNAUTHORIZED
-        
-        return handler
 
+        return handler
 
     def test_create(self, mock_cloud_portal_customization_cache, request_factory, mock_storage_controller, assert_auth_required):
         endpoint = '/api/storage/create'
@@ -55,7 +54,9 @@ class TestStorageViews:
         system_id = str(uuid4())
         data = {'systemId': system_id}
 
-        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
+        mock_cloud_portal_customization_cache(
+            target='api.views.storage', config={'cloud_storage_size': storage_size}
+        )
         request = request_factory(endpoint, data=data)
 
         mock_create, expected_return = mock_storage_controller('create')
@@ -63,13 +64,12 @@ class TestStorageViews:
         response = create(request)
 
         mock_create.assert_called_once()
-        _, id_used, storage_size_used = mock_create.mock_calls[0].args
+        _, id_used, storage_size_used = mock_create.call_args.args
         assert id_used == system_id
         assert storage_size_used == storage_size
         assert response.status_code == status.HTTP_200_OK
         assert response.data == expected_return
         assert_auth_required(create, endpoint, data)
-
 
     def test_create_storage_size_not_setup(self, mock_cloud_portal_customization_cache, request_factory, mock_storage_controller, assert_auth_required):
         endpoint = '/api/storage/create'
@@ -77,7 +77,9 @@ class TestStorageViews:
         system_id = str(uuid4())
         data = {'systemId': system_id}
 
-        mock_cloud_portal_customization_cache(config={'cloud_storage_size': storage_size})
+        mock_cloud_portal_customization_cache(
+            target='api.views.storage', config={'cloud_storage_size': storage_size}
+        )
         request = request_factory(endpoint, data=data)
 
         mock_create, expected_return = mock_storage_controller('create')
@@ -125,7 +127,7 @@ class TestStorageViews:
         assert source_used == source_system_id
         assert response.status_code == status.HTTP_200_OK
         assert_auth_required(move, endpoint, data)
-    
+
     def test_usage_stats(self, request_factory, mock_storage_controller, mock_cloud_portal_customization_cache, assert_auth_required):
         endpoint = '/api/storage/statistics'
         storage_size = randint(1, 10000)
@@ -167,7 +169,7 @@ class TestStorageViews:
 
         for key in ('currentRecordingBitrate', 'maxLiveDelay'):
             expected_storage_info[key] = storage[key]
-        
+
         for key in ('spaceUsed', 'cloudCapacity'):
             expected_storage_info[key] = str(expected_storage_info[key])
 
@@ -184,7 +186,7 @@ class TestStorageViews:
         assert mock_statistics.call_count == len(storages)
         assert response.data == expected_storage_info
         assert_auth_required(usage_stats, endpoint, data, get=True)
-    
+
     def test_usage_stats_no_storage(self, request_factory, mock_storage_controller):
         system_id = str(uuid4())
         data = {'systemId': system_id}

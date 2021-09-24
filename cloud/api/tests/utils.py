@@ -44,6 +44,17 @@ class MockResponse:
             raise HTTPError(http_error_msg, response=self)
 
 
+class MockCache:
+    def __init__(self):
+        self.cache = {}
+
+    def get(self, key, default=None):
+        return self.cache.get(key, default)
+
+    def set(self, key, value, timeout=60):
+        self.cache[key] = value
+
+
 class NxOverride:
     def _login(self, user, backend=None, ip='127.0.0.1'):
         from django.contrib.auth import login
@@ -103,3 +114,9 @@ class NxAPIClient(NxOverride, APIClient):
 
         if self.session:
             super().logout()
+
+
+def unwrap(decorated_func):
+    while hasattr(decorated_func, '__wrapped__'):
+        decorated_func = decorated_func.__wrapped__
+    return decorated_func

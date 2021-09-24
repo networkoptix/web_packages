@@ -4,11 +4,13 @@ import pytest
 @pytest.fixture()
 def customization_config():
     return {
+        'alexaIntegrationEnabled': True,
         'app_types_for_platform': {'arm': ['client', 'server'], 'linux': ['bundle', 'client', 'server'],
                                    'macos': ['client'], 'sdk': ['metadata_sdk', 'storage_sdk', 'video_source_sdk'],
                                    'windows': ['bundle', 'client', 'server']},
-        'available_downloads_platform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'cloud_storage_enabled': False,
+        'available_downloads_platform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'bookmarksEnabled': False, 'cloud_storage_enabled': False,
         'cloud_storage_size': '53687091200', 'copyright_year': '2020', 'company_name': 'Network Optix',
+        'customClientsEnabled': False,
         'company_link': 'https://www.networkoptix.com', 'developers_enabled': True, 'feedback_enabled': True,
         'integration_filter_items': [{'id': 'automation', 'name': 'Automation', 'enabled': True},
                                      {'id': 'videoAnalytics', 'name': 'Video Analytics', 'enabled': True},
@@ -60,10 +62,11 @@ def customization_config():
 @pytest.fixture()
 def settings_from_cache():
     return {
+        'alexaIntegrationEnabled': False, 'customClientsEnabled': False,
         'appTypesForPlatform': {'arm': ['client', 'server'], 'linux': ['bundle', 'client', 'server'],
                                 'macos': ['client'], 'sdk': ['metadata_sdk', 'storage_sdk', 'video_source_sdk'],
                                 'windows': ['bundle', 'client', 'server']},
-        'availableDownloadsPlatform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'cloudName': 'Nx Cloud',
+        'availableDownloadsPlatform': ['arm', 'linux', 'macos', 'sdk', 'windows'], 'bookmarksEnabled': False, 'cloudName': 'Nx Cloud',
         'vmsName': 'Nx Witness', 'cloudStorageEnabled': False, 'cloudStorageSize': '53687091200',
         'copyrightYear': '2020', 'companyName': 'Network Optix', 'companyLink': 'https://www.networkoptix.com',
         'developersEnabled': True, 'feedbackEnabled': True,

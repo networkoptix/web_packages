@@ -83,24 +83,30 @@ def test_handle_push_notification_send(mocker, db):
         str(uuid4()) for _ in range(5)]
     mock_send_notifications = mocker.patch(
         'notifications.models.PushNotification.send_notifications', return_value=[fcm_responses, None])
-    mock_set_subscriptions_from_targets = mocker.patch(
-        'notifications.notifications_api.set_subscriptions_from_targets', return_value=None)
-    push_notification_with_subscriptions = baker.make(
+    system = {'users': baker.make('Account', 2)}
+    mock_get_system_with_users = mocker.patch(
+        'notifications.tasks.get_system_with_users', return_value=system)
+    mock_get_push_devices_from_targets = mocker.patch(
+        'notifications.tasks.get_push_devices_from_targets', return_value=None)
+    push_notification_with_devices = baker.make(
         PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets)
     push_notification_without_subscriptions = baker.make(
         PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets)
+    push_notification_with_subscriptions = baker.make(
+        PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets)
 
-    # Test sending with subscriptions
+    # Test sending with device_ids
     responses, no_subscriptions = handle_push_notification_send(
         push_notification_with_subscriptions, device_ids, request_data)
-    updated_with_subscriptions = PushNotification.objects.get(
-        id=push_notification_with_subscriptions.id)
+    updated_with_device_ids = PushNotification.objects.get(
+        id=push_notification_with_devices.id)
 
     assert not no_subscriptions
     assert responses == [fcm_responses, None]
     mock_send_notifications.assert_called_once_with(device_ids=device_ids)
-    assert updated_with_subscriptions.state == PushNotification.RESULT_STATES.open
-    mock_set_subscriptions_from_targets.assert_not_called()
+    assert updated_with_device_ids.state == PushNotification.RESULT_STATES.open
+    mock_get_system_with_users.assert_not_called()
+    mock_get_push_devices_from_targets.assert_not_called()
 
     # Test sending no subscriptions
     responses, no_subscriptions = handle_push_notification_send(
@@ -112,8 +118,25 @@ def test_handle_push_notification_send(mocker, db):
     assert no_subscriptions
     assert updated_without_subscriptions.state == PushNotification.RESULT_STATES.success
     assert updated_without_subscriptions.send_date
-    mock_set_subscriptions_from_targets.assert_called_once_with(
-        push_notification_without_subscriptions, request_data)
+    mock_get_push_devices_from_targets.assert_called_once_with(
+        push_notification_without_subscriptions, system['users'])
+
+    # Test sending with subscriptions
+    mock_get_system_with_users.reset_mock()
+    mock_get_push_devices_from_targets.reset_mock()
+    mock_get_push_devices_from_targets.return_value = mocker.sentinel.devices
+    mock_send_notifications.reset_mock()
+    responses, no_subscriptions = handle_push_notification_send(
+        push_notification_with_subscriptions, None, request_data)
+    updated_with_subscriptions = PushNotification.objects.get(
+        id=push_notification_with_subscriptions.id)
+
+    assert not no_subscriptions
+    assert responses == [fcm_responses, None]
+    mock_send_notifications.assert_called_with(devices=mocker.sentinel.devices)
+    assert updated_with_subscriptions.state == PushNotification.RESULT_STATES.open
+    mock_get_system_with_users.assert_called_with(push_notification_with_subscriptions, request_data)
+    mock_get_push_devices_from_targets.assert_called_with(push_notification_with_subscriptions, system['users'])
 
 
 def test_handle_push_notification_resend(mocker):
@@ -203,15 +226,13 @@ def test_handle_push_notification_send_exception(mocker):
 
 
 def test_send_push_notification(mocker, db):
-    request_data, fcm_responses, raw_system_id, raw_targets, *devices = [
+    request_data, raw_system_id, raw_targets, *devices = [
         str(uuid4()) for _ in range(randint(10, 100))]
     request_data = str(uuid4())
     mock_process_fcm_push_response = mocker.patch(
-        'notifications.notifications_api.process_fcm_push_response', return_value=None)
-    mock_set_subscriptions_from_targets = mocker.patch(
-        'notifications.notifications_api.set_subscriptions_from_targets', return_value=devices)
-    mock_send_notifications = mocker.patch(
-        'notifications.models.PushNotification.send_notifications', return_value=[fcm_responses, None])
+        'notifications.tasks.notifications_api.process_fcm_push_response', return_value=[])
+    mock_handle_push_notification_send = mocker.patch(
+        'notifications.tasks.handle_push_notification_send', return_value=[[mocker.sentinel.fcm_response, []], False])
     push_notification = baker.make(
         PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets)
 
@@ -219,11 +240,10 @@ def test_send_push_notification(mocker, db):
     updated_notification = PushNotification.objects.get(
         id=push_notification.id)
 
-    mock_set_subscriptions_from_targets.assert_called_once_with(
-        push_notification, request_data)
-    mock_send_notifications.assert_called_once_with(devices=devices)
+    mock_handle_push_notification_send.assert_called_once_with(
+        push_notification, None, request_data)
     mock_process_fcm_push_response.assert_called_once_with(
-        fcm_responses, push_notification)
+        mocker.sentinel.fcm_response, push_notification)
     assert updated_notification.send_date
 
 

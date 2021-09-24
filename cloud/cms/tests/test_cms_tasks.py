@@ -277,7 +277,7 @@ def test_async_zendesk_sync(mocker, db):
                        mock_log_id, force_update=force_update)
     mock_get_log.assert_called_once_with(id=mock_log_id)
     mock_update_customization_structure.assert_called_once_with(
-        menu, site, customization.name, mock_log, force_update)
+        menu, site, mock_log, force_update)
 
 
 def test_async_zendesk_push_article(mocker, db):

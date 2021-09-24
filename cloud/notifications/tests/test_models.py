@@ -1,4 +1,5 @@
 from conftest import check_against_expected_meta
+import functools
 import pytest
 from unittest.mock import call
 from uuid import uuid4
@@ -400,24 +401,6 @@ class TestPushNotification(BaseModelTest):
 
         assert instance.sub_traffic_relay(test_url) == expected
 
-    def test_generate_provider_specific_messages(self):
-        messages = PushNotification.generate_provider_specific_messages(
-            'title',
-            'body',
-            {'payload_key': 'payload_value'},
-            {'options_key': 'options_value'},
-            {'data_key': 'data_value'}
-        )
-
-        expected_messages = {
-            2: '{"APNS": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", \\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, \\"payload_key\\": \\"payload_value\\"}"}',
-            4: '{"APNS_SANDBOX": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", \\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, \\"payload_key\\": \\"payload_value\\"}"}',
-            1: '{"GCM": "{\\"notification\\": {\\"title\\": null, \\"body\\": null}, \\"data\\": {\\"data_key\\": \\"data_value\\", \\"options_key\\": \\"options_value\\"}}"}',
-            3: '{"BAIDU": "{\\"msg\\": {\\"title\\": null, \\"description\\": null}, \\"custom_content\\": {\\"data_key\\": \\"data_value\\"}, \\"options_key\\": \\"options_value\\"}"}'
-        }
-
-        assert messages == expected_messages
-
     def test_send_notifications(self, instance, mocker, db):
         def map_id(choices):
             return [id for id, *_ in choices]
@@ -430,8 +413,6 @@ class TestPushNotification(BaseModelTest):
             return device
 
         expected_sns_messages = str(uuid4())
-        mock_generate_provider_specific_messages = mocker.patch(
-            'notifications.models.PushNotification.generate_provider_specific_messages', return_value=expected_sns_messages)
 
         expected_sns_client = str(uuid4())
         mock_get_sns_client = mocker.patch(
@@ -439,13 +420,21 @@ class TestPushNotification(BaseModelTest):
 
         expected_response = str(uuid4())
         mock_send_message = mocker.patch(
-            'notifications.models.PushDeviceQuerySet.send_message', return_value=expected_response)
+            'notifications.models.PushDevice.send_message', return_value=expected_response)
 
         mock_send_sns_push = mocker.patch(
             'notifications.engines.sns_push.send_sns_push')
 
         devices = [randomize(device) for device in baker.prepare(
             PushDevice, randint(10, 100))]
+        legacy_notification_devices_count = sum(
+            1 for device in devices
+            if device.provider == PushDevice.PROVIDERS.firebase_legacy and device.type == PushDevice.TYPES.notification
+        )
+        legacy_data_devices_count = sum(
+            1 for device in devices
+            if device.provider == PushDevice.PROVIDERS.firebase_legacy and device.type == PushDevice.TYPES.data
+        )
 
         expected_send_sns_push_calls = [
             call(device, expected_sns_client,
@@ -456,6 +445,6 @@ class TestPushNotification(BaseModelTest):
             device_ids=(device.id for device in devices))
 
         mock_send_sns_push.has_calls(expected_send_sns_push_calls)
-        assert mock_send_message.call_count == 2
-        assert notification_response == expected_response
-        assert data_response == expected_response
+        assert mock_send_message.call_count == legacy_notification_devices_count + legacy_data_devices_count
+        assert notification_response == [expected_response] * legacy_notification_devices_count
+        assert data_response == [expected_response] * legacy_data_devices_count

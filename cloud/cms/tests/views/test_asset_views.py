@@ -878,7 +878,7 @@ def test_upload_image(mocker, arf, account_factory, db):
     mock_ext_file.file.url = mock_location
 
     mocker.patch.object(Image, 'open', return_value=mock_pil_image)
-    mock_content_file = mocker.patch(
+    mock_content_file = mocker.patch.object(
         base, 'ContentFile', return_value=mock_content_file_instance)
     mock_external_file_create = mocker.patch(
         'cms.models.ExternalFile.objects.create', return_value=mock_ext_file)
@@ -1022,15 +1022,25 @@ def test_get_asset_info_by_menu(mocker, arf, account_factory, db):
 
 
 class TestCustomClientViewSet:
-    def check_and_replace_class_variables(self, view_class):
+    @staticmethod
+    def check_and_replace_class_variables(view_class):
         expected_variables = {
             'permission_classes': [IsAuthenticatedOrTokenHasScope],
             'serializer_class': CustomClientSerializer,
             'waffle_flag': FLAGS.custom_clients
         }
+        actual_values = {}
         for attribute, value in expected_variables.items():
-            assert getattr(view_class, attribute, str(uuid4())) == value
+            actual_value = getattr(view_class, attribute, str(uuid4()))
+            assert actual_value == value
+            actual_values[attribute] = actual_value
             setattr(view_class, attribute, None)
+        return actual_values
+
+    @staticmethod
+    def restore_class_variables(view_class, values):
+        for attribute, value in values.items():
+            setattr(view_class, attribute, value)
 
     @pytest.fixture
     def get_instance(self, mocker, arf, account_factory, db):
@@ -1046,8 +1056,10 @@ class TestCustomClientViewSet:
                                     return_value=custom_client)
             return instance
 
-        self.check_and_replace_class_variables(CustomClientViewSet)
-        return _get_instance
+        original_values = self.check_and_replace_class_variables(CustomClientViewSet)
+        yield _get_instance
+        # Restore class attributes so the adjacent tests are not affected
+        self.restore_class_variables(CustomClientViewSet, original_values)
 
     def test_get_queryset(self, mocker, get_instance, db):
         instance = get_instance()

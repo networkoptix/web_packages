@@ -1,5 +1,6 @@
 from hashlib import md5, sha256
 import base64
+from functools import wraps
 import random
 import string
 import logging
@@ -69,6 +70,7 @@ def lower_case_email(func):
 
 
 def auto_refresh_token(func):
+    @wraps(func)
     def _wrapper(request, *args, **kwargs):
         if hasattr(request, "session"):
             access_token = request.session.get("access_token")
@@ -223,7 +225,6 @@ class System(object):
         if endpoint == 'getNonce':
             return f'{CLOUD_DB_URL}/auth/getNonce'
         return f'{CLOUD_DB_URL}/system/{system_id_segment}{endpoint}'
-
 
     @staticmethod
     @validate_response

@@ -6,6 +6,7 @@ import json
 import django
 from django.conf import settings
 from django.contrib.auth.models import Permission
+from django.contrib.auth.signals import user_login_failed
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
@@ -119,6 +120,13 @@ def register(request):
     return api_success({'activated': activated})
 
 
+def send_login_failed_signal(sender, email, password, request):
+    user_login_failed.send(
+        sender=sender,
+        credentials=django.contrib.auth._clean_credentials({'email': email, 'password': password}),
+        request=request
+    )
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -138,14 +146,21 @@ def login(request):
     password = request.data.get('password')
     ip = get_ip(request)
 
-    token = Auth.get_token(email, password, ip=ip)
-    validate_token = Auth.validate_token(token['access_token'])
+    try:
+        token = Auth.get_token(email, password, ip=ip)
+        validate_token = Auth.validate_token(token['access_token'])
+    except APILogicException as exception:
+        send_login_failed_signal(__name__, email, password, request)
+        raise exception
+
     if email != validate_token['username']:
-        raise APIInternalException("Token does not match email.")
+        send_login_failed_signal(__name__, email, password, request)
+        raise APIInternalException("Token does not match email.", error_code=ErrorCodes.unknown_error)
 
     try:
         user = models.Account.objects.get(email=email)
     except models.Account.DoesNotExist:
+        send_login_failed_signal(__name__, email, password, request)
         user = None
 
     if user is None:

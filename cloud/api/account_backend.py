@@ -107,6 +107,6 @@ def user_login_failed_callback(sender, credentials, request, **kwargs):
     ip = None
     if request:
         ip = get_ip(request)
-    user_name = credentials.get('username', None)
+    user_name = credentials.get('email') or credentials.get('username')
     logger.info(f'Failed login attempt: %{user_name}, IP: {ip}')
     AccountLoginHistory.objects.create(action='user_login_failed', ip=ip, email=user_name)

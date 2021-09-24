@@ -31,6 +31,7 @@ django-celery-results==1.0.4
 django-cleanup==5.1.0
 django-cors-headers==3.7.0
 django-csv-exports==1.0.5
+django-mock-queries==2.1.7
 django-model-utils==3.1.2
 django-nested-admin==3.3.0
 django-npm==1.0.0
@@ -90,6 +91,7 @@ py-vapid==1.5.0
 pycodestyle==2.6.0
 pycparser==2.19
 pycurl==7.43.0.6
+pyfakefs==4.5.1
 Pygments==2.3.1
 PyJWT==1.7.1
 pyparsing==2.4.7

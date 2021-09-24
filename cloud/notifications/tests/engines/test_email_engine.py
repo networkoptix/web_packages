@@ -6,16 +6,18 @@ from notifications.engines.email_engine import *
 
 
 class TestEmailEngine:
-    def test_email_cache(self, mocker):
+    def test_email_cache(self, mocker, mock_cache):
+        cache_mock = mock_cache('notifications.engines.email_engine.cache')
         customization_name, cache_type, value = [
             str(uuid4()) for _ in range(3)]
         expected_version_id = randint(1, 1000)
+
         mocker.patch(
             'cms.models.check_update_cache', return_value=[False, expected_version_id])
 
         email_cache(customization_name, cache_type, value)
 
-        version_id = cache.get('email_cache')[customization_name]['version_id']
+        version_id = cache_mock.get('email_cache')[customization_name]['version_id']
 
         assert email_cache(customization_name, cache_type) == value
         assert version_id == expected_version_id

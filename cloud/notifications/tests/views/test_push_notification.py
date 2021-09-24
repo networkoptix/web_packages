@@ -106,7 +106,7 @@ class TestCloudSystemBasicAuthentication(WithInstanceFixture):
         mock_clouddb_account_get = mocker.patch(
             'api.controllers.cloud_api.Account.get', side_effect=APINotAuthorisedException(test_error))
         mock_clouddb_system_get = mocker.patch(
-            'api.controllers.cloud_api.System.get', return_value={'systems': [system]})
+            'api.controllers.cloud_api.System.basic_get', return_value={'systems': [system]})
         mock_credentials = mocker.MagicMock()
         mock_credentials.tokens = tokens
         mock_temp_login_instance = mocker.MagicMock()
@@ -139,8 +139,7 @@ class TestCloudSystemBasicAuthentication(WithInstanceFixture):
         assert caches['push_authentication'].get(login, False) == system
         mock_clouddb_account_get.assert_called_once_with(
             mock_request, email=user, password=password)
-        mock_clouddb_system_get.assert_called_once_with(tokens, user)
-        mock_temp_login.assert_called_once_with(user, password)
+        mock_clouddb_system_get.assert_called_once_with(user, password, user)
         assert mock_request.data == expected_request_data
 
 
@@ -203,7 +202,8 @@ class TestCloudSessionAuthentication(WithInstanceFixture):
         assert mock_request.data == expected_request_data
 
 
-def test_push_notification(arf, account_factory, db):
+def test_push_notification(arf, account_factory, db, mocker, default_customization):
+    mocker.patch('notifications.views.push_notification.get_mobile_compatible_customization', return_value=default_customization)
     title, body, payload_key, payload_value, options_key, options_value, target, system_id = [
         str(uuid4()) for _ in range(8)]
     data = {
@@ -222,6 +222,7 @@ def test_push_notification(arf, account_factory, db):
     }
     url = reverse('push_notification')
     request = arf.post(url, data, format='json')
+    request.session = {}
     user = account_factory()
     force_authenticate(request, user=user)
 

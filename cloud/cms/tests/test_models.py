@@ -755,6 +755,7 @@ class TestMenuNodeMethods:
                     'draft': False,
                     'asset_type': 'Documentation Page',
                     'related_asset_ids': [asset.id for asset in nodes[0].related_assets.all()],
+                    'name_raw': 'node1',
                     'next_item': True,
                     'new_window': False,
                     'icon': 'icon1.svg',
@@ -775,6 +776,7 @@ class TestMenuNodeMethods:
                     'draft': False,
                     'asset_type': 'Documentation Page',
                     'related_asset_ids': [asset.id for asset in nodes[1].related_assets.all()],
+                    'name_raw': 'node2',
                     'next_item': False,
                     'new_window': True,
                     'icon': 'icon2.svg',
@@ -1458,13 +1460,20 @@ class TestCustomization:
         ids = {customization.id for customization in (*l1_customizations, *l2_customizations)}
         assert set(root_customization.get_children_ids(root_customization)) == ids
 
-    def test_save(self, db, english_language):
+    def test_save(self, db, english_language, asset_type_factory):
+        integration = baker.make(
+            'Asset', asset_type=asset_type_factory(AssetType.ASSET_TYPES.integration), name='Integration',
+            customizations=Customization.objects.all()
+        )
         customization = Customization(name='new_cust', default_language=english_language)
         customization.save()
-        portal = Asset.objects.filter(customizations=customization).first()
+        portal = Asset.objects.filter(customizations=customization, asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
         assert portal
         assert portal.asset_type.type == AssetType.ASSET_TYPES.cloud_portal
         assert portal.name == 'Cloud portal - new_cust'
+
+        integration.refresh_from_db()
+        assert integration.customizations.filter(id=customization.id).exists()
 
 
 class TestCustomClient:
@@ -1475,7 +1484,6 @@ class TestCustomClient:
     def test_name(self):
         name = self.client._meta.get_field('name')
         assert name.max_length == 100
-        assert name.blank
 
     def test_last_modified(self):
         last_modified = self.client._meta.get_field('last_modified')
