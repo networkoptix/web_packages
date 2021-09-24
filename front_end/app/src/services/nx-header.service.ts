@@ -187,7 +187,7 @@ export class NxHeaderService {
         this.currentLocation = bestMatch;
     }
 
-    static findMatchFactory(url: any, target: Record<any, any> = {}) {
+    static findMatchFactory(url: any, target: Record<any, any> = {}, removeFirstBreadcrumb = true) {
         return (startingNodes) => {
             const nodes = [...startingNodes];
             for (let i = 0; i < nodes.length; i++) {
@@ -202,6 +202,9 @@ export class NxHeaderService {
                             target.assetId = node.asset_id;
                             target.parentNode = parentNode;
                             target.childNode = node;
+                            if (removeFirstBreadcrumb) {
+                                node.breadcrumbs.pop();
+                            }
                             target.breadcrumbs = node.breadcrumbs;
                             if (nodeUrl === url) {
                                 break;
