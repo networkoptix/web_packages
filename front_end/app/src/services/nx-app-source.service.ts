@@ -13,7 +13,7 @@ export class NxAppSourceService {
         this.CONFIG = configService.getConfig();
     }
 
-    getMenuBase(system: NxSystem) {
+    getMenuBase(system: Partial<NxSystem>) {
         if (this.CONFIG.isLocal) {
             return `${this.CONFIG.menus.systemHealth.baseUrl}`;
         } else {

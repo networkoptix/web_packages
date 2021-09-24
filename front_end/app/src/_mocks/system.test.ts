@@ -1,6 +1,6 @@
 import { NxSystem } from '@services/system.service';
 
-export function setupTestSystem() : NxSystem {
+export function setupTestSystem() : Partial<NxSystem> {
     return {
         cloudStorageSystemEnabled : false,
         mediaservers              : null,
@@ -60,61 +60,12 @@ export function setupTestSystem() : NxSystem {
             isMine   : true,
             canMerge : 1
         },
-        _isAvailable      : true,
-        isOnline          : true,
-        stateMessage      : '',
-        _subscribersCount : {
-            _isScalar   : false,
-            observers   : [],
-            closed      : false,
-            isStopped   : false,
-            hasError    : false,
-            thrownError : null,
-            _value      : 2
-        },
-        show404                 : false,
-        currentBusyServerIds    : {},
-        licensesModifiedSubject : {
-            _isScalar   : false,
-            observers   : [],
-            closed      : false,
-            isStopped   : false,
-            hasError    : false,
-            thrownError : null,
-            _value      : ''
-        },
-
+        isAvailable          : true,
+        isOnline             : true,
+        stateMessage         : '',
+        subscriberCount      : 2,
+        show404              : false,
         currentServerNotBusy : true,
-        currentUserEmail     : 'noptixautoqa+owner@gmail.com',
-        mediaserver          : {
-            emptyId : '{00000000-0000-0000-0000-000000000000}',
-            http    : {
-                $ref: '$["cloudApi"]["configService"]["http"]'
-            },
-            CONFIG: {
-                $ref: '$["cloudApi"]["configService"]["config"]'
-            },
-            location: {
-                $ref: '$["systemApiService"]["location"]'
-            },
-            cacheService: {
-                $ref: '$["cloudApi"]["configService"]["http"]["handler"]["chain"]["next"]["interceptor"]["cacheRegistrationService"]'
-            },
-            cookieService: {
-                $ref: '$["systemApiService"]["cookieService"]'
-            },
-            healthService: {
-                $ref: '$["systemApiService"]["healthService"]'
-            },
-            appState: {
-                $ref: '$["cloudApi"]["configService"]["http"]["handler"]["chain"]["next"]["next"]["interceptor"]["appState"]'
-            },
-            authGet   : 'MTVkNDdlZjc0YTk0NDJkMzgzODE1MDA2ZGM1YzBlN2UtMzQyNTcyODY4NzpuaXdYNUlkcEJuaUFsNXNGelRYYTFoZmdvbHJVVTg9aHp4cHBjOjRlNWUxMGFiZmZiNmYwMjRhNzkzODk3OTQ4ODk5OTJm',
-            authPost  : 'MTVkNDdlZjc0YTk0NDJkMzgzODE1MDA2ZGM1YzBlN2UtMzQyNTcyODY4NzpuaXdYNUlkcEJuaUFsNXNGelRYYTFoZmdvbHJVVTg9aHp4cHBjOmM3YmNmZTJhYzVhZGQ5OGQ4MDA3YzUwMzUxZjM1ZWFi',
-            authPlay  : 'MTVkNDdlZjc0YTk0NDJkMzgzODE1MDA2ZGM1YzBlN2UtMzQyNTcyODY4NzpuaXdYNUlkcEJuaUFsNXNGelRYYTFoZmdvbHJVVTg9aHp4cHBjOjgyYjUxNmM2ODU3ZGI2ODkzNDBjMTRlNDY2MTZiODdk',
-            userEmail : 'noptixautoqa+owner@gmail.com',
-            systemId  : 'c27aaff0-0694-469b-a8d6-c43cd8a9648c',
-            urlBase   : 'https://c27aaff0-0694-469b-a8d6-c43cd8a9648c.relay.vmsproxy.hdw.mx'
-        }
+        currentUserEmail     : 'noptixautoqa+owner@gmail.com'
     };
 }
