@@ -198,7 +198,7 @@ export class NxConsoleTableComponent {
     update$ = new BehaviorSubject(null);
     filterStates: Record<string, FilterState> = {};
     fixedWidths = {};
-    noClients = false;
+    noItems = false;
     ignoreActive = false
 
     selectedManifest: ConsoleManifest;
@@ -247,7 +247,7 @@ export class NxConsoleTableComponent {
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
                 const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.manifest.settings);
-                this.noClients = !data.length;
+                this.noItems = !data.length;
                 this.showSearch ||= !!search;
                 const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);
                 if (!isNaN(perPageFromParam)) {

@@ -26,7 +26,7 @@
             <div>{{selectedManifest.searchSubheading}}</div>
         </div>
     </nx-section>
-    <div *ngIf="!noClients" class="console-table-wrapper">
+    <div *ngIf="!noItems" class="console-table-wrapper">
         <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48">
             <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
                 <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative">
@@ -175,7 +175,7 @@
             </tbody>
         </table>
     </div>
-    <div *ngIf="!(selectedData.data$ | async)?.length && !(selectedData.noSearchMatches$ | async)" class="table-content-placeholder" [style.height.px]="48 * (selectedData.perPage$ | async)">
+    <div *ngIf="!(selectedData.data$ | async)?.length && !(selectedData.noSearchMatches$ | async)" class="table-content-placeholder" [style.height.px]="noItems ? 360 : 48 * (selectedData.perPage$ | async)">
         <ng-template #createPlaceholder>
             <div class="create-placeholder">
                 <svg-icon nx-add-svg-src
@@ -195,7 +195,7 @@
             <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>
         </div>
     </nx-section>
-    <div *ngIf="!noClients" class="action-buttons-row">
+    <div *ngIf="!noItems">
         <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')">{{action.title}}</button>
     </div>
 </nx-block>

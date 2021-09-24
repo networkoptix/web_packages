@@ -392,7 +392,7 @@ export const nxConfig: IConfig = {
                     title      : 'Create Custom Client',
                     subheading : "You don't have any Custom Clients yet.",
                     modal      : ModalType.CLIENT_CREATE,
-                    icon       : 'NoSettings.svg'
+                    icon       : 'CustomClients.svg'
                 }
             ]
         }
