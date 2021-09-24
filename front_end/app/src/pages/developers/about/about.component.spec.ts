@@ -1,19 +1,20 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
-import { NxAboutComponent } from './about.component';
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { FormsModule } from '@angular/forms';
+import { DebugElement }           from '@angular/core';
+import { BehaviorSubject }        from 'rxjs';
+import { FormsModule }            from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxRibbonService } from '.@components/ribbon';
-import { NxAccountService } from '@services/account.service';
-import { NxMenusService } from '@services/menus.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxHeaderService } from '@services/nx-header.service';
-import { NxPageService } from '@services/page.service';
+import { CommonModule }           from '@angular/common';
+
+import { NxAboutComponent }          from './about.component';
+import { NxConfigService }           from '@services/nx-config';
+import { nxConfig }                  from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxRibbonService }           from '@components/ribbon';
+import { NxAccountService }          from '@services/account.service';
+import { NxMenusService }            from '@services/menus.service';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { NxPageService }             from '@services/page.service';
 import {
     landingRoute,
     docMenuMap,
@@ -23,7 +24,6 @@ import {
     routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
 import { getMockTranslations, MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
-import { CommonModule } from '@angular/common';
 
 describe('For Developers Landing', () => {
     let component: NxAboutComponent;
