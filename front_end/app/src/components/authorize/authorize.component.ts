@@ -153,7 +153,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         if (event.code === 'Enter') {
-            this.elem.nativeElement.querySelector('button.process-button').click();
+            this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
         }
     }
 

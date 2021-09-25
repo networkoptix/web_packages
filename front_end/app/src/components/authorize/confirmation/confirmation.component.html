@@ -9,7 +9,7 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="d-flex justify-content-end w-100">
-            <button class="btn btn-primary process-button" type="submit" (click)="confirm()" translate>OK</button>
+            <button class="btn btn-primary on-keypress-enter" type="submit" (click)="confirm()" translate>OK</button>
         </div>
     </footer>
 </main>
