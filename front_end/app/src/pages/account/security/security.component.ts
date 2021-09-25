@@ -55,10 +55,8 @@ export class NxAccountSecurityComponent implements OnInit {
         };
     }
 
-    enabled2FA(enabled) {
-        this.tfauth.on = enabled;
-
-        if (enabled) {
+    toggle2FA() {
+        if (!this.tfauth.enabled) {
             this.dialogs
                 .wizard2FA()
                 .then((action) => {

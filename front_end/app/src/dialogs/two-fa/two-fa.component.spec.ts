@@ -17,6 +17,7 @@ import { Renderer2 } from '@angular/core';
 import { NxToastService }                         from '@dialogs/toast.service';
 import { ClipboardService }   from 'ngx-clipboard';
 import { NxSystemsService } from '@services/systems.service';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 // Mock class for NgbModalRef
 export class MockNgbModalRef {
@@ -107,7 +108,8 @@ describe('TwoFAModalContent', () => {
                     { provide: NxSystemsService, useValue: systemsServiceMock }
                 ],
                 imports: [
-                    FormsModule, HttpClientTestingModule
+                    FormsModule, HttpClientTestingModule,
+                    AngularSvgIconModule.forRoot()
                     // NgbModule.forRoot()
                 ]
             }).compileComponents()
@@ -268,7 +270,7 @@ describe('TwoFAModalContent', () => {
             const line2Text = el.querySelector('div.modal-body div.lineStrong');
             const codeLine2Text = el.querySelector('div.modal-body div.code-area-note');
             const buttonText = el.querySelector('div.modal-footer button#wizardDone span');
-            
+
             // cannot compare HTML strings (rendered string have /<span _ngcontent-a-c165="" .../) ...
             // TODO: Find a way...
             // expect(line1Text.innerHTML).toBe(LANG['finishLine1']);

@@ -1,6 +1,6 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/mixins';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/mixins";
 
 a {
     text-decoration: none !important;
@@ -90,6 +90,7 @@ a {
 $nx-theme-colors :
     "brand" $brand_core $light1,
     "default" $light8 $light1,
+    "default-dark" $light16 $light1,
     "default-inverted" $light4 $light16,
     "success" $brand-success $light1,
     "success-bright" $brand-success-bright $light1,

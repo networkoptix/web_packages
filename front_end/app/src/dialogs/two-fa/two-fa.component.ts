@@ -146,12 +146,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
 
             // try first to authenticate API -> TBD
+            if (this.type === 'off') {
+                return Promise.resolve();
+            }
             return this.accountService
                 .verify(this.password)
                 .then((result: any) => {
-                    if (this.type === 'off') {
-                        return Promise.resolve(result.resultCode);
-                    }
                     return this.accountService.get2FaKey();
                 });
         }, {
@@ -179,7 +179,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 }
             }
         }, (response) => {
-            if (response.keyUrl) {
+            if (response?.keyUrl) {
                 this.setTemplate(T_FA_STEPS.WizardQR);
                 this.valueQR = response.keyUrl;
                 this.accessCode = response.keyUrl.slice(-16);
@@ -289,7 +289,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.type === 'code') {
+        if (this.type === 'off') {
+            this.setTemplate(T_FA_STEPS.WizardLogin);
+        } else if (this.type === 'code') {
             this.accountService
                 .get2FaBackupCode()
                 .then((response: any) => {

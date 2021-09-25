@@ -1,23 +1,34 @@
 import {
     ComponentFixture, TestBed,
     waitForAsync, inject, tick, fakeAsync
-} from '@angular/core/testing';
-
-import { of }                         from 'rxjs';
-import { ActivatedRoute }             from '@angular/router';
-import { nxConfig }                   from '@services/nx-config/config';
-import { NxConfigService }            from '@services/nx-config';
-import { NxLanguageProviderService }  from '@services/nx-language-provider';
+}                                         from '@angular/core/testing';
+import { NgModule }                       from '@angular/core';
+import { of }                             from 'rxjs';
+import { ActivatedRoute }                 from '@angular/router';
+import { nxConfig }                       from '@services/nx-config/config';
+import { NxConfigService }                from '@services/nx-config';
+import { NxLanguageProviderService }      from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }    from '@app/language_i18n_static_types';
 import { NxAccountSecurityComponent } from '@pages/account/security/security.component';
-import { NxProcessService }           from '@services/process.service';
-import { NxDialogsService }           from '@dialogs/dialogs.service';
-import { NxCloudApiService }          from '@services/nx-cloud-api';
-import { NxSystemsService }           from '@services/systems.service';
-import { NxAccountService }           from '@services/account.service';
-import { NxMenuService }              from '@src/menu';
-import { NxApplyService }             from '@services/apply.service';
-import { NxPageService }              from '@services/page.service';
+import { NxProcessService }               from '@services/process.service';
+import { NxDialogsService }               from '@dialogs/dialogs.service';
+import { NxCloudApiService }              from '@services/nx-cloud-api';
+import { NxSystemsService }               from '@services/systems.service';
+import { NxAccountService }               from '@services/account.service';
+import { NxMenuService }                  from '@src/menu';
+import { NxApplyService }                 from '@services/apply.service';
+import { NxPageService }                  from '@services/page.service';
+import { TranslateModule }                from '@ngx-translate/core';
+import { NxPreLoaderComponent }           from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxTagComponent }                 from '@components/tag/tag.component';
+
+@NgModule({
+    imports : [TranslateModule.forRoot()],
+    exports : [TranslateModule]
+})
+class TranslateTestingModule {}
 
 describe('NxAccountSecurityComponent', () => {
     let component: NxAccountSecurityComponent;
@@ -42,8 +53,12 @@ describe('NxAccountSecurityComponent', () => {
 
         TestBed
             .configureTestingModule({
-                declarations : [NxAccountSecurityComponent],
-                providers    : [
+                imports      : [TranslateTestingModule],
+                declarations : [
+                    NxAccountSecurityComponent, NxPreLoaderComponent, NxTagComponent,
+                    NxContentBlockComponent, NxContentBlockSectionComponent
+                ],
+                providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxProcessService, useValue: {} },
@@ -99,23 +114,23 @@ describe('NxAccountSecurityComponent', () => {
         });
 
         it('should have header and body', () => {
-            const cardHeader = el.querySelector('nx-block header div span');
-            const cardHeaderSwitch = el.querySelector('nx-block header div nx-switch');
+            const cardHeader = el.querySelector('nx-block header div h4');
+            const cardButton = el.querySelector('nx-block nx-section button');
             const cardBody = el.querySelector('nx-block nx-section span');
             expect(cardHeader.innerHTML).toBe(LANG['Two-factor authentication']);
-            expect(cardHeaderSwitch).toBeTruthy();
+            expect(cardButton).toBeTruthy();
             expect(cardBody.innerHTML.length).toBeGreaterThan(20);
         });
 
         // revise after backend is working
-        xit('should call enabled2FA on keydown', fakeAsync(() => {
-            const spy = spyOn(component, 'enabled2FA').and.returnValue();
-            const tfaSwitch = el.querySelector('nx-block header div nx-switch');
+        xit('should call toggle2FA on keydown', fakeAsync(() => {
+            const spy = spyOn(component, 'toggle2FA').and.returnValue();
+            const tfaSwitch = el.querySelector('nx-block nx-section button');
             tfaSwitch.dispatchEvent(new MouseEvent('click'));
             tick();
             fixture.detectChanges();
             fixture.whenStable().then(() => {
-                expect(spy.calls.count()).toBe(1, 'enabled2FA method should be called once');
+                expect(spy.calls.count()).toBe(1, 'toggle2FA method should be called once');
             }, err => {});
         }));
     });
