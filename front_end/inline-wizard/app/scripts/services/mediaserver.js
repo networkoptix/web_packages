@@ -12,6 +12,7 @@ angular.module('webInlineWizard')
         var mediaserver = {};
         var cacheModuleInfo = null;
         var cacheCurrentUser = null;
+        var bearerToken = null;
 
         var proxy = '';
         // Support proxy mode
@@ -132,8 +133,12 @@ angular.module('webInlineWizard')
             request.catch(offlineHandler);
             return request;
         }
-        function wrapPost(url, data){
-            return wrapRequest($http.post(url, data));
+        function wrapPost(url, data) {
+            var headers = {};
+            if (bearerToken) {
+                headers.Authorization = `Bearer ${bearerToken.token}`;
+            }
+            return wrapRequest($http.post(url, data, { headers }));
         }
         function wrapGet(url, data){
             var canceller = $q.defer();
@@ -141,7 +146,11 @@ angular.module('webInlineWizard')
                 url += (url.indexOf('?')>0)?'&':'?';
                 url += $.param(data);
             }
-            var obj =  wrapRequest($http.get(url, { timeout: canceller.promise }));
+            var headers = {};
+            if (bearerToken) {
+                headers.Authorization = `Bearer ${bearerToken.token}`;
+            }
+            var obj =  wrapRequest($http.get(url, { timeout: canceller.promise, headers }));
             obj.then(function(){
                 canceller = null;
             },function(){
@@ -260,46 +269,10 @@ angular.module('webInlineWizard')
             },
             login:function(login, password){
                 login = login.toLowerCase();
-                var self = this;
-
-                function sendLogin(){
-                    $log.log('Login1: getNonce for ' + login);
-                    return self.getNonce(login).then(function(data){
-                        var realm = data.data.reply.realm;
-                        var nonce = data.data.reply.nonce;
-
-                        var auth = self.digest(login, password, realm, nonce);
-                        var authRtsp = self.digest(login, password, realm, nonce, 'PLAY');
-
-                        $log.log('Login2: nonce is ' + nonce);
-                        $log.log('Login2: auth is ' + auth);
-
-                        $log.log('Login2: cookieLogin');
-                        // Check auth again - without catching errors
-                        return $http.post(proxy + '/web/api/cookieLogin',{
-                            auth: auth
-                        }).then(function(data){
-                            $log.log('Login3: cookieLogin result');
-                            if(data.data.error !== '0'){
-                                var resHeaders = data.headers();
-                                $log.log('Login3: cookieLogin failed: ' + data.data.error);
-                                data.data.authResult = 'x-auth-result' in resHeaders ? resHeaders['x-auth-result'] : '';
-                                return $q.reject(data.data);
-                            }
-
-                            $localStorage.$reset();
-                            $localStorage.login = login;
-                            $localStorage.nonce = nonce;
-                            $localStorage.realm = realm;
-                            $localStorage.auth = auth;
-                            $localStorage.authRtsp = authRtsp;
-                            systemAPI.setAuthKeys(auth, null, authRtsp);
-                            $log.log('Login3: cookieLogin success!');
-                            return data.data.reply;
-                        });
-                    });
-                }
-                return sendLogin();
+                return $http.post(proxy + '/rest/v1/login/sessions', { username: login, password }).then(({data}) => {
+                    bearerToken = data;
+                    return data;
+                });
             },
             url:function(){
                 return proxy;
@@ -417,7 +390,7 @@ angular.module('webInlineWizard')
             setupLocalSystem: function(systemName, password, systemSettings) {
                 var config = {
                     name     : systemName,
-                    settings : systemSettings,
+                    settings : systemSettings || {},
                     local    : {
                         password: password
                     }
@@ -500,7 +473,7 @@ angular.module('webInlineWizard')
             restart: function() { return wrapPost(proxy + '/web/api/restart'); },
             getStorages: function(){ return wrapGet(proxy + '/web/api/storageSpace'); },
             saveStorages:function(info){return wrapPost(proxy + '/web/ec2/saveStorages',info); },
-            discoveredPeers:function(){return wrapGet(proxy + '/web/api/discoveredPeers?showAddresses=true'); },
+            discoveredPeers:function(){return wrapGet(proxy + '/api/discoveredPeers?showAddresses=true'); },
 
             getLayouts:function(){return wrapGet(proxy + '/web/ec2/getLayouts'); },
             getUsers:function(){return wrapGet(proxy + '/web/ec2/getUsers'); },
@@ -536,18 +509,18 @@ angular.module('webInlineWizard')
             systemSettings:function(setParams){
                 //return;
                 if(!setParams) {
-                    return wrapGet(proxy + '/web/api/systemSettings');
+                    return wrapGet(proxy + '/api/systemSettings');
                 }else{
                     var requestParams = [];
                     for(var key in setParams){
                         requestParams.push(key + '=' + setParams[key]);
                     }
 
-                    return wrapGet(proxy + '/web/api/systemSettings?' + requestParams.join('&'));
+                    return wrapGet(proxy + '/api/systemSettings?' + requestParams.join('&'));
                 }
             },
             getSystemSettings:function(){
-                return wrapGet(proxy + '/web/ec2/getSettings');
+                return wrapGet(proxy + '/ec2/getSettings');
             },
 
 
