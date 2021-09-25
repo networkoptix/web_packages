@@ -97,13 +97,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
     form = AccountAdminForm
 
     def save_model(self, request, obj, form, change):
-        # forbid creating superusers outside specific domain
-        if obj.is_superuser and not obj.email.endswith(settings.SUPERUSER_DOMAIN):
-            obj.is_superuser = False
+        # forbid creating superusers if their email isn't from the superuser domain
+        obj.is_staff |= obj.email.endswith(settings.SUPERUSER_DOMAIN)
 
-        # if this is superuser - make him is_staff too
-        if obj.is_superuser:
-            obj.is_staff = True
+        # forbid creating superusers if they're not staff
+        obj.is_superuser &= obj.is_staff
 
         obj.save()
 

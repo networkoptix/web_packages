@@ -1333,6 +1333,12 @@ class UserGroupsToAssetPermissions(models.Model):
                 user, settings.CUSTOMIZATION, "cms.access_integration_store")
 
     @staticmethod
+    def user_can_view_all_releases(user):
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(
+                user, settings.CUSTOMIZATION, "cms.user_can_view_all_releases")
+
+    @staticmethod
     def convert_permission_to_codename(permission):
         if permission.find('.') > -1:
             # need to remove app_label to get codename
