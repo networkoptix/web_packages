@@ -466,12 +466,14 @@ ${password}    ${BASE PASSWORD}
 25. Left menu search: Searchable fields
     [Tags]    C81796    webadmin    cloud    search
     Log in to system    ${system}    ${system}[owner]
-
-    Log    Step 1
-    Search For    en
-    Wait until elements are visible
-    ...    ${LICENSES LINK}
-    ...    ${GENERAL LINK}
+    
+    IF    '${LANGUAGE}'=='en_US'
+        Log    Step 1
+        Search For    en
+        Wait until elements are visible
+        ...    ${LICENSES LINK}
+        ...    ${GENERAL LINK}
+    END
 
     Log    Step 2
     Search For    ${CAMERA NAME}
