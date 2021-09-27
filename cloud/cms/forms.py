@@ -322,10 +322,7 @@ class AssetSettingsForm(forms.Form):
         required=False
     )
 
-    action = forms.ChoiceField(
-        widget=forms.RadioSelect,
-        required=True,
-        choices=(
+    AVAILABLE_ACTIONS = (
             ('generate_json', mark_safe('Generate structure template based on archive<br>'
                                         '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
             ('merge_with_db', mark_safe('Generate structure using archive and db<br>'
@@ -344,6 +341,11 @@ class AssetSettingsForm(forms.Form):
             ('import_assets_from_json', mark_safe('Create assets and update data records for existing assets from a json file<br>'
                                                   '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets</span>')),
         )
+
+    action = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        required=True,
+        choices=AVAILABLE_ACTIONS
     )
 
     force = forms.BooleanField(
@@ -407,7 +409,6 @@ class AssetForm(forms.ModelForm):
         cleaned_data = super().clean()
         customizations = cleaned_data.get('customizations')
         asset_type = cleaned_data.get('asset_type')
-
         if self.instance.pk:
             if not customizations:
                 customizations = self.instance.customizations.all()
@@ -419,7 +420,6 @@ class AssetForm(forms.ModelForm):
             cleaned_data['customizations'] = Customization.objects.all()
         else:
             num_customizations = len(customizations)
-
             if asset_type.single_customization:
                 if num_customizations > 1:
                     raise forms.ValidationError(f"Too many customizations selected for "
@@ -493,6 +493,9 @@ class MenuChangeForm(forms.ModelForm):
     customization_view = forms.ChoiceField(required=False, help_text='Make sure to save any changes before changing the view')
     admin_config = forms.CharField(widget=forms.Textarea,
         help_text='Configures which fields to display on inline menu nodes. Should be a dict with properties, header, details, and advanced. Each contains an array of fields to show.')
+    class Meta:
+        model = Menu
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -531,7 +534,6 @@ class MenuChangeForm(forms.ModelForm):
 
         if validation_errors:
             raise ValidationError(validation_errors)
-
         return json.dumps(updated_config)
 
 
@@ -547,7 +549,9 @@ class MenuNodeChangeForm(forms.ModelForm):
                 },
                 forward=['menu']
             ),
-        }
+        },
+        model = MenuNode
+        exclude = []
 
     class Media:
         js = ('js/menuNode.js',)
@@ -581,6 +585,8 @@ class MenuNodeChangeForm(forms.ModelForm):
         
 class MenuNodeInlineForm(forms.ModelForm):
     class Meta:
+        model = MenuNode
+        exclude = []
         widgets = {
             'enabled': BootstrapMultiSelect(field_name='enabled', options={
                 'includeSelectAllOption': True,
@@ -634,7 +640,6 @@ class MenuNodeInlineForm(forms.ModelForm):
                 ).exists()
             elif self.instance.pk and self.instance.enabled.filter(id=self.current_customization.id):
                 enabled = True
-
             self.fields['enabled'] = forms.BooleanField(required=False)
             self.initial['enabled'] = enabled
         if 'permissions' in self.fields:

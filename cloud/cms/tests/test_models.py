@@ -8,7 +8,6 @@ from model_bakery import baker, seq
 
 from django.test import TestCase
 from django_mock_queries.query import MockSet
-
 from cms.models import *
 
 

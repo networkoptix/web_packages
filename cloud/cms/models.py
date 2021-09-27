@@ -1262,6 +1262,8 @@ class UserGroupsToAssetPermissions(models.Model):
 
     @staticmethod
     def check_permission(user, asset, permission=None):
+        if not user:
+            return False
         if user.is_superuser:
             return True
         if permission and not user.has_perm(permission):
