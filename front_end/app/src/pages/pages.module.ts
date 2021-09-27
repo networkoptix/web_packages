@@ -42,9 +42,9 @@ const lazyRoutes: Routes = [
     },
     {
         path         : '',
+        loadChildren : determineLandingPageRoutingStrategy(),
         pathMatch    : 'full',
-        canActivate  : [RedirectGuard],
-        loadChildren : determineLandingPageRoutingStrategy()
+        canActivate  : [RedirectGuard]
     },
     {
         path         : 'systems/:systemId/advanced',
@@ -121,7 +121,7 @@ const lazyRoutes: Routes = [
     },
     {
         path         : 'content/about',
-        loadChildren : () => import('./landing/landing.module').then(m => m.LandingModule)
+        loadChildren : () => import('./new-landing/landing-routing.module').then(m => m.LandingRoutingModule)
     },
     {
         path         : 'content',
