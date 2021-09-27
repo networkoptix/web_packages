@@ -2439,6 +2439,21 @@ class ZendeskArticleLabel(models.Model):
         return self.name
 
 
+class ZendeskArticleManager(models.Manager):
+    def create(self, **kwargs):
+        article = kwargs.pop('article', {})
+        fields = ['author_id', 'comments_disabled', 'created_at', 'draft',
+                  'edited_at', 'html_url', 'permission_group_id', 'position',
+                  'promoted', 'title', 'updated_at', 'user_segment_id']
+        kwarg_mapping = {
+            field: getattr(article, field, None)
+            for field in fields 
+            if field not in kwargs}
+        kwarg_mapping['article_id'] = article.id
+
+        super().create(**kwargs, **kwarg_mapping)
+
+
 class ZendeskArticle(models.Model):
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
     section = models.ForeignKey(ZendeskSection, on_delete=models.CASCADE)
@@ -2464,6 +2479,8 @@ class ZendeskArticle(models.Model):
     sync = models.BooleanField(default=True)
 
     needs_sync = models.BooleanField(default=False)
+
+    objects = ZendeskArticleManager()
 
     def __str__(self):
         return f'{self.title} ({self.article_id})'
