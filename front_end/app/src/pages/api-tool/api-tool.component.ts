@@ -9,7 +9,7 @@ import { NxSystem, NxSystemService } from '@services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     delay, distinctUntilChanged,
-    filter, map, retryWhen
+    filter, finalize, map, retryWhen, take
 }                                    from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import SwaggerUI                     from 'swagger-ui';
@@ -111,7 +111,9 @@ export class NxApiToolComponent implements OnInit {
     serversDropdown: ServerDropdownItem[] = [];
     selectedServer: ServerDropdownItem;
     serversLoaded: boolean;
-    noSystemError = false;
+    loadingFailure = false;
+    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
+    APIFileLoadingError = false;
     mediaServerUpdating = false;
     gettingLegacyAPI: boolean;
     swaggerMenuTitle: string;
@@ -235,7 +237,7 @@ export class NxApiToolComponent implements OnInit {
         }  else if (cachedSystem) {
             this.system = cachedSystem;
             this.selectedSystem = { value: this.system.id, name: this.system.info.name };
-            this.updateMediaServers();
+            this.getServersInfo();
         } else {
             const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.headerService.lastActive.stateOfHealth === 'online'
                 ? this.headerService.lastActive : this.systems.find(system => system.stateOfHealth === 'online');
@@ -243,7 +245,8 @@ export class NxApiToolComponent implements OnInit {
                 this.system = await this.systemService.createSystem('', validSystem.id);
                 this.getServersInfo();
             } else {
-                this.noSystemError = true;
+                this.loadingErrorType = 'NO_SYSTEM_FOUND_API_TOOL';
+                this.loadingFailure = true;
             }
         }
     }
@@ -253,7 +256,7 @@ export class NxApiToolComponent implements OnInit {
             .getApiDoc(serverId, type);
     }
 
-    onServerChange(event) {
+    onServerChange(_event) {
 
     }
 
@@ -282,10 +285,16 @@ export class NxApiToolComponent implements OnInit {
                     }
                 }),
                 retryWhen(err => {
-                    return err.pipe(delay(1000));
+                    return err.pipe(delay(1000), take(5));
+                }),
+                finalize(() => {
+                    if (!this.serversLoaded) {
+                        this.loadingFailure = true;
+                        this.loadingErrorType = 'SYSTEM_FAILED_TO_LOAD_API_TOOL';
+                    }
                 })
             )
-            .subscribe((system) => {
+            .subscribe(_system => {
                 if (!this.mediaServerUpdating) {
                     this.updateMediaServers();
                 }
@@ -341,14 +350,20 @@ export class NxApiToolComponent implements OnInit {
                                             return !server.incompatible;
                                         });
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
-                                            this.createMenuContent(this.selectedServer.apiDocFull);
-                                            await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
-                                            this.menuService.section = 'api_information';
-                                            if (this.serverSubscription) {
-                                                this.serverSubscription.unsubscribe();
+                                            if (this.selectedServer.incompatible) {
+                                                // If for whatever reason, all servers are marked as incompatible
+                                                this.APIFileLoadingError = true;
+                                                this.content = {} as any;
+                                            } else {
+                                                this.createMenuContent(this.selectedServer.apiDocFull);
+                                                await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
+                                                this.menuService.section = 'api_information';
                                             }
                                             this.mediaServerUpdating = false;
                                             this.serversLoaded = true;
+                                            if (this.serverSubscription) {
+                                                this.serverSubscription.unsubscribe();
+                                            }
                                         }
                                     });
                             } else {
@@ -383,7 +398,7 @@ export class NxApiToolComponent implements OnInit {
         let legacyAPI;
         let deprecatedAPI;
 
-        // Optional chaining here because getApiDoc returns undefined if system version is below 4.3
+        // Optional chaining here because getApiDoc returns undefined if system version is below 5.0
         const legacyAPICall = this.getAPIDoc(serverID, 'legacy')?.then(response => {
             this.removeProprietaryEndpoints(response);
             this.modifyTagNames(response, 'legacy');
@@ -462,7 +477,7 @@ export class NxApiToolComponent implements OnInit {
                     if (this.CONFIG.isLocal) {
                         request.curlOptions = ['--insecure'];
                     }
-                    // System APIs before 4.3 only have one trace request which is the RTSP request
+                    // System APIs before 5.0 only have one trace request which is the RTSP request
                     if ((!this.isRestAPI() && request.method === 'TRACE') || this.isRTSPRoute(request)) {
                         this.RTSPRequestShowing = true;
                         this.handleRTSPRequest(request);
@@ -494,12 +509,12 @@ export class NxApiToolComponent implements OnInit {
     private authenticateRequest (request) {
         const headers = this.system.serverManager.mediaserverConnections[this.selectedServer.value].generateHeaders();
         if (headers) {
-            // 4.3 and up
+            // 5.0 and up
             for (const key of headers.keys()) {
                 request.headers[key] = headers.get(key);
             }
         } else {
-            // Below 4.3
+            // Below 5.0
             this.setAuthParam(request);
         }
     }
@@ -514,11 +529,12 @@ export class NxApiToolComponent implements OnInit {
     }
 
     isRestAPI(serverID = this.selectedServer.value) {
+        // REST API servers are 5.0 and above
         return this.system.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
     getSupportedMethods = () => {
-        // Trace requests are not truly supported, but in the APIs that are below 4.3 there is only a single trace request that is handled differently
+        // Trace requests are not truly supported, but in the APIs that are below 5.0 there is only a single trace request that is handled differently
         // and the try it out button needs to be enabled for this handling
         return this.isRestAPI()
             ? ['get', 'put', 'post', ' delete', 'options', 'head', 'patch']

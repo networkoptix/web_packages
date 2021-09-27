@@ -1,4 +1,5 @@
-<ng-container *ngIf="!noSystemError;else noSystem">
+<ng-container *ngIf="loadingFailure; then loadingError"></ng-container>
+<ng-container *ngIf="!loadingFailure">
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
@@ -42,6 +43,7 @@
                 <nx-pre-loader *ngIf="!this.content"></nx-pre-loader>
 
                 <ng-container *ngIf="this.content">
+                    <ng-container *ngIf="APIFileLoadingError; then APILoadingFailed"></ng-container>
                     <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else placeHolderTemplate">
                         <div style="padding: 0 1rem 1rem">
                             <h2>{{ swaggerMenuTitle }}</h2>
@@ -57,12 +59,16 @@
 </ng-container>
 
 
-<ng-template #noSystem>
-    <nx-page-placeholder type="NO_SYSTEM_FOUND_API_TOOL">
+<ng-template #loadingError>
+    <nx-page-placeholder [type]="loadingErrorType">
         <button class="btn btn-primary main-button mx-auto">
             <a routerLink="/" translate>Go to Main Page</a>
         </button>
     </nx-page-placeholder>
+</ng-template>
+
+<ng-template #APILoadingFailed>
+    <h2>Getting an API File for this system has failed.</h2>
 </ng-template>
 
 <ng-template #placeHolderTemplate>

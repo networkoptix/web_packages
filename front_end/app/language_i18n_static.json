@@ -683,7 +683,11 @@
             "message": "System is offline and hence, servers are not accessible."
         },
         "noSystemApiTool": {
-            "title": "No System Found",
+            "title": "No Valid System Found",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "System failed to load",
             "message": ""
         }
     },

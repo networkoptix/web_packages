@@ -155,6 +155,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = '';
                     this.placeholderTitle = this.LANG.placeholderTexts.noSystemApiTool.title();
                     break;
+                case 'SYSTEM_FAILED_TO_LOAD_API_TOOL':
+                    this.iconName = '404';
+                    this.message = '';
+                    this.placeholderTitle = this.LANG.placeholderTexts.systemLoadFailureApiTool.title();
+                    break;
             }
         }
     }

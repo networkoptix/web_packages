@@ -694,10 +694,11 @@ export interface PasswordRequirements {
 }
 
 export interface PlaceholderTexts {
-    noSettings:      NoSettings;
-    merge:           PlaceholderTextsMerge;
-    server:          NoSettings;
-    noSystemApiTool: NoSettings;
+    noSettings:               NoSettings;
+    merge:                    PlaceholderTextsMerge;
+    server:                   NoSettings;
+    noSystemApiTool:          NoSettings;
+    systemLoadFailureApiTool: NoSettings;
 }
 
 export interface PlaceholderTextsMerge {
@@ -1702,6 +1703,7 @@ const typeMap: any = {
         { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
         { json: "server", js: "server", typ: r("NoSettings") },
         { json: "noSystemApiTool", js: "noSystemApiTool", typ: r("NoSettings") },
+        { json: "systemLoadFailureApiTool", js: "systemLoadFailureApiTool", typ: r("NoSettings") },
     ], false),
     "PlaceholderTextsMerge": o([
         { json: "title", js: "title", typ: "any" },
