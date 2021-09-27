@@ -49,7 +49,7 @@ export interface ColumnConfig {
     meta?: DataStructureMeta
 }
 
-enum ActionType {
+export enum ActionType {
     PRIMARY='primary',
     SECONDARY='secondary',
     SUCCESS='success',

@@ -1,8 +1,9 @@
 import { IConfig }                               from './config-types';
 import { environment }                           from '@environments/environment';
-import { ConfigType, ConsoleSection, ModalType, OptionalFeatures } from '@components/console-table/console-table.component';
-import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
-import { GroupingOptions, SortOptions }          from '@pages/developer-console/console/edit/console-edit.component';
+
+import { ActionType, ConfigType, ConsoleSection, ModalType, OptionalFeatures }  from '@components/console-table/console-table.component';
+import { FeatureFlagStrings }                                                   from '@services/nx-config/base-config';
+import { GroupingOptions, SortOptions }                                         from '@pages/developer-console/console/edit/console-edit.component';
 
 export const nxConfig: IConfig = {
     alertTimeout           : 3 * 1000, // Alerts are shown for 3 seconds,
@@ -292,7 +293,7 @@ export const nxConfig: IConfig = {
                     name  : 'name',
                     label : 'Internal Name',
                     meta  : {
-                        filter : {
+                        filter: {
                             sortable : SortOptions.TEXT,
                             grouping : GroupingOptions.TEXT
                         }
@@ -303,7 +304,9 @@ export const nxConfig: IConfig = {
                     name  : 'last_modified',
                     label : 'Last Modified',
                     meta  : {
-                        styles : 'expanded-width',
+                        options: {
+                            defaultWidth: 108
+                        },
                         filter : {
                             sortable    : SortOptions.DATE,
                             grouping    : GroupingOptions.DATE_AUTO,
@@ -317,7 +320,7 @@ export const nxConfig: IConfig = {
                     label : '',
                     meta  : {
                         options: {
-                            defaultWidth: 148
+                            defaultWidth: 184
                         },
                         icon    : 'download.svg',
                         tooltip : 'Download'
@@ -392,7 +395,8 @@ export const nxConfig: IConfig = {
                     title      : 'Create Custom Client',
                     subheading : "You don't have any Custom Clients yet.",
                     modal      : ModalType.CLIENT_CREATE,
-                    icon       : 'CustomClients.svg'
+                    icon       : 'CustomClients.svg',
+                    type       : ActionType.PRIMARY
                 }
             ]
         }

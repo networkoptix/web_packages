@@ -40,7 +40,10 @@
         </ng-container>
     </div>
     <div class="modal-footer border-top-0">
-        <nx-process-button [process]="values?.id ? saveContext : createContext" [buttonText]="'Save' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
+        <ng-template #createButton>
+            <nx-process-button [process]="createContext" [buttonText]="'Create' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
+        </ng-template>
+        <nx-process-button *ngIf="values?.id; else createButton" [process]="saveContext" [buttonText]="'Save' | translate" [buttonDisabled]="processDisabled"></nx-process-button>
         <nx-cancel-button [process]="values?.id ? saveContext : createContext" [discardFn]="close"></nx-cancel-button>
         <nx-process-button *ngIf="values?.id"
             [process]="deleteContext"
