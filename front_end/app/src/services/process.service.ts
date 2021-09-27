@@ -14,6 +14,7 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 type Handler = (...args: any[]) => any
 
 const logError = (...args) => console.error(args);
+
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
@@ -59,7 +60,7 @@ export class Process {
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
+    public run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
         this.processing = true;
         this.error = false;
         this.success = false;
@@ -86,12 +87,13 @@ export class Process {
 
     // Handler method wrappers
 
-    onSuccess = async(res) => {
-        if (this.canceled) return;
+    public onSuccess = async (res) => {
+        if (this.canceled)
+            return;
         const data = await res;
         const error = this.cloudApiService.checkResponseHasError(data);
         if (error || data?.error && data.error !== '0') {
-            this.errorHelper(error || data);
+            return this.errorHelper(error || data);
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
@@ -102,18 +104,18 @@ export class Process {
                 };
                 this.toastService.show(this.settings.successMessage, options);
             }
-            this._successHandler(data);
+            return this._successHandler(data);
         }
     };
 
-    onError = (error) => {
+    public onError = (error) => {
         if (error && error.error) {
             error = error.error;
         }
-        this.errorHelper(error);
+        return this.errorHelper(error);
     };
 
-    onComplete = () => {
+    public onComplete = () => {
         this.processing = false;
         this.finished = true;
     };
@@ -128,7 +130,7 @@ export class Process {
      * @param successHandler
      * @param errorHandler
      */
-    then(successHandler, errorHandler = logError) {
+     public then (successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
         return this;
@@ -142,7 +144,7 @@ export class Process {
      *
      * @param catchHandler
      */
-    catch(catchHandler) {
+     public catch (catchHandler) {
         this._catchHandler = catchHandler;
         return this;
     }
@@ -150,14 +152,15 @@ export class Process {
     /**
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
      */
-    cancel() {
+     public  cancel () {
         this.processing = false;
         this.canceled = true;
         this.canceled$.next(true);
     }
 
-    private errorHelper(data) {
-        if (this.canceled) return;
+    private errorHelper (data) {
+        if (this.canceled)
+            return;
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
@@ -215,7 +218,7 @@ export class NxProcessService {
      * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
      * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
      */
-    createProcess(
+    public createProcess (
         caller: (() => PromiseLike<any>) | Observable<any>,
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},

@@ -59,26 +59,36 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     username: string;
     role: string;
 
+    passwordChanged: boolean = false
+
     @ViewChild('userSettingsForm') userSettingsForm: HTMLFormElement;
 
-    get localUserName() {
+    get localUserName () {
         return this.localUserNameWatcher.value;
     }
 
-    set localUserName(value) {
+    set localUserName (value) {
         this.localUserNameWatcher.value = value;
+    }
+
+    get localUserNameDiffers (): boolean {
+        return this.localUserName !== this.username
+    }
+
+    get shouldChangePassword (): boolean {
+        return this.localUserNameDiffers && !this.passwordChanged
     }
 
     private routeParamsSubscription: Subscription;
     private systemSubscription: Subscription;
     private userSubscription: Subscription;
 
-    private setupDefaults() {
+    private setupDefaults () {
         this.locked = {};
         this.menuService.section = 'users';
     }
 
-    constructor(
+    constructor (
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef,
         private configService: NxConfigService,
@@ -101,7 +111,15 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
+    protected _filterUser = (user: any) => NxUtilsService.cleanId(user.id) === this.paramUser
+
+    protected _findUser () {
+        // is `userManager` redundant here?
+        // there's another piece of code differing only in its presence
+        return this.system.userManager.users.find(this._filterUser);
+    }
+
+    public ngOnInit (): void {
         this.LANG = this.language.translations;
 
         this.routeParamsSubscription = this.route
@@ -109,8 +127,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .subscribe(params => {
                 if (params.userId) {
                     this.paramUser = params.userId;
-                    if (this.paramUser.indexOf('?') > -1) {
-                        this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
+                    const qmi = this.paramUser.indexOf('?') // qmi stands for "question mark index"
+                    if (qmi > -1) {
+                        this.paramUser = this.paramUser.substring(0, qmi);
                     }
                     this.menuService.detail = this.paramUser;
                     this.setUser();
@@ -124,8 +143,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 if (!this.CONFIG.isLocal) {
                     this.pageService.pageTitle = this.system.info.name;
                 }
-                // Route guard did not worked :( ... so doing it the old way
-                if (!this.system.userManager.permissions || !this.system.userManager.permissions.editUsers) {
+                // Route guard did not work :( ... so doing it the old way
+                if (!this.system.userManager.permissions?.editUsers) {
                     this.uriService
                         .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                         .catch(error => {
@@ -140,9 +159,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.userSubscription = this.system.infoSubject.subscribe(() => {
                     this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
 
-                    const updatedUser = this.system.userManager.users.find((user: any) => {
-                        return NxUtilsService.cleanId(user.id) === this.paramUser;
-                    });
+                    const updatedUser = this._findUser()
 
                     const cleanUser =  { ...this.selectedUser };
                     delete cleanUser.role?.optionLabel;
@@ -157,8 +174,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         this.initProcesses();
 
-        this.applyService
-            .initPageWatcher(this.viewContainerRef, this.editUser, () => {
+        this.applyService.initPageWatcher(
+            // component
+            this.viewContainerRef,
+            // saveProcess
+            this.editUser,
+            // discardFunction
+            () => {
                 this.selectedUser.isEnabled = this.userEnabled.originalValue;
                 const originalRole = this.userRole.originalValue === 'Custom'
                     ? this.currentCustomRole : this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
@@ -166,6 +188,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.localUserNameWatcher.originalValue = this.localUserNameWatcher.value = this.selectedUser.name;
                 this.applyService.reset();
             },
+            // dataWatchers
             [
                 this.userEnabled,
                 this.userRole,
@@ -173,10 +196,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.email,
                 this.localUserNameWatcher
             ]
-            );
+        );
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy (): void {
         this.routeParamsSubscription.unsubscribe();
         this.systemSubscription.unsubscribe();
         if (this.userSubscription) {
@@ -184,8 +207,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
-    initProcesses() {
-        this.editUser = this.processService.createProcess(async() => {
+    public initProcesses () {
+        this.editUser = this.processService.createProcess(async () => {
+            if (this.shouldChangePassword) {
+                // console.log('rejected saving the form until password has changed')
+                return Promise.reject();
+            }
             if (this.userSettingsForm?.invalid) {
                 return Promise.reject();
             }
@@ -193,13 +220,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (!user.name || this.locked[user.email]) {
                 return Promise.reject();
             }
-            this.locked[user.email] = true;
             try {
                 this.locked[user.email] = true;
                 user.name = this.localUserNameWatcher.value;
                 await this.system.saveUser(user, user.role);
                 await this.system.getUsers(true).catch(err => console.error(err));
-                this.locked[user.email] = false;
             } catch (_) {
                 this.selectedUser.name = this.localUserNameWatcher.originalValue;
                 const options = {
@@ -212,39 +237,41 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                         this.LANG.toastMessage.nameFail,
                         { type: this.LANG.common.login?.() }
                     ), options);
+            } finally {
+                this.locked[user.email] = false;
+                this.applyService.reset(true);
+                this.setUser();
+                this.applyService.reset();
             }
-            this.locked[user.email] = false;
-            this.applyService.reset(true);
-            this.setUser();
-            this.applyService.reset();
         }, {
             ignoreError: true
         });
     }
 
-    handleBlur() {
-        this.editMode = false;
+    public handleUserNameBlur () {
+        // this.editMode = false;
 
         if (!this.localUserName || this.emptyName) {
             this.localUserNameWatcher.reset();
+            this.passwordChanged = false
         }
     }
 
-    handleFocus() {
-        this.editMode = true;
-    }
+    // public handleUserNameFocus () {
+    //     this.editMode = true;
+    // }
 
-    handleNameChange(newName) {
+    public handleUserNameChange (newName) {
         this.emptyName = /^\s+$/.test(newName);
     }
 
-    removeUser() {
+    public removeUser () {
         const user = this.selectedUser;
         if (this.locked[user.email]) {
             return;
         }
         this.locked[user.email] = true;
-        this.calcNextUserId();
+        this._calcNextUserId();
 
         this.dialogs.removeUser(this.system, user).then((result) => {
             if (result) {
@@ -265,21 +292,25 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    calcNextUserId() {
+    protected _calcNextUserId () {
         const currentUserIndex = this.system.users.findIndex((user) => {
             return user.id === this.selectedUser.id;
         });
-        const nextUserIndex = currentUserIndex + 1 !== this.system.users?.length ? currentUserIndex + 1 : currentUserIndex - 1;
-        this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextUserIndex].id);
+        const incIndex = currentUserIndex + 1
+        const decIndex = currentUserIndex - 1
+        const nextIndex =
+            (incIndex !== this.system.users?.length)
+                ? incIndex
+                : decIndex; // single-user list case check required here, too?
+        this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextIndex].id);
     }
 
-    setUser() {
+    public setUser () {
         if (this.system && this.system.users?.length > 0) {
+
             let user;
             if (this.paramUser) {
-                user = this.system.users.find((user: any) => {
-                    return NxUtilsService.cleanId(user.id) === this.paramUser;
-                });
+                user = this.system.users.find(this._filterUser) // maybe use this.findUser() instead?
             }
             if (typeof (user) === 'undefined') {
                 if (this.menuService.section === 'users') {
@@ -292,9 +323,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                             console.error(error);
                         });
                 } else {
+                    // shouldn't it be without `else` here? like, `finally`?
                     return;
                 }
             }
+
+            this.passwordChanged = false
 
             this.applyService.reset(true);
             this.selectedUser = { ...user };
@@ -308,7 +342,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (this.selectedUser.role.name === 'Custom') {
                 this.currentCustomRole = NxUtilsService.deepCopy(this.selectedUser.role);
             }
-            // watchers set
+
+            // watcher setup
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.fullName.value = this.selectedUser.fullName;
@@ -319,16 +354,26 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.applyService.reset();
 
             this.settingsService.footerSubject.next(true);
-            setTimeout(() => this.applyService.setVisible(this.selectedUser.canBeEdited));
+            setTimeout(() => this.applyService.setVisible(this.selectedUser.canBeEdited), 0);
         }
     }
 
-    changePassword() {
-        return this.dialogs
+    public changePassword () {
+        const dialog = this.dialogs
             .changePassword(this.system, this.selectedUser);
+        dialog.then(this._onPasswordChanged)
     }
 
-    setPermission(role: NxSystemRole) {
+    protected _onPasswordChanged = (result) => {
+        if (!result) {
+            // console.log('password change cancelled')
+            return
+        }
+        // console.log('password changed')
+        this.passwordChanged = true
+    }
+
+    public setPermission (role: NxSystemRole) {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description()
@@ -338,12 +383,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.role = role.name;
     }
 
-    updateEnabled(state) {
+    public updateEnabled (state) {
         this.selectedUser.isEnabled = state;
         this.userEnabled.value = state;
     }
 
-    routeToAccountSettings() {
+    public routeToAccountSettings () {
         this.uriService
             .updateURI('/account')
             .catch(error => {
@@ -351,7 +396,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             });
     }
 
-    updateForm(e) {
+    public updateForm (e) {
         const { name, value } = e.target;
         this[name].value = value;
         this.selectedUser[name] = value;

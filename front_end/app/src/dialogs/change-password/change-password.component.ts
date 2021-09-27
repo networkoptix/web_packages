@@ -44,12 +44,20 @@ export class ChangePasswordModalContent {
         this.confirmNewPasswordForUser = '';
     }
 
+    public get isMe (): boolean {
+        return this.user.isLocalOwner && this.user.isMe
+    }
+
+    public closeModal = (result: boolean = false) => {
+        return this.activeModal.close(result)
+    }
+
     ngOnInit() {
         this.changePassword = this.processService
             .createProcess(() => {
                 this.user.password = this.newPasswordForUser;
 
-                if (this.user.isLocalOwner && this.user.isMe) {
+                if (this.isMe) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
                         this.renderer.selectRootElement('#confirmNewPassword').focus();
@@ -67,13 +75,13 @@ export class ChangePasswordModalContent {
 
                             return this.system
                                 .saveUser(this.user, this.user.role)
-                                .then(() => this.activeModal.close());
+                                .then(() => this.closeModal(true));
                         });
                 }
 
                 return this.system
                     .saveUser(this.user, this.user.role)
-                    .then(() => this.activeModal.close());
+                    .then(() => this.closeModal(true));
             }, {
                 errorCodes: {
                     notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),

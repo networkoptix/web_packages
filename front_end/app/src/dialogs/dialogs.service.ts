@@ -84,13 +84,14 @@ export class NxDialogsService {
             });
     }
 
-    ngOnDestroy() {}
+    public ngOnDestroy () {
+    }
 
-    dismiss() {
+    public dismiss () {
         this.toastService.remove();
     }
 
-    notify(message: string, type: string, hold?: boolean) {
+    public notify (message: string, type: string, hold?: boolean) {
         type = type || this.CONFIG.toast.info;
         hold = hold || false;
 
@@ -103,7 +104,7 @@ export class NxDialogsService {
         return this.toastService.show(message, options);
     }
 
-    createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any>(
+    public createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any> (
         modal: Modal, options: Options, inputs: Inputs
     ): Promise<Result> {
         const modalRef = this.modalService.open(modal, options);
@@ -111,7 +112,7 @@ export class NxDialogsService {
         return modalRef.result;
     }
 
-    alert(message: string, title: string, footerClass?: string) {
+    public alert (message: string, title: string, footerClass?: string) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -133,7 +134,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    apply(applyFunc: Process, discardFunc: () => void, form: NgForm) {
+    public apply (applyFunc: Process, discardFunc: () => void, form: NgForm) {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
@@ -147,8 +148,13 @@ export class NxDialogsService {
         return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
     }
 
-    confirm(
-        message: string, title: string, actionLabel: string, actionType?: string, cancelLabel?: string, footerClass?: string
+    public confirm (
+        message: string,
+        title: string,
+        actionLabel: string,
+        actionType?: string,
+        cancelLabel?: string,
+        footerClass?: string
     ) {
         const options: IParams = {
             windowClass : 'modal-holder',
@@ -171,7 +177,13 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(account: NxAccountService | BaseAccount | CloudAccount, keepPage?: boolean, redirectClose?: boolean, redirectHome = false, blockNavigation = false) {
+    public login (
+        account: NxAccountService | BaseAccount | CloudAccount,
+        keepPage?: boolean,
+        redirectClose?: boolean,
+        redirectHome = false,
+        blockNavigation = false
+    ) {
         if (this.CONFIG.browserNotSupported) {
             return;
         }
@@ -223,7 +235,7 @@ export class NxDialogsService {
             });
     }
 
-    addUser(system: NxSystem) {
+    public addUser (system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -237,7 +249,11 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    addStorage(serverId: string, storageManager: StorageManager, cancelPolls: () => any) {
+    public addStorage (
+        serverId: string,
+        storageManager: StorageManager,
+        cancelPolls: () => any
+    ) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -253,7 +269,7 @@ export class NxDialogsService {
         return this.createModal(AddStorageModalContent, options, params);
     }
 
-    edit(modalContent: ModalContent) {
+    public edit (modalContent: ModalContent) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -261,7 +277,7 @@ export class NxDialogsService {
         return this.createModal(EditModalContent, options, modalContent);
     }
 
-    downloadAsync(modalContent: ModalContent) {
+    public downloadAsync (modalContent: ModalContent) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -269,7 +285,7 @@ export class NxDialogsService {
         return this.createModal(DownloadAsyncModalContent, options, modalContent);
     }
 
-    changeStorage(system: NxSystem) {
+    public changeStorage (system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -283,7 +299,7 @@ export class NxDialogsService {
         return this.createModal(ChangeStorageModalContent, options, params);
     }
 
-    cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+    public cloudStorageDelete (system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
         // WIP still need to implement
         const options: IParams = {
             windowClass : 'modal-holder',
@@ -299,7 +315,7 @@ export class NxDialogsService {
         return this.createModal(CloudStorageDeleteModalContent, options, params);
     }
 
-    cloudStorageMove(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+    public cloudStorageMove (system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
         // WIP still need to implement
         const options: IParams = {
             windowClass : 'modal-holder',
@@ -315,7 +331,7 @@ export class NxDialogsService {
         return this.createModal(CloudStorageMoveModalContent, options, params);
     }
 
-    disconnect(account: NxAccountService, system: NxSystem) {
+    public disconnect (account: NxAccountService, system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -330,7 +346,7 @@ export class NxDialogsService {
         return this.createModal(DisconnectModalContent, options, params);
     }
 
-    removeUser(system: NxSystem, user: NxSystemUser) {
+    public removeUser (system: NxSystem, user: NxSystemUser) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -345,7 +361,7 @@ export class NxDialogsService {
         return this.createModal(RemoveUserModalContent, options, params);
     }
 
-    removeSystem(system: NxSystem) {
+    public removeSystem (system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -359,7 +375,7 @@ export class NxDialogsService {
         return this.createModal(RemoveSystemModalContent, options, params);
     }
 
-    restartServer(system: NxSystem, serverId: string, serverName: string) {
+    public restartServer (system: NxSystem, serverId: string, serverName: string) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -375,7 +391,7 @@ export class NxDialogsService {
         return this.createModal(RestartServerModalContent, options, params);
     }
 
-    detachServer(system: NxSystem, serverId: string, serverName: string) {
+    public detachServer (system: NxSystem, serverId: string, serverName: string) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -391,7 +407,7 @@ export class NxDialogsService {
         return this.createModal(DetachServerModalContent, options, params);
     }
 
-    resetServer(system: NxSystem, serverId: string, serverName: string) {
+    public resetServer (system: NxSystem, serverId: string, serverName: string) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -407,7 +423,7 @@ export class NxDialogsService {
         return this.createModal(ResetServerModalContent, options, params);
     }
 
-    changePassword(system: NxSystem, user: NxSystemUser) {
+    public changePassword (system: NxSystem, user: NxSystemUser) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -422,7 +438,7 @@ export class NxDialogsService {
         return this.createModal(ChangePasswordModalContent, options, params);
     }
 
-    wizard() {
+    public wizard () {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -436,7 +452,7 @@ export class NxDialogsService {
         return this.createModal(WizardModalContent, options, params);
     }
 
-    merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public  merge (account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -452,7 +468,7 @@ export class NxDialogsService {
         return this.createModal(MergeModalContent, options, params);
     }
 
-    message(account: NxAccountService, type: string, data: IParams): Promise<any> {
+    public message (account: NxAccountService, type: string, data: IParams): Promise<any> {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -468,7 +484,7 @@ export class NxDialogsService {
         return this.createModal(MessageModalContent, options, params);
     }
 
-    embed(systemId: string) {
+    public embed (systemId: string) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -481,7 +497,7 @@ export class NxDialogsService {
         return this.createModal(EmbedModalContent, options, params);
     }
 
-    deleteCloudUser(cloudApi: NxCloudApiService) {
+    public deleteCloudUser (cloudApi: NxCloudApiService) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -495,7 +511,11 @@ export class NxDialogsService {
         return this.createModal(DeleteCloudUserModalContent, options, params);
     }
 
-    updateCameraCredentials(camera: ICamera, system: NxSystem, updateCallback: () => Promise<any>) {
+    public updateCameraCredentials (
+        camera: ICamera,
+        system: NxSystem,
+        updateCallback: () => Promise<any>
+    ) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -511,7 +531,10 @@ export class NxDialogsService {
         return this.createModal(UpdateCameraCredentialsModalContent, options, params);
     }
 
-    resetBackupToDefaultSettings(system: NxSystem, setDefaultBackupSettings: () => {}) {
+    public resetBackupToDefaultSettings (
+        system: NxSystem,
+        setDefaultBackupSettings: () => {}
+    ) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -526,7 +549,7 @@ export class NxDialogsService {
         return this.createModal(ResetBackupModalContent, options, params);
     }
 
-    newCode2FA() {
+    public newCode2FA () {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -541,7 +564,7 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
-    off2FA() {
+    public off2FA () {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -556,7 +579,7 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
-    wizard2FA() {
+    public wizard2FA() {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
