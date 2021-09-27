@@ -88,7 +88,6 @@ Cloud Suite Setup
     Set To Dictionary    ${server 3}    sysId=${server 3}[cloud id]
 
     Log in to user and system    ${user in charge}    ${server 1}[sysId]    password=${password}
-    Sleep    95
     Go to Servers
     Verify on Servers Page    timeout=120
 
@@ -98,8 +97,7 @@ Cloud Suite Setup
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
     Common Restart Logout    ${ENV}
-
-    Merge Systems Local    ${server auth}    admin:${password}    https://${QA BURBANK IP}:${server 1}[port]   ${QA BURBANK IP}:${server 2}[port]    currentPassword=${password}
+    Merge Cloud Systems    ${ENV}    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
     Sleep    120
 
     ${users}=    Register and Activate Generic Users    password=${password}
@@ -203,7 +201,7 @@ Web Admin Test Teardown
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
     Reload Page
     Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-    Element Text Should Be    ${SERVER 1 LIST MENU NAME}     server 1 name changed
+    Wait Until Element is Visible    //nx-level-3-item//a//span[contains(text(),"server 1 name changed")]     
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page
@@ -352,12 +350,10 @@ Web Admin Test Teardown
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
-    Sleep    1
     @{auth}=    Create List    ${user in charge}    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${extra port}
-    Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    7001    ${server 1}[serverId]
+    Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    ${7001}    ${server 1}[serverId]
     Log To Console    port changed back
-    Sleep    1
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${server 1}[port]
 
 # Waiting to hear back from server team about proper error code

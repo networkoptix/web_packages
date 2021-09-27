@@ -35,7 +35,7 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             r = s.post(f'{env}/api/systems/merge', data)
-            assert r.status_code == 200
+            assert r.status_code == 200, f'merge failed with {r.status_code}'
             return r.json()
 
     def change_password(self, env, email, old_password, new_password):
