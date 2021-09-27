@@ -27,13 +27,13 @@ export interface AuthorizeParams {
     response_type: string,
     client_id: string,
     redirect_url: string,
+    client_type: ClientType,
+    view_type: 'desktop' | 'mobile' | 'web',
     grant_type?: string,
     scope?: string,
     signature?: string,
     state?: string,
     code?: string,
-    client_type?: ClientType,
-    view_type?: 'desktop' | 'mobile' | 'web',
     message?: 'passwordReset' | 'activated',
     email?: string,
     access_code?: string,
@@ -253,10 +253,16 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         if (this.initialData.redirect_url === 'redirect-oauth') {
-            const { client_id, client_type } = this.initialData;
-            this.router.navigate(['redirect-oauth'], {
-                queryParams: { code, client_id, client_type, view_type: this.viewType }
-            });
+            const { client_id, client_type, access_code, access_token } = this.initialData;
+            // @ts-ignore
+            if (nativeClient && (access_code || access_token)) {
+                // @ts-ignore
+                nativeClient.twoFaVerified(access_code || access_token);
+            } else {
+                this.router.navigate(['redirect-oauth'], {
+                    queryParams: { code, client_id, client_type, view_type: this.viewType }
+                });
+            }
         } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
             this.initialData.redirect_url = link;
             this.currentState = AuthorizeState.confirm;

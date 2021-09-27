@@ -66,14 +66,14 @@ export class NxOAuthRedirectComponent implements OnInit {
 
     redirectToOAuth() {
         const { client_id, client_type, view_type } = this.initialData;
-        const redirect_url = 'redirect-oauth'
+        const redirect_url = 'redirect-oauth';
         this.router.navigate(['authorize'], {
             queryParams: {
                 client_id,
-                client_type: client_type || 'loginSystem',
+                client_type   : client_type || 'loginSystem',
                 redirect_url,
-                view_type: view_type || 'desktop',
-                response_type: 'code'
+                view_type     : view_type || 'desktop',
+                response_type : 'code'
             }
         });
     }
