@@ -126,7 +126,17 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     setValue(event?) {
-        if (this._value === null || this._value >= this.min && this._value <= this.max) {
+        if (
+            this._value === null ||
+            (typeof this._value === 'number' && !Number.isNaN(this._value))
+        ) {
+            if (typeof this._value === 'number') {
+                if (this._value < this.min) {
+                    this._value = this.min;
+                } else if (this._value > this.max) {
+                    this._value = this.max;
+                }
+            }
             if (event) {
                 event.target.value = this._value;
             }
@@ -135,6 +145,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
             this.onChangeCallback(this._value);
             this.onChange.emit(this._value);
         } else {
+            // parseInt('') => NaN
             this._value = this._previousValue;
         }
     }
