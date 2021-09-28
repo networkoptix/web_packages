@@ -361,57 +361,198 @@ def test_accept_review(mocker, arf, account_factory, db):
     assert res.data['errorText'] == CANT_ACCEPT
 
 
-NOT_SURE_IF_WORTH_TESTING = 'Not sure if these handlers are worth testing unless to address any regressions in the future'
+def test_defer_handler(mocker):
+    mock_func = mocker.MagicMock()
+    expected_result, kwarg_key, kwarg_value, *args = [
+        str(uuid4()) for _ in range(randint(5, 15))]
+    mock_func.return_value = expected_result
+    kwargs = {kwarg_key: kwarg_value}
+
+    @defer_handler
+    def test_defer_decorator(*args, **kwargs):
+        return mock_func(*args, **kwargs)
+
+    deferred = test_defer_decorator(*args, **kwargs)
+    assert deferred.__name__ == test_defer_decorator.__name__
+    mock_func.assert_not_called()
+    assert deferred() == expected_result
+    mock_func.assert_called_once_with(*args, **kwargs)
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_defer_handler():
-    assert False
+def test_handle_force_update(mocker, account_factory, arf, db):
+    mocker.patch.object(filldata, 'init_skin')
+    asset_review = baker.make(AssetCustomizationReview)
+    superuser = account_factory()
+    non_superuser = account_factory(is_superuser=False)
+    request = arf.post('')
+    request.user = superuser
+
+    # Test not handled
+    deferred = handle_force_update(request, asset_review)
+    assert deferred() is None
+
+    # Test success
+    request.POST = {'force_update'}
+    deferred = handle_force_update(request, asset_review)
+    assert deferred() == (
+        'success', f'Version {asset_review.version.id} was force updated')
+
+    # Test error
+    request.user = non_superuser
+    assert deferred() == ('error', 'You cannot force update this asset')
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_force_update():
-    assert False
+def test_handle_publish_single_customization(mocker, arf, account_factory, db):
+    published_result, asset_review = [str(uuid4()) for _ in range(2)]
+    mocker.patch('cms.views.asset.publish_review',
+                 return_value=published_result)
+    superuser = account_factory()
+    request = arf.post('')
+    request.user = superuser
+
+    # Test not publish
+    deferred = handle_publish_single_customization(
+        request, asset_review, True, True)
+    assert not deferred()
+
+    # Test publish handled
+    request.POST = {'publish'}
+    deferred = handle_publish_single_customization(
+        request, asset_review, True, True)
+    assert deferred() == published_result
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_publish_single_customization():
-    assert False
+def test_handle_publish_all_customizations(arf, account_factory, db):
+    user = account_factory()
+    asset_review = baker.make(AssetCustomizationReview,
+                              version__created_by=user)
+    request = arf.post('')
+    request.user = user
+
+    # Test not handled
+    deferred = handle_publish_all_customizations(
+        request, asset_review, True, True)
+    assert not deferred()
+    review_state = AssetCustomizationReview.objects.get(
+        id=asset_review.id).state
+    assert review_state == AssetCustomizationReview.REVIEW_STATES.pending
+
+    # Test handled
+    request.POST = {'publish_all'}
+    deferred = handle_publish_all_customizations(
+        request, asset_review, True, True)
+    accepted_customization_portals = list(Asset.objects.filter(
+        customizations__in=[
+            asset_review.customization], asset_type__type=AssetType.ASSET_TYPES.cloud_portal
+    ).values_list('name', flat=True))
+    assert deferred() == (
+        'success',
+        f"Version {asset_review.version.id} has been accepted for {', '.join(accepted_customization_portals)}"
+    )
+    review_state = AssetCustomizationReview.objects.get(
+        id=asset_review.id).state
+    assert review_state == AssetCustomizationReview.REVIEW_STATES.accepted
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_publish_all_customizations():
-    assert False
+def test_handle_revoke(arf, account_factory, db):
+    user = account_factory()
+    asset_review = baker.make(AssetCustomizationReview,
+                              version__created_by=user)
+    request = arf.post('')
+    request.user = user
+
+    # Test not handled
+    deferred = handle_revoke(request, asset_review, True)
+    assert not deferred()
+    updated_asset_review = AssetCustomizationReview.objects.get(
+        id=asset_review.id)
+    assert updated_asset_review.state != AssetCustomizationReview.REVIEW_STATES.rejected
+
+    # Test handled
+    request.POST = {'revoke': True, 'review_id': asset_review.id}
+    deferred = handle_revoke(request, asset_review, True)
+    assert deferred() == (
+        'success', f"Version {asset_review.version.id} has been revoked")
+    updated_asset_review = AssetCustomizationReview.objects.get(
+        id=asset_review.id)
+    assert updated_asset_review.state == AssetCustomizationReview.REVIEW_STATES.rejected
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_revoke():
-    assert False
+def test_handle_reject_or_ask(arf, account_factory, db):
+    note = str(uuid4())
+    user = account_factory()
+    asset_review = baker.make(AssetCustomizationReview,
+                              version__created_by=user)
+    request = arf.post('')
+    request.user = user
+
+    # Test not handled
+    deferred = handle_reject_or_ask(request, asset_review)
+    assert not deferred()
+
+    # Test reject with note
+    request.POST = {'review_id': asset_review.id,
+                    'addedNote': note, 'reject': True}
+    deferred = handle_reject_or_ask(request, asset_review)
+    assert deferred() == (
+        'success', f"Version {asset_review.version.id} has been rejected")
+    updated_asset_review = AssetCustomizationReview.objects.get(
+        id=asset_review.id)
+    assert updated_asset_review.notes == f'\n{user.email}: {note}\n'
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_reject_or_ask():
-    assert False
+def test_handle_invalid_permissions(mocker):
+    invalid_actions = ['force_update', 'publish', 'revoke']
+
+    for action in invalid_actions:
+        mock_request = mocker.MagicMock(POST={action})
+        deferred = handle_invalid_permissions(mock_request)
+        pytest.raises(PermissionDenied, deferred)
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_invalid_permissions():
-    assert False
-
-
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
 def test_handle_invalid_option():
-    assert False
+    deferred_handler = handle_invalid_option()
+    assert deferred_handler() == ('error', 'Invalid option selected')
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_get_review_arguments():
-    assert False
+def test_get_review_arguments(arf, account_factory, db):
+    asset_review = baker.make(AssetCustomizationReview)
+    superuser = account_factory()
+    non_superuser = account_factory(is_superuser=False)
+    request = arf.post('', data={'review_id': asset_review.id})
+    request.user = superuser
+
+    # Test has permission
+    retrieved_review, can_publish, has_asset_type_permission = get_review_arguments(
+        request)
+    assert asset_review == retrieved_review
+    assert can_publish
+    assert has_asset_type_permission
+
+    # Test doesn't have permission
+    request.user = non_superuser
+    retrieved_review, can_publish, has_asset_type_permission = get_review_arguments(
+        request)
+    assert asset_review == retrieved_review
+    assert not can_publish
+    assert not has_asset_type_permission
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_display_message():
-    assert False
+def test_handle_display_message(mocker):
+    request = str(uuid4())
+    msg_levels = ['debug', 'info', 'success', 'warning', 'error']
+    test_messages = {
+        level: str(uuid4())
+        for level in msg_levels
+    }
+
+    for level, message in test_messages.items():
+        mock_level = mocker.patch.object(messages, level)
+        message_tuple = level, message
+        handle_display_message(
+            request, message_tuple)
+        mock_level.assert_called_once_with(
+            request, message)
 
 
 def test_review(mocker, arf, account_factory, db):
@@ -539,24 +680,186 @@ def test_make_preview(mocker, arf, account_factory, default_customization, db):
     assert res.content == asset_redirect_url.encode()
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_settings_from_json():
-    assert False
+def test_handle_settings_from_json(mocker, arf, account_factory, db):
+    user = account_factory()
+    request = arf.post('')
+    request.user = user
+    non_json, form, asset = [
+        mocker.MagicMock()
+        for _ in range(3)]
+
+    file_name, task_id, json_cache_id, asset_type, *settings_file = [
+        str(uuid4())
+        for _ in range(randint(10, 15))]
+    non_json.name = file_name
+    asset.asset_type = asset_type
+    form.cleaned_data = {'force': True}
+
+    # Test not handled
+    assert not handle_settings_from_json(request, True, form, non_json, asset)
+
+    # Test handles update_asset_by_json
+    form.cleaned_data['action'] = 'update_asset_by_json'
+    mock_update_asset = mocker.patch.object(structure, 'update_asset_by_json')
+    mock_success_message = mocker.patch.object(messages, 'success')
+
+    assert handle_settings_from_json(
+        request, True, form, settings_file, asset) == [None, None, []]
+    mock_update_asset.assert_called_once_with(asset, settings_file[0], user)
+    mock_success_message.assert_called_once_with(request, 'Content updated')
+
+    # Test handles import_assets_from_json
+    form.cleaned_data['action'] = 'import_assets_from_json_publish'
+    mocker.patch.object(uuid, 'uuid4', return_value=json_cache_id)
+    mock_info_message = mocker.patch.object(messages, 'info')
+    mock_async_import = mocker.patch.object(
+        tasks.async_import_assets_from_json, 'apply_async', return_value=task_id)
+    assert handle_settings_from_json(
+        request, True, form, settings_file, asset) == [task_id, None, []]
+    mock_info_message.assert_called_once_with(
+        request, 'Starting assets import')
+    mock_async_import.assert_called_once_with(
+        args=[json_cache_id, user.id, True])
+    assert PackagesCache()[json_cache_id] == settings_file
+
+    # Test handles update_structure
+    form.cleaned_data['action'] = 'update_structure'
+    mock_warning_message = mocker.patch.object(messages, 'warning')
+    mock_update_from_object = mocker.patch.object(
+        structure, 'update_from_object')
+
+    assert handle_settings_from_json(
+        request, True, form, settings_file, asset) == [None, None, []]
+    mock_warning_message.assert_called_once_with(request, "You can only update one asset_type at a time. "
+                                                 "Only the first asset type from structure.json was used.")
+    mock_update_from_object.assert_called_once_with(
+        settings_file, asset_type=asset_type, preserve_files=True)
+    mock_success_message.assert_called_with(
+        request, 'Structure updated')
+
+    # Test handles invalid
+    form.cleaned_data['action'] = 'invalid action'
+    error_response = handle_settings_from_json(
+        request, True, form, settings_file, asset)[1]
+    assert isinstance(error_response, HttpResponseBadRequest)
+    assert error_response.content == 'json is acceptable only for Updating structure'.encode()
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_settings_from_zip():
-    assert False
+def test_handle_settings_from_zip(mocker, arf, account_factory, db):
+    def assert_has_correct_attachment(res, expected_content):
+        assert res.status_code == status.HTTP_200_OK
+        assert res.content == expected_content.encode()
+        assert res.cookies['filename'].value == 'structure.json'
+
+    user = account_factory()
+    request = arf.post('')
+    request.user = user
+    file, form, asset = [
+        mocker.MagicMock()
+        for _ in range(3)]
+    form.cleaned_data = {}
+    file.name = str(uuid4())
+
+    # Test not a zip file
+    res = handle_settings_from_zip(request, form, file, asset)
+    assert isinstance(res, HttpResponseBadRequest)
+    assert res.content == 'zip archive is expected'.encode()
+
+    # Test handle generate_json
+    form.cleaned_data['action'] = 'generate_json'
+    file.name += '.zip'
+    error_file, error_extension, *data = [
+        str(uuid4()) for _ in range(randint(5, 15))]
+    mock_generate_structure = mocker.patch.object(
+        generate_structure, 'from_zip', return_value=(
+            data, [{'file': error_file, 'extension': error_extension}]))
+    mock_error_message = mocker.patch.object(messages, 'error')
+    expected_content = json.dumps(
+        data, ensure_ascii=False, indent=4, separators=(',', ': '))
+
+    res = handle_settings_from_zip(request, form, file, asset)
+    mock_generate_structure.assert_called_once_with(file, asset)
+    mock_error_message.assert_called_once_with(
+        request, f'Error with {error_file} problem with {error_extension}')
+    assert_has_correct_attachment(res, expected_content)
+
+    # Test handle merge_with_db
+    form.cleaned_data['action'] = 'merge_with_db'
+    mock_merge_with_db = mocker.patch.object(
+        generate_structure, 'merge_db_with_archive', return_value=data)
+
+    res = handle_settings_from_zip(request, form, file, asset)
+    mock_merge_with_db.assert_called_once_with(file, asset)
+    assert_has_correct_attachment(res, expected_content)
+
+    # Test handle update_structure
+    form.cleaned_data['action'] = 'update_structure'
+    message = str(uuid4())
+    message_tuple = ('warning', message)
+    mock_process_zip = mocker.patch.object(
+        structure, 'process_zip', return_value=[message_tuple])
+    mock_add_message = mocker.patch.object(messages, 'add_message')
+
+    assert not handle_settings_from_zip(request, form, file, asset)
+    mock_process_zip.assert_called_once_with(
+        file, user, asset, True, False)
+    mock_add_message.assert_called_once_with(
+        request, messages.WARNING, message)
+
+    # Test handle update_content
+    form.cleaned_data['action'] = 'update_content'
+    assert not handle_settings_from_zip(request, form, file, asset)
+    mock_process_zip.assert_called_with(
+        file, user, asset, False, True)
+    mock_add_message.assert_called_with(
+        request, messages.WARNING, message)
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_handle_settings_file():
-    assert False
+def test_handle_settings_file(mocker):
+    request, form, file, asset, json_handler_result, zip_handler_response = [
+        str(uuid4()) for _ in range(6)]
+    mock_handle_settings_from_json = mocker.patch(
+        'cms.views.asset.handle_settings_from_json', return_value=json_handler_result)
+    mock_handle_settings_from_zip = mocker.patch(
+        'cms.views.asset.handle_settings_from_zip', return_value=zip_handler_response)
+
+    # Test handle json
+    assert handle_settings_file(
+        request, form, file, asset) == json_handler_result
+    mock_handle_settings_from_json.assert_called_once_with(
+        request, form, file, asset)
+    mock_handle_settings_from_zip.assert_not_called()
+
+    # Test handle zip
+    mock_handle_settings_from_json.return_value = None
+    assert handle_settings_file(request, form, file, asset) == (
+        None, zip_handler_response, [])
 
 
-@pytest.mark.skip(reason=NOT_SURE_IF_WORTH_TESTING)
-def test_get_settings_from_request():
-    assert False
+def test_get_settings_from_request(arf, account_factory, db):
+    asset = baker.make(Asset)
+    user = account_factory()
+    data = {}
+    request = arf.post('', data=data)
+    request.user = user
+    request.data = data
+    request.session = {}
+    context = {
+        'asset': asset,
+        'form': None,
+        'conflicts': [],
+        'file': '',
+        'user': user,
+        'has_permission': admin.site.has_permission(request),
+        'site_url': admin.site.site_url,
+        'site_header': admin.site.site_header,
+        'site_title': admin.site.site_title,
+        'task_id': '',
+        'title': f'Settings for {asset.name}'
+    }
+
+    assert get_settings_from_request(request, asset.id) == (
+        asset, None, context, None)
 
 
 def test_asset_settings(mocker, arf, account_factory, db):

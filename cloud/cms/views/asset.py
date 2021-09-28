@@ -1,4 +1,4 @@
-import functools
+from functools import wraps
 from PIL import Image
 from django.core.files import base
 from waffle import flag_is_active
@@ -364,8 +364,12 @@ def review_generator(target_reviews):
 
 
 def defer_handler(func):
+    @wraps(func)
     def _wrap_handler(*args, **kwargs):
-        return lambda: func(*args, **kwargs)
+        @wraps(func)
+        def _inner_handler():
+            return func(*args, **kwargs)
+        return _inner_handler
 
     return _wrap_handler
 
@@ -593,9 +597,7 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
             args=[json_cache_id, request.user.id, import_assets_from_json_publish])
         messages.info(request, 'Starting assets import')
         return [task, None, conflicts]
-    elif not update_structure:
-        return [None, HttpResponseBadRequest('json is acceptable only for Updating structure'), conflicts]
-    else:
+    elif update_structure:
         cms_structure = loaded_json
         if type(cms_structure) == list and len(cms_structure) > 1:
             messages.warning(request, "You can only update one asset_type at a time. "
@@ -603,6 +605,9 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
         structure.update_from_object(
             cms_structure, asset_type=asset.asset_type, preserve_files=True)
         messages.success(request, "Structure updated")
+    else:
+        return [None, HttpResponseBadRequest('json is acceptable only for Updating structure'), conflicts]
+
 
     return [None, None, conflicts]
 
@@ -632,15 +637,15 @@ def handle_settings_from_zip(request, form, file, asset):
         log_messages = structure.process_zip(
             file, request.user, asset, action == 'update_structure', action == 'update_content')
 
-    for item in log_messages:
-        log_type = {
-            'info': messages.INFO,
-            'error': messages.ERROR,
-            'debug': messages.DEBUG,
-            'success': messages.SUCCESS,
-            'warning': messages.WARNING,
-        }[item[0]]
-        messages.add_message(request, log_type, item[1])
+        for item in log_messages:
+            log_type = {
+                'info': messages.INFO,
+                'error': messages.ERROR,
+                'debug': messages.DEBUG,
+                'success': messages.SUCCESS,
+                'warning': messages.WARNING,
+            }[item[0]]
+            messages.add_message(request, log_type, item[1])
 
 
 def handle_settings_file(request, form, file, asset):
