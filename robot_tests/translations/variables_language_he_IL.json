@@ -22,7 +22,7 @@
     "RESET TO DEFAULTS TEXT": "איפוס לברירות המחדל",
     "DETAILED INFO TEXT": "מידע מפורט",
     "DISCONNECT MODAL WARNING TEXT": "You will not be able to access this System anymore.",
-    "SUCCESSFULLY DISCONNECTED": "המערכת התנתקה בהצלחה מ %PRODUCT_NAME%",
+    "SUCCESSFULLY DISCONNECTED": "המערכת התנתקה בהצלחה מ- %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "החשבון כבר הופעל או שקוד האישור שגוי",
     "AUTOTESTS OFFLINE TEXT": "לא מקוון",
     "NEW PERMISSIONS SAVED": "הרשאות חדשות נשמרו",
