@@ -279,6 +279,7 @@
     "Owner": "Owner",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "Password",
+    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
     "Password is required": "Password is required",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "Password reset instructions are sent to the provided email",

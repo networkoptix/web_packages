@@ -44,7 +44,7 @@
 
                 <ng-container *ngIf="this.content">
                     <ng-container *ngIf="APIFileLoadingError; then APILoadingFailed"></ng-container>
-                    <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else placeHolderTemplate">
+                    <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else description">
                         <div style="padding: 0 1rem 1rem">
                             <h2>{{ swaggerMenuTitle }}</h2>
                             <p class="mt-3" *ngIf="swaggerMenuDescription">{{ swaggerMenuDescription }}</p>
@@ -68,32 +68,10 @@
 </ng-template>
 
 <ng-template #APILoadingFailed>
-    <h2>Getting an API File for this system has failed.</h2>
+    <h2 translate>Getting an API File for this system has failed.</h2>
 </ng-template>
 
-<ng-template #placeHolderTemplate>
-    <h2> {{ placeHolderContent[this.content.selectedSection] || 'API Information'}} </h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur quis ex nec velit dictum
-        elementum sed eget odio. Vivamus placerat tincidunt enim, a rutrum urna feugiat nec. Maecenas
-        dapibus posuere tellus. Proin ut posuere ante. In a rhoncus quam. Integer posuere ex quis mauris
-        rhoncus mattis. Aenean interdum ante magna, eget pellentesque tortor vehicula vel. Aliquam
-        placerat justo eros. Vivamus vitae iaculis lorem, a accumsan odio. Vivamus ac libero aliquet,
-        vestibulum tellus quis, vestibulum augue. Phasellus vestibulum metus quis elit ullamcorper, sed
-        blandit leo condimentum. Sed ac ipsum aliquam, ullamcorper tortor nec, congue ante. Suspendisse
-        potenti. Nulla mattis ligula sit amet tincidunt dignissim. Aliquam volutpat tempor eros, non
-        cursus ipsum tempor nec. Mauris dictum, ligula eget vulputate auctor, libero magna lobortis
-        mauris, eu faucibus ipsum mauris sit amet ex.
-    </p>
-
-    <h2>API Changes</h2>
-    <p>Nulla at risus id sem mollis eleifend vitae eu eros. Phasellus egestas eros diam, at aliquam sem
-        imperdiet eget. Curabitur tempor, massa in vulputate commodo, arcu magna accumsan diam, ut
-        mattis magna turpis eget ante. Donec aliquam euismod tempus. Phasellus eros mauris, faucibus
-        tempus consectetur a, dictum id nunc. Suspendisse porttitor ante non turpis feugiat lobortis. In
-        a ante nulla. Aliquam gravida mauris et erat mattis, eu viverra ex sodales. Integer id orci
-        volutpat, egestas nisi at, cursus nisl. Pellentesque vel fringilla leo. Curabitur neque nisi,
-        condimentum eget bibendum sed, placerat in eros. Nulla aliquam nunc et neque ornare condimentum.
-        Fusce sed scelerisque ligula. Fusce et tincidunt ligula, non cursus nulla. Ut sed ex at elit
-        consectetur mollis sit amet a nibh.
-    </p>
+<ng-template #description>
+    <h2>{{ pageDescription.title }}</h2>
+    <div [innerHTML]="pageDescription.description | safe: 'html'"></div>
 </ng-template>

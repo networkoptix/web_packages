@@ -9,7 +9,7 @@ import { NxSystem, NxSystemService } from '@services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     delay, distinctUntilChanged,
-    filter, finalize, map, retryWhen, take
+    filter, finalize, map, retryWhen, take, tap
 }                                    from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import SwaggerUI                     from 'swagger-ui';
@@ -47,6 +47,11 @@ interface SystemDropdownItem {
 
 // Could make this type more accurate, but have to watch out for different/older versions of the API
 interface APIDoc {
+    info? : {
+        title: string,
+        description: string,
+        version : string
+    }
     tags  : {
                 name: string,
                 description?: string,
@@ -72,14 +77,21 @@ interface ServerDropdownItem {
 }
 
 interface Level1Item {
-    id     : string,
-    svg    : string,
-    label  : string,
-    path   : string,
-    level2 : any[],
-    level3 : any[]
+    searchable? : boolean,
+    id          : string,
+    svg         : string,
+    label       : string,
+    path        : string,
+    level2      : any[],
+    level3      : any[]
 }
 interface Content {
+        pageDescriptions       : {
+            [API: string]: {
+                title: string,
+                description: string
+            }
+        },
         searchable             : boolean,
         selectedSection        : string,
         selectedSubSection     : string, // updated by selectedSubSectionSubject
@@ -121,6 +133,10 @@ export class NxApiToolComponent implements OnInit {
     placeHolderContent: { [key in placeHolderSelections]: string } = { api_information: 'API Information', legacy: 'Legacy API', deprecated: 'Deprecated Endpoints' }
     RTSPRequestShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
+    pageDescription = {
+        title       : 'API Information',
+        description : 'This page contains documentation for the API.'
+    }
 
     private resizeSubscription: Subscription;
     private menuSectionSubscription: Subscription;
@@ -159,6 +175,9 @@ export class NxApiToolComponent implements OnInit {
             .pipe(filter(value => value !== '')).subscribe(selection => {
                 if (this.content) {
                     this.content.selectedSection = selection;
+                    if (this.placeHolderContent[selection]) {
+                        this.changeAPIDescription(selection);
+                    }
                     this.content = { ...this.content }; // trigger onChange
                     if (typeof selection === 'string') {
                         this.setMenuTitle(selection);
@@ -194,6 +213,11 @@ export class NxApiToolComponent implements OnInit {
                 this.initSwagger(this.content.selectedSubSection);
             }
         });
+    }
+
+    changeAPIDescription(selectedSection) {
+        this.pageDescription.title = this.content.pageDescriptions[selectedSection].title;
+        this.pageDescription.description = this.content.pageDescriptions[selectedSection].description;
     }
 
     setMenuTitle(selection: string) {
@@ -285,7 +309,7 @@ export class NxApiToolComponent implements OnInit {
                     }
                 }),
                 retryWhen(err => {
-                    return err.pipe(delay(1000), take(5));
+                    return err.pipe(delay(1000), take(10));
                 }),
                 finalize(() => {
                     if (!this.serversLoaded) {
@@ -579,6 +603,12 @@ export class NxApiToolComponent implements OnInit {
 
     private createMenuContent(response: APIDoc) {
         const _content = {
+            pageDescriptions: {
+                api_information: {
+                    title       : response.info?.title || 'API Information',
+                    description : response.info?.description || ''
+                }
+            },
             searchable             : false,
             selectedSection        : 'api_information', // updated by selectedSectionSubject
             selectedSubSection     : '', // updated by selectedSubSectionSubject
@@ -650,7 +680,7 @@ export class NxApiToolComponent implements OnInit {
         this.content = _content;
     }
 
-    private addSubMenuApi(legacyApi: APIDoc, baseContent, type: 'legacy' | 'deprecated') {
+    private addSubMenuApi(legacyApi: APIDoc, baseContent: Content, type: 'legacy' | 'deprecated') {
         const title = type[0].toUpperCase() + type.slice(1);
         const apiContent = baseContent;
         apiContent.level1.push({
@@ -661,6 +691,11 @@ export class NxApiToolComponent implements OnInit {
             level2 : [],
             level3 : []
         });
+
+        baseContent.pageDescriptions[type] = {
+            title       : legacyApi.info?.title || `${type.toUpperCase()} API Information`,
+            description : legacyApi.info?.description || ''
+        };
 
         const _content = apiContent.level1.find(item => item.id === type);
 
