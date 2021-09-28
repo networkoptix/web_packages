@@ -175,7 +175,9 @@ export class NxSystem extends System {
             this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.useRest);
         }
         // Handling promise to satisfy the linter.
-        unauthorizedCallback(true).then(() => {});
+        if (!this.useRest || !(<NxSystemRestAPI> this.mediaserver)?.accessToken) {
+            unauthorizedCallback(true).then(() => {});
+        }
 
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(() => this.update(), this.CONFIG.updateInterval);

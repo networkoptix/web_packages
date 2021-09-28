@@ -86,7 +86,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     private get isSessionOauth() {
-        return this.cookieService.get(this.token).includes('nxcdb');
+        return this.accessToken.includes('nxcdb');
     }
 
     private createSignature(message) {
@@ -94,7 +94,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public get accessToken() {
-        return this.cookieService.get(this.token);
+        return this.cookieService.get(`${this.systemId ?? ''}-${this.token}`);
+    }
+
+    public set accessToken(token) {
+        this.deleteToken(this.accessToken).toPromise().catch();
+        this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
+        this.cookieService.set(`${this.systemId ?? ''}-${this.token}`, token);
     }
 
     private handleOldToken(request, allSystems?: boolean) {
@@ -186,7 +192,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private getTokens() {
         const storageService = this.storageService;
         const refreshToken = storageService.refreshToken;
-        const accessToken = this.cookieService.get(this.token);
+        const accessToken = this.accessToken;
         const cloudAccessToken = storageService.cloudAccessToken;
         return { accessToken, cloudAccessToken, refreshToken };
     }
@@ -194,7 +200,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     public setTokens(tokens, isSystem) {
         const storageService = this.storageService;
         if (isSystem) {
-            this.cookieService.set(this.token, tokens.access_token);
+            this.accessToken = tokens.access_token;
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
@@ -209,6 +215,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         this.cookieService.delete(this.token);
         storageService.clear = this.cloudToken;
         storageService.clear = this.refreshToken;
+    }
+
+    private deleteToken(token) {
+        const host = environment.isLocal ? this.CONFIG.cloudHost : '';
+        return this.http.post(`${host}/oauth/revoke`, { token }, { headers: { Authorization: `Bearer ${token}` } });
     }
 
     protected retryHandler(request) {
@@ -281,7 +292,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             retryWhen((request) => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, (error) => {
-                if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
             })
@@ -306,7 +317,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             retryWhen((request) => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, (error) => {
-                if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
             })
@@ -361,7 +372,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     return this.currentUser;
                 });
         } else if (environment.isLocal) { // Local system mode ???
-            const endpoint = `/rest/v1/login/sessions/${this.cookieService.get(this.token)}`;
+            const endpoint = `/rest/v1/login/sessions/${this.accessToken}`;
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result :any) => {
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
@@ -381,7 +392,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public ensureFreshSession() {
-        return this.get(`/rest/v1/login/sessions/${this.cookieService.get(this.token)}`).pipe(
+        return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap((res) => {
                 if (res.ageS >= this.CONFIG.sessionFreshnessSec) {
                     return this.reauthenticate();
