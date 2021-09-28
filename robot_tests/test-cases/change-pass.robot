@@ -63,8 +63,7 @@ Reset DB and Open New Browser On Failure
     [tags]    C41576
     Go To    ${url}/account/password
     # note: user below requires a system for verification purposes but no interaction with the system nor any modifications to the account are made - thats why original account used here.
-    Log In    ${EMAIL VIEWER}    ${password}    ${False}    button=None
-    Validate Log In    ${EMAIL VIEWER}
+    Log In    ${EMAIL VIEWER}    ${password}    ${True}    button=None
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
     Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
