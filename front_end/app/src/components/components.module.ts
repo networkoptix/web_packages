@@ -15,7 +15,6 @@ import { NxRadioComponent }                   from './radio/radio.component';
 import { NxAlertBlockComponent }              from './content-block/alert/block.component';
 import { NxContentBlockComponent }            from './content-block/content-block.component';
 import { NxContentBlockSectionComponent }     from './content-block/section/section.component';
-import { NxMultiLineEllipsisComponent }       from './multi-line-ellipsis/mle.component';
 import { NxExternalVideoComponent }           from './external-video/external-video.component';
 // import { NxLayoutRightComponent }             from './layout-right/layout.component';
 import { NxTagComponent }                     from './tag/tag.component';
@@ -104,7 +103,6 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        NxMultiLineEllipsisComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
         NxTagComponent,
@@ -154,7 +152,6 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        NxMultiLineEllipsisComponent,
         // NxLayoutRightComponent,
         NxTagComponent,
         NxCarouselComponent,
@@ -207,7 +204,6 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        NxMultiLineEllipsisComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
         NxTagComponent,
