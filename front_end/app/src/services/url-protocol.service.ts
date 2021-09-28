@@ -5,6 +5,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxCloudApiService }         from '@services/nx-cloud-api';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,8 @@ export class NxUrlProtocolService {
         @Inject(WINDOW) private window: Window,
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -61,7 +63,8 @@ export class NxUrlProtocolService {
             systemId         : undefined,
             action           : undefined,
             actionParameters : {}, // Object with parameters
-            auth             : true // true for request, null for skipping, string for specific value
+            auth             : true, // true for request, null for skipping, string for specific value
+            access_code      : undefined
         };
 
         if (linkSettings.systemId) {
@@ -78,12 +81,16 @@ export class NxUrlProtocolService {
         if (settings.from) {
             getParams.from = settings.from;
         }
-        if (settings.auth) {
+        if (typeof settings.auth === 'string') {
             getParams.auth = settings.auth;
         }
 
         if (settings.context) {
             getParams.context = settings.context;
+        }
+
+        if (settings.access_code) {
+            getParams.access_code = settings.access_code;
         }
 
         let url = `${protocol}//${host}/${settings.command}/`;
@@ -105,27 +112,33 @@ export class NxUrlProtocolService {
     }
 
     getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
-        return new Promise((resolve, reject) => {
-            this.accountService
-                .authKey()
-                .then((authKey) => {
-                    linkSettings.auth = authKey;
-                    resolve({
-                        link: this.generateLink(linkSettings),
-                        authKey
-                    });
-                }).catch(() => {
-                    resolve({
-                        link    : this.generateLink(linkSettings),
-                        authKey : undefined
-                    });
-                });
-        });
+        const auth = linkSettings.useOauth
+            ? this.cloudApiService.getAccessCode(linkSettings.systemId).toPromise()
+            : this.accountService.authKey();
+
+        return auth.then((data) => {
+            if (linkSettings.useOauth) {
+                linkSettings.access_code = data.access_code;
+            } else {
+                linkSettings.auth = data;
+            }
+            const linkData: any = {
+                link: this.generateLink(linkSettings)
+            };
+            if (linkSettings.useOauth) {
+                linkData.access_code = data.access_code;
+            } else {
+                linkData.authKey = data;
+            }
+            return linkData;
+        }).catch(() => ({
+            link: this.generateLink(linkSettings)
+        }));
     }
 
-    open(systemId: string) {
+    open(systemId: string, useOauth: boolean) {
         return this.getLink({
-            systemId
+            systemId, useOauth
         }).then((data: { link: string, authKey: string}) => {
             let link      = data.link;
             const authKey = data.authKey;
@@ -221,5 +234,8 @@ export interface linkSettings {
     systemId?: string,
     action?: {},
     actionParameters?: {},
-    auth?: boolean|string|undefined
+    auth?: boolean|string|undefined,
+    // eslint-disable-next-line camelcase
+    access_code?: string|undefined,
+    useOauth?: boolean
 }

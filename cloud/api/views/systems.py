@@ -34,6 +34,13 @@ user_email__body = openapi.Schema(type=openapi.TYPE_STRING)
 user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
+def get_refresh_from_request(request):
+    refresh_token = request.session.get('refresh_token', request.data.get('refresh_token'))
+    if not refresh_token:
+        raise APINotAuthorisedException('No refresh token was found')
+    return refresh_token
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="If the user has access to the system clouddb will return its info.",
                      manual_parameters=[system_id__route_param])
@@ -115,6 +122,28 @@ def digest(login, password, realm, nonce, method):
     return base64.b64encode(auth)
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Returns access code needed to get tokens to a cloud system.",
+                     manual_parameters=[system_id__route_param],
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "refresh_token": openapi.Schema(type=openapi.TYPE_STRING)
+                         }
+                     ))
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def get_access_code(request, system_id):
+    refresh_token = get_refresh_from_request(request)
+    data = cloud_api.Auth.get_code(email="",
+                                   password="",
+                                   grant_type=cloud_api.Auth.GRANT_TYPE.refresh_token,
+                                   ip=get_ip(request),
+                                   refresh_token=refresh_token,
+                                   scope=f"cloudSystemId={system_id}")
+    return api_success(data)
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns the auth keys needed to make api requests to a cloud system.",
                      manual_parameters=[system_id__route_param])
@@ -147,10 +176,7 @@ def get_auth(request, system_id):
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_token(request, system_id):
-    refresh_token = request.session.get('refresh_token', request.data.get('refresh_token'))
-    if not refresh_token:
-        raise APINotAuthorisedException('No refresh token was found')
-
+    refresh_token = get_refresh_from_request(request)
     data = cloud_api.Auth.get_refresh_token(refresh_token, ip=get_ip(request), scope=f"cloudSystemId={system_id}")
 
     if "refresh_token" in data:

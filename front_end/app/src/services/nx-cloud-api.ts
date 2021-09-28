@@ -247,6 +247,11 @@ export class NxCloudApiService {
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
+    getAccessCode(systemId: string) {
+        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/accessCode`, {});
+    }
+
+    @swClear('cloudSystemAPI', '/systems', false)
     getSystemAuth(systemId: string) {
         return this.http.get<t.SystemAuth>(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
