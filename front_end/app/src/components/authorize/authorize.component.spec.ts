@@ -11,7 +11,7 @@ import { CommonModule }                            from '@angular/common';
 import { of }                                      from 'rxjs';
 import { LocalStorageService }                     from 'ngx-webstorage';
 
-import { AuthorizeState, ClientType, NxAuthorizeComponent } from './authorize.component';
+import { AuthorizeParams, AuthorizeState, ClientType, NxAuthorizeComponent } from './authorize.component';
 import { NxAuthorizeEmailComponent }            from './email/email.component';
 import { NxAuthorizePasswordComponent }         from './password/password.component';
 import { NxAuthorizeCreateAccountComponent }    from './create-account/create-account.component';
@@ -243,7 +243,7 @@ describe('OAuth Test Suite', () => {
         fixture.detectChanges();
         expect(component.clientType).toBe('loginToCloud');
         expect(component.currentState).toBe('email');
-        expect(component.initialData).toEqual({
+        expect(component.initialData).toEqual(<AuthorizeParams>{
             client_id     : 'cloud',
             grant_type    : 'password',
             response_type : 'code',
