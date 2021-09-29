@@ -8,6 +8,13 @@ import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
 
+interface AccessRole {
+    name: string;
+    optionLabel: any;
+    isAdmin: boolean;
+    isOwner: boolean;
+}
+
 @Component({
     selector      : 'nx-permissions-select',
     templateUrl   : 'permissions.component.html',
@@ -21,11 +28,11 @@ export class NxPermissionsDropdown extends BaseDropdown {
     @Input() roles;
     @Input() system;
     @Input() selected;
-    @Output() onSelected = new EventEmitter<string>();
+    @Output() onSelected = new EventEmitter<AccessRole>();
 
     selection: string;
     message: string;
-    accessRoles;
+    accessRoles: AccessRole[];
     differ;
 
     constructor(private languageService: NxLanguageProviderService,
@@ -51,16 +58,12 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     processAccessRoles() {
-        if (this.roles) {
-            this.accessRoles = this.roles.filter((role) => {
-                if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                    role.optionLabel = this.LANG.accessRoles[role.name]?.label() || role.name;
-                    return true;
-                }
-
-                return false;
+        this.accessRoles = (this.roles ?? [])
+            .filter((role) => !(role.isOwner || role.isAdmin && !this.system.isMine))
+            .map((role) => {
+                role.optionLabel = this.LANG.accessRoles[role.name]?.label() || role.name;
+                return role;
             });
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -83,11 +86,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     changePermission(role) {
         this.selection = (typeof role.optionLabel === 'function') ? role.optionLabel() : role.optionLabel;
 
-        const selectedRole = this.accessRoles.filter((accessRole) => {
-            if (accessRole.name === role.name) {
-                return role;
-            }
-        })[0];
+        const selectedRole = this.accessRoles.find((accessRole) => accessRole.name === role.name);
         this.onSelected.emit(selectedRole);
 
         return false; // return false so event will not bubble to HREF
