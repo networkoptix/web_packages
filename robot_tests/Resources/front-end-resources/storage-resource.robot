@@ -60,8 +60,8 @@ Storage Suite Setup
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
     Open Browser and go to URL    ${url}
     Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
-    Verify Storages    ${server 1['owner']}    ${server 1['cloud id']}    5
-    Verify Storages    ${server 1['owner']}    ${server 2['cloud id']}    1
+    Verify Storages    5    owner=${server 1['owner']}    system=${server 1['cloud id']}    login=${TRUE}
+    Verify Storages    1    owner=${server 1['owner']}    system=${server 2['cloud id']}    login=${TRUE}
 
 Catenate Storages One
     [Arguments]    ${string}
@@ -85,19 +85,19 @@ Storage Suite Teardown
     Close All Browsers
 
 Verify Storages
-    [Arguments]    ${owner}    ${system}    ${storages number}
-    Log in to user and system    ${owner}     ${system}
-    Go To Servers
-    Sleep    5
-    ${load} =    Run Keyword and Return Status    Verify on Servers Page    #timeout=95
-    Run Keyword If    ${load} == ${FALSE}    Reload Page
-    Run Keyword If    ${load} == ${FALSE}    Verify on Servers Page    #timeout=95
+    [Arguments]    ${storages number}    ${owner}=null    ${system}=null    ${login}=${FALSE}
+    Run Keyword If    ${login}    Run Keywords
+    ...    Log in to user and system    ${owner}     ${system}    AND
+    ...    Go To Servers    AND
+    ...    Sleep    5    AND
+    ...    Verify on Servers Page    #timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
-    Log Out
-    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
+    Run Keyword If    ${login}    Run Keywords
+    ...    Log Out    AND
+    ...    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
     [Arguments]    ${owner}    ${system}
@@ -243,8 +243,9 @@ Delete Recorded Video Files
     [Return]    ${results}
 
 Wait Until Files Are Recorded
-    [Arguments]    ${disk}    ${attempts}
+    [Arguments]    ${disk}    ${attempts}    ${increment}=0
     ${start files} =    Verify Recorded Video Files    ${disk}
+    ${start files} =    Evaluate    ${start files}+${increment}
     FOR    ${n}    IN RANGE    ${attempts}
         ${files} =    Verify Recorded Video Files    ${disk}
         Exit For Loop If    ${files} > ${start files}
@@ -259,6 +260,13 @@ Wait Until Recorded Files Deleted
         Exit For Loop If    ${files} == 0
         Sleep    8
     END
+    
+Verify New Files Are Not Recorded
+    [Arguments]    ${disk}    ${wait}
+    ${start files} =    Verify Recorded Video Files    ${disk}
+    Sleep    ${wait}
+    ${files} =    Verify Recorded Video Files    ${disk}
+    Should Be True    ${files} == ${start files}
 
 Turn On Backup For Camera
     [Arguments]    ${server}    ${server auth}

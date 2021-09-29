@@ -508,7 +508,7 @@ Wait Until Elements Are Visible
 Wait Until Elements Are Visible with Retry
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
-        Run Keyword And Continue On Failure    Wait Until Element is Visible With Retry    ${element}    ${timeout}
+        Run Keyword And Warn On Failure    Wait Until Element is Visible With Retry    ${element}    ${timeout}
     END
 
 Wait Until Elements Are Enabled
@@ -1107,14 +1107,32 @@ Verify No Horizontal Scrollbar
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be Equal As Numbers    ${width out}    ${width in} 
+    Should Be Equal As Numbers    ${width out}    ${width in}
     
 Verify Horizontal Scrollbar Exists
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be True    ${width out} < ${width in}    
+    Should Be True    ${width out} < ${width in}
     
+Verify One Element Above the Other
+    [Arguments]    ${higher element}    ${lower element}
+    ${lower y} =    Get Vertical Position    ${higher element}
+    ${higher y} =    Get Vertical Position    ${lower element}
+    Should Be True    ${lower y} < ${higher y}
+    
+Drag Horizontal Scrollbar
+    [Arguments]    ${scrollbar}    ${x offset}
+    Assign Id To Element    ${scrollbar}    scrollID
+    Execute Javascript        document.getElementById("scrollID").scrollBy(${x offset}, 0)
+    
+Verify Element Does Not Scroll
+    [Arguments]    ${element}    ${scrollbar}
+    ${original x} =    Get Horizontal Position    ${element}
+    Slow    Drag Horizontal Scrollbar    ${scrollbar}    50
+    ${new x} =    Get Horizontal Position    ${element}
+    Should Be Equal As Numbers    ${original x}    ${new x}
+
 Delete All Text
     [Arguments]    ${input}
     ${value}=   Get Element Attribute    ${input}    value

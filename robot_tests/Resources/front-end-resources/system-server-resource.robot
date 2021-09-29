@@ -84,6 +84,7 @@ Verify Storage Elements
 Verify Add Storage Dialog
     Wait Until Elements Are Visible
     ...    ${ADD STORAGE MODAL}
+    ...    ${ADD EXTERNAL STORAGE HEADER}
     ...    ${AS MODAL CLOSE BUTTON}
     ...    ${AS MODAL URL INPUT}
     ...    ${AS MODAL LOGIN INPUT}

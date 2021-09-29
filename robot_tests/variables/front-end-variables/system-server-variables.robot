@@ -101,6 +101,8 @@ ${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"
 ${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
 ${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
+${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/standard/loading.svg"]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
 ${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
 ${STORAGE SMB ICON}                 //*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
@@ -109,6 +111,10 @@ ${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 ${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
+${STORAGE SCROLLBAR}                //form[@name="storageSettings"]
+${STORAGE ADDRESS COLUMN}           ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS ADDRESS TEXT}")]
+${STORAGE MODE COLUMN}              ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS MODE TEXT}")]
+${STORAGE SPACE COLUMN}             ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS SPACE TEXT}")]
 
 ${DELETE STORAGE MODAL}             //div[@class="modal-content"]
 ${DELETE STORAGE CLOSE BUTTON}      ${DELETE STORAGE MODAL}//button[@aria-label="Close"]
@@ -117,6 +123,7 @@ ${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON T
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]
+${ADD EXTERNAL STORAGE HEADER}      //h1[@class="modal-title" and contains(text(),"${ADD EXTERNAL STORAGE}")]
 ${AS MODAL CLOSE BUTTON}            ${ADD STORAGE MODAL}/div[@class="modal-header"]/button
 ${AS MODAL URL INPUT}               ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl"]
 ${AS MODAL URL INPUT ERROR}         ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl" and contains(@class, "ng-invalid")]
