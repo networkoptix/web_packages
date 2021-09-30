@@ -88,8 +88,7 @@ export class Process {
     // Handler method wrappers
 
     public onSuccess = async (res) => {
-        if (this.canceled)
-            return;
+        if (this.canceled) { return; }
         const data = await res;
         const error = this.cloudApiService.checkResponseHasError(data);
         if (error || data?.error && data.error !== '0') {
@@ -130,7 +129,7 @@ export class Process {
      * @param successHandler
      * @param errorHandler
      */
-     public then (successHandler, errorHandler = logError) {
+    public then (successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
         return this;
@@ -144,7 +143,7 @@ export class Process {
      *
      * @param catchHandler
      */
-     public catch (catchHandler) {
+    public catch (catchHandler) {
         this._catchHandler = catchHandler;
         return this;
     }
@@ -152,15 +151,16 @@ export class Process {
     /**
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
      */
-     public  cancel () {
+    public  cancel () {
         this.processing = false;
         this.canceled = true;
         this.canceled$.next(true);
     }
 
     private errorHelper (data) {
-        if (this.canceled)
+        if (this.canceled) {
             return;
+        }
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
@@ -259,11 +259,17 @@ export interface ProcessSettings {
 }
 
 export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
-    const errorCode = (error?.data?.resultCode) ||
-        (error?.resultCode) ||
-        (error?.type === 'error' &&
-        'networkConnection') ||
-        error?.errorText || error?.errorString || error;
+    if (error?.status === 422) {
+        error = error.error;
+        // Error object is nested
+    }
+    const errorCode =
+        error?.data?.resultCode ||
+        error?.resultCode ||
+        error?.type === 'error' && 'networkConnection' ||
+        error?.errorText ||
+        error?.errorString ||
+        error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();
     }

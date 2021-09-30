@@ -1,12 +1,10 @@
 import {
-    Component, Inject, OnInit,
-    Input, ViewChild, Renderer2
+    Component, Inject, OnInit, Input, ViewChild
 }                                    from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 
-import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxUtilsService }            from '@services/utils.service';
@@ -17,16 +15,18 @@ import { WINDOW }                    from '@services/window-provider';
 import { CookieService }             from 'ngx-cookie-service';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 
+import type { NxAccountService } from '@services/account.service';
+
 @Component({
     selector    : 'nx-login-webadmin-modal',
     templateUrl : 'login-webadmin.component.html',
     styleUrls   : ['login-webadmin.component.scss']
 })
 export class LoginWebadminModalContent implements OnInit {
-    @Input() account;
+    @Input() account: NxAccountService;
     @Input() login;
-    @Input() keepPage;
-    @Input() blockNavigation;
+    @Input() keepPage: boolean;
+    @Input() blockNavigation: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -38,7 +38,7 @@ export class LoginWebadminModalContent implements OnInit {
     remember: boolean;
     hideErrors: boolean = true;
 
-    wrongPassword: boolean;
+    wrongCredentials: boolean;
     accountBlocked: boolean;
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
@@ -48,7 +48,7 @@ export class LoginWebadminModalContent implements OnInit {
         this.next = '';
         this.password = '';
         this.remember = true;
-        this.wrongPassword = false;
+        this.wrongCredentials = false;
     }
 
     constructor(
@@ -58,8 +58,6 @@ export class LoginWebadminModalContent implements OnInit {
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
-        private genericModal: NxModalGenericComponent,
-        private renderer: Renderer2,
         private router: Router,
         private cookieService: CookieService,
         public activeModal: NgbActiveModal,
@@ -89,13 +87,10 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     resetForm() {
-        const { errors } = this.loginForm.controls.login_email;
-        if (errors) {
-            this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
-        }
         if (!this.loginForm.valid) {
+            this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
-            this.wrongPassword = false;
+            this.wrongCredentials = false;
             this.accountBlocked = false;
         }
     }
@@ -120,25 +115,25 @@ export class LoginWebadminModalContent implements OnInit {
             this.next = nextUrl[1];
         }
         this.password = '';
-        const showWrongLoginError = () => {
-            this.wrongPassword = true;
-            this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
-            this.password = '';
-            this.renderer.selectRootElement('#login_password').focus();
+        const showWrongCredentialsError = () => {
+            this.wrongCredentials = true;
+            this.loginForm.controls.login_email.setErrors({ nx_wrong_credentials: true });
+            this.loginForm.controls.login_password.setErrors({ nx_wrong_credentials: true });
         };
 
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
-            this.wrongPassword = false;
+            this.wrongCredentials = false;
             this.accountBlocked = false;
 
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                'This user does not exist.' : showWrongLoginError,
-                notAuthorized               : showWrongLoginError,
+                'This user does not exist.' : showWrongCredentialsError,
+                'Wrong password.'           : showWrongCredentialsError,
+                notAuthorized               : showWrongCredentialsError,
                 accountBlocked              : () => {
                     this.loginForm.controls.login_password.markAsPristine();
                     this.loginForm.controls.login_password.markAsUntouched();
