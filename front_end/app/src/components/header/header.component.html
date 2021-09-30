@@ -139,12 +139,12 @@
                 <ng-container *ngTemplateOutlet="rightNav;context:{showSmall: showSmallRightNav$ | async}"></ng-container>
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
                     <li>
-                            <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
-                            <nx-header-language-select
-                                *ngIf="CONFIG.isLocal"
-                                class="auto"
-                                short="true" altStyle="true"
-                                instantReload="true" instantApply="true"></nx-header-language-select>
+                        <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
+                        <nx-header-language-select
+                            *ngIf="CONFIG.isLocal"
+                            class="auto"
+                            short="true" altStyle="true"
+                            instantReload="true" instantApply="true"></nx-header-language-select>
                     </li>
                 </ul>
             </div>
