@@ -44,7 +44,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'X-Runtime-Guid';
     private readonly refreshToken = 'refreshToken';
-    private readonly oldToken = 'Unable to process owner\'s REST API request: session should not be older than';
+    private readonly oldSessionErrorId = 'sessionExpired';
     private injector: Injector;
 
     constructor(
@@ -115,7 +115,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             (error.status === 401 ||
                             error.status === 403 ||
                             error.resultCode === 'forbidden') &&
-                            (error.errorString || error.error.errorString).includes(this.oldToken)
+                            error.error.errorId.includes(this.oldSessionErrorId)
                         ) {
                             return this.reauthenticate(allSystems);
                         } else if (error.status === 503) {
