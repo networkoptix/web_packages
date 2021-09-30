@@ -98,7 +98,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public set accessToken(token) {
-        this.deleteToken(this.accessToken).toPromise().catch();
+        if (this.isSessionOauth) {
+            this.deleteToken(this.accessToken).toPromise().catch();
+        }
         this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
         this.cookieService.set(`${this.systemId ?? ''}-${this.token}`, token);
     }
@@ -212,7 +214,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private clearTokens() {
         const storageService = this.storageService;
-        this.cookieService.delete(this.token);
+        this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
         storageService.clear = this.cloudToken;
         storageService.clear = this.refreshToken;
     }
@@ -335,7 +337,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         });
 
         if (this.serverId) {
-            headers = headers.set(this.token, this.serverId);
+            headers = headers.set(`${this.systemId ?? ''}-${this.token}`, this.serverId);
         }
 
         headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
@@ -405,7 +407,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/login/sessions', { username, password, setCookie: remember })
             .pipe(tap((res) => {
                 if (remember) {
-                    this.cookieService.set(this.token, res.token);
+                    this.accessToken = res.token;
                 }
             }));
     }
