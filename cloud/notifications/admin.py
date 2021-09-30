@@ -220,7 +220,6 @@ class PushNotificationAdmin(admin.ModelAdmin):
     list_filter = ('customization', 'state')
     list_display = ('short_title', 'customization', 'state', 'raw_targets_formatted', 'raw_system_id',
                     'created_date_formatted', 'send_date_formatted', 'delivery_interval', 'result_errors')
-    date_hierarchy = 'created_date'
     readonly_fields = ('log',)
 
     def raw_targets_formatted(self, obj):
