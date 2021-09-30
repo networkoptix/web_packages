@@ -95,6 +95,7 @@ const lazyRoutes: Routes = [
         path         : 'developers',
         loadChildren : () => import('./developer-console/developer-console.module').then(m => m.NxDeveloperConsoleModule),
         canLoad      : [FeatureGuard],
+        canActivate  : [AuthGuard],
         data         : {
             flags: FeatureFlagStrings.customClients
         }
