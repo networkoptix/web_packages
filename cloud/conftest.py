@@ -18,6 +18,23 @@ from rest_framework.test import APIClient
 from django_mock_queries.query import MockSet
 
 
+class BaseModelTest:
+    @pytest.fixture()
+    def instance(self, get_instance):
+        return get_instance(self.model_class)
+
+    @pytest.fixture()
+    def get_instance(self, db):
+        def _get_instance(model_class=self.model_class, **kwargs):
+            assert getattr(self, 'model_class')
+            return baker.prepare(model_class, **kwargs)
+
+        return _get_instance
+
+    def test_check_meta(self):
+        assert getattr(self, 'expected_meta')
+        check_against_expected_meta(self.model_class, self.expected_meta)
+
 def generateJSON():
     return json.dumps({
         str(uuid4()): str(uuid4()),

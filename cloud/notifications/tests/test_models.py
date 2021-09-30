@@ -1,4 +1,4 @@
-from conftest import check_against_expected_meta
+from conftest import check_against_expected_meta, BaseModelTest
 import functools
 import pytest
 from unittest.mock import call
@@ -16,24 +16,6 @@ class TestMessageTypes:
         keys = list(filter(lambda k: not k.startswith(
             "__", 0, 2) and k != "keys", dir(MESSAGE_TYPES)))
         assert MESSAGE_TYPES.keys() == keys
-
-
-class BaseModelTest:
-    @pytest.fixture()
-    def instance(self, get_instance):
-        return get_instance(self.model_class)
-
-    @pytest.fixture()
-    def get_instance(self, db):
-        def _get_instance(model_class=self.model_class, **kwargs):
-            assert getattr(self, 'model_class')
-            return baker.prepare(model_class, **kwargs)
-
-        return _get_instance
-
-    def test_check_meta(self):
-        assert getattr(self, 'expected_meta')
-        check_against_expected_meta(self.model_class, self.expected_meta)
 
 
 class TestEvent(BaseModelTest):
