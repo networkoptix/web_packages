@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL必填",
     "INVALID URL TEXT": "无效 URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "登录名或密码不正确",
-    "FAILED TO ADD STORAGE TEXT": "无法添加外部存储",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "状态",
     "NOT ABLE TO LOAD STORAGE TEXT": "无法加载存储信息。",
     "RESERVED": "保留",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "仍要添加此存储吗？",
     "BACK TEXT": "返回",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "存储/无效/ HD Witness Media已删除",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

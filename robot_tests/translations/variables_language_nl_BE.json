@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is vereist",
     "INVALID URL TEXT": "Ongeldige URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Gebruikersnaam of wachtwoord is onjuist",
-    "FAILED TO ADD STORAGE TEXT": "Toevoegen van externe opslag is mislukt",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Status",
     "NOT ABLE TO LOAD STORAGE TEXT": "Kan opslaginformatie niet laden.",
     "RESERVED": "Gereserveerd",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Deze opslag toch toevoegen?",
     "BACK TEXT": "Terug",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Opslag / ongeldige / HD Witness Media verwijderd",
-    "STORAGES OUTDATED WARNING TEXT": "Opslag verouderd. Herlaad pagina om te updaten."
+    "STORAGES OUTDATED WARNING TEXT": "Opslag verouderd. Herlaad pagina om te updaten.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

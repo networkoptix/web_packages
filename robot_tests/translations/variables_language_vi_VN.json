@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "URL không hợp lệ",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Email hoặc mật khẩu không chính xác",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Tiểu bang",
     "NOT ABLE TO LOAD STORAGE TEXT": "Không thể tải thông tin lưu trữ.",
     "RESERVED": "Dự trữ",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Thêm lưu trữ này?",
     "BACK TEXT": "Trở lại",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

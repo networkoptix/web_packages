@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "L'URL no és vàlid",
     "LOGIN OR PASSWORD INCORRECT TEXT": "L'usuari o la contrasenya són incorrectes",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Estat",
     "NOT ABLE TO LOAD STORAGE TEXT": "No es pot carregar la informació d'emmagatzematge.",
     "RESERVED": "Reservat",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Voleu afegir aquest emmagatzematge de totes maneres?",
     "BACK TEXT": "Enrere",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

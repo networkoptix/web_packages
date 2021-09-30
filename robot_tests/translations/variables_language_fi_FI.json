@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "Virheellinen URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Käyttäjätunnus tai salasana on virheellinen",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Tila",
     "NOT ABLE TO LOAD STORAGE TEXT": "Not able to load storage information.",
     "RESERVED": "Varattu",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Lisää tämä tallennustila joka tapauksessa?",
     "BACK TEXT": "Takaisin",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

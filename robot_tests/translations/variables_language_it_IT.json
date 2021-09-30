@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "L'URL è obbligatoria",
     "INVALID URL TEXT": "URL non valido",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Login o password non corretti",
-    "FAILED TO ADD STORAGE TEXT": "Impossibile aggiungere la memoria esterna",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Stato",
     "NOT ABLE TO LOAD STORAGE TEXT": "Impossibile caricare le informazioni di archiviazione.",
     "RESERVED": "Riservato",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Aggiungi questo spazio comunque?",
     "BACK TEXT": "Indietro",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiviazione / non valido / supporto HD Witness elim Media eliminato",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "Neplatná adresa URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Přihlašovací jméno nebo heslo je nesprávné",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Stav",
     "NOT ABLE TO LOAD STORAGE TEXT": "Nelze načíst informace o úložišti.",
     "RESERVED": "Vyhrazený",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Přesto přidat toto úložiště?",
     "BACK TEXT": "Zpět",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

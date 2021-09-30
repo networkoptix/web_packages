@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "L'URL est requise",
     "INVALID URL TEXT": "URL invalide",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Mot de passe actuel incorrect",
-    "FAILED TO ADD STORAGE TEXT": "Impossible d'ajouter le stockage externe",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "État",
     "NOT ABLE TO LOAD STORAGE TEXT": "Impossible de charger les informations de stockage.",
     "RESERVED": "Réservé",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Ajouter tout de même ce stockage ?",
     "BACK TEXT": "Précédent",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Stockage /invalid/HD Witness Media supprimé",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

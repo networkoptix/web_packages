@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL は必須です。",
     "INVALID URL TEXT": "URLが無効です",
     "LOGIN OR PASSWORD INCORRECT TEXT": "ログインID、またはパスワードが間違っています。",
-    "FAILED TO ADD STORAGE TEXT": "外部ストレージの追加に失敗しました",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "状態",
     "NOT ABLE TO LOAD STORAGE TEXT": "ストレージ情報を読み込めません。",
     "RESERVED": "予約済み",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "このストレージを追加しますか？",
     "BACK TEXT": "戻る",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "無効なストレージが削除されました",
-    "STORAGES OUTDATED WARNING TEXT": "ストレージが古くなっています。ページを再読み込みして更新してください。"
+    "STORAGES OUTDATED WARNING TEXT": "ストレージが古くなっています。ページを再読み込みして更新してください。",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

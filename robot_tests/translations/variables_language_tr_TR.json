@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "Geçersiz URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Kullanıcı adı veya şifre hatalı",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Durum",
     "NOT ABLE TO LOAD STORAGE TEXT": "Depolama bilgileri yüklenemiyor.",
     "RESERVED": "Rezerve",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Bu depolama yinede eklensin mi?",
     "BACK TEXT": "Geri",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

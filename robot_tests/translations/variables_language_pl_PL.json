@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "Adres URL jest wymagany",
     "INVALID URL TEXT": "Nieprawidłowy adres URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Nieprawidłowa nazwa użytkownika lub hasło",
-    "FAILED TO ADD STORAGE TEXT": "Nie udało się dodać pamięci zewnętrznej",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Stan",
     "NOT ABLE TO LOAD STORAGE TEXT": "Nie można załadować informacji o archiwum.",
     "RESERVED": "Zarezerwowane",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Czy mimo to dodać to archiwum?",
     "BACK TEXT": "Wstecz",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiwum /nieprawidłowe/HD Witness Media usunięte",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "Ugyldig URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Innlogging eller passord er feil",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Delstat",
     "NOT ABLE TO LOAD STORAGE TEXT": "Kan ikke laste lagringsinformasjon.",
     "RESERVED": "Reservert",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Vil du legge til lagringsmedie uansett?",
     "BACK TEXT": "Tilbake",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

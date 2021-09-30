@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "Недійсна URL адреса",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Логін або пароль неправильні",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Стан",
     "NOT ABLE TO LOAD STORAGE TEXT": "Не в змозі завантажити інформацію про носій.",
     "RESERVED": "Зарезервовано",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Додати це сховище в будь-якому випадку?",
     "BACK TEXT": "Назад",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

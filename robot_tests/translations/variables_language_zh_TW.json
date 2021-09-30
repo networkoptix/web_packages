@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL為必填欄位",
     "INVALID URL TEXT": "無效的URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "帳號或密碼不正確",
-    "FAILED TO ADD STORAGE TEXT": "無法新增外部儲存空間。",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "狀態",
     "NOT ABLE TO LOAD STORAGE TEXT": "無法載入儲存資訊",
     "RESERVED": "保留",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "仍要新增此儲存裝置?",
     "BACK TEXT": "返回",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "存儲/無效/ HD Witness Media 已刪除",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

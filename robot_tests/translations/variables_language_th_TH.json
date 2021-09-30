@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "URL ไม่ถูกต้อง",
     "LOGIN OR PASSWORD INCORRECT TEXT": "เข้าสู่ระบบหรือรหัสผ่านไม่ถูกต้อง",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "สถานะ",
     "NOT ABLE TO LOAD STORAGE TEXT": "ไม่สามารถโหลดข้อมูลหน่วยเก็บข้อมูล",
     "RESERVED": "สงวนไว้แล้ว",
@@ -504,5 +504,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "เพิ่มพื้นที่เก็บข้อมูลนี้หรือไม่?",
     "BACK TEXT": "กลับ",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }
