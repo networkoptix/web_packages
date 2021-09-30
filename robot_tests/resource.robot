@@ -401,7 +401,7 @@ Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    timeout=60
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
