@@ -181,6 +181,7 @@
     "Generate Backup Codes": "Generate Backup Codes",
     "Get a list of single-use backup codes. You can use them to log in to %CLOUD_NAME% if you don't have access to your mobile authentication app.": "Get a list of single-use backup codes. You can use them to log in to %CLOUD_NAME% if you don't have access to your mobile authentication app.",
     "Get in touch": "Get in touch",
+    "Getting an API File for this system has failed.": "Getting an API File for this system has failed.",
     "Go to Main Page": "Go to Main Page",
     "Go to Support Page": "Go to Support Page",
     "Go to the \"Cloud\" tab in the \"System Administration\" dialog": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",

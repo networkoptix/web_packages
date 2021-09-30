@@ -7,22 +7,23 @@
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
 
                 <div class="mb-3">
-                    <nx-select
-                            [id]="'avail-systems'"
-                            [stillLoading]="!serversLoaded"
-                            [items]="systemsDropdown"
-                            (onSelected)="onSystemChange($event)"
-                            [selected]="selectedSystem || {}">
-                    </nx-select>
-
-                    <nx-select
-                            class="mt-2"
-                            [id]="'avail-systems'"
-                            [stillLoading]="!serversLoaded"
-                            [items]="serversDropdown"
-                            (onSelected)="onServerChange($event)"
-                            [selected]="selectedServer || {}">
-                    </nx-select>
+                    <ng-container *ngIf="!CONFIG.isLocal">
+                        <nx-select
+                                [id]="'avail-systems'"
+                                [stillLoading]="!serversLoaded"
+                                [items]="systemsDropdown"
+                                (onSelected)="onSystemChange($event)"
+                                [selected]="selectedSystem || {}">
+                        </nx-select>
+                        <nx-select
+                                class="mt-2"
+                                [id]="'avail-systems'"
+                                [stillLoading]="!serversLoaded"
+                                [items]="serversDropdown"
+                                (onSelected)="onServerChange($event)"
+                                [selected]="selectedServer || {}">
+                        </nx-select>
+                    </ng-container>
 
                     <div *ngIf="selectedServer?.incompatible" class="mt-2"
                          style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center">

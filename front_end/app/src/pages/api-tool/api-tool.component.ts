@@ -135,7 +135,7 @@ export class NxApiToolComponent implements OnInit {
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     pageDescription = {
         title       : 'API Information',
-        description : 'This page contains documentation for the API.'
+        description : ''
     }
 
     private resizeSubscription: Subscription;
@@ -380,6 +380,7 @@ export class NxApiToolComponent implements OnInit {
                                                 this.content = {} as any;
                                             } else {
                                                 this.createMenuContent(this.selectedServer.apiDocFull);
+                                                this.changeAPIDescription('api_information');
                                                 await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
                                                 this.menuService.section = 'api_information';
                                             }

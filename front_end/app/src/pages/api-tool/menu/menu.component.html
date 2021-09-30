@@ -3,6 +3,7 @@
         (ngModelChange)="modelChanged($event)"
         [ngModel]="menuModel.query"
         (onFocusOut)="resetNav()"
+        [ngClass]="{ 'local-nx-search': CONFIG.isLocal}"
         (onFocus)="setNav()"
         class="d-block mb-2"
         layout="search"
@@ -10,9 +11,9 @@
         instant>
 </nx-search>
 
-<div class="nx-menu nx-menu-toggle"
-     [ngClass]="{ 'mb-3 searchable' : searchMode }" #menuWrapper
-     [ngStyle]="{ 'height': menuHeightFit }">
+<div class="nx-menu nx-menu-toggle" 
+     [ngClass]="{ 'mb-3 searchable' : searchMode, 'local-nx-menu': CONFIG.isLocal}" #menuWrapper
+     [ngStyle]="{ 'height': menuHeightFit}">
 
     <div class="nx-menu-overlay" *ngIf="transition" ></div>
 
