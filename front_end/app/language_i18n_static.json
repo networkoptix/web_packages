@@ -409,7 +409,8 @@
         "twoFactor": {
             "action": "Login",
             "message": "Two factor authentication is enabled for this account. Please login.",
-            "title": "Two factor is required!"
+            "title": "Two factor is required!",
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:"
         }
     },
     "downloads": {
@@ -714,6 +715,11 @@
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation."
+    },
+    "twoFa": {
+        "twoFADescription_a": "Currently you have",
+        "twoFADescription_b": "{count, plural, =0{# such systems} one{# such system} other{# such systems}}",
+        "systemsReminder": "and {count} more..."
     },
     "search": {
         "Any": "Any",

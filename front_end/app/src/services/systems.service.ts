@@ -235,4 +235,5 @@ export interface NxSystemWithUserInfo extends NxSystem {
     capabilities: IParams;
     state: string;
     stateOfHealth: string;
+    system2faEnabled: boolean;
 }

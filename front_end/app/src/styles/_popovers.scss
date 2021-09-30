@@ -1,4 +1,4 @@
-@use '../../styles/theme_variables' as *;
+@use "../../styles/theme_variables" as *;
 
 .popover {
     border : none;
@@ -13,6 +13,17 @@
             margin-left : -.5rem !important;
             transform   : translateX(-50%);
         }
+    }
+    
+    &.bs-popover-right {
+        & > .arrow {
+            margin-top : -1rem !important;
+            transform   : translateX(-50%);
+        }
+    }
+    
+    &.systems-popover {
+        width : 250px;
     }
 }
 

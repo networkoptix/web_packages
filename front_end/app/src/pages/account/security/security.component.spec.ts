@@ -22,7 +22,7 @@ import { TranslateModule }                from '@ngx-translate/core';
 import { NxPreLoaderComponent }           from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxTagComponent }                 from '@components/tag/tag.component';
+import { NxSwitchComponent }              from '@components/switch/switch.component';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -33,7 +33,7 @@ class TranslateTestingModule {}
 describe('NxAccountSecurityComponent', () => {
     let component: NxAccountSecurityComponent;
     let fixture: ComponentFixture<NxAccountSecurityComponent>;
-    let el: HTMLElement;
+    let el;
     let LANG: LanguageI18NStaticTypes;
 
     const configMock = { getConfig: () => nxConfig };
@@ -55,7 +55,7 @@ describe('NxAccountSecurityComponent', () => {
             .configureTestingModule({
                 imports      : [TranslateTestingModule],
                 declarations : [
-                    NxAccountSecurityComponent, NxPreLoaderComponent, NxTagComponent,
+                    NxAccountSecurityComponent, NxPreLoaderComponent, NxSwitchComponent,
                     NxContentBlockComponent, NxContentBlockSectionComponent
                 ],
                 providers: [
@@ -115,23 +115,21 @@ describe('NxAccountSecurityComponent', () => {
 
         it('should have header and body', () => {
             const cardHeader = el.querySelector('nx-block header div h4');
-            const cardButton = el.querySelector('nx-block nx-section button');
+            const cardHeaderSwitch = el.querySelector('nx-block header div nx-switch');
             const cardBody = el.querySelector('nx-block nx-section span');
             expect(cardHeader.innerHTML).toBe(LANG['Two-factor authentication']);
-            expect(cardButton).toBeTruthy();
+            expect(cardHeaderSwitch).toBeTruthy();
             expect(cardBody.innerHTML.length).toBeGreaterThan(20);
         });
 
-        // revise after backend is working
-        xit('should call toggle2FA on keydown', fakeAsync(() => {
-            const spy = spyOn(component, 'toggle2FA').and.returnValue();
-            const tfaSwitch = el.querySelector('nx-block nx-section button');
-            tfaSwitch.dispatchEvent(new MouseEvent('click'));
-            tick();
+        it('should call toggle2FA on keydown', fakeAsync(() => {
+            const spy = spyOn(component, 'toggle2FA');
+            const tfaSwitch = fixture.debugElement.nativeElement.querySelector('nx-block header div nx-switch');
+            const nxSwitch = tfaSwitch.querySelector('div'); // id="2fa-active-status"
+            nxSwitch.click();
             fixture.detectChanges();
-            fixture.whenStable().then(() => {
-                expect(spy.calls.count()).toBe(1, 'toggle2FA method should be called once');
-            }, err => {});
+            tick();
+            expect(spy.calls.count()).toBe(1, 'toggle2FA method should be called once');
         }));
     });
 

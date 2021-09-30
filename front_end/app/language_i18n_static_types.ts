@@ -41,6 +41,7 @@ export interface LanguageI18NStaticTypes {
     privacyPolicy:         PrivacyPolicy;
     registration:          Registration;
     ribbon:                Ribbon;
+    twoFa:                 LanguageI18NStaticTypesTwoFa;
     search:                Search;
     servers:               Servers;
     serverTabTitles:       ServerTabTitles;
@@ -251,7 +252,7 @@ export interface DevConsole {
 }
 
 export interface Dialogs {
-    twoFa:         TwoFa;
+    twoFa:         DialogsTwoFa;
     addUser:       AddUser;
     buttons:       Buttons;
     cloudStorage:  CloudStorage;
@@ -423,9 +424,10 @@ export interface TwoFactor {
 }
 
 export interface RemoveSystem {
-    action:  any;
-    message: any;
-    title:   any;
+    action:         any;
+    message:        any;
+    title:          any;
+    wizardWarning?: any;
 }
 
 export interface DialogsTitles {
@@ -447,7 +449,7 @@ export interface Tooltips {
     deleteAccount: any;
 }
 
-export interface TwoFa {
+export interface DialogsTwoFa {
     wizardWarning:      any;
     wizardWarningDescr: any;
 }
@@ -926,6 +928,12 @@ export interface Deleted {
     success: any;
 }
 
+export interface LanguageI18NStaticTypesTwoFa {
+    twoFADescription_a: any;
+    twoFADescription_b: any;
+    systemsReminder:    any;
+}
+
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
@@ -1105,6 +1113,7 @@ const typeMap: any = {
         { json: "privacyPolicy", js: "privacyPolicy", typ: r("PrivacyPolicy") },
         { json: "registration", js: "registration", typ: r("Registration") },
         { json: "ribbon", js: "ribbon", typ: r("Ribbon") },
+        { json: "twoFa", js: "twoFa", typ: r("LanguageI18NStaticTypesTwoFa") },
         { json: "search", js: "search", typ: r("Search") },
         { json: "servers", js: "servers", typ: r("Servers") },
         { json: "serverTabTitles", js: "serverTabTitles", typ: r("ServerTabTitles") },
@@ -1299,7 +1308,7 @@ const typeMap: any = {
         { json: "create", js: "create", typ: "any" },
     ], false),
     "Dialogs": o([
-        { json: "twoFa", js: "twoFa", typ: r("TwoFa") },
+        { json: "twoFa", js: "twoFa", typ: r("DialogsTwoFa") },
         { json: "addUser", js: "addUser", typ: r("AddUser") },
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
@@ -1457,6 +1466,7 @@ const typeMap: any = {
         { json: "action", js: "action", typ: "any" },
         { json: "message", js: "message", typ: "any" },
         { json: "title", js: "title", typ: "any" },
+        { json: "wizardWarning", js: "wizardWarning", typ: u(undefined, "") },
     ], false),
     "DialogsTitles": o([
         { json: "error", js: "error", typ: "any" },
@@ -1475,7 +1485,7 @@ const typeMap: any = {
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
     ], false),
-    "TwoFa": o([
+    "DialogsTwoFa": o([
         { json: "wizardWarning", js: "wizardWarning", typ: "any" },
         { json: "wizardWarningDescr", js: "wizardWarningDescr", typ: "any" },
     ], false),
@@ -1901,5 +1911,10 @@ const typeMap: any = {
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "any" },
+    ], false),
+    "LanguageI18NStaticTypesTwoFa": o([
+        { json: "twoFADescription_a", js: "twoFADescription_a", typ: "any" },
+        { json: "twoFADescription_b", js: "twoFADescription_b", typ: "any" },
+        { json: "systemsReminder", js: "systemsReminder", typ: "any" },
     ], false),
 };

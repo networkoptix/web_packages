@@ -8,17 +8,21 @@ import { TranslateModule }            from '@ngx-translate/core';
 import { DirectivesModule }           from '@directives/directives.module';
 import { ComponentsModule }           from '@components/components.module';
 import { NxAccountSecurityComponent } from './security.component';
+import { PipesModule }                from '@src/pipes/pipes.module';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
 
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         RouterModule,
         FormsModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        DirectivesModule
+        DirectivesModule,
+        PipesModule,
+        AngularSvgIconModule.forRoot()
     ],
     providers      : [],
     declarations   : [

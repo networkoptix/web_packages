@@ -4,13 +4,12 @@
         <nx-block>
             <header>
                 <div class="tfauth-status-switch-wrapper">
-                    <h4 translate>Two-factor authentication</h4>
-                    <nx-tag
-                        *ngIf="tfauth.enabled"
-                        static type="success" class="ml-3">{{ 'enabled' | translate | uppercase }}</nx-tag>
-                    <nx-tag
-                        *ngIf="!tfauth.enabled"
-                        static type="default-dark" class="ml-3">{{ 'disabled' | translate | uppercase }}</nx-tag>
+                    <nx-switch
+                        [checked]="tfauth.on"
+                        (onSwitch)="toggle2FA($event)"
+                        componentId="2fa-active-status">
+                    </nx-switch>
+                    <h4 class="ml-3" translate>Two-factor authentication</h4>
                 </div>
             </header>
 
@@ -18,15 +17,29 @@
                 <span *ngIf="!tfauth.enabled; else enabledText" translate>Better protect your account from unauthorized access by requiring a verification code generated in a mobile authentication app (such as Google Authenticator, Microsoft Authenticator or Duo Mobile) in addition to your %CLOUD_NAME% password.</span>
 
                 <ng-template #enabledText>
-                    <span translate>Your account is protected with two-factor authentication.</span>
+                    <span translate>Verification code from the authentication app allows you to log in to systems that require two-factor authentication.</span>
+                    <span class="float-left" *ngIf="!twoFaSystems.length" translate>Currently you don’t have such systems.</span>
+                    <div class="float-left" *ngIf="twoFaSystems.length">{{LANG.twoFa.twoFADescription_a()}}
+                        <div class="float-right ml-1 pseudo-anchor"
+                             [ngbPopover]="popLegend"
+                             popoverClass="systems-popover"
+                             triggers="click"
+                             placement="right">{{LANG.twoFa.twoFADescription_b({count: twoFaSystems.length})}}.</div>
+                    </div>
+                    <span class="ml-1 float-left" translate>System owner can change this setting at any time.</span>
                 </ng-template>
-            </nx-section>
 
-            <nx-section>
-                <button class="btn btn-default"
-                        style="text-transform: capitalize"
-                        id="btnToggle2FA"
-                        (click)="toggle2FA()">{{ !tfauth.enabled ? 'enable' : 'disable' | translate }}</button>
+                <ng-template #popLegend>
+                    <div *ngFor="let system of twoFaSystems | slice:0:4; let i=index" class="d-flex align-items-center">
+                        <svg-icon nx-add-svg-src
+                                  class="d-inline-block"
+                                  [src]="CONFIG.icons.dir + 'system.svg'"
+                                  [svgStyle]="{'width.px': '24', 'height.px': '24'}"
+                                  [applyClass]="true"></svg-icon>
+                        <span class="system-name ml-1">{{system.name}}</span>
+                    </div>
+                    <div class="reminder" *ngIf="twoFaSystems.length > 4">{{ LANG.twoFa.systemsReminder({count: twoFaSystems.length - 4})}}</div>
+                </ng-template>
             </nx-section>
         </nx-block>
 

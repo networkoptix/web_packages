@@ -1,5 +1,21 @@
+@use "../../styles/theme_variables" as *;
 @import "../account.component";
 
-.tfauth-status-switch-wrapper {
-    display: flex;
-}
+:host {
+     .tfauth-status-switch-wrapper {
+         display : flex;
+     }
+    
+     .system-name {
+         font-family: $font-family-medium;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+     }
+    
+    .reminder {
+        font-family : $font-family-medium;
+        color: $light16;
+        margin-left: 28px;
+    }
+ }
