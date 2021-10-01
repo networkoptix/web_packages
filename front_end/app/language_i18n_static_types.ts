@@ -886,6 +886,7 @@ export interface Settings {
 export interface SessionLimitDuration {
     hours:   any;
     minutes: any;
+    days:    any;
 }
 
 export interface WarningMessages {
@@ -1888,6 +1889,7 @@ const typeMap: any = {
     "SessionLimitDuration": o([
         { json: "hours", js: "hours", typ: "any" },
         { json: "minutes", js: "minutes", typ: "any" },
+        { json: "days", js: "days", typ: "any" },
     ], false),
     "WarningMessages": o([
         { json: "videoEncryption", js: "videoEncryption", typ: "any" },

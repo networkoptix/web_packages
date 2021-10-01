@@ -15,6 +15,19 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { delayInitial }              from '@services/utils.service';
 
+const HR_MINS = 60;
+const DAY_HRS = 24;
+const DAY_MINS = HR_MINS * DAY_HRS;
+
+type LimitSessionTimeUnit = 'days' | 'hours' | 'minutes';
+type LimitSessionTimeItem = {
+    value: LimitSessionTimeUnit;
+    name: string;
+    id: number;
+    max: number;
+    default?: number;
+}
+
 class AlexaSettings {
     static CUSTOM_PROPERTY_ENDPOINT = 'alexa'
 
@@ -43,22 +56,21 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    selectedTimeUnit;
+    selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
     timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-    limitSessionTimeUnits;
-    limitSessionTimeItems;
+    limitSessionTimeUnits: Record<LimitSessionTimeUnit, LimitSessionTimeItem>;
+    limitSessionTimeItems: LimitSessionTimeItem[];
     saveSettings: Process;
-    setWarningMessageThroughApplyService;
-    timeUnitTracker;
+    setWarningMessageThroughApplyService: () => void;
     selectElement;
     alexaSettings: Partial<AlexaSettings>;
     eventRulesBeingSetup = false;
 
     settingsWatchersSet = false;
-    settingsWatchers: any = {
+    settingsWatchers = {
         autoDiscoveryEnabled         : new Watcher<boolean>(),
         statisticsAllowed            : new Watcher<boolean>(),
         cameraSettingsOptimization   : new Watcher<boolean>(),
@@ -67,9 +79,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         videoTrafficEncryptionForced : new Watcher<boolean>(),
         sessionLimitMinutes          : new Watcher<number>()
     };
-
-    readonly minutes: string = 'minutes';
-    readonly hours: string = 'hours';
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
@@ -89,25 +98,33 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.LANG = language.translations;
     }
 
+    DAY_MINS = DAY_MINS // For template access
+
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
-            hours: {
-                value   : this.hours,
-                name    : this.LANG.system.settings.sessionLimitDuration.hours(),
+            days: {
+                value   : 'days',
+                name    : this.LANG.system.settings.sessionLimitDuration.days(),
                 id      : 1,
-                max     : 600,
-                default : 24
+                max     : 999999,
+                default : 30
+            },
+            hours: {
+                value : 'hours',
+                name  : this.LANG.system.settings.sessionLimitDuration.hours(),
+                id    : 2,
+                max   : 999999
             },
             minutes: {
-                value : this.minutes,
+                value : 'minutes',
                 name  : this.LANG.system.settings.sessionLimitDuration.minutes(),
-                id    : 2,
-                max   : 600
+                id    : 3,
+                max   : 999999
             }
         };
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
-        this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
+        this.limitSessionTimeItems = [...Object.values(this.limitSessionTimeUnits)];
         this.initApplyService();
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
@@ -169,10 +186,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     this.updateTimeUnitInput(this.selectedTimeUnit);
                     sw[setting].originalValue = curr;
                     this.timeValue = curr;
-                    if (this.timeValue % 60 === 0) {
-                        this.timeValue /= 60;
-                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
-                    }
+                    this.divideTimeValue();
                 }
             }
         });
@@ -198,12 +212,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 sw.sessionLimitMinutes.value = 0;
             }
             const changes = {};
-            const settings = Object.keys(sw);
-            for (const setting of settings) {
-                const obj = sw[setting];
-                if (obj.value !== obj.originalValue) {
-                    changes[setting] = obj.value;
-                    obj.originalValue = obj.value;
+            for (const [setting, watcher] of Object.entries(sw)) {
+                if (watcher.value !== watcher.originalValue) {
+                    changes[setting] = watcher.value;
+                    watcher.originalValue = watcher.value;
                 }
             }
             return this.system.updateOrGetSystemSettings(changes).toPromise();
@@ -221,10 +233,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.updateTimeUnitInput(this.selectedTimeUnit);
                     this.timeValue = sessionLimitMinutes.originalValue;
-                    if (this.timeValue % 60 === 0) {
-                        this.timeValue /= 60;
-                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
-                    }
+                    this.divideTimeValue();
                 } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
                     this.sessionLimitToggle = false;
                 }
@@ -233,8 +242,18 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.applyService.setVisible(false);
     }
 
+    divideTimeValue(): void {
+        if (this.timeValue % DAY_MINS === 0) { // Whole days
+            this.timeValue /= DAY_MINS;
+            this.selectedTimeUnit = this.limitSessionTimeUnits.days;
+        } else if (this.timeValue % HR_MINS === 0) { // Whole hours
+            this.timeValue /= HR_MINS;
+            this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
+        }
+    }
+
     // sets input max value and updates hour/minutes
-    updateTimeUnitInput(timeUnit) {
+    updateTimeUnitInput(timeUnit): void {
         this.currentMaxTimeUnit = timeUnit.max;
 
         if (this.selectedTimeUnit.value !== timeUnit.value) {
@@ -243,24 +262,35 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         }
     }
 
-    storePreviousValue(e) {
-        if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
-            e.preventDefault();
-        }
-        this.previousInputValue = this.timeValue;
-    }
+    // storePreviousValue(e) {
+    //     if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
+    //         e.preventDefault();
+    //     }
+    //     this.previousInputValue = this.timeValue;
+    // }
 
-    updateLimitSessionValue(newTimeValue) {
+    updateLimitSessionValue(newTimeValue: number) {
         const sw = this.settingsWatchers;
-        if (this.selectedTimeUnit.value === this.hours) {
-            sw.sessionLimitMinutes.value = newTimeValue * 60;
-        } else if (newTimeValue && newTimeValue % 60 === 0) {
+        if (this.selectedTimeUnit.value === 'days') {
+            sw.sessionLimitMinutes.value = newTimeValue * DAY_MINS;
+        } else if (this.selectedTimeUnit.value === 'hours') {
+            sw.sessionLimitMinutes.value = newTimeValue * HR_MINS;
+            if (newTimeValue % DAY_HRS === 0) {
+                newTimeValue /= DAY_HRS;
+                this.timeValue = newTimeValue;
+                this.selectElement.change(this.limitSessionTimeUnits.days);
+            }
+        } else if (newTimeValue) {
             sw.sessionLimitMinutes.value = newTimeValue;
-            newTimeValue /= 60;
-            this.timeValue = newTimeValue;
-            // handler for when minutes gets changed to hours in the same change
-            // 120 hours --> 120 minutes --> 2 hours
-            this.selectElement.change(this.limitSessionTimeUnits.hours);
+            if (newTimeValue % DAY_MINS === 0) {
+                newTimeValue /= DAY_MINS;
+                this.timeValue = newTimeValue;
+                this.selectElement.change(this.limitSessionTimeUnits.days);
+            } else if (newTimeValue % HR_MINS === 0) {
+                newTimeValue /= HR_MINS;
+                this.timeValue = newTimeValue;
+                this.selectElement.change(this.limitSessionTimeUnits.hours);
+            }
         } else {
             sw.sessionLimitMinutes.value = newTimeValue;
         }
@@ -270,9 +300,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle() {
         if (this.sessionLimitToggle) {
-            this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
+            this.selectedTimeUnit = this.limitSessionTimeUnits.days;
             this.timeValue = this.selectedTimeUnit.default;
-            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;
+            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * DAY_MINS;
             this.updateTimeUnitInput(this.selectedTimeUnit);
         } else {
             this.timeValue = 0;

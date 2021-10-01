@@ -775,7 +775,8 @@
             "notAbleToLoadSystem": "Not able to load system settings.",
             "sessionLimitDuration": {
                 "hours": "hours",
-                "minutes": "minutes"
+                "minutes": "minutes",
+                "days": "days"
             },
             "warningMessages": {
                 "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
