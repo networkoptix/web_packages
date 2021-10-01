@@ -213,12 +213,12 @@ export const nxConfig: IConfig = {
         embedInfo: {
             vimeo: {
                 link  : 'https://player.vimeo.com/video/',
-                regex : '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
+                regex : 'https?:\\/\\/(?:www.)?vimeo.com\\/([0-9]{9})'
             },
             youtube: {
                 link  : 'https://www.youtube.com/embed/',
                 // eslint-disable-next-line no-useless-escape
-                regex : '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
+                regex : '(?:https?:\\/\\/)(?:www.)youtube.com\\/(?:watch[?]v=|embed\\/)([\\w-]{11})([&=\\w-]?){0,}'
             }
         },
         filter: {
