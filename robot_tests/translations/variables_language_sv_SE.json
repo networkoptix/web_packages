@@ -53,7 +53,7 @@
     "URL REQUIRED TEXT": "En webbadress krävs",
     "INVALID URL TEXT": "Ogiltig URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Inloggning eller lösenord är felaktigt",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
+    "FAILED TO ADD STORAGE TEXT": "Det gick inte att lägga till extern lagring - servern svarar inte",
     "STATE TEXT": "Läge",
     "NOT ABLE TO LOAD STORAGE TEXT": "Kan inte ladda lagringsinformation.",
     "RESERVED": "Reserverad",
@@ -505,7 +505,7 @@
     "BACK TEXT": "Tillbaka",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Lagring /ogiltig/HD Witness Media borttagen",
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
-    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
-    "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS ADDRESS TEXT": "Adress",
+    "STORAGE LOCATIONS MODE TEXT": "Läge",
+    "STORAGE LOCATIONS SPACE TEXT": "Utrymme"
 }
