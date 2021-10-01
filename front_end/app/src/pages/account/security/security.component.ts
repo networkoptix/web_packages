@@ -1,6 +1,4 @@
-import {
-    Component, OnInit
-}                                                 from '@angular/core';
+import { Component, OnInit }                      from '@angular/core';
 import { NxLanguageProviderService }              from '@services/nx-language-provider';
 import { NxConfigService, IConfig }               from '@services/nx-config';
 import { NxAccountService, Account }              from '@services/account.service';
@@ -32,6 +30,10 @@ export class NxAccountSecurityComponent implements OnInit {
     tfauth : TFAUTH;
 
     twoFaSystems: NxSystemWithUserInfo[] = [];
+    subV5Systems: NxSystemWithUserInfo[] = [];
+
+    temp2faEnabled = false;
+    // TODO: Replace with API logic
 
     private setupDefaults() {
         this.menuService.detail = 'security';
@@ -65,9 +67,18 @@ export class NxAccountSecurityComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe((systems: NxSystemWithUserInfo[]) => {
                 systems.forEach(system => {
+                    system.name = NxUtilsService.htmlToEntity(system.name);
+
                     if (system.system2faEnabled) {
-                        system.name = NxUtilsService.htmlToEntity(system.name);
                         this.twoFaSystems.push(system);
+                    }
+
+                    // TODO: Replace with actual version check
+                    const isSubV5 = Object.keys(system.capabilities).some((capability) => {
+                        return capability.includes('4_3');
+                    });
+                    if (isSubV5) {
+                        this.subV5Systems.push(system);
                     }
                 });
             });
@@ -96,5 +107,11 @@ export class NxAccountSecurityComponent implements OnInit {
     genNewCode() {
         this.dialogs
             .newCode2FA();
+    }
+
+    // TODO: Replace
+    tempToggle2fa(state: boolean): void {
+        this.temp2faEnabled = state;
+        console.log('Toggle');
     }
 }

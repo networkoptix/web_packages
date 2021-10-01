@@ -16,10 +16,10 @@ import {
 */
 
 @Component({
-    selector     : 'nx-section',
-    templateUrl  : 'section.component.html',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : ['section.component.scss']
+    selector      : 'nx-section',
+    templateUrl   : 'section.component.html',
+    encapsulation : ViewEncapsulation.None,
+    styleUrls     : ['section.component.scss']
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
