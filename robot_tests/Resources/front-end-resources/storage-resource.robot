@@ -225,8 +225,9 @@ Wait Until Analytics Data Exists
     Check Analytics Data is Present     ${disk}    ${camera}    ${server name}
 
 Verify Recorded Video Files
-    [Arguments]    ${disk}
+    [Arguments]    ${disk}    ${directory}=${None}
     ${disk} =    Set Variable If    '${disk}' == 'networkdisk'    networkdisk    ${disk}-${random}
+    ${disk} =    Set Variable If    ${directory}    ${disk}/${directory}    ${disk}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    find ${disk} -iname "*mkv" -printf "%f "
@@ -243,29 +244,29 @@ Delete Recorded Video Files
     [Return]    ${results}
 
 Wait Until Files Are Recorded
-    [Arguments]    ${disk}    ${attempts}    ${increment}=0
-    ${start files} =    Verify Recorded Video Files    ${disk}
+    [Arguments]    ${disk}    ${attempts}    ${increment}=0    ${directory}=${None}
+    ${start files} =    Verify Recorded Video Files    ${disk}    ${directory}
     ${start files} =    Evaluate    ${start files}+${increment}
     FOR    ${n}    IN RANGE    ${attempts}
-        ${files} =    Verify Recorded Video Files    ${disk}
+        ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
         Exit For Loop If    ${files} > ${start files}
         Sleep    8
     END
     [Return]    ${files}
 
 Wait Until Recorded Files Deleted
-    [Arguments]    ${disk}    ${attempts}
+    [Arguments]    ${disk}    ${attempts}    ${directory}=${None}
     FOR    ${n}    IN RANGE    ${attempts}
-        ${files} =    Verify Recorded Video Files    ${disk}
+        ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
         Exit For Loop If    ${files} == 0
         Sleep    8
     END
     
 Verify New Files Are Not Recorded
-    [Arguments]    ${disk}    ${wait}
-    ${start files} =    Verify Recorded Video Files    ${disk}
+    [Arguments]    ${disk}    ${wait}    ${directory}=${None}
+    ${start files} =    Verify Recorded Video Files    ${disk}    ${directory}
     Sleep    ${wait}
-    ${files} =    Verify Recorded Video Files    ${disk}
+    ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
     Should Be True    ${files} == ${start files}
 
 Turn On Backup For Camera
@@ -333,7 +334,7 @@ Cleanup External Drive
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
@@ -354,7 +355,7 @@ Cleanup External Drive
     Select Server By Name    ${server 3['id']}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
