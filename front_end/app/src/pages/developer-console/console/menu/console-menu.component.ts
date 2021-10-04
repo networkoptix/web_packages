@@ -58,3 +58,9 @@ export class NxDevConsoleMenuComponent {
         this.loading = !menu.length;
     }
 }
+
+export const forUnitTest = {
+    NxHeaderService,
+    NxConfigService,
+    ConsoleMode
+};

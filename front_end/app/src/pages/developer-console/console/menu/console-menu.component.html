@@ -32,7 +32,7 @@
     </li>
 </ul>
 
-<div *ngIf="showAdditionalLinks && TYPES.EDIT === type">
+<div *ngIf="showAdditionalLinks && TYPES.EDIT === type" class="additional-links">
     <!-- TODO: Need to replace svgs -->
     <ng-container *ngTemplateOutlet="additionalLink; context{
         icon: 'eye.svg', title: 'Show Preview' | translate
