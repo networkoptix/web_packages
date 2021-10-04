@@ -54,7 +54,10 @@ Clear Register Fields
     [tags]    C24211    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
-    Check Log In
+    ${random email}    Get Random Email    ${BASE EMAIL}
+    Log In    ${random email}    ${password}      validate=False     button=${LOG IN NAV BAR}
+    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${EMAIL OWNER}    ${password}    validate=False    button=None
 
 5. Should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -160,7 +163,7 @@ Clear Register Fields
     Press Keys    None    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
     Press Keys    None    ENTER
-    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
+    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //nx-register-component//span[(text()='${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 
 11. Should open Terms and conditions in a new page
@@ -273,19 +276,20 @@ Clear Register Fields
     Log In    ${EMAIL OWNER}     ${BASE PASSWORD}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]     ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER}
+    ${logged in text and email}=    Replace String    ${YOU ARE ALREADY LOGGED IN TEXT}    {{user}}    ${EMAIL OWNER}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]     ${logged in text and email}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
     Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL OWNER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER} 
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${logged in text and email}
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
     Wait Until Element Contains     ${ACCOUNT DROPDOWN}     ${EMAIL OWNER}
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL OWNER} 
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL OWNER}')]    ${logged in text and email}
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Validate Log Out
     Wait Until Location Is    ${ENV}/register
