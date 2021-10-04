@@ -262,8 +262,8 @@ response_errors = {
 }
 
 logic_errors = {
-    ErrorCodes.forbidden: APINotAuthorisedException,
-    ErrorCodes.not_authorized: APINotAuthorisedException
+    "forbidden": APINotAuthorisedException,
+    "not_authorized": APINotAuthorisedException
 }
 
 

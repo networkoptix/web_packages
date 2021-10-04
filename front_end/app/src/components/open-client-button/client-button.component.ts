@@ -30,7 +30,6 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     canceled: boolean;
     modalActive: boolean;
     openClient: Process;
-    useOauth: boolean;
 
     constructor(configService: NxConfigService,
                 private processService: NxProcessService,
@@ -51,11 +50,10 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.modalActive = false;
         this.canceled = false;
-        this.useOauth = Object.keys(this.system.capabilities).some((key) => key.includes('4_3'));
 
         this.openClient = this.processService.createProcess(() => {
             return this.urlProtocol
-                .open(this.system && this.system.id, this.useOauth);
+                .open(this.system && this.system.id, this.system.useRest);
         }, {
             errorCodes: {
                 notVisited: () => false
