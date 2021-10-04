@@ -4,7 +4,7 @@ Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Server Settings Test Teardown
 Suite Teardown    Server Settings Suite Tear Down
-Force Tags        system    Threaded
+Force Tags        system    
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
@@ -147,6 +147,7 @@ Server Settings Suite Tear Down
 
 Server Settings Test Setup
     [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
+    Skip If Irrelevant
     Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
     ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
 
@@ -161,7 +162,7 @@ Cloud Test Setup
 Web Admin Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
     Open Browser and go to URL    https://${QA BURBANK IP}:${server}[port]
-    Log In Web Admin    ${user}    ${password}
+    Log In Web Admin    ${user}    ${password}    ${verify}
     Sleep    5
     Run Keyword If    ${verify}    Wait Until Element is Visible    ${SERVERS LINK}
     Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
@@ -184,7 +185,7 @@ Web Admin Test Teardown
 
 *** Test Cases ***
 #Rename server requires a name
-#    [Tags]    C70960    threaded
+#    [Tags]    C70960    
 #    Verify Server Buttons Are Enabled
 #    Rename System or Hardware    ${EMPTY}
 #    Wait Until Element Is Visible    ${SYSTEM SAVE}
@@ -194,7 +195,7 @@ Web Admin Test Teardown
 #    Element Text Should Be    ${SERVER NAME}    server 1
 
 1. Server name can be changed
-    [Tags]    C71000    threaded
+    [Tags]    C71000    cloud    webadmin
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     Change System Name    server 1 name changed    save=True
@@ -208,7 +209,7 @@ Web Admin Test Teardown
     Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
 
 2. Server name changed via API updates on cloud
-    [Tags]    C70961    threaded
+    [Tags]    C70961    cloud    webadmin
     Verify on Servers Page
     Sleep    1
     Select Server By Name    server 1
@@ -226,7 +227,7 @@ Web Admin Test Teardown
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
 
 3. Restart close button works
-    [Tags]    C70968    threaded
+    [Tags]    C70968    cloud    webadmin
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -235,7 +236,7 @@ Web Admin Test Teardown
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
 4. Restart cancel button works
-    [Tags]    C70968    threaded
+    [Tags]    C70968    cloud    webadmin
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -244,7 +245,7 @@ Web Admin Test Teardown
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
 5. Restart server as owner
-    [Tags]    C70968
+    [Tags]    C70968    cloud    webadmin
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -262,7 +263,7 @@ Web Admin Test Teardown
            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
 6. Restart server as administrator
-    [Tags]    C70968
+    [Tags]    C70968    cloud    webadmin
     [Setup]    Server Settings Test Setup    user=${admin}
     Verify on Servers Page
     Wait Until Element Is Enabled    ${RESTART SERVER BUTTON}
@@ -280,13 +281,13 @@ Web Admin Test Teardown
             ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
 7. Change port is only available for owner
-    [Tags]    C70927    threaded
+    [Tags]    C70927    cloud    webadmin
     [Setup]    Server Settings Test Setup    user=${admin}
     Verify on Servers Page
     Element Should Be Disabled    ${PORT INPUT}
 
 8. Port field validation
-    [Tags]    C70929    threaded
+    [Tags]    C70929    cloud    webadmin
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
@@ -346,7 +347,7 @@ Web Admin Test Teardown
     Should Be Equal    ${current port}    ${before port}
 
 9. Change port
-    [Tags]    C70975
+    [Tags]    C70975    cloud    webadmin
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
@@ -358,7 +359,7 @@ Web Admin Test Teardown
 
 # Waiting to hear back from server team about proper error code
 10. Administrator cannot change port via API
-    [Tags]    C70927    threaded
+    [Tags]    C70927    cloud    webadmin
     Verify on Servers Page
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
@@ -369,7 +370,7 @@ Web Admin Test Teardown
     Should Be True    ${status is correct}
 
 11. Check status
-    [Tags]    C70957
+    [Tags]    C70957    cloud    webadmin
     Verify on Servers Page
     Wait Until Element is Not Visible    ${CHECK STATUS BUTTON}
     Select Server By Name    server 2
@@ -391,7 +392,7 @@ Web Admin Test Teardown
     Stop Docker Server    ${server 2}[id]  
 
 12. Detailed info 1 server
-    [Tags]   C70923    threaded
+    [Tags]   C70923    cloud    webadmin
     [Setup]    Server Settings Test Setup    server=${server 3}
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
@@ -403,7 +404,7 @@ Web Admin Test Teardown
     Page Should Not Contain Element    ${HM TABLE}
 
 13. Detailed info 2 servers
-    [Tags]    C70923    threaded    deb
+    [Tags]    C70923    cloud    webadmin
     Execute Command Remotely   docker container start ${server 2}[id]
     Select Server By Name    server 1
     Click Button    ${SERVER DETAILED INFO BUTTON}
@@ -416,7 +417,7 @@ Web Admin Test Teardown
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 14. Offline system 1 server settings
-    [Tags]    C70950    threaded    deb
+    [Tags]    C70950    cloud
     [Setup]    Server Settings Test Setup    server=${server 3}
     Execute Command Remotely    docker container stop ${server 3}[id]
     Reload Page
@@ -430,14 +431,14 @@ Web Admin Test Teardown
     Element Should not be Visible    ${SERVER DETAILED INFO BUTTON}
 
 15. Online two servers
-    [Tags]    C701205    threaded
+    [Tags]    C701205    cloud    webadmin
     Verify on Servers Page
     Select Server By Name    server 1
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     
 16. Server1 is online Server2 is offline
-    [Tags]    C70955    threaded
+    [Tags]    C70955    cloud    webadmin
     Select Server By Name    server 1
     Element Should be Enabled    ${PORT INPUT}
     Element Should be Enabled    ${RESTART SERVER BUTTON}
@@ -451,13 +452,13 @@ Web Admin Test Teardown
     Element Text Should Be    ${SERVER OFFLINE ALERT}    ${SERVER OFFLINE TEXT}
 
 17. Owner/Admin has Access
-    [Tags]    C69853    C70927    threaded
+    [Tags]    C69853    C70927    cloud    webadmin
     Wait Until Element is Visible    ${SERVERS LINK}
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
 18. Administrator has Access
-    [Tags]    C69853    C70927    threaded
+    [Tags]    C69853    C70927    cloud    webadmin
     [Setup]    Server Settings Test Setup    ${server 1}    ${admin}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
@@ -465,28 +466,28 @@ Web Admin Test Teardown
     Element Should Be Disabled    ${PORT INPUT}
 
 19. Viewer does not have Access
-    [Tags]    C69853    threaded
+    [Tags]    C69853    cloud    webadmin
     [Setup]    Server Settings Test Setup    ${server 1}    ${viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 20. Advanced Viewer does not have Access
-    [Tags]    C69853    threaded
+    [Tags]    C69853    cloud    webadmin
     [Setup]    Server Settings Test Setup    ${server 1}    ${adv viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 21. Live Viewer does not have Access
-    [Tags]    C69853    threaded
+    [Tags]    C69853    cloud    webadmin
     [Setup]    Server Settings Test Setup    ${server 1}    ${live viewer}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 22. Custom User does not have Access
-    [Tags]    C69853    threaded
+    [Tags]    C69853    cloud    webadmin
     [Setup]    Server Settings Test Setup    ${server 1}    ${custom}    verify=${False}
     Element Should not be Visible    ${SERVERS LINK}
 
 # This is probably deprecated by the new left menu search.
 #Tab order is correct for online system
-#    [Tags]    C69882    threaded
+#    [Tags]    C69882    
 #    Verify on Servers Page
 #    Press Keys    None    TAB
 #    Element Should Be Focused    //nx-level-3-item/a//span[contains(text(),"server 1")]/../..
