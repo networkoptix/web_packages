@@ -161,7 +161,7 @@
         "systemServerError": "Errore interno del server",
         "systemServerErrorMessage": "Si è verificato un errore, riprova più tardi. Se il problema persiste, contattare il team di supporto.",
         "systemUnreachable": "Il sistema è inaccessibile",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Il sistema sembra non rispondere. Si prega di ricaricare la pagina.",
         "unknown": "Sconosciuto",
         "vendor": "Fornitore",
         "model": "Modello",
@@ -477,8 +477,8 @@
         "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
         "licenseServerError": "Impossibile attivare la licenza. Il server delle licenze non risponde. Riprova o contatta l'assistenza.",
         "networkConnection": "Impossibile connettersi a %CLOUD_NAME%, controlla la connessione di rete.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncrypted": "ARCHIVIO CRITTOGRAFATO",
+        "archiveEncryptedMessage": "Chiedere all'amministratore di sistema di immettere la password di crittografia per decifrare questo archivio."
     },
     "integration": {
         "Access Control": "Controllo accesso",
@@ -678,9 +678,9 @@
         "successRename": "Nome del server salvato."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Visualizza",
+        "Settings": "Impostazioni",
+        "Information": "Informazioni"
     },
     "system": {
         "connected": "Connesso",
