@@ -16,7 +16,7 @@
             <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
                 <p class="mb-0" translate>All settings for this server will be reset to factory default settings, and it will be detached from this system and added to a new one.</p>
                 <p [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }" translate>Video archive will remain intact.</p>
-                <span *ngIf="system.mediaserver.requiresPassword" translate>Enter password for your account to continue.</span>
+                <span *ngIf="system.mediaserver.requiresPassword" translate>Enter password for your account to continue</span><span>.</span>
             </div>
             <ng-container *ngIf="system.mediaserver.requiresPassword">
                 <input class="form-control"
