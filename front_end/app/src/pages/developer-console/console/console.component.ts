@@ -100,3 +100,11 @@ export class NxDevConsoleComponent {
         return { sectionParam, mode, id, context };
     }
 }
+
+export const forUnitTest = {
+    NxConfigService,
+    ActivatedRoute,
+    Router,
+    NxCloudApiService,
+    NxHeaderService
+};
