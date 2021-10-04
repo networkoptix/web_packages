@@ -48,12 +48,15 @@
     "RESERVED NONSYSTEM TOOLTIP": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest zbyt mała, a dostępne są inne większe lokalizacje.",
     "RESERVED SYSTEM TOOLTIP": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest na dysku systemowym, a dostępne są inne większe lokalizacje.",
     "REINDEX TOOLTIP FIRST": "Indeksowanie znacznie zwiększa obciążenie dysków.",
+    "REINDEX TOOLTIP SECOND": "You can cancel it anytime without data loss.",
     "REINDEXING MAIN": "Indeksowanie głównego archiwum...",
     "REINDEXING BACKUP": "Indeksowanie zapasowego archiwum...",
+    "REINDEX ARCHIVE MSG TEXT": "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)",
+    "REINDEX ARCHIVE TEXT": "Reindex Archive",
     "URL REQUIRED TEXT": "Adres URL jest wymagany",
     "INVALID URL TEXT": "Nieprawidłowy adres URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Nieprawidłowa nazwa użytkownika lub hasło",
-    "FAILED TO ADD STORAGE TEXT": "Nie udało się dodać pamięci zewnętrznej",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Stan",
     "NOT ABLE TO LOAD STORAGE TEXT": "Nie można załadować informacji o archiwum.",
     "RESERVED": "Zarezerwowane",
@@ -504,5 +507,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Czy mimo to dodać to archiwum?",
     "BACK TEXT": "Wstecz",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Archiwum /nieprawidłowe/HD Witness Media usunięte",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

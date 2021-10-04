@@ -378,7 +378,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description()
             : this.LANG.accessRoles.customRole.description();
-        this.selectedUser.role = role;
+        this.selectedUser.role = { ...role };
         this.userRole.value = role.name;
         this.role = role.name;
     }

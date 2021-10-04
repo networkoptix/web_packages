@@ -52,16 +52,12 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     processAccessRoles() {
-        if (this.roles) {
-            this.accessRoles = this.roles.filter((role) => {
-                if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                    role.optionLabel = this.LANG.accessRoles[role.name]?.label() || role.name;
-                    return true;
-                }
-
-                return false;
+        this.accessRoles = (this.roles ?? [])
+            .filter((role) => !(role.isOwner || role.isAdmin && !this.system.isMine))
+            .map((role) => {
+                role.optionLabel = this.LANG.accessRoles[role.name]?.label() || role.name;
+                return role;
             });
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -84,11 +80,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     changePermission(role) {
         this.selection = (typeof role.optionLabel === 'function') ? role.optionLabel() : role.optionLabel;
 
-        const selectedRole = this.accessRoles.filter((accessRole) => {
-            if (accessRole.name === role.name) {
-                return role;
-            }
-        })[0];
+        const selectedRole = this.accessRoles.find((accessRole) => accessRole.name === role.name);
         this.onSelected.emit(selectedRole);
 
         return false; // return false so event will not bubble to HREF

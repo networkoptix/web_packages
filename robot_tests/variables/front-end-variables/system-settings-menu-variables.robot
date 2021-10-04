@@ -12,8 +12,8 @@ ${LEFT MENU SEARCH MATCHES}           ${LEFT MENU}//div[contains(@class, 'nx-men
 ${LEFT MENU LEVEL1 ADMIN}             ${LEFT MENU}//nx-level-1-item/a[@id='admin']
 ${LEFT MENU LEVEL1 ICON}              ${LEFT MENU LEVEL1 ADMIN}//svg-icon
 ${LEFT MENU LEVEL3 GENERAL}           ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="general"]
-${LEFT MENU LEVEL3 LIC}               ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="license"]
-${LEFT MENU LEVEL3 STARAGE}           ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="cloudStorage"]
+${LEFT MENU LEVEL3 LIC}               //*[@id="licenses"]//span[contains(text(),"Licen")]
+${LEFT MENU LEVEL3 STORAGE}           ${LEFT MENU LEVEL1 ADMIN}/../..//nx-level-3-item/a[@id="cloudStorage"]
 
 ${LEFT MENU LEVEL1 USERS}             ${LEFT MENU}//nx-level-1-item/a[@id='users']
 ${LEFT MENU LEVEL3 USER1}             ${LEFT MENU LEVEL1 USERS}/../..//div[1]/nx-level-3-item/a

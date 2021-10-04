@@ -48,7 +48,7 @@ Create system and attach to cloud
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     @{default auth}=    Create List    admin    admin
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    name=${system name}
-    sleep    1
+    sleep    5
     &{Setup Cloud System json}=    Setup Cloud System
     ...    ${default auth}
     ...    ${server url}:${server port}
@@ -62,7 +62,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
-    Sleep    0.25
+    Sleep    5
     ${Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}

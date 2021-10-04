@@ -48,12 +48,15 @@
     "RESERVED NONSYSTEM TOOLTIP": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
     "RESERVED SYSTEM TOOLTIP": "This storage location cannot be used for recording because it's system storage and there are other larger storage locations available for recording.",
     "REINDEX TOOLTIP FIRST": "Reindexing will significantly increase drives load.",
+    "REINDEX TOOLTIP SECOND": "You can cancel it anytime without data loss.",
     "REINDEXING MAIN": "Reindexing Main Storage...",
     "REINDEXING BACKUP": "Reindexing Backup Storage...",
+    "REINDEX ARCHIVE MSG TEXT": "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)",
+    "REINDEX ARCHIVE TEXT": "Reindex Archive",
     "URL REQUIRED TEXT": "URL is required",
     "INVALID URL TEXT": "כתובת אתר לא חוקית",
     "LOGIN OR PASSWORD INCORRECT TEXT": "שם או הסיסמה שגויים",
-    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "מצב",
     "NOT ABLE TO LOAD STORAGE TEXT": "אין אפשרות לטעון מידע על אחסון.",
     "RESERVED": "שמור",
@@ -504,5 +507,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "האם להוסיף את האחסון הזה בכל זאת?",
     "BACK TEXT": "אחורה",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Storage /invalid/HD Witness Media deleted",
-    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update."
+    "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

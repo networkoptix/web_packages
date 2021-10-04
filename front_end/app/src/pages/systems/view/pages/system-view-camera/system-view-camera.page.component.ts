@@ -551,6 +551,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 takeUntil(this.unsub$)
             )
             .subscribe((state: PlaybackState) => {
+                this.selectedTransport = state.transport;
                 this.cameraCurrentState = state;
                 this.cameraError = state.error;
 

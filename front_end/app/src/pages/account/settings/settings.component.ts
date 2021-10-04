@@ -127,7 +127,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             this.account.last_name = this.watchers.lastName.originalValue;
             this.langCode = this.watchers.langCode.originalValue;
             this.applyService.reset();
-        }, Object.values(this.watchers), undefined, this.displayErrors);
+        }, Object.values(this.watchers), undefined, this.displayErrors, true);
 
         this.accountService
             .get()

@@ -159,6 +159,18 @@
             "advanced": true
           },
           {
+            "label": "Mobile Client Display Name",
+            "name": "%MOBILE_DISPLAY_NAME%",
+            "type": "text",
+            "value": "the mobile client",
+            "optional": true,
+            "description": "The name used when referring to the mobile client throughout cloud portal. Does not affect the actual iOS or Android application name",
+            "advanced": true,
+            "meta": {
+              "shortcut": true
+            }
+          },
+          {
             "label": "IOS application ID",
             "name": "%IOS_APPLICATION_ID%",
             "old_name": "{{iOSappID}}",

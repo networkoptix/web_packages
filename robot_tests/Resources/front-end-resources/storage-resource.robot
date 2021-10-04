@@ -60,8 +60,8 @@ Storage Suite Setup
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
     Open Browser and go to URL    ${url}
     Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
-    Verify Storages    ${server 1['owner']}    ${server 1['cloud id']}    5
-    Verify Storages    ${server 1['owner']}    ${server 2['cloud id']}    1
+    Verify Storages    5    owner=${server 1['owner']}    system=${server 1['cloud id']}    login=${TRUE}
+    Verify Storages    1    owner=${server 1['owner']}    system=${server 2['cloud id']}    login=${TRUE}
 
 Catenate Storages One
     [Arguments]    ${string}
@@ -85,19 +85,19 @@ Storage Suite Teardown
     Close All Browsers
 
 Verify Storages
-    [Arguments]    ${owner}    ${system}    ${storages number}
-    Log in to user and system    ${owner}     ${system}
-    Go To Servers
-    Sleep    5
-    ${load} =    Run Keyword and Return Status    Verify on Servers Page    #timeout=95
-    Run Keyword If    ${load} == ${FALSE}    Reload Page
-    Run Keyword If    ${load} == ${FALSE}    Verify on Servers Page    #timeout=95
+    [Arguments]    ${storages number}    ${owner}=null    ${system}=null    ${login}=${FALSE}
+    Run Keyword If    ${login}    Run Keywords
+    ...    Log in to user and system    ${owner}     ${system}    AND
+    ...    Go To Servers    AND
+    ...    Sleep    5    AND
+    ...    Verify on Servers Page    #timeout=95
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     ${disks} =    Get Element Count    //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
-    Log Out
-    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
+    Run Keyword If    ${login}    Run Keywords
+    ...    Log Out    AND
+    ...    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
     [Arguments]    ${owner}    ${system}
@@ -225,8 +225,9 @@ Wait Until Analytics Data Exists
     Check Analytics Data is Present     ${disk}    ${camera}    ${server name}
 
 Verify Recorded Video Files
-    [Arguments]    ${disk}
+    [Arguments]    ${disk}    ${directory}=${None}
     ${disk} =    Set Variable If    '${disk}' == 'networkdisk'    networkdisk    ${disk}-${random}
+    ${disk} =    Set Variable If    ${directory}    ${disk}/${directory}    ${disk}
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    find ${disk} -iname "*mkv" -printf "%f "
@@ -243,22 +244,30 @@ Delete Recorded Video Files
     [Return]    ${results}
 
 Wait Until Files Are Recorded
-    [Arguments]    ${disk}    ${attempts}
-    ${start files} =    Verify Recorded Video Files    ${disk}
+    [Arguments]    ${disk}    ${attempts}    ${increment}=0    ${directory}=${None}
+    ${start files} =    Verify Recorded Video Files    ${disk}    ${directory}
+    ${start files} =    Evaluate    ${start files}+${increment}
     FOR    ${n}    IN RANGE    ${attempts}
-        ${files} =    Verify Recorded Video Files    ${disk}
+        ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
         Exit For Loop If    ${files} > ${start files}
         Sleep    8
     END
     [Return]    ${files}
 
 Wait Until Recorded Files Deleted
-    [Arguments]    ${disk}    ${attempts}
+    [Arguments]    ${disk}    ${attempts}    ${directory}=${None}
     FOR    ${n}    IN RANGE    ${attempts}
-        ${files} =    Verify Recorded Video Files    ${disk}
+        ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
         Exit For Loop If    ${files} == 0
         Sleep    8
     END
+    
+Verify New Files Are Not Recorded
+    [Arguments]    ${disk}    ${wait}    ${directory}=${None}
+    ${start files} =    Verify Recorded Video Files    ${disk}    ${directory}
+    Sleep    ${wait}
+    ${files} =    Verify Recorded Video Files    ${disk}    ${directory}
+    Should Be True    ${files} == ${start files}
 
 Turn On Backup For Camera
     [Arguments]    ${server}    ${server auth}
@@ -325,7 +334,7 @@ Cleanup External Drive
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
@@ -346,7 +355,7 @@ Cleanup External Drive
     Select Server By Name    ${server 3['id']}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot

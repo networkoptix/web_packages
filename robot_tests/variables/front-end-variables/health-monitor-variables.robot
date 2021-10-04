@@ -56,3 +56,4 @@ ${HM ALERTS LINK ERRORS}                 ${HM ALERTS PAGE LINK}/div[2]/div[1]/nx
 ${HM ALERTS LINK WARNINGS}               ${HM ALERTS PAGE LINK}/div[2]/div[2]/nx-alert-counter/div/span
 
 ${HM STORAGE TABLE}                      //table//td[contains(@title, "HD Witness Media")]
+${HM STORAGE DISK}                       ${HM STORAGE TABLE}/span[contains(text(), "/HD Witness Media")]

@@ -33,19 +33,25 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     actualRotation = 0;
     private player: videojs.Player;
+    private hasPlayed = false;
     protected transport = '';
 
     constructor() {}
 
     initPlayer(): void {
         let videoJsAutoRetry = 0;
-        let playerHasPlayed = false;
         let stallTimer;
-        const waitingTime = 4 * 1000;
+        const waitingTime = 8 * 1000;
         const options = {
             autoplay          : true,
             inactivityTimeout : 0
         };
+
+        const resetTimer = () => {
+            stallTimer && clearTimeout(stallTimer);
+            stallTimer = undefined;
+        };
+
         this.player = videojs(this.videoView.nativeElement, options);
 
         this.player.on('ready', () => {
@@ -53,14 +59,16 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('playing', () => {
-            playerHasPlayed = true;
+            this.hasPlayed = true;
             this.bufferingChange.emit(1);
         });
 
         this.player.on('waiting', () => {
-            stallTimer && clearTimeout(stallTimer);
-            if (playerHasPlayed) {
-                playerHasPlayed = false;
+            if (this.hasPlayed) {
+                resetTimer();
+                this.hasPlayed = false;
+            }
+            if (!stallTimer) {
                 stallTimer = setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
@@ -68,7 +76,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('timeupdate', () => {
-            stallTimer && clearTimeout(stallTimer);
+            resetTimer();
         });
 
         this.player.on('ended', () => {
@@ -81,7 +89,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('abort', (err) => {
-            playerHasPlayed = false;
+            this.hasPlayed = false;
             !this.paused && this.videoError.emit(err);
         });
 
@@ -99,7 +107,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
         if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)) {
-            this.transport = this.sourceUrl && this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm' || '';
+            if (this.sourceUrl) {
+                this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';
+            }
             this._calculateRotation();
             this._reactOnPlaybackStateChange(prevMode);
         }
@@ -125,8 +135,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const isPaused = this.player.paused() || false;
         switch (this.mode) {
             case PLAYBACK_MODE.STOPPED:
-                if (prevMode === PLAYBACK_MODE.STOPPED) {
-                    !isPaused && this.player.pause();
+                if (this.hasPlayed && !isPaused) {
+                    this.player.pause();
                 }
                 this._log('react on stopped');
                 this.bufferingChange.emit(1);
@@ -134,12 +144,16 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             case PLAYBACK_MODE.LIVE:
             case PLAYBACK_MODE.ARCHIVE:
                 if (this.player && prevMode !== this.mode && !this.paused) {
+                    this.player.reset();
+                    this.hasPlayed = false;
                     this._startPlayback();
                 }
                 if (this.mode === PLAYBACK_MODE.ARCHIVE && this.paused) {
-                    !isPaused && this.player.pause();
-                    this._log('react on pause');
-                    this.bufferingChange.emit(1);
+                    if (this.hasPlayed && !isPaused) {
+                        this.player.pause();
+                        this._log('react on pause');
+                        this.bufferingChange.emit(1);
+                    }
                 }
                 break;
             default:
@@ -177,9 +191,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             this.bufferingChange.emit(0);
             this.player.src(source);
             this.player.poster(posterUrl);
-            if (this.player.paused()) {
-                setTimeout(() => this.player.play().catch(() => this._log('pause was called in start playback')));
-            }
         } else {
             this._warn('playback requested in wrong mode');
         }

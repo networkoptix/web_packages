@@ -5,5 +5,5 @@
         </h3>
     </div>
     <div *ngIf="(!nonPadded && haveSubheader) || haveSubheader" class="card--body-spacer"></div>
-    <ng-content></ng-content>
+    <div class="card--body-content"><ng-content></ng-content></div>
 </div>

@@ -48,12 +48,15 @@
     "RESERVED NONSYSTEM TOOLTIP": "Dieser Speicherort kann nicht für die Aufzeichnung verwendet werden, da er zu klein ist und andere größere Speicherorte für die Aufzeichnung verfügbar sind.",
     "RESERVED SYSTEM TOOLTIP": "Dieser Speicherort kann nicht für die Aufzeichnung verwendet werden, da es sich um Systemspeicher handelt und andere größere Speicherorte für die Aufzeichnung verfügbar sind.",
     "REINDEX TOOLTIP FIRST": "Durch die Neuindizierung wird die Laufwerkslast erheblich erhöht.",
+    "REINDEX TOOLTIP SECOND": "You can cancel it anytime without data loss.",
     "REINDEXING MAIN": "Neuindizierung des Hauptspeichers...",
     "REINDEXING BACKUP": "Neuindizierung des Backupspeichers...",
+    "REINDEX ARCHIVE MSG TEXT": "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)",
+    "REINDEX ARCHIVE TEXT": "Reindex Archive",
     "URL REQUIRED TEXT": "URL ist erforderlich",
     "INVALID URL TEXT": "Ungültige URL",
     "LOGIN OR PASSWORD INCORRECT TEXT": "Login oder Passwort falsch",
-    "FAILED TO ADD STORAGE TEXT": "Fehler beim Hinzufügen eines externen Speichers",
+    "FAILED TO ADD STORAGE TEXT": "Failed to add external storage - server doesn't respond",
     "STATE TEXT": "Zustand",
     "NOT ABLE TO LOAD STORAGE TEXT": "Speicherinformationen können nicht geladen werden.",
     "RESERVED": "Reserviert",
@@ -504,5 +507,8 @@
     "ADD THIS STORAGE ANYWAY TEXT": "Speicher trotzdem hinzufügen?",
     "BACK TEXT": "Zurück",
     "INNACCESSIBLE STORAGE DELETED TOAST TEXT": "Speicher /ungültig/HD Witness Media gelöscht",
-    "STORAGES OUTDATED WARNING TEXT": "Speicher veraltet. Seite zum Aktualisieren neu laden."
+    "STORAGES OUTDATED WARNING TEXT": "Speicher veraltet. Seite zum Aktualisieren neu laden.",
+    "STORAGE LOCATIONS ADDRESS TEXT": "Address",
+    "STORAGE LOCATIONS MODE TEXT": "Mode",
+    "STORAGE LOCATIONS SPACE TEXT": "Space"
 }

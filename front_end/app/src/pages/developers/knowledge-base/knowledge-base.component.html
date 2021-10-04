@@ -113,9 +113,9 @@
                     <div class="related-section" *ngIf="(relatedLinksFiltered$ | async).length">
                         <h4>
                             <ng-template #related>
-                                <ng-container translate>RELATED TOPICS</ng-container>
+                                <span translate>RELATED TOPICS</span>
                             </ng-template>
-                            <ng-container *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</ng-container>
+                            <span *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</span>
                         </h4>
                         <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url" [queryParams]="{'state': link.state}">
                             {{link.display_name || link.name}}

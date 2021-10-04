@@ -292,6 +292,7 @@ Change Full Name for Local User
     [Arguments]    ${new full name}
     Sleep    5
     Input Text    ${LOCAL USER NAME}     ${new full name}
+    Sleep    .5
     [Return]    ${new full name}
 
 Change Permission Level for Local User

@@ -28,6 +28,7 @@ ${drives}    5
 *** Keywords ***
 Restart
     # ${status} =    Run Keyword And Return Status    Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Set Window Size    1920    1080
     Common Restart Logout    ${url}
     Reset to Default Storage Config
 
@@ -36,7 +37,8 @@ Restart
     [Tags]    C81803    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
+    Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should Be Equal As Integers    ${height}    259
@@ -45,11 +47,13 @@ Restart
     [Tags]    C81534
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     Wait Until Element Is Visible    ${STORAGE INFO BUTTON}
     Click Button    ${STORAGE INFO BUTTON}
     Location Should Contain    health/storages
     Wait Until Element Is Visible    ${HM STORAGE TABLE}
+    ${count} =    Get Element Count    ${HM STORAGE DISK}
+    Should Be Equal as Numbers    5    ${count}
     
 3. Analytics DB Storage dropdown is not visible
     [Tags]    C81740    Analytics    
@@ -58,107 +62,30 @@ Restart
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
     
-4. Disabling storage warnings aren't shown - Main storages
-    [Tags]    C81570    mode
-    [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
-    ${files disk0} =    Verify Recorded Video Files    disk0
-
-    Log    Step 2
-    Delete Recorded Video Files    disk2
-    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Sleep    2
-    ${files 2 disk0} =    Verify Recorded Video Files    disk2
-    Log    ${files 2 disk0}
-    Element Should Not Be Visible    ${RECORDING STOP WARNING}
-
-    Log    Step 3
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING}
-
-    Log    Step 4
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk2} =    Verify Recorded Video Files    disk2
-    Should Be True    ${files 3 disk2} == 0
-
-5. Disabling storage warnings aren't shown - Backup storages
-    [Tags]    C81571    mode
-    [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
-    @{disabled} =    Create List    disk3    disk1
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}   ${disabled}    ${backups}
-
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
-    ${files disk0} =    Verify Recorded Video Files    disk0
-
-    Log    Step 2
-    Delete Recorded Video Files    disk2
-    Wait Until Recorded Files Deleted    disk2    100
-    Wait Until Element is Visible with Retry    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
-    Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Sleep    2
-    ${files 2 disk0} =    Verify Recorded Video Files    disk2
-    Log    ${files 2 disk0}
-    Element Should Not Be Visible    ${RECORDING STOP WARNING}
-
-    Log    Step 3
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING}
-
-    Log    Step 4
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk2} =    Verify Recorded Video Files    disk2
-    Should Be True    ${files 3 disk2} == 0
-
-6. Scrolling on small resolutions in Storage Locations block
+4. Scrolling on small resolutions in Storage Locations block
     [Tags]    C81535
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
     Set Window Size    600    1080
     Sleep    1
     Verify Horizontal Scrollbar Exists    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
+    Verify One Element Above the Other    ${STORAGE LOCATIONS TABLE}/table    ${STORAGE ADD BUTTON}
+    Verify Element Does Not Scroll    ${STORAGE ADD BUTTON}    ${STORAGE SCROLLBAR}
+    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+    Verify Element Does Not Scroll    //header//h4[contains(text(),"${STORAGE LOCATIONS TEXT}")]   ${STORAGE SCROLLBAR}
     Set Window Size    1920    1080
     Sleep    1
     Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
 
-7. Alphabetical sorting in Storage Locations Table
+5. Alphabetical sorting in Storage Locations Table
     [Tags]    C81537
     @{menu order}    Create List
     @{sorted}        Create List
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     @{storages} =    Get WebElements    ${STORAGE ITEM}
     FOR    ${storage}    IN    @{storages}
         ${disk} =    Get Text    ${storage}
@@ -168,11 +95,11 @@ Restart
     Sort List    ${sorted}
     Lists Should Be Equal    ${menu order}    ${sorted}
 
-8. Enabled, disabled and inaccessible storages appearance
+6. Enabled, disabled and inaccessible storages appearance
     [Tags]    C81540
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible
+    Wait Until Elements Are Visible With Retry
     ...    ${STORAGE LOCATIONS BLOCK}
     ...    ${STORAGE ADD BUTTON}
     ...    ${STORAGE ITEM}
@@ -193,21 +120,24 @@ Restart
     Element Style Should Be    ${STORAGE ENABLED MAIN ICON}                color    ${COLOR DARK9 RGB}
     Element Style Should Be    ${STORAGE ENABLED MAIN ADDRESS}             color    ${COLOR DARK9 RGB}
 
-9. Width of mode column
+7. Width of mode column
+    [Documentation]    In order to verify Step 5 of the testrail testcase, run this test case in another language. robot -V getvars.py:default:ru_RU -i C81555 test-cases
     [Tags]    C81555
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}    ${STORAGE DISABLED NOT IN USE}     ${STORAGE ENABLED MAIN}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}    ${STORAGE DISABLED NOT IN USE}     ${STORAGE ENABLED MAIN}
     ${width}    ${height} =    Get Element Size    ${STORAGE DISABLED NOT IN USE}/ancestor::td
     Click Button    ${STORAGE DISABLED NOT IN USE}/parent::button
     Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
     Click Link    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
+    Wait Until Element is Visible    ${STORAGE DISK 2}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${width 2}    ${height 2} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
     Should Be Equal As Integers    ${width}    ${width 2}
     Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
     Click Link     ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
+    Wait Until Element is Visible    ${STORAGE DISK 2}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${width 3}    ${height 3} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
     Should Be Equal As Integers    ${width}    ${width 3}
@@ -217,13 +147,13 @@ Restart
     ${width 4}    ${height 4} =    Get Element Size    ${STORAGE DISK 2}/parent::td/following-sibling::td
     Should Be Equal As Integers    ${width}    ${width 4}
 
-10. Active Mode Lines
+8. Active Mode Lines
     [Tags]    C81557
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
 
     Log    Step 1
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
 
     Log    Step 2
     Click Button    ${STORAGE ENABLED MAIN}/parent::button
@@ -257,7 +187,10 @@ Restart
 
     Log    Step 6
     Click Link    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}    
+    ...    ${SAVE BUTTON}    
+    ...    ${CANCEL BUTTON}
 
     Log    Step 7
     Click Button    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button
@@ -267,7 +200,10 @@ Restart
     ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
     ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}
     Click Link    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE DISK 1}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE NOT IN USE MODE}    
+    ...    ${SAVE BUTTON}    
+    ...    ${CANCEL BUTTON}
 
     Log    Step 8
     Click Button    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button
@@ -277,7 +213,7 @@ Restart
     ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
     ...    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}
     Click Link    ${STORAGE DISK 1}/parent::td/following-sibling::td${STORAGE NOT IN USE MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
+    Wait Until Elements Are Visible    ${STORAGE ENABLED BACKUP}    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
     Log    Step 9
@@ -296,7 +232,10 @@ Restart
 
     Log    Step 10
     Click Link    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE DISK 2}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}    
+    ...    ${SAVE BUTTON}    
+    ...    ${CANCEL BUTTON}
 
     Log    Step 11
     Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button
@@ -306,7 +245,10 @@ Restart
     ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
     ...    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE MODE LINE}
     Click Link    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+    Wait Until Elements Are Visible    
+    ...    ${STORAGE DISK 2}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}    
+    ...    ${SAVE BUTTON}    
+    ...    ${CANCEL BUTTON}
 
     Log    Step 12
     Click Button    ${STORAGE DISK 2}/parent::td/following-sibling::td${STORAGE BACKUP MODE}/parent::button
@@ -319,19 +261,19 @@ Restart
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE DISABLED NOT IN USE}
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
-11. Reserved System storage tooltip
+9. Reserved Non-System storage tooltip
     [Tags]    C81566
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED RESERVED}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED RESERVED}
     Mouse Over   ${STORAGE RESERVED TOOLTIP ICON}
     Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}
 
-12. Changing of reserved space is shown in the table
+10. Changing of reserved space is shown in the table
     [Tags]    C81569
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
@@ -347,37 +289,44 @@ Restart
     Click Button    ${SAVE BUTTON}
     Sleep    2
     Reload Page
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
     Should Contain  ${reserved}    5.0
 
-13. No Size Tooltip when Inaccessble
+11. No Size Tooltip when Inaccessble
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
+    Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
     Mouse Over    ${STORAGE INACCESSIBLE SIZE}
     Sleep    1
     Element Should Not Be Visible    ${STORAGE INACCESSIBLE SIZE}/following-sibling::ngb-popover-window
 
-14. Storage Locations Table without control buttons
+12. Storage Locations Table without control buttons
     [Tags]    C81572
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS FIRST ROW}
+    Wait Until Elements Are Visible With Retry    
+    ...    ${STORAGE LOCATIONS BLOCK}    
+    ...    ${STORAGE ADD BUTTON}    
+    ...    ${STORAGE LOCATIONS FIRST ROW}
+    ...    ${STORAGE ADDRESS COLUMN}
+    ...    ${STORAGE MODE COLUMN}
+    ...    ${STORAGE SPACE COLUMN}
     ${count} =    Get Element Count    ${STORAGE LOCATIONS TABLE}//th
     Should Be Equal As Integers    ${count}    3
 
-15. Not able to load storage information
+13. Not able to load storage information
     [Tags]    C84518
     Log in to user and system    ${server 3['owner']}     ${server 3['cloud id']}
     Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}
+    Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}
+    Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
     Should Be Equal As Integers    ${height}    259
 
-16. Storages order in "Analytics DB Storage" dropdown
+14. Storages order in "Analytics DB Storage" dropdown
     [Tags]    C81757    Analytics
     @{menu order}    Create List
     @{dropdown order}    Create List
@@ -401,8 +350,11 @@ Restart
         Append To List    ${menu order}    ${disk}
     END 
     Lists Should Be Equal    ${menu order}    ${dropdown order}
+    @{sorted} =    Set Variable    ${dropdown order}
+    Sort List     ${sorted}
+    Lists Should Be Equal    ${sorted}    ${dropdown order}
 
-17. Cancel Changing "Analytics DB Storage"
+15. Cancel Changing "Analytics DB Storage"
     [Tags]    C81778    Analytics
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -414,11 +366,14 @@ Restart
     Click Button    ${ANALYTICS DROPDOWN}
     Wait Until Element is Visible    //a[@tabindex="0"]/span[contains(text(),"disk1")]
     Click Element    //a[@tabindex="0"]/span[contains(text(),"disk1")]
+    Wait Until Element Contains    ${ANALYTICS DROPDOWN}    disk1
     Log    Step 3
-    Wait Until Element is Visible     ${CANCEL BUTTON}
+    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${CANCEL BUTTON}
+    Wait Until Element Contains    ${ANALYTICS DROPDOWN}    disk0
+    Wait Until Elements Are Not Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
 
-18. Successful changing Analytics DB Storage plus confirmation dialog
+16. Successful changing Analytics DB Storage plus confirmation dialog
     [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755    
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk3
@@ -567,456 +522,7 @@ Restart
     Log To Console    C81777 ....... | PASS |
     Set Selenium Speed    ${normal}
 
-19. Change storage mode: Main -> Backup
-    [Tags]    C81541    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
-
-    Log    Step 2
-    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files disk0} > 0
-    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files disk1} > 0
-
-    Log    Step 3
-    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Click Button    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 5
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    ${files 2 disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files 2 disk1} > ${files disk1}
-
-    Log    Step 6
-    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 7
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-
-    Log    Step 8
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE BACKUP MODE}    timeout=35
-
-    Log    Step 9
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files 2 disk0}
-    Sleep    15
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files 2 disk1} or ${files 3 disk1} < ${files 2 disk1}
-
-20. Change storage mode: Backup -> Main
-    [Tags]    C81542    mode
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
-
-    Log    Step 2
-    ${files disk0} =    Verify Recorded Video Files    disk0
-    ${files disk1} =    Verify Recorded Video Files    disk1
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    Sleep    30
-    ${files 2 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 2 disk1} == ${files disk1} or ${files 2 disk1} < ${files disk1}
-
-    Log    Step 3
-    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
-    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Sleep    2
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Click Button    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}    ${STORAGE ENABLED BACKUP}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 5
-    ${files 3 disk0} =     Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files 2 disk0}
-    Sleep    30
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
-
-    Log    Step 6
-    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
-    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Sleep    2
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 7
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 8
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
-
-    Log    Step 9
-    ${files 4 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 4 disk0} > ${files 3 disk0}
-    ${files 4 disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files 4 disk1} > ${files 3 disk1}
-
-21. Enable storage: Not in use -> Main
-    [Tags]    C81543    mode    
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
-    ${files disk2} =    Verify Recorded Video Files    disk2
-    
-    Log    Step 2
-    ${files 2 disk2} =    Wait Until Files Are Recorded    disk2    15
-    Should Be True    ${files 2 disk2} == ${files disk2}
-
-    Log    Step 3
-    Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Wait Until Element is Visible    ${STORAGE CHANGING MODE}
-    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 5
-    Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
-
-    Log    Step 6
-    ${files 3 disk2} =    Wait Until Files Are Recorded    disk2    100
-    Should Be True    ${files 3 disk2} > ${files 2 disk2}
-
-22. Enable storage: Not in use -> Backup
-    [Tags]    C81544    mode    archive
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
-    @{disabled} =    Create List    disk1    disk2    disk3
-    @{backups} =    Create List
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go To Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
-
-    Log    Step 2
-    ${files disk0} =    Verify Recorded Video Files    disk0
-    ${files disk2} =    Verify Recorded Video Files    disk2
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    ${files 2 disk2} =    Verify Recorded Video Files    disk2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    Should Be True    ${files disk2} == ${files 2 disk2}
-    Log    Step 3
-    Click Button      ${STORAGE DISABLED NOT IN USE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Click Link      ${STORAGE DISABLED NOT IN USE}/parent::button/following-sibling::div/ul/li${STORAGE BACKUP MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure     Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure     Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Wait Until Storages Are Outdated and Refresh
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Enable Archive Backup
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Reload Page
-    Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    
-    Log    Step 5
-    Wait Until Elements Are Visible    
-    ...    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
-    ...    ${ARCHIVE BACKUP CHECK BOX}
-    # ...    ${ARCHIVE BACKUP STREAMS MSG}
-    # ...    ${ARCHIVE BACKUP CLIENT MSG}
-    ...    timeout=35
-
-    Log    Step 6
-    ${files 2 disk2} =    Verify Recorded Video Files    disk2
-    Sleep    20
-    ${files 3 disk2} =    Verify Recorded Video Files   disk2
-    Should Be True    ${files 3 disk2} == ${files 2 disk2} or ${files 3 disk2} < ${files 2 disk2}
-
-    Log    Step 7
-    # Turn On Backup For Camera    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    # Reload Page
-    # Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    # Enable Archive Backup
-    # Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    # Click Element    ${SAVE BUTTON}
-    # Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    # Reload Page
-    # Wait Until Element Is Not Visible    ${ARCHIVE BACKUP SWITCH ENABLED}
-
-    # ${files disk0} =     Wait Until Files Are Recorded    disk0    100
-    # ${files 4 disk2} =    Verify Recorded Video Files    disk2
-    # Sleep    60
-    # ${files 5 disk2} =    Verify Recorded Video Files    disk2
-    # Should Be True    ${files 5 disk2} == ${files 4 disk2}
-
-    # Log    Step 8
-    ${files disk0} =    Verify Recorded Video Files    disk0
-    Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
-    Reload Page
-    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
-    ${backup initialized} =    Set Variable    ${TRUE}
-    Set Suite Variable    ${backup initialized}
-    ${files 2 disk0} =    Wait Until Files Are Recorded    disk0    100
-    ${files 6 disk2} =    Wait Until Files Are Recorded    disk2    100
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Should Be True    ${files 2 disk0} > ${files disk0}
-    Should Be True    ${files 6 disk2} > ${files 3 disk2}
-
-23. Disable storage: Main -> Not in use
-    [Tags]    C81545    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
-
-    Log    Step 2
-    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files disk0} > 0
-    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files disk1} > 0
-
-    Log    Step 3
-    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-
-    Log    Step 5
-    Wait Until Element Is Visible     ${STORAGE DISK 1}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-
-    Log    Step 6
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
-
-24. Disable storage: Backup -> Not in use
-    [Tags]    C81546    mode    archive
-    Skip If Image Is    4.3_test    5.0_test
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
-    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
-    Run Keyword If    ${status}    Run Keywords
-    ...    Click Element    ${ARCHIVE BACKUP CHECK BOX}    AND
-    ...    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
-    ...    Click Element    ${SAVE BUTTON}
-
-    Log    Step 2
-    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files disk0} > 0
-    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files disk1} > 0
-
-    Log    Step 3
-    Wait Until Element is Visible with Retry    ${STORAGE ENABLED BACKUP} /parent::button
-    Click Button      ${STORAGE ENABLED BACKUP} /parent::button
-    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 4
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-
-    Log    Step 5
-    Wait Until Element Is Visible with Retry     ${STORAGE DISK 1}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]    timeout=30
-
-    Log    Step 6
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
-
-25. Changing mode state - reload page
-    [Tags]    C81558    mode
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
-
-    Log    Step 2
-    Click Button      ${STORAGE ENABLED BACKUP}/parent::button
-    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Click Link      ${STORAGE ENABLED BACKUP}/parent::button/following-sibling::div/ul/li${STORAGE MAIN MODE}/parent::a
-    Sleep    2
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    Log    Step 3
-    Reload Page
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}    timeout=35
-
-26. Disabling storage warnings - Main storages
-    [Tags]    C81562    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
-
-    Log    Step 2
-    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files disk0} > 0
-    Sleep    60
-    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files disk1} > 0
-
-    Log    Step 3
-    Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Click Button      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button
-    Wait Until Element is Visible    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
-    Element Style Should Be    ${RECORDING STOP WARNING}    color    ${ERROR COLOR WITH OPACITY}
-
-    Log    Step 4
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
-
-    Log    Step 5
-    Wait Until Element Is Visible    ${STORAGE DELETION ALERT ICON}
-    Mouse Over    ${STORAGE DELETION ALERT ICON}
-    Wait Until Element Is Visible    ${STORAGE DELETION ALERT TOOLTIP}
-
-    Log    Step 6
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
-
-27. Disabling storage warnings - Backup storages
-    [Tags]    C81564    mode    archive
-    Skip If Image Is    4.3_test    5.0_test
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-    Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
-    Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
-    ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
-    Run Keyword If    ${status}    Run Keywords
-    ...    Click Element    ${ARCHIVE BACKUP CHECK BOX}    AND
-    ...    Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
-    ...    Click Element    ${SAVE BUTTON}
-
-    Log    Step 2
-    ${files disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files disk0} > 0
-    Sleep    120
-    ${files disk1} =    Wait Until Files Are Recorded    disk1    100
-    Should Be True    ${files disk1} > 0
-
-    Log    Step 3
-    Wait Until Element is Visible with Retry    ${STORAGE ENABLED BACKUP} /parent::button
-    Click Button      ${STORAGE ENABLED BACKUP} /parent::button
-    Wait Until Element is Visible    ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Click Link      ${STORAGE ENABLED BACKUP} /parent::button/following-sibling::div/ul/li${STORAGE NOT IN USE MODE}/parent::a
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${RECORDING STOP WARNING}
-
-    Log    Step 4
-    Sleep    2
-    Click Button    ${SAVE BUTTON}
-    Run Keyword and Continue on Failure    Wait Until Element is Visible    ${STORAGE CHANGING MODE}    timeout=5
-    Run Keyword and Continue on Failure    Element Style Should Be    ${STORAGE CHANGING MODE}    color    ${DISABLED STORAGE COLOR}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}     ${RECORDING STOP WARNING}
-
-    Log    Step 5
-    Wait Until Element Is Visible    ${STORAGE DELETION ALERT ICON}
-    Mouse Over    ${STORAGE DELETION ALERT ICON}
-    Wait Until Element Is Visible    ${STORAGE DELETION ALERT TOOLTIP}
-
-    Log    Step 6
-    ${files 3 disk0} =    Wait Until Files Are Recorded    disk0    100
-    Should Be True    ${files 3 disk0} > ${files disk0}
-    Sleep    15
-    ${files 3 disk1} =    Verify Recorded Video Files    disk1
-    Should Be True    ${files 3 disk1} == ${files disk1} or ${files 3 disk1} < ${files disk1}
-
-28. Storage Location Table Space Legend Tooltip Shows
+17. Storage Location Table Space Legend Tooltip Shows
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1024,7 +530,7 @@ Restart
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
 
-29. Backup Option Disabled when only One Main Storage
+18. Backup Option Disabled when only One Main Storage
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1035,7 +541,7 @@ Restart
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${BACKUP}"]
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
 
-30. Change Storage from Main to Backup
+19. Change Storage from Main to Backup
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk1
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -1051,7 +557,7 @@ Restart
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
 
-31. Change Storage from Backup to Not in Use
+20. Change Storage from Backup to Not in Use
     @{disabled} =    Create List    disk3
     @{backups} =    Create List    disk1    disk2
     Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -1067,7 +573,7 @@ Restart
     Wait Until Element is Visible    ${STORAGE CHANGING MODE}
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}
 
-32. Add Storage Close button works
+21. Add Storage Close button works
     [Tags]    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1079,7 +585,7 @@ Restart
     Click Button    ${AS MODAL CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
-33. Add Storage Cancel button works
+22. Add Storage Cancel button works
     [Tags]    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1091,7 +597,7 @@ Restart
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
-34. Detailed Info button works system has multiple storages
+23. Detailed Info button works system has multiple storages
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1099,7 +605,7 @@ Restart
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
-35. Detailed Info button works (system has one storage)
+24. Detailed Info button works (system has one storage)
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1107,7 +613,7 @@ Restart
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
 
-36. Add external storage: Close dialog and Cancel
+25. Add external storage: Close dialog and Cancel
     [Tags]    C81583    external
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1116,15 +622,19 @@ Restart
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
+    Press Keys     ${AS MODAL URL INPUT}     some storage url
     Click Button    ${AS MODAL CLOSE BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Verify Storages    5
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
+    Press Keys     ${AS MODAL URL INPUT}     some storage url
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Verify Storages    5
 
-37. Add external storage: empty URL
-    [Tags]    C81584    external
+26. Add external storage: empty URL
+    [Tags]    C81584    external    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1136,11 +646,13 @@ Restart
     Wait Until Elements are Visible
     ...    ${AS MODAL URL INPUT ERROR}
     ...    ${AS MODAL URL REQUIRED}
+    Element Style Should Be    ${AS MODAL URL REQUIRED}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL URL INPUT ERROR}    border-color    ${ERROR COLOR} 
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-38. Add external storage: wrong URL
-    [Tags]    C81585    external
+27. Add external storage: wrong URL
+    [Tags]    C81585    external    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1153,63 +665,96 @@ Restart
     Wait Until Elements Are Visible
     ...    ${AS MODAL URL INPUT ERROR}
     ...    ${AS MODAL URL INVALID}
+    Element Style Should Be    ${AS MODAL URL INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL URL INPUT ERROR}    border-color    ${ERROR COLOR} 
     Delete All Text     ${AS MODAL URL INPUT}
     Press Keys     ${AS MODAL URL INPUT}     \example\com\
     Click Button    ${AS MODAL SUBMIT BUTTON}
     Wait Until Elements Are Visible
     ...    ${AS MODAL URL INPUT ERROR}
     ...    ${AS MODAL URL INVALID}
+    Element Style Should Be    ${AS MODAL URL INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL URL INPUT ERROR}    border-color    ${ERROR COLOR} 
     Delete All Text     ${AS MODAL URL INPUT}
     Press Keys     ${AS MODAL URL INPUT}     //example/
     Click Button    ${AS MODAL SUBMIT BUTTON}
     Wait Until Elements Are Visible
     ...    ${AS MODAL URL INPUT ERROR}
     ...    ${AS MODAL URL INVALID}
+    Element Style Should Be    ${AS MODAL URL INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL URL INPUT ERROR}    border-color    ${ERROR COLOR} 
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-39. Add external storage: Wrong login or password
-    [Tags]    C81589    external
+28. Add external storage: Wrong login or password
+    [Tags]    C81589    external    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
+    
+    Log    Step 1
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
     Click Button    ${STORAGE ADD BUTTON}
     Verify Add Storage Dialog
     Input Text      ${AS MODAL URL INPUT}     ${networkdisk}
-    Input Text      ${AS MODAL LOGIN INPUT}      incorrect
-    Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}
+    Input Text      ${AS MODAL LOGIN INPUT}      qaburbank
+    Input Text      ${AS MODAL PASSWORD INPUT}     incorrect
     Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${AS MODAL PASSWORD INVALID}
-
-    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
-    Input Text      ${AS MODAL LOGIN INPUT}      qaburbank    clear=True
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
+    
+    Log    Step 2
+    Input Text      ${AS MODAL LOGIN INPUT}      incorrect    clear=True
+    Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}    clear=True
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
+    
+    Log    Step 3
+    Delete All Text      ${AS MODAL LOGIN INPUT}
     Input Text      ${AS MODAL PASSWORD INPUT}     incorrect    clear=True
     Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${AS MODAL PASSWORD INVALID}
-    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
+        
+    Log    Step 4
     Delete All Text      ${AS MODAL LOGIN INPUT}      
     Input Text      ${AS MODAL PASSWORD INPUT}     ${QA BURBANK PASS}    clear=True
     Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements Are Visible
-    ...    ${AS MODAL PASSWORD INVALID}
-
-    # Input Text      ${AS MODAL URL INPUT}     ${EMPTY}    clear=True
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
+    
+    Log    Step 5
     Input Text      ${AS MODAL LOGIN INPUT}      qaburbank   clear=True
     Delete All Text      ${AS MODAL PASSWORD INPUT}  
+    Click Button    ${AS MODAL SUBMIT BUTTON}
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
+    
+    Log    Step 6
     Delete All Text      ${AS MODAL LOGIN INPUT}       
     Delete All Text     ${AS MODAL PASSWORD INPUT}     
     Click Button    ${AS MODAL SUBMIT BUTTON}
-    Wait Until Elements are Visible
-    ...    ${AS MODAL PASSWORD INVALID}
+    Wait Until Element Is Visible    ${AS MODAL PASSWORD INVALID}
+    Element Style Should Be    ${AS MODAL PASSWORD INVALID}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL LOGIN INPUT}    border-color    ${ERROR COLOR} 
+    Element Style Should Be    ${AS MODAL PASSWORD INPUT}    border-color    ${ERROR COLOR} 
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
-40. Add external storage: invalid storage path
-    [Tags]    C81597    external
+29. Add external storage: invalid storage path
+    [Tags]    C81597    external    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1225,11 +770,14 @@ Restart
     ...    ${AS MODAL URL INPUT ERROR}
     ...    ${AS MODAL URL NOT FOUND}
     ...    ${ADD STORAGE MODAL}
+    Element Style Should Be    ${AS MODAL URL NOT FOUND}    color    ${ERROR COLOR WITH OPACITY} 
+    Element Style Should Be    ${AS MODAL URL INPUT ERROR}    border-color    ${ERROR COLOR} 
     Click Button    ${AS MODAL CANCEL BUTTON}
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
+    Verify Storages    5
 
-41. Failed to add external storage: server is offline
-    [Tags]    C81600    external
+30. Failed to add external storage: server is offline
+    [Tags]    C81600    external    
     Log in to user and system    ${server 1['owner']}     ${server 2['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1258,8 +806,8 @@ Restart
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
 
-42. Add external storage: successful scenario with password
-    [Tags]    C81599    C81587    C81595    C81596    External    
+31. Add external storage: successful scenario with password
+    [Tags]    C81599    C81587    C81595    C81596    External    deb
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1273,18 +821,25 @@ Restart
     Click Button    ${AS MODAL SUBMIT BUTTON}
     # url text should have one less "/" in the start than when added
     Wait Until Element Is Visible    ${ALERT}
+    Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
     Element Text Should Be    ${ALERT}     ${EXTERNAL STORAGE ADDED TEXT}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
-    Mouse Over    ${STORAGE SMB ICON}
+    ...    ${STORAGE DISK NETWORK}/ancestor::tr${STORAGE SIZE CHART}
+    ${address} =    Get Substring    ${networkdisk}    1
+    Element Should Contain     ${STORAGE DISK NETWORK}    ${address}
+    Element Style Should Be    ${STORAGE DISK NETWORK}/preceding-sibling::${STORAGE SMB ICON}    color    ${COLOR DARK9 RGB}
+    Element Style Should Be    ${STORAGE DISK NETWORK}/ancestor::tr${STORAGE MAIN MODE}/parent::button    color    ${COLOR DARK9 RGB}
+    Element Style Should Be    ${STORAGE DISK NETWORK}    color    ${COLOR DARK9 RGB}
+    Mouse Over    //${STORAGE SMB ICON}
     Wait Until Element Is Visible    ${STORAGE SMB TOOLTIP}
     Reload Page
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Wait Until Files Are Recorded    networkdisk    100
@@ -1337,7 +892,7 @@ Restart
     Wait Until Elements Are Not Visible
     ...    ${ADD STORAGE MODAL}
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
 
@@ -1360,7 +915,7 @@ Restart
     Wait Until Elements Are Not Visible
     ...    ${ADD STORAGE MODAL}
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
 
@@ -1406,13 +961,13 @@ Restart
     Element Text Should Be    ${ALERT}     ${EXTERNAL STORAGE ADDED TEXT}
     Wait Until Elements Are Visible
     ...    ${STORAGE DISK NETWORK}
-    ...    ${STORAGE SMB ICON}
+    ...    //${STORAGE SMB ICON}
     ...    ${STORAGE DISK NETWORK}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
     ...    ${SMB STORAGE DELETE BUTTON}
     Log To Console    C81596 ....... | PASS |
     Cleanup External Drive
     
-43. Cancel deleting storage
+32. Cancel deleting storage
     [Tags]    C81573    deleting    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -1420,6 +975,7 @@ Restart
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON}
     Wait Until Element Is Enabled    ${INACCESSIBLE STORAGE DELETE BUTTON}
+    Sleep    .25
     Click Button    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     Wait Until Elements Are Visible
     ...    ${DELETE STORAGE MODAL}            
@@ -1437,8 +993,8 @@ Restart
     Click Button      ${DELETE STORAGE CANCEL BUTTON}
     Wait Until Elements Are Visible    ${STORAGE DISABLED INACCESSIBLE}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
     
-44. Delete Inaccessible storage
-    [Tags]    C81573    deleting    deb
+33. Delete Inaccessible storage
+    [Tags]    C81573    deleting
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
@@ -1460,9 +1016,9 @@ Restart
     Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON}
     Set Suite Variable    ${drives}    4
     
-45. Backup settings block availability for owner, administrator and other users
-    [Tags]    C81804    archive    deb
-    Skip If    '${IMAGE}' == '4.3_test'    Backup Archive not supported with 4.3
+34. Backup settings block availability for owner, administrator and other users
+    [Tags]    C81804    archive
+    Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
     FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        
         Log in to user and system    ${account}     ${server 1['cloud id']}
@@ -1480,7 +1036,7 @@ Restart
         Log Out
     END
     
-46. Backup settings block is not shown if no one storage is assigned “Backup” mode
+35. Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive    
     Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
@@ -1491,7 +1047,7 @@ Restart
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
 
-47. Backup off
+36. Backup off
     [Tags]    C81807    archive    
     Skip If Image Is    4.3_test    5.0_test
     # @{disabled} =    Create List    disk3    disk2 
@@ -1505,7 +1061,7 @@ Restart
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
-48. Backup on – default settings
+37. Backup on – default settings
     [Tags]    C81808    archive    
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1517,8 +1073,8 @@ Restart
     Wait Until Elements Are Visible    ${ARCHIVE BACKUP CHECK BOX}    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     
-49. Backup on – custom settings
-    [Tags]    C81809    archive    
+38. Backup on – custom settings
+    [Tags]    C81809    archive
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1531,10 +1087,11 @@ Restart
     ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
     ...    ${ARCHIVE BACKUP RESET MSG}         
     ...    ${BACKUP RESET BUTTON} 
+    Wait Until Element is Enabled    ${BACKUP RESET BUTTON}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     
-50. It is not necessary to apply changes to make the backup settings block appear
-    [Tags]    C81811    archive    
+39. It is not necessary to apply changes to make the backup settings block appear
+    [Tags]    C81811    archive
     Skip If Image Is    4.3_test    5.0_test
     @{disabled} =    Create List    disk3    disk1    disk2 
     @{backups} =    Create List    
@@ -1543,6 +1100,10 @@ Restart
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
+    Wait Until Elements Are Visible With Retry    
+    ...    ${STORAGE ENABLED MAIN}
+    ...    ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}
+    ...    ${STORAGE DISK 2}/ancestor::tr${STORAGE NOT IN USE MODE}
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
     Log    Step 2
     Wait Until Element is Visible with Retry    ${STORAGE DISK 1}/ancestor::tr${STORAGE NOT IN USE MODE}/parent::button
@@ -1570,8 +1131,8 @@ Restart
     Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ARCHIVE BACKUP CHECK BOX} 
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     
-51. Cancel Backup enabling
-    [Tags]    C83183    archive    
+40. Cancel Backup enabling
+    [Tags]    C83183    archive
     Skip If Image Is    4.3_test    5.0_test
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1585,11 +1146,11 @@ Restart
     Click Element    ${change focus}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     Click Button    ${CANCEL BUTTON}
-    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}   
+    Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}   ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
-52. Cancel Backup disabling - default settings
+41. Cancel Backup disabling - default settings
     [Tags]    C83184    archive    
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1610,8 +1171,8 @@ Restart
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}     ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}   
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
         
-53. Cancel Backup disabling - custom settings
-    [Tags]    C83185    archive    
+42. Cancel Backup disabling - custom settings
+    [Tags]    C83185    archive
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1623,7 +1184,8 @@ Restart
     ...    ${ARCHIVE BACKUP CHECK BOX}
     ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
     ...    ${ARCHIVE BACKUP RESET MSG}         
-    ...    ${BACKUP RESET BUTTON} 
+    ...    ${BACKUP RESET BUTTON}
+    Wait Until Element is Enabled    ${BACKUP RESET BUTTON}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
     Click Element    ${ARCHIVE BACKUP CHECK BOX}
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -1639,10 +1201,12 @@ Restart
     ...    ${ARCHIVE BACKUP CHECK BOX}
     ...    ${ARCHIVE BACKUP SET CLIENT MSG}    
     ...    ${ARCHIVE BACKUP RESET MSG}         
-    ...    ${BACKUP RESET BUTTON} 
+    ...    ${BACKUP RESET BUTTON}
+    ...    ${NO UNSAVED CHANGES}
+    Wait Until Element is Enabled    ${BACKUP RESET BUTTON}
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
      
-54. Cancel resetting backup settings for system of 1 server
+43. Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive    
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1686,14 +1250,13 @@ Restart
     ...    ${BACKUP RESET BUTTON}   
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}       
     
-55. Reset backup settings for system of 1 server
-    [Tags]    C83330    archive    
+44. Reset backup settings for system of 1 server
+    [Tags]    C83330    archive
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Wait Until Element is Visible with Retry    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    Go To Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    
@@ -1719,11 +1282,13 @@ Restart
     ...    ${RESET BACKUP CLOSE BUTTON}        
     ...    ${RESET BACKUP CANCEL BUTTON}
     Click Button    ${RESET BACKUP RESET BUTTON} 
+    Wait Until Element Is Not Visible    ${RESET BACKUP MODAL}
     Wait Until Elements Are Visible    ${ARCHIVE BACKUP STREAMS MSG}    ${ARCHIVE BACKUP CLIENT MSG}  
     
-    ${files 3 disk1} =    Wait Until Files Are Recorded    disk1    100
+    ${files 3 disk1} =    Wait Until Files Are Recorded    disk1    100    3    directory='HD Witness Media/low_quality/'
+    Verify New Files Are Not Recorded    disk1    30    directory='HD Witness Media/hi_quality/'
     
-56. Reindex archive block owerview: only Main storage
+45. Reindex archive block owerview: only Main storage
     [Tags]    C81605    
     @{disabled} =    Create List    disk2    disk3     
     @{backups} =    Create List    
@@ -1732,12 +1297,12 @@ Restart
     Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
-    Wait Until Elements Are Visible    ${STORAGE REINDEXING BLOCK}    #${STORAGE REINDEXING MAIN}     ${STORAGE REINDEX MAIN BUTTON}
+    Wait Until Elements Are Visible    ${STORAGE REINDEXING BLOCK}    ${STORAGE REINDEX MAIN BUTTON}    ${STORAGE REINDEX ARCHIVE HEADER}    ${STORAGE REINDEX ARCHIVE MSG} 
     Sleep    2
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
-    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
+    Wait Until Elements Are Visible    ${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEX TOOLTIP SECOND}
     
-57. Reindex archive block owerview: Main and Backup storages
+46. Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive    
     Skip If Image Is    4.3_test    5.0_test
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1750,12 +1315,14 @@ Restart
     ...    ${STORAGE REINDEX MAIN BUTTON}
     ...    ${STORAGE REINDEX BACKUP BUTTON}
     #...    ${STORAGE REINDEXING BACKUP}
+    ...    ${STORAGE REINDEX ARCHIVE HEADER}    
+    ...    ${STORAGE REINDEX ARCHIVE MSG}
     Sleep    2
     Mouse Over    ${STORAGE REINDEX MAIN BUTTON}
-    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
+    Wait Until Elements Are Visible    ${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEX TOOLTIP SECOND}
     Mouse Over    ${change focus} 
     Mouse Over    ${STORAGE REINDEX BACKUP BUTTON}
-    Wait Until Element Is Visible    ${STORAGE REINDEX TOOLTIP}
+    Wait Until Elements Are Visible    ${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEX TOOLTIP SECOND}
      
 # Reindex Main Storage Successfully FUTURE (need to make sure there's an archive or else reindexing will go too quickly)
 #     Verify on Servers Page

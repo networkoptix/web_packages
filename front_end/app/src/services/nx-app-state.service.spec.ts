@@ -1,7 +1,7 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { NxAppStateService }     from '@services/nx-app-state.service';
 
-describe('Xyz AppState Service', () => {
+describe('AppState Service', () => {
     let appStateService: NxAppStateService;
 
     beforeEach(waitForAsync(() => {
@@ -47,5 +47,13 @@ describe('Xyz AppState Service', () => {
         });
 
         appStateService.ready = true;
+    });
+
+    it('should have setter and getter (canManuallyAccess)', () => {
+        appStateService.manualAccessSubject$.subscribe((canAccess) => {
+            expect(appStateService.canManuallyAccess).toBe(canAccess);
+        });
+
+        appStateService.canManuallyAccess = true;
     });
 });

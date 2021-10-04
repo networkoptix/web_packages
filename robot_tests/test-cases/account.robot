@@ -338,12 +338,12 @@ Account Suite Tear Down
     ...    Sleep    5    AND
     ...    Close Browser
 
-    Open Browser With Options
+    Open Browser and go to URL    ${url}
     Go To    ${url}/restore_password
     Wait Until Elements are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
     Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element is Visible    ${RESET EMAIL SENT MESSAGE}  
+    Wait Until Element is Visible    ${RESET EMAIL SENT MESSAGE}
     Sleep    10
     Open Mailbox
     ...    host=${BASE HOST}
@@ -387,6 +387,7 @@ Account Suite Tear Down
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    validate=False    button=None
+    Set Account Language    ${ENV}    ${no perm}    ${password}    ${lang}
     Sleep    5
     Reload Page
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
@@ -509,7 +510,6 @@ Account Suite Tear Down
     Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}
     Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}
     Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}
-
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
     Verify in Account Page

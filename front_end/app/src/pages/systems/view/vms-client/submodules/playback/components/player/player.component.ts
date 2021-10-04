@@ -9,8 +9,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import VmsState from '../../../vms/datatypes/VmsState';
-import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair'
-
+import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair';
 
 @Component({
     selector    : 'player',
@@ -41,6 +40,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public handleClick: (e: MouseEvent) => void
 
+    private serverErrors = {
+        cannotDecrypt : 'Cannot decrypt media',
+        setupPassword : 'Please set up camera password'
+    }
+
     constructor (
         translateService: NxLanguageProviderService,
         public http: HttpClient,
@@ -51,7 +55,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.LANG = translateService.translations;
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
-        this.handleClick = generateClickDubleClickPair((e) => this.onClick(e), (e) => this.onDblClick(e))
+        this.handleClick = generateClickDubleClickPair((e) => this.onClick(e), (e) => this.onDblClick(e));
     }
 
     public ngOnInit (): void {
@@ -118,9 +122,13 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public videoErrorEventHandler (event: any) {
         const { player } = event.target;
-        if (player?.error()?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) { // code: 4
+        const toggleTransport = () => {
             this.transportChangeByError = true;
             this.playback.changeTransport(this.playback.state.transport !== 'hls' ? 'hls' : 'webm');
+        };
+        const errorCode = player?.error()?.code;
+        if ([MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED, MediaError.MEDIA_ERR_DECODE].includes(errorCode) && !this.transportChangeByError) { // code: 4, 3
+            toggleTransport();
         } else if (player && ['abort', 'error'].includes(event.type)) {
             if (event.type === 'error' && this.transportChangeByError) {
                 this.playback.setError(this.LANG.common.cameraStates.noFormat());
@@ -128,10 +136,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.http.get(player.src())
                 .subscribe((response: any) => {
-                    switch (response.error) {
+                    switch (response?.error) {
                         case '4':
-                            if (response.errorString === 'Cannot decrypt media') {
+                            if (response.errorString === this.serverErrors.cannotDecrypt) {
                                 this.playback.unplayableArchive();
+                            } else if (!this.transportChangeByError && response.errorString !== this.serverErrors.setupPassword) {
+                                toggleTransport();
                             } else {
                                 this.playback.setError(response.errorString);
                             }

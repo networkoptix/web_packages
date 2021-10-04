@@ -49,5 +49,17 @@
   "41002": {
     "name": "coverage",
     "note": "Coverage 6.0b1 starts to use a modern hash algorithm (sha256) when fingerprinting for high-security environments."
+  },
+  "41271": {
+    "name": "pillow",
+    "note": "The package pillow from 5.2.0 and before 8.3.2 is vulnerable to Regular Expression Denial of Service (ReDoS) via the getrgb function. https://github.com/python-pillow/Pillow/commit/9e08eb8f78fdfd2f476e1b20b7cf38683754866b https://pillow.readthedocs.io/en/stable/releasenotes/8.3.2.html"
+  },
+  "41277": {
+    "name": "pillow",
+    "note": "Pillow 8.3.2 fixes a 6-byte out-of-bounds (OOB) read. The previous bounds check in FliDecode.c incorrectly calculated the required read buffer size when copying a chunk, potentially reading six extra bytes off the end of the allocated buffer from the heap. Present since Pillow 7.1.0."
+  },
+  "41288": {
+    "name": "sqlparse",
+    "note": "sqlparse is a non-validating SQL parser module for Python. In sqlparse versions 0.4.0 and 0.4.1 there is a regular Expression Denial of Service in sqlparse vulnerability. The regular expression may cause exponential backtracking on strings containing many repetitions of '\\r\\n' in SQL comments. Only the formatting feature that removes comments from SQL statements is affected by this regular expression. As a workaround don't use the sqlformat.format function with keyword strip_comments=True or the --strip-comments command line flag when using the sqlformat command line tool. The issues has been fixed in sqlparse 0.4.2."
   }
 }

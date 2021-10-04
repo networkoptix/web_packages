@@ -51,7 +51,7 @@ ${STORAGE MAIN MODE}                //span[contains(text(), "${MAIN}")]
 ${STORAGE BACKUP MODE}              //span[contains(text(), "${BACKUP}")]
 ${STORAGE NOT IN USE MODE}          //span[contains(text(), "${NOT IN USE}")]
 ${STORAGE BACKUP MODE DISABLED}     //span[contains(text(), "${BACKUP}") and @class="disabled"]
-${STORAGE NOT IN USE MODE DISABLED}  //span[contains(text(), "${NOT IN USE}") and @class="disabled"]
+${STORAGE NOT IN USE MODE DISABLED}   //span[contains(text(), "${NOT IN USE}") and @class="disabled"]
 ${STORAGE MODE LINE}                //span[contains(text(), "${BACKUP}")]/ancestor::li/following-sibling::li/hr
 ${STORAGE MAIN MENU ITEM}           ${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li//span[contains(text(), "${MAIN}")]/parent::a
 ${STORAGE BACKUP MENU ITEM}         ${STORAGE MAIN MODE}/parent::button/following-sibling::div/ul/li//span[contains(text(), "${BACKUP}")]/parent::a
@@ -74,11 +74,11 @@ ${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disable
 ${STORAGE ENABLED MAIN}             ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
 ${STORAGE ENABLED BACKUP}           ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
 ${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED NOT IN USE ICON}  ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED INACCESSIBLE ICON}  ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
 ${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED RESERVED ADDRESS}  ${STORAGE DISK 3}
-${STORAGE DISABLED NOT IN USE ADDRESS}  ${STORAGE DISK 2}
+${STORAGE DISABLED RESERVED ADDRESS}   ${STORAGE DISK 3}
+${STORAGE DISABLED NOT IN USE ADDRESS}   ${STORAGE DISK 2}
 ${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
 ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
 ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/info.svg"]
@@ -101,14 +101,21 @@ ${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"
 ${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
 ${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
+${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/standard/loading.svg"]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
 ${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
-${STORAGE SMB ICON}                 //*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
+${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
 ${STORAGE SMB TOOLTIP}              ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${SMB TOOLTIP TEXT}")]
 ${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 ${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
+${STORAGE SCROLLBAR}                //form[@name="storageSettings"]
+${STORAGE ADDRESS COLUMN}           ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS ADDRESS TEXT}")]
+${STORAGE MODE COLUMN}              ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS MODE TEXT}")]
+${STORAGE SPACE COLUMN}             ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS SPACE TEXT}")]
+${STORAGE SIZE CHART}               //td[@class="size-chart"]
 
 ${DELETE STORAGE MODAL}             //div[@class="modal-content"]
 ${DELETE STORAGE CLOSE BUTTON}      ${DELETE STORAGE MODAL}//button[@aria-label="Close"]
@@ -117,6 +124,7 @@ ${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON T
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]
 ${ADD STORAGE MODAL}                //nx-modal-add-storage/form[@id="addStorageForm"]
+${ADD EXTERNAL STORAGE HEADER}      //h1[@class="modal-title" and contains(text(),"${ADD EXTERNAL STORAGE}")]
 ${AS MODAL CLOSE BUTTON}            ${ADD STORAGE MODAL}/div[@class="modal-header"]/button
 ${AS MODAL URL INPUT}               ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl"]
 ${AS MODAL URL INPUT ERROR}         ${ADD STORAGE MODAL}/div[contains(@class, "modal-body")]//input[@id="addUrl" and contains(@class, "ng-invalid")]
@@ -142,9 +150,12 @@ ${AS MODAL ADD ANYWAY}              ${ADD STORAGE MODAL}//*[contains(text(), "${
 ${AS MODAL BACK BUTTON}             ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]//button[contains(text(), "${BACK TEXT}")]
 
 ${STORAGE REINDEXING BLOCK}         //nx-block//div[contains(@class, "reindex-container")]
+${STORAGE REINDEX ARCHIVE HEADER}   //h4[contains(text(), "${REINDEX ARCHIVE TEXT}")]
+${STORAGE REINDEX ARCHIVE MSG}      //p[contains(text(), "${REINDEX ARCHIVE MSG TEXT}")]
 ${STORAGE REINDEX MAIN BUTTON}      ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX MAIN STORAGE TEXT}")]
 ${STORAGE REINDEX BACKUP BUTTON}    ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX BACKUP STORAGE TEXT}")]
-${STORAGE REINDEX TOOLTIP}          ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
+${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
+${STORAGE REINDEX TOOLTIP SECOND}   ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]//p[contains(text(), "${REINDEX TOOLTIP SECOND}")]
 ${STORAGE REINDEXING MAIN}          ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]//div[contains(text(), "${REINDEXING MAIN}")]
 ${REINDEXING MAIN PERCENT}          ${STORAGE REINDEXING MAIN}/following-sibling::span
 ${REINDEXING MAIN CANCEL BUTTON}    ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]/button[contains(text(), "${CANCEL BUTTON TEXT}")]

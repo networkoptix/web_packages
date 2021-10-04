@@ -556,7 +556,7 @@ export class NxApplyService {
         this.updatedWatchers$.next('update');
     }
 
-    private createComponent(onlyShowSectionWatchers = false) {
+    private createComponent(onlyShowSectionWatchers: boolean = false) {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);

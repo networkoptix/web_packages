@@ -116,6 +116,9 @@ Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
+    IF    '${validate}' == 'True'
+        Check Language Logged In    ${email}    ${password}
+    END
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
@@ -177,9 +180,7 @@ Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${email}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    IF    '${mode}' == 'cloud'
-        Check Language Logged In    ${email}    ${password}
-    ELSE IF    '${mode}' == 'webadmin'
+    IF    '${mode}' == 'webadmin'
         Wait Until Element Is Visible    ${CLOUD NAME}
         Sleep    1
     END    
@@ -400,7 +401,7 @@ Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    timeout=60
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
     Click Button    ${ADD USER BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
@@ -502,6 +503,12 @@ Wait Until Elements Are Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
         Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
+    END
+    
+Wait Until Elements Are Visible with Retry
+    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    FOR     ${element}  IN  @{elements}
+        Run Keyword And Warn On Failure    Wait Until Element is Visible With Retry    ${element}    ${timeout}
     END
 
 Wait Until Elements Are Enabled
@@ -923,8 +930,11 @@ Create Docker Server
     Acquire Lock   create_server_lock
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
-    Run Keyword If    '5.0' not in $image   Set Local Variable   ${vms}    old
-    ...    ELSE   Set Local Variable    ${vms}    new
+    IF    '5.0' not in $image
+        Set Local Variable   ${vms}    old
+    ELSE
+        Set Local Variable    ${vms}    new
+    END
     ${port}=   Get Random Available Port
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} ${storage string} ${image}
                   ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} ${storage string} ${image}
@@ -953,7 +963,8 @@ Create Base System
     ...                port: ""
     ${local auth}=   Create List    admin    ${base password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
-    Slow    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=1
+    Sleep    5
+    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}
     # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
@@ -1088,22 +1099,40 @@ Execute Command Remotely
 
 Wait Until Element is Visible with Retry
     [Arguments]    ${element}    ${timeout}=120
-    ${load} =    Run Keyword and Return Status    Wait Until Element is Visible    ${element}    timeout=${timeout}
-    Run Keyword If    ${load} == ${FALSE}    Reload Page
+    ${load} =    Run Keyword and Warn On Failure    Wait Until Element is Visible    ${element}    timeout=${timeout}
+    Run Keyword Unless    ${load} == ('PASS', None)    Reload Page
     Wait Until Element is Visible    ${element}   timeout=${timeout}
     
 Verify No Horizontal Scrollbar
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be Equal As Numbers    ${width out}    ${width in} 
+    Should Be Equal As Numbers    ${width out}    ${width in}
     
 Verify Horizontal Scrollbar Exists
     [Arguments]    ${outer element}    ${inner element}
     ${width out}    ${height out} =    Get Element Size    ${outer element}
     ${width in}     ${height in} =    Get Element Size    ${inner element}
-    Should Be True    ${width out} < ${width in}    
+    Should Be True    ${width out} < ${width in}
     
+Verify One Element Above the Other
+    [Arguments]    ${higher element}    ${lower element}
+    ${lower y} =    Get Vertical Position    ${higher element}
+    ${higher y} =    Get Vertical Position    ${lower element}
+    Should Be True    ${lower y} < ${higher y}
+    
+Drag Horizontal Scrollbar
+    [Arguments]    ${scrollbar}    ${x offset}
+    Assign Id To Element    ${scrollbar}    scrollID
+    Execute Javascript        document.getElementById("scrollID").scrollBy(${x offset}, 0)
+    
+Verify Element Does Not Scroll
+    [Arguments]    ${element}    ${scrollbar}
+    ${original x} =    Get Horizontal Position    ${element}
+    Slow    Drag Horizontal Scrollbar    ${scrollbar}    50
+    ${new x} =    Get Horizontal Position    ${element}
+    Should Be Equal As Numbers    ${original x}    ${new x}
+
 Delete All Text
     [Arguments]    ${input}
     ${value}=   Get Element Attribute    ${input}    value
