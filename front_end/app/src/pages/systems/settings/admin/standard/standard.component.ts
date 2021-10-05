@@ -186,7 +186,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     this.updateTimeUnitInput(this.selectedTimeUnit);
                     sw[setting].originalValue = curr;
                     this.timeValue = curr;
-                    this.divideTimeValue();
+                    this.divideTimeValue(this.timeValue);
                 }
             }
         });
@@ -210,6 +210,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             if (this.timeValue === null || this.timeValue === 0) {
                 this.sessionLimitToggle = false;
                 sw.sessionLimitMinutes.value = 0;
+            } else {
+                this.divideTimeValue(sw.sessionLimitMinutes.value);
             }
             const changes = {};
             for (const [setting, watcher] of Object.entries(sw)) {
@@ -233,7 +235,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.updateTimeUnitInput(this.selectedTimeUnit);
                     this.timeValue = sessionLimitMinutes.originalValue;
-                    this.divideTimeValue();
+                    this.divideTimeValue(this.timeValue);
                 } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
                     this.sessionLimitToggle = false;
                 }
@@ -242,12 +244,12 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.applyService.setVisible(false);
     }
 
-    divideTimeValue(): void {
-        if (this.timeValue % DAY_MINS === 0) { // Whole days
-            this.timeValue /= DAY_MINS;
+    divideTimeValue(minutesValue: number): void {
+        if (minutesValue % DAY_MINS === 0) { // Whole days
+            this.timeValue = minutesValue / DAY_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.days;
-        } else if (this.timeValue % HR_MINS === 0) { // Whole hours
-            this.timeValue /= HR_MINS;
+        } else if (minutesValue % HR_MINS === 0) { // Whole hours
+            this.timeValue = minutesValue / HR_MINS;
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
         }
     }
@@ -275,22 +277,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             sw.sessionLimitMinutes.value = newTimeValue * DAY_MINS;
         } else if (this.selectedTimeUnit.value === 'hours') {
             sw.sessionLimitMinutes.value = newTimeValue * HR_MINS;
-            if (newTimeValue % DAY_HRS === 0) {
-                newTimeValue /= DAY_HRS;
-                this.timeValue = newTimeValue;
-                this.selectElement.change(this.limitSessionTimeUnits.days);
-            }
-        } else if (newTimeValue) {
-            sw.sessionLimitMinutes.value = newTimeValue;
-            if (newTimeValue % DAY_MINS === 0) {
-                newTimeValue /= DAY_MINS;
-                this.timeValue = newTimeValue;
-                this.selectElement.change(this.limitSessionTimeUnits.days);
-            } else if (newTimeValue % HR_MINS === 0) {
-                newTimeValue /= HR_MINS;
-                this.timeValue = newTimeValue;
-                this.selectElement.change(this.limitSessionTimeUnits.hours);
-            }
         } else {
             sw.sessionLimitMinutes.value = newTimeValue;
         }
