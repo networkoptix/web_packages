@@ -29,6 +29,8 @@ export class MenuNode {
     public draft?: boolean;
     public pending?: boolean;
     public indented?: boolean;
+    public asset_type?: any;
+    public order?: number;
     public state?: 'pending' | 'draft'
     public breadcrumbs: MenuNode[];
     public queryParamsHandling: QueryParamsHandling = ''

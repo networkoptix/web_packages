@@ -302,18 +302,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.inline = params.inline !== 'undefined';
         });
 
-        // TODO: (Only for display purpose) Temporary solution until we move View to A8
-        // View is still under AJS and it doesn't trigger route change
-        this.startTimerSystemIdUpdate(); // ensure update on page reload
-
-        // notification from view.js
-        this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
-            if (systemId) {
-                this.systemIdUpdate(systemId);
-            }
-        });
-        // TODO: END
-
         // TODO: experiment iFrame
         // this.headerService.visibilitySubject.subscribe((state) => {
         //     if (state !== undefined) {

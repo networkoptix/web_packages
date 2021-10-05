@@ -1,17 +1,10 @@
-import { Injectable }               from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { Router, NavigationStart }  from '@angular/router';
-
-import { environment }              from '@environments/environment';
-import { NxMenusService, MenuNode } from './menus.service';
-import { ContextManifest }          from './nx-cloud-api.types';
-
-enum systemRoutes {
-    SETTINGS='settings',
-    VIEW='view',
-    HEALTH='health',
-    BOOKMARKS='bookmarks'
-}
+import { Injectable }                   from '@angular/core';
+import { BehaviorSubject }              from 'rxjs';
+import { Router, NavigationStart }      from '@angular/router';
+import { environment }                  from '@environments/environment';
+import { NxMenusService, MenuNode }     from './menus.service';
+import { ContextManifest }              from './nx-cloud-api.types';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 
 type createButtonType = 'default' | 'primary'
 interface MenuNodeNavProps {
@@ -21,6 +14,7 @@ interface MenuNodeNavProps {
     queryParamsHandling
 }
 
+@UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root'
 })
@@ -28,19 +22,37 @@ export class NxHeaderService {
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject(null);
     public lastActive$ = new BehaviorSubject(null);
-    private unsub$ = new Subject();
     public nodes: MenuNode[] = [];
-    public currentLocation$ = new BehaviorSubject<any>({})
-    public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary')
+    public currentLocation$ = new BehaviorSubject<any>({});
+    public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
 
     public dynamicRoutes = {}
+
+    constructor(
+        private router: Router,
+        private menusService: NxMenusService
+    ) {
+        this.router.events
+            .pipe(untilDestroyed(this))
+            .subscribe(event => {
+                if (event instanceof NavigationStart) {
+                    this.setLocation(event.url);
+                }
+            });
+
+        this.menusService.currentSystemNode$
+            .pipe(untilDestroyed(this))
+            .subscribe(_ => {
+                this.setLocation(this.router.url);
+            });
+    }
 
     set currentLocation(value) {
         this.currentLocation$.next(value);
     }
 
     get currentLocation() {
-        return this.currentLocation$.value;
+        return this.currentLocation$.getValue();
     }
 
     set createAccountButtonType(value: createButtonType) {
@@ -48,29 +60,7 @@ export class NxHeaderService {
     }
 
     get createAccountButtonType() {
-        return this.createAccountButtonType$.value;
-    }
-
-    // Only to communicate with AJS
-    systemIdSubject = new BehaviorSubject<string>(undefined);
-
-    constructor(
-        private router: Router,
-        private menusService: NxMenusService
-    ) {
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationStart) {
-                this.setLocation(event.url);
-            }
-        });
-
-        this.menusService.currentSystemNode$.subscribe(_ => {
-            this.setLocation(this.router.url);
-        });
-    }
-
-    ngOnDestroy() {
-        this.unsub$.next('done');
+        return this.createAccountButtonType$.getValue();
     }
 
     get show$() {
@@ -82,7 +72,7 @@ export class NxHeaderService {
     }
 
     get activeSystem() {
-        return this.activeSystem$.value;
+        return this.activeSystem$.getValue();
     }
 
     set activeSystem(system) {
@@ -94,7 +84,7 @@ export class NxHeaderService {
     }
 
     get lastActive() {
-        return this.lastActive$.value;
+        return this.lastActive$.getValue();
     }
 
     getDynamicRoute(url: string) {
