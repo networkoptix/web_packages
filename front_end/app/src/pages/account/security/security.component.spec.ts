@@ -23,6 +23,8 @@ import { NxPreLoaderComponent }           from '@components/placeholders/pre-loa
 import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxSwitchComponent }              from '@components/switch/switch.component';
+import { NxCheckboxComponent }            from '@components/checkbox/checkbox.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -47,16 +49,19 @@ describe('NxAccountSecurityComponent', () => {
     };
 
     let accountSpy: jasmine.SpyObj<NxAccountService>;
+    const systemsServiceMock = {
+        systemsSubject: of([])
+    };
 
     beforeEach(waitForAsync(() => {
         const mockAccountService = jasmine.createSpyObj('NxAccountService', ['account', 'get']);
 
         TestBed
             .configureTestingModule({
-                imports      : [TranslateTestingModule],
+                imports      : [TranslateTestingModule, FormsModule],
                 declarations : [
                     NxAccountSecurityComponent, NxPreLoaderComponent, NxSwitchComponent,
-                    NxContentBlockComponent, NxContentBlockSectionComponent
+                    NxContentBlockComponent, NxContentBlockSectionComponent, NxCheckboxComponent
                 ],
                 providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },
@@ -64,7 +69,7 @@ describe('NxAccountSecurityComponent', () => {
                     { provide: NxProcessService, useValue: {} },
                     { provide: ActivatedRoute, useValue: {} },
                     { provide: NxCloudApiService, useValue: {} },
-                    { provide: NxSystemsService, useValue: {} },
+                    { provide: NxSystemsService, useValue: systemsServiceMock },
                     { provide: NxAccountService, useValue: mockAccountService },
                     { provide: NxMenuService, useValue: {} },
                     { provide: NxApplyService, useValue: {} },

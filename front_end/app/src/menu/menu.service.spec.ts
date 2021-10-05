@@ -242,7 +242,7 @@ describe('NxMenuService', () => {
                 query: '192.168.5.10'
             };
             searchService.getMatchPatterns(menuModel);
-            const filtered = menuService.fillerItemsBy(menuModel);
+            const filtered = menuService.filterItemsBy(menuModel);
 
             expect(filtered.length).toBe(1);
             expect(filtered[0].id).toBe('cameras');
