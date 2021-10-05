@@ -1,4 +1,5 @@
 import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+
 import { ActivatedRoute, Router }                     from '@angular/router';
 import { Location }                                   from '@angular/common';
 import { Observable }                                 from 'rxjs';
@@ -46,59 +47,6 @@ export interface DataStructureMeta {
     styles? : string,
     filter? : DataStructureFilter
 }
-
-// export interface DataStructure<Value = any> {
-//     title: string,
-//     key: string,
-//     type: DataStructureType,
-//     value: Value,
-//     tag?: string,
-//     placeholder?: string,
-//     description?: string,
-//     meta?: DataStructureMeta
-// }
-
-// interface ContextStruct {
-//     heading: string,
-//     structures: DataStructure[]
-// }
-
-// // TODO: Replace with struct from cms
-// const mockStructures: DataStructure[] = [
-//     {
-//         key         : 'email',
-//         title       : 'Support E-mail',
-//         tag         : '%SupportE-mail%',
-//         value       : 'test@test.com',
-//         type        : DataStructureType.TEXT,
-//         placeholder : 'email address',
-//         description : 'E-mail customers should use for support.'
-//     },
-//     {
-//         key         : 'phone',
-//         title       : 'Support Phone',
-//         tag         : '%SupportPhone%',
-//         value       : '123-456-7890',
-//         type        : DataStructureType.TEXT,
-//         placeholder : 'phone number',
-//         description : 'Phone number customers should use for support. (Ex. (573) 884-1878 | +1 (573) 884-1878 | +(591) 7433433 | 0591 74339296 | +1 555 555 5554)'
-//     },
-//     {
-//         key         : 'url',
-//         title       : 'Support URL',
-//         tag         : '%SupportURL%',
-//         value       : 'www.test.com',
-//         type        : DataStructureType.TEXT,
-//         placeholder : 'website',
-//         description : 'Web address customers should use for support. Example: http://support.google.com, https://www.yahoo.com/support'
-//     }
-//
-// ];
-//
-// const mockContext: ContextStruct = {
-//     heading    : 'Context Header',
-//     structures : mockStructures
-// };
 
 @UntilDestroy()
 @Component({
@@ -188,7 +136,7 @@ export class NxDevConsoleEditComponent {
                 const unsavedAsset = this.consoleService.unsavedAssets[id];
                 if (unsavedAsset) {
                     this.asset = unsavedAsset;
-                    this.asset.values = this.context.fields.reduce((values, field) => ({ ...values, [field.name]: '' }), this.asset.values);
+                    this.asset.values = this.context.fields.reduce((values, field) => ({ ...values, [field.name]: values[field.name] || '' }), this.asset.values);
                     this.headerService.addDynamicDevConsoleNode(this.asset, baseEditUrl.split(`/${this.asset.id}`)[0], this.contextList, this.router.url);
                 } else {
                     (this.cloudApi.getSubAPI(section).retrieve(id) as Observable<any>).pipe(
@@ -223,30 +171,17 @@ export class NxDevConsoleEditComponent {
         delete this.errors[structureName];
         this.hasErrors = !!Object.keys(this.errors).length;
     }
-
-    // addWatchers = () => this.context?.fields.forEach(({ name }) => {
-    //     this.watchers[name] = new Watcher(this.values.values[name] || '', this);
-    //
-    //     this.applyService.initPageWatcher(
-    //         this.applyContainer,
-    //         this.saveContext,
-    //         this.reset,
-    //         Object.values(this.watchers)
-    //     );
-    // });
-
-    // getValues = () => Object.entries(
-    //     this.watchers
-    // ).reduce((values, [key, watcher]) => ({ ...values, [key]: watcher.value }),{})
-
-    // reset = () => {
-    //     for (const key in this.watchers) {
-    //         this.watchers[key].reset();
-    //     }
-    // }
-
-    // updateWatcher(key, value) {
-    //     this.watchers[key].value = value;
-    //     this.errors = {};
-    // }
 }
+
+export const forUnitTest = {
+    NxConfigService,
+    NxLanguageProviderService,
+    ActivatedRoute,
+    Router,
+    NxProcessService,
+    NxToastService,
+    NxCloudApiService,
+    NxHeaderService,
+    NxConsoleService,
+    Location
+};

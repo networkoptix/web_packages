@@ -6,7 +6,7 @@
     <nx-block header-style="slim">
         <nx-section>
             <form #editForm="ngForm">
-                <section *ngFor="let structure of context.fields">
+                <section *ngFor="let structure of context.fields" [ngClass]="'section-' + structure.name">
                     <label [for]="structure.name" [ngbTooltip]="!structure.optional && ('This field is required' | translate)">
                         {{structure.label}}
                         <span *ngIf="!structure.optional" class="input-error">*</span>
@@ -25,7 +25,7 @@
                             [(ngModel)]="asset.values[structure.name]"
                             class="form-control">
                     </ng-container>
-                    <div *ngIf="structure.description" [innerHTML]="structure.description"></div>
+                    <div *ngIf="structure.description" [innerHTML]="structure.description" class="context-field-description"></div>
                     <div *ngIf="errors[structure.name] as errors" class="d-flex flex-column">
                         <span *ngFor="let error of errors" class="input-error">{{error}}</span>
                     </div>
