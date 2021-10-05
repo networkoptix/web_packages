@@ -53,7 +53,7 @@
     "Archive Backup": "Archive Backup",
     "Archive mode and cameras to backup were set up with the desktop client.": "Archive mode and cameras to backup were set up with the desktop client.",
     "Ascending": "Ascending",
-    "Ask for verification code on every login with Nx Cloud account": "Ask for verification code on every login with Nx Cloud account",
+    "Ask for verification code on every login with %CLOUD_NAME% account": "Ask for verification code on every login with %CLOUD_NAME% account",
     "Aspect Ratio": "Aspect Ratio",
     "Audio": "Audio",
     "Authentication": "Authentication",
