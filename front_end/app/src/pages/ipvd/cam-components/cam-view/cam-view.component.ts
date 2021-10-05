@@ -2,10 +2,10 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
-}                                    from '@angular/core';
-import { Subscription }              from 'rxjs';
-import { delay }                     from 'rxjs/operators';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+}                                       from '@angular/core';
+import { Subscription }                 from 'rxjs';
+import { delay }                        from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
@@ -49,7 +49,6 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     elementWidth;
     camera: { title: string, param?: string, secondaryParam?: string }[];
 
-    private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
@@ -86,8 +85,8 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             { title: this.LANG.ipvd.isMultiSensor?.(), param: 'isMultiSensor' },
             { title: this.LANG.ipvd.isAnalyticsSupported?.(), param: 'isAnalyticsSupported' }
         ];
-        this.uriSubscription = this.uri
-            .getURI()
+        this.uri.getParams()
+            .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = params;
                 this.debug = (params.debug !== undefined);

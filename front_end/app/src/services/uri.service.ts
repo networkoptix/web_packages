@@ -1,9 +1,10 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Location }                        from '@angular/common';
 import { ActivatedRoute, Router, Params }  from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
-import { NxConfigService, IConfig }        from './nx-config';
-import { WINDOW }                          from '@services/window-provider';
+
+import { NxConfigService, IConfig } from './nx-config';
+import { WINDOW }                   from '@services/window-provider';
+import { NxUtilsService }           from './utils.service';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -42,7 +43,7 @@ export class NxUriService {
     }
 
     set queryParams(params: Params) {
-        if (params !== this.queryParams) {
+        if (!NxUtilsService.isEqual(params, this.queryParams)) {
             this.queryParamsSubject.next(params);
         }
     }
@@ -63,7 +64,7 @@ export class NxUriService {
         this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`);
     }
 
-    getURI(): Observable<Params> {
+    getParams(): Observable<Params> {
         return this.route.queryParams;
     }
 
@@ -160,7 +161,7 @@ export class NxUriService {
         let childRoute = '';
 
         if (!this.CONFIG.isLocal) {
-            base += params.systemId;
+            base += systemId;
         }
 
         if (otherParams.length) {
@@ -175,12 +176,13 @@ export class NxUriService {
                 }
             } else {
                 // TODO: This probably needs to be refactored, temporary fix for lazy load
+                // TODO: parts of this seem like it had been broken -> should investigate what else needs refactoring here
                 const routeLookup = {
                     cameraId : 'cameras',
                     serverId : 'servers',
                     userId   : 'users'
                 };
-                childRoute += routeLookup[param] + '/' + value;
+                childRoute = childRoute.slice(-1) + routeLookup[param] + '/' + value;
             }
         }
         return base + childRoute;

@@ -75,7 +75,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         // Example URI
         // /integrations?search=node
         this.uriSubscription = this.uri
-            .getURI()
+            .getParams()
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';

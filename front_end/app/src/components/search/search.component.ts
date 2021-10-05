@@ -124,7 +124,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.location.subscribe((event: PopStateEvent) => {
             // force search component update
             setTimeout(() => {
-                this.updateFilter(this.uri.getURI());
+                this.updateFilter(this.uri.getParams());
                 this.modelChanged(false);
             });
         });

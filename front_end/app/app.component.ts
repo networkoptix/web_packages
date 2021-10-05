@@ -165,7 +165,7 @@ export class AppComponent {
         // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
         // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
-        const authUriSub = this.uriService.getURI()
+        const authUriSub = this.uriService.getParams()
             .pipe(timeout(3000), finalize(() => authUriSub.unsubscribe()))
             .subscribe(params => {
                 if (params.auth) {

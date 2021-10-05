@@ -172,7 +172,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
 
         this.uriSubscription = this.uri
-            .getURI()
+            .getParams()
             .subscribe(params => {
                 this.params = params;
                 this.setDebugAndBetaMode();

@@ -11,7 +11,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxAccountService, Account } from '@services/account.service';
 import { NxPageService }             from '@services/page.service';
-import { NxUriService }              from '@services/uri.service';
 import { NxUtilsService }            from '@services/utils.service';
 import { SearchTag, SearchFilter }   from '@components/search/search.component';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
@@ -50,7 +49,6 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     constructor(configService: NxConfigService,
-                private uri: NxUriService,
                 private bookmarkService: BookmarkService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -68,7 +66,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.pageService.pageTitle = this.LANG.pageTitles.integrations?.();
         this.pageService.pageDescription = this.CONFIG.integration.seoPageDesc;
 
-        this.uri.getURI()
+        this.route.queryParams
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.filterModel.query = params.search || '';
