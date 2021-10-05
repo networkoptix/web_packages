@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Системи",
     "NO PERMISSION TO SHARE TEXT": "Ви не маєте прав для створення цього клієнта",
     "WELCOME TEXT": "Вітаємо в",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Ви вже увійшли як",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Підключення до %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Hệ thống",
     "NO PERMISSION TO SHARE TEXT": "Bạn không có quyền chia sẻ hệ thống này",
     "WELCOME TEXT": "Chào mừng bạn đến",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Bạn đã đăng nhập như",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Kết nối với %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

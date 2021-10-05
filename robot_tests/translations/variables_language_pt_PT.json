@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Sistemas",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
     "WELCOME TEXT": "Bem-vindo a",
-    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Connect to %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

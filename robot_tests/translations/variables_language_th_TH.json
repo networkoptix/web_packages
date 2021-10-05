@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "ระบบ",
     "NO PERMISSION TO SHARE TEXT": "คุณไม่ได้รับอนุญาตให้แชร์ระบบนี้",
     "WELCOME TEXT": "ขอต้อนรับสู่:",
-    "YOU ARE ALREADY LOGGED IN TEXT": "คุณเข้าสู่ระบบในฐานะ",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "เชื่อมต่อไปยัง %PRODUCT_NAME%$s",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

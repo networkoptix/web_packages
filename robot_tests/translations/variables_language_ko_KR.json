@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "시스템",
     "NO PERMISSION TO SHARE TEXT": "이 시스템을 공유 할 권한이 없습니다",
     "WELCOME TEXT": "에 오신 것을 환영합니다",
-    "YOU ARE ALREADY LOGGED IN TEXT": "이미 로그인 한 상태입니다",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "%PRODUCT_NAME%에 연결",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

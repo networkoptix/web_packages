@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Systemen",
     "NO PERMISSION TO SHARE TEXT": "U bent niet gerechtigd om dit systeem te delen",
     "WELCOME TEXT": "Welkom bij",
-    "YOU ARE ALREADY LOGGED IN TEXT": "U bent al ingelogd als",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Verbind met %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

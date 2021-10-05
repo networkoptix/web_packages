@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Rendszerek",
     "NO PERMISSION TO SHARE TEXT": "Nincs jogosultsága, hogy megossza ezt a rendszert",
     "WELCOME TEXT": "Üdvözöljük",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Már be van jelentkezve, mint",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Csatlakozás %PRODUCT_NAME% felhőhöz",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

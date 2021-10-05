@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Systemy",
     "NO PERMISSION TO SHARE TEXT": "Nie masz uprawnień do udostępniania tego systemu",
     "WELCOME TEXT": "Witamy w",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Jesteś już zalogowany jako",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Podłącz do %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Podłącz system do %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Wprowadź w %PRODUCT_NAME% konto, do którego chcesz podłączyć ten system.",

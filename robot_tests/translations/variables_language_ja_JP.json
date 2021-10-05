@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "システム",
     "NO PERMISSION TO SHARE TEXT": "このシステムを共有する権限がありません",
     "WELCOME TEXT": "ようこそ",
-    "YOU ARE ALREADY LOGGED IN TEXT": "としてログイン済みです",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "%PRODUCT_NAME% に接続",
     "CONNECT SYSTEM TO CLOUD TEXT": "システムを %PRODUCT_NAME% に接続",
     "ENTER CLOUD ACCOUNT NAME TEXT": "このシステムに接続したい %PRODUCT_NAME% アカウントを入力してください。",

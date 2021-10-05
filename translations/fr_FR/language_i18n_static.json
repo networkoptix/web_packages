@@ -22,7 +22,7 @@
         },
         "Live Viewer": {
             "description": "Peut uniquement voir la vidéo en direct",
-            "label": "Visualiseur en direct"
+            "label": "Visualiser en direct"
         },
         "Owner": {
             "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
@@ -30,11 +30,11 @@
         },
         "Viewer": {
             "description": "Peut afficher la vidéo en direct et parcourir les archives",
-            "label": "Visualisateur"
+            "label": "Opérateur"
         },
         "advancedViewer": {
             "description": "Peut voir la vidéo en direct, parcourir l’archive, configurer les caméras, contrôle PTZ etc",
-            "label": "Visualisateur avancé"
+            "label": "Opérateur avancé"
         },
         "cloudAdmin": {
             "description": "Peut configurer le système et le partager",
@@ -49,28 +49,28 @@
             "label": "Rôle personnalisé"
         },
         "disabled": {
-            "description": "L’utilisateur est désactivé et ne peut pas connecter au système",
+            "description": "L'utilisateur est désactivé et ne peut pas se connecter au système",
             "label": "Désactivé"
         },
         "liveViewer": {
             "description": "Peut seulement voir vidéo en direct",
-            "label": "Visualiseur en direct"
+            "label": "Opérateur en direct"
         },
         "owner": {
-            "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
+            "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système du cloud",
             "label": "Propriétaire"
         },
         "viewer": {
             "description": "Peut afficher la vidéo en direct et parcourir les archives",
-            "label": "Visualisateur"
+            "label": "Opérateur"
         }
     },
     "account": {
         "accountSavedSuccess": "Votre compte est enregistré avec succès",
-        "accountSettings": "Paramètres compte",
+        "accountSettings": "Paramètres du compte",
         "activationLinkSent": "Lien d'activation envoyé",
         "agreementAccepted": "L'accord a été accepté",
-        "changePassword": "Changer mot de passe",
+        "changePassword": "Changer le mot de passe",
         "newPasswordLabel": "Nouveau mot de passe",
         "passwordChangedSuccess": "Mot de passe enregistré avec succès",
         "saveChanges": "Enregistrer"

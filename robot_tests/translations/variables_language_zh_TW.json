@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "系統",
     "NO PERMISSION TO SHARE TEXT": "您沒有共享本系統的權限",
     "WELCOME TEXT": "歡迎來到",
-    "YOU ARE ALREADY LOGGED IN TEXT": "您已經登入",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "連接至 %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "將系統連接至 %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "請輸入要與此系統連接的 %PRODUCT_NAME%",

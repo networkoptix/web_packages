@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Järjestelmät",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
     "WELCOME TEXT": "Tervetuloa",
-    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Yhdistä %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

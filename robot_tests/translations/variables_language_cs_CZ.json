@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "Systémy",
     "NO PERMISSION TO SHARE TEXT": "Nemáte oprávnění ke sdílení tohoto systému",
     "WELCOME TEXT": "Vítejte v",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Jste již přihlášeni jako",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Připojeno k %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Connect system to %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Enter %PRODUCT_NAME% account you want this system to be connected to.",

@@ -323,7 +323,7 @@
     "SYSTEMS TITLE TEXT": "System",
     "NO PERMISSION TO SHARE TEXT": "Du har inte behörighet att dela detta system",
     "WELCOME TEXT": "Välkommen till",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Du är redan inloggad som",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as {{user}}",
     "CONNECT TO CLOUD TEXT": "Anslut till %PRODUCT_NAME%",
     "CONNECT SYSTEM TO CLOUD TEXT": "Anslut systemet till %PRODUCT_NAME%",
     "ENTER CLOUD ACCOUNT NAME TEXT": "Ange %PRODUCT_NAME% konto som du vill att detta system ska vara anslutet till.",
