@@ -524,8 +524,8 @@ class TableDataSource extends DataSource<any> {
 
     constructor(
         data,
-        itemsPerPage = 0,
-        minItemsAdvanced = 0,
+        itemsPerPage = 3,
+        minItemsAdvanced = 15,
         currentPage = 1,
         search = '',
         displayedColumns = [],
@@ -572,3 +572,11 @@ class TableDataSource extends DataSource<any> {
         return Math.floor(index / this.#itemsPerPage$.value) + 1;
     }
 }
+
+export const forUnitTest = {
+    NxConfigService,
+    NxDialogsService,
+    NxCloudApiService,
+    TableDataSource,
+    ConsoleSection
+};
