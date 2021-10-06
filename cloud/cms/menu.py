@@ -28,11 +28,11 @@ class CustomMenu(Menu):
             items.Bookmarks(),
             items.AppList(
                 _('Applications'),
-                exclude=settings.ADMIN_DASHBOARD
+                models=settings.ADMIN_DASHBOARD
             ),
             items.AppList(
                 _('Internal'),
-                models=settings.ADMIN_DASHBOARD
+                exclude=settings.ADMIN_DASHBOARD
             ),
             items.MenuItem('Help', '/static/help/cms/'),
         ]

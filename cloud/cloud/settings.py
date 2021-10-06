@@ -507,30 +507,11 @@ CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/login|ping|systems/(?:(?:dis)?c
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
-ADMIN_DASHBOARD = ('cms.models.ContentVersion',
-                   'cms.models.Context',
-                   'cms.models.ContextProxy',
-                   'cms.models.ContextTemplate',
-                   'cms.models.Customization',
-                   'cms.models.DataRecord',
-                   'cms.models.DataStructure',
-                   'cms.models.ExternalFile',
-                   'cms.models.Language',
-                   'cms.models.MenuNode',
-                   'cms.models.AssetType',
-                   'cms.models.LicenseType',
-                   'cms.models.SpecialStructure',
-                   'cms.models.UserGroupsToAssetPermissions',
-                   'cms.models.UserGroupsToAssetType',
-                   'cms.models.ContributorAgreement',
-                   'cms.models.Zendesk*',
-                   '*.auth.models.Permission',
-                   'django_celery_beat.*',
-                   'django_celery_results.*',
-                   'notifications.models.*',
-                   'push_notifications.models.*',
-                   'rest_hooks.*',
-                   'zapier.models.*'
+ADMIN_DASHBOARD = ('cms.models.Asset',
+                   'cms.models.AssetCustomizationReview',
+                   'api.models.AccountLoginHistory',
+                   'api.models.Account',
+                   'api.models.ProxyGroup'
                    )
 
 # START s3 config
