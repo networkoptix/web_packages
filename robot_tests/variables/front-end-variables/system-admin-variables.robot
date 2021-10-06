@@ -28,6 +28,15 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    trafficEncryptionForced=false
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
+
+&{default advanced settings}
+...    autoDiscoveryEnabled=true
+...    statisticsAllowed=true
+...    cameraSettingsOptimization=true
+...    auditTrailEnabled=true
+...    trafficEncryptionForced=false
+...    videoTrafficEncryptionForced=false
+...    sessionLimitMinutes=0
 ...    additionalLocalFsTypes=${EMPTY}
 ...    arecontRtspEnabled=false
 ...    auditTrailPeriodDays=183
