@@ -1,20 +1,20 @@
-/* eslint-disable camelcase */
-import { Inject, Injectable, OnDestroy }  from '@angular/core';
-import { QueryParamsHandling }            from '@angular/router';
-import { TranslateService }               from '@ngx-translate/core';
+import { Injectable, OnDestroy }         from '@angular/core';
+import { QueryParamsHandling }           from '@angular/router';
+import { TranslateService }              from '@ngx-translate/core';
 import {
-    BehaviorSubject, Subject, from, combineLatest, Observable
-}                                         from 'rxjs';
+    BehaviorSubject, Subject,
+    from, combineLatest, Observable
+}                                        from 'rxjs';
 import {
-    takeUntil, map, switchMap, startWith
-}                                         from 'rxjs/operators';
-
-import { IConfig, NxConfigService }  from './nx-config';
-import { MenuStructure, MenusStructure }             from './nx-config/base-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSessionService }          from './session.service';
-import { NxCloudApiService }         from './nx-cloud-api';
+    map, switchMap
+}                                        from 'rxjs/operators';
+import { IConfig, NxConfigService }      from './nx-config';
+import { MenuStructure, MenusStructure } from './nx-config/base-config';
+import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
+import { NxLanguageProviderService }     from './nx-language-provider';
+import { NxSessionService }              from './session.service';
+import { NxCloudApiService }             from './nx-cloud-api';
+import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
 
 export enum Auth {
     BOTH='Both',
@@ -29,6 +29,7 @@ export class MenuNode {
     public draft?: boolean;
     public pending?: boolean;
     public indented?: boolean;
+    // eslint-disable-next-line camelcase
     public asset_type?: any;
     public order?: number;
     public state?: 'pending' | 'draft'
@@ -56,16 +57,16 @@ export class MenuNode {
     }
 }
 
+@UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root'
 })
-export class NxMenusService implements OnDestroy {
+export class NxMenusService {
     private menusStructure: MenusStructure;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private languageChanged$ = new BehaviorSubject('')
+    private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
-    private unsub$ = new Subject();
 
     endpoint: Partial<{ view: boolean, settings: boolean, information: boolean, bookmarks: boolean }> = {};
 
@@ -78,12 +79,9 @@ export class NxMenusService implements OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
-        // @ts-ignore
-        this.languageService.translateSubject.pipe(takeUntil(this.unsub$)).subscribe(this.updateMenu);
-    }
-
-    ngOnDestroy() {
-        this.unsub$.next('done');
+        this.languageService.translateSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(this.updateMenu);
     }
 
     updateMenu = (lang) => {
@@ -179,6 +177,7 @@ export class NxMenusService implements OnDestroy {
         if (!node) {
             return;
         }
+        // eslint-disable-next-line camelcase
         let display_name = node.display_name || node.name;
         let name = node.name;
 
@@ -189,8 +188,10 @@ export class NxMenusService implements OnDestroy {
             }
             if (translatedRaw && translatedRaw !== node.name_raw) {
                 name = translatedRaw;
+                // eslint-disable-next-line camelcase
                 display_name = translatedRaw;
             } else {
+                // eslint-disable-next-line camelcase
                 display_name = this.translate.instant(display_name);
                 name = this.translate.instant(node.name);
             }

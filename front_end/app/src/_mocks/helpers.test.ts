@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
+import { Subject } from "rxjs/internal/Subject";
 import staticLang from '../../language_i18n_static.json';
 
 @NgModule({
@@ -93,6 +94,7 @@ export const getMockTranslations = (overrides?) => {
 
     return {
         translations,
-        getTranslations: () => translations
+        getTranslations  : () => translations,
+        translateSubject : new Subject()
     };
 };
