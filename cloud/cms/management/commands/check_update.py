@@ -5,8 +5,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from cms.controllers import filldata
-from cms.models import check_update_cache, get_cloud_portal_asset
-
+from cms import models
 logger = logging.getLogger(__name__)
 
 
@@ -15,31 +14,34 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         local_version = self.read_id()
-        update, current_version = check_update_cache(settings.CUSTOMIZATION, local_version)
+        update, current_version = models.check_update_cache(settings.CUSTOMIZATION, local_version)
         logger.info(f"Local version: {local_version}\tUpdate: {update}\tCurrent Version: {current_version}")
 
         # Memory is initializing
-        if local_version == 0:
+        if not local_version:
             logger.info(current_version or 0)
             self.write_id(current_version or 0)
             self.stdout.write(self.style.SUCCESS("Initialized version.id file."))
             return
 
         if update:
-            self.write_id(current_version)
-            asset = get_cloud_portal_asset()
-            logger.info("Need to update content.")
-
-            logger.info(f"Init skin: {asset}\t Preview: False")
-            filldata.init_skin(asset, False, workers=1)
-
-            logger.info(f"Init skin: {asset}\t Preview: True")
-            filldata.init_skin(asset, True, workers=1)
-
-            logger.info("Content has been updated.")
-            self.stdout.write(self.style.SUCCESS(f"Successfully initiated static content for {asset.__str__()}"))
+            self.initialize_static_content(current_version)
         else:
             self.stdout.write(self.style.SUCCESS("No change was detected"))
+
+    def initialize_static_content(self, current_version):
+        self.write_id(current_version)
+        asset = models.get_cloud_portal_asset()
+        logger.info("Need to update content.")
+
+        logger.info(f"Init skin: {asset}\t Preview: False")
+        filldata.init_skin(asset, False, workers=1)
+
+        logger.info(f"Init skin: {asset}\t Preview: True")
+        filldata.init_skin(asset, True, workers=1)
+
+        logger.info("Content has been updated.")
+        self.stdout.write(self.style.SUCCESS(f"Successfully initiated static content for {asset.__str__()}"))
 
     def read_id(self):
         local_version = 0

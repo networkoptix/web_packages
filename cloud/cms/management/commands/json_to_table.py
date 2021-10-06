@@ -2,19 +2,23 @@ import logging
 import json
 
 from django.core.management.base import BaseCommand
-from cms.controllers.structure import read_structure_files
-from cms.controllers.structure_to_html import process_structure_json
+from cms.controllers import structure
+from cms.controllers import structure_to_html
 
 logger = logging.getLogger(__name__)
 
 
+def get_template(template_file):
+    return template_file.read()
+
+
 def process_from_cms_structure_json():
     with open("cms/asset_structure_template.html.mustache") as template_file:
-        template = template_file.read()
+        template = get_template(template_file)
 
-    asset_types = read_structure_files()
+    asset_types = structure.read_structure_files()
     for asset_type in asset_types:
-        html_file = process_structure_json(asset_type, template)
+        html_file = structure_to_html.process_structure_json(asset_type, template)
         with open(f"cms/{asset_type['type']}.html", "w+") as out_file:
             out_file.write(html_file)
 
