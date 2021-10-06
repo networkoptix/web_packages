@@ -113,7 +113,7 @@ export class NxUrlProtocolService {
 
     getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
         const auth = linkSettings.useOauth
-            ? this.cloudApiService.getAccessCode(linkSettings.systemId).toPromise()
+            ? this.cloudApiService.getAccessCode('*').toPromise()
             : this.accountService.authKey();
 
         return auth.then((data) => {

@@ -123,7 +123,8 @@ def digest(login, password, realm, nonce, method):
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="Returns access code needed to get tokens to a cloud system.",
+                     operation_description="Returns access code needed to get tokens for a cloud system."
+                                           "If system_id is * then a general access code is returned instead.",
                      manual_parameters=[system_id__route_param],
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
@@ -135,12 +136,15 @@ def digest(login, password, realm, nonce, method):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_access_code(request, system_id):
     refresh_token = get_refresh_from_request(request)
+    scope = None
+    if system_id != "*":
+        scope = f"cloudSystemId={system_id}"
     data = cloud_api.Auth.get_code(email="",
                                    password="",
                                    grant_type=cloud_api.Auth.GRANT_TYPE.refresh_token,
                                    ip=get_ip(request),
                                    refresh_token=refresh_token,
-                                   scope=f"cloudSystemId={system_id}")
+                                   scope=scope)
     return api_success(data)
 
 
