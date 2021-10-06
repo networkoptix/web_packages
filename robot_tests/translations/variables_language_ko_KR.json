@@ -183,7 +183,7 @@
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "라이선스 키가 이 시스템에서 이미 활성화되었습니다.",
     "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "라이선스 키가 이미 활성화되어 있으며, 다른 시스템의 서버 하드웨어 ID %HWID%에 귀속 되었습니다.",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Only one Starter license is allowed per system",
-    "ONLY ONE NVR LICENSE ALLOWED TEXT": "Only one NVR license is allowed per system",
+    "ONLY ONE NVR LICENSE ALLOWED TEXT": "only one NVR license is allowed per System",
     "LICENSE SERVER DID NOT RESPOND TEXT": "라이선스를 활성화하지 못했습니다. 라이선스 서버가 응답하지 않았습니다. 다시 시도하거나 지원팀에 문의하십시오.",
     "FAILED TO ACTIVATE LICENSE TEXT": "라이선스를 활성화하지 못했습니다. 다시 시도하거나 지원팀에 문의하십시오.",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "연결 시간이 초과되어 라이선스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인하고 다시 시도하십시오.",

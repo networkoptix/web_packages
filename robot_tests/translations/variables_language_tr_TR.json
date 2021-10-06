@@ -183,7 +183,7 @@
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "Bu sistemde lisans anahtarı zaten etkinleştirildi",
     "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "Lisans anahtarı zaten etkinleştirildi ve başka bir sistemde donanım kimliği %HWID% olan sunucuya bağlı",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Sistem başına yalnızca bir başlangıç lisansına izin verilir",
-    "ONLY ONE NVR LICENSE ALLOWED TEXT": "Only one NVR license is allowed per system",
+    "ONLY ONE NVR LICENSE ALLOWED TEXT": "only one NVR license is allowed per System",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun",
     "FAILED TO ACTIVATE LICENSE TEXT": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin",

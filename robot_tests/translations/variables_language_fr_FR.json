@@ -183,7 +183,7 @@
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "La clé de licence a déjà été activée dans ce système",
     "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "La clé de licence a déjà été activée et liée au serveur avec l'ID matériel %HWID% dans un autre système",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Une seule licence de démarrage est autorisée par système",
-    "ONLY ONE NVR LICENSE ALLOWED TEXT": "Une seule licence NVR est autorisée par système",
+    "ONLY ONE NVR LICENSE ALLOWED TEXT": "only one NVR license is allowed per System",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Impossible d'activer la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter le support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Échec de l'activation de la licence. Veuillez réessayer ou contacter le support",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer",

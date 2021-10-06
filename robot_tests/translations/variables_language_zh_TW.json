@@ -183,7 +183,7 @@
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "授權已在此系統中啟用",
     "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "License key has already been activated and bound to server with hardware ID %HWID% in another system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "每個系統只允許啟用一組Starter授權。",
-    "ONLY ONE NVR LICENSE ALLOWED TEXT": "每個系統僅允許啟用一組NVR授權。",
+    "ONLY ONE NVR LICENSE ALLOWED TEXT": "only one NVR license is allowed per System",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Failed to activate license. License server did not respond. Please try again or contact support",
     "FAILED TO ACTIVATE LICENSE TEXT": "Failed to activate license. Please try again or contact support",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again",

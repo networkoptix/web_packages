@@ -183,7 +183,7 @@
     "LICENSE KEY ALREADY ACTIVATED IN THIS SYSTEM TEXT": "Licensnyckeln har redan aktiverats i detta system",
     "LICENSE KEY ALREADY ACTIVATED ON ANOTHER SYSTEM TEXT": "Licensnyckel har redan aktiverats och bundits till server med hårdvaru-ID %HWID% i ett annat system",
     "ONLY ONE STARTER LICENSE ALLOWED TEXT": "Endast en startlicens är tillåten per system",
-    "ONLY ONE NVR LICENSE ALLOWED TEXT": "Endast en NVR-licens är tillåten per system",
+    "ONLY ONE NVR LICENSE ALLOWED TEXT": "only one NVR license is allowed per System",
     "LICENSE SERVER DID NOT RESPOND TEXT": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport",
     "FAILED TO ACTIVATE LICENSE TEXT": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport",
     "FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen",

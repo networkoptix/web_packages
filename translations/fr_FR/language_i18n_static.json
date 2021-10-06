@@ -78,7 +78,7 @@
     "activeActions": {
         "resetPassword": "Réinitialiser mot de passe",
         "sendConfirm": "Renvoyer lien d'activation",
-        "setNewPassword": "Sauvergarder mot de passe",
+        "setNewPassword": "Sauvegarder le mot de passe",
         "setNewPasswordLabel": "Nouveau mot de passe"
     },
     "cameraFilters": {
@@ -105,7 +105,7 @@
             }
         },
         "cameraLinks": {
-            "copyActiveText": "copié dvers presse-papiers",
+            "copyActiveText": "copié vers le presse-papiers",
             "copyDefaultText": "copier",
             "copyToClipboard": "copier vers presse-papier",
             "highStream": "Flux Haut",
@@ -128,7 +128,7 @@
             "ubuntuNX": "Ce navigateur ne supporte pas la vidéo à partir de serveurs ARM. S.V.P, utilisez un navigateur Chromium.",
             "unauthorized": "Authentification requise"
         },
-        "chromeCastWarning": "Chromecast consommer beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
+        "chromeCastWarning": "Chromecast consomme beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
         "login": "se connecter",
         "recordingSettingsWarning": "Veuillez mettre à jour les paramètres d'enregistrement manquants.",
         "disableMotionWarning": "Le mode d'enregistrement sera changé en \"Toujours enregistrer\"",
