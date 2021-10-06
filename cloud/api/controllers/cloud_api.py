@@ -520,13 +520,14 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def toggle_2fa(request, password, totp, digest_enabled, tfa_enabled, headers=None):
+    def update_2fa_settings(request, totp, tfa_enabled, password=None, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
-            "httpDigestAuthEnabled": digest_enabled,
-            "password": password,
             "totp": totp
         }
+        if password:
+            data["password"] = password
+
         return put_wrapper(f"{CLOUD_DB_URL}/account/self/settings/security", json=data, headers=headers)
 
 

@@ -175,27 +175,80 @@ class TestAccountViews:
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert models.Account.objects.filter(email=active_user.email).exists()
 
-    def test_toggle2fa(self, active_user):
+    def mock_update_2fa(self, two_fa):
+        return self.mocker.patch.object(Account, 'update_2fa_settings', return_value=two_fa)
+
+    def request_security(self, active_user, action=None):
         data = {
             'password': 'pass',
             'totp': '456723'
         }
-        req = self.arf.post('/api/account/toggle2fa', data=data)
+
+        if action:
+            data['action'] = action
+
+        req = self.arf.post('/api/account/security', data=data)
         req.user = active_user
         req.session = {}
+        return req
+
+    def test_security_missing_activate(self, active_user):
+        req = self.request_security(active_user)
+        resp = security(req)
+        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_security_activate(self, active_user):
         two_fa = {
-            "httpDigestAuthEnabled": True,
             "account2faEnabled": True
         }
-        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
-        two_fa_mock = self.mocker.patch.object(Account, 'toggle_2fa', return_value=two_fa)
+        req = self.request_security(active_user, action="activate")
+        security_mock = self.mock_update_2fa(two_fa)
+        resp = security(req)
 
-        resp = toggle2fa(req)
         assert resp.status_code == status.HTTP_200_OK
-        assert resp.data == {'account2faEnabled': True, 'httpDigestAuthEnabled': True}
-        assert two_fa_mock.call_args.args[1] == 'pass'
-        assert two_fa_mock.call_args.args[2] == '456723'
-        assert two_fa_mock.call_args.args[3] is True
+        assert resp.data == {'account2faEnabled': True}
+        assert security_mock.call_args.args[1] == '456723'
+        assert security_mock.call_args.args[2] is True
+        assert security_mock.call_args.kwargs['password'] == 'pass'
+
+    def test_security_deactivate(self, active_user):
+        two_fa = {
+            "account2faEnabled": False
+        }
+        req = self.request_security(active_user, action="deactivate")
+        security_mock = self.mock_update_2fa(two_fa)
+        resp = security(req)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data == {'account2faEnabled': False}
+        assert security_mock.call_args.args[1] == '456723'
+        assert security_mock.call_args.args[2] is False
+        assert security_mock.call_args.kwargs['password'] == 'pass'
+
+    def test_security_toggle(self, active_user):
+        two_fa = {
+            "account2faEnabled": False
+        }
+        req = self.request_security(active_user, "toggle")
+        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
+        security_mock = self.mock_update_2fa(two_fa)
+        resp = security(req)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data == {'account2faEnabled': False}
+        assert security_mock.call_args.args[1] == '456723'
+        assert security_mock.call_args.args[2] is False
+
+        two_fa["account2faEnabled"] = True
+        req = self.request_security(active_user, "toggle")
+        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+        security_mock = self.mock_update_2fa(two_fa)
+        resp = security(req)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data == {'account2faEnabled': True}
+        assert security_mock.call_args.args[1] == '456723'
+        assert security_mock.call_args.args[2] is True
 
     def test_review_cookie(self):
         assert not self.user.cookie_reviewed

@@ -1,4 +1,5 @@
 import base64
+import enum
 import time
 import logging
 import json
@@ -33,6 +34,9 @@ from api.views.account_serializers import (
 logger = logging.getLogger(__name__)
 
 # Swagger Schemas for body parameters
+action__body = openapi.Schema(type=openapi.TYPE_STRING,
+                              description="The action is use to determine how the 2fa settings is update."
+                                          " Valid values are activate, deactivate, and toggle.")
 email__body = openapi.Schema(type=openapi.TYPE_STRING)
 first_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 last_name__body = openapi.Schema(type=openapi.TYPE_STRING)
@@ -297,29 +301,50 @@ def delete_user(request):
     return api_success()
 
 
+class SecurityAction(enum.Enum):
+    activate = 'activate'
+    deactivate = 'deactivate'
+    toggle = 'toggle'
+
+    @classmethod
+    def actions(cls):
+        return list(cls.__members__.keys())
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="Toggles 2fa for users account.",
+                     operation_description="Configures 2fa settings for users account.",
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
+                             "action": action__body,
                              "password": password__body,
                              "totp": totp__body
                          },
-                         required=["password", "totp"]
+                         required=["action", "totp"]
                      ))
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
-def toggle2fa(request):
-    require_params(request, ("password", "totp"))
-    account = Account.get(request)
-    return api_success(
-        Account.toggle_2fa(request,
-                           request.data.get("password"),
-                           request.data.get("totp"),
-                           not account.get("httpDigestAuthEnabled"),
-                           not account.get('account2faEnabled')
-                           )
-    )
+def security(request):
+    require_params(request, ("action", "totp"))
+
+    totp = request.data.get("totp")
+    action = request.data.get("action")
+    if action not in SecurityAction.actions():
+        raise APIRequestException(
+            f"Action is not valid. Should be one of the following {SecurityAction.actions()}",
+            ErrorCodes.bad_request)
+
+    if action == SecurityAction.toggle.name:
+        account = Account.get(request)
+        return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
+
+    require_params(request, ("password", ))
+    password = request.data.get("password")
+
+    if action == SecurityAction.activate.name:
+        return api_success(Account.update_2fa_settings(request, totp, True, password=password))
+    else:
+        return api_success(Account.update_2fa_settings(request, totp, False, password=password))
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
