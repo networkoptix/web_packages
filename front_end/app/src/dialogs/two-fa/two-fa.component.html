@@ -38,38 +38,39 @@
     </div>
 </ng-template>
 
-<ng-template #wizardWarning>
-    <div class="modal-header">
-        <h1 class="modal-title" translate>Two-factor authentication</h1>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="closeWizard()" *ngIf="closable">
-            <span class="close-content"><span class="close-icon"></span></span>
-        </button>
-    </div>
+<!-- It's removed form spec but let;s keep it just in case -- TT -->
+<!--<ng-template #wizardWarning>-->
+<!--    <div class="modal-header">-->
+<!--        <h1 class="modal-title" translate>Two-factor authentication</h1>-->
+<!--        <button type="button" class="close"-->
+<!--                data-dismiss="modal" aria-label="Close"-->
+<!--                (click)="closeWizard()" *ngIf="closable">-->
+<!--            <span class="close-content"><span class="close-icon"></span></span>-->
+<!--        </button>-->
+<!--    </div>-->
 
-    <div class="modal-body">
-        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarning({ count: incompatibleSystems.length })"></span></div>
-        <div class="my-3">
-            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">
-                <svg-icon nx-add-svg-src
-                        class="d-inline-block"
-                        [src]="CONFIG.icons.dir + 'system.svg'"
-                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"
-                        [applyClass]="true"></svg-icon>
-                <span class="system-name">{{system.name}}</span>
-            </div>
-        </div>
-        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr()"></span></div>
-    </div>
+<!--    <div class="modal-body">-->
+<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarning({ count: incompatibleSystems.length })"></span></div>-->
+<!--        <div class="my-3">-->
+<!--            <div *ngFor="let system of incompatibleSystems" class="d-flex align-items-center">-->
+<!--                <svg-icon nx-add-svg-src-->
+<!--                        class="d-inline-block"-->
+<!--                        [src]="CONFIG.icons.dir + 'system.svg'"-->
+<!--                        [svgStyle]="{'width.px': '32', 'height.px': '32'}"-->
+<!--                        [applyClass]="true"></svg-icon>-->
+<!--                <span class="system-name">{{system.name}}</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div><span [innerText]="LANG.dialogs.twoFa.wizardWarningDescr()"></span></div>-->
+<!--    </div>-->
 
-    <div class="modal-footer justify-end">
-        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">
-            <span translate>Next</span>
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
-        </button>
-    </div>
-</ng-template>
+<!--    <div class="modal-footer justify-end">-->
+<!--        <button id="nextWizardLogin" class="btn btn-danger btn-next" (click)="next()">-->
+<!--            <span translate>Next</span>-->
+<!--            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>-->
+<!--        </button>-->
+<!--    </div>-->
+<!--</ng-template>-->
 
 <ng-template #wizardLogin>
     <div class="modal-header">

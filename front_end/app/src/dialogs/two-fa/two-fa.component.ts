@@ -21,7 +21,7 @@ import { NxUtilsService }                         from '@services/utils.service'
 
 export enum T_FA_STEPS {
     Code,
-    WizardWarning,
+    // WizardWarning,
     WizardLogin,
     WizardQR,
     WizardCode,
@@ -72,7 +72,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('codeForm') codeForm: HTMLFormElement;
 
     @ViewChild('code', { static: true }) codeTemplate: TemplateRef<any>;
-    @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<any>;
+    // @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<any>;
     @ViewChild('wizardLogin', { static: true }) wizardLoginTemplate: TemplateRef<any>;
     @ViewChild('wizardQR', { static: true }) wizardQRTemplate: TemplateRef<any>;
     @ViewChild('wizardCode', { static: true }) wizardCodeTemplate: TemplateRef<any>;
@@ -270,9 +270,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             case T_FA_STEPS.Code:
                 this.templateType = this.codeTemplate;
                 break;
-            case T_FA_STEPS.WizardWarning:
-                this.templateType = this.wizardWarningTemplate;
-                break;
+            // case T_FA_STEPS.WizardWarning:
+            //     this.templateType = this.wizardWarningTemplate;
+            //     break;
             case T_FA_STEPS.WizardLogin:
                 this.templateType = this.wizardLoginTemplate;
                 break;
@@ -307,7 +307,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.toastService.show(this.LANG.common.generalError(), options);
                 });
         } else {
-            this.incompatibleSystems.length ? this.setTemplate(T_FA_STEPS.WizardWarning) : this.setTemplate(T_FA_STEPS.WizardLogin);
+            this.setTemplate(T_FA_STEPS.WizardLogin);
+            // this.incompatibleSystems.length ? this.setTemplate(T_FA_STEPS.WizardWarning) : this.setTemplate(T_FA_STEPS.WizardLogin);
         }
     }
 
@@ -327,9 +328,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     next() {
         switch (this.currentStep) {
-            case T_FA_STEPS.WizardWarning:
-                this.setTemplate(T_FA_STEPS.WizardLogin);
-                break;
+            // case T_FA_STEPS.WizardWarning:
+            //     this.setTemplate(T_FA_STEPS.WizardLogin);
+            //     break;
             case T_FA_STEPS.WizardLogin:
                 this.loginProcess.run();
                 break;
