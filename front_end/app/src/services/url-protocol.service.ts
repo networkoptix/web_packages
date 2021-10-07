@@ -111,7 +111,8 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
+    // eslint-disable-next-line camelcase
+    getLink(linkSettings: linkSettings): Promise<{link: string, authKey?: string | undefined, access_code?: string}> {
         const auth = linkSettings.useOauth
             ? this.cloudApiService.getAccessCode('*').toPromise()
             : this.accountService.authKey();
