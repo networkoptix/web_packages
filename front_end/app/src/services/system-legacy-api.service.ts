@@ -773,6 +773,10 @@ export class NxSystemAPI {
 
     // End of storage
 
+    getCameraHistoryItems() {
+        return this.get('/ec2/getCameraHistoryItems');
+    }
+
     getRecordStats(useCache = false) {
         return this.get('/api/recStats', undefined, {
             [useCache ? 'cache-request' : 'reset-cache']: 'true'

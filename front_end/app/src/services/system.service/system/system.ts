@@ -544,6 +544,10 @@ export class NxSystem extends System {
         return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }
 
+    public getCameraHistoryItems() {
+        return this.mediaserver.getCameraHistoryItems();
+    }
+
     public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
         return this.ensureSystemAuth().then(
             () => this.mediaserver.getRecords(
