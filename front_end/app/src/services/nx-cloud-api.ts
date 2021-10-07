@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Injectable, Injector }                  from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams }   from '@angular/common/http';
 import { Router }                                from '@angular/router';
@@ -179,11 +180,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    toggle2fa(password, totp) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/toggle2fa', {
-            password : password,
-            totp     : totp
-        }).toPromise();
+    update2fa(password, totp, action) {
+        return this.http.post<t.CloudResponse>(
+            this.CONFIG.apiBase + '/account/security',
+            { password, totp, action }
+        ).toPromise();
     }
 
     get2FaKey() {
@@ -376,11 +377,12 @@ export class NxCloudApiService {
 
     authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string, signature?: string) {
         const body: any = {
-            email, password,
-            client_id: clientId,
-            redirect_uri: redirectUrl,
-            response_type: responseType
-        }
+            email,
+            password,
+            client_id     : clientId,
+            redirect_uri  : redirectUrl,
+            response_type : responseType
+        };
         state && (body.state = state);
         scope && (body.scope = scope);
         signature && (body.signature = signature);

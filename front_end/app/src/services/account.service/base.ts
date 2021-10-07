@@ -223,8 +223,8 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.verify(password);
     }
 
-    toggle2fa(password, totp) {
-        return this.cloudApi.toggle2fa(password, totp);
+    update2fa(password, totp, action = 'toggle') {
+        return this.cloudApi.update2fa(password, totp, action);
     }
 
     get2FaKey() {

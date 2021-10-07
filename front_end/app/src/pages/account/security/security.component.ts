@@ -1,4 +1,7 @@
-import { Component, OnInit }                      from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+
+import { NxApplyService, Watcher }                from '@services/apply.service';
+import { NxProcessService, Process }              from '@services/process.service';
 import { NxLanguageProviderService }              from '@services/nx-language-provider';
 import { NxConfigService, IConfig }               from '@services/nx-config';
 import { NxAccountService, Account }              from '@services/account.service';
@@ -32,8 +35,8 @@ export class NxAccountSecurityComponent implements OnInit {
     twoFaSystems: NxSystemWithUserInfo[] = [];
     subV5Systems: NxSystemWithUserInfo[] = [];
 
-    temp2faEnabled = false;
-    // TODO: Replace with API logic
+    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
+    verificationWatcher = new Watcher<boolean>();
 
     private setupDefaults() {
         this.menuService.detail = 'security';
@@ -42,6 +45,8 @@ export class NxAccountSecurityComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
         private accountService: NxAccountService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
@@ -62,6 +67,7 @@ export class NxAccountSecurityComponent implements OnInit {
             on      : !!this.account.account2faEnabled,
             enabled : !!this.account.account2faEnabled
         };
+        this.verificationWatcher.value = !!this.account.account2faEnabled;
 
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
@@ -82,6 +88,42 @@ export class NxAccountSecurityComponent implements OnInit {
                     }
                 });
             });
+
+        // TODO: Replace with API logic
+        this.applyService.initPageWatcher(
+            this.applyContainer,
+            this.processService.createProcess(
+                () => {
+                    return this.dialogs
+                        .toggleVerificationCode(this.verificationWatcher.value)
+                        .then(action => {
+                            if (action === 'canceled') {
+                                // eslint-disable-next-line prefer-promise-reject-errors
+                                return Promise.reject('dialogCancel');
+                            } else {
+                                const newState = (action === 'enabled');
+                                this.tfauth.on = newState;
+                                this.tfauth.enabled = newState;
+                                this.updateVerificationOriginal();
+                            }
+                        });
+                },
+                { errorCodes: { dialogCancel: () => {} } },
+                () => {},
+                () => {}
+            ),
+            () => {
+                this.applyService.reset();
+            },
+            [this.verificationWatcher]
+        );
+    }
+
+    updateVerificationOriginal(newValue?: boolean): void {
+        if (newValue !== undefined) {
+            this.verificationWatcher.value = newValue;
+        }
+        this.verificationWatcher.originalValue = this.verificationWatcher.value;
     }
 
     toggle2FA(enabled) {
@@ -91,15 +133,18 @@ export class NxAccountSecurityComponent implements OnInit {
             this.dialogs
                 .wizard2FA()
                 .then((action) => {
-                    this.tfauth.on = !(action === 'canceled');
+                    console.log(action);
+                    this.tfauth.on = (action !== 'canceled');
                     this.tfauth.enabled = (action === 'enabled');
+                    this.updateVerificationOriginal(action === 'enabled');
                 });
         } else {
             this.dialogs
                 .off2FA()
                 .then((action) => {
                     this.tfauth.on = (action === 'canceled');
-                    this.tfauth.enabled = !(action === 'disabled');
+                    this.tfauth.enabled = (action !== 'disabled');
+                    this.updateVerificationOriginal(action !== 'disabled');
                 });
         }
     }
@@ -107,11 +152,5 @@ export class NxAccountSecurityComponent implements OnInit {
     genNewCode() {
         this.dialogs
             .newCode2FA();
-    }
-
-    // TODO: Replace
-    tempToggle2fa(state: boolean): void {
-        this.temp2faEnabled = state;
-        console.log('Toggle');
     }
 }

@@ -46,40 +46,40 @@
                         {{ LANG.security.twoFa.systemsRemainder({count: twoFaSystems.length - 4})}}
                     </div>
                 </ng-template>
+                <ng-container *ngIf="tfauth.enabled">
+                    <!-- Need a manual line break -->
+                    <br/>
 
-                <!-- Need a manual line break -->
-                <br/>
-
-                <div class="tfauth-checkbox mt-3 mb-3">
-                    <nx-checkbox
-                        componentId='skip-tfauth'
-                        [ngModel]="temp2faEnabled"
-                        (ngModelChange)="tempToggle2fa($event);"
-                    ></nx-checkbox>
-                    <label for='skip-tfauth' translate>
-                        Ask for verification code on every login with %CLOUD_NAME% account
-                    </label>
-                </div>
-
-                <div class="tfauth-v5-warning" *ngIf="tfauth.enabled && subV5Systems.length">
-                    <h4 translate>WARNING</h4>
-                    <div class="float-left">
-                        {{ LANG.security.twoFa.v5Warning_a1({ count: subV5Systems.length }) }}
-                        <span
-                            class="ml-1 mr-1 pseudo-anchor"
-                            [ngbPopover]="popLegendSubV5"
-                            popoverClass="systems-popover"
-                            triggers="click"
-                            placement="right"
-                        >
-                            {{ LANG.security.twoFa.v5Warning_a2({ count: subV5Systems.length }) }}
-                        </span>
-                        {{ LANG.security.twoFa.v5Warning_a3({ count: subV5Systems.length }) }}
-                        <strong>{{ LANG.security.twoFa.v5Warning_a4() }}</strong>
-                        {{ LANG.security.twoFa.v5Warning_a5() }}
+                    <div class="tfauth-checkbox mt-3 mb-3">
+                        <nx-checkbox
+                            componentId='skip-tfauth'
+                            [(ngModel)]="verificationWatcher.value"
+                        ></nx-checkbox>
+                        <label for='skip-tfauth' translate>
+                            Ask for verification code on every login with %CLOUD_NAME% account
+                        </label>
                     </div>
-                    <p>{{ LANG.security.twoFa.v5Warning_b({ count: subV5Systems.length }) }}</p>
-                </div>
+
+                    <div class="tfauth-v5-warning" *ngIf="subV5Systems.length">
+                        <h4 translate>WARNING</h4>
+                        <div class="float-left">
+                            {{ LANG.security.twoFa.v5Warning_a1({ count: subV5Systems.length }) }}
+                            <span
+                                class="ml-1 mr-1 pseudo-anchor"
+                                [ngbPopover]="popLegendSubV5"
+                                popoverClass="systems-popover"
+                                triggers="click"
+                                placement="right"
+                            >
+                                {{ LANG.security.twoFa.v5Warning_a2({ count: subV5Systems.length }) }}
+                            </span>
+                            {{ LANG.security.twoFa.v5Warning_a3({ count: subV5Systems.length }) }}
+                            <strong>{{ LANG.security.twoFa.v5Warning_a4() }}</strong>
+                            {{ LANG.security.twoFa.v5Warning_a5() }}
+                        </div>
+                        <p>{{ LANG.security.twoFa.v5Warning_b({ count: subV5Systems.length }) }}</p>
+                    </div>
+                </ng-container>
 
                 <ng-template #popLegendSubV5>
                     <div *ngFor="let system of subV5Systems | slice:0:4; let i=index" class="d-flex align-items-center">
@@ -121,3 +121,5 @@
 </div>
 
 <ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
+
+<ng-container #applyContainer></ng-container>

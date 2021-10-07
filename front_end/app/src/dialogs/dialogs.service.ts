@@ -591,4 +591,19 @@ export class NxDialogsService {
 
         return this.createModal(TwoFAModalContent, options, params);
     }
+
+    toggleVerificationCode(enable: boolean) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'sm'
+        };
+
+        const params: IParams = {
+            type     : `verification-${enable ? 'enable' : 'disable'}`,
+            closable : true
+        };
+
+        return this.createModal(TwoFAModalContent, options, params);
+    }
 }

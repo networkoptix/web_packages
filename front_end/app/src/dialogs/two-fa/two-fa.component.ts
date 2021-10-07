@@ -25,7 +25,8 @@ export enum T_FA_STEPS {
     WizardLogin,
     WizardQR,
     WizardCode,
-    WizardFinish
+    WizardFinish,
+    VerificationToggle
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -55,6 +56,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     public loginProcess: Process;
     public qrProcess: Process;
     public codeProcess: Process;
+    public verificationProcess: Process;
     public hideErrors = true;
 
     public wrongPassword: boolean;
@@ -77,6 +79,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('wizardQR', { static: true }) wizardQRTemplate: TemplateRef<any>;
     @ViewChild('wizardCode', { static: true }) wizardCodeTemplate: TemplateRef<any>;
     @ViewChild('wizardFinish', { static: true }) wizardFinishTemplate: TemplateRef<any>;
+
+    @ViewChild('verificationToggle', { static: true }) verificationToggleTemplate: TemplateRef<any>;
 
     private resetDefaults() {
         this.newCodes = [];
@@ -220,7 +224,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 return this.refreshSession()
                     .then((result) => {
                         if (result.resultCode === 'ok') {
-                            return this.accountService.toggle2fa(this.password, this.tfaCode);
+                            return this.accountService.update2fa(
+                                this.password,
+                                this.tfaCode,
+                                this.account.account2faEnabled
+                                    ? 'deactivate'
+                                    : 'activate'
+                            );
                         }
                         // eslint-disable-next-line prefer-promise-reject-errors
                         return Promise.reject({ resultCode: result.errorText });
@@ -262,6 +272,71 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.activeModal.close('disabled');
             }
         });
+
+        // Adapted from full codeProcess for verification code toggle for now
+        // TODO: Replace with digest auth toggle
+        this.verificationProcess = this.processService.createProcess(() => {
+            if (this.tfaCode === '') {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                return Promise.reject({ resultCode: 'missingParam' });
+            }
+            // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
+            return this.accountService.get2FaBackupCode().then((response: any) => {
+                if (response.errorText !== undefined) {
+                    // eslint-disable-next-line prefer-promise-reject-errors
+                    return Promise.reject({ resultCode: 'noBackupCodes' });
+                }
+                this.newCodes = response.map(code => code.backup_code);
+
+                return this.refreshSession()
+                    .then((result) => {
+                        if (result.resultCode === 'ok') {
+                            return this.accountService.update2fa(
+                                '',
+                                this.tfaCode,
+                                'toggle'
+                            );
+                        }
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        return Promise.reject({ resultCode: result.errorText });
+                    }, (error) => {
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        return Promise.reject({ resultCode: error });
+                    });
+            });
+        }, {
+            ignoreUnauthorized : true,
+            ignoreError        : true,
+            errorCodes         : {
+                accountBlocked: () => {
+                    this.accountBlocked = true;
+                    this.codeForm.controls.tfaCodeInput.setErrors({ nx_account_blocked: true });
+                    this.renderer.selectRootElement('#login_password').focus();
+                },
+                missingParam: () => {
+                    this.codeForm.controls.tfaCodeInput.markAsTouched();
+                    this.codeForm.controls.tfaCodeInput.setErrors({ required: true });
+                    this.renderer.selectRootElement('#tfaCodeInput').focus();
+                },
+                noBackupCodes: () => {
+                    const options = {
+                        classname : this.CONFIG.toast.danger,
+                        autohide  : true,
+                        delay     : this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show(this.LANG.common.generalError(), options);
+                }
+            }
+        }, (response) => {
+            if (response.account2faEnabled) {
+                this.activeModal.close('enabled');
+            }
+
+            if (response.account2faEnabled === false) {
+                this.resetDefaults();
+                this.activeModal.close('disabled');
+            }
+        });
     }
 
     setTemplate(step) {
@@ -285,12 +360,18 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             case T_FA_STEPS.WizardFinish:
                 this.templateType = this.wizardFinishTemplate;
                 break;
+
+            case T_FA_STEPS.VerificationToggle:
+                this.templateType = this.verificationToggleTemplate;
+                break;
         }
     }
 
     ngAfterViewInit() {
         if (this.type === 'off') {
             this.setTemplate(T_FA_STEPS.WizardLogin);
+        } else if (this.type.startsWith('verification')) {
+            this.setTemplate(T_FA_STEPS.VerificationToggle);
         } else if (this.type === 'code') {
             this.accountService
                 .get2FaBackupCode()
@@ -343,6 +424,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             case T_FA_STEPS.WizardFinish:
                 this.activeModal.close('enabled');
                 break;
+            case T_FA_STEPS.VerificationToggle:
+                this.verificationProcess.run();
         }
     }
 
