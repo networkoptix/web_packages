@@ -12,7 +12,6 @@ import { AngularSvgIconModule }        from 'angular-svg-icon';
 import { ComponentsModule }            from '@components/components.module';
 import { DirectivesModule }            from '@directives/directives.module';
 import { PipesModule }                 from '@src/pipes/pipes.module';
-import { LoginModalContent }           from './login/login.component';
 import { DisconnectModalContent }      from './disconnect/disconnect.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
 import { AddStorageModalContent }      from './add-storage/add-storage.component';
@@ -65,7 +64,6 @@ import { QrCodeModule } from 'ng-qrcode';
         QrCodeModule
     ],
     declarations: [
-        LoginModalContent,
         LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,

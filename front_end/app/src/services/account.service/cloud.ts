@@ -15,6 +15,7 @@ import { NxPollService }             from '../poll.service';
 import { NxSystemAPIService }        from '../system-api.service';
 import { NxStorageService }          from '../storage.service';
 import { Account }                   from '@services/account.service/account';
+import { OauthService }              from '@services/oauth.service';
 
 /**
  * CloudAccount overrides BaseAccount, should maintain the same interface.
@@ -36,7 +37,8 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
         injector: Injector,
-        protected nxSystemAPIService: NxSystemAPIService
+        protected nxSystemAPIService: NxSystemAPIService,
+        private oauthService: OauthService
     ) {
         super(
             configService,
@@ -56,7 +58,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         );
     }
 
-    get(forceUpdate = false) {
+    get(forceUpdate = false): Promise<Account> {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -189,26 +191,26 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             });
     }
 
-    requireLogin() {
+    showLogin(
+        _keepPage?: boolean,
+        _redirectClose?: boolean,
+        _redirectHome?: boolean,
+        _blockNavigation?: boolean
+    ): void {
+        // Cloud portal no longer uses login dialog
+        this.oauthService.redirectOauth();
+    }
+
+    requireLogin(): Promise<void | Account> {
         return this.get()
-            .then((account: Account) => {
-                if ((!account || !account.is_authenticated) && !this.loginDialogActive) {
-                    this.loginDialogActive = true;
-                    return this.dialogs
-                        .login(this, true, true).then((result) => {
-                            if (result === 'register') {
-                                return this.router.navigate(['/register']).then(() => result);
-                            } else if (!result) {
-                                this.storageService.loginRegister = true;
-                            }
-                            return this.get();
-                        })
-                        .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
-                        .finally(() => {
-                            this.loginDialogActive = false;
-                        });
+            .then(account => {
+                if (!account || !account.is_authenticated) {
+                    this.oauthService.redirectOauth();
+                } else if (account.is_authenticated) {
+                    return account;
                 }
-                return this.loginDialogActive ? undefined : account;
+            }).catch(() => {
+                this.router.navigate([this.CONFIG.redirect.unauthorised]);
             });
     }
 }

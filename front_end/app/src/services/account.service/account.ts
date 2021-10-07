@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
 
 import { User } from '../system-api.types';
@@ -7,24 +8,17 @@ import { User } from '../system-api.types';
 })
 export class Account {
     email: string;
-    // eslint-disable-next-line camelcase
     first_name: string;
     name: string;
     id: string;
-    // eslint-disable-next-line camelcase
     last_name: string;
     language: string;
-    // eslint-disable-next-line camelcase
     is_staff: boolean;
-    // eslint-disable-next-line camelcase
     is_superuser: boolean;
     isCloud: boolean;
     permissions: string[];
-    // eslint-disable-next-line camelcase
     can_publish_integration: boolean;
-    // eslint-disable-next-line camelcase
     is_authenticated: boolean;
-    // eslint-disable-next-line camelcase
     cookie_reviewed: boolean;
     account2faEnabled: boolean;
 
@@ -39,4 +33,34 @@ export class Account {
         this.is_superuser = isAdmin || permissions.includes('GlobalAdminPermission');
         this.isCloud = isCloud;
     }
+}
+
+const DUMMY_ACCOUNT: Account = {
+    email                   : '',
+    first_name              : '',
+    name                    : '',
+    id                      : '',
+    last_name               : '',
+    language                : '',
+    is_staff                : true,
+    is_superuser            : true,
+    isCloud                 : true,
+    permissions             : [''],
+    can_publish_integration : true,
+    is_authenticated        : true,
+    cookie_reviewed         : true,
+    account2faEnabled       : true
+};
+
+// .requiresLogin() in account service doesn't return an actual Account object
+export function isAccount(unknownObj: unknown): unknownObj is Account {
+    return typeof unknownObj === 'object' && (
+        Object.entries(unknownObj).every(([key, value]) => {
+            return (
+                // eslint-disable-next-line no-prototype-builtins
+                DUMMY_ACCOUNT.hasOwnProperty(key) &&
+                typeof DUMMY_ACCOUNT[key] === typeof value
+            );
+        })
+    );
 }

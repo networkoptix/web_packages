@@ -10,7 +10,7 @@ import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { PipesModule }               from '@src/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {

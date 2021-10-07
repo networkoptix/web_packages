@@ -53,7 +53,7 @@
                 <a
                     class="btn btn-primary"
                     href
-                    (click)="login(); false;"
+                    (click)="login()"
                     translate>
                     Log In
                 </a>
@@ -63,7 +63,7 @@
         <div *ngIf="!change.success && !changeSuccess" >
             <h1 class="heading mb-4" translate>Set New Password</h1>
 
-            <form name="restorePasswordWithCode" 
+            <form name="restorePasswordWithCode"
                 #restorePasswordWithCode="ngForm"
                 class="form"
                 [ngClass]="{'hide-errors': hideErrors}"

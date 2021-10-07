@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector }        from '@angular/core';
+import { Inject, Injectable           }        from '@angular/core';
 import { DOCUMENT, Location }                  from '@angular/common';
 import { DomSanitizer }                        from '@angular/platform-browser';
 import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +15,6 @@ import { Process }                             from '@services/process.service';
 import { NxCloudApiService }                   from '@services/nx-cloud-api';
 import { LanguageI18NStaticTypes }             from '@app/language_i18n_static_types';
 
-import { LoginModalContent }                   from './login/login.component';
 import { GenericModalContent }                 from './generic/generic.component';
 import { AddUserModalContent }                 from './add-user/add-user.component';
 import { DisconnectModalContent }              from './disconnect/disconnect.component';
@@ -218,8 +217,7 @@ export class NxDialogsService {
             });
         }
 
-        return this.createModal(NxConfigService.isLocal ? LoginWebadminModalContent : LoginModalContent
-            , options, params)
+        return this.createModal(LoginWebadminModalContent, options, params)
             // handle how the dialog was closed
             // required if we need to have dismissible dialog otherwise
             // will raise a JS error ( Uncaught [in promise] )

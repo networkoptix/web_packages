@@ -15,7 +15,7 @@ import { NxAppStateService }               from '../nx-app-state.service';
 import { NxUriService }                    from '../uri.service';
 import { NxPollService }                   from '../poll.service';
 import { NxUtilsService }                  from '../utils.service';
-import { NxSystemAPIService, NxSystemRestAPI } from '../system-api.service';
+import { NxSystemAPIService }              from '../system-api.service';
 import { Account }                         from './account';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { NxStorageService }                from '../storage.service';
@@ -56,6 +56,12 @@ export abstract class BaseAccount implements OnDestroy {
     abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
     abstract logout(doNotRedirect?: boolean, skipReload?): void;
     abstract requireLogin(): Promise<any>;
+    abstract showLogin(
+        keepPage?: boolean,
+        redirectClose?: boolean,
+        redirectHome?: boolean,
+        blockNavigation?: boolean
+    ): void;
 
     constructor(
         configService: NxConfigService,
@@ -307,22 +313,6 @@ export abstract class BaseAccount implements OnDestroy {
                             }
                         });
                 }
-            });
-    }
-
-    protected showLogin() {
-        this.loginDialogActive = true;
-        return this.dialogs
-            .login(this, true, true).then((result: any) => {
-                this.storageService.loginRegister = true;
-                if (result === 'register') {
-                    return this.router.navigate(['/register']).then(() => result);
-                }
-                return this.get();
-            })
-            .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
-            .finally(() => {
-                this.loginDialogActive = false;
             });
     }
 

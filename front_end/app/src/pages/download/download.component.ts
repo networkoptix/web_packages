@@ -1,6 +1,6 @@
 import {
     Component, OnInit, OnDestroy,
-    ViewChild, Inject, Input, PLATFORM_ID
+    Inject, Input, PLATFORM_ID
 }                                       from '@angular/core';
 import {
     ActivatedRoute, ActivationEnd, Router
@@ -13,7 +13,7 @@ import { Subscription }                 from 'rxjs';
 
 import { NxLanguageProviderService }    from '@services/nx-language-provider';
 import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxAccountService }             from '@services/account.service';
+import { NxAccountService, isAccount }  from '@services/account.service';
 import { NxPageService }                from '@services/page.service';
 import { NxCloudApiService }            from '@services/nx-cloud-api';
 import { NxUriService }                 from '@services/uri.service';
@@ -206,19 +206,10 @@ export class DownloadComponent implements OnInit, OnDestroy {
             this.accountService
                 .requireLogin()
                 .then(result => {
-                    if (!result) {
-                        this.router
-                            .navigate([this.CONFIG.redirect.unauthorised])
-                            .catch(error => {
-                                console.error(error);
-                            });
-                        return;
-                    } else if (result === 'register') {
-                        return;
+                    if (isAccount(result)) {
+                        this.canViewDownloads = true;
+                        this.getDownloads();
                     }
-
-                    this.canViewDownloads = true;
-                    this.getDownloads();
                 });
         } else {
             this.canViewDownloads = true;

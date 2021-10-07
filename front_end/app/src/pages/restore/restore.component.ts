@@ -202,7 +202,7 @@ export class NxRestoreComponent implements OnInit {
     }
 
     login() {
-        this.dialogs.login(this.accountService, false, true);
+        this.accountService.showLogin(false, true);
     }
 
     loginRedirect() {
@@ -210,7 +210,6 @@ export class NxRestoreComponent implements OnInit {
         const redirect = this.CONFIG.redirect.paths.some((path) => {
             return path === '/' ? url === '/' : url.includes(path);
         });
-        // Handling promise to satisfy the linter.
-        this.dialogs.login(this.accountService, !redirect).then(() => {});
+        this.accountService.showLogin(!redirect);
     }
 }

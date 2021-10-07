@@ -8,7 +8,6 @@ import { NonSupportedBrowserModule } from './non-supported-browser/non-supported
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
 import { NxAccountModule }           from './account/account.module';
-import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';

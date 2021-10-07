@@ -3,8 +3,8 @@ import {
 }                                    from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
-import { of } from 'rxjs';
-import { tap, catchError }      from 'rxjs/operators';
+import { of }                        from 'rxjs';
+import { tap, catchError }           from 'rxjs/operators';
 
 import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
@@ -64,6 +64,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .createConnection(undefined, undefined, undefined, () => of(''), true);
     }
 
+    // Explicitly specifying return type Promise<Account> breaks requireLogin()
     async get(forceUpdate = false) {
         try {
             const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
@@ -72,7 +73,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             return account;
         } catch (err) {
             if (!this.loginDialogActive) {
-                return this.showLogin().then(() => undefined);
+                return this.showLoginDialog().then(() => undefined);
             }
         }
     }
@@ -134,13 +135,38 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             });
     }
 
-    requireLogin() {
+    showLogin(
+        keepPage?: boolean,
+        redirectClose?: boolean,
+        redirectHome = false,
+        blockNavigation = false
+    ): void {
+        this.dialogs.login(this, keepPage, redirectClose, redirectHome, blockNavigation);
+    }
+
+    private showLoginDialog(): Promise<string | Account> {
+        this.loginDialogActive = true;
+        return this.dialogs
+            .login(this, true, true).then((result: string) => {
+                this.storageService.loginRegister = true;
+                if (result === 'register') {
+                    return this.router.navigate(['/register']).then(() => result);
+                }
+                return this.get();
+            })
+            .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
+            .finally(() => {
+                this.loginDialogActive = false;
+            });
+    }
+
+    requireLogin(): Promise<string | boolean | Account> {
         return this.get()
-            .then((account: Account) => {
-                return account || !this.loginDialogActive && this.showLogin();
+            .then(account => {
+                return account || !this.loginDialogActive && this.showLoginDialog();
             }).catch(() => {
                 if (!this.loginDialogActive) {
-                    return this.showLogin();
+                    return this.showLoginDialog();
                 } else {
                     return undefined;
                 }

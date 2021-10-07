@@ -15,7 +15,7 @@ import { filter }                    from 'rxjs/operators';
 import * as isArray                  from 'core-js/features/array/is-array';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService }          from '@services/account.service';
+import { NxAccountService, isAccount } from '@services/account.service';
 import { NxPageService }             from '@services/page.service';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { NxUriService }              from '@services/uri.service';
@@ -162,7 +162,12 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.accountService
                     .requireLogin()
                     .then(account => {
-                        this.canViewRelease = account && (account.is_superuser || account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
+                        this.canViewRelease = isAccount(account) && (
+                            account.is_superuser ||
+                            account.permissions.includes(
+                                this.CONFIG.permissions.canViewRelease
+                            )
+                        );
 
                         if (this.canViewRelease) {
                             this.getData();
@@ -172,8 +177,15 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     });
             } else {
                 this.canViewRelease = true;
-                (this.build === undefined ? Promise.resolve() : this.accountService.requireLogin())
-                    .then(() => this.getData());
+                if (this.build === undefined) {
+                    this.getData();
+                } else {
+                    this.accountService.requireLogin().then(account => {
+                        if (isAccount(account)) {
+                            this.getData();
+                        }
+                    });
+                }
             }
         });
     }

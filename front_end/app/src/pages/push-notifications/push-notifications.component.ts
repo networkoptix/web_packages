@@ -6,16 +6,19 @@ import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { Subscription, timer }          from 'rxjs';
 
 import { NxSystemsService }             from '@services/systems.service';
-import { NxAccountService }             from '@services/account.service';
+import { NxAccountService, isAccount }  from '@services/account.service';
+import { NxConfigService, IConfig }     from '@services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector : 'push-notifications-component',
+    selector    : 'push-notifications-component',
     templateUrl : 'push-notifications.component.html',
-    styleUrls : ['push-notifications.component.scss']
+    styleUrls   : ['push-notifications.component.scss']
 })
 
 export class PushComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
+
     notification;
     systems;
     devices;
@@ -57,29 +60,28 @@ export class PushComponent implements OnInit, OnDestroy {
         this.subChanges = false;
     }
 
-    constructor(private accountService: NxAccountService,
-                private systemsService: NxSystemsService,
-                private afMessaging: AngularFireMessaging,
-                private http: HttpClient,
-                private router: Router
+    constructor(
+        configService: NxConfigService,
+        private accountService: NxAccountService,
+        private systemsService: NxSystemsService,
+        private afMessaging: AngularFireMessaging,
+        private http: HttpClient,
+        private router: Router
     ) {
         this.setupDefaults();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
-            if (!(account && account.email.endsWith('@networkoptix.com'))) {
-                this.router
-                    .navigate(['/'])
-                    .catch(error => {
-                        console.error(error);
-                    });
-            } else {
+            if (isAccount(account) && account.email.endsWith('@networkoptix.com')) {
                 this.account = account;
                 this.setSystems();
                 this.setFirebase();
+            } else {
+                this.router.navigate([this.CONFIG.redirect.unauthorised]);
             }
         });
     }
