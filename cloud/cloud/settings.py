@@ -43,6 +43,7 @@ from cloud.logger import downgrade_requests
 
 conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+CI = os.getenv('CI', False)
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
@@ -203,6 +204,8 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             }
         }
     }
+    if CI:
+        DATABASES['default']['HOST'] = 'mysql'
 
     if not LOCAL_ENVIRONMENT and not TESTING:
         DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'

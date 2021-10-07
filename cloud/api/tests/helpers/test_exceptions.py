@@ -327,7 +327,7 @@ class TestExceptions:
         for logic_error, ErrorClass in logic_errors.items():
             error_text = str(uuid4())
             result_code = logic_error
-            mock_response.status_code = logic_error.value
+            mock_response.status_code = logic_error
             mock_response.json.return_value = {
                 'errorText': error_text,
                 'resultCode': result_code
@@ -336,7 +336,7 @@ class TestExceptions:
                 validator()
 
             assert raised_error.value.error_text == error_text
-            assert raised_error.value.error_code == result_code
+            assert raised_error.value.error_code == result_code or raised_error.value.error_code.value == result_code
             assert isinstance(raised_error.value, ErrorClass)
 
     def test_get_client_ip(self, mocker):
@@ -437,7 +437,7 @@ class TestExceptions:
         # Test APIException
         api_exception = APIException(str(uuid4()), status.HTTP_400_BAD_REQUEST)
         self.handler_test_with(mock_request, api_exception, mock_log_error)
-        
+
         # Test other exception
         other_exception = Exception(str(uuid4()))
         response = self.handler_test_with(mock_request, other_exception, mock_log_error)

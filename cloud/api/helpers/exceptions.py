@@ -97,6 +97,7 @@ def create_response_with_cookies(data, status_code, cookies):
                 response.set_cookie(name, value, httponly=True, secure=True)
     return response
 
+
 def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
     if data is None:
         data = {
@@ -109,7 +110,7 @@ def require_params(request, params_list):
     error_data = {}
     try:
         for param in params_list:
-            if request.method == "POST" and (data := getattr(request, 'data', request.POST)) and not (data.get(param, '')):
+            if request.method == "POST" and (not (data := getattr(request, 'data', request.POST)) or not (data.get(param, ''))):
                 error_data[param] = ['This field is required.']
             elif request.method == "GET" and (param not in request.GET):
                 error_data[param] = ['This field is required.']

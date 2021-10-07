@@ -50,8 +50,6 @@ def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, djan
             read_structure_json()
         eng = Language.objects.get_or_create(name='English', code='en_US')[0]
         Customization.objects.get_or_create(name='default', default_language=eng)
-        portal_type = get_asset_type(AssetType.ASSET_TYPES.documentation)
-        Asset.objects.get_or_create(name='Nx Cloud', asset_type=portal_type)
 
 
 @pytest.fixture(autouse=True)
@@ -114,10 +112,7 @@ def cloud_portal_type(db):
 
 @pytest.fixture
 def default_portal(default_customization, cloud_portal_type, db):
-    portal, created = Asset.objects.get_or_create(name='Nx Cloud', asset_type=cloud_portal_type)
-    if created:
-        portal.customizations.add(default_customization)
-    return portal
+    return Asset.objects.filter(asset_type=cloud_portal_type, customizations=default_customization).first()
 
 
 @pytest.fixture()

@@ -444,7 +444,7 @@ class Customization(models.Model):
             # Default cloud portal asset type
             asset_type, _ = AssetType.objects.get_or_create(name="", single_customization=True,
                                                             type=AssetType.ASSET_TYPES.cloud_portal)
-            cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
+            cloud_portal = Asset.objects.create(name=f"Cloud Portal",
                                                 asset_type=asset_type)
             cloud_portal.customizations.set([self])
             # Automatically add new customization to all assets and menu_nodes that have all other customizations enabled
@@ -512,7 +512,7 @@ class AssetType(models.Model):
                 fields = (asset_type.custom_field_overrides or dict()).get('fields', {})
                 cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
             return fields
-        except (ConnectionError, OperationalError):
+        except (ConnectionError, OperationalError, ProgrammingError):
             return {}
 
     def get_customizations(self, asset):
@@ -526,11 +526,11 @@ class AssetType(models.Model):
 
 class AssetManager(models.Manager):
     def create(self, *args, **kwargs):
-        """Auto generated asset names could be longer than 255 characters. Problem usually only encountered in when assets get indirectly created using baker.make, the asset name field should at some point be changed to a TextField instead of CharField. 
+        """Auto generated asset names could be longer than 255 characters. Problem usually only encountered in when assets get indirectly created using baker.make, the asset name field should at some point be changed to a TextField instead of CharField.
 
         Returns:
             Asset: Created Asset
-        """        
+        """
         NAME = 'name'
         max_length = getattr(Asset._meta.get_field(NAME), 'max_length', 255)
         kwargs[NAME] = kwargs.get(NAME, '')[:max_length]
@@ -2455,7 +2455,7 @@ class ZendeskArticleManager(models.Manager):
                   'promoted', 'title', 'updated_at', 'user_segment_id']
         kwarg_mapping = {
             field: getattr(article, field, None)
-            for field in fields 
+            for field in fields
             if field not in kwargs}
         kwarg_mapping['article_id'] = article.id
 

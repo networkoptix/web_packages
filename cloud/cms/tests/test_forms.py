@@ -58,18 +58,18 @@ class TestHelperFunctions:
     @patch('cms.models.DataStructure.find_actual_values')
     def test_get_restricted_keywords(self, mock_cms_models, mocker, db):
         branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
-        ds1 = baker.make('DataStructure', name='Restricted', context=branding_context)
-        ds2 = baker.make('DataStructure', name='Restricted', context=branding_context)
-        mock_cms_models.return_value = { ds1: ['item1', 'item2'], ds2: ['item3', 'item4']}
+        restricted_ds = branding_context.datastructure_set.filter(name='Restricted').first()
+        mock_cms_models.return_value = {restricted_ds: ['item1', 'item2']}
 
         restricted_words = get_restricted_keywords()
-        assert restricted_words == ['item1', 'item2', 'item3', 'item4']
+        assert restricted_words == ['item1', 'item2']
 
     def test_generate_branding_variables(self, db):
         datastructure = baker.make("DataStructure", name='Test DS')
         branding_variables = generate_branding_variables(datastructure)
         # Check that it is html
         assert list(filter(lambda html_snippet: not isinstance(html_snippet, str), BeautifulSoup(branding_variables, "html.parser").contents))
+
 
 class TestCustomContextForm:
     @pytest.fixture(autouse=True)
@@ -94,7 +94,7 @@ class TestCustomContextForm:
 
     @pytest.fixture()
     def create_datastructures(self):
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure1",
                     context=self.context,
                     label='label1',
@@ -103,7 +103,7 @@ class TestCustomContextForm:
                     meta_settings={'char_limit': 200, 'regex': '^[a-zA-Z0-9_.+-]' },
                     placeholder='ds1 placeholder')
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure2",
                     context=self.context,
                     description='guid description',
@@ -112,7 +112,7 @@ class TestCustomContextForm:
                     type=5
                     )
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure3",
                     context=self.context,
                     label='label3',
@@ -121,20 +121,20 @@ class TestCustomContextForm:
                     # Array
                     type=11,)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure4",
                     context=self.context,
                     # Object
                     type=10)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure5",
                     context=self.context,
                     placeholder='ds5 placeholder',
                     # HTML
                     type=2)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure6",
                     context=self.context,
                     label='image field',
@@ -143,7 +143,7 @@ class TestCustomContextForm:
                     # Image
                     type=1)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure7",
                     context=self.context,
                     label='file field',
@@ -152,7 +152,7 @@ class TestCustomContextForm:
                     # File
                     type=4)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure8",
                     context=self.context,
                     label='select field',
@@ -161,7 +161,7 @@ class TestCustomContextForm:
                     # Select
                     type=6)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure9",
                     context=self.context,
                     label='multiselect field',
@@ -170,7 +170,7 @@ class TestCustomContextForm:
                     # MultiSelect
                     type=12)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure10",
                     context=self.context,
                     label='checkbox field',
@@ -178,7 +178,7 @@ class TestCustomContextForm:
                     # Checkbox
                     type=9)
 
-        baker.make("DataStructure", 
+        baker.make("DataStructure",
                     name="datastructure11",
                     context=self.context,
                     label='long_text field',
@@ -193,7 +193,7 @@ class TestCustomContextForm:
         assert self.form.fields['language'].choices == self.mocked_language_choices
         assert self.form.branding_shortcuts == self.mocked_branding_shortcuts
         assert self.form.hidden_branding_shortcuts == self.mocked_hidden_branding_shortcuts
-    
+
     def test_remove_language(self, init_form):
         assert self.form.fields['language']
         self.form.remove_language()
@@ -228,12 +228,12 @@ class TestCustomContextForm:
         assert guid_field.label == 'datastructure2'
 
         # meta_settings get added to help_text
-        assert '<br>Character limit: 200' in field_one.help_text 
-        
+        assert '<br>Character limit: 200' in field_one.help_text
+
         # GUID Format added to description if required
-        assert ("<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal characters (0-9, a-f, A-F)<br>This record is the same for every language.<br>Regex pattern: \{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$" 
+        assert ("<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal characters (0-9, a-f, A-F)<br>This record is the same for every language.<br>Regex pattern: \{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$"
                 in guid_field.help_text)
-    
+
         # If data structure is not translatable but context is, something is added to the description.
         assert '<br>This record is the same for every language.' in guid_field.help_text
 
@@ -354,7 +354,7 @@ class TestAssetSettingsForm:
         assert field.required == False
         assert field.label == "Force Update"
         assert isinstance(field, BooleanField)
-    
+
     def test_normal_user_no_publish_choice(self):
         import_assets_from_json_publish = [choice for choice in self.form.fields['action'].choices if choice[0] == 'import_assets_from_json_publish']
         assert not len(import_assets_from_json_publish)
@@ -418,8 +418,8 @@ class TestAssetForm:
         self.group_model = baker.make("Group", name="test-group")
         self.asset_type = baker.make("AssetType", name="new_asset_type", type=0)
         self.customization_one = customization_factory('testcust')
-        self.form = AssetForm(data={'name': 'test-asset', 
-                                    'created_by': self.user.id,  
+        self.form = AssetForm(data={'name': 'test-asset',
+                                    'created_by': self.user.id,
                                     'asset_type': self.asset_type.id,
                                     'preview_status': 0,
                                     'primary_group': self.group_model.id,
@@ -463,12 +463,12 @@ class TestAssetForm:
         field = self.form.fields['asset_type']
         assert field
         assert isinstance(field, ModelChoiceField)
-    
+
     def test_preview_status(self, new_asset_form):
         field = self.form.fields['preview_status']
         assert field
         assert isinstance(field, TypedChoiceField)
-    
+
     def test_primary_group(self, new_asset_form):
         field = self.form.fields['primary_group']
         assert field
@@ -509,9 +509,9 @@ class TestAssetForm:
     def test_new_form_non_superuser(self, new_asset_form):
         # Advanced asset_types are hidden for non-superusers
         assert self.form.fields['asset_type'].queryset.filter(advanced=True).count() == 0
-        # Non-superusers can only select themselves as the created_by user, so the count is always 1 
+        # Non-superusers can only select themselves as the created_by user, so the count is always 1
         assert self.form.fields['created_by'].queryset.count() == 1
-    
+
     def test_new_form_is_superuser(self, new_asset_form_is_superuser):
         assert self.form.fields['asset_type'].queryset.filter(advanced=True).count() != 0
         assert self.form.fields['created_by'].queryset.count() != 1
@@ -538,8 +538,8 @@ class TestAssetForm:
         mock_asset.customizations.add(mock_customization)
         mock_asset.save()
         # publish_all_customization is false and mock_customization is selected
-        self.form = AssetForm(data={'name': 'test-asset', 
-                                    'created_by': self.user.id,  
+        self.form = AssetForm(data={'name': 'test-asset',
+                                    'created_by': self.user.id,
                                     'asset_type': self.asset_type.id,
                                     'preview_status': 0,
                                     'primary_group': self.group_model.id,
@@ -555,7 +555,7 @@ class TestAssetForm:
         class MockErrorField:
             name = 'test_name'
         mocker.patch('cms.forms.are_asset_datarecords_unique', return_value=[False, MockErrorField])
-    
+
         self.form.is_valid()
         with pytest.raises(ValidationError, match='Cannot apply customizations because there is a uniqueness conflict on the test_name field'):
             self.form.clean()
@@ -587,11 +587,11 @@ class TestCustomizationForm:
         self.child_customization.parent = self.form_customization
         self.child_customization.save()
         self.extra_customization = customization_factory(name='cust4')
-        self.form = CustomizationForm(instance = self.form_customization, 
+        self.form = CustomizationForm(instance = self.form_customization,
                                       data={
-                                            'parent': self.extra_customization.id, 
+                                            'parent': self.extra_customization.id,
                                             'default_language': 1,
-                                            'languages': [1], 
+                                            'languages': [1],
                                             'name': 'new_name'
                                             })
 
@@ -607,7 +607,7 @@ class TestCustomizationForm:
         field = self.form.fields['default_language']
         assert field
         assert isinstance(field, ModelChoiceField)
-    
+
     def test_languages(self, new_customization_form):
         field = self.form.fields['languages']
         assert field
@@ -630,10 +630,10 @@ class TestCustomizationForm:
         assert isinstance(field, BooleanField)
 
     def test_new_customization_parent_queryset_inlcudes_all_customizations(self, new_customization_form):
-        assert Customization.objects.all().count() == len(self.form.fields['parent'].choices) - 1 
+        assert Customization.objects.all().count() == len(self.form.fields['parent'].choices) - 1
                                                          # Minus 1 to account for default choice, which is blank
 
-    
+
     def test_does_not_include_itself_as_parent_choice(self, existing_customization_form):
         self_customization = None
         for item in self.form.fields['parent'].choices:
@@ -649,14 +649,14 @@ class TestCustomizationForm:
         assert not child_customization
 
     def test_invalid_customization(self, existing_customization_form):
-        # extra_customization is selected as the parent, 
+        # extra_customization is selected as the parent,
         # and it becomes a child of the form customization, which is an invalid selection
         self.extra_customization.parent = self.form_customization
         self.extra_customization.save()
 
         with pytest.raises(ValueError, match='Invalid customization was selected'):
             # clean_parent is run here
-            self.form.save() 
+            self.form.save()
 
     def test_customization_form_submits(self, existing_customization_form):
         # clean_parent is run here
@@ -721,7 +721,7 @@ class TestContributorAgreementForm:
         self.user = django_user_model(email=self.email)
         self.contributor_agreement = baker.prepare('ContributorAgreement', user = self.user)
         self.form = ContributorAgreementForm(instance = self.contributor_agreement)
-    
+
     def test_model(self):
         assert self.form.Meta.model == ContributorAgreement
 
@@ -732,7 +732,7 @@ class TestContributorAgreementForm:
         assert field.widget.url == reverse('account-autocomplete')
         assert isinstance(field, ModelChoiceField)
 
-    def test_accepted_agreement(self): 
+    def test_accepted_agreement(self):
         field = self.form.fields['accepted_agreement']
         assert field
         assert isinstance(field, ModelChoiceField)
@@ -755,7 +755,7 @@ class TestMenuChangeForm:
 
     def test_model(self):
         assert self.form.Meta.model == Menu
-    
+
     def test_name(self):
         field = self.form.fields['name']
         assert field
@@ -839,7 +839,7 @@ class TestMenuChangeForm:
                                  }
         with pytest.raises(ValidationError, match='Invalid JSON format'):
             self.form.clean_admin_config()
-    
+
     def test_clean_admin_config_raises_invalid_value_error(self):
         admin_config_string = '{"header": ["name", "invalid_entry"]}'
         self.form.cleaned_data = {
@@ -1036,7 +1036,7 @@ class TestMenuNodeInlineForm(MenuNodeFieldTests):
         field = self.form.fields['subtitle']
         assert field
         assert isinstance(field, CharField)
-        
+
     def test_related_assets(self, init_form):
         field = self.form.fields['related_assets']
         assert field
@@ -1044,7 +1044,7 @@ class TestMenuNodeInlineForm(MenuNodeFieldTests):
         assert field.help_text == 'Use to add related articles for knowledgebase pages'
         assert isinstance(field.widget, ModelSelect2Multiple)
         assert field.widget.url == reverse('asset_autocomplete')
-        assert field.widget.attrs == { 
+        assert field.widget.attrs == {
                                 'data-placeholder': 'Select related articles',
                                 'data-minimum-input-length': 2
                               }
@@ -1052,7 +1052,7 @@ class TestMenuNodeInlineForm(MenuNodeFieldTests):
 
     def test_enabled_widget(self, init_form):
         widget = self.form.fields['enabled'].widget
-        assert widget.options == {  
+        assert widget.options == {
                                   'includeSelectAllOption': True,
                                   'maxHeight': 300,
                                   'selectAllText': 'All',
@@ -1180,7 +1180,7 @@ class TestMenuPortForm:
         assert set(field.queryset) == set(Menu.objects.filter(allow_porting=True))
         assert callable(field.label_from_instance)
         assert isinstance(field, ModelChoiceField)
-    
+
     def test_file(self):
         field = self.form.fields['file']
         assert field
@@ -1217,14 +1217,14 @@ class TestZendeskImportForm:
     @pytest.fixture()
     def init_form_importing(self):
         self.form = ZendeskImportForm(['import'])
-    
+
 
     def test_menu(self, init_form):
         field = self.form.fields['menu']
         assert field
         assert set(field.queryset) == set(Menu.objects.filter(allow_porting=True))
         assert isinstance(field, ModelChoiceField)
-    
+
     def test_domain(self, init_form):
         field = self.form.fields['domain']
         assert field

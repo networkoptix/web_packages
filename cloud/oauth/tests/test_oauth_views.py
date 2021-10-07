@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from uuid import uuid4
 from oauth.views import *
 
+
 class TestOauthViews:
     @pytest.fixture(autouse=True)
     def setup_instance(self, django_user_model, arf):
@@ -19,7 +20,6 @@ class TestOauthViews:
         assert response.status_code == 400
         assert response.data['resultCode'] == 'wrongParameters'
         assert response.data['errorText'] == 'Parameters are missing'
-
 
     # Test helper functions
     def test_check_signature(self, mocker):
@@ -93,7 +93,7 @@ class TestOauthViews:
         response = self.authenticate(self.password, Auth.RESPONSE_TYPE.token)
 
         assert response.status_code == 400
-        assert response.data['resultCode'] == 'wrongParameters'
+        assert response.data['resultCode'] == 'badRequest'
         assert response.data['errorText'] == 'Invalid value for response_type. It must be code.'
 
     def test_authenticate_raises_not_authorized(self, mocker):
@@ -116,7 +116,6 @@ class TestOauthViews:
         request = self.arf.post('/oauth/logout/', data=self.data)
         request.session = {}
         return logout(request)
-        
 
     def test_valid_logout(self, mocker):
         mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', return_value=True)
@@ -135,7 +134,7 @@ class TestOauthViews:
         assert mock_delete_token.call_count == 1
         assert response.data['errorText'] == 'Invalid cloud access and refresh token'
         assert response.data['resultCode'] == 'notAuthorized'
-     
+
     def test_logout_no_access_token(self, mocker):
         # test that Auth.delete_token throws an error, but logout still succeeds
         mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', side_effect=APILogicException('', ''))
@@ -197,9 +196,9 @@ class TestOauthViews:
         # Authorization code grant_type and token response_type
         data = {
             'code': str(uuid4()),
-        }        
+        }
         response = self.token(data)
-        
+
         assert response.status_code == 200
         mock_get_access_token.assert_called_once_with(data['code'], ip=self.mock_ip)
 
@@ -225,7 +224,7 @@ class TestOauthViews:
 
         mock_check_signature.assert_called_once_with(data['signature'], data['scope'], data['redirect_uri'])
         mock_get_code.assert_called_once_with(
-                                              data['email'], 
+                                              data['email'],
                                               data['password'],
                                               client_id=data['client_id'],
                                               ip=self.mock_ip,
@@ -317,7 +316,7 @@ class TestOauthViews:
         return revoke_token(request)
 
     def test_valid_revoke_token(self, mocker):
-        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', return_value=Response())   
+        mock_delete_token = mocker.patch('api.controllers.cloud_api.Auth.delete_token', return_value=Response())
         data = {
             'token': str(uuid4())
         }
@@ -325,7 +324,7 @@ class TestOauthViews:
         args, kwargs = mock_delete_token.call_args_list[0]
 
         assert response.status_code == 200
-        assert data['token'] in args        
+        assert data['token'] in args
 
     def test_revoke_token_require_params(self):
         response = self.revoke_token({})

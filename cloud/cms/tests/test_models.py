@@ -906,7 +906,7 @@ class TestAssetMethods:
     def test_str(self, default_portal):
         assert str(self.asset) == 'Great Asset'
 
-        assert str(default_portal) == 'Nx Cloud - Cloud Portal - default'
+        assert str(default_portal) == 'Cloud Portal - Cloud Portal - default'
 
     def test_can_preview_on_portal(self, default_portal):
         assert default_portal.can_preview_on_portal
@@ -1469,7 +1469,7 @@ class TestCustomization:
         portal = Asset.objects.filter(customizations=customization, asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
         assert portal
         assert portal.asset_type.type == AssetType.ASSET_TYPES.cloud_portal
-        assert portal.name == 'Cloud portal - new_cust'
+        assert portal.name == 'Cloud Portal'
 
         integration.refresh_from_db()
         assert integration.customizations.filter(id=customization.id).exists()

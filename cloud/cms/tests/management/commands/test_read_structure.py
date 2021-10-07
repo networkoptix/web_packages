@@ -313,6 +313,7 @@ class TestReadStructure:
             structure, 'read_menu_structure')
         mock_write_stdout = mocker.patch.object(
             instance.stdout, 'write')
+        mock_read_languages = mocker.patch('cms.management.commands.readstructure.read_languages')
 
         # Test error if missing asset_type
         pytest.raises(ValueError, instance.handle, match='asset_type required')
@@ -339,4 +340,5 @@ class TestReadStructure:
             call(instance.style.SUCCESS(
                 message))
             for message in expected_std_messages)
+        mock_read_languages.assert_called_with(settings.DEFAULT_SKIN)
         assert deployment_cache.get(settings.DEPLOYMENT_READY)

@@ -776,7 +776,7 @@ class TestZendeskMapper:
             mock_action = mocker.patch.object(
                 getattr(mapper.zen_client.help_center, endpoint), action)
             getattr(mapper, f'_clean_{label}')(id)
-            mock_action.mock_calls[0].args[0].id == id
+            assert mock_action.mock_calls[0].args[0].id == id
 
         return _clean_zendesk
 

@@ -422,35 +422,38 @@ def test_handle_publish_single_customization(mocker, arf, account_factory, db):
     assert deferred() == published_result
 
 
-def test_handle_publish_all_customizations(arf, account_factory, db):
+def test_handle_publish_all_customizations(arf, account_factory, db, default_portal):
     user = account_factory()
-    asset_review = baker.make(AssetCustomizationReview,
-                              version__created_by=user)
+    customizations_with_portal = Customization.objects.filter(asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
+    asset_reviews = []
+    for customization in customizations_with_portal:
+        asset_reviews.append(
+            baker.make(AssetCustomizationReview, customization=customization, version__created_by=user)
+        )
     request = arf.post('')
     request.user = user
 
     # Test not handled
     deferred = handle_publish_all_customizations(
-        request, asset_review, True, True)
+        request, asset_reviews[0], True, True)
     assert not deferred()
     review_state = AssetCustomizationReview.objects.get(
-        id=asset_review.id).state
+        id=asset_reviews[0].id).state
     assert review_state == AssetCustomizationReview.REVIEW_STATES.pending
 
     # Test handled
     request.POST = {'publish_all'}
     deferred = handle_publish_all_customizations(
-        request, asset_review, True, True)
+        request, asset_reviews[0], True, True)
     accepted_customization_portals = list(Asset.objects.filter(
-        customizations__in=[
-            asset_review.customization], asset_type__type=AssetType.ASSET_TYPES.cloud_portal
+        asset_type__type=AssetType.ASSET_TYPES.cloud_portal
     ).values_list('name', flat=True))
     assert deferred() == (
         'success',
-        f"Version {asset_review.version.id} has been accepted for {', '.join(accepted_customization_portals)}"
+        f"Version {asset_reviews[0].version.id} has been accepted for {', '.join(accepted_customization_portals)}"
     )
     review_state = AssetCustomizationReview.objects.get(
-        id=asset_review.id).state
+        id=asset_reviews[0].id).state
     assert review_state == AssetCustomizationReview.REVIEW_STATES.accepted
 
 
@@ -573,6 +576,7 @@ def test_review(mocker, arf, account_factory, db):
     mocker.patch(
         'cms.models.UserGroupsToAssetPermissions.check_customization_access', return_value=True)
     mocker.patch('cms.views.asset.review_generator', return_value=[])
+    mock_init_skin = mocker.patch('cms.views.asset.filldata.init_skin')
 
     # Test version doesn't exist
     res = review(mock_request)
@@ -622,6 +626,8 @@ def test_review(mocker, arf, account_factory, db):
     # Test handle force update
     mock_request.POST = {**base_data, 'force_update': True}
     review(mock_request)
+    mock_init_skin.assert_any_call(mock_review.version.asset, preview=False)
+    mock_init_skin.assert_any_call(mock_review.version.asset, preview=True)
     mock_handle_display_message.assert_called_with(
         mock_request, ('success', f'Version {mock_review.version.id} was force updated'))
 
@@ -1366,14 +1372,8 @@ class TestCustomClientViewSet:
 
     def test_get_queryset(self, mocker, get_instance, db):
         instance = get_instance()
-
-        # Test superuser no clients
-        assert not instance.get_queryset()
-
-        # Test superuser has client
         custom_client = baker.make(CustomClient, created_customization=Customization.objects.filter(
             name=settings.CUSTOMIZATION).first())
-        assert list(instance.get_queryset()) == [custom_client]
 
         # Test non-superuser no clients
         mocker.patch.object(instance.request.user, 'is_superuser', False)

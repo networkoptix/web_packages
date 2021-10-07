@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('api', '0031_auto_20210726_2259'),
+        ('cms', '0140_add_cloud_host_field')
     ]
 
     operations = [

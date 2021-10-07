@@ -11,6 +11,7 @@ import pytest
 from pytest_django.asserts import assertContains
 
 
+@pytest.mark.integration
 class TestLoginHistory:
     test_user_email = 'test@test.com'
 
@@ -43,6 +44,7 @@ class TestLoginHistory:
         assert last_record.ip == '127.0.0.1'
 
 
+@pytest.mark.integration
 class TestCloudInvite:
     @pytest.fixture(autouse=True)
     def setup(self, admin_client, default_customization):
