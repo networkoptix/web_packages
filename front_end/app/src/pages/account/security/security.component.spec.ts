@@ -24,7 +24,7 @@ import { NxContentBlockComponent }        from '@components/content-block/conten
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxSwitchComponent }              from '@components/switch/switch.component';
 import { NxCheckboxComponent }            from '@components/checkbox/checkbox.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule }                    from '@angular/forms';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -44,6 +44,19 @@ describe('NxAccountSecurityComponent', () => {
             'Two-factor authentication' : 'Two-factor authentication',
             pageTitles                  : {
                 security: 'Security'
+            },
+            security: {
+                twoFa: {
+                    twoFADescription_a1 : jasmine.createSpy(),
+                    twoFADescription_a2 : jasmine.createSpy(),
+                    systemsRemainder    : jasmine.createSpy(),
+                    v5Warning_a1        : jasmine.createSpy(),
+                    v5Warning_a2        : jasmine.createSpy(),
+                    v5Warning_a3        : jasmine.createSpy(),
+                    v5Warning_a4        : jasmine.createSpy(),
+                    v5Warning_a5        : jasmine.createSpy(),
+                    v5Warning_b         : jasmine.createSpy()
+                }
             }
         }
     };
@@ -55,6 +68,8 @@ describe('NxAccountSecurityComponent', () => {
 
     beforeEach(waitForAsync(() => {
         const mockAccountService = jasmine.createSpyObj('NxAccountService', ['account', 'get']);
+        const spyCreateProcess = jasmine.createSpyObj('NxProcessService', ['createProcess']);
+        const spyApplyInitPageWatcher = jasmine.createSpyObj('NxApplyService', ['initPageWatcher']);
 
         TestBed
             .configureTestingModule({
@@ -66,13 +81,13 @@ describe('NxAccountSecurityComponent', () => {
                 providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: NxConfigService, useValue: configMock },
-                    { provide: NxProcessService, useValue: {} },
+                    { provide: NxProcessService, useValue: spyCreateProcess },
                     { provide: ActivatedRoute, useValue: {} },
                     { provide: NxCloudApiService, useValue: {} },
                     { provide: NxSystemsService, useValue: systemsServiceMock },
                     { provide: NxAccountService, useValue: mockAccountService },
                     { provide: NxMenuService, useValue: {} },
-                    { provide: NxApplyService, useValue: {} },
+                    { provide: NxApplyService, useValue: spyApplyInitPageWatcher },
                     { provide: NxPageService, useValue: {} },
                     { provide: NxDialogsService, useValue: {} }
                 ]
@@ -127,7 +142,14 @@ describe('NxAccountSecurityComponent', () => {
             expect(cardBody.innerHTML.length).toBeGreaterThan(20);
         });
 
-        it('should call toggle2FA on keydown', fakeAsync(() => {
+        it('should not have verification code elements', () => {
+            const checkbox = el.querySelector('.tfauth-checkbox');
+            const warning = el.querySelector('.tfauth-v5-warning');
+            expect(checkbox).toBeNull();
+            expect(warning).toBeNull();
+        });
+
+        it('should call toggle2FA on click', fakeAsync(() => {
             const spy = spyOn(component, 'toggle2FA');
             const tfaSwitch = fixture.debugElement.nativeElement.querySelector('nx-block header div nx-switch');
             const nxSwitch = tfaSwitch.querySelector('div'); // id="2fa-active-status"
@@ -144,9 +166,27 @@ describe('NxAccountSecurityComponent', () => {
             component.tfauth.enabled = true;
             fixture.detectChanges();
         });
+
         it('should have two blocks', () => {
             const block = el.querySelectorAll('nx-block');
             expect(block.length).toBe(2);
+        });
+
+        it('should have verification code checkbox', () => {
+            const checkbox = el.querySelector('.tfauth-checkbox');
+            expect(checkbox).toBeTruthy();
+        });
+
+        it('should not have a warning with no v5.0 systems', () => {
+            const warning = el.querySelector('.tfauth-v5-warning');
+            expect(warning).toBeNull();
+        });
+
+        it('should have a warning with at least one v5.0 system', () => {
+            component.subV5Systems = [{ name: 'foo' } as any];
+            fixture.detectChanges();
+            const warning = el.querySelector('.tfauth-v5-warning');
+            expect(warning).toBeTruthy();
         });
     });
 });

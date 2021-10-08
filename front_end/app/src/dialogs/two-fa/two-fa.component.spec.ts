@@ -12,12 +12,12 @@ import { NxAccountService }              from '@services/account.service';
 import { T_FA_STEPS, TwoFAModalContent } from '@dialogs/two-fa/two-fa.component';
 import { NgbActiveModal }                from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule }                   from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Renderer2 } from '@angular/core';
-import { NxToastService }                         from '@dialogs/toast.service';
-import { ClipboardService }   from 'ngx-clipboard';
-import { NxSystemsService } from '@services/systems.service';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule }       from '@angular/common/http/testing';
+import { Renderer2 }                     from '@angular/core';
+import { NxToastService }                from '@dialogs/toast.service';
+import { ClipboardService }              from 'ngx-clipboard';
+import { NxSystemsService }              from '@services/systems.service';
+import { AngularSvgIconModule }          from 'angular-svg-icon';
 
 // Mock class for NgbModalRef
 export class MockNgbModalRef {
@@ -145,6 +145,7 @@ describe('TwoFAModalContent', () => {
                 //     account2faEnabled       : false
                 // };
 
+                component.type = '';
                 component.ngAfterViewInit();
             }));
     }));
