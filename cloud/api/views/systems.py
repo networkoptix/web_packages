@@ -30,6 +30,7 @@ slave_system_id__body = openapi.Schema(type=openapi.TYPE_STRING,
                                        description="The system that disappears after the cloud merge completes.")
 system_id__body = openapi.Schema(type=openapi.TYPE_STRING)
 system_name__body = openapi.Schema(type=openapi.TYPE_STRING, description="Name of the system.")
+totp__body = openapi.Schema(type=openapi.TYPE_STRING, description="Verification code from 2fa app.")
 user_email__body = openapi.Schema(type=openapi.TYPE_STRING)
 user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 
@@ -300,6 +301,28 @@ def connect(request):
     with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
         data = cloud_api.System.bind(credentials.tokens, request.data['name'])
     return api_success(data)
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Toggles the systems system2faEnabled setting. "
+                                           "This setting forces all cloud users for the system to use 2fa",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "system_id": system_id__body,
+                             "totp": totp__body
+                         },
+                         required=["system_id", "totp"]
+                     ))
+@api_view(['POST'])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def toggle2fa(request):
+    require_params(request, ('systemId', 'totp'))
+    system_id = request.data.get('systemId')
+    systems = cloud_api.System.get(request, system_id).get('systems')
+    target_system = next(filter(lambda s: s['id'] == system_id, systems), None)
+    twofa_enabled = target_system.get('system2faEnabled', False)
+    return api_success(cloud_api.System.update(request, system_id, request.data.get('totp'), not twofa_enabled))
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

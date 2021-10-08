@@ -356,6 +356,16 @@ class System(object):
         }
         return post_wrapper(f"{CLOUD_DB_URL}/system/{system_id}/signature/validate", json=data)
 
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def update(request, system_id, totp, require2fa, headers=None):
+        data = {
+            'system2faEnabled': require2fa,
+            'totp': totp
+        }
+        return put_wrapper(f"{CLOUD_DB_URL}/system/{system_id}", json=data, headers=headers)
+
 
 class Account(object):
     @staticmethod

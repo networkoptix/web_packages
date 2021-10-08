@@ -1,4 +1,4 @@
-import { Inject, Injectable           }        from '@angular/core';
+import { Inject, Injectable }                  from '@angular/core';
 import { DOCUMENT, Location }                  from '@angular/common';
 import { DomSanitizer }                        from '@angular/platform-browser';
 import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +46,7 @@ import { EditModalContent }                    from './edit/edit.component';
 import { ModalContent }                        from '@components/console-table/console-table.component';
 import { DownloadAsyncModalContent }           from './download-async/download-async.component';
 import { StorageManager }                      from '@services/system.service/system/storage-manager/storage-manager';
+import { Mandatory2faModalContent }            from './mandatory-2fa/mandatory-2fa.component';
 
 import '@dialogs/dialogs.scss';
 
@@ -605,5 +606,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(TwoFAModalContent, options, params);
+    }
+
+    public toggleSystem2fa(system: NxSystem, system2faEnabled: boolean) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            system2faEnabled,
+            system,
+            closable: true
+        };
+
+        return this.createModal(Mandatory2faModalContent, options, params);
     }
 }

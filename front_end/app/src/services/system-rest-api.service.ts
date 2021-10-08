@@ -99,7 +99,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     public set accessToken(token) {
         if (this.isSessionOauth) {
-            this.deleteToken(this.accessToken).toPromise().catch();
+            this.deleteToken(this.accessToken).toPromise().catch(() => {});
         }
         this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
         this.cookieService.set(`${this.systemId ?? ''}-${this.token}`, token);

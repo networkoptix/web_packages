@@ -247,6 +247,8 @@
             "createAccount": "Create New Account",
             "delete": "Delete",
             "deleteAccount": "Delete Account",
+            "disable": "Disable",
+            "enable": "Enable",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
             "ok": "OK",
@@ -350,6 +352,8 @@
             "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
         },
         "message": {
+            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
+            "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "Storage settings saved.",
             "storageSettingsNotSaved": "Couldn't save storage settings.",
             "settingsSaved": "Settings saved.",

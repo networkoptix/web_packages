@@ -46,7 +46,8 @@ import { EditModalContent }               from './edit/edit.component';
 import { TwoFAModalContent }              from './two-fa/two-fa.component';
 import { DownloadAsyncModalContent }      from './download-async/download-async.component';
 import { NxDialogsService }               from './dialogs.service';
-import { QrCodeModule } from 'ng-qrcode';
+import { QrCodeModule }                   from 'ng-qrcode';
+import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.component';
 
 @NgModule({
     imports: [
@@ -91,7 +92,8 @@ import { QrCodeModule } from 'ng-qrcode';
         RemoveSystemModalContent,
         EditModalContent,
         TwoFAModalContent,
-        DownloadAsyncModalContent
+        DownloadAsyncModalContent,
+        Mandatory2faModalContent
     ],
     providers: [
         NxDialogsService,

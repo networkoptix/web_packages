@@ -14,6 +14,8 @@ import { NxMenuService }             from '@src/menu';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { delayInitial }              from '@services/utils.service';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxSystemsService }          from '@services/systems.service';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;
@@ -69,6 +71,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     alexaSettings: Partial<AlexaSettings>;
     eventRulesBeingSetup = false;
 
+    is2faDialogActive: Promise<any>;
+    system2faEnabled = false;
+
     settingsWatchersSet = false;
     settingsWatchers = {
         autoDiscoveryEnabled         : new Watcher<boolean>(),
@@ -90,9 +95,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
-        private processService: NxProcessService,
+        private cloudApi: NxCloudApiService,
+        private dialogService: NxDialogsService,
         private menuService: NxMenuService,
-        private cloudApi: NxCloudApiService
+        private processService: NxProcessService,
+        private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -138,6 +145,10 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             }
             );
         }
+
+        const { system2faEnabled } = this.systemsService.systems
+            .filter((system) => system.id === this.system.id)?.shift();
+        this.system2faEnabled = system2faEnabled;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -294,6 +305,21 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             this.timeValue = 0;
             this.settingsWatchers.sessionLimitMinutes.value = 0;
         }
+    }
+
+    // handle mandatory 2fa
+    handleMandatory2fa() {
+        if (this.is2faDialogActive) {
+            return;
+        }
+
+        this.is2faDialogActive = this.dialogService.toggleSystem2fa(this.system, this.system2faEnabled).then((res) => {
+            if (!res || res === 'cancel') {
+                this.system2faEnabled = !this.system2faEnabled;
+            }
+        }).finally(() => {
+            this.is2faDialogActive = undefined;
+        });
     }
 
     // Alexa Methods

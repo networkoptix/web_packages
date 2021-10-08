@@ -275,6 +275,8 @@ export interface Buttons {
     createAccount:    any;
     delete:           any;
     deleteAccount:    any;
+    disable:          any;
+    enable:           any;
     download:         any;
     logoutAuthorised: any;
     ok:               any;
@@ -385,6 +387,8 @@ export interface RecommendSupport {
 }
 
 export interface DialogsMessage {
+    system2faEnabled:        any;
+    system2faDisabled:       any;
     storageSettingsSaved:    any;
     storageSettingsNotSaved: any;
     settingsSaved:           any;
@@ -1340,6 +1344,8 @@ const typeMap: any = {
         { json: "createAccount", js: "createAccount", typ: "any" },
         { json: "delete", js: "delete", typ: "any" },
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
+        { json: "disable", js: "disable", typ: "any" },
+        { json: "enable", js: "enable", typ: "any" },
         { json: "download", js: "download", typ: "any" },
         { json: "logoutAuthorised", js: "logoutAuthorised", typ: "any" },
         { json: "ok", js: "ok", typ: "any" },
@@ -1440,6 +1446,8 @@ const typeMap: any = {
         { json: "c_proceeding", js: "c_proceeding", typ: "any" },
     ], false),
     "DialogsMessage": o([
+        { json: "system2faEnabled", js: "system2faEnabled", typ: "any" },
+        { json: "system2faDisabled", js: "system2faDisabled", typ: "any" },
         { json: "storageSettingsSaved", js: "storageSettingsSaved", typ: "any" },
         { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "any" },
         { json: "settingsSaved", js: "settingsSaved", typ: "any" },
