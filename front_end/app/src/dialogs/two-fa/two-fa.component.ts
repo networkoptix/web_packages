@@ -109,11 +109,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .pipe(untilDestroyed(this))
             .subscribe((systems: NxSystemWithUserInfo[]) => {
                 systems.forEach(system => {
-                    const isVersion43 = Object.keys(system.capabilities).some((capability) => {
-                        return capability.includes('4_3');
-                    });
-
-                    if (!isVersion43) {
+                    if (!system.useRest) {
                         system.name = NxUtilsService.htmlToEntity(system.name);
                         this.incompatibleSystems.push(system);
                     }

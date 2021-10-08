@@ -79,11 +79,7 @@ export class NxAccountSecurityComponent implements OnInit {
                         this.twoFaSystems.push(system);
                     }
 
-                    // TODO: Replace with actual version check
-                    const isSubV5 = Object.keys(system.capabilities).some((capability) => {
-                        return capability.includes('4_3');
-                    });
-                    if (isSubV5) {
+                    if (!system.useRest) {
                         this.subV5Systems.push(system);
                     }
                 });

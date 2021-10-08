@@ -44,12 +44,7 @@ export class NxSystemService {
 
     createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean, skipSettingSystem?: boolean) {
         const id = systemId || serverId;
-        const cloudSystemInfo: any = (this.systemsService.systems || []).filter((system) => system.id === id)?.shift();
-        let useRest = false;
-        if (cloudSystemInfo) {
-            // TODO: Once clouddb has versions for system use that instead of capabilities
-            useRest = Object.keys(cloudSystemInfo.capabilities).some((key) => key.includes('4_3'));
-        }
+        const cloudSystemInfo: any = (this.systemsService.systems || []).find((system) => system.id === id);
         let system;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
@@ -67,7 +62,7 @@ export class NxSystemService {
                 systemId,
                 serverId,
                 undefined,
-                useRest
+                cloudSystemInfo?.useRest
             );
             this.systemsCache[id] = system;
         }
