@@ -191,7 +191,7 @@ export class NxMenuService implements OnDestroy {
                     }
                     const filteredItem = NxUtilsService.deepCopy(item);
                     filteredItem.additionalText = additional;
-                    filteredItem.subNode = subNode;
+                    filteredItem.subNode = subNode || node;
                     filteredItem.query = { search: model.query };
                     haveNode.level3.push(this.highlighted(filteredItem));
                 }
