@@ -65,7 +65,8 @@ class AccountBackend(ModelBackend):
                 raise APILogicException('User is not in portal', ErrorCodes.portal_critical_error)
         if validate_token:
             request.session['access_token'] = validate_token.get('access_token')
-            request.session['refresh_token'] = None
+            if 'refresh_token' not in request.session:
+                request.session['refresh_token'] = None
         return Account.objects.get(email=user['email'])
 
     def get_user(self, user_id):

@@ -93,16 +93,20 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/system/cloudSignature', { message });
     }
 
+    private get cloudAccessTokenName() {
+        return `${this.systemId ? this.systemId + '-' : ''}${this.token}`;
+    }
+
     public get accessToken() {
-        return this.cookieService.get(`${this.systemId ?? ''}-${this.token}`);
+        return this.cookieService.get(this.cloudAccessTokenName);
     }
 
     public set accessToken(token) {
         if (this.isSessionOauth) {
             this.deleteToken(this.accessToken).toPromise().catch(() => {});
         }
-        this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
-        this.cookieService.set(`${this.systemId ?? ''}-${this.token}`, token);
+        this.cookieService.delete(this.cloudAccessTokenName);
+        this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
     }
 
     private handleOldToken(request, allSystems?: boolean) {
@@ -221,7 +225,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private deleteToken(token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        return this.http.post(`${host}/oauth/revoke`, { token }, { headers: { Authorization: `Bearer ${token}` } });
+        return this.http.post(`${host}/oauth/revoke/`, { token }, { headers: { Authorization: `Bearer ${token}` } });
     }
 
     protected retryHandler(request) {

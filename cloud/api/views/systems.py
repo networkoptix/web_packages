@@ -182,7 +182,9 @@ def get_auth(request, system_id):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def get_token(request, system_id):
     refresh_token = get_refresh_from_request(request)
-    data = cloud_api.Auth.get_refresh_token(refresh_token, ip=get_ip(request), scope=f"cloudSystemId={system_id}")
+    scope = f"{settings.CLOUD_PORTAL_URL.replace('https://', '')}/cdb/oauth2/token cloudSystemId={system_id}"
+    data = cloud_api.\
+        Auth.get_refresh_token(refresh_token, ip=get_ip(request), scope=scope)
 
     if "refresh_token" in data:
         del data["refresh_token"]
