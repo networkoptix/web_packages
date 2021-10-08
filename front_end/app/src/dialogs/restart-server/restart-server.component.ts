@@ -66,6 +66,7 @@ export class RestartServerModalContent {
                     this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);
                     let systemOfflineShown = false;
+                    let serverHasGoneOfflineOnce = false;
                     const serverSubscription = this.system.serverManager.getForceServers(false)
                         .pipe(
                             map((res: any) => {
@@ -79,9 +80,14 @@ export class RestartServerModalContent {
                                         throw Error('server not found');
                                     }
                                     if (serverObj[this.serverId] === 'Offline') {
+                                        serverHasGoneOfflineOnce = true;
                                         throw Error('still restarting');
                                     }
+                                    if (!serverHasGoneOfflineOnce) {
+                                        throw Error('still in the process of restarting');
+                                    }
                                 } else {
+                                    serverHasGoneOfflineOnce = true;
                                     throw Error('no response yet');
                                 }
                             }),

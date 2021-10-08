@@ -1007,7 +1007,7 @@ export class NxSystemAPI {
         });
     }
 
-    getMediaServers(useCache) {
+    getMediaServers(useCache: boolean) {
         const endpoint = '/ec2/getMediaServersEx';
         return this.get<t.GetMediaServers>(
             endpoint,

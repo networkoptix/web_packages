@@ -364,7 +364,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             this.destroyRestartTake$.complete();
                             this.setStatus('');
                         }
-                    })
+                    });
             });
     }
 
