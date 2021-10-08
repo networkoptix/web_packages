@@ -135,7 +135,7 @@ ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//sp
 ${SAVE BUTTON}                        //nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${CANCEL BUTTON}                      //nx-cancel-button//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 
-${ENCRYPTING VIDEO WARNING}           //div[text()='${ENCRYPTING VIDEO WARNING TEXT}']
+${ENCRYPTING VIDEO WARNING}           //div[text()="${ENCRYPTING VIDEO WARNING TEXT}"]
 
 #Disconnect from cloud portal
 ${DISCONNECT FORM}                      //form[@name='disconnectForm']
