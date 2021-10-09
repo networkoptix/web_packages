@@ -71,6 +71,10 @@ export class NxSystemService {
             return system;
         }
 
+        if (useRest) {
+            (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().catch(() => {});
+        }
+
         this.system = system;
         this.system.lostConnection = false;
         if (!skipPoll) {

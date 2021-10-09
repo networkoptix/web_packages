@@ -196,8 +196,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     needToConfigureTwoFactor(system) {
-        return false;
-        // return system.twoFactorRequired && !this.account.twoFactorConfigured;
+        return system.system2faEnabled && !this.account.account2faEnabled;
     }
 
     ngOnDestroy(): void {}

@@ -42,7 +42,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     static readonly supportedVersion = 4.3;
     public readonly requiresPassword: boolean = false;
     private readonly cloudToken = 'cloudAccessToken';
-    private readonly token = 'X-Runtime-Guid';
+    private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
     private readonly oldSessionErrorId = 'sessionExpired';
     private injector: Injector;
@@ -203,10 +203,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return { accessToken, cloudAccessToken, refreshToken };
     }
 
+    public setAccessTokenAsCookie() {
+        return this.get(`/rest/v1/login/sessions/${this.accessToken}?setCookie=true`, {}, { withCredentials: 'true' }).toPromise();
+    }
+
     public setTokens(tokens, isSystem) {
         const storageService = this.storageService;
         if (isSystem) {
             this.accessToken = tokens.access_token;
+            this.setAccessTokenAsCookie().catch(() => {});
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
@@ -218,7 +223,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private clearTokens() {
         const storageService = this.storageService;
-        this.cookieService.delete(`${this.systemId ?? ''}-${this.token}`);
+        this.cookieService.delete(this.cloudAccessTokenName);
         storageService.clear = this.cloudToken;
         storageService.clear = this.refreshToken;
     }

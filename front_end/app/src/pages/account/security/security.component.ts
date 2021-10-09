@@ -129,10 +129,10 @@ export class NxAccountSecurityComponent implements OnInit {
             this.dialogs
                 .wizard2FA()
                 .then((action) => {
-                    console.log(action);
                     this.tfauth.on = (action !== 'canceled');
                     this.tfauth.enabled = (action === 'enabled');
                     this.updateVerificationOriginal(action === 'enabled');
+                    this.applyService.reset();
                 });
         } else {
             this.dialogs
@@ -141,6 +141,7 @@ export class NxAccountSecurityComponent implements OnInit {
                     this.tfauth.on = (action === 'canceled');
                     this.tfauth.enabled = (action !== 'disabled');
                     this.updateVerificationOriginal(action !== 'disabled');
+                    this.applyService.reset();
                 });
         }
     }

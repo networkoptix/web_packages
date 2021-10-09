@@ -62,7 +62,11 @@ def kill_tokens(request):
     for key in ['refresh_token', 'access_token']:
         token = request.session.get(key)
         if token:
-            Auth.delete_token(request, token)
+            try:
+                Auth.delete_token(request, token)
+            except (APINotAuthorisedException, APILogicException):
+                pass
+            request.session[key] = None
 
 
 def login_helper(request, token, user):
