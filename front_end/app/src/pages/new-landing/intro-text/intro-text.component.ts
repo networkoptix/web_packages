@@ -19,7 +19,6 @@ import { IntersectionStatus } from '@directives/nx-intersection.directive';
     styleUrls   : ['./intro-text.component.scss']
 })
 export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
-  // createAccountButton Ref not used yet, used to change the color of the header later
   @ViewChild('createButton') createButtonRef: ElementRef<HTMLElement>;
   @ViewChild('rootFixed') rootFixedRef: ElementRef;
   @ViewChild('rootAbsolute') rootAbsoluteRef: ElementRef;

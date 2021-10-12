@@ -57,8 +57,7 @@ def zapier_exceptions(func):
 
 
 def authenticate(request):
-    user, email, password = None, None, None
-
+    user = email = password = None
     if "HTTP_AUTHORIZATION" in request.META:
         credentials = request.META['HTTP_AUTHORIZATION'].split()
         if credentials[0].lower() == "basic":
@@ -75,6 +74,8 @@ def increment_rule(rule):
     rule.times_used += 1
     rule.save()
 
+def random_uuid():
+    return str(uuid.uuid4())
 
 @zapier_exceptions
 def make_rule(rule_type, email, password, system_id, caption="", description="", source="", zapier_trigger=""):
@@ -139,7 +140,7 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
                                       "description": "_bell_on",
                                       "eventTimestampUsec": "0",
                                       "eventType": "undefinedEvent",
-                                      "inputPortId": str(uuid.uuid4()),
+                                      "inputPortId": random_uuid(),
                                       "metadata": {
                                           "allUsers": False,
                                           "instigators": ["{00000000-0000-0000-0000-100000000000}",
@@ -172,7 +173,6 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
 def make_or_increment_rule(action, email, system_id, caption, password=None,
                            description=None, source=None, target_url=None):
     rules_query = GeneratedRule.objects.filter(email=email, system_id=system_id, caption=caption)
-
     if action == 'Generic Event':
         rules_query = rules_query.filter(source=source, direction="Zapier to Nx").first()
 
@@ -214,6 +214,8 @@ def get_systems(request):
 
     return api_success(zap_list)
 
+def encode_url(query_params):
+    return f"api/createEvent?{urlencode(query_params).replace('+', '%20')}"
 
 @swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
@@ -235,7 +237,7 @@ def zapier_send_generic_event(request):
     make_or_increment_rule('Generic Event', email, system_id, caption,
                            password=password, description=description, source=source)
 
-    url = f"api/createEvent?{urlencode(query_params).replace('+', '%20')}"
+    url = encode_url(query_params)
     return cloud_gateway.get(system_id, url, email, password)
 
 
@@ -271,6 +273,9 @@ def ping(request):
     return Response({'status': 'ok'})
 
 
+def generate_subscribe_url_link(query_params):
+    return f'{CLOUD_INSTANCE_URL}/zapier/?{urlencode(query_params)}'
+
 @swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
@@ -283,17 +288,14 @@ def subscribe_webhook(request):
     target = request.data['target_url']
 
     event = system_id + " " + caption
-
     query_params = {"system_id": system_id, "caption": caption}
-
     user_hooks = ZapHook.objects.filter(user=user, target=target)
     if user_hooks.exists():
         return Response({'message': 'There is already a webhook for ' + caption, 'link': None}, status=500)
 
-    url_link = f'{CLOUD_INSTANCE_URL}/zapier/?{urlencode(query_params)}'
+    url_link = generate_subscribe_url_link(query_params)
 
     make_or_increment_rule('Http Action', email, system_id, caption, password=password, target_url=url_link)
-
     zap_hook = ZapHook(user=user, event=event, target=target)
     zap_hook.save()
     return Response({'message': 'Webhook created for ' + caption, 'link': url_link}, status=200)
@@ -320,6 +322,6 @@ def unsubscribe_webhook(request):
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
-def test_subscribe(request):
+def mock_subscribe(request):
     authenticate(request)
     return Response({'data': [{'caption': 'caption'}]})

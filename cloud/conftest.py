@@ -41,6 +41,9 @@ def generateJSON():
         str(uuid4()): [str(uuid4()) for _ in range(randint(1, 20))]
     })
 
+def generate_uuids(amount):
+    return [str(uuid4()) for _ in range(amount)]
+
 baker.generators.add('jsonfield.fields.JSONField', 'conftest.generateJSON')
 
 @pytest.fixture(scope='session')
