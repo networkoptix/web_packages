@@ -205,7 +205,7 @@ class ContextProcessor:
                         # do not update files from global contexts all the time
                         continue
 
-                    if not datastructure.translatable and language != self.asset.default_language:
+                    if not datastructure.translatable and language and language != self.asset.default_language:
                         # if file itself is not translatable - update it only for default language
                         continue
 
