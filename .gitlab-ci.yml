@@ -2,17 +2,55 @@ variables:
   JENKINS_URL: http://jenkins.lan.hdw.mx
   JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
+  PIP_TRUSTED_HOST: 'artifactory.lan.hdw.mx'
+  PIP_INDEX_URL: 'http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple'
+  PIP_EXTRA_INDEX_URL: 'http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-remote/simple'
 
 workflow:
   rules:
-  # Enable for merge requests.
-  - if: $CI_MERGE_REQUEST_ID
-  # Enable for protected branch.
-  - if: $CI_COMMIT_REF_PROTECTED
-  - when: never
+    # Enable for merge requests.
+    - if: $CI_MERGE_REQUEST_ID
+    # Enable for protected branch.
+    - if: $CI_COMMIT_REF_PROTECTED
+    - when: never
 
 stages:
-- build
+  - build
+  - test
+
+django-unit-test:
+  image: python:3.8-alpine3.12
+  stage: test
+  services:
+    - name: mysql:5.7
+      alias: mysql
+    - name: redis:3.2.8-alpine
+      alias: redis
+  variables:
+    TESTING: 'true'
+    MYSQL_DATABASE: 'cloudportal'
+    MYSQL_ROOT_PASSWORD: ''
+    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    MYSQL_USER: 'cloud'
+    MYSQL_PASSWORD: ''
+  before_script:
+    - apk update
+    - apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib curl jq netcat-openbsd
+  script:
+    - cd cloud
+    # Add pip cache and venv later
+    - pip install -r requirements.txt --index-url="$PIP_INDEX_URL" --extra-index-url="$PIP_EXTRA_INDEX_URL" --trusted-host="$PIP_TRUSTED_HOST"
+    - pytest -m "not integration" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+  coverage: /^TOTAL.+?(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/report.xml
+      cobertura: cloud/coverage.xml
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
 
 build-webadmin:
   stage: build
@@ -30,3 +68,4 @@ build-webadmin:
       "GITLAB_JOB_URL=$CI_JOB_URL"
   rules:
   - when: manual
+  allow_failure: true
