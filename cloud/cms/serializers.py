@@ -125,6 +125,12 @@ class ArticleSerializer(serializers.Serializer):
     body = serializers.CharField(allow_blank=True)
 
 
+REGEX_FIELD_MAP = {
+    'emailField': serializers.EmailField,
+    'urlField': serializers.URLField
+}
+
+
 class CustomClientSerializer(serializers.ModelSerializer):
 
     class ValuesSerializer(serializers.Serializer):
@@ -140,15 +146,15 @@ class CustomClientSerializer(serializers.ModelSerializer):
             }
             for field_name, field_props in self.custom_fields.items():
                 optional = field_props.get('optional', False)
-                if field_props.get('regex', ''):
-                    field = serializers.RegexField(
-                        required=not optional, allow_blank=optional, label=field_props.get('label', field_name),
-                        regex=field_props['regex']
-                    )
+                regex = field_props.get('regex', '')
+                field_kwargs = dict(required=not optional, allow_blank=optional, label=field_props.get('label', field_name))
+                if regex:
+                    if regex in REGEX_FIELD_MAP:
+                        field = REGEX_FIELD_MAP[regex](**field_kwargs)
+                    else:
+                        field = serializers.RegexField(regex=regex, **field_kwargs)
                 else:
-                    field = serializers.CharField(
-                        required=not optional, allow_blank=optional, label=field_props.get('label', field_name)
-                    )
+                    field = serializers.CharField(**field_kwargs)
 
                 self.fields[field_name] = field
                 # Needed to handle "." in variable names being split
