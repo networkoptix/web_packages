@@ -59,6 +59,7 @@ export class RestartServerModalContent {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
+                this.system.isAvailable = false;
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(
@@ -115,6 +116,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
+                                            serverHasGoneOfflineOnce = true;
                                             this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                                         }
                                     }),
@@ -124,6 +126,11 @@ export class RestartServerModalContent {
                         )
                         .subscribe(() => {
                             this.ribbonService.hide();
+                            if (this.system.currentBusyServerIds.has(this.serverId)) {
+                                this.system.currentServerNotBusy = true;
+                                this.system.currentBusyServerIds.delete(this.serverId);
+                                this.system.isAvailable = true;
+                            }
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
                             this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
@@ -133,6 +140,7 @@ export class RestartServerModalContent {
                 err => {
                     this.system.currentServerNotBusy = true;
                     this.system.currentBusyServerIds.delete(this.serverId);
+                    this.system.isAvailable = true;
                     let message = this.LANG.servers.restartFailed();
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline?.();

@@ -399,7 +399,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
-                    if (!this.system.isOnline) {
+                    if (!this.system.isOnline || !this.system.isAvailable) {
                         this.showPreloader = false;
                     }
 
@@ -469,7 +469,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             }
                         }
                         this.noCameras = this.system && this.system.cameraManager.cameras && this.system.cameraManager.cameras.length === 0;
-                        if (this.noCameras) {
+                        if (this.noCameras || !this.system.isAvailable) {
                             this.showPreloader = false;
                         }
                     });

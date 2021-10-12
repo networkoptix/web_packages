@@ -1,5 +1,5 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="placeholder-section" type="NO_SETTINGS" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
+    <nx-page-placeholder class="placeholder-section" type="NO_SETTINGS" *ngIf="(isOffline || !system.isAvailable) && !selectedServer"></nx-page-placeholder>
     <div *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting || checking" class="col-12">
         <ng-container *ngIf="!checking">
             <nx-alert-block
