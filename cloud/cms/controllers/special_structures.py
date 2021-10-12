@@ -23,6 +23,7 @@ class SpecialStructures:
         self.add_function('%VMS_MAC_COMPANY_ID%', self.calc_vms_mac_company_id, 'VMS Mac Company Id', 'Company ID used by VMS on Mac OS')
         self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable, 'VMS Windows Executable', 'VMS executable name on windows')
         self.add_function('%VMS_ID%', self.calc_vms_id, 'VMS Id', 'VMS Id from vms pack')
+        self.add_function('%MOBILE_DISPLAY_NAME%', self.calc_mobile_display_name, 'Mobile Client Display Name', 'The name used when referring to the mobile client throughout cloud portal. Does not affect the actual iOS or Android application name', shortcut=True)
 
     def add_function(self, tag: str, function, label='', description='', hidden=False, shortcut=False):
         self.function_dict[tag] = {
@@ -163,3 +164,8 @@ class SpecialStructures:
     @staticmethod
     def calc_vms_id(asset: Asset):
         return SpecialStructures.get_vms_default_ds_value(asset, '%VMS_ID%') or '{vmsId}'
+
+    @staticmethod
+    def calc_mobile_display_name(asset):
+        customization = asset.customizations.first()
+        return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
