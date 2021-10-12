@@ -9,7 +9,7 @@ module.exports = function(config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine', '@angular-devkit/build-angular'],
+        frameworks: ['jasmine', '@angular-devkit/build-angular', 'viewport'],
 
         plugins: [
             require('karma-jasmine'),
@@ -19,8 +19,36 @@ module.exports = function(config) {
             require('karma-jasmine-html-reporter'),
             require('karma-coverage-istanbul-reporter'),
             require('karma-spec-reporter'),
-            require('@angular-devkit/build-angular/plugins/karma')
+            require('@angular-devkit/build-angular/plugins/karma'),
+            require('karma-viewport')
         ],
+
+        // Viewport configuration
+        viewport: {
+            breakpoints: [
+                {
+                    name : 'mobile',
+                    size : {
+                        width  : 320,
+                        height : 480
+                    }
+                },
+                {
+                    name : 'tablet',
+                    size : {
+                        width  : 768,
+                        height : 1024
+                    }
+                },
+                {
+                    name : 'screen',
+                    size : {
+                        width  : 1440,
+                        height : 900
+                    }
+                }
+            ]
+        },
 
         client: {
             clearContext : false, // leave Jasmine Spec Runner output visible in browser
@@ -51,7 +79,7 @@ module.exports = function(config) {
         // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
-            dir                   : require( 'path' ).join( __dirname, './coverage/test-karma' ),
+            dir                   : require('path').join(__dirname, './coverage/test-karma'),
             reports               : ['html', 'lcovonly', 'text-summary'],
             fixWebpackSourcePaths : true
         },

@@ -236,7 +236,7 @@ describe('OAuth Test Suite', () => {
         fixture.detectChanges();
         expect(component.footerItems.length).toBe(3);
         const links = el.nativeElement.querySelectorAll('a');
-        expect(links.length).toBe(0);
+        expect(links.length).toBe(3);
     });
 
     it('should set up default states', () => {
