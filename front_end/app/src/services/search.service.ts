@@ -27,8 +27,6 @@ export class NxSearchService {
         this.navSelectionSubject.next();
     }
 
-    ngOnDestroy() {}
-
     findMatch(searchFor, model) {
         const _searchFor = searchFor && searchFor.toLowerCase();
 
