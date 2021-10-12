@@ -169,7 +169,7 @@ def test_handle_editor_action(mocker):
         call(request, "Upload error for {}. {}", expected_upload_errors),
         call(request, "Asset error for {}. {}", expected_asset_errors)
     ]
-    assert mock_add_upload_error_messages.has_calls(expected_errors)
+    mock_add_upload_error_messages.assert_has_calls(expected_errors)
 
 
 def test_save_records(mocker):

@@ -65,7 +65,7 @@ class TestEmailEngine:
                     language_code, customization_name)
         mock_get_email_title.assert_called_once_with(
             customization_name, language_code, msg_type)
-        mock_read_template.has_calls(
+        mock_read_template.assert_has_calls(
             call(customization_name, msg_type, language_code, is_html) for is_html in [True, False])
         mock_email_multi_alternatives.assert_called_once_with(
             expected_subject, expected_body, expected_email_from, to=(email,))
@@ -102,13 +102,14 @@ class TestEmailEngine:
             customization_name, language_code, event) == subject
         mock_read_file.assert_called_once_with(
             customization_name, NOTIFICATION_TEMPLATE_FILENAME, language_code)
-        mock_email_cache.has_calls(
-            call(customization_name, EMAIL_TITLES), call(customization_name, EMAIL_TITLES, {language_code: data}))
+        mock_email_cache.assert_has_calls([
+            call(customization_name, EMAIL_TITLES),
+            call(customization_name, EMAIL_TITLES, cache_value)
+        ], any_order=True)
 
     def test_read_template(self, mocker):
         def get_path(filename):
-            base = 'templates/lang_{{language}}'
-            return f'{base}/{filename}.mustache'
+            return f'templates/lang_{{{{language}}}}/{filename}.mustache'
         customization_name, name, language_code, mock_file = [
             str(uuid4()) for _ in range(4)]
         mock_read_file = mocker.patch(
@@ -121,22 +122,21 @@ class TestEmailEngine:
             assert read_template(
                 customization_name, name, language_code, is_html) == mock_file
 
-        mock_read_file.has_calls(
-            call(customization_name, html_path, language_code), call(customization_name, non_html_path, language_code))
+        mock_read_file.assert_has_calls([
+            call(customization_name, html_path, language_code), call(customization_name, non_html_path, language_code)])
 
     def test_read_file(self, mocker):
         customization_name, file_dir, file, language_code, mock_file, mock_cloud_portal_asset = [
             str(uuid4()) for _ in range(6)]
         filename = '{{language}}' + f'/{file}'
-        expected_filename = f'{file_dir}/{file}'
         mock_email_cache = mocker.patch(
             'notifications.engines.email_engine.email_cache', return_value={})
-        mock_read_customized_file = mocker.patch(
+        mocker.patch(
             'cms.controllers.filldata.read_customized_file', return_value=mock_file)
-        mock_get_cloud_portal_asset = mocker.patch(
+        mocker.patch(
             'cms.models.get_cloud_portal_asset', return_value=mock_cloud_portal_asset)
 
         assert read_file(customization_name, filename,
                          language_code=language_code) == mock_file
-        mock_email_cache.has_calls(
-            call(customization_name, 'files'), call(customization_name, 'files', {expected_filename: mock_file}))
+        mock_email_cache.assert_has_calls([
+            call(customization_name, 'files'), call(customization_name, 'files', mock_email_cache.return_value)])

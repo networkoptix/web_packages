@@ -36,11 +36,11 @@ class TestExceptions:
         response = create_response_with_cookies(
             mock_data, mock_status_code, mock_cookies)
 
-        assert response.delete_cookie.has_calls(
+        response.delete_cookie.assert_has_calls(
             call(name)
             for name in cookies_to_delete)
 
-        assert response.set_cookie.has_calls(
+        response.set_cookie.assert_has_calls(
             call(name, value, httponly=True, secure=True)
             for name, value in cookies_to_set.items())
 

@@ -28,7 +28,7 @@ def test_get_updater(mocker):
     for current in progress:
         updater(current)
 
-    assert mock_current_task.update_state.has_calls(expected_calls)
+    mock_current_task.update_state.assert_has_calls(expected_calls)
 
     # Test error
     error = str(uuid4())
@@ -183,7 +183,7 @@ def test_make_structure(mocker, account_factory, db):
     expected_file_name = f"{asset.name}-structure.json"
     expected_content = json.dumps(
         [mock_asset_dict], ensure_ascii=False, indent=4, separators=(',', ': '))
-    mock_updater.has_calls(call(0, 1), call(1, 1))
+    mock_updater.assert_has_calls([call(0, 1), call(1, 1)])
     mock_make_asset_dict.assert_called_once_with(asset, use_actual_values)
     mock_complete_updater.assert_called_once_with(
         expected_file_name, expected_content)
