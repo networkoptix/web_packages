@@ -65,11 +65,11 @@ ${EXTERNAL LINKS TITLE}    ${DROPDOWN NAVIGATION TILE}//div[@class="section-titl
 ${EXTERNAL LINK}    ${EXTERNAL LINKS TITLE}/../following-sibling::ul//a
 
 &{FOR DEVS EXTERNAL LINKS}
-   ...   Developer Tools=https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools
-   ...   API Documentation=https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API
-   ...   Developers Support=https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum
+   ...   ${DEVELOPER TOOLS TEXT}=https://support.networkoptix.com/hc/en-us/sections/360007229354-Developer-Tools
+   ...   ${API DOCUMENTATION TEXT}=https://support.networkoptix.com/hc/en-us/articles/219573367-Nx-Server-HTTP-REST-API
+   ...   ${DEVELOPER SUPPORT TEXT}=https://support.networkoptix.com/hc/en-us/community/topics/115000552988-Developer-Forum
 
 &{EXTERNAL LINKS}
-   ...   Hardware Calculator=http://networkoptix.com/calculator/
-   ...   Support=${SUPPORT URL}/
-   ...   Privacy Policy=${PRIVACY POLICY URL FULL}
+   ...   ${HARDWARE CALCULATOR}=http://networkoptix.com/calculator/
+   ...   ${SUPPORT}=${SUPPORT URL}/
+   ...   ${PRIVACY POLICY}=${PRIVACY POLICY URL FULL}

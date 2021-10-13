@@ -63,6 +63,7 @@ Force Tags        cloud
     [Tags]        anon    ui    
     Go To    ${knowledge base}[url]
     Check Header Items    False
+    Go To    ${ENV}
 
 # User has no systems connected to cloud
 6. No systems: Header button text is correct
@@ -352,7 +353,7 @@ Force Tags        cloud
     ${links names}=   Get External Links Names   ${FOR DEVELOPERS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${FOR DEVELOPERS LINK}\[contains(text(), "${name}")]    href
-        Set Local Variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
+        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
 
@@ -365,6 +366,6 @@ Force Tags        cloud
     ${links names}=   Get External Links Names   ${EXTERNAL LINKS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${EXTERNAL LINK}\[contains(text(), "${name}")]    href
-        Set Local Variable    ${expected url}    ${EXTERNAL LINKS["${name}"]}
+        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
