@@ -63,7 +63,11 @@ Force Tags        cloud
     [Tags]        anon    ui    
     Go To    ${knowledge base}[url]
     Check Header Items    False
+<<<<<<< HEAD
+    Go Back
+=======
     Go To    ${ENV}
+>>>>>>> d381c8334539d06f3a3548903f9da17b547da36b
 
 # User has no systems connected to cloud
 6. No systems: Header button text is correct
@@ -71,6 +75,7 @@ Force Tags        cloud
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Sleep    5
     Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
+    Validate Header Button Text    ${expected text}
 
 7. No systems: Logo goes to landing page
     [Tags]        no_sys    

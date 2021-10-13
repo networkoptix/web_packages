@@ -45,7 +45,6 @@ Header Test Setup
 Header Test Teardown
     Skip If Irrelevant
     Close Modal If There
-    Reload Page
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}    timeout=5
     Run Keyword If    ${logged in}    Log Out
 
