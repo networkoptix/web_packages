@@ -386,7 +386,8 @@ def change_password(request):
                                   error_data={'new_password': error.detail})
 
     try:
-        Account.change_password(request.user.email, old_password, new_password)
+        totp = request.data.get('totp')
+        Account.change_password(request, request.user.email, old_password, new_password, totp)
         models.Account.objects.get(email=request.user.email).password_changed()
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
@@ -482,8 +483,9 @@ def restore_password(request):
             raise APIRequestException('Wrong new password', ErrorCodes.wrong_parameters,
                                       error_data={'new_password': error.detail})
 
+        totp = request.data['totp']
         email = Account.extract_temp_credentials(code)[1]
-        Account.restore_password(code, new_password)
+        Account.restore_password(code, new_password, totp)
         models.Account.objects.get(email=email).password_changed()
 
         account = models.Account.objects.get(email=email)

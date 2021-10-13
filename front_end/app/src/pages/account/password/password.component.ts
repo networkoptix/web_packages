@@ -74,8 +74,9 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.pageService.pageTitle = this.LANG.pageTitles.changePassword;
 
         this.changePassword = this.processService.createProcess(() => {
-            return this.cloudApiService
-                .changePassword(this.pass.newPassword, this.pass.password);
+            return this.account.account2faEnabled
+                ? this.dialogs.passwordVerificationCode(this.pass.newPassword, this.pass.password)
+                : this.cloudApiService.changePassword(this.pass.newPassword, this.pass.password);
         }, {
             errorCodes: {
                 notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),

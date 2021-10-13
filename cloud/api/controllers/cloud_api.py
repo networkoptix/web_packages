@@ -438,20 +438,27 @@ class Account(object):
             return data
 
     @staticmethod
-    def restore_password(code, new_password):
+    def restore_password(code, new_password, totp):
         temp_password, email = Account.extract_temp_credentials(code)
-        return Account.change_password(email, temp_password, new_password)
+        return Account.change_password({}, email, temp_password, new_password, totp)
 
     @staticmethod
     @validate_response
-    def change_password(email, old_password, new_password):
+    @auto_refresh_token
+    def change_password(request, email, old_password, new_password, totp=None, headers=None):
         email = email.lower()
-        password_ha1, password_ha1_sha256 = Account.encode_password(email, new_password)
         params = {
-            'passwordHa1': password_ha1,
-            'passwordHa1Sha256': password_ha1_sha256
+            'password': new_password,
+            'currentPassword': old_password
         }
-        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, auth={"email": email, "password": old_password})
+        if totp:
+            params['totp'] = totp
+
+        auth = None
+        if not headers:
+            auth = {"email": email, "password": old_password}
+
+        return post_wrapper(f'{CLOUD_DB_URL}/account/update', json=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response

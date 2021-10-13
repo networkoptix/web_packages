@@ -18,8 +18,10 @@ import { ClipboardService, IClipboardResponse }   from 'ngx-clipboard';
 import { UntilDestroy, untilDestroyed }           from '@ngneat/until-destroy';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUtilsService }                         from '@services/utils.service';
+import { NxCloudApiService }                      from '@services/nx-cloud-api';
 
 export enum T_FA_STEPS {
+    ChangePassword,
     Code,
     // WizardWarning,
     WizardLogin,
@@ -39,6 +41,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @Input() type;
     @Input() cancellable;
     @Input() closable;
+    @Input() newPassword;
+    @Input() oldPassword;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -53,6 +57,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     public newCodes: string[];
     public scrambledIndexes: number[] = [1, 5, 2, 6, 3, 7, 4, 8];
     public password: string;
+    public changePasswordProcess: Process;
     public loginProcess: Process;
     public qrProcess: Process;
     public codeProcess: Process;
@@ -73,6 +78,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('loginForm') loginForm: HTMLFormElement;
     @ViewChild('codeForm') codeForm: HTMLFormElement;
 
+    @ViewChild('changePassword', { static: true }) changePasswordTemplate: TemplateRef<any>;
     @ViewChild('code', { static: true }) codeTemplate: TemplateRef<any>;
     // @ViewChild('wizardWarning', { static: true }) wizardWarningTemplate: TemplateRef<any>;
     @ViewChild('wizardLogin', { static: true }) wizardLoginTemplate: TemplateRef<any>;
@@ -126,7 +132,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         public activeModal: NgbActiveModal,
         private toastService: NxToastService,
         private clipboardService: ClipboardService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -333,11 +340,26 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.activeModal.close('disabled');
             }
         });
+
+        this.changePasswordProcess = this.processService.createProcess(() => {
+            return this.cloudApiService.changePassword(this.newPassword, this.oldPassword, this.tfaCode);
+        }, {
+            ignoreUnauthorized : true,
+            ignoreError        : true
+        }, (res) => {
+            this.activeModal.close(res);
+        }, (err) => {
+            this.activeModal.close(err);
+        });
     }
 
-    setTemplate(step) {
+    async setTemplate(step) {
+        await new Promise(resolve => setTimeout(resolve)); // sleep
         this.currentStep = step;
         switch (step) {
+            case T_FA_STEPS.ChangePassword:
+                this.templateType = this.changePasswordTemplate;
+                break;
             case T_FA_STEPS.Code:
                 this.templateType = this.codeTemplate;
                 break;
@@ -366,6 +388,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         if (this.type === 'off') {
             this.setTemplate(T_FA_STEPS.WizardLogin);
+        } else if (this.type === 'changePassword') {
+            this.setTemplate(T_FA_STEPS.ChangePassword);
         } else if (this.type.startsWith('verification')) {
             this.setTemplate(T_FA_STEPS.VerificationToggle);
         } else if (this.type === 'code') {
@@ -405,6 +429,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     next() {
         switch (this.currentStep) {
+            case T_FA_STEPS.ChangePassword:
+                this.changePasswordProcess.run();
+                break;
             // case T_FA_STEPS.WizardWarning:
             //     this.setTemplate(T_FA_STEPS.WizardLogin);
             //     break;

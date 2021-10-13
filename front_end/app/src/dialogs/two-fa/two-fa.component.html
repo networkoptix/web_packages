@@ -1,6 +1,41 @@
 
 <ng-container [ngTemplateOutlet]="templateType"></ng-container>
 
+<ng-template #changePassword>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Change Password</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="loginForm" novalidate>
+            <div class="form-group mt-3">
+                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
+                <input type="text" class="form-control"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       autocomplete="off"
+                       maxlength="255"
+                       required autofocus>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer justify-start">
+        <button class="btn btn-primary" (click)="next()">
+            <span translate>OK</span>
+        </button>
+        <div class="m-2"></div>
+        <button class="btn btn-default" (click)="closeWizard()">
+            <span translate>Cancel</span>
+        </button>
+    </div>
+</ng-template>
+
 <ng-template #code>
     <div class="modal-header">
         <h1 class="modal-title" translate>Backup codes</h1>

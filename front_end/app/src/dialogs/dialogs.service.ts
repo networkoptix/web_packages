@@ -578,6 +578,23 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
+    passwordVerificationCode(newPassword: string, oldPassword: string) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'sm'
+        };
+
+        const params: IParams = {
+            newPassword,
+            oldPassword,
+            type     : 'changePassword',
+            closable : true
+        };
+
+        return this.createModal(TwoFAModalContent, options, params);
+    }
+
     public wizard2FA() {
         const options: IParams = {
             windowClass : 'modal-holder',

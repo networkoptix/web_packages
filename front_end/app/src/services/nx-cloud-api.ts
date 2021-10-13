@@ -490,10 +490,11 @@ export class NxCloudApiService {
         return this.http.post<t.AccountEdit>(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
-    changePassword(newPassword: string, oldPassword: string) {
+    changePassword(newPassword: string, oldPassword: string, totp?: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/changePassword', {
             new_password : newPassword,
-            old_password : oldPassword
+            old_password : oldPassword,
+            totp
         }).toPromise();
     }
 
