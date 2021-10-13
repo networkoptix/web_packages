@@ -50,9 +50,22 @@ export class NxDropMenu extends BaseDropdown {
         super(languageService, configService);
         this.menusService.currentSystemNode$.subscribe(_ => {
             this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                .subscribe(header => this.menuNodes$.next(this.menusService.cleanEmptyNodes(header.nodes)));
+                .subscribe(header => {
+                    const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                    if (this.CONFIG.isLocal) {
+                        this.replaceCloudHost(nodes);
+                    }
+                    this.menuNodes$.next(nodes);
+                });
         });
     }
+
+    replaceCloudHost(nodes) {
+        nodes.forEach(node => {
+            node.url = node.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
+            this.replaceCloudHost(node.nodes);
+        });
+    };
 
     trackItem(index, item) {
         return item ? item.id : undefined;

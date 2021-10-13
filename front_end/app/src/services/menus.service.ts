@@ -108,13 +108,14 @@ export class NxMenusService {
                     title       : name
                 };
             }
-            if (menu?.title !== 'header') {
-                return from([menu]);
-            }
         }
 
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu.nodes = (menu?.nodes?.length) ? [this.currentSystemNode$.value, ...menu.nodes] : [this.currentSystemNode$.value];
+        }
+
+        if (this.CONFIG.isLocal) {
+            return from([menu]);
         }
 
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
@@ -218,6 +219,10 @@ export class NxMenusService {
 
         if (endpoint.bookmarks) {
             segment = '/bookmarks';
+        }
+
+        if (endpoint.settings && this.CONFIG.isLocal) {
+            segment = '/settings';
         }
 
         return (!this.CONFIG.isLocal && systemId) ? url + segment : segment;
