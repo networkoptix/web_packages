@@ -61,94 +61,93 @@ export class RestartServerModalContent {
                 this.applyService.isOnline$.next(haveOnlineServers);
                 this.system.isAvailable = false;
                 return this.system.restartServer(this.serverId);
-            }, { ignoreError: true })
-            .then(
-                () => {
-                    this.system.currentBusyServerIds.add(this.serverId);
-                    this.close(this.CONFIG.servers.status.restarting);
-                    let systemOfflineShown = false;
-                    let serverHasGoneOfflineOnce = false;
-                    const serverSubscription = this.system.serverManager.getForceServers(false)
-                        .pipe(
-                            map((res: any) => {
-                                if (res) {
-                                    // maps server status into serverObj
-                                    const serverObj: { id?: string } = {};
-                                    Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
-                                        serverObj[server[1].id] = server[1].status;
-                                    });
-                                    if (!serverObj[this.serverId]) {
-                                        throw Error('server not found');
-                                    }
-                                    if (serverObj[this.serverId] === 'Offline') {
-                                        serverHasGoneOfflineOnce = true;
-                                        throw Error('still restarting');
-                                    }
-                                    if (!serverHasGoneOfflineOnce) {
-                                        throw Error('still in the process of restarting');
-                                    }
-                                } else {
+            },
+            { ignoreError: true },
+            () => {
+                this.system.currentBusyServerIds.add(this.serverId);
+                this.close(this.CONFIG.servers.status.restarting);
+                let systemOfflineShown = false;
+                let serverHasGoneOfflineOnce = false;
+                const serverSubscription = this.system.serverManager.getForceServers(false)
+                    .pipe(
+                        map((res: any) => {
+                            if (res) {
+                                // maps server status into serverObj
+                                const serverObj: { id?: string } = {};
+                                Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
+                                    serverObj[server[1].id] = server[1].status;
+                                });
+                                if (!serverObj[this.serverId]) {
+                                    throw Error('server not found');
+                                }
+                                if (serverObj[this.serverId] === 'Offline') {
                                     serverHasGoneOfflineOnce = true;
-                                    throw Error('no response yet');
+                                    throw Error('still restarting');
                                 }
-                            }),
-                            mergeMap(() => {
-                                if (NxConfigService.isLocal) {
-                                    // give the user chance to read the toaster
-                                    setTimeout(() => window.location.reload(), 2000);
-                                    throw Error('re-login on restart');
+                                if (!serverHasGoneOfflineOnce) {
+                                    throw Error('still in the process of restarting');
                                 }
-                                // makes sure that system is online
-                                return this.system.getInfo(true, false)
-                                    .then(() => {
-                                        if (!this.system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                                            throw Error('system is offline still');
-                                        }
-                                    })
-                                    .catch(err => { throw Error(err); });
-                            }),
-                            retryWhen(errors => {
-                                /** If single server system or only online server, system goes offline
-                                 * systemOfflineShown used to stop block from running constantly while offline
-                                 * Otherwise, catches all other errors and retries every 4 seconds */
-                                return errors.pipe(
-                                    tap(val => {
-                                        if (!systemOfflineShown && [502, 503].includes(val.status)) {
-                                            systemOfflineShown = true;
-                                            serverHasGoneOfflineOnce = true;
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                                        }
-                                    }),
-                                    delayWhen(() => timer(4000))
-                                );
-                            })
-                        )
-                        .subscribe(() => {
-                            this.ribbonService.hide();
-                            if (this.system.currentBusyServerIds.has(this.serverId)) {
-                                this.system.currentServerNotBusy = true;
-                                this.system.currentBusyServerIds.delete(this.serverId);
-                                this.system.isAvailable = true;
+                            } else {
+                                serverHasGoneOfflineOnce = true;
+                                throw Error('no response yet');
                             }
-                            this.system.systemInfo = this.system;
-                            options.classname = this.CONFIG.toast.success;
-                            this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
-                            serverSubscription.unsubscribe();
-                        });
-                },
-                err => {
-                    this.system.currentServerNotBusy = true;
-                    this.system.currentBusyServerIds.delete(this.serverId);
-                    this.system.isAvailable = true;
-                    let message = this.LANG.servers.restartFailed();
-                    if (err && (err.name === 'TimeoutError' || err.status === 503)) {
-                        message = this.LANG.servers.serverOffline?.();
-                        this.close(this.CONFIG.servers.status.offline);
-                    }
-                    this.toastService.show(message, options);
+                        }),
+                        mergeMap(() => {
+                            if (NxConfigService.isLocal) {
+                                // give the user chance to read the toaster
+                                setTimeout(() => window.location.reload(), 2000);
+                                throw Error('re-login on restart');
+                            }
+                            // makes sure that system is online
+                            return this.system.getInfo(true, false)
+                                .then(() => {
+                                    if (!this.system.isOnline) {
+                                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                                        throw Error('system is offline still');
+                                    }
+                                })
+                                .catch(err => { throw Error(err); });
+                        }),
+                        retryWhen(errors => {
+                            /** If single server system or only online server, system goes offline
+                             * systemOfflineShown used to stop block from running constantly while offline
+                             * Otherwise, catches all other errors and retries every 4 seconds */
+                            return errors.pipe(
+                                tap(val => {
+                                    if (!systemOfflineShown && [502, 503].includes(val.status)) {
+                                        systemOfflineShown = true;
+                                        serverHasGoneOfflineOnce = true;
+                                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                                    }
+                                }),
+                                delayWhen(() => timer(4000))
+                            );
+                        })
+                    )
+                    .subscribe(() => {
+                        this.ribbonService.hide();
+                        if (this.system.currentBusyServerIds.has(this.serverId)) {
+                            this.system.currentServerNotBusy = true;
+                            this.system.currentBusyServerIds.delete(this.serverId);
+                            this.system.isAvailable = true;
+                        }
+                        this.system.systemInfo = this.system;
+                        options.classname = this.CONFIG.toast.success;
+                        this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
+                        serverSubscription.unsubscribe();
+                    });
+            },
+            err => {
+                this.system.currentServerNotBusy = true;
+                this.system.currentBusyServerIds.delete(this.serverId);
+                this.system.isAvailable = true;
+                let message = this.LANG.servers.restartFailed();
+                if (err && (err.name === 'TimeoutError' || err.status === 503)) {
+                    message = this.LANG.servers.serverOffline?.();
+                    this.close(this.CONFIG.servers.status.offline);
                 }
-            );
+                this.toastService.show(message, options);
+            });
     }
 
     close(msg) {
