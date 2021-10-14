@@ -15,6 +15,7 @@ export interface BaseConfig {
     viewsDir?: string;
     previewPath?: string;
     alertTimeout: number;
+    maxNumberServerChecked: number;
     extendedRequestTimeout: number;
     apiRequestAttempts: number;
     animations: Animations;
