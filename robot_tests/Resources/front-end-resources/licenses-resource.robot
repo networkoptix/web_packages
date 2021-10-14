@@ -2,19 +2,25 @@
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
         ${rand}=   Generate Random String
-        ${system}=   Create Base System    license_system_${i}_${rand}    network=bridge    owner=${LM OWNER}
+        ${system}=   Create Base System    license_system_${i}_${rand}    network=bridge
         Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system}[port]   ${LM HOST}
         Set Suite Variable    ${system ${i}}    ${system}
         ${server name}=   Catenate    SEPARATOR=${SPACE}
         Set Suite Variable    ${server ${i}}    Server ${system}[id]
     END
-    Sleep    30
+    Sleep    10
 
     Merge Systems Local    ${LOCAL AUTH}    admin:${BASE PASSWORD}    https://${QA BURBANK IP}:${system 2}[port]    ${QA BURBANK IP}:${system 3}[port]    currentPassword=${BASE PASSWORD}
-    Sleep    30
+    Sleep    10
+
+    FOR    ${i}    IN RANGE    1    3
+        ${id}=   Connect System to Cloud    ${system ${i}}[local auth]    https://${QA BURBANK IP}:${system ${i}}[port]    ${system ${i}}[name]    ${LM OWNER}    ${BASE PASSWORD}
+        Set To Dictionary    ${system ${i}}    cloud id=${id}
+        Set To Dictionary    ${system ${i}}    cloud auth=${cloud auth}
+    END
 
     FOR    ${role}    IN    @{LM USERS.keys()}
-        REST Save User
+        Save User
             ...    ${LOCAL AUTH}
             ...    https://${QA BURBANK IP}:${system 1}[port]
             ...    ${LM USERS}[${role}]
@@ -22,19 +28,22 @@ LM Suite Set Up
             ...    ${LM USERS}[${role}]
             ...    LM ${role}
             ...    password=${BASE PASSWORD}
-            ...    is_cloud=${True}
+        #    ...    is_cloud=${True}
         Sleep   1
     END
     Sleep    30
     Open Browser and go to URL    ${ENV}
 
 LM Suite Teardown
-    ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
-    FOR   ${sys}    IN    @{systems}
-        Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys}[id]
-    END
+#    ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
+#    FOR   ${sys}    IN    @{systems}
+#        Disconnect    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}    ${sys}[id]
+#    END
+#    FOR   ${i}    IN RANGE    1    4
+#        Delete Docker Server    ${system ${i}}[id]
+#    END
     FOR   ${i}    IN RANGE    1    4
-        Delete Docker Server    ${system ${i}}[id]
+        Delete Base System    ${system ${i}}
     END
     Close All Browsers
 
@@ -127,14 +136,14 @@ Get Formatted Key Input
 
 Validate Input Error
     [Arguments]    ${error text}
-    Wait Until Element Is Visible   ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]
+    Run keyword and continue on failure    Wait Until Element Is Visible   ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]
     ${class}=   Get Element Attribute    ${LICENSE KEY INPUT}    class
     FOR    ${val}    IN    ng-dirty    ng-touched    ng-invalid
         Should Contain    ${class}    ${val}
     END
-    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${ERROR COLOR WITH OPACITY}
-    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    ${ERROR COLOR}
-    Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
+    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    border-color    ${ERROR COLOR}
+    Run keyword and continue on failure    Wait Until Element Has Style    ${NEW LICENSE FORM}//span[contains(text(), "${error text}")]    color    ${ERROR COLOR WITH OPACITY}
 
 Validate Input Normal State
     Run keyword and continue on failure    Wait Until Element Has Style    ${LICENSE KEY INPUT}    color    rgba(43, 56, 63, 1)    #${DISABLED TEXT COLOR}

@@ -21,7 +21,7 @@ ${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
 ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
-@{disk size}    160000    40000    40000    12000    12000
+@{disk size}    80000    30000    30000    12000    12000
 ${networkdisk}    //${QA BURBANK IP}/networkdisk
 ${drives}    5
 

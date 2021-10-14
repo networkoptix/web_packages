@@ -184,6 +184,7 @@ Reset
         Wait Until Elements Are Visible    ${USERS LIST LINK}
         Click Link    ${USERS LIST LINK}
         Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+        Sleep    1
         Click Button    ${ADD USER BUTTON SYSTEMS}
         Wait Until Element is Visible    ${ADD USER MODAL}
         Click Button    ${ADD USER CLOSE}

@@ -28,6 +28,15 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    trafficEncryptionForced=false
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
+
+&{default advanced settings}
+...    autoDiscoveryEnabled=true
+...    statisticsAllowed=true
+...    cameraSettingsOptimization=true
+...    auditTrailEnabled=true
+...    trafficEncryptionForced=false
+...    videoTrafficEncryptionForced=false
+...    sessionLimitMinutes=0
 ...    additionalLocalFsTypes=${EMPTY}
 ...    arecontRtspEnabled=false
 ...    auditTrailPeriodDays=183
@@ -126,7 +135,7 @@ ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//sp
 ${SAVE BUTTON}                        //nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${CANCEL BUTTON}                      //nx-cancel-button//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 
-${ENCRYPTING VIDEO WARNING}           //div[text()='${ENCRYPTING VIDEO WARNING TEXT}']
+${ENCRYPTING VIDEO WARNING}           //div[text()="${ENCRYPTING VIDEO WARNING TEXT}"]
 
 #Disconnect from cloud portal
 ${DISCONNECT FORM}                      //form[@name='disconnectForm']

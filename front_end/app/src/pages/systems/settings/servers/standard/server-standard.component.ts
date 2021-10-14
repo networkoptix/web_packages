@@ -386,6 +386,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         return this.dialogs
             .restartServer(this.system, id, name)
             .then(res => {
+                this.system.isAvailable = false;
                 this.setStatus(res);
                 this.system.infoSubject
                     .pipe(untilDestroyed(this), skipWhile(system => system.isOnline), takeUntil(this.destroyRestartTake$))
@@ -393,6 +394,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         if (this.system.isOnline) {
                             this.system.currentServerNotBusy = true;
                             this.system.currentBusyServerIds.delete(id);
+                            this.system.isAvailable = true;
                             this.destroyRestartTake$.next(true);
                             this.destroyRestartTake$.complete();
                             this.setStatus('');

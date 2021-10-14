@@ -212,7 +212,7 @@ Save Cloud System Credentials
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
     &{data}=   Create Dictionary    cloudAuthKey=${auth key}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
     Create Digest Session    Save Cloud Credentials session    ${server url}    auth=${auth}    verify=False    disable_warnings=1
-    ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=10
+    ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=30
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 

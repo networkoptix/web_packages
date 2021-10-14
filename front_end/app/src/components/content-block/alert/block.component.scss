@@ -282,7 +282,7 @@
 }
 
 .warning-error-padding {
-    height: 40px !important;
+    min-height: 40px !important;
     display: flex;
     align-items: center;
     padding: 0 16px 0 10px !important;

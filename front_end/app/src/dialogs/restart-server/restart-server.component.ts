@@ -53,20 +53,21 @@ export class RestartServerModalContent {
             delay     : this.CONFIG.alertTimeout
         };
         this.restartServer = this.processService
-            .createProcess(
-                () => {
-                    const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
-                    if (!haveOnlineServers) {
-                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
-                    }
-                    this.applyService.isOnline$.next(haveOnlineServers);
-                    return this.system.restartServer(this.serverId);
-                },
-                { ignoreError: true },
+            .createProcess(() => {
+                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                if (!haveOnlineServers) {
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                }
+                this.applyService.isOnline$.next(haveOnlineServers);
+                this.system.isAvailable = false;
+                return this.system.restartServer(this.serverId);
+            }, { ignoreError: true })
+            .then(
                 () => {
                     this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);
                     let systemOfflineShown = false;
+                    let serverHasGoneOfflineOnce = false;
                     const serverSubscription = this.system.serverManager.getForceServers(false)
                         .pipe(
                             map((res: any) => {
@@ -80,9 +81,14 @@ export class RestartServerModalContent {
                                         throw Error('server not found');
                                     }
                                     if (serverObj[this.serverId] === 'Offline') {
+                                        serverHasGoneOfflineOnce = true;
                                         throw Error('still restarting');
                                     }
+                                    if (!serverHasGoneOfflineOnce) {
+                                        throw Error('still in the process of restarting');
+                                    }
                                 } else {
+                                    serverHasGoneOfflineOnce = true;
                                     throw Error('no response yet');
                                 }
                             }),
@@ -110,6 +116,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
+                                            serverHasGoneOfflineOnce = true;
                                             this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                                         }
                                     }),
@@ -119,6 +126,11 @@ export class RestartServerModalContent {
                         )
                         .subscribe(() => {
                             this.ribbonService.hide();
+                            if (this.system.currentBusyServerIds.has(this.serverId)) {
+                                this.system.currentServerNotBusy = true;
+                                this.system.currentBusyServerIds.delete(this.serverId);
+                                this.system.isAvailable = true;
+                            }
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
                             this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
@@ -128,6 +140,7 @@ export class RestartServerModalContent {
                 err => {
                     this.system.currentServerNotBusy = true;
                     this.system.currentBusyServerIds.delete(this.serverId);
+                    this.system.isAvailable = true;
                     let message = this.LANG.servers.restartFailed();
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline?.();

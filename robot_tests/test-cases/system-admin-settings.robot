@@ -662,8 +662,11 @@ Force Tags        system
 
     Log    Step 2
     Go To    ${server url}
-    Run Keyword If    ${IMAGE} == ${4.2_test}    Wait until location is    ${server url}/static/index.html#/
-    ...    ELSE     Wait until location is    ${server url}/#/settings
+    IF    '${IMAGE}' == '4.2_test'
+        Wait until location is    ${server url}/static/index.html#/
+    ELSE
+        Wait until location is    ${server url}/#/settings
+    END
 
     Log    Step 3
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    trafficEncryptionForced    false

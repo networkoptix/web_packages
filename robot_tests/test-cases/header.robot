@@ -63,6 +63,11 @@ Force Tags        cloud
     [Tags]        anon    ui    
     Go To    ${knowledge base}[url]
     Check Header Items    False
+<<<<<<< HEAD
+    Go Back
+=======
+    Go To    ${ENV}
+>>>>>>> d381c8334539d06f3a3548903f9da17b547da36b
 
 # User has no systems connected to cloud
 6. No systems: Header button text is correct
@@ -70,6 +75,7 @@ Force Tags        cloud
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Sleep    5
     Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
+    Validate Header Button Text    ${expected text}
 
 7. No systems: Logo goes to landing page
     [Tags]        no_sys    
@@ -352,7 +358,7 @@ Force Tags        cloud
     ${links names}=   Get External Links Names   ${FOR DEVELOPERS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${FOR DEVELOPERS LINK}\[contains(text(), "${name}")]    href
-        Set Local Variable    ${expected url}        ${FOR DEVS EXTERNAL LINKS["${name}"]}
+        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
 
@@ -365,6 +371,6 @@ Force Tags        cloud
     ${links names}=   Get External Links Names   ${EXTERNAL LINKS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${EXTERNAL LINK}\[contains(text(), "${name}")]    href
-        Set Local Variable    ${expected url}    ${EXTERNAL LINKS["${name}"]}
+        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END

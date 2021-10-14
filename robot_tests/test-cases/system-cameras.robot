@@ -837,6 +837,10 @@ Set Radio Value
     ...    ${OFFLINE MESSAGE}
     Log Out
 
+    Log in to user and system    ${system2}[cloud users][custom]    ${system2}[cloud id]
+    Element should not be visible    ${CAMERAS LINK}
+    Log Out
+
 33. Motion sensitivity block for cameras with different statuses
     [Tags]    C76418    Threaded
     Verify on Cameras Page
