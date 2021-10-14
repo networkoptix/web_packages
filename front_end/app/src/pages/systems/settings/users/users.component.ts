@@ -1,28 +1,32 @@
 import {
-    Component, Inject, OnDestroy,
-    OnInit, ViewChild, ViewContainerRef
-}                                               from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
-import { UntilDestroy }                         from '@ngneat/until-destroy';
-import { filter }                               from 'rxjs/operators';
-import { Subscription }                         from 'rxjs';
+    Component,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
-import { NxDialogsService }                     from '@dialogs/dialogs.service';
-import { NxSettingsService }                    from '../settings.service';
-import { NxMenuService }                        from '@src/menu';
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxPageService }                        from '@services/page.service';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxUtilsService }                       from '@services/utils.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSettingsService } from '../settings.service';
+import { NxMenuService } from '@src/menu';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxPageService } from '@services/page.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUtilsService } from '@services/utils.service';
 import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
-import { NxProcessService, Process }            from '@services/process.service';
-import { NxUriService }                         from '@services/uri.service';
-import { NxApplyService, Watcher }              from '@services/apply.service';
-import { NxToastService }                       from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
-import { WINDOW }                               from '@services/window-provider';
-import { environment }                          from '@environments/environment';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxUriService } from '@services/uri.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { WINDOW } from '@services/window-provider';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -72,11 +76,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     get localUserNameDiffers (): boolean {
-        return this.localUserName !== this.username
+        return this.localUserName !== this.username;
     }
 
     get shouldChangePassword (): boolean {
-        return this.localUserNameDiffers && !this.passwordChanged
+        return this.localUserNameDiffers && !this.passwordChanged;
     }
 
     private routeParamsSubscription: Subscription;
@@ -127,7 +131,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .subscribe(params => {
                 if (params.userId) {
                     this.paramUser = params.userId;
-                    const qmi = this.paramUser.indexOf('?') // qmi stands for "question mark index"
+                    const qmi = this.paramUser.indexOf('?'); // qmi stands for "question mark index"
                     if (qmi > -1) {
                         this.paramUser = this.paramUser.substring(0, qmi);
                     }
@@ -159,7 +163,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.userSubscription = this.system.infoSubject.subscribe(() => {
                     this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
 
-                    const updatedUser = this._findUser()
+                    const updatedUser = this._findUser();
 
                     const cleanUser =  { ...this.selectedUser };
                     delete cleanUser.role?.optionLabel;
@@ -253,7 +257,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         if (!this.localUserName || this.emptyName) {
             this.localUserNameWatcher.reset();
-            this.passwordChanged = false
+            this.passwordChanged = false;
         }
     }
 
@@ -296,8 +300,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         const currentUserIndex = this.system.users.findIndex((user) => {
             return user.id === this.selectedUser.id;
         });
-        const incIndex = currentUserIndex + 1
-        const decIndex = currentUserIndex - 1
+        const incIndex = currentUserIndex + 1;
+        const decIndex = currentUserIndex - 1;
         const nextIndex =
             (incIndex !== this.system.users?.length)
                 ? incIndex
@@ -307,10 +311,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     public setUser () {
         if (this.system && this.system.users?.length > 0) {
-
             let user;
             if (this.paramUser) {
-                user = this.system.users.find(this._filterUser) // maybe use this.findUser() instead?
+                user = this.system.users.find(this._filterUser); // maybe use this.findUser() instead?
             }
             if (typeof (user) === 'undefined') {
                 if (this.menuService.section === 'users') {
@@ -328,7 +331,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this.passwordChanged = false
+            this.passwordChanged = false;
 
             this.applyService.reset(true);
             this.selectedUser = { ...user };
@@ -361,16 +364,16 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     public changePassword () {
         const dialog = this.dialogs
             .changePassword(this.system, this.selectedUser);
-        dialog.then(this._onPasswordChanged)
+        dialog.then(this._onPasswordChanged);
     }
 
     protected _onPasswordChanged = (result) => {
         if (!result) {
             // console.log('password change cancelled')
-            return
+            return;
         }
         // console.log('password changed')
-        this.passwordChanged = true
+        this.passwordChanged = true;
     }
 
     public setPermission (role: NxSystemRole) {

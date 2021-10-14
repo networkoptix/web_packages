@@ -1,25 +1,28 @@
-import { NgModule }                         from '@angular/core';
-import { CommonModule }                     from '@angular/common';
-import { RouterModule, Routes }             from '@angular/router';
-import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }                  from '@ngx-translate/core';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ComponentsModule }                 from '@components/components.module';
-import { NxSystemAdminModule }              from './settings/admin/admin.module';
-import { NxSystemUsersModule }              from './settings/users/users.module';
-import { NxSystemServersModule }            from './settings/servers/servers.module';
-import { NxCamerasModule }                  from './settings/cameras/cameras.module';
-import { NxSystemLicensesModule }           from './settings/licenses/licenses.module';
-import { NxSystemSettingsComponent }        from './settings/settings.component';
-import { NxSystemAdminComponent }           from './settings/admin/admin.component';
-import { NxSystemUsersComponent }           from './settings/users/users.component';
-import { NxSystemServersComponent }         from './settings/servers/servers.component';
+import { ComponentsModule } from '@components/components.module';
+import { NxSystemAdminModule } from './settings/admin/admin.module';
+import { NxSystemUsersModule } from './settings/users/users.module';
+import { NxSystemServersModule } from './settings/servers/servers.module';
+import { NxCamerasModule } from './settings/cameras/cameras.module';
+import { NxSystemLicensesModule } from './settings/licenses/licenses.module';
+import { NxSystemSettingsComponent } from './settings/settings.component';
+import { NxSystemAdminComponent } from './settings/admin/admin.component';
+import { NxSystemUsersComponent } from './settings/users/users.component';
+import { NxSystemServersComponent } from './settings/servers/servers.component';
 import {
-    ApplyGuard, AuthGuard, SystemGuard
-}                                           from '@src/routeGuards';
-import { NxCamerasComponent }               from './settings/cameras/cameras.component';
-import { MenuModule }                       from '@src/menu';
-import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
+    ApplyGuard,
+    AuthGuard,
+    SystemGuard,
+    UsersGuard
+} from '@src/routeGuards';
+import { NxCamerasComponent } from './settings/cameras/cameras.component';
+import { MenuModule } from '@src/menu';
+import { NxSystemLicensesComponent } from './settings/licenses/licenses.component';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 export const localSettingsRoutes: Routes = [
@@ -45,7 +48,7 @@ export const localSettingsRoutes: Routes = [
                 path                  : 'users',
                 component             : NxSystemUsersComponent,
                 canDeactivate         : [ApplyGuard],
-                canActivate           : [SystemGuard],
+                canActivate           : [SystemGuard, UsersGuard],
                 runGuardsAndResolvers : 'always'
             },
             {
@@ -107,8 +110,10 @@ export const localSettingsRoutes: Routes = [
         RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [
+        UsersGuard
+    ],
+    declarations: [
     ],
     bootstrap: [
     ],
