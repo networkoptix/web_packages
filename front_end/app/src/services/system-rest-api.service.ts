@@ -230,7 +230,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private deleteToken(token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        return this.http.post(`${host}/oauth/revoke/`, { token }, { headers: { Authorization: `Bearer ${token}` } });
+        return this.http.post(`${host}/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${token}` } });
     }
 
     protected retryHandler(request) {
