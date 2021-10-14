@@ -22,6 +22,7 @@
     "postbuild-webadmin": "./cloud-portal-postbuild.sh true",
     "postinstall": "ngcc && node setSkin.js --skin blue",
     "test": "ng test",
+    "test:ci": "ng test --karma-config karma.conf.ci.js",
     "test:watch": "ng test --karma-config karma.conf.watch.js",
     "test:chrome": "ng test --browsers Chrome --karma-config karma.conf.watch.js",
     "test:safari": "ng test --browsers Safari --karma-config karma.conf.watch.js",
