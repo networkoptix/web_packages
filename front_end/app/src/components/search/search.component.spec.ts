@@ -18,7 +18,10 @@ import { BehaviorSubject } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-describe('Search Component', () => {
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+describe('NxSearchComponent', () => {
     let component: NxSearchComponent;
     let fixture: ComponentFixture<NxSearchComponent>;
     let el: DebugElement;
@@ -53,7 +56,9 @@ describe('Search Component', () => {
                     FormsModule,
                     DirectivesModule,
                     PipesModule,
-                    TranslateModule.forRoot()
+                    TranslateModule.forRoot(),
+                    AngularSvgIconModule,
+                    HttpClientTestingModule
                 ],
                 providers: [
                     new MockProvider(NxConfigService, configMock),

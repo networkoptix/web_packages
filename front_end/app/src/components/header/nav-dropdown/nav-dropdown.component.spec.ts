@@ -1,15 +1,22 @@
 import {
-    waitForAsync, ComponentFixture, TestBed
-}                       from '@angular/core/testing';
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { WINDOW }                    from '@services/window-provider';
-import { NxNavDropdownComponent }    from './nav-dropdown.component';
+import { NxHeaderService } from '@services/nx-header.service';
+import { WINDOW } from '@services/window-provider';
+import { NxNavDropdownComponent } from './nav-dropdown.component';
+
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 
 describe('NxNavDropdownComponent', () => {
     let component: NxNavDropdownComponent;
@@ -70,13 +77,21 @@ describe('NxNavDropdownComponent', () => {
         urlified          : 'testUrlified',
         subtitle          : 'subtitleText',
         name_raw          : 'nameRaw'
-    }
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxNavDropdownComponent],
-            imports      : [CommonModule],
-            providers    : [
+            declarations: [
+                NxNavDropdownComponent,
+                NxArrowNavDirective
+            ],
+            imports: [
+                CommonModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                RouterTestingModule
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxHeaderService, useValue: {} },

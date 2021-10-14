@@ -1,12 +1,17 @@
 import {
-    waitForAsync, ComponentFixture, TestBed
-}                                          from '@angular/core/testing';
-import { DebugElement }                    from '@angular/core';
-import { CommonModule }                    from '@angular/common';
-import { NxConfigService }                 from '@services/nx-config';
-import { nxConfig }                        from '@services/nx-config/config';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxEmailComponent }                from './email.component';
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxEmailComponent } from './email.component';
+
+import { FormsModule } from '@angular/forms';
+import { NxFocusMeDirective } from '@directives/nx-focus-me'
 
 describe('NxEmailComponent email input Unit Test', () => {
     let component: NxEmailComponent;
@@ -18,8 +23,8 @@ describe('NxEmailComponent email input Unit Test', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxEmailComponent],
-            imports      : [CommonModule],
+            declarations : [NxEmailComponent, NxFocusMeDirective],
+            imports      : [CommonModule, FormsModule],
             providers    : [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock }

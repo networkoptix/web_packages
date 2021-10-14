@@ -38,7 +38,7 @@ import { ComponentsModule }          from '@components/components.module';
 })
 class TranslateTestingModule {}
 
-describe('OAuth Test Suite', () => {
+describe('NxAuthorizeComponent', () => {
     let component: NxAuthorizeComponent;
     let fixture: ComponentFixture<NxAuthorizeComponent>;
     let el: DebugElement;
@@ -733,7 +733,6 @@ describe('OAuth Test Suite', () => {
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.newPassHeader());
         const spans = el.nativeElement.querySelectorAll('span');
-        console.log('spans', spans);
         expect(spans.length).toBe(3);
         expect(spans[0].innerHTML).toBe('For');
         const buttons = el.nativeElement.querySelectorAll('button');

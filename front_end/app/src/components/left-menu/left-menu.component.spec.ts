@@ -13,7 +13,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import { DebugElement } from '@angular/core';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
-describe('Test NxLeftMenuComponent', () => {
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+describe('NxLeftMenuComponent', () => {
     let component: NxLeftMenuComponent;
     let fixture: ComponentFixture<NxLeftMenuComponent>;
     let el: DebugElement;
@@ -50,9 +54,15 @@ describe('Test NxLeftMenuComponent', () => {
             TestBed.configureTestingModule({
                 imports: [
                     CommonModule,
-                    DirectivesModule
+                    DirectivesModule,
+                    AngularSvgIconModule,
+                    HttpClientTestingModule,
+                    RouterTestingModule
                 ],
-                declarations : [NxLeftMenuComponent, RouterLinkDirectiveStub],
+                declarations : [
+                    NxLeftMenuComponent,
+                    RouterLinkDirectiveStub
+                ],
                 providers    : [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(Location, locationMock),

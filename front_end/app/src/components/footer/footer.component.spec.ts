@@ -1,17 +1,21 @@
 import {
-    waitForAsync, ComponentFixture, TestBed
-}                                 from '@angular/core/testing';
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 import { DebugElement, NgModule } from '@angular/core';
-import { CommonModule }           from '@angular/common';
-import { TranslateModule }        from '@ngx-translate/core';
-import { DomSanitizer }           from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
-import { NxConfigService }     from '@services/nx-config';
-import { nxConfig }            from '@services/nx-config/config';
-import { NxAppStateService }   from '@services/nx-app-state.service';
-import { NxMenusService }      from '@services/menus.service';
-import { NxFooterComponent }   from './footer.component';
-import { BehaviorSubject, of } from 'rxjs';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxFooterComponent } from './footer.component';
+import { of } from 'rxjs';
+
+import { RouterTestingModule } from '@angular/router/testing';
 
 @NgModule({
     imports : [TranslateModule.forRoot()],
@@ -27,7 +31,7 @@ describe('NxFooterComponent', () => {
     nxConfig.company.name = 'Nx Cloud';
     const configMock = { getConfig: () => nxConfig };
     const appStateMock = {
-        footerVisibleSubject : of(true)
+        footerVisibleSubject: of(true)
     };
 
     const footers = [
@@ -78,13 +82,19 @@ describe('NxFooterComponent', () => {
             nodes: footers
         }),
         cleanEmptyNodes: (footer: any) => footer
-    }
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxFooterComponent],
-            imports      : [CommonModule, TranslateTestingModule],
-            providers    : [
+            declarations: [
+                NxFooterComponent
+            ],
+            imports: [
+                CommonModule,
+                TranslateTestingModule,
+                RouterTestingModule
+            ],
+            providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: DomSanitizer, useValue: {} },
                 { provide: NxAppStateService, useValue: appStateMock },

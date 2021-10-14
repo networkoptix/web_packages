@@ -1,8 +1,11 @@
 import {
-    waitForAsync, ComponentFixture, TestBed
+    waitForAsync,
+    ComponentFixture,
+    TestBed
 }                       from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxTabsComponent } from './tabs.component';
@@ -21,7 +24,7 @@ describe('NxTabsComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations : [NxTabsComponent],
-            imports      : [CommonModule],
+            imports      : [CommonModule, RouterTestingModule],
             providers    : [
                 { provide: NxHeaderService, useValue: headerMock }
             ]

@@ -1,15 +1,22 @@
+/* eslint-disable dot-notation */
 import {
     ComponentFixture, fakeAsync, TestBed, tick, waitForAsync
-}                                           from '@angular/core/testing';
-import { FormsModule }                      from '@angular/forms';
-import { NxPasswordComponent }              from '@components/password-input/password.component';
-import { nxConfig }                         from '@services/nx-config/config';
-import { NxConfigService }                  from '@services/nx-config';
-import { NxCloudApiService }                from '@services/nx-cloud-api';
-import { of }                               from 'rxjs';
-import { delay }                            from 'rxjs/operators';
-import { NxLanguageProviderService }        from '@services/nx-language-provider';
+} from '@angular/core/testing';
+import { FormsModule, NgModel } from '@angular/forms';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { CommonModule } from '@angular/common';
+
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+    NxPasswordTagValidationComponent
+} from '@components/password-input-tag-validation/password-tag-validation.component';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -36,10 +43,15 @@ describe('NxPasswordComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,
-                FormsModule
+                FormsModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule
             ],
-            declarations : [NxPasswordComponent],
-            providers    : [
+            declarations: [
+                NxPasswordComponent,
+                NxPasswordTagValidationComponent
+            ],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxCloudApiService, useValue: spyApi }
@@ -49,6 +61,7 @@ describe('NxPasswordComponent', () => {
             .then(() => {
                 fixture = TestBed.createComponent(NxPasswordComponent);
                 component = fixture.componentInstance;
+                component.component = { valid: true } as NgModel;
                 el = fixture.debugElement.nativeElement.querySelector('input');
 
                 apiSpy = TestBed.inject(NxCloudApiService) as jasmine.SpyObj<NxCloudApiService>;
