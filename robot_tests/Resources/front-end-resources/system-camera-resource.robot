@@ -138,3 +138,13 @@ Create And Add Custom Camera User Type and User
     #Save User    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${user}    ${custom permissions}[permissions]    ${user}    ${BASE PASSWORD}    user id=${id}    user role id=${role id}
     Save User Existing    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${user}    ${custom permissions}[permissions]    ${user}    ${custom permissions}[id]    ${id}
     [Return]    ${user}
+    
+Take Camera Offline
+    [Documentation]    Simulates the camera going offline by blacklisting its IP on the docker server
+    [Arguments]    ${docker name}    ${Camera IP}
+    Execute Command Remotely    docker exec -d ${docker name} iptables -A INPUT -s ${Camera IP} -j DROP
+    
+Bring Camera Online
+    [Documentation]    Brings the camera back online by removing the blacklisting of its IP on the docker server
+    [Arguments]    ${docker name}    ${Camera IP}
+    Execute Command Remotely    docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
