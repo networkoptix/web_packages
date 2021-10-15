@@ -89,12 +89,14 @@ export class NxKnowledgebaseService {
             this.loadingMenu = true;
             return from(this.accountService.get()).pipe(
                 switchMap((account: Account) => {
+                    // eslint-disable-next-line camelcase
                     return this.menusService.getMenu(this.menuName || '', false, account?.is_superuser);
                 }),
                 tap(menu => {
                     this.baseRoute = '/docs/' + this.basePath + '/' + this.kbName + '/';
                     menu.nodes = this.menusService.cleanEmptyNodes(menu.nodes, true);
                     menu.nodes.forEach(node => this.mapParentNodeAndUrl(node));
+                    // eslint-disable-next-line camelcase
                     if (this.account?.is_superuser) {
                         menu.nodes = this.menusService.addDraftAndPending(menu.nodes);
                     }

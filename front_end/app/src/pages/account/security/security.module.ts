@@ -23,12 +23,12 @@ import { AngularSvgIconModule }       from 'angular-svg-icon';
         PipesModule,
         AngularSvgIconModule.forRoot()
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxAccountSecurityComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxAccountSecurityComponent
     ]
 })

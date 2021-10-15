@@ -17,19 +17,19 @@ import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-password-input',
-    templateUrl : 'password.component.html',
-    styleUrls   : ['password.component.scss'],
-    providers   : [
+    selector: 'nx-password-input',
+    templateUrl: 'password.component.html',
+    styleUrls: ['password.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxPasswordComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxPasswordComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxPasswordComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxPasswordComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None

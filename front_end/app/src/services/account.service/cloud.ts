@@ -120,8 +120,8 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                     return Promise.resolve({
                         data: {
-                            account    : result,
-                            resultCode : this.CONFIG.responseOk
+                            account: result,
+                            resultCode: this.CONFIG.responseOk
                         }
                     });
                 }
@@ -133,8 +133,8 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
                 return Promise.resolve({
                     data: {
-                        account    : result,
-                        resultCode : this.CONFIG.responseOk
+                        account: result,
+                        resultCode: this.CONFIG.responseOk
                     }
                 });
             }

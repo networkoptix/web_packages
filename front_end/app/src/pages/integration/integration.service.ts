@@ -151,9 +151,9 @@ export class IntegrationService implements OnDestroy {
 
             if (matchScreenshot) {
                 processed.push({
-                    id      : item[0].replace('overview', ''),
-                    value   : item[1],
-                    sortKey : parseInt(matchScreenshot[1], 10)
+                    id: item[0].replace('overview', ''),
+                    value: item[1],
+                    sortKey: parseInt(matchScreenshot[1], 10)
                 });
             }
         });

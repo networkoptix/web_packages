@@ -17,11 +17,11 @@ export class NxRibbonService {
     LANG: LanguageI18NStaticTypes
     CONFIG: IConfig
     context = {
-        visibility     : false,
-        message        : '',
-        actions        : [],
-        type           : '',
-        updateFunction : ''
+        visibility: false,
+        message: '',
+        actions: [],
+        type: '',
+        updateFunction: ''
     };
 
     contextSubject = new BehaviorSubject(this.context);
@@ -51,8 +51,8 @@ export class NxRibbonService {
         const msg = (typeof message === 'function') ? message() : message;
 
         this.context = {
-            visibility : true,
-            message    : msg,
+            visibility: true,
+            message: msg,
             actions,
             type,
             updateFunction
@@ -63,11 +63,11 @@ export class NxRibbonService {
 
     hide() {
         this.context = {
-            visibility     : false,
-            message        : '',
-            actions        : [],
-            type           : '',
-            updateFunction : ''
+            visibility: false,
+            message: '',
+            actions: [],
+            type: '',
+            updateFunction: ''
         };
         this.contextSubject.next(this.context);
         this.appStateService.ribbonVisibility = false;

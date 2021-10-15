@@ -680,8 +680,8 @@ export class NxSystemAPI {
         ]).pipe(
             map(({ reply }: any) => {
                 return {
-                    hasAnalyticsData : !!reply[analyticsEndpoint]?.length,
-                    hasPlugins       : reply[getCamerasEndpoint]?.reduce(
+                    hasAnalyticsData: !!reply[analyticsEndpoint]?.length,
+                    hasPlugins: reply[getCamerasEndpoint]?.reduce(
                         (hasPlugins, { addParams, parentId }) =>
                             hasPlugins ||
                             addParams.find(
@@ -746,9 +746,9 @@ export class NxSystemAPI {
 
     checkForAnalyticsData() {
         const queryParams = {
-            startTime : 0,
-            endTime   : Number.MAX_SAFE_INTEGER,
-            limit     : 1
+            startTime: 0,
+            endTime: Number.MAX_SAFE_INTEGER,
+            limit: 1
         };
         return this.get('/ec2/analyticsLookupObjectTracks', queryParams);
     }
@@ -844,8 +844,8 @@ export class NxSystemAPI {
         ]).pipe(
             map(({ reply }: any) => {
                 return {
-                    licenses : reply['ec2/getLicenses'],
-                    hwids    :
+                    licenses: reply['ec2/getLicenses'],
+                    hwids:
                         reply['ec2/getHardwareIdsOfServers'].reply
                             .reduce((ids: any[], { hardwareIds }) => {
                                 ids.push(...hardwareIds);
@@ -936,16 +936,16 @@ export class NxSystemAPI {
 
     userObject(fullName: string, email: string): User {
         return {
-            canBeEdited  : true,
-            canBeDeleted : true,
+            canBeEdited: true,
+            canBeDeleted: true,
             email,
-            id           : '',
-            isCloud      : true,
-            isEnabled    : true,
-            userRoleId   : this.emptyId,
-            permissions  : '',
+            id: '',
+            isCloud: true,
+            isEnabled: true,
+            userRoleId: this.emptyId,
+            permissions: '',
             // TODO: Remove the trash below after #VMS-2968
-            name         : email,
+            name: email,
             fullName
         };
     }

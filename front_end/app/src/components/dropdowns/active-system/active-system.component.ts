@@ -8,9 +8,9 @@ import { NxConfigService }           from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
-    selector    : 'nx-active-system',
-    templateUrl : 'active-system.component.html',
-    styleUrls   : ['active-system.component.scss']
+    selector: 'nx-active-system',
+    templateUrl: 'active-system.component.html',
+    styleUrls: ['active-system.component.scss']
 })
 
 export class NxActiveSystemDropdown extends BaseDropdown {
@@ -20,9 +20,9 @@ export class NxActiveSystemDropdown extends BaseDropdown {
     params;
     show: boolean;
     active = {
-        health   : false,
-        settings : false,
-        view     : false
+        health: false,
+        settings: false,
+        view: false
     };
 
     constructor(

@@ -4,9 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 const COOKIE_NAME = 'nx_show_ips';
 
 @Component({
-    selector    : 'nx-media-server-list-header',
-    templateUrl : 'media-server-list-header.component.html',
-    styleUrls   : ['media-server-list-header.component.scss']
+    selector: 'nx-media-server-list-header',
+    templateUrl: 'media-server-list-header.component.html',
+    styleUrls: ['media-server-list-header.component.scss']
 })
 export class NxMediaServerListHeaderComponent implements OnInit {
     @Output() ipVisibilityStateChange = new EventEmitter();

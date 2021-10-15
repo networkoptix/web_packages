@@ -10,9 +10,9 @@ import { Process }                               from '@services/process.service
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-apply-content',
-    templateUrl : 'apply.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-apply-content',
+    templateUrl: 'apply.component.html',
+    styleUrls: []
 })
 export class ApplyModalContent<Apply extends Process, Discard extends Function> {
     @Input() applyFunc: Apply;
@@ -46,10 +46,10 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
 }
 
 @Component({
-    selector      : 'nx-modal-apply',
-    template      : '',
-    encapsulation : ViewEncapsulation.None,
-    styleUrls     : []
+    selector: 'nx-modal-apply',
+    template: '',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: []
 })
 
 export class NxModalApplyComponent {
@@ -68,8 +68,8 @@ export class NxModalApplyComponent {
     private dialog(applyFunc, discardFunc) {
         this.modalRef = this.modalService.open(ApplyModalContent,
             {
-                windowClass : 'modal-holder',
-                backdrop    : 'static'
+                windowClass: 'modal-holder',
+                backdrop: 'static'
             });
         this.modalRef.componentInstance.applyFunc = applyFunc;
         this.modalRef.componentInstance.discardFunc = discardFunc;

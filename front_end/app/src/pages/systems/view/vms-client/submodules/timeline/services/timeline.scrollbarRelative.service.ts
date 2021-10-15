@@ -21,12 +21,14 @@ export class TimelineScrollbarRelativeService {
 
     protected _log (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
     protected _warn (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
@@ -39,19 +41,19 @@ export class TimelineScrollbarRelativeService {
 
     protected _subject = new BehaviorSubject<TimelineScrollbarRelativeServiceStatus>(
         {
-            magnification  : 1.0,
-            offset         : 0.0,
-            canScrollLeft  : false,
-            canScrollRight : false
+            magnification: 1.0,
+            offset: 0.0,
+            canScrollLeft: false,
+            canScrollRight: false
         }
     )
 
     protected _emit () {
         this._subject.next({
-            magnification  : this.magnification,
-            offset         : this.offset,
-            canScrollLeft  : this.canScrollLeft,
-            canScrollRight : this.canScrollRight
+            magnification: this.magnification,
+            offset: this.offset,
+            canScrollLeft: this.canScrollLeft,
+            canScrollRight: this.canScrollRight
         });
     }
 
@@ -63,9 +65,9 @@ export class TimelineScrollbarRelativeService {
         return Math.max(
             0,
             Math.min(
-                (this.timeline.targetScrollMs - this.timeline.fullRange.start)
-                    / this.timeline.fullRange.duration,
-                1.0 - 1 / this.magnification,
+                (this.timeline.targetScrollMs - this.timeline.fullRange.start) /
+                    this.timeline.fullRange.duration,
+                1.0 - 1 / this.magnification
             )
         );
     }

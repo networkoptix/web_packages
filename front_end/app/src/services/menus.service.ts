@@ -89,9 +89,9 @@ export class NxMenusService {
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, { title, description, nodes }]) => {
                 newMenu[name] = {
-                    title       : title,
-                    description : description,
-                    nodes       : nodes.map(this.translateNode(lang))
+                    title: title,
+                    description: description,
+                    nodes: nodes.map(this.translateNode(lang))
                 };
                 return newMenu;
             }, {});
@@ -103,9 +103,9 @@ export class NxMenusService {
         if (this.CONFIG.isLocal) {
             if (menu?.title === undefined) {
                 menu = {
-                    description : undefined,
-                    nodes       : [],
-                    title       : name
+                    description: undefined,
+                    nodes: [],
+                    title: name
                 };
             }
         }

@@ -10,7 +10,7 @@ describe('NxTagComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NxTagComponent]
         })
-                .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(() => {

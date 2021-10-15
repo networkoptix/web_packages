@@ -12,8 +12,8 @@ describe('NxCheckboxComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxCheckboxComponent],
-                providers    : []
+                declarations: [NxCheckboxComponent],
+                providers: []
             })
             .compileComponents();
 
@@ -36,10 +36,10 @@ describe('NxCheckboxComponent', () => {
 
     it('should have defined states', () => {
         expect(component['cbxStates']).toEqual({
-            false     : 'unchecked',
-            true      : 'checked',
-            disabled  : 'disabled',
-            undefined : 'tristate'
+            false: 'unchecked',
+            true: 'checked',
+            disabled: 'disabled',
+            undefined: 'tristate'
         });
     });
 

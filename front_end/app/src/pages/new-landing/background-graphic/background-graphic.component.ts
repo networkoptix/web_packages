@@ -9,9 +9,9 @@ interface layer {
 }
 
 @Component({
-    selector    : 'nx-background-graphic',
-    templateUrl : './background-graphic.component.html',
-    styleUrls   : ['./background-graphic.component.scss']
+    selector: 'nx-background-graphic',
+    templateUrl: './background-graphic.component.html',
+    styleUrls: ['./background-graphic.component.scss']
 })
 export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
   @Input() scrollPosition: number
@@ -23,21 +23,21 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
   graphicPaths = ['1', '2', '3', '4', '5', '6', '7', 'contrast']
 
   svgProperties = {
-      defaultWidth  : 1920,
-      defaultHeight : 1080
+      defaultWidth: 1920,
+      defaultHeight: 1080
   }
 
   calculationProperties = {
-      scrollSpeedCoefficient   : 0.0005,
-      layerDistanceCoefficient : 0.00005
+      scrollSpeedCoefficient: 0.0005,
+      layerDistanceCoefficient: 0.00005
   }
 
   constructor(configService: NxConfigService, platform: Platform, public landingService: NxLandingService) {
       this.CONFIG = configService.getConfig();
       for (const graphic of this.graphicPaths) {
           this.layers.push({
-              path  : 'land_layer_' + graphic + '.svg',
-              scale : 0.5
+              path: 'land_layer_' + graphic + '.svg',
+              scale: 0.5
           });
       }
       this.isSafari = platform.SAFARI;

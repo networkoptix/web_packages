@@ -7,10 +7,10 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { Process }                  from '@services/process.service';
 
 @Component({
-    selector      : 'nx-process-button',
-    templateUrl   : 'process-button.component.html',
-    styleUrls     : ['process-button.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-process-button',
+    templateUrl: 'process-button.component.html',
+    styleUrls: ['process-button.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;
@@ -48,6 +48,7 @@ export class NxProcessButtonComponent implements OnInit {
     touchForm() {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
+            // eslint-disable-next-line no-prototype-builtins
             if (form.controls.hasOwnProperty(ctrl)) {
                 form.get(ctrl).markAsTouched();
                 form.get(ctrl).markAsDirty();
@@ -58,6 +59,7 @@ export class NxProcessButtonComponent implements OnInit {
     setFocusToInvalid() {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
+            // eslint-disable-next-line no-prototype-builtins
             if (form.controls.hasOwnProperty(ctrl)) {
                 if (form.get(ctrl).invalid) {
                     // TODO : find how to set element's focus

@@ -16,9 +16,9 @@ import { CurrentStorageState }       from '@services/system.service/system/stora
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-server-advanced-storage-component',
-    templateUrl : 'server-storage-adv.component.html',
-    styleUrls   : ['server-storage-adv.component.scss']
+    selector: 'nx-server-advanced-storage-component',
+    templateUrl: 'server-storage-adv.component.html',
+    styleUrls: ['server-storage-adv.component.scss']
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
@@ -176,16 +176,16 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 }
 
 export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, maxReserve, ...storage }) => ({
-    addParams      : [{ name: 'space', value: `${totalSpace}` }],
-    id             : storageId,
-    isBackup       : isBackup,
-    parentId       : serverId,
-    spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
-    storageType    : storageType,
+    addParams: [{ name: 'space', value: `${totalSpace}` }],
+    id: storageId,
+    isBackup: isBackup,
+    parentId: serverId,
+    spaceLimit: Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
+    storageType: storageType,
     // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
-    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
-    url            : url,
-    usedForWriting : isUsedForWriting.value
+    typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}',
+    url: url,
+    usedForWriting: isUsedForWriting.value
 });
 
 export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, usedForWriting: ufw, ...storage }) => {
@@ -197,8 +197,8 @@ export const mapStorages = (storages) => storages.map(({ freeSpace: free, reserv
     isUsedForWriting.value = ufw;
     return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, remainingSpace, watchers: [...reservedSpace.watcher, isUsedForWriting] };
 }).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => moreWatchers ? ({
-    storages : [...storages, storage],
-    watchers : [...watchers, ...moreWatchers]
+    storages: [...storages, storage],
+    watchers: [...watchers, ...moreWatchers]
 }) : { storages, watchers }, { storages: [], watchers: [] });
 
 export class BitConverter {
@@ -347,9 +347,9 @@ export const fromBits = (
     }
 
     const unitList = {
-        bit  : BIT_UNITS,
-        byte : BYTE_UNITS,
-        bps  : BPS_UNITS
+        bit: BIT_UNITS,
+        byte: BYTE_UNITS,
+        bps: BPS_UNITS
     };
     const UNITS = unitList[options.unitType];
     const base = options.unitType === 'byte' ? 1024 : 1000;

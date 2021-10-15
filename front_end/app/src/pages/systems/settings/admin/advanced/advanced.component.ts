@@ -20,9 +20,9 @@ import { FormWatcher, NxApplyService }  from '@services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-system-advanced-admin-component',
-    templateUrl : 'advanced.component.html',
-    styleUrls   : ['advanced.component.scss']
+    selector: 'nx-system-advanced-admin-component',
+    templateUrl: 'advanced.component.html',
+    styleUrls: ['advanced.component.scss']
 })
 
 export class NxSystemAdvancedAdminComponent implements OnDestroy {

@@ -22,9 +22,9 @@ import { map, startWith }                   from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-menu-api',
-    templateUrl : 'menu.component.html',
-    styleUrls   : ['menu.component.scss']
+    selector: 'nx-menu-api',
+    templateUrl: 'menu.component.html',
+    styleUrls: ['menu.component.scss']
 })
 export class NxMenuApiComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;

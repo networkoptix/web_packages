@@ -4,9 +4,9 @@ import { Platform } from '@angular/cdk/platform';
 import { NxLandingService } from '../landing.service';
 
 @Component({
-    selector    : 'nx-mask',
-    templateUrl : './mask.component.html',
-    styleUrls   : ['./mask.component.scss']
+    selector: 'nx-mask',
+    templateUrl: './mask.component.html',
+    styleUrls: ['./mask.component.scss']
 })
 export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() scrollPosition = 820;
@@ -15,8 +15,8 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
     isSafari: boolean;
 
     calculationProperties = {
-        scrollSpeedCoefficient : 0.0005,
-        maskCoefficient        : 2.4
+        scrollSpeedCoefficient: 0.0005,
+        maskCoefficient: 2.4
     }
 
     CONFIG: IConfig

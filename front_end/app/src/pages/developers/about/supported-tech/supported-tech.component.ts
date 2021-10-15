@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-supported-tech',
-    templateUrl : 'supported-tech.component.html',
-    styleUrls   : ['supported-tech.component.scss']
+    selector: 'nx-supported-tech',
+    templateUrl: 'supported-tech.component.html',
+    styleUrls: ['supported-tech.component.scss']
 })
 export class NxSupportedTechComponent {
     @Input() supportedTechNode: AboutNode;

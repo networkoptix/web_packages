@@ -23,15 +23,15 @@ import { Watcher }                   from '@services/apply.service';
  */
 
 @Component({
-    selector      : 'nx-select',
-    templateUrl   : 'dropdown.component.html',
-    styleUrls     : ['dropdown.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-select',
+    templateUrl: 'dropdown.component.html',
+    styleUrls: ['dropdown.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxGenericDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxGenericDropdown),
+            multi: true
         }
     ]
 })

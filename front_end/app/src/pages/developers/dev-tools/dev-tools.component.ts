@@ -12,9 +12,9 @@ import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-dev-tools',
-    templateUrl : 'dev-tools.component.html',
-    styleUrls   : ['dev-tools.component.scss']
+    selector: 'nx-dev-tools',
+    templateUrl: 'dev-tools.component.html',
+    styleUrls: ['dev-tools.component.scss']
 })
 export class NxDevToolsComponent implements OnInit {
     @Input() devToolsNode: Partial<AboutNode>;
@@ -55,11 +55,11 @@ export class NxDevToolsComponent implements OnInit {
                 icon,
                 nodes
             }): AboutNode => ({
-                title       : displayName || name || asset?.title,
+                title: displayName || name || asset?.title,
                 subtitle,
-                displayName : displayName || name,
-                nodes       : nodes && nodes.map(mapToDevToolsNode),
-                url         : url || `/docs/content/${assetId}`,
+                displayName: displayName || name,
+                nodes: nodes && nodes.map(mapToDevToolsNode),
+                url: url || `/docs/content/${assetId}`,
                 assetId,
                 asset,
                 icon,

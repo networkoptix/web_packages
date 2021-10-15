@@ -33,9 +33,9 @@ describe('NxSystemsListComponent', () => {
         };
         const configSpy = { getConfig: () => nxConfig };
         TestBed.configureTestingModule({
-            imports      : [HttpClientTestingModule],
-            declarations : [NxSystemsListComponent],
-            providers    : [
+            imports: [HttpClientTestingModule],
+            declarations: [NxSystemsListComponent],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateSpy },
                 { provide: NxConfigService, useValue: configSpy },
                 NxPageService,

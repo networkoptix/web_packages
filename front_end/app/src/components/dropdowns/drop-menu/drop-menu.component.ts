@@ -15,9 +15,9 @@ import { NxAccountService }          from '@services/account.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-drop-menu',
-    templateUrl : 'drop-menu.component.html',
-    styleUrls   : ['drop-menu.component.scss']
+    selector: 'nx-drop-menu',
+    templateUrl: 'drop-menu.component.html',
+    styleUrls: ['drop-menu.component.scss']
 })
 export class NxDropMenu extends BaseDropdown {
     @Input() endpoint: any = {};
@@ -31,10 +31,10 @@ export class NxDropMenu extends BaseDropdown {
 
     systemCounter: number;
     active = {
-        health   : false,
-        register : false,
-        settings : false,
-        view     : false
+        health: false,
+        register: false,
+        settings: false,
+        view: false
     };
 
     params: any;

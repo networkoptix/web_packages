@@ -10,11 +10,11 @@ describe('NxUtilsService', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            providers    : [
+            providers: [
                 NxUtilsService,
                 DeviceDetectorService,
                 { provide: LOCALE_ID, useValue: 'id' },
-                { provide: DOCUMENT, useValue: {}}
+                { provide: DOCUMENT, useValue: {} }
             ]
         });
         utilsService = TestBed.inject(NxUtilsService);

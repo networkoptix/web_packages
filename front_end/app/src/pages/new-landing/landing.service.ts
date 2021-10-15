@@ -18,8 +18,8 @@ export class NxLandingService {
     backgroundGraphicFinishedLoading$ = new BehaviorSubject<boolean>(false);
     contentStartRef: ElementRef;
     scrollBreakpoints = {
-        showGraphics : 1000,
-        maskMaxSize  : 815
+        showGraphics: 1000,
+        maskMaxSize: 815
     }
 
     animationDuration = 1800;

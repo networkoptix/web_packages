@@ -8,14 +8,14 @@ import { extNgForm }                 from '@services/apply.service';
 import { Process }                   from '@services/process.service';
 
 @Component({
-    selector    : 'nx-apply',
-    templateUrl : 'apply.component.html',
-    styleUrls   : ['apply.component.scss'],
-    providers   : [
+    selector: 'nx-apply',
+    templateUrl: 'apply.component.html',
+    styleUrls: ['apply.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxApplyComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxApplyComponent),
+            multi: true
         }
     ]
 })

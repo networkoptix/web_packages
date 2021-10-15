@@ -12,8 +12,8 @@ import { setupConfig }                        from '@src/_mocks/config.test';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {
 }
@@ -32,12 +32,12 @@ describe('NxRibbonComponent', () => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
 
         TestBed.configureTestingModule({
-            declarations : [NxRibbonComponent, RouterLinkDirectiveStub],
-            imports      : [
+            declarations: [NxRibbonComponent, RouterLinkDirectiveStub],
+            imports: [
                 CommonModule,
                 TranslateTestingModule
             ],
-            providers    : [
+            providers: [
                 NxRibbonService,
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxHeaderService, useValue: spyHeader },
@@ -75,32 +75,32 @@ describe('NxRibbonComponent', () => {
             service.CONFIG = setupConfig();
             service.LANG.ribbon = {
                 beingMerged: {
-                    mayTake : () => 'Depending on the size of the database, it may take up to several hours.',
-                    to      : () => 'is being merged to this system'
+                    mayTake: () => 'Depending on the size of the database, it may take up to several hours.',
+                    to: () => 'is being merged to this system'
                 },
-                finishingMerge : () => 'Finishing systems merge',
-                integration    : {
-                    accept          : () => 'Accept',
-                    backToEditText  : () => 'Back to the editing interfaces',
-                    previewRibbon   : () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
-                    publishedRibbon : () => 'This page is the live version that is publicly available.',
-                    reject          : () => 'Reject'
+                finishingMerge: () => 'Finishing systems merge',
+                integration: {
+                    accept: () => 'Accept',
+                    backToEditText: () => 'Back to the editing interfaces',
+                    previewRibbon: () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
+                    publishedRibbon: () => 'This page is the live version that is publicly available.',
+                    reject: () => 'Reject'
                 },
-                systemOffline  : () => 'System is offline. Some settings may not be available.',
-                systemsMerging : () => 'This system is currently involved in a merge operation.'
+                systemOffline: () => 'System is offline. Some settings may not be available.',
+                systemsMerging: () => 'This system is currently involved in a merge operation.'
             };
 
             const actions: RibbonAction[] = [{
-                type  : 'link',
-                text  : 'Go back',
-                value : '/admin/cms/asset'
+                type: 'link',
+                text: 'Go back',
+                value: '/admin/cms/asset'
             }];
             const context = {
-                visibility     : true,
-                message        : 'Alcohol! Because no great story started with someone eating a salad.',
+                visibility: true,
+                message: 'Alcohol! Because no great story started with someone eating a salad.',
                 actions,
-                type           : '',
-                updateFunction : ''
+                type: '',
+                updateFunction: ''
             };
 
             service.show(context.message, context.actions, context.type, context.updateFunction);
@@ -121,11 +121,11 @@ describe('NxRibbonComponent', () => {
         [NxRibbonService],
         (service: NxRibbonService) => {
             const context = {
-                visibility     : false,
-                message        : '',
-                actions        : [],
-                type           : '',
-                updateFunction : ''
+                visibility: false,
+                message: '',
+                actions: [],
+                type: '',
+                updateFunction: ''
             };
 
             service.hide();

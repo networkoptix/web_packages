@@ -36,7 +36,7 @@ export interface RulerSerif {
 export class TimelinePrimaryRulerCanvasRendererService {
     constructor(
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService,
+        protected vms: VideoManagementSystemService
     ) {
     }
 
@@ -71,9 +71,9 @@ export class TimelinePrimaryRulerCanvasRendererService {
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
-        ctx.save()
+        ctx.save();
         actualDrawing();
-        ctx.restore()
+        ctx.restore();
     }
 
     protected _getIntervals (): Array<IrregularLengthInterval> {

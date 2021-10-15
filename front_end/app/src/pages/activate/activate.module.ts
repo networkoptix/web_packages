@@ -64,8 +64,8 @@ const appRoutes: Routes = [
     declarations: [
         NxActivateComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxActivateComponent
     ]
 })

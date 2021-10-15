@@ -24,9 +24,9 @@ describe('For Developers Landing - Supported Tech Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxSupportedTechComponent, RouterLinkDirectiveStub],
-                imports      : [CommonModule],
-                providers    : [
+                declarations: [NxSupportedTechComponent, RouterLinkDirectiveStub],
+                imports: [CommonModule],
+                providers: [
                     new MockProvider(Router, routeLandingMock),
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(WINDOW, {})

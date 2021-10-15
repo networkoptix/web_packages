@@ -50,9 +50,9 @@ export interface DataStructureMeta {
 
 @UntilDestroy()
 @Component({
-    selector    : 'console-edit',
-    templateUrl : 'console-edit.component.html',
-    styleUrls   : ['console-edit.component.scss']
+    selector: 'console-edit',
+    templateUrl: 'console-edit.component.html',
+    styleUrls: ['console-edit.component.scss']
 })
 export class NxDevConsoleEditComponent {
     @Input() contextList: ContextManifest[] = [];
@@ -90,8 +90,8 @@ export class NxDevConsoleEditComponent {
         const getMethod = (action: string) => {
             const [subAPI, method] = ({
                 [ConsoleSection.CUSTOM_CLIENTS]: {
-                    create : ['customClient', 'create'],
-                    save   : ['customClient', 'partialUpdate']
+                    create: ['customClient', 'create'],
+                    save: ['customClient', 'partialUpdate']
                 }
             })[this.route.snapshot.params.section][action];
             return this.cloudApi[subAPI][method];

@@ -5,12 +5,12 @@ describe('Search service', () => {
     let search: NxSearchService;
 
     const modelMock = {
-        query           : '',
-        queryExactMatch : '',
-        queryAndMatch   : '',
-        queryOrMatch    : '',
-        queryEndsWith   : '',
-        queryStartsWith : ''
+        query: '',
+        queryExactMatch: '',
+        queryAndMatch: '',
+        queryOrMatch: '',
+        queryEndsWith: '',
+        queryStartsWith: ''
     };
 
     beforeEach(waitForAsync(() => {

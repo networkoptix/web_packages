@@ -17,8 +17,8 @@ import { NxLicenseTrialComponent }        from '@pages/systems/settings/licenses
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {
 }

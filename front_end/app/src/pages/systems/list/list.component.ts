@@ -22,9 +22,9 @@ import { NxUtilsService }            from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-systems-list-component',
-    templateUrl : 'list.component.html',
-    styleUrls   : ['list.component.scss']
+    selector: 'nx-systems-list-component',
+    templateUrl: 'list.component.html',
+    styleUrls: ['list.component.scss']
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
@@ -109,8 +109,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             this.fetchComplete = true;
             return this.systemsService.forceUpdateSystems().toPromise();
         }, {
-            errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
-            logoutForbidden : true
+            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
+            logoutForbidden: true
         });
 
         this.searchSubscription = this.searchChanged

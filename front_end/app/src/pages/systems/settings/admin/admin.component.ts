@@ -36,9 +36,9 @@ interface Settings {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-system-admin-component',
-    templateUrl : 'admin.component.html',
-    styleUrls   : ['admin.component.scss']
+    selector: 'nx-system-admin-component',
+    templateUrl: 'admin.component.html',
+    styleUrls: ['admin.component.scss']
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -137,8 +137,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     private updateSettings(forceMergeState?: boolean) {
         this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         this.settings = {
-            disconnectDisabled : this.merging,
-            renameDisabled     : this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master'
+            disconnectDisabled: this.merging,
+            renameDisabled: this.merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master'
         };
     }
 
@@ -178,8 +178,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
 
         this.settings = {
-            disconnectDisabled : false,
-            renameDisabled     : false
+            disconnectDisabled: false,
+            renameDisabled: false
         };
 
         if (this.settingsServiceSubscription) {
@@ -253,9 +253,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }).catch(() => {
                             this.systemNameWatcher.reset();
                             const options = {
-                                classname : this.CONFIG.toast.warning,
-                                autohide  : true,
-                                delay     : this.CONFIG.alertTimeout
+                                classname: this.CONFIG.toast.warning,
+                                autohide: true,
+                                delay: this.CONFIG.alertTimeout
                             };
                             this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
                         });
@@ -335,7 +335,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }
             this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
-                const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
+                const { dialogs: { cloudStorage: { systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
                 this.dialogs.confirm(message, title, ok);
             }).catch(() => {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts
@@ -400,9 +400,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.toastService.show(
                             this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name }),
                             {
-                                classname : this.CONFIG.toast.success,
-                                autohide  : true,
-                                delay     : this.CONFIG.alertTimeout
+                                classname: this.CONFIG.toast.success,
+                                autohide: true,
+                                delay: this.CONFIG.alertTimeout
                             });
                     }, err => {
                         console.error(err);

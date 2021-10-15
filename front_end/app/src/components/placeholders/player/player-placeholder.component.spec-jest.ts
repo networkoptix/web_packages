@@ -25,9 +25,9 @@ describe('NxSectionPlaceholderComponent', () => {
             })
         };
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxSectionPlaceholderComponent],
-            providers    : [
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [NxSectionPlaceholderComponent],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateSpy },
                 { provide: NxConfigService, useValue: configSpy }
             ]

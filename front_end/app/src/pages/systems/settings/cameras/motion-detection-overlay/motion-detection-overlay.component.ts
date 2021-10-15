@@ -10,10 +10,10 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxUtilsService }           from '@services/utils.service';
 
 @Component({
-    selector        : 'nx-motion-detection-overlay',
-    templateUrl     : 'motion-detection-overlay.component.html',
-    styleUrls       : ['motion-detection-overlay.component.scss'],
-    changeDetection : ChangeDetectionStrategy.OnPush
+    selector: 'nx-motion-detection-overlay',
+    templateUrl: 'motion-detection-overlay.component.html',
+    styleUrls: ['motion-detection-overlay.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;

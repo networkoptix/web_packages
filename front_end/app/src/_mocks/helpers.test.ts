@@ -1,11 +1,11 @@
-import { NgModule } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
-import { Subject } from "rxjs/internal/Subject";
+import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { Subject } from 'rxjs/internal/Subject';
 import staticLang from '../../language_i18n_static.json';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 export class TranslateTestingModule {}
 
@@ -23,8 +23,8 @@ export class MockProvider<Provider, Value> {
 }
 
 export const sanitizerMock = {
-    sanitize                : (_, val) => val,
-    bypassSecurityTrustHtml : (val) => val
+    sanitize: (_, val) => val,
+    bypassSecurityTrustHtml: (val) => val
 };
 
 const parseStaticTranslations = (staticLangNode) => Object.entries(
@@ -94,7 +94,7 @@ export const getMockTranslations = (overrides?) => {
 
     return {
         translations,
-        getTranslations  : () => translations,
-        translateSubject : new Subject()
+        getTranslations: () => translations,
+        translateSubject: new Subject()
     };
 };

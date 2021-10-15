@@ -7,9 +7,9 @@ import { first } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-cookie-banner',
-    templateUrl : './cookie-banner.component.html',
-    styleUrls   : ['./cookie-banner.component.scss']
+    selector: 'nx-cookie-banner',
+    templateUrl: './cookie-banner.component.html',
+    styleUrls: ['./cookie-banner.component.scss']
 })
 export class NxCookieBannerComponent implements OnInit {
     CONFIG: IConfig

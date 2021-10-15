@@ -19,14 +19,14 @@ import {
  */
 
 @Component({
-    selector    : 'nx-radio',
-    templateUrl : 'radio.component.html',
-    styleUrls   : ['radio.component.scss'],
-    providers   : [
+    selector: 'nx-radio',
+    templateUrl: 'radio.component.html',
+    styleUrls: ['radio.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxRadioComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxRadioComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -44,10 +44,10 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     public state: string;
     private _value; // ngModel representation
     private _rbxStates = {
-        rbFalse    : 'unchecked',
-        rbTrue     : 'checked',
-        rbDisabled : 'disabled',
-        rbOrElse   : 'tristate'
+        rbFalse: 'unchecked',
+        rbTrue: 'checked',
+        rbDisabled: 'disabled',
+        rbOrElse: 'tristate'
     };
 
     // the method set in registerOnChange to emit changes back to the form

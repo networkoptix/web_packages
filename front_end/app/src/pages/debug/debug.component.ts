@@ -17,8 +17,8 @@ import { WINDOW }                    from '@services/window-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-debug',
-    templateUrl : 'debug.component.html'
+    selector: 'nx-debug',
+    templateUrl: 'debug.component.html'
 })
 export class NxDebugComponent {
     LANG: LanguageI18NStaticTypes;
@@ -28,32 +28,32 @@ export class NxDebugComponent {
     actionParametersError = false;
     debugProcess;
     debugProxySettings = {
-        authGet  : '',
-        authPost : '',
-        method   : 'POST',
-        proxyUrl : 'relay-bur.vmsproxy.hdw.mx',
-        systemId : new Watcher<string>(),
-        apiCall  : 'web/ec2/saveUser',
-        data     : '{}',
-        success  : undefined,
-        result   : ''
+        authGet: '',
+        authPost: '',
+        method: 'POST',
+        proxyUrl: 'relay-bur.vmsproxy.hdw.mx',
+        systemId: new Watcher<string>(),
+        apiCall: 'web/ec2/saveUser',
+        data: '{}',
+        success: undefined,
+        result: ''
     };
 
     linkSettings = {
-        native           : true,
-        from             : undefined, // client, mobile, portal, webadmin
-        context          : undefined,
-        command          : undefined, // client, cloud, system
-        systemId         : undefined,
-        action           : undefined,
-        actionParameters : undefined, // Object with parameters
-        auth             : undefined // true for request, undefined for skipping, string for specific value
+        native: true,
+        from: undefined, // client, mobile, portal, webadmin
+        context: undefined,
+        command: undefined, // client, cloud, system
+        systemId: undefined,
+        action: undefined,
+        actionParameters: undefined, // Object with parameters
+        auth: undefined // true for request, undefined for skipping, string for specific value
     };
 
     mergeSettings = {
-        masterSystemId : '',
-        slaveSystemId  : '',
-        result         : ''
+        masterSystemId: '',
+        slaveSystemId: '',
+        result: ''
     };
 
     message = JSON.stringify({ code: 'test_code' }, undefined, '\t');
@@ -141,8 +141,8 @@ export class NxDebugComponent {
                 }, 2000);
             });
         }, {
-            successMessage : 'Success!',
-            errorPrefix    : 'Fail!'
+            successMessage: 'Success!',
+            errorPrefix: 'Fail!'
         }).then((res) => {
             console.log(res);
         }, (error) => {
@@ -150,8 +150,8 @@ export class NxDebugComponent {
         });
 
         this.debugProcess = {
-            success : true,
-            process : debugProcess
+            success: true,
+            process: debugProcess
         };
         // Handling promise to satisfy the linter.
         this.systemsService.forceUpdateSystemsAsPromise().then(() => {});

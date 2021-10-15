@@ -9,9 +9,9 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-change-password',
-    templateUrl : 'change-password.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-change-password',
+    templateUrl: 'change-password.component.html',
+    styleUrls: []
 })
 export class ChangePasswordModalContent {
     @Input() system;
@@ -45,11 +45,11 @@ export class ChangePasswordModalContent {
     }
 
     public get isMe (): boolean {
-        return this.user.isLocalOwner && this.user.isMe
+        return this.user.isLocalOwner && this.user.isMe;
     }
 
     public closeModal = (result: boolean = false) => {
-        return this.activeModal.close(result)
+        return this.activeModal.close(result);
     }
 
     ngOnInit() {
@@ -61,6 +61,7 @@ export class ChangePasswordModalContent {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
                         this.renderer.selectRootElement('#confirmNewPassword').focus();
+                        // eslint-disable-next-line prefer-promise-reject-errors
                         return Promise.reject('dontMatch');
                     }
 
@@ -70,6 +71,7 @@ export class ChangePasswordModalContent {
                             if (!response.reply) {
                                 this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
                                 this.renderer.selectRootElement('#currentPassword').focus();
+                                // eslint-disable-next-line prefer-promise-reject-errors
                                 return Promise.reject('wrongPassword');
                             }
 
@@ -84,14 +86,14 @@ export class ChangePasswordModalContent {
                     .then(() => this.closeModal(true));
             }, {
                 errorCodes: {
-                    notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                    dontMatch        : () => {},
-                    wrongPassword    : () => {}
+                    notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                    dontMatch: () => {},
+                    wrongPassword: () => {}
                 },
-                successMessage     : this.LANG.account.passwordChangedSuccess?.(),
-                errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
-                ignoreUnauthorized : true
+                successMessage: this.LANG.account.passwordChangedSuccess?.(),
+                errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+                ignoreUnauthorized: true
             });
     }
 }

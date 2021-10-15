@@ -27,7 +27,7 @@ describe('NxContentBlockComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NxContentBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
         wrapperComponent = fixture.componentInstance;

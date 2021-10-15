@@ -14,8 +14,8 @@ describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;
 
     const configMock = {
-        getConfig   : () => nxConfig,
-        getSettings : []
+        getConfig: () => nxConfig,
+        getSettings: []
     };
 
     const translateMock = {

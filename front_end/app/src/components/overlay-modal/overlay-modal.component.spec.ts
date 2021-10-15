@@ -17,8 +17,8 @@ import { NxOverlayModalComponent }   from './overlay-modal.component';
 import { BehaviorSubject, of } from 'rxjs';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -30,8 +30,8 @@ describe('NxOverlayModalComponent', () => {
     const translateMock = {
         translations: {
             servers: {
-                refresh    : () => 'Refresh',
-                refreshing : () => 'Refreshing'
+                refresh: () => 'Refresh',
+                refreshing: () => 'Refreshing'
             }
         }
     };
@@ -40,8 +40,8 @@ describe('NxOverlayModalComponent', () => {
         retrieve: () => false
     };
     const appStateMock = {
-        systemAvailable$ : of(false),
-        lastErrorStatus$ : new BehaviorSubject<number>(undefined)
+        systemAvailable$: of(false),
+        lastErrorStatus$: new BehaviorSubject<number>(undefined)
     };
     const accountMock = {
         get: () => Promise.resolve(undefined)
@@ -53,27 +53,27 @@ describe('NxOverlayModalComponent', () => {
     };
     const servers = [
         {
-            url  : 'https://cloud-test.hdw.mx/serverONEurl',
-            name : 'serverONEname',
-            ip   : 'serverONEip'
+            url: 'https://cloud-test.hdw.mx/serverONEurl',
+            name: 'serverONEname',
+            ip: 'serverONEip'
         },
         {
-            url  : 'https://cloud-test.hdw.mx/serverTWOurl',
-            name : 'serverTWOname',
-            ip   : 'serverTWOip'
+            url: 'https://cloud-test.hdw.mx/serverTWOurl',
+            name: 'serverTWOname',
+            ip: 'serverTWOip'
         },
         {
-            url  : 'https://cloud-test.hdw.mx/serverTHREEurl',
-            name : 'serverTHREEname',
-            ip   : 'serverTHREEip'
+            url: 'https://cloud-test.hdw.mx/serverTHREEurl',
+            name: 'serverTHREEname',
+            ip: 'serverTHREEip'
         }
-    ]
+    ];
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxOverlayModalComponent],
-            imports      : [CommonModule, TranslateTestingModule],
-            providers    : [
+            declarations: [NxOverlayModalComponent],
+            imports: [CommonModule, TranslateTestingModule],
+            providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxAppStateService, useValue: appStateMock },

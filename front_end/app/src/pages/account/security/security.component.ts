@@ -20,9 +20,9 @@ export type TFAUTH = {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-account-security-component',
-    templateUrl : 'security.component.html',
-    styleUrls   : ['security.component.scss']
+    selector: 'nx-account-security-component',
+    templateUrl: 'security.component.html',
+    styleUrls: ['security.component.scss']
 })
 
 export class NxAccountSecurityComponent implements OnInit {
@@ -64,8 +64,8 @@ export class NxAccountSecurityComponent implements OnInit {
         this.account = this.accountService.account;
 
         this.tfauth = {
-            on      : !!this.account.account2faEnabled,
-            enabled : !!this.account.account2faEnabled
+            on: !!this.account.account2faEnabled,
+            enabled: !!this.account.account2faEnabled
         };
         this.verificationWatcher.value = !!this.account.account2faEnabled;
 

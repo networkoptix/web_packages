@@ -15,9 +15,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
-    selector    : 'nx-activate-component',
-    templateUrl : 'activate.component.html',
-    styleUrls   : ['activate.component.scss']
+    selector: 'nx-activate-component',
+    templateUrl: 'activate.component.html',
+    styleUrls: ['activate.component.scss']
 })
 
 export class NxActivateComponent implements OnInit {
@@ -92,11 +92,11 @@ export class NxActivateComponent implements OnInit {
             return this.cloudApiService.reactivate(this.accountInfo.email);
         }, {
             errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated?.(),
-                notFound  : this.LANG.errorCodes.emailNotFound?.()
+                forbidden: this.LANG.errorCodes.accountAlreadyActivated?.(),
+                notFound: this.LANG.errorCodes.emailNotFound?.()
             },
-            holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix?.()
+            holdAlerts: true,
+            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix?.()
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess?.();
             this.dialogs.notify(this.LANG.account.activationLinkSent?.(), 'success');
@@ -126,9 +126,9 @@ export class NxActivateComponent implements OnInit {
         this.uriParamCode = this.route.snapshot.params.code;
 
         this.accountInfo = {
-            newPassword  : '',
-            email        : '', // moved to init()
-            activateCode : this.uriParamCode
+            newPassword: '',
+            email: '', // moved to init()
+            activateCode: this.uriParamCode
         };
 
         this.reactivating = (this.uriParam === 'reactivating');

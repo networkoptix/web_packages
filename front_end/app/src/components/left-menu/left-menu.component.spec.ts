@@ -30,8 +30,8 @@ describe('NxLeftMenuComponent', () => {
         }
     };
     const kbMock = {
-        menuSubject          : new BehaviorSubject(kbMenu),
-        activeAssetIdSubject : new BehaviorSubject(initialNode.asset_id)
+        menuSubject: new BehaviorSubject(kbMenu),
+        activeAssetIdSubject: new BehaviorSubject(initialNode.asset_id)
     };
     const configMock = {
         config: {
@@ -40,9 +40,9 @@ describe('NxLeftMenuComponent', () => {
         }
     };
     const locationMock = {
-        _path        : initialNode.url,
-        path         : () => locationMock._path,
-        replaceState : (newUrl) => {
+        _path: initialNode.url,
+        path: () => locationMock._path,
+        replaceState: (newUrl) => {
             const [url, search = ''] = newUrl.split('?');
             windowMock.location.search = search;
             locationMock._path = url;
@@ -59,11 +59,8 @@ describe('NxLeftMenuComponent', () => {
                     HttpClientTestingModule,
                     RouterTestingModule
                 ],
-                declarations : [
-                    NxLeftMenuComponent,
-                    RouterLinkDirectiveStub
-                ],
-                providers    : [
+                declarations: [NxLeftMenuComponent, RouterLinkDirectiveStub],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(Location, locationMock),
                     new MockProvider(NxKnowledgebaseService, kbMock),

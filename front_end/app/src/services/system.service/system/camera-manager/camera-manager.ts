@@ -27,6 +27,7 @@ export class CameraManager {
             return Promise.resolve();
         } catch (error) {
             if (error.name === 'TimeoutError') {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ offline: true });
             }
             return Promise.reject(Error(`Request to server has failed ${error}`));
@@ -106,18 +107,18 @@ export class CameraManager {
             const motionLowRes = newApi ? RecordingType.META_LOW : RecordingType.MOTION_LOW;
 
             const recordingSettings: IRecordingSettings = {
-                recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
-                quality   : this.parseRecordingQuality(camera.scheduleTasks),
-                fps       : this.parseFps(camera.scheduleTasks, maxFps),
+                recording: camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
+                quality: this.parseRecordingQuality(camera.scheduleTasks),
+                fps: this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
-                modes     : [
+                modes: [
                     { name: 'always', id: RecordingType.ALWAYS, value: this.parseRecordingMode(camera, [RecordingType.ALWAYS]), enabled: true },
                     { name: 'motion', id: motionOnly, value: this.parseRecordingMode(camera, [RecordingType.META_ONLY, RecordingType.MOTION_ONLY]), enabled: motionEnabled },
                     {
-                        name    : 'motionLowRes',
-                        id      : motionLowRes,
-                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
-                        enabled : motionLowResEnabled && motionEnabled
+                        name: 'motionLowRes',
+                        id: motionLowRes,
+                        value: !motionEnabled ? 0 : this.parseRecordingMode(camera, [RecordingType.META_LOW, RecordingType.MOTION_LOW]),
+                        enabled: motionLowResEnabled && motionEnabled
                     }
                 ]
             };
@@ -130,15 +131,15 @@ export class CameraManager {
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
         cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = updatedTask && cameraSettings.scheduleEnabled ? {
-            bitrateKbps   : 0,
-            endTime       : 86400,
-            startTime     : 0,
-            recordingType : updatedTask.recordingType
+            bitrateKbps: 0,
+            endTime: 86400,
+            startTime: 0,
+            recordingType: updatedTask.recordingType
         } : {
-            bitrateKbps   : 0,
-            endTime       : 0,
-            startTime     : 0,
-            recordingType : RecordingType.NEVER
+            bitrateKbps: 0,
+            endTime: 0,
+            startTime: 0,
+            recordingType: RecordingType.NEVER
         };
 
         const updateParams: Partial<ICamera> | any = cameraSettings;

@@ -14,9 +14,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
  */
 
 @Component({
-    selector    : 'nx-section-placeholder',
-    templateUrl : 'section-placeholder.component.html',
-    styleUrls   : ['section-placeholder.component.scss']
+    selector: 'nx-section-placeholder',
+    templateUrl: 'section-placeholder.component.html',
+    styleUrls: ['section-placeholder.component.scss']
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

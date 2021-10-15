@@ -73,10 +73,10 @@ export enum ClientType {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-authorize-component',
-    templateUrl   : 'authorize.component.html',
-    styleUrls     : ['authorize.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-authorize-component',
+    templateUrl: 'authorize.component.html',
+    styleUrls: ['authorize.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxAuthorizeComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -331,8 +331,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 return this.login();
             },
             {
-                ignoreUnauthorized : true,
-                ignoreError        : true,
+                ignoreUnauthorized: true,
+                ignoreError: true,
                 timeoutMs
             },
             res => {
@@ -363,8 +363,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 return this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
             },
             {
-                ignoreUnauthorized : true,
-                ignoreError        : true,
+                ignoreUnauthorized: true,
+                ignoreError: true,
                 timeoutMs
             },
             res => {

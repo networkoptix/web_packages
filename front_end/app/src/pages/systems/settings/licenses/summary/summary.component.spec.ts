@@ -14,8 +14,8 @@ import { TranslateModule }                  from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {
 }
@@ -89,16 +89,16 @@ describe('Licenses (Summary)', () => {
         beforeEach(() => {
             component.licenses = [
                 {
-                    count      : 12,
-                    countAvail : 12,
-                    required   : 0,
-                    type       : 'NVR'
+                    count: 12,
+                    countAvail: 12,
+                    required: 0,
+                    type: 'NVR'
                 },
                 {
-                    count      : 12,
-                    countAvail : 6,
-                    required   : 0,
-                    type       : 'Professional'
+                    count: 12,
+                    countAvail: 6,
+                    required: 0,
+                    type: 'Professional'
                 }
             ];
 

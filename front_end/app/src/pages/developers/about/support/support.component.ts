@@ -11,9 +11,9 @@ import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-support',
-    templateUrl : 'support.component.html',
-    styleUrls   : ['support.component.scss']
+    selector: 'nx-support',
+    templateUrl: 'support.component.html',
+    styleUrls: ['support.component.scss']
 })
 export class NxSupportComponent implements OnChanges {
     @Input() supportNode: AboutNode;

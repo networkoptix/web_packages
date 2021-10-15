@@ -40,9 +40,9 @@ import { NxUtilsService }               from '@services/utils.service';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-cameras-component',
-    templateUrl : 'cameras.component.html',
-    styleUrls   : ['cameras.component.scss']
+    selector: 'nx-cameras-component',
+    templateUrl: 'cameras.component.html',
+    styleUrls: ['cameras.component.scss']
 })
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -418,8 +418,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.canSeeInfo = this.system.canViewInfo();
                             if (this.canSeeInfo) {
                                 this.fullInfoPath = this.uriService.getSystemSettingsRoute({
-                                    systemId   : this.system.id,
-                                    childRoute : ChildRoutes.HEALTH
+                                    systemId: this.system.id,
+                                    childRoute: ChildRoutes.HEALTH
                                 }) + this.CONFIG.menus.systemSettings.cameras.path;
                             }
                         }
@@ -537,20 +537,20 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }
 
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
-                fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
-                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || RecordingType.ALWAYS,
-                streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
+                fps: !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
+                recordingType: this.recordingModesWatcher.value.find(({ value }) => value === 2)?.id || RecordingType.ALWAYS,
+                streamQuality: this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
 
             const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
-                id              : this.selectedCamera.id,
-                name            : this.cameraNameWatcher.value,
-                audioEnabled    : this.audioEnabledWatcher.value,
-                overrideAr      : `${this.selectedAspectWatcher.value}` || '',
-                rotation        : `${this.selectedRotationWatcher.value}` || '',
-                scheduleEnabled : this.recordingWatcher.value,
-                motionType      : this.motionType,
-                motionMask      : this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
+                id: this.selectedCamera.id,
+                name: this.cameraNameWatcher.value,
+                audioEnabled: this.audioEnabledWatcher.value,
+                overrideAr: `${this.selectedAspectWatcher.value}` || '',
+                rotation: `${this.selectedRotationWatcher.value}` || '',
+                scheduleEnabled: this.recordingWatcher.value,
+                motionType: this.motionType,
+                motionMask: this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
             };
 
             return Promise.all([
@@ -697,8 +697,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ({ name, id, enabled }) => ({
                 name,
                 id,
-                enabled : this.checkModeEnabled(id, enabled),
-                value   : name === toggledName ? 2 : 0
+                enabled: this.checkModeEnabled(id, enabled),
+                value: name === toggledName ? 2 : 0
             })
         );
     }
@@ -742,12 +742,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     getSupportedMotion() {
         const softwareGrid = {
-            id    : MotionType.softwareGrid,
-            value : 'softwaregrid'
+            id: MotionType.softwareGrid,
+            value: 'softwaregrid'
         };
         const hardwaregrid = {
-            id    : MotionType.hardwareGrid,
-            value : 'hardwaregrid'
+            id: MotionType.hardwareGrid,
+            value: 'hardwaregrid'
         };
 
         const { selectedCamera: { parsedAddParams: { supportedMotion, motionStream } } } = this;

@@ -17,9 +17,9 @@ import { NxStaticCacheService }      from '@services/nx-static-cache';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'content-component',
-    templateUrl : 'content.component.html',
-    styleUrls   : ['content.component.scss']
+    selector: 'content-component',
+    templateUrl: 'content.component.html',
+    styleUrls: ['content.component.scss']
 })
 export class NxContentComponent implements OnInit {
     CONFIG: IConfig;

@@ -6,9 +6,9 @@ import { NxMenuService }                           from '@src/menu';
  */
 
 @Component({
-    selector    : 'nx-api-level-2-item',
-    templateUrl : 'level-2-item.component.html',
-    styleUrls   : ['level-2-item.component.scss']
+    selector: 'nx-api-level-2-item',
+    templateUrl: 'level-2-item.component.html',
+    styleUrls: ['level-2-item.component.scss']
 })
 export class NxApiLevel2ItemComponent implements OnInit {
     @Input() searchMode: boolean;

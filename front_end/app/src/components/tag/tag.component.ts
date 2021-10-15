@@ -21,13 +21,13 @@ import { Subscription }                            from 'rxjs';
  */
 
 @Component({
-    selector   : 'nx-tag',
+    selector: 'nx-tag',
     templateUrl: 'tag.component.html',
-    styleUrls  : ['tag.component.scss'],
-    providers  : [{
-        provide    : NG_VALUE_ACCESSOR,
+    styleUrls: ['tag.component.scss'],
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => NxTagComponent),
-        multi      : true
+        multi: true
     }]
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
@@ -46,7 +46,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     public tagHref: string;
 
     constructor(
-        private renderer: Renderer2,
+        private renderer: Renderer2
     ) {
         this.linkParam = {};
     }

@@ -12,10 +12,10 @@ import { NxProcessService, Process } from '@services/process.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector      : 'nx-client-button',
-    templateUrl   : 'client-button.component.html',
-    styleUrls     : ['client-button.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-client-button',
+    templateUrl: 'client-button.component.html',
+    styleUrls: ['client-button.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() system;

@@ -12,20 +12,20 @@ describe('Uri Service', () => {
 
     const configMock = { getConfig: () => nxConfig };
     const queryParams = {
-        param1 : 'value1',
-        param2 : 'value2'
+        param1: 'value1',
+        param2: 'value2'
     };
     const routeMock = {
-        queryParams : of(queryParams),
-        snapshot    : {
+        queryParams: of(queryParams),
+        snapshot: {
             queryParams: {
                 page: 'test'
             }
         }
     };
     const routerMock = {
-        url      : 'https://cloud-test.hdw.mx/authorize?view_type=desktop&client_type=renewDesktop',
-        navigate : () => Promise.resolve(true)
+        url: 'https://cloud-test.hdw.mx/authorize?view_type=desktop&client_type=renewDesktop',
+        navigate: () => Promise.resolve(true)
     };
 
     beforeEach(waitForAsync(() => {
@@ -83,16 +83,16 @@ describe('Uri Service', () => {
 
     it('should return system settings with childRoutes', () => {
         expect(uriService.getSystemSettingsRoute({
-            systemId   : 'systemId',
-            childRoute : ChildRoutes.VIEW,
-            cameraId   : 'cameraId'
+            systemId: 'systemId',
+            childRoute: ChildRoutes.VIEW,
+            cameraId: 'cameraId'
         })).toBe('/systems/systemId/view/');
     });
 
     it('should return system settings with serverId', () => {
         expect(uriService.getSystemSettingsRoute({
-            systemId : 'systemId',
-            serverId : 'serverId'
+            systemId: 'systemId',
+            serverId: 'serverId'
         })).toBe('/systems/systemId/servers/serverId');
     });
 

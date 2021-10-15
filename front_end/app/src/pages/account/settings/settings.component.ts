@@ -27,9 +27,9 @@ import { WINDOW }                    from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-account-settings-component',
-    templateUrl : 'settings.component.html',
-    styleUrls   : ['settings.component.scss']
+    selector: 'nx-account-settings-component',
+    templateUrl: 'settings.component.html',
+    styleUrls: ['settings.component.scss']
 })
 
 export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -46,9 +46,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     hideErrors = true;
 
     watchers = {
-        firstName : new Watcher<string>(),
-        lastName  : new Watcher<string>(),
-        langCode  : new Watcher<string>()
+        firstName: new Watcher<string>(),
+        lastName: new Watcher<string>(),
+        langCode: new Watcher<string>()
     };
 
     private formSubscription: Subscription;
@@ -112,9 +112,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
-            successMessage  : this.LANG.account.accountSavedSuccess(),
-            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix(),
-            logoutForbidden : true
+            successMessage: this.LANG.account.accountSavedSuccess(),
+            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix(),
+            logoutForbidden: true
         }).then((result) => {
             this.applyService.reset(true);
             this.setOriginal();

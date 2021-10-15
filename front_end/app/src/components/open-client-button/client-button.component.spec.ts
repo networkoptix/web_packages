@@ -14,8 +14,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -40,14 +40,8 @@ describe('NxClientButtonComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                NxClientButtonComponent,
-                NxProcessButtonComponent
-            ],
-            imports: [
-                CommonModule,
-                TranslateTestingModule
-            ],
+            declarations: [NxClientButtonComponent, NxProcessButtonComponent],
+            imports: [CommonModule, TranslateTestingModule],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxProcessService, useValue: processMock },

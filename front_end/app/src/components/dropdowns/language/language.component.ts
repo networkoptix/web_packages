@@ -27,8 +27,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     direction: string;
     langCode: string;
     activeLanguage: ILanguage = {
-        language : '',
-        name     : ''
+        language: '',
+        name: ''
     };
 
     languages: ILanguages = [];
@@ -128,30 +128,30 @@ class BaseLanguageDropdown extends BaseDropdown {
 }
 
 @Component({
-    selector      : 'nx-language-select',
-    templateUrl   : 'language.component.html',
-    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-language-select',
+    templateUrl: 'language.component.html',
+    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxLanguageDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
         }
     ]
 })
 export class NxLanguageDropdown extends BaseLanguageDropdown {}
 
 @Component({
-    selector      : 'nx-header-language-select',
-    templateUrl   : 'language.component.html',
-    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-header-language-select',
+    templateUrl: 'language.component.html',
+    styleUrls: [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxLanguageDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
         }
     ]
 })

@@ -7,10 +7,10 @@ import { NxConfigService, IConfig }        from '@services/nx-config';
 import { InfoBlockLine, InfoBlockSection } from '@src/components/info-block/info-block.component';
 
 @Component({
-    selector      : 'nx-single-entity',
-    templateUrl   : './single-entity.component.html',
-    styleUrls     : ['./single-entity.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-single-entity',
+    templateUrl: './single-entity.component.html',
+    styleUrls: ['./single-entity.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
     @Input() params;

@@ -19,16 +19,16 @@ export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     public settings: ProcessSettings = {
-        errorCodes         : {},
-        errorMessage       : '',
-        errorPrefix        : '',
-        holdAlerts         : false,
-        ignoreUnauthorized : false,
-        logoutForbidden    : false,
-        successMessage     : '',
-        ignoreError        : false,
-        name               : '',
-        timeoutMs          : 0
+        errorCodes: {},
+        errorMessage: '',
+        errorPrefix: '',
+        holdAlerts: false,
+        ignoreUnauthorized: false,
+        logoutForbidden: false,
+        successMessage: '',
+        ignoreError: false,
+        name: '',
+        timeoutMs: 0
     };
 
     // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
@@ -97,9 +97,9 @@ export class Process {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
                 const options = {
-                    classname : this.CONFIG.toast.success,
-                    autohide  : !this.settings.holdAlerts,
-                    delay     : this.CONFIG.alertTimeout
+                    classname: this.CONFIG.toast.success,
+                    autohide: !this.settings.holdAlerts,
+                    delay: this.CONFIG.alertTimeout
                 };
                 this.toastService.show(this.settings.successMessage, options);
             }
@@ -182,9 +182,9 @@ export class Process {
             const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage}`;
 
             const options = {
-                autohide  : !this.settings.holdAlerts,
-                classname : this.CONFIG.toast.danger,
-                delay     : this.CONFIG.alertTimeout
+                autohide: !this.settings.holdAlerts,
+                classname: this.CONFIG.toast.danger,
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }

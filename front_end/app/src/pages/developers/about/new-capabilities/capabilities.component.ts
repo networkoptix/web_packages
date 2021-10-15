@@ -5,9 +5,9 @@ import { AboutNode } from '../about.component';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
-    selector    : 'nx-new-capabilities',
-    templateUrl : './capabilities.component.html',
-    styleUrls   : ['./capabilities.component.scss']
+    selector: 'nx-new-capabilities',
+    templateUrl: './capabilities.component.html',
+    styleUrls: ['./capabilities.component.scss']
 })
 export class NxNewCapabilitiesComponent implements OnInit {
     @Input() devCapabilitiesNode: AboutNode;
@@ -15,8 +15,8 @@ export class NxNewCapabilitiesComponent implements OnInit {
     errorManager: ErrorStateManager;
     CONFIG: IConfig;
     svg = {
-        width  : '72',
-        height : '76'
+        width: '72',
+        height: '76'
     }
 
     constructor(configService: NxConfigService,  @Inject(WINDOW) private window: Window) {

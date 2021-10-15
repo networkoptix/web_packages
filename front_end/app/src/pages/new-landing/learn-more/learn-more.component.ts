@@ -7,9 +7,9 @@ import { NxLandingService } from '../landing.service';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-learn-more',
-    templateUrl : './learn-more.component.html',
-    styleUrls   : ['./learn-more.component.scss']
+    selector: 'nx-learn-more',
+    templateUrl: './learn-more.component.html',
+    styleUrls: ['./learn-more.component.scss']
 })
 export class NxLearnMoreComponent implements OnChanges {
     @Input() scrollPosition: number
@@ -17,8 +17,8 @@ export class NxLearnMoreComponent implements OnChanges {
 
     visible = true
     isVisibleBreakpoints = {
-        scrollPosition : 91,
-        screenHeight   : 690
+        scrollPosition: 91,
+        screenHeight: 690
     }
 
     constructor(public landingService: NxLandingService, private platform: Platform, private scrollMechanics: NxScrollMechanicsService, @Inject(WINDOW) private window: Window) {}

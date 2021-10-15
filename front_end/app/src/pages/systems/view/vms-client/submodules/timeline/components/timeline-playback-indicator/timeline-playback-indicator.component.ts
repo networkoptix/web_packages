@@ -14,9 +14,9 @@ const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
 
 @Component({
-    selector    : 'timeline-playback-indicator',
-    templateUrl : './timeline-playback-indicator.component.html',
-    styleUrls   : ['./timeline-playback-indicator.component.scss']
+    selector: 'timeline-playback-indicator',
+    templateUrl: './timeline-playback-indicator.component.html',
+    styleUrls: ['./timeline-playback-indicator.component.scss']
 })
 export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     protected playbackSubscription: Subscription
@@ -58,9 +58,9 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     public get edgeCaseClasses () {
         this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
         return {
-            'left-most' : this.honestOffset <= 0,
-            leftish     : this.honestOffset > 0 && this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
-            rightish    : this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
+            'left-most': this.honestOffset <= 0,
+            leftish: this.honestOffset > 0 && this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
+            rightish: this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
                 this.honestOffset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - (MARGIN + PRIMARY_WIDTH),
             'right-most': this.honestOffset >= this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr
         };
@@ -122,11 +122,11 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public onTimelineSubjectChange (s: TimelineServiceStatus) {
-        const ps = this.playback.state
+        const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
-            this.timeMs = ps.currentTime // prevents the weired jitter
-            const ho = this.honestOffset
-            const vo = this.visibleOffset
+            this.timeMs = ps.currentTime; // prevents the weired jitter
+            const ho = this.honestOffset;
+            const vo = this.visibleOffset;
             this.honestOffset = this.timeline.timeToDomOffsetX(this.timeMs);
             this.visibleOffset = Math.max(
                 MARGIN + PRIMARY_WIDTH / 2,
@@ -166,7 +166,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 this.timeMs = s.currentTime;
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'dd mmmm yyyy';
-                const tweakedT = this.vms.tweakT(this.timeMs)
+                const tweakedT = this.vms.tweakT(this.timeMs);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
 

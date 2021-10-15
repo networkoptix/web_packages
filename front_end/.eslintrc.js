@@ -74,11 +74,11 @@ module.exports = {
                 'beforeColon': false,
                 'afterColon' : true
             },
-            "align"     : {
-                "beforeColon": true,
-                "afterColon" : true,
-                "on"         : "colon"
-            }
+            // "align"     : {
+            //     "beforeColon": true,
+            //     "afterColon" : true,
+            //     "on"         : "colon"
+            // }
         }],
         "keyword-spacing"              : ["error", { "before": true, "after": true }],
         "lines-between-class-members"  : ["error", "always", { "exceptAfterSingleLine": true }],

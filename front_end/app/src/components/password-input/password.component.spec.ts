@@ -47,10 +47,7 @@ describe('NxPasswordComponent', () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule
             ],
-            declarations: [
-                NxPasswordComponent,
-                NxPasswordTagValidationComponent
-            ],
+            declarations: [NxPasswordComponent, NxPasswordTagValidationComponent],
             providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },

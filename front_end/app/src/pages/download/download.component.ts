@@ -21,9 +21,9 @@ import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'download-component',
-    templateUrl : 'download.component.html',
-    styleUrls   : ['download.component.scss']
+    selector: 'download-component',
+    templateUrl: 'download.component.html',
+    styleUrls: ['download.component.scss']
 })
 
 export class DownloadComponent implements OnInit, OnDestroy {
@@ -59,9 +59,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.downloads = { ...this.CONFIG.downloads };
 
         this.downloadsData = {
-            version    : '',
-            installers : [{ platform: '', appType: '' }],
-            releaseUrl : ''
+            version: '',
+            installers: [{ platform: '', appType: '' }],
+            releaseUrl: ''
         };
 
         this.sortedPlatforms = [];

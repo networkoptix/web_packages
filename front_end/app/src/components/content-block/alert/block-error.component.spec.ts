@@ -31,10 +31,10 @@ describe('NxAlertBlockComponent (error)', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxAlertBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [NxAlertBlockComponent, TestHostComponent, NxContentBlockSectionComponent]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestHostComponent);
         wrapperComponent = fixture.componentInstance;

@@ -5,9 +5,9 @@ import SelectionService from '../../../timeline/services/timeline.selection.serv
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector    : 'playback-controls',
-    templateUrl : './playback-controls.component.html',
-    styleUrls   : ['./playback-controls.component.scss']
+    selector: 'playback-controls',
+    templateUrl: './playback-controls.component.html',
+    styleUrls: ['./playback-controls.component.scss']
 })
 export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
     protected subscription: Subscription

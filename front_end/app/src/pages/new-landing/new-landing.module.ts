@@ -15,14 +15,14 @@ import { NxIntroTextComponent } from './intro-text/intro-text.component';
 
 const appRoutes: Routes = [
     {
-        path      : '',
-        component : NxLandingPageComponent
+        path: '',
+        component: NxLandingPageComponent
     }
 ];
 
 @NgModule({
-    declarations : [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent, NxLearnMoreComponent, NxIntroTextComponent],
-    imports      : [
+    declarations: [NxContentLandingBlockComponent, NxLandingPageComponent, NxContentContainerComponent, NxBackgroundGraphicComponent, NxMaskComponent, NxLearnMoreComponent, NxIntroTextComponent],
+    imports: [
         CommonModule,
         DirectivesModule,
         TranslateModule,

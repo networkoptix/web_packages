@@ -39,9 +39,9 @@ enum TARGET_STORAGE {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-server-storage-component',
-    templateUrl : 'server-storage-standard.component.html',
-    styleUrls   : ['server-storage-standard.component.scss']
+    selector: 'nx-server-storage-component',
+    templateUrl: 'server-storage-standard.component.html',
+    styleUrls: ['server-storage-standard.component.scss']
 })
 export class NxSystemStorageComponent implements OnInit {
     @Input() system: NxSystem;
@@ -341,10 +341,10 @@ export class NxSystemStorageComponent implements OnInit {
         if (this.system.useRest) {
             const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({
                 id,
-                backupPolicy      : 'CameraBackupDefault',
-                backupQuality     : 'CameraBackupDefault',
-                backupType        : 'CameraBackupDefault',
-                backupContentType : 'archive'
+                backupPolicy: 'CameraBackupDefault',
+                backupQuality: 'CameraBackupDefault',
+                backupType: 'CameraBackupDefault',
+                backupContentType: 'archive'
             }));
             await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
         }
@@ -547,10 +547,10 @@ export class NxSystemStorageComponent implements OnInit {
         } = Object.entries(this.LANG.storage.modes).reduce((accum, [key, value]) => ({ ...accum, [key]: value() }), {});
         // Add max additional width here for each key of this.LANG.storage.modes
         const addWidth = {
-            disabled : 36,
-            reserved : 36,
-            main     : 36,
-            notInUse : 56
+            disabled: 36,
+            reserved: 36,
+            main: 36,
+            notInUse: 56
         };
 
         this.ddWidth = Object.entries(modes).reduce((width, current) => {
@@ -615,8 +615,8 @@ export class NxSystemStorageComponent implements OnInit {
 
     get infoPath() {
         return this.uriService.getSystemSettingsRoute({
-            systemId   : this.system.id,
-            childRoute : ChildRoutes.HEALTH
+            systemId: this.system.id,
+            childRoute: ChildRoutes.HEALTH
         }) + 'storages';
     }
 
@@ -651,9 +651,9 @@ export class NxSystemStorageComponent implements OnInit {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
         }
         const options = {
-            classname : this.CONFIG.toast.success,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.success,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         let message: string;
         return defer(() => this.system.storageManager.rebuildArchive(this.serverId, type, action).pipe(

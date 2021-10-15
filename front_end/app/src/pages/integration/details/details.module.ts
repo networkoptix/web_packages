@@ -13,9 +13,9 @@ import { NxSetupComponent }              from './setup/setup.component';
 
 const appRoutes: Routes = [
     {
-        path      : '',
-        component : NxIntegrationDetailsComponent,
-        children  : [
+        path: '',
+        component: NxIntegrationDetailsComponent,
+        children: [
             { path: '', component: NxOverviewComponent },
             { path: 'how-to-setup', component: NxSetupComponent }
         ]
@@ -35,14 +35,14 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         PipesModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxIntegrationDetailsComponent,
         NxSetupComponent,
         NxOverviewComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxIntegrationDetailsComponent,
         NxSetupComponent,
         NxOverviewComponent

@@ -9,9 +9,9 @@ import { NxSystem, ICamera }         from '@services/system.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-rename-content',
-    templateUrl : 'update-camera-credentials.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-rename-content',
+    templateUrl: 'update-camera-credentials.component.html',
+    styleUrls: []
 })
 export class UpdateCameraCredentialsModalContent implements OnInit {
     @Input() camera: ICamera;

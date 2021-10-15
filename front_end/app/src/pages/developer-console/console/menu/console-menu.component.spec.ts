@@ -14,8 +14,8 @@ const {
 } = forUnitTest;
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -27,16 +27,16 @@ describe('NxDevConsoleMenuComponent', () => {
     const menuMock = [...Array(
         Math.round(Math.random() * 20) + 1
     )].map(_ => ({
-        title : uuid(),
-        url   : uuid(),
-        icon  : uuid()
+        title: uuid(),
+        url: uuid(),
+        icon: uuid()
     }));
 
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxDevConsoleMenuComponent],
-                providers    : [
+                declarations: [NxDevConsoleMenuComponent],
+                providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxHeaderService, useValue: { currentLocation: { parentNode: { nodes: [] } }, setLocation: () => { } } }
                 ],

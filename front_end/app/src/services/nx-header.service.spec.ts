@@ -8,9 +8,9 @@ import { headerNodes }                    from '@src/_mocks/nodesMock';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
 const routerMock = {
-    navigate : jasmine.createSpy('navigate'),
-    events   : eventSubject.asObservable(),
-    url      : '/systems'
+    navigate: jasmine.createSpy('navigate'),
+    events: eventSubject.asObservable(),
+    url: '/systems'
 };
 
 const menuMock = {

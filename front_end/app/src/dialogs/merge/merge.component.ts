@@ -18,9 +18,9 @@ import StateMachine                  from './stateMachine';
 import { State }                     from './stateForMergeDialog';
 
 @Component({
-    selector    : 'nx-modal-merge-content',
-    templateUrl : 'merge.component.html',
-    styleUrls   : ['merge.component.scss']
+    selector: 'nx-modal-merge-content',
+    templateUrl: 'merge.component.html',
+    styleUrls: ['merge.component.scss']
 })
 export class MergeModalContent {
     @Input() system;
@@ -192,8 +192,8 @@ export class MergeModalContent {
                     } else {
                         let show = this.checkMergeDefault;
                         const templateUpdates: any = {
-                            helpText       : this.LANG.dialogs.merge.ownerCanMergeText?.(),
-                            selectedTarget : this.targetSystemDropdown.value
+                            helpText: this.LANG.dialogs.merge.ownerCanMergeText?.(),
+                            selectedTarget: this.targetSystemDropdown.value
                         };
                         if (this.targetSystemDropdown.peer) {
                             show = this.serverUrlState;
@@ -279,8 +279,8 @@ export class MergeModalContent {
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
                 Object.assign(templateUpdates, {
-                    helpText       : this.LANG.dialogs.merge.ownerCanMergeText?.(),
-                    selectedTarget : this.targetSystem.value
+                    helpText: this.LANG.dialogs.merge.ownerCanMergeText?.(),
+                    selectedTarget: this.targetSystem.value
                 });
 
                 if (this.targetSystem.systemName) {
@@ -320,11 +320,11 @@ export class MergeModalContent {
                         const ip = NxUtilsService.cleanIp(peer.remoteAddresses[0]);
                         const system: any = {
                             ...peer,
-                            id             : peer.id.replace(/[{}]/g, ''),
-                            url            : `${ip}:${peer.port}`,
-                            systemName     : isNew ? this.LANG.dialogs.merge.newSystemDisplayName() : peer.systemName,
-                            name           : peer.name,
-                            discoveredPeer : true,
+                            id: peer.id.replace(/[{}]/g, ''),
+                            url: `${ip}:${peer.port}`,
+                            systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName() : peer.systemName,
+                            name: peer.name,
+                            discoveredPeer: true,
                             ip,
                             isNew
                         };
@@ -448,8 +448,8 @@ export class MergeModalContent {
                             } else if (res.errorString === 'UNAUTHORIZED') {
                                 this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
                                 this.updateShow(this.confirmPasswordError, {
-                                    passwordErrorText : this.passwordWrong,
-                                    passwordValue     : ''
+                                    passwordErrorText: this.passwordWrong,
+                                    passwordValue: ''
                                 });
                                 this.adminPasswordInput.nativeElement.focus();
                             } else if (res.errorString) {
@@ -457,9 +457,9 @@ export class MergeModalContent {
                                     this.machine.transition(this.serverUrlErrors);
                                 }
                                 const newCheckMergeErrors = {
-                                    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
-                                    DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
-                                    FAIL                                : this.systemOfflineUrl
+                                    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: this.differentOwners,
+                                    DUPLICATE_MEDIASERVER_FOUND: this.duplicateServers,
+                                    FAIL: this.systemOfflineUrl
                                 };
                                 this.updateShow(this.serverUrlErrors, {
                                     urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
@@ -533,15 +533,15 @@ export class MergeModalContent {
                     }
                     this.close({
                         secondary: {
-                            id   : this.secondarySystem.id,
-                            name : this.secondaryName
+                            id: this.secondarySystem.id,
+                            name: this.secondaryName
                         },
                         primary: {
-                            id   : this.primarySystem.id,
-                            name : this.primaryName
+                            id: this.primarySystem.id,
+                            name: this.primaryName
                         },
-                        anotherSystemId : this.targetSystem.id,
-                        role            : this.primarySystem.id === this.system.id
+                        anotherSystemId: this.targetSystem.id,
+                        role: this.primarySystem.id === this.system.id
                             ? this.CONFIG.system.status.master
                             : this.CONFIG.system.status.slave
                     });
@@ -745,9 +745,9 @@ export class MergeModalContent {
                     : error;
                 errorText[error] = NxLanguageProviderService.translate(
                     this.LANG.dialogs.merge[parsedError], {
-                        primarySystem   : this.primaryName,
-                        targetSystem    : this.secondaryName,
-                        secondarySystem : this.secondaryName,
+                        primarySystem: this.primaryName,
+                        targetSystem: this.secondaryName,
+                        secondarySystem: this.secondaryName,
                         downloadHTML
                     });
             }
@@ -839,9 +839,9 @@ export class MergeModalContent {
     makeSelectorList(systems) {
         return systems.map(system => {
             return {
-                value : system.id,
-                name  : this.addStatus(system),
-                peer  : Boolean(system.localSystemId)
+                value: system.id,
+                name: this.addStatus(system),
+                peer: Boolean(system.localSystemId)
             };
         });
     }

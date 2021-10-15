@@ -21,12 +21,12 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         Nx404Component
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         Nx404Component
     ]
 })

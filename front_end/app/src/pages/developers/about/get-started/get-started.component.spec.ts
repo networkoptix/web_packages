@@ -37,9 +37,9 @@ describe('For Developers Landing - Capabilities Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxGetStartedComponent, RouterLinkDirectiveStub],
-                imports      : [CommonModule],
-                providers    : [
+                declarations: [NxGetStartedComponent, RouterLinkDirectiveStub],
+                imports: [CommonModule],
+                providers: [
                     new MockProvider(Router, routeLandingMock),
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(WINDOW, {})
@@ -51,10 +51,10 @@ describe('For Developers Landing - Capabilities Node', () => {
             component.getStartedNode = getStartedNode;
             component.ngOnChanges({
                 getStartedNode: {
-                    currentValue  : getStartedNode,
-                    previousValue : null,
-                    firstChange   : false,
-                    isFirstChange : () => true
+                    currentValue: getStartedNode,
+                    previousValue: null,
+                    firstChange: false,
+                    isFirstChange: () => true
                 }
             });
             el = fixture.debugElement;

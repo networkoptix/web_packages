@@ -12,9 +12,9 @@ import { AuthGuard } from '@guards/authGuard';
 
 const appRoutes: Routes = [
     {
-        path        : '',
-        component   : NxApiToolComponent,
-        canActivate : [AuthGuard]
+        path: '',
+        component: NxApiToolComponent,
+        canActivate: [AuthGuard]
     }
 ];
 
@@ -29,12 +29,12 @@ const appRoutes: Routes = [
         MenuApiModule,
         FormsModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxApiToolComponent
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [],
+    entryComponents: [
         NxApiToolComponent
     ],
     exports: [

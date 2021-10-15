@@ -14,8 +14,8 @@ import { RouterLinkDirectiveStub } from '../../_testing/router-link-directive-st
 import { of } from 'rxjs';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -28,8 +28,8 @@ xdescribe('NxCookieBannerComponent', () => {
     const configMock = { getConfig: () => nxConfig };
     let localStorageMockStore = {};
     const localStorageMock = {
-        retrieve : (key: string) => !!localStorageMockStore[key],
-        store    : (key: string) => { localStorageMockStore[key] = true; }
+        retrieve: (key: string) => !!localStorageMockStore[key],
+        store: (key: string) => { localStorageMockStore[key] = true; }
     };
     const accountMock = {
         accountSubject: of('')
@@ -38,8 +38,8 @@ xdescribe('NxCookieBannerComponent', () => {
     beforeEach(waitForAsync(() => {
         localStorageMockStore = {};
         TestBed.configureTestingModule({
-            declarations : [NxCookieBannerComponent, RouterLinkDirectiveStub],
-            imports      : [
+            declarations: [NxCookieBannerComponent, RouterLinkDirectiveStub],
+            imports: [
                 CommonModule,
                 TranslateTestingModule
             ],

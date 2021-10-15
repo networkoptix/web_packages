@@ -25,8 +25,8 @@ export class NxHealthService {
 
     alertsValues;
     alertsCount = {
-        warning : 0,
-        error   : 0
+        warning: 0,
+        error: 0
     };
 
     resourceNames = {};
@@ -164,9 +164,9 @@ export class NxHealthService {
         }
 
         return {
-            text        : retValue,
-            format      : header.format || '',
-            formatClass : this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
+            text: retValue,
+            format: header.format || '',
+            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
             value
         };
     }

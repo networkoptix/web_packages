@@ -9,9 +9,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'overview-component',
-    templateUrl : 'overview.component.html',
-    styleUrls   : ['overview.component.scss']
+    selector: 'overview-component',
+    templateUrl: 'overview.component.html',
+    styleUrls: ['overview.component.scss']
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {

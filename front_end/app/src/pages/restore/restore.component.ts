@@ -15,9 +15,9 @@ import { NxSessionService }          from '@services/session.service';
 import { NxAppStateService }         from '@services/nx-app-state.service';
 
 @Component({
-    selector    : 'nx-restore-component',
-    templateUrl : 'restore.component.html',
-    styleUrls   : ['restore.component.scss']
+    selector: 'nx-restore-component',
+    templateUrl: 'restore.component.html',
+    styleUrls: ['restore.component.scss']
 })
 
 export class NxRestoreComponent implements OnInit {
@@ -93,9 +93,9 @@ export class NxRestoreComponent implements OnInit {
         }
 
         this.data = {
-            newPassword : '',
-            email       : this.uriParamEmail || this.storageService.email,
-            restoreCode : this.uriParamCode
+            newPassword: '',
+            email: this.uriParamEmail || this.storageService.email,
+            restoreCode: this.uriParamCode
         };
 
         this.restoring = (this.uriParam === 'restoring');
@@ -137,12 +137,12 @@ export class NxRestoreComponent implements OnInit {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
             errorCodes: {
-                notFound      : this.LANG.errorCodes.wrongCodeRestore?.(),
-                notAuthorized : this.LANG.errorCodes.wrongCodeRestore?.()
+                notFound: this.LANG.errorCodes.wrongCodeRestore?.(),
+                notAuthorized: this.LANG.errorCodes.wrongCodeRestore?.()
             },
-            ignoreUnauthorized : true,
-            holdAlerts         : true,
-            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.()
+            ignoreUnauthorized: true,
+            holdAlerts: true,
+            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.()
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess?.();
             this.setContext('changeSuccess');
@@ -160,9 +160,9 @@ export class NxRestoreComponent implements OnInit {
             errorCodes: {
                 notFound: this.LANG.errorCodes.emailNotFound?.()
             },
-            ignoreUnauthorized : true,
-            holdAlerts         : true,
-            errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix?.()
+            ignoreUnauthorized: true,
+            holdAlerts: true,
+            errorPrefix: this.LANG.errorCodes.cantSendActivationPrefix?.()
         }).then(() => {
             this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess?.();
             this.restoring = false;

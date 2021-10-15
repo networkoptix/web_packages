@@ -4,7 +4,7 @@ import VideoManagementSystemService from '../../../vms/services/vms.service';
 import { float, ms } from '../../../../utils/type-aliases';
 import drawStripyBar from './stripy-bar/stripy-bar';
 import getSlopeWidth from './stripy-bar/slope';
-import cfg from './drawingConfigs/recordsDrawingConfig'
+import cfg from './drawingConfigs/recordsDrawingConfig';
 import stripeCfg from './stripy-bar/cfg';
 
 @Injectable({
@@ -18,14 +18,14 @@ export class TimelineRecordsCanvasRendererService {
     }
 
     protected get cfg () {
-        return cfg
+        return cfg;
     }
 
     public render (ctx: CanvasRenderingContext2D) {
-        ctx.save()
+        ctx.save();
         this._drawBackground(ctx);
         this._drawRecords(ctx);
-        ctx.restore()
+        ctx.restore();
     }
 
     protected _drawBackground (ctx: CanvasRenderingContext2D) {

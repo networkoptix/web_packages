@@ -30,61 +30,58 @@ describe('NxNavDropdownComponent', () => {
     };
     const configMock = { getConfig: () => nxConfig };
     const dropdownNode = {
-        display_name        : 'nodeName',
-        url                 : 'testUrl',
-        queryParamsHandling : undefined,
-        breadcrumbs         : [],
-        name                : 'nameNode',
-        nodes               : [
+        display_name: 'nodeName',
+        url: 'testUrl',
+        queryParamsHandling: undefined,
+        breadcrumbs: [],
+        name: 'nameNode',
+        nodes: [
             {
-                display_name        : 'innerNodeName',
-                url                 : 'testUrl1',
-                queryParamsHandling : undefined,
-                breadcrumbs         : [],
-                name                : 'nameInnerNode',
-                nodes               : [],
-                authentication      : undefined,
-                new_window          : false,
-                asset_id            : null,
-                related_asset_ids   : [],
-                next_item           : false,
-                urlified            : 'testUrlified',
-                subtitle            : 'subtitleText',
-                name_raw            : 'innerNameRaw'
+                display_name: 'innerNodeName',
+                url: 'testUrl1',
+                queryParamsHandling: undefined,
+                breadcrumbs: [],
+                name: 'nameInnerNode',
+                nodes: [],
+                authentication: undefined,
+                new_window: false,
+                asset_id: null,
+                related_asset_ids: [],
+                next_item: false,
+                urlified: 'testUrlified',
+                subtitle: 'subtitleText',
+                name_raw: 'innerNameRaw'
             },
             {
-                display_name        : 'innerNodeName2',
-                url                 : 'testUrl2',
-                queryParamsHandling : undefined,
-                breadcrumbs         : [],
-                name                : 'nameInnerNode2',
-                nodes               : [],
-                authentication      : undefined,
-                new_window          : false,
-                asset_id            : null,
-                related_asset_ids   : [],
-                next_item           : false,
-                urlified            : 'testUrlified',
-                subtitle            : 'subtitleText',
-                name_raw            : 'innerNameRaw2'
+                display_name: 'innerNodeName2',
+                url: 'testUrl2',
+                queryParamsHandling: undefined,
+                breadcrumbs: [],
+                name: 'nameInnerNode2',
+                nodes: [],
+                authentication: undefined,
+                new_window: false,
+                asset_id: null,
+                related_asset_ids: [],
+                next_item: false,
+                urlified: 'testUrlified',
+                subtitle: 'subtitleText',
+                name_raw: 'innerNameRaw2'
             }
         ],
-        authentication    : undefined,
-        new_window        : false,
-        asset_id          : null,
-        related_asset_ids : [],
-        next_item         : false,
-        urlified          : 'testUrlified',
-        subtitle          : 'subtitleText',
-        name_raw          : 'nameRaw'
+        authentication: undefined,
+        new_window: false,
+        asset_id: null,
+        related_asset_ids: [],
+        next_item: false,
+        urlified: 'testUrlified',
+        subtitle: 'subtitleText',
+        name_raw: 'nameRaw'
     };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                NxNavDropdownComponent,
-                NxArrowNavDirective
-            ],
+            declarations: [NxNavDropdownComponent, NxArrowNavDirective],
             imports: [
                 CommonModule,
                 AngularSvgIconModule.forRoot(),

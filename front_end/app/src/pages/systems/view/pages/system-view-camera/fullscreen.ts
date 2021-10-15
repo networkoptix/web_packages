@@ -15,7 +15,7 @@ function getFullscreenElement() {
 }
 
 export default {
-    request    : getReqFullscreen,
-    exit       : getExitFullscreen,
-    getElement : getFullscreenElement
+    request: getReqFullscreen,
+    exit: getExitFullscreen,
+    getElement: getFullscreenElement
 };

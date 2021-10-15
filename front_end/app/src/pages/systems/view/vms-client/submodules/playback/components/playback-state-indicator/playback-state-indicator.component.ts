@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 
 @Component({
-    selector    : 'playback-state-indicator',
-    templateUrl : './playback-state-indicator.component.html',
-    styleUrls   : ['./playback-state-indicator.component.scss']
+    selector: 'playback-state-indicator',
+    templateUrl: './playback-state-indicator.component.html',
+    styleUrls: ['./playback-state-indicator.component.scss']
 })
 export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
     protected subscription: Subscription

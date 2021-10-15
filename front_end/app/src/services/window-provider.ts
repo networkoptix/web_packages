@@ -3,8 +3,8 @@ import { InjectionToken, FactoryProvider } from '@angular/core';
 export const WINDOW = new InjectionToken<Window>('window');
 
 export const windowProvider: FactoryProvider = {
-    provide    : WINDOW,
-    useFactory : () => window
+    provide: WINDOW,
+    useFactory: () => window
 };
 
 export const WINDOWS_PROVIDERS = [

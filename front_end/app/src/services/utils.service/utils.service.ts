@@ -248,9 +248,9 @@ export class NxUtilsService {
         }
 
         const unitList = {
-            bit  : uv.BIT_UNITS,
-            byte : uv.BYTE_UNITS,
-            bps  : uv.BPS_UNITS
+            bit: uv.BIT_UNITS,
+            byte: uv.BYTE_UNITS,
+            bps: uv.BPS_UNITS
         };
         const UNITS = unitList[options.unitType];
         const base = options.unitType === 'byte' ? 1024 : 1000;

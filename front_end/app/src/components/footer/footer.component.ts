@@ -12,9 +12,9 @@ import { NxMenusService, MenuNode } from '@services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-footer',
-    templateUrl : 'footer.component.html',
-    styleUrls   : ['footer.component.scss']
+    selector: 'nx-footer',
+    templateUrl: 'footer.component.html',
+    styleUrls: ['footer.component.scss']
 })
 export class NxFooterComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

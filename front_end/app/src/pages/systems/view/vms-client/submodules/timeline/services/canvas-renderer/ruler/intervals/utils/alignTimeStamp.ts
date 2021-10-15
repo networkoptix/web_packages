@@ -12,12 +12,11 @@ export function alignTimeStamp (
     const date = new Date(t);
     const incIfRight = alignment === 'right' ? 1 : 0;
     const round = Math[{
-        left  : 'floor',
-        right : 'ceil'
+        left: 'floor',
+        right: 'ceil'
     }[alignment]];
 
     switch (d) {
-
         case 'month':
             date.setHours(0, 0, 0, 0);
             date.setDate(1);

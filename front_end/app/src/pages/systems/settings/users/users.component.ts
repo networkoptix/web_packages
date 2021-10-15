@@ -30,9 +30,9 @@ import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-system-user-component',
-    templateUrl : 'users.component.html',
-    styleUrls   : ['users.component.scss']
+    selector: 'nx-system-user-component',
+    templateUrl: 'users.component.html',
+    styleUrls: ['users.component.scss']
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
@@ -232,9 +232,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             } catch (_) {
                 this.selectedUser.name = this.localUserNameWatcher.originalValue;
                 const options = {
-                    classname : this.CONFIG.toast.warning,
-                    autohide  : true,
-                    delay     : this.CONFIG.alertTimeout
+                    classname: this.CONFIG.toast.warning,
+                    autohide: true,
+                    delay: this.CONFIG.alertTimeout
                 };
                 this.toastService.show(
                     NxLanguageProviderService.translate(

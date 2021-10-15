@@ -35,9 +35,9 @@ export enum CardClasses {
 
 @UntilDestroy({ checkProperties: false })
 @Component({
-    selector    : 'nx-knowledge-base',
-    templateUrl : 'knowledge-base.component.html',
-    styleUrls   : ['knowledge-base.component.scss']
+    selector: 'nx-knowledge-base',
+    templateUrl: 'knowledge-base.component.html',
+    styleUrls: ['knowledge-base.component.scss']
 })
 export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
@@ -62,7 +62,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (this.kbService.menuName) {
             if (relatedLinks.type === 'next') {
-                const currentIndex = relatedLinks.nodes.findIndex(({ asset_id : id }) => id === assetId);
+                const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => id === assetId);
                 if (currentIndex === (relatedLinks.nodes.length - 1)) {
                     return [];
                 } else {
@@ -157,8 +157,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippet : content ? NxUtilsService.highlight(content, matchStart, matchEnd) : shortDescription,
-                title   : NxUtilsService.highlight(title, titleMatchStart, titleMatchEnd)
+                snippet: content ? NxUtilsService.highlight(content, matchStart, matchEnd) : shortDescription,
+                title: NxUtilsService.highlight(title, titleMatchStart, titleMatchEnd)
             };
         });
     }
@@ -166,10 +166,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     showRibbon(id, state, reviewId?) {
         const draftActions: RibbonActionInput[] = [
             {
-                type     : 'link',
-                text     : this.LANG.ribbon.integration.backToEditText,
-                value    : this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
-                external : true
+                type: 'link',
+                text: this.LANG.ribbon.integration.backToEditText,
+                value: this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
+                external: true
             }
         ];
         const message = state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon();
@@ -208,15 +208,15 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     private getReviewActions(process: Process, reviewId: any): RibbonActionInput[] {
         return [
             {
-                type  : 'process-button',
-                text  : this.LANG.ribbon.integration.accept?.(),
-                value : process
+                type: 'process-button',
+                text: this.LANG.ribbon.integration.accept?.(),
+                value: process
             },
             {
-                type     : 'link',
-                text     : this.LANG.ribbon.integration.reject?.(),
-                value    : `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
-                external : true
+                type: 'link',
+                text: this.LANG.ribbon.integration.reject?.(),
+                value: `/admin/cms/assetcustomizationreview/${reviewId}/change/`,
+                external: true
             }
         ];
     }

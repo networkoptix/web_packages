@@ -12,8 +12,8 @@ import { PipesModule }                   from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
-        path      : '',
-        component : NxBookmarksComponent
+        path: '',
+        component: NxBookmarksComponent
     }
 
 ];
@@ -29,12 +29,12 @@ const appRoutes: Routes = [
         BookmarksListModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxBookmarksComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxBookmarksComponent
     ]
 })

@@ -12,9 +12,9 @@ import { AuthorizeParams, ClientType } from '@components/authorize/authorize.com
 
 @UntilDestroy()
 @Component({
-    selector    : 'oauth-redirect-component',
-    templateUrl : './oauth-redirect.component.html',
-    styleUrls   : ['./oauth-redirect.component.scss']
+    selector: 'oauth-redirect-component',
+    templateUrl: './oauth-redirect.component.html',
+    styleUrls: ['./oauth-redirect.component.scss']
 })
 
 export class NxOAuthRedirectComponent implements OnInit {
@@ -65,15 +65,19 @@ export class NxOAuthRedirectComponent implements OnInit {
     }
 
     redirectToOAuth() {
+        // eslint-disable-next-line camelcase
         const { client_id, client_type, view_type } = this.initialData;
+        // eslint-disable-next-line camelcase
         const redirect_url = 'redirect-oauth';
         this.router.navigate(['authorize'], {
             queryParams: {
                 client_id,
-                client_type   : client_type || 'loginSystem',
+                // eslint-disable-next-line camelcase
+                client_type: client_type || 'loginSystem',
                 redirect_url,
-                view_type     : view_type || 'desktop',
-                response_type : 'code'
+                // eslint-disable-next-line camelcase
+                view_type: view_type || 'desktop',
+                response_type: 'code'
             }
         });
     }

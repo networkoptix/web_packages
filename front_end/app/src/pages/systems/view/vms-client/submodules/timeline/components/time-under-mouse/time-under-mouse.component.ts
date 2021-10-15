@@ -18,9 +18,9 @@ const PRIMARY_WIDTH = 140;
 const MAIN_MOUSE_BUTTON = 0;
 
 @Component({
-    selector    : 'time-under-mouse',
-    templateUrl : './time-under-mouse.component.html',
-    styleUrls   : ['./time-under-mouse.component.scss']
+    selector: 'time-under-mouse',
+    templateUrl: './time-under-mouse.component.html',
+    styleUrls: ['./time-under-mouse.component.scss']
 })
 export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     protected subscription: Subscription
@@ -66,7 +66,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             try {
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'ddd mmm dd yyyy';
-                const tweakedT = this.vms.tweakT(s.timeUnderMouse)
+                const tweakedT = this.vms.tweakT(s.timeUnderMouse);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
                 if (s.pressed) {

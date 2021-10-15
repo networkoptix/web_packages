@@ -23,9 +23,9 @@ describe('NxSectionPlaceholderComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports      : [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-            declarations : [NxSectionPlaceholderComponent],
-            providers    : [
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [NxSectionPlaceholderComponent],
+            providers: [
                 new MockProvider(NxConfigService, configMock),
                 new MockProvider(NxLanguageProviderService, langMock)
             ]

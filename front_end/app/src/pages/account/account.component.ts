@@ -18,9 +18,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'account',
-    templateUrl : 'account.component.html',
-    styleUrls   : ['account.component.scss']
+    selector: 'account',
+    templateUrl: 'account.component.html',
+    styleUrls: ['account.component.scss']
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
@@ -39,8 +39,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.pass = {
-            password    : '',
-            newPassword : ''
+            password: '',
+            newPassword: ''
         };
     }
 
@@ -81,29 +81,29 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             return;
         }
         this.content = {
-            base            : accountMenu.baseUrl,
-            selectedSection : accountMenu.settings.id,
-            level1          : [
+            base: accountMenu.baseUrl,
+            selectedSection: accountMenu.settings.id,
+            level1: [
                 {
-                    id     : accountMenu.settings.id,
-                    icon   : accountMenu.icon,
-                    label  : this.account.email || this.account.first_name,
-                    path   : accountMenu.settings.path,
-                    level3 : [
+                    id: accountMenu.settings.id,
+                    icon: accountMenu.icon,
+                    label: this.account.email || this.account.first_name,
+                    path: accountMenu.settings.path,
+                    level3: [
                         {
-                            id    : accountMenu.settings.id,
-                            label : this.LANG.account.accountSettings(),
-                            path  : accountMenu.settings.path
+                            id: accountMenu.settings.id,
+                            label: this.LANG.account.accountSettings(),
+                            path: accountMenu.settings.path
                         },
                         {
-                            id    : accountMenu.password.id,
-                            label : this.LANG.account.changePassword(),
-                            path  : accountMenu.password.path
+                            id: accountMenu.password.id,
+                            label: this.LANG.account.changePassword(),
+                            path: accountMenu.password.path
                         },
                         {
-                            id    : accountMenu.security.id,
-                            label : this.LANG.account.security(),
-                            path  : accountMenu.security.path
+                            id: accountMenu.security.id,
+                            label: this.LANG.account.security(),
+                            path: accountMenu.security.path
                         }
                     ]
                 }

@@ -18,9 +18,9 @@ import { NxAppStateService }         from '@services/nx-app-state.service';
 import type { NxAccountService } from '@services/account.service';
 
 @Component({
-    selector    : 'nx-login-webadmin-modal',
-    templateUrl : 'login-webadmin.component.html',
-    styleUrls   : ['login-webadmin.component.scss']
+    selector: 'nx-login-webadmin-modal',
+    templateUrl: 'login-webadmin.component.html',
+    styleUrls: ['login-webadmin.component.scss']
 })
 export class LoginWebadminModalContent implements OnInit {
     @Input() account: NxAccountService;
@@ -78,11 +78,11 @@ export class LoginWebadminModalContent implements OnInit {
             return this.account.reactivate(email);
         }, {
             errorCodes: {
-                forbidden : this.LANG.errorCodes.accountAlreadyActivated(),
-                notFound  : this.LANG.errorCodes.emailNotFound()
+                forbidden: this.LANG.errorCodes.accountAlreadyActivated(),
+                notFound: this.LANG.errorCodes.emailNotFound()
             },
-            holdAlerts  : true,
-            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix()
+            holdAlerts: true,
+            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
         });
     }
 
@@ -129,12 +129,12 @@ export class LoginWebadminModalContent implements OnInit {
 
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
-                'This user does not exist.' : showWrongCredentialsError,
-                'Wrong password.'           : showWrongCredentialsError,
-                notAuthorized               : showWrongCredentialsError,
-                accountBlocked              : () => {
+            ignoreUnauthorized: true,
+            errorCodes: {
+                'This user does not exist.': showWrongCredentialsError,
+                'Wrong password.': showWrongCredentialsError,
+                notAuthorized: showWrongCredentialsError,
+                accountBlocked: () => {
                     this.loginForm.controls.login_password.markAsPristine();
                     this.loginForm.controls.login_password.markAsUntouched();
 

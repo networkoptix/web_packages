@@ -249,8 +249,8 @@ export class NxSystem extends System {
                 ownerAccountEmail,
                 systemName,
                 mergeInfo,
-                capabilities : JSON.parse(<any>specificFeatures),
-                isOnline     : true
+                capabilities: JSON.parse(<any>specificFeatures),
+                isOnline: true
             };
         };
 
@@ -588,11 +588,11 @@ export class NxSystem extends System {
                             const now = Date.now();
                             // @ts-ignore
                             return r.reply.map(i => ({
-                                vmsTime        : parseInt(i.vmsTime),
-                                vmsTimeOffset  : now - parseInt(i.vmsTime),
-                                osTimeOffset   : now - parseInt(i.osTime),
-                                serverId       : i.serverId.slice(1, i.serverId.length - 1),
-                                timeZoneOffset : parseInt(i.timeZoneOffset)
+                                vmsTime: parseInt(i.vmsTime),
+                                vmsTimeOffset: now - parseInt(i.vmsTime),
+                                osTimeOffset: now - parseInt(i.osTime),
+                                serverId: i.serverId.slice(1, i.serverId.length - 1),
+                                timeZoneOffset: parseInt(i.timeZoneOffset)
                             }));
                         }, (err) => {
                             if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
@@ -630,19 +630,19 @@ export class NxSystem extends System {
                 eventCondition: NxSystem.getEventCondition(
                     alarmResourceName
                 )(),
-                actionType   : 'showOnAlarmLayoutAction',
-                eventType    : EventTypes.USER_DEFINED,
-                actionParams : NxSystem.getActionParams([user.id, user.id], true)
+                actionType: 'showOnAlarmLayoutAction',
+                eventType: EventTypes.USER_DEFINED,
+                actionParams: NxSystem.getActionParams([user.id, user.id], true)
             },
             existingRules
         );
 
         const doCommandRule = NxSystem.createRule(
             {
-                eventCondition : NxSystem.getEventCondition(doCommandResourceName)(),
-                actionType     : 'showPopupAction',
-                eventType      : EventTypes.USER_DEFINED,
-                actionParams   : NxSystem.getActionParams([user.id, user.id], true)
+                eventCondition: NxSystem.getEventCondition(doCommandResourceName)(),
+                actionType: 'showPopupAction',
+                eventType: EventTypes.USER_DEFINED,
+                actionParams: NxSystem.getActionParams([user.id, user.id], true)
             },
             existingRules
         );
@@ -679,17 +679,17 @@ export class NxSystem extends System {
         [actionResourceId, ...additionalResources]: string[],
         useSource = false
     ) => ({
-        allUsers         : false,
-        authType         : 'authBasicAndDigest',
-        durationMs       : 600000,
-        forced           : true,
-        fps              : 30,
-        needConfirmation : false,
-        playToClient     : true,
-        recordAfter      : 5,
-        recordBeforeMs   : 5000,
-        requestType      : '',
-        streamQuality    : 'highest',
+        allUsers: false,
+        authType: 'authBasicAndDigest',
+        durationMs: 600000,
+        forced: true,
+        fps: 30,
+        needConfirmation: false,
+        playToClient: true,
+        recordAfter: 5,
+        recordBeforeMs: 5000,
+        requestType: '',
+        streamQuality: 'highest',
         useSource,
         actionResourceId,
         additionalResources
@@ -701,11 +701,11 @@ export class NxSystem extends System {
     ) => (...valuesToParse: string[]) => {
         const lookupGroupAliases = (groupName: string) => {
             const aliases = {
-                all               : ['everyone'],
-                Administrator     : ['admin', 'admins'],
-                'Advanced Viewer' : ['advanced'],
-                Viewer            : ['viewers'],
-                'Live Viewer'     : ['live viewers']
+                all: ['everyone'],
+                Administrator: ['admin', 'admins'],
+                'Advanced Viewer': ['advanced'],
+                Viewer: ['viewers'],
+                'Live Viewer': ['live viewers']
             };
             return [groupName, ...(aliases[groupName] || [])];
         };
@@ -723,26 +723,26 @@ export class NxSystem extends System {
             );
 
         return {
-            caption            : condition,
-            description        : noDescription ? '' : condition,
-            eventTimestampUsec : '0',
-            eventType          : 'undefinedEvent',
-            metadata           : {
-                allUsers : false,
-                level    : '0'
+            caption: condition,
+            description: noDescription ? '' : condition,
+            eventTimestampUsec: '0',
+            eventType: 'undefinedEvent',
+            metadata: {
+                allUsers: false,
+                level: '0'
             },
-            omitDbLogging : false,
-            reasonCode    : 'none',
+            omitDbLogging: false,
+            reasonCode: 'none',
             resourceName
         };
     }
 
     static baseRule = {
-        system            : false,
-        schedule          : '',
-        eventState        : 'Undefined',
-        disabled          : false,
-        aggregationPeriod : 0
+        system: false,
+        schedule: '',
+        eventState: 'Undefined',
+        disabled: false,
+        aggregationPeriod: 0
     }
 
     static getRuleId = (
@@ -767,11 +767,11 @@ export class NxSystem extends System {
         { actionParams, eventCondition, ...rule }: RawRule,
         existingRules: EventRule[]
     ): EventRule => ({
-        id             : NxSystem.getRuleId(eventCondition.caption, rule.actionType, existingRules),
+        id: NxSystem.getRuleId(eventCondition.caption, rule.actionType, existingRules),
         ...NxSystem.baseRule,
         ...rule,
-        actionParams   : JSON.stringify(actionParams),
-        eventCondition : JSON.stringify(eventCondition)
+        actionParams: JSON.stringify(actionParams),
+        eventCondition: JSON.stringify(eventCondition)
     })
 
     /**

@@ -11,9 +11,9 @@ import { NxCloudApiService }             from '@services/nx-cloud-api';
 import { NxBootstrapProvider }           from '@services/nx-bootstrap-provider';
 
 @Component({
-    selector  : 'nx-503',
-    styleUrls : ['503.component.scss'],
-    template  : '<div [innerHTML]="compTemplate"></div>'
+    selector: 'nx-503',
+    styleUrls: ['503.component.scss'],
+    template: '<div [innerHTML]="compTemplate"></div>'
 })
 export class Nx503Component implements OnInit {
     compTemplate: SafeHtml;

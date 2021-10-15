@@ -18,9 +18,9 @@ import { NxSystem, NxSystemService } from '@services/system.service';
 
 @UntilDestroy()
 @Component({
-    selector    : 'bookmarks-component',
-    templateUrl : 'bookmarks.component.html',
-    styleUrls   : ['bookmarks.component.scss']
+    selector: 'bookmarks-component',
+    templateUrl: 'bookmarks.component.html',
+    styleUrls: ['bookmarks.component.scss']
 })
 
 export class NxBookmarksComponent implements OnInit, OnDestroy {
@@ -114,7 +114,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                 uniqueTags.add(tag);
                 bookmark.tagsFormatted.push({ type: 'default', label: tag });
             });
-        })
+        });
         this.filterModel.tags = Array.from(uniqueTags).map((tag: string): SearchTag =>  {
             return { id: tag, label: tag, value: false };
         });

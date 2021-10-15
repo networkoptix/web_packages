@@ -4,11 +4,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { NxToastService } from '@dialogs/toast.service';
 
 @Component({
-    selector    : 'app-toasts',
-    templateUrl : 'toast.component.html',
-    styleUrls   : ['toast.component.scss'],
-    host        : { '[class.nx-toasts]': 'true' },
-    animations  : [
+    selector: 'app-toasts',
+    templateUrl: 'toast.component.html',
+    styleUrls: ['toast.component.scss'],
+    host: { '[class.nx-toasts]': 'true' },
+    animations: [
         trigger('fadeInOut', [
             transition(':enter', [
                 style({ opacity: 0 }),

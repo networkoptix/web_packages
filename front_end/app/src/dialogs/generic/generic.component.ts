@@ -9,9 +9,9 @@ import { NxLanguageProviderService }             from '@services/nx-language-pro
 import { LanguageI18NStaticTypes }               from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-generic-content',
-    templateUrl : 'generic.component.html',
-    styleUrls   : ['generic.component.scss']
+    selector: 'nx-modal-generic-content',
+    templateUrl: 'generic.component.html',
+    styleUrls: ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -43,10 +43,10 @@ export class GenericModalContent implements OnInit {
 }
 
 @Component({
-    selector      : 'nx-modal-general',
-    template      : '',
-    encapsulation : ViewEncapsulation.None,
-    styleUrls     : []
+    selector: 'nx-modal-general',
+    template: '',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: []
 })
 export class NxModalGenericComponent {
     modalRef: NgbModalRef;
@@ -64,8 +64,8 @@ export class NxModalGenericComponent {
         hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
             {
-                windowClass : 'modal-holder',
-                backdrop    : 'static'
+                windowClass: 'modal-holder',
+                backdrop: 'static'
             });
 
         this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';

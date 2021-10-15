@@ -9,9 +9,9 @@ import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'landing-component',
-    templateUrl : 'landing.component.html',
-    styleUrls   : ['landing.component.scss']
+    selector: 'landing-component',
+    templateUrl: 'landing.component.html',
+    styleUrls: ['landing.component.scss']
 })
 
 export class NxLandingComponent implements OnInit {

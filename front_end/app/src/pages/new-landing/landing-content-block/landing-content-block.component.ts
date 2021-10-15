@@ -3,9 +3,9 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 
 type InputType = 'small' | 'wide' | 'adaptive'
 @Component({
-    selector    : 'nx-landing-content-block',
-    templateUrl : './landing-content-block.component.html',
-    styleUrls   : ['./landing-content-block.component.scss']
+    selector: 'nx-landing-content-block',
+    templateUrl: './landing-content-block.component.html',
+    styleUrls: ['./landing-content-block.component.scss']
 })
 export class NxContentLandingBlockComponent {
     CONFIG: IConfig
@@ -19,16 +19,16 @@ export class NxContentLandingBlockComponent {
 
     svgSizes = {
         mainSvg: {
-            width  : '64',
-            height : '64'
+            width: '64',
+            height: '64'
         },
         arrowLarge: {
-            width  : '64',
-            height : '50'
+            width: '64',
+            height: '50'
         },
         arrowSmall: {
-            width  : '40',
-            height : '24'
+            width: '40',
+            height: '24'
         }
     }
 

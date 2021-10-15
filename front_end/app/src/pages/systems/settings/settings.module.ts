@@ -26,64 +26,64 @@ import { PipesModule }               from '@src/pipes/pipes.module';
 
 export const cloudSettingsRoutes: Routes = [
     {
-        path        : '',
-        component   : NxSystemSettingsComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path: '',
+        component: NxSystemSettingsComponent,
+        canActivate: [AuthGuard],
+        children: [
             {
-                path          : '',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                path: '',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'advanced',
-                component     : NxSystemAdminComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'advanced',
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'users',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard],
+                canActivate: [SystemGuard]
             },
             {
-                path          : 'users/:userId',
-                component     : NxSystemUsersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'users/:userId',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard],
+                canActivate: [SystemGuard]
             },
             {
-                path          : 'servers',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard],
+                canActivate: [SystemGuard]
             },
             {
-                path          : 'servers/:serverId',
-                component     : NxSystemServersComponent,
-                canDeactivate : [ApplyGuard],
-                canActivate   : [SystemGuard]
+                path: 'servers/:serverId',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard],
+                canActivate: [SystemGuard]
             },
             {
-                path          : 'cameras',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'cameras/:cameraId',
-                component     : NxCamerasComponent,
-                canDeactivate : [ApplyGuard]
+                path: 'cameras/:cameraId',
+                component: NxCamerasComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
-                path          : 'cloud-storage',
-                component     : NxCloudStorageComponent,
-                canActivate   : [SystemGuard],
-                canDeactivate : [ApplyGuard]
+                path: 'cloud-storage',
+                component: NxCloudStorageComponent,
+                canActivate: [SystemGuard],
+                canDeactivate: [ApplyGuard]
             },
             {
-                path        : 'licenses',
-                component   : NxSystemLicensesComponent,
-                canActivate : [SystemGuard]
+                path: 'licenses',
+                component: NxSystemLicensesComponent,
+                canActivate: [SystemGuard]
             }
         ]
     }

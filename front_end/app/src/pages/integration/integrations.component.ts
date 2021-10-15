@@ -16,9 +16,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'integrations-component',
-    templateUrl : 'integrations.component.html',
-    styleUrls   : ['integrations.component.scss']
+    selector: 'integrations-component',
+    templateUrl: 'integrations.component.html',
+    styleUrls: ['integrations.component.scss']
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
@@ -31,11 +31,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     params: any;
     account: any;
     selectors = {
-        access    : false,
-        analytics : false,
-        cameras   : false,
-        home      : false,
-        psim      : false
+        access: false,
+        analytics: false,
+        cameras: false,
+        home: false,
+        psim: false
     };
 
     private emptyFilter: any = {};

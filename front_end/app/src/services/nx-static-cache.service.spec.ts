@@ -14,8 +14,8 @@ describe('Static cache service', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports   : [HttpClientTestingModule],
-            providers : [
+            imports: [HttpClientTestingModule],
+            providers: [
                 HttpClient,
                 { provide: NxConfigService, useValue: configMock }
             ]

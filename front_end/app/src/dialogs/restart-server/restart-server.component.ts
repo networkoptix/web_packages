@@ -15,9 +15,9 @@ import { NxApplyService }            from '@services/apply.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-restart-server-content',
-    templateUrl : 'restart-server.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-restart-server-content',
+    templateUrl: 'restart-server.component.html',
+    styleUrls: []
 })
 export class RestartServerModalContent {
     @Input() system;
@@ -48,9 +48,9 @@ export class RestartServerModalContent {
 
     ngOnInit() {
         const options      = {
-            classname : this.CONFIG.toast.warning,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.warning,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         this.restartServer = this.processService
             .createProcess(() => {

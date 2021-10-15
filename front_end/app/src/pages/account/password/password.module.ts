@@ -21,12 +21,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
         DirectivesModule,
         PipesModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxAccountPasswordComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxAccountPasswordComponent
     ]
 })

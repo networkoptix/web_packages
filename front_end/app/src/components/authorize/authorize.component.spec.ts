@@ -33,8 +33,8 @@ import { WINDOW }                    from '@services/window-provider';
 import { ComponentsModule }          from '@components/components.module';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -45,92 +45,92 @@ describe('NxAuthorizeComponent', () => {
     const translateMock = {
         translations: {
             authorize: {
-                loginCloudHeader        : () => 'Log in to %CLOUD_NAME%',
-                activateHeader          : () => 'Activate %CLOUD_NAME% Account',
-                createdText             : () => 'Account Created!',
-                createdAdditional       : () => '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
-                activatedText           : () => 'Account Activated!',
-                activatedAdditional     : () => '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
-                connectedText           : () => 'System connected to %CLOUD_NAME%',
-                connectHeader           : () => 'Connect System to %CLOUD_NAME%',
-                connectSubheader        : () => 'To access it from anywhere and enable additional features',
-                expiredHeader           : () => 'Your session has expired',
-                expiredAccountSubheader : () => 'Please, log in again as {accountEmail}',
-                expiredSubheader        : () => 'Please, log in again',
-                loginSystemHeader       : () => 'Log in to {systemName}',
-                loginSystemSubheader    : () => 'With your %CLOUD_NAME% Account',
-                toAccountSubheader      : () => 'To {accountEmail}',
-                asAccountSubheader      : () => 'As {accountEmail}',
-                passwordDisconnect      : () => 'to disconnect system from %CLOUD_NAME%',
-                passwordMerge           : () => 'to merge systems',
-                passwordBackup          : () => 'to create backup',
-                passwordRestore         : () => 'to restore system from backup',
-                passwordReset           : () => 'to reset server',
-                passwordRestart         : () => 'to restart server',
-                passwordDetach          : () => 'to detach server',
-                createAccountHeader     : () => 'Create %CLOUD_NAME% Account',
-                loginErrorAdditional    : () => 'Please try again or login to the system directly with your local account.',
-                connectErrorAdditional  : () => 'Please try again later.',
-                setupErrorAdditional    : () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
-                passResetHeader         : () => 'Reset Password',
-                newPassHeader           : () => 'Set New Password'
+                loginCloudHeader: () => 'Log in to %CLOUD_NAME%',
+                activateHeader: () => 'Activate %CLOUD_NAME% Account',
+                createdText: () => 'Account Created!',
+                createdAdditional: () => '<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>',
+                activatedText: () => 'Account Activated!',
+                activatedAdditional: () => '<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>',
+                connectedText: () => 'System connected to %CLOUD_NAME%',
+                connectHeader: () => 'Connect System to %CLOUD_NAME%',
+                connectSubheader: () => 'To access it from anywhere and enable additional features',
+                expiredHeader: () => 'Your session has expired',
+                expiredAccountSubheader: () => 'Please, log in again as {accountEmail}',
+                expiredSubheader: () => 'Please, log in again',
+                loginSystemHeader: () => 'Log in to {systemName}',
+                loginSystemSubheader: () => 'With your %CLOUD_NAME% Account',
+                toAccountSubheader: () => 'To {accountEmail}',
+                asAccountSubheader: () => 'As {accountEmail}',
+                passwordDisconnect: () => 'to disconnect system from %CLOUD_NAME%',
+                passwordMerge: () => 'to merge systems',
+                passwordBackup: () => 'to create backup',
+                passwordRestore: () => 'to restore system from backup',
+                passwordReset: () => 'to reset server',
+                passwordRestart: () => 'to restart server',
+                passwordDetach: () => 'to detach server',
+                createAccountHeader: () => 'Create %CLOUD_NAME% Account',
+                loginErrorAdditional: () => 'Please try again or login to the system directly with your local account.',
+                connectErrorAdditional: () => 'Please try again later.',
+                setupErrorAdditional: () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
+                passResetHeader: () => 'Reset Password',
+                newPassHeader: () => 'Set New Password'
             }
         }
     };
     nxConfig.dynamicMenus.authorizeFooter = {
-        title       : 'Demo',
-        description : 'demo',
-        nodes       : [
+        title: 'Demo',
+        description: 'demo',
+        nodes: [
             {
-                name                : 'About %CLOUD_NAME% Cloud',
-                url                 : '/content/about',
-                asset_id            : null,
-                authentication      : null,
-                display_name        : 'About %CLOUD_NAME% Cloud',
-                icon                : '',
-                new_window          : false,
-                next_item           : false,
-                breadcrumbs         : null,
-                related_asset_ids   : [],
-                urlified            : '',
-                subtitle            : '',
-                name_raw            : '',
-                queryParamsHandling : '',
-                nodes               : []
+                name: 'About %CLOUD_NAME% Cloud',
+                url: '/content/about',
+                asset_id: null,
+                authentication: null,
+                display_name: 'About %CLOUD_NAME% Cloud',
+                icon: '',
+                new_window: false,
+                next_item: false,
+                breadcrumbs: null,
+                related_asset_ids: [],
+                urlified: '',
+                subtitle: '',
+                name_raw: '',
+                queryParamsHandling: '',
+                nodes: []
             },
             {
-                name                : 'Terms',
-                url                 : '/content/eula',
-                asset_id            : null,
-                authentication      : null,
-                display_name        : 'Terms',
-                icon                : '',
-                new_window          : false,
-                next_item           : false,
-                breadcrumbs         : null,
-                related_asset_ids   : [],
-                urlified            : '',
-                subtitle            : '',
-                name_raw            : '',
-                queryParamsHandling : '',
-                nodes               : []
+                name: 'Terms',
+                url: '/content/eula',
+                asset_id: null,
+                authentication: null,
+                display_name: 'Terms',
+                icon: '',
+                new_window: false,
+                next_item: false,
+                breadcrumbs: null,
+                related_asset_ids: [],
+                urlified: '',
+                subtitle: '',
+                name_raw: '',
+                queryParamsHandling: '',
+                nodes: []
             },
             {
-                name                : 'Privacy Policy',
-                url                 : 'https://www.networkoptix.com/privacy-policy',
-                asset_id            : null,
-                authentication      : null,
-                display_name        : 'Privacy Policy',
-                icon                : '',
-                new_window          : false,
-                next_item           : false,
-                breadcrumbs         : null,
-                related_asset_ids   : [],
-                urlified            : '',
-                subtitle            : '',
-                name_raw            : '',
-                queryParamsHandling : '',
-                nodes               : []
+                name: 'Privacy Policy',
+                url: 'https://www.networkoptix.com/privacy-policy',
+                asset_id: null,
+                authentication: null,
+                display_name: 'Privacy Policy',
+                icon: '',
+                new_window: false,
+                next_item: false,
+                breadcrumbs: null,
+                related_asset_ids: [],
+                urlified: '',
+                subtitle: '',
+                name_raw: '',
+                queryParamsHandling: '',
+                nodes: []
             }
         ]
     };
@@ -140,10 +140,10 @@ describe('NxAuthorizeComponent', () => {
     };
     const routeMock = {
         queryParams: of({
-            client_id     : 'someId',
-            grant_type    : 'password',
-            response_type : 'code',
-            scope         : 'anythingElse'
+            client_id: 'someId',
+            grant_type: 'password',
+            response_type: 'code',
+            scope: 'anythingElse'
         }),
         snapshot: { data: { action: '' } }
     };
@@ -154,19 +154,19 @@ describe('NxAuthorizeComponent', () => {
 
     const accountMock = {
         get: () => ({
-            can_publish_integration : false,
-            name                    : 'Test',
-            first_name              : 'Test',
-            isCloud                 : false,
-            is_staff                : false,
-            language                : 'en_US',
-            last_name               : '1234',
-            permissions             : [],
-            is_superuser            : false,
-            id                      : 'test',
-            email                   : 'test@test.com',
-            is_authenticated        : false,
-            cookie_reviewed         : true
+            can_publish_integration: false,
+            name: 'Test',
+            first_name: 'Test',
+            isCloud: false,
+            is_staff: false,
+            language: 'en_US',
+            last_name: '1234',
+            permissions: [],
+            is_superuser: false,
+            id: 'test',
+            email: 'test@test.com',
+            is_authenticated: false,
+            cookie_reviewed: true
         })
     };
 
@@ -244,11 +244,11 @@ describe('NxAuthorizeComponent', () => {
         expect(component.clientType).toBe('loginToCloud');
         expect(component.currentState).toBe('email');
         expect(component.initialData).toEqual(<AuthorizeParams>{
-            client_id     : 'cloud',
-            grant_type    : 'password',
-            response_type : 'code',
-            scope         : 'anythingElse',
-            redirect_url  : ''
+            client_id: 'cloud',
+            grant_type: 'password',
+            response_type: 'code',
+            scope: 'anythingElse',
+            redirect_url: ''
         });
     });
 

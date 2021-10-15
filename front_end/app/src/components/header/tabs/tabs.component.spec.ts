@@ -23,9 +23,9 @@ describe('NxTabsComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxTabsComponent],
-            imports      : [CommonModule, RouterTestingModule],
-            providers    : [
+            declarations: [NxTabsComponent],
+            imports: [CommonModule, RouterTestingModule],
+            providers: [
                 { provide: NxHeaderService, useValue: headerMock }
             ]
         }).compileComponents()
@@ -34,20 +34,20 @@ describe('NxTabsComponent', () => {
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
                 component.node = {
-                    display_name        : 'nodeName',
-                    url                 : 'testUrl',
-                    queryParamsHandling : undefined,
-                    breadcrumbs         : [],
-                    name                : 'nameNode',
-                    nodes               : [],
-                    authentication      : undefined,
-                    new_window          : false,
-                    asset_id            : null,
-                    related_asset_ids   : [],
-                    next_item           : false,
-                    urlified            : 'testUrlified',
-                    subtitle            : 'subtitleText',
-                    name_raw            : 'nameRaw'
+                    display_name: 'nodeName',
+                    url: 'testUrl',
+                    queryParamsHandling: undefined,
+                    breadcrumbs: [],
+                    name: 'nameNode',
+                    nodes: [],
+                    authentication: undefined,
+                    new_window: false,
+                    asset_id: null,
+                    related_asset_ids: [],
+                    next_item: false,
+                    urlified: 'testUrlified',
+                    subtitle: 'subtitleText',
+                    name_raw: 'nameRaw'
                 };
             })
             .catch(err => console.error(err));

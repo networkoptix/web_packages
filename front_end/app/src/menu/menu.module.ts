@@ -43,8 +43,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
         NxLevel3ItemComponent,
         NxAlertCounter
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxMenuComponent,
         NxLevel1ItemComponent,
         NxLevel2ItemComponent,

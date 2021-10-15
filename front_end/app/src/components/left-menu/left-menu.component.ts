@@ -16,9 +16,9 @@ export interface RelatedLinks {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-left-menu',
-    templateUrl : 'left-menu.component.html',
-    styleUrls   : ['left-menu.component.scss']
+    selector: 'nx-left-menu',
+    templateUrl: 'left-menu.component.html',
+    styleUrls: ['left-menu.component.scss']
 })
 export class NxLeftMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter();

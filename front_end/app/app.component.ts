@@ -28,8 +28,8 @@ require('what-input');
 require('./scripts/vendor/protocolcheck');
 
 @Component({
-    selector : 'nx-app',
-    template : `
+    selector: 'nx-app',
+    template: `
         <div class="headerContainer">
             <nx-header *ngIf="!appStateService.authorizing && (appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
@@ -50,8 +50,8 @@ require('./scripts/vendor/protocolcheck');
         <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
         <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
-    styleUrls     : ['./app.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    styleUrls: ['./app.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class AppComponent {
@@ -109,13 +109,13 @@ export class AppComponent {
          * Angular will not make it through here as they are not supported at all ... see index.html
          */
         this.browserBlacklist = {
-            ie                 : 9999,
-            'ms-edge'          : 9999,
-            'ms-edge-chromium' : 84,
-            safari             : 12,
-            chrome             : 76,
-            firefox            : 72,
-            opera              : 70
+            ie: 9999,
+            'ms-edge': 9999,
+            'ms-edge-chromium': 84,
+            safari: 12,
+            chrome: 76,
+            firefox: 72,
+            opera: 70
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();

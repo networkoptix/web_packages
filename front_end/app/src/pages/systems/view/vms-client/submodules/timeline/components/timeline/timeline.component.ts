@@ -17,9 +17,9 @@ const MOUSE_HIDE_UNTIL_PX = 8;
 // let times_rendered = 0
 
 @Component({
-    selector    : 'timeline',
-    templateUrl : './timeline.component.html',
-    styleUrls   : ['./timeline.component.scss']
+    selector: 'timeline',
+    templateUrl: './timeline.component.html',
+    styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef;
@@ -140,7 +140,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         // console.log('mouse down', e.screenX)
         this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
         this._mouseNotReleasedYet = true;
-        this.timeUnderMouse.handleMouseDown()
+        this.timeUnderMouse.handleMouseDown();
     }
 
     public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
@@ -170,7 +170,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
-        this.timeUnderMouse.handleMouseUp()
+        this.timeUnderMouse.handleMouseUp();
     }
 
     @HostListener('document:mouseup')

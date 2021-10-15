@@ -13,9 +13,9 @@ import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-remove-model-content',
-    templateUrl : 'remove-system.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-remove-model-content',
+    templateUrl: 'remove-system.component.html',
+    styleUrls: []
 })
 export class RemoveSystemModalContent {
     @Input() system;
@@ -28,8 +28,8 @@ export class RemoveSystemModalContent {
     password: string;
     wrongPassword: boolean;
     auth = {
-        username : '',
-        password : ''
+        username: '',
+        password: ''
     };
 
     hideErrors = true;
@@ -68,18 +68,18 @@ export class RemoveSystemModalContent {
             this.wrongPassword = false;
             return this.system.deleteFromCurrentAccount(this.auth.password);
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
-                accountBlocked : this.credentialErrorHandler,
-                notAuthorized  : this.credentialErrorHandler
+            ignoreUnauthorized: true,
+            errorCodes: {
+                accountBlocked: this.credentialErrorHandler,
+                notAuthorized: this.credentialErrorHandler
             },
             errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
         }, () => {
             this.activeModal.close(true);
             const options = {
-                classname : this.CONFIG.toast.success,
-                autohide  : true,
-                delay     : this.CONFIG.alertTimeout
+                classname: this.CONFIG.toast.success,
+                autohide: true,
+                delay: this.CONFIG.alertTimeout
             };
             const msg = this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name });
             this.toastService.show(msg, options);

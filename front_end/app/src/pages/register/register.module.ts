@@ -52,8 +52,8 @@ const appRoutes: Routes = [
     declarations: [
         NxRegisterComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxRegisterComponent
     ]
 })

@@ -11,9 +11,9 @@ type BtnClassesEnum = 'play' | 'pause'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'playback-controls',
-    templateUrl : './playback-controls.component.html',
-    styleUrls   : ['./playback-controls.component.scss']
+    selector: 'playback-controls',
+    templateUrl: './playback-controls.component.html',
+    styleUrls: ['./playback-controls.component.scss']
 })
 @LoggerDecorator('PLAYBACK CONTROLS ::', true)
 export class PlaybackControlsComponent implements OnInit {

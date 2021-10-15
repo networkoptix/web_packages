@@ -25,10 +25,10 @@ const SCROLL_AREA_LIMIT = 120;
 
 @UntilDestroy()
 @Component({
-    selector      : 'nx-menu',
-    templateUrl   : 'menu.component.html',
-    styleUrls     : ['menu.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-menu',
+    templateUrl: 'menu.component.html',
+    styleUrls: ['menu.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;

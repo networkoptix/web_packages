@@ -14,19 +14,19 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-email-input',
-    templateUrl : 'email.component.html',
-    styleUrls   : ['email.component.scss'],
-    providers   : [
+    selector: 'nx-email-input',
+    templateUrl: 'email.component.html',
+    styleUrls: ['email.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxEmailComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxEmailComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxEmailComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxEmailComponent),
+            multi: true
         }
     ],
     encapsulation: ViewEncapsulation.None

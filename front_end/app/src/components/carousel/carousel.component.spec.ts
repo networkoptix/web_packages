@@ -17,22 +17,22 @@ describe('NxCarouselComponent', () => {
     const langMock = getMockTranslations();
 
     const screenshots = [{
-        id      : 'Screenshot1',
-        value   : 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
-        sortKey : 1,
-        caption : 'screenshot 23'
+        id: 'Screenshot1',
+        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot1-257/Screenshot_23.png',
+        sortKey: 1,
+        caption: 'screenshot 23'
     }, {
-        id      : 'Screenshot2',
-        value   : 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
-        sortKey : 2
+        id: 'Screenshot2',
+        value: 'https://cloud-test.hdw.mx/static/media/test-asset-011119-amironenko/overviewscreenshot2-259/Screenshot_25.png',
+        sortKey: 2
     }];
 
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                imports      : [BrowserAnimationsModule],
-                declarations : [NxCarouselComponent],
-                providers    : [
+                imports: [BrowserAnimationsModule],
+                declarations: [NxCarouselComponent],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock)
                 ]

@@ -147,8 +147,8 @@ export class StorageState extends BaseManager {
             })
         );
         this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier : 'Storage State',
-            prettyPrint   : false
+            logIdentifier: 'Storage State',
+            prettyPrint: false
         }));
 
         this.statsUpdated$ = new Subject<any>();
@@ -157,8 +157,8 @@ export class StorageState extends BaseManager {
     constructor(public serverManager: ServerManager) {
         super();
         this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier : 'Storage State',
-            prettyPrint   : false
+            logIdentifier: 'Storage State',
+            prettyPrint: false
         }));
         this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
     }

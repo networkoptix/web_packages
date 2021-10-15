@@ -12,9 +12,9 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
  */
 
 @Component({
-    selector    : 'nx-player-placeholder',
-    templateUrl : 'player-placeholder.component.html',
-    styleUrls   : ['player-placeholder.component.scss']
+    selector: 'nx-player-placeholder',
+    templateUrl: 'player-placeholder.component.html',
+    styleUrls: ['player-placeholder.component.scss']
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

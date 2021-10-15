@@ -13,8 +13,8 @@ import { NxSystem }                                from '@services/system.servic
 import { CommonModule, DatePipe }                                from '@angular/common';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {
 }
@@ -84,126 +84,126 @@ describe('Licenses (Details)', () => {
         beforeEach(() => {
             component.licenses = [{
                 info: {
-                    brand         : 'hdwitness',
-                    class         : 'nvr',
-                    company       : 'TestNVR',
-                    count         : '4',
-                    deactivations : '0',
-                    expiration    : '',
-                    expired       : false,
-                    hwid          : '052f25774269474ec8f9454d92ca9511cf',
-                    inuse         : '',
-                    name          : 'hdwitness',
-                    required      : 0,
-                    serial        : '0000-0000-0000-0000',
-                    serverName    : 'Server Sofia',
-                    serverStatus  : 'Online',
-                    serverTime    : 1614116391263,
-                    signature2    : 'Zd8Ulv0b6nsJrcMnAkS9R54eFVptZl3NN1Kpt2ycdAGCCy/Tbgk2Pix3jSkz/hNqPcrEDpIO+SqKIgjGdEMA9A1XAelHdf61QDamuk48ePhwl3SbZ31wcSh9YyW8c0LNsx6GB07C/9zkDT2aE3lIUMYuEym0ZjfhPiPhu40eEvyx1504VMydkPdge2pz/T3HVOXJ/0UJwPm8YJNkwrxHpYRRVHvMGTKU9JuC/g2IaivIGYKDPk4YUePVsdE64iKXb2hImBS1C6vu88CxHA21prsQ9/J7WgG4zddgktI7HHzSJ4ywDSBj2IsTGFe3KdMGrxi/CCSL4pegtqe+imbZVQ',
-                    status        : 'OK',
-                    support       : 'nvr@qa.com',
-                    version       : '4.3.0.683'
+                    brand: 'hdwitness',
+                    class: 'nvr',
+                    company: 'TestNVR',
+                    count: '4',
+                    deactivations: '0',
+                    expiration: '',
+                    expired: false,
+                    hwid: '052f25774269474ec8f9454d92ca9511cf',
+                    inuse: '',
+                    name: 'hdwitness',
+                    required: 0,
+                    serial: '0000-0000-0000-0000',
+                    serverName: 'Server Sofia',
+                    serverStatus: 'Online',
+                    serverTime: 1614116391263,
+                    signature2: 'Zd8Ulv0b6nsJrcMnAkS9R54eFVptZl3NN1Kpt2ycdAGCCy/Tbgk2Pix3jSkz/hNqPcrEDpIO+SqKIgjGdEMA9A1XAelHdf61QDamuk48ePhwl3SbZ31wcSh9YyW8c0LNsx6GB07C/9zkDT2aE3lIUMYuEym0ZjfhPiPhu40eEvyx1504VMydkPdge2pz/T3HVOXJ/0UJwPm8YJNkwrxHpYRRVHvMGTKU9JuC/g2IaivIGYKDPk4YUePVsdE64iKXb2hImBS1C6vu88CxHA21prsQ9/J7WgG4zddgktI7HHzSJ4ywDSBj2IsTGFe3KdMGrxi/CCSL4pegtqe+imbZVQ',
+                    status: 'OK',
+                    support: 'nvr@qa.com',
+                    version: '4.3.0.683'
                 },
-                key          : '0000-0000-0000-0000',
-                licenseBlock : 'NAME=hdwitness↵SERIAL=D9RR-LV9X-E59W-QI6A↵HWID=052f25774269474ec8f9454d92ca9511cf↵COUNT=4↵CLASS=nvr↵VERSION=4.3.0.683↵BRAND=hdwitness↵EXPIRATION=↵SIGNATURE2=Zd8Ulv0b6nsJrcMnAkS9R54eFVptZl3NN1Kpt2ycdAGCCy/Tbgk2Pix3jSkz/hNqPcrEDpIO+SqKIgjGdEMA9A1XAelHdf61QDamuk48ePhwl3SbZ31wcSh9YyW8c0LNsx6GB07C/9zkDT2aE3lIUMYuEym0ZjfhPiPhu40eEvyx1504VMydkPdge2pz/T3HVOXJ/0UJwPm8YJNkwrxHpYRRVHvMGTKU9JuC/g2IaivIGYKDPk4YUePVsdE64iKXb2hImBS1C6vu88CxHA21prsQ9/J7WgG4zddgktI7HHzSJ4ywDSBj2IsTGFe3KdMGrxi/CCSL4pegtqe+imbZVQ==↵COMPANY=TestNVR↵SUPPORT=nvr@qa.com↵DEACTIVATIONS=0↵'
+                key: '0000-0000-0000-0000',
+                licenseBlock: 'NAME=hdwitness↵SERIAL=D9RR-LV9X-E59W-QI6A↵HWID=052f25774269474ec8f9454d92ca9511cf↵COUNT=4↵CLASS=nvr↵VERSION=4.3.0.683↵BRAND=hdwitness↵EXPIRATION=↵SIGNATURE2=Zd8Ulv0b6nsJrcMnAkS9R54eFVptZl3NN1Kpt2ycdAGCCy/Tbgk2Pix3jSkz/hNqPcrEDpIO+SqKIgjGdEMA9A1XAelHdf61QDamuk48ePhwl3SbZ31wcSh9YyW8c0LNsx6GB07C/9zkDT2aE3lIUMYuEym0ZjfhPiPhu40eEvyx1504VMydkPdge2pz/T3HVOXJ/0UJwPm8YJNkwrxHpYRRVHvMGTKU9JuC/g2IaivIGYKDPk4YUePVsdE64iKXb2hImBS1C6vu88CxHA21prsQ9/J7WgG4zddgktI7HHzSJ4ywDSBj2IsTGFe3KdMGrxi/CCSL4pegtqe+imbZVQ==↵COMPANY=TestNVR↵SUPPORT=nvr@qa.com↵DEACTIVATIONS=0↵'
             }];
             component.LANG.license = {
                 info: {
-                    channels       : () => 'Channels',
-                    deactivations  : () => 'Deactivation left',
-                    error          : () => 'Error',
-                    expired        : () => 'Expired',
-                    expires        : () => 'Expires',
-                    hwid           : () => 'Hardware ID',
-                    nvrError       : () => 'NVR Error',
-                    ok             : () => 'OK',
-                    online         : () => 'Online',
-                    server         : () => 'Server',
-                    serverNotFound : () => 'Server not found',
-                    status         : () => 'Status',
-                    type           : () => 'Type'
+                    channels: () => 'Channels',
+                    deactivations: () => 'Deactivation left',
+                    error: () => 'Error',
+                    expired: () => 'Expired',
+                    expires: () => 'Expires',
+                    hwid: () => 'Hardware ID',
+                    nvrError: () => 'NVR Error',
+                    ok: () => 'OK',
+                    online: () => 'Online',
+                    server: () => 'Server',
+                    serverNotFound: () => 'Server not found',
+                    status: () => 'Status',
+                    type: () => 'Type'
                 },
                 licenseTypeTitles: {
-                    Analog           : () => 'Analog',
-                    'Analog Encoder' : () => 'Analog Encoder',
-                    Bridge           : () => 'Bridge',
-                    Edge             : () => 'Edge',
-                    'IO Module'      : () => 'IO Module',
-                    NVR              : () => 'NVR',
-                    Professional     : () => 'Professional',
-                    Starter          : () => 'Starter',
-                    Time             : () => 'Time',
-                    Trial            : () => 'Trial',
-                    VMAX             : () => 'VMAX',
-                    'Video Wall'     : () => 'Video Wall'
+                    Analog: () => 'Analog',
+                    'Analog Encoder': () => 'Analog Encoder',
+                    Bridge: () => 'Bridge',
+                    Edge: () => 'Edge',
+                    'IO Module': () => 'IO Module',
+                    NVR: () => 'NVR',
+                    Professional: () => 'Professional',
+                    Starter: () => 'Starter',
+                    Time: () => 'Time',
+                    Trial: () => 'Trial',
+                    VMAX: () => 'VMAX',
+                    'Video Wall': () => 'Video Wall'
                 },
                 messages: {
-                    activated      : () => 'License key activated',
-                    inuse          : () => 'License key has already been activated and bound to server with hardware ID {hwid} in another system',
-                    required       : () => '{number} more required',
-                    trialActivated : () => 'Trial license activated. Starting today, you can record up to 4 cameras for 30 days.'
+                    activated: () => 'License key activated',
+                    inuse: () => 'License key has already been activated and bound to server with hardware ID {hwid} in another system',
+                    required: () => '{number} more required',
+                    trialActivated: () => 'Trial license activated. Starting today, you can record up to 4 cameras for 30 days.'
                 }
             };
             component.CONFIG.licenseTypes = [
                 {
-                    name                 : 'time',
-                    title                : 'Time',
-                    deactivationsAllowed : 3
+                    name: 'time',
+                    title: 'Time',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'trial',
-                    title                : 'Trial',
-                    deactivationsAllowed : 0
+                    name: 'trial',
+                    title: 'Trial',
+                    deactivationsAllowed: 0
                 },
                 {
-                    name                 : 'digital',
-                    title                : 'Professional',
-                    deactivationsAllowed : 3
+                    name: 'digital',
+                    title: 'Professional',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'analog',
-                    title                : 'Analog',
-                    deactivationsAllowed : 3
+                    name: 'analog',
+                    title: 'Analog',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'edge',
-                    title                : 'Edge',
-                    deactivationsAllowed : 3
+                    name: 'edge',
+                    title: 'Edge',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'vmax',
-                    title                : 'VMAX',
-                    deactivationsAllowed : 3
+                    name: 'vmax',
+                    title: 'VMAX',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'videowall',
-                    title                : 'Video Wall',
-                    deactivationsAllowed : 3
+                    name: 'videowall',
+                    title: 'Video Wall',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'analogencoder',
-                    title                : 'Analog Encoder',
-                    deactivationsAllowed : 3
+                    name: 'analogencoder',
+                    title: 'Analog Encoder',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'starter',
-                    title                : 'Starter',
-                    deactivationsAllowed : 3
+                    name: 'starter',
+                    title: 'Starter',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'iomodule',
-                    title                : 'IO Module',
-                    deactivationsAllowed : 3
+                    name: 'iomodule',
+                    title: 'IO Module',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'bridge',
-                    title                : 'Bridge',
-                    deactivationsAllowed : 3
+                    name: 'bridge',
+                    title: 'Bridge',
+                    deactivationsAllowed: 3
                 },
                 {
-                    name                 : 'nvr',
-                    title                : 'NVR',
-                    deactivationsAllowed : 0
+                    name: 'nvr',
+                    title: 'NVR',
+                    deactivationsAllowed: 0
                 }
             ];
             (component as any).orderedDetails(component.licenses[0].info);

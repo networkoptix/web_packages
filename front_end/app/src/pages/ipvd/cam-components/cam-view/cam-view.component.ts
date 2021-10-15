@@ -15,9 +15,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-cam-view',
-    templateUrl : './cam-view.component.html',
-    styleUrls   : ['./cam-view.component.scss']
+    selector: 'nx-cam-view',
+    templateUrl: './cam-view.component.html',
+    styleUrls: ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() activeCamera;

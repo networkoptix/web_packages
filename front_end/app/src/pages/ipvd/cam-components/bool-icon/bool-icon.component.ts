@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector   : 'nx-bool-icon',
+    selector: 'nx-bool-icon',
     templateUrl: './bool-icon.component.html',
-    styleUrls  : ['./bool-icon.component.scss'],
+    styleUrls: ['./bool-icon.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class BoolIconComponent implements OnInit {

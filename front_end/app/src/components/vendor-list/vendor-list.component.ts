@@ -25,14 +25,14 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-vendor-list',
-    templateUrl   : 'vendor-list.component.html',
-    styleUrls     : ['vendor-list.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [{
-        provide     : NG_VALUE_ACCESSOR,
-        useExisting : forwardRef(() => NxVendorListComponent),
-        multi       : true
+    selector: 'nx-vendor-list',
+    templateUrl: 'vendor-list.component.html',
+    styleUrls: ['vendor-list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NxVendorListComponent),
+        multi: true
     }]
 })
 export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
@@ -73,51 +73,51 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
         this.filters = [
             {
-                label       : this.LANG.cameraFilters.highRes(),
-                select      : { id: 'resolution', value: '8000000' },
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.highRes(),
+                select: { id: 'resolution', value: '8000000' },
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.aptz(),
-                tagId       : 'isAptzSupported',
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.aptz(),
+                tagId: 'isAptzSupported',
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.ptz(),
-                tagId       : 'isPtzSupported',
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.ptz(),
+                tagId: 'isPtzSupported',
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.audio(),
-                tagId       : 'isAudioSupported',
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.audio(),
+                tagId: 'isAudioSupported',
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.H265(),
-                tagId       : 'isH265',
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.H265(),
+                tagId: 'isH265',
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.encoder(),
-                multiselect : { id: 'hardwareTypes', value: 'encoder' }
+                label: this.LANG.cameraFilters.encoder(),
+                multiselect: { id: 'hardwareTypes', value: 'encoder' }
             },
             {
-                label : this.LANG.cameraFilters.TwWayAudio(),
-                tagId : 'isTwAudioSupported'
+                label: this.LANG.cameraFilters.TwWayAudio(),
+                tagId: 'isTwAudioSupported'
             },
             {
-                label       : this.LANG.cameraFilters.multiSensor(),
-                multiselect : { id: 'hardwareTypes', value: 'multiSensorCamera' }
+                label: this.LANG.cameraFilters.multiSensor(),
+                multiselect: { id: 'hardwareTypes', value: 'multiSensorCamera' }
             },
             {
-                label       : this.LANG.cameraFilters.fisheye(),
-                tagId       : 'isFisheye',
-                multiselect : { id: 'hardwareTypes', value: 'camera' }
+                label: this.LANG.cameraFilters.fisheye(),
+                tagId: 'isFisheye',
+                multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label       : this.LANG.cameraFilters.IO(),
-                tagId       : 'isIoSupported',
-                multiselect : { id: 'hardwareTypes', value: 'other' }
+                label: this.LANG.cameraFilters.IO(),
+                tagId: 'isIoSupported',
+                multiselect: { id: 'hardwareTypes', value: 'other' }
             }
         ];
     }

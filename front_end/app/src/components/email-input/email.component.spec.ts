@@ -23,9 +23,9 @@ describe('NxEmailComponent email input Unit Test', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxEmailComponent, NxFocusMeDirective],
-            imports      : [CommonModule, FormsModule],
-            providers    : [
+            declarations: [NxEmailComponent, NxFocusMeDirective],
+            imports: [CommonModule, FormsModule],
+            providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock }
             ]

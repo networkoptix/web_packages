@@ -59,8 +59,8 @@ describe('For Developers Landing - Integrations Node', () => {
         const additionalPlugins = block.querySelector('.more-span > p > strong').innerText;
         const firstPluginBlock = block.querySelector('.integration-block');
         const firstPlugin = {
-            altText : firstPluginBlock.querySelector('img').alt,
-            iconSrc : firstPluginBlock.querySelector('img').src
+            altText: firstPluginBlock.querySelector('img').alt,
+            iconSrc: firstPluginBlock.querySelector('img').src
         };
         return { title, button, additionalPlugins, shownPlugins, firstPlugin };
     };
@@ -68,8 +68,8 @@ describe('For Developers Landing - Integrations Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxIntegrationsComponent, RouterLinkDirectiveStub],
-                imports      : [
+                declarations: [NxIntegrationsComponent, RouterLinkDirectiveStub],
+                imports: [
                     PipesModule,
                     CommonModule,
                     NgbModule,

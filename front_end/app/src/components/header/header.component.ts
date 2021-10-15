@@ -56,9 +56,9 @@ enum breakpoints {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-header',
-    templateUrl : 'header.component.html',
-    styleUrls   : [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
+    selector: 'nx-header',
+    templateUrl: 'header.component.html',
+    styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

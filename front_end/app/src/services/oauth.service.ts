@@ -46,22 +46,22 @@ export class OauthService {
     redirectOauth(state?: string, email?: string) {
         const { href } = this.window.location;
         const clientTypes = {
-            connect    : 'connect',
-            login      : 'loginWebadmin',
-            disconnect : 'passwordDisconnect',
-            detach     : 'passwordDetach',
-            reset      : 'passwordReset',
-            restart    : 'passwordRestart'
+            connect: 'connect',
+            login: 'loginWebadmin',
+            disconnect: 'passwordDisconnect',
+            detach: 'passwordDetach',
+            reset: 'passwordReset',
+            restart: 'passwordRestart'
         };
         const params = new URLSearchParams({
-            client_type   : state in clientTypes ? clientTypes[state] : clientTypes.login,
-            view_type     : 'web',
-            redirect_url  : href,
-            client_id     : this.CONFIG.isLocal ? 'webadmin' : 'cloud_portal',
-            response_type : 'code',
-            grant_type    : 'password',
-            scope         : this.CONFIG.isLocal ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}` : '',
-            state         : state
+            client_type: state in clientTypes ? clientTypes[state] : clientTypes.login,
+            view_type: 'web',
+            redirect_url: href,
+            client_id: this.CONFIG.isLocal ? 'webadmin' : 'cloud_portal',
+            response_type: 'code',
+            grant_type: 'password',
+            scope: this.CONFIG.isLocal ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}` : '',
+            state: state
         });
         if (email) {
             params.append('email', email);

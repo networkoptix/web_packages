@@ -15,9 +15,9 @@ export enum mainButtonState {
 }
 
 @Component({
-    selector    : 'nx-header-main-button',
-    templateUrl : 'main-button.component.html',
-    styleUrls   : [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
+    selector: 'nx-header-main-button',
+    templateUrl: 'main-button.component.html',
+    styleUrls: [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;

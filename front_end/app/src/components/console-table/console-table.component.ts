@@ -150,35 +150,35 @@ export class ListSerializer<Initial, Serialized> {
     #customClientsSerializer = (data) => {
         const createHash = (values: Record<any, any>) => md5(JSON.stringify(Object.entries(values).sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)));
         const createDownloadAsyncValues = ({ values: _, ...values }) => ({
-            modal     : ModalType.CLIENT_DOWNLOAD,
-            heading   : this.downloadManifest.label,
-            manifest  : this.downloadManifest,
-            settings  : this.contentSettings || {},
-            lookupKey : createHash(values),
+            modal: ModalType.CLIENT_DOWNLOAD,
+            heading: this.downloadManifest.label,
+            manifest: this.downloadManifest,
+            settings: this.contentSettings || {},
+            lookupKey: createHash(values),
             values
         });
         const createSettingsModalValues = ({ values: _, ...values }) => ({
-            modal    : ModalType.CLIENT_EDIT,
-            heading  : this.editManifest.label,
-            manifest : this.editManifest,
-            settings : this.contentSettings || {},
+            modal: ModalType.CLIENT_EDIT,
+            heading: this.editManifest.label,
+            manifest: this.editManifest,
+            settings: this.contentSettings || {},
             values
         });
 
         return data.map(
             item => ({
                 ...item,
-                downloadAsync : createDownloadAsyncValues(item),
-                settingsModal : createSettingsModalValues(item)
+                downloadAsync: createDownloadAsyncValues(item),
+                settingsModal: createSettingsModalValues(item)
             }));
     }
 }
 
 @UntilDestroy()
 @Component({
-    selector    : 'console-table',
-    templateUrl : 'console-table.component.html',
-    styleUrls   : ['console-table.component.scss']
+    selector: 'console-table',
+    templateUrl: 'console-table.component.html',
+    styleUrls: ['console-table.component.scss']
 })
 export class NxConsoleTableComponent {
     @Input() sectionParam: ConsoleSection;
@@ -289,10 +289,10 @@ export class NxConsoleTableComponent {
     #paramUpdaterFactory = (param: string) => <Value>(value: Value) => this.router.navigate(
         [],
         {
-            relativeTo          : this.route,
-            queryParams         : { [param]: value },
-            queryParamsHandling : 'merge',
-            replaceUrl          : true
+            relativeTo: this.route,
+            queryParams: { [param]: value },
+            queryParamsHandling: 'merge',
+            replaceUrl: true
         }
     );
 
@@ -342,16 +342,16 @@ export class NxConsoleTableComponent {
 
     async handleModal(modalContent?) {
         const createClientModalContent = {
-            modal       : ModalType.CLIENT_CREATE,
-            manifest    : this.manifest,
-            heading     : this.translate.instant('devConsole.create'),
-            settings    : this.contentManifest.manifest.settings,
-            contextList : this.contextList
+            modal: ModalType.CLIENT_CREATE,
+            manifest: this.manifest,
+            heading: this.translate.instant('devConsole.create'),
+            settings: this.contentManifest.manifest.settings,
+            contextList: this.contextList
         };
 
         const actions = (modal) => ({
-            [ModalType.CLIENT_CREATE] : () => this.dialogService.edit(createClientModalContent),
-            [ModalType.CLIENT_EDIT]   : () => this.dialogService.edit(modalContent)
+            [ModalType.CLIENT_CREATE]: () => this.dialogService.edit(createClientModalContent),
+            [ModalType.CLIENT_EDIT]: () => this.dialogService.edit(modalContent)
             // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
         })[modal || ModalType.CLIENT_CREATE]();
 
@@ -378,8 +378,8 @@ export class NxConsoleTableComponent {
 
         const notifyDownload = (url) => {
             const options = {
-                classname : this.CONFIG.toast.success,
-                showHTML  : true
+                classname: this.CONFIG.toast.success,
+                showHTML: true
             };
             this.toastService.show(buildDownloadToast(url), options);
         };

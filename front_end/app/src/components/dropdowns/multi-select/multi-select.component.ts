@@ -22,15 +22,15 @@ import { NxConfigService }           from '@services/nx-config';
  */
 
 @Component({
-    selector      : 'nx-multi-select',
-    templateUrl   : 'multi-select.component.html',
-    styleUrls     : ['multi-select.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-multi-select',
+    templateUrl: 'multi-select.component.html',
+    styleUrls: ['multi-select.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxMultiSelectDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxMultiSelectDropdown),
+            multi: true
         }
     ]
 })

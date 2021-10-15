@@ -25,9 +25,9 @@ export enum InfoDetailClass {
 }
 
 @Component({
-    selector    : 'nx-info-block',
-    templateUrl : 'info-block.component.html',
-    styleUrls   : ['info-block.component.scss']
+    selector: 'nx-info-block',
+    templateUrl: 'info-block.component.html',
+    styleUrls: ['info-block.component.scss']
 })
 export class NxInfoBlockComponent implements OnInit {
     @Input() sectionsOrColumns: InfoBlockColumns | InfoBlockSections;

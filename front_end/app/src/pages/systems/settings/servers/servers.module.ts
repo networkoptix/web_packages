@@ -38,7 +38,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
         NxServerLoggerComponent,
         NxSystemStorageComponent,
         NxSystemAdvancedStorageComponent,
-        NxStorageSizeComponent,
+        NxStorageSizeComponent
     ],
     bootstrap: [
     ],

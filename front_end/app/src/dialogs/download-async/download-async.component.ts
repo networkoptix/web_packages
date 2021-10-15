@@ -129,9 +129,9 @@ export class PackageHandler {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-modal-download-async',
-    templateUrl : 'download-async.component.html',
-    styleUrls   : ['download-async.component.scss']
+    selector: 'nx-modal-download-async',
+    templateUrl: 'download-async.component.html',
+    styleUrls: ['download-async.component.scss']
 })
 export class DownloadAsyncModalContent implements ModalContent {
     @Input() heading: string;

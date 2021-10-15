@@ -33,9 +33,9 @@ export enum T_FA_STEPS {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'two-fa-modal-content',
-    templateUrl : 'two-fa.component.html',
-    styleUrls   : ['two-fa.component.scss']
+    selector: 'two-fa-modal-content',
+    templateUrl: 'two-fa.component.html',
+    styleUrls: ['two-fa.component.scss']
 })
 export class TwoFAModalContent implements OnInit, AfterViewInit {
     @Input() type;
@@ -103,9 +103,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
                     const options = {
-                        classname : this.CONFIG.toast.success,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
+                        classname: this.CONFIG.toast.success,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.copiedToClipboard(), options);
                 }
@@ -162,9 +162,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     return this.accountService.get2FaKey();
                 });
         }, {
-            ignoreUnauthorized : true,
-            ignoreError        : true,
-            errorCodes         : {
+            ignoreUnauthorized: true,
+            ignoreError: true,
+            errorCodes: {
                 notAuthorized: () => {
                     this.wrongPassword = true;
                     this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
@@ -203,8 +203,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.qrProcess = this.processService.createProcess(() => {
             return Promise.resolve({ result: { success: true } });
         }, {
-            ignoreUnauthorized : true,
-            ignoreError        : true
+            ignoreUnauthorized: true,
+            ignoreError: true
         }, (response) => {
             if (response.result.success) {
                 this.setTemplate(T_FA_STEPS.WizardCode);
@@ -243,9 +243,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     });
             });
         }, {
-            ignoreUnauthorized : true,
-            ignoreError        : true,
-            errorCodes         : {
+            ignoreUnauthorized: true,
+            ignoreError: true,
+            errorCodes: {
                 accountBlocked: () => {
                     this.accountBlocked = true;
                     this.codeForm.controls.tfaCodeInput.setErrors({ nx_account_blocked: true });
@@ -258,9 +258,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 },
                 noBackupCodes: () => {
                     const options = {
-                        classname : this.CONFIG.toast.danger,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
+                        classname: this.CONFIG.toast.danger,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 }
@@ -308,9 +308,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     });
             });
         }, {
-            ignoreUnauthorized : true,
-            ignoreError        : true,
-            errorCodes         : {
+            ignoreUnauthorized: true,
+            ignoreError: true,
+            errorCodes: {
                 accountBlocked: () => {
                     this.accountBlocked = true;
                     this.codeForm.controls.tfaCodeInput.setErrors({ nx_account_blocked: true });
@@ -323,9 +323,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 },
                 noBackupCodes: () => {
                     const options = {
-                        classname : this.CONFIG.toast.danger,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
+                        classname: this.CONFIG.toast.danger,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 }
@@ -344,8 +344,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.changePasswordProcess = this.processService.createProcess(() => {
             return this.cloudApiService.changePassword(this.newPassword, this.oldPassword, this.tfaCode);
         }, {
-            ignoreUnauthorized : true,
-            ignoreError        : true
+            ignoreUnauthorized: true,
+            ignoreError: true
         }, (res) => {
             this.activeModal.close(res);
         }, (err) => {
@@ -401,9 +401,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 }, () => {
                     this.activeModal.close();
                     const options = {
-                        classname : this.CONFIG.toast.danger,
-                        autohide  : true,
-                        delay     : this.CONFIG.alertTimeout
+                        classname: this.CONFIG.toast.danger,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 });

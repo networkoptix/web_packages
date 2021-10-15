@@ -7,9 +7,9 @@ import { map, pairwise, startWith } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-paginator',
-    templateUrl : 'paginator.component.html',
-    styleUrls   : ['paginator.component.scss']
+    selector: 'nx-paginator',
+    templateUrl: 'paginator.component.html',
+    styleUrls: ['paginator.component.scss']
 })
 export class NxPaginatorComponent {
     @Input() numPages: number;

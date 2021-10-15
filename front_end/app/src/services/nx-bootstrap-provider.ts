@@ -85,10 +85,10 @@ export class NxBootstrapProvider {
     setLanguage(data) {
         // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };
         const customStrings = {
-            '%CLOUD_NAME%'   : this.CONFIG.cloudName,
-            '%VMS_NAME%'     : this.CONFIG.vmsName,
-            '%SUPPORT_LINK%' : this.CONFIG.company.link,
-            '%COMPANY_NAME%' : this.CONFIG.company.name
+            '%CLOUD_NAME%': this.CONFIG.cloudName,
+            '%VMS_NAME%': this.CONFIG.vmsName,
+            '%SUPPORT_LINK%': this.CONFIG.company.link,
+            '%COMPANY_NAME%': this.CONFIG.company.name
         };
         const processLanguage = (language) => {
             Object.entries(language).forEach(([key, phrase]) => {
@@ -115,17 +115,17 @@ export class NxBootstrapProvider {
             const { description, webadminConfig, supportedLanguages } = data;
             this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
-                    title       : name,
-                    description : '',
-                    nodes       : nodes
+                    title: name,
+                    description: '',
+                    nodes: nodes
                 };
                 return menu;
             }, {});
             this.CONFIG.cloudName = description.cloudName;
             this.CONFIG.vmsName = description.vmsName;
             this.CONFIG.company = {
-                copyrightYear : description.copyrightYear,
-                links         : {
+                copyrightYear: description.copyrightYear,
+                links: {
                     website: description.contact.supportAddress
                 },
                 name: description.companyName
@@ -159,9 +159,9 @@ export class NxBootstrapProvider {
             this.CONFIG.company = {
                 copyrightYear,
                 links: {
-                    privacy : privacyLink,
-                    support : supportLink,
-                    website : companyLink
+                    privacy: privacyLink,
+                    support: supportLink,
+                    website: companyLink
                 },
                 name: companyName
             };
@@ -170,14 +170,14 @@ export class NxBootstrapProvider {
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
-                integrationStore        : integrationStoreEnabled,
+                integrationStore: integrationStoreEnabled,
                 publicDownloads,
                 publicReleases,
                 cloudStorageEnabled,
                 cloudStorageSize,
                 customClientsEnabled,
-                alexaIntegrationEnabled : featureFlags.alexaIntegration && alexaIntegrationEnabled,
-                bookmarksEnabled        : featureFlags.bookmarks && bookmarksEnabled
+                alexaIntegrationEnabled: featureFlags.alexaIntegration && alexaIntegrationEnabled,
+                bookmarksEnabled: featureFlags.bookmarks && bookmarksEnabled
             };
 
             const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
@@ -192,8 +192,8 @@ export class NxBootstrapProvider {
 
             const { integrationFilterItems, integrationFilterLimitation } = data;
             this.CONFIG.integration.filter = {
-                items      : integrationFilterItems,
-                limitation : integrationFilterLimitation
+                items: integrationFilterItems,
+                limitation: integrationFilterLimitation
             };
 
             if (data.appTypesForPlatform) {

@@ -25,10 +25,10 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-system-metrics-component',
-    templateUrl   : 'metrics.component.html',
-    styleUrls     : ['metrics.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-system-metrics-component',
+    templateUrl: 'metrics.component.html',
+    styleUrls: ['metrics.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;

@@ -16,20 +16,20 @@ const {
 } = forUnitTest;
 
 @Component({
-    selector : 'console-menu',
-    template : '<p>Mock console menu</p>'
+    selector: 'console-menu',
+    template: '<p>Mock console menu</p>'
 })
 class MockConsoleMenu { }
 
 @Component({
-    selector : 'console-edit',
-    template : '<p>Mock console edit</p>'
+    selector: 'console-edit',
+    template: '<p>Mock console edit</p>'
 })
 class MockConsoleEdit { }
 
 @Component({
-    selector : 'console-table',
-    template : '<p>Mock console table</p>'
+    selector: 'console-table',
+    template: '<p>Mock console table</p>'
 })
 class MockConsoleTable { }
 
@@ -42,9 +42,9 @@ describe('NxDevConsoleComponent', () => {
     const expectedMode = 'edit';
     const expectedId = uuid();
     const expectedMenu = [{
-        url   : uuid(),
-        title : uuid(),
-        icon  : uuid()
+        url: uuid(),
+        title: uuid(),
+        icon: uuid()
     }];
     const contexts = expectedMenu.map(({
         url: name, title: label, icon
@@ -53,9 +53,9 @@ describe('NxDevConsoleComponent', () => {
     }));
     const routeMock = {
         params: new BehaviorSubject({
-            section : expectedSection,
-            mode    : expectedMode,
-            id      : expectedId
+            section: expectedSection,
+            mode: expectedMode,
+            id: expectedId
         })
     };
     const mockManifest = { manifest: { contexts } };
@@ -68,8 +68,8 @@ describe('NxDevConsoleComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxDevConsoleComponent, MockConsoleEdit, MockConsoleTable, MockConsoleMenu],
-                providers    : [
+                declarations: [NxDevConsoleComponent, MockConsoleEdit, MockConsoleTable, MockConsoleMenu],
+                providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: ActivatedRoute, useValue: routeMock },
                     { provide: Router, useValue: { url: '', navigateByUrl: () => { } } },

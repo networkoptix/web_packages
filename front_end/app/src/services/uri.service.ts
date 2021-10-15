@@ -102,9 +102,9 @@ export class NxUriService {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {
                     queryParams,
-                    relativeTo          : this.route,
-                    replaceUrl          : replace || this.CONFIG.isLocal,
-                    queryParamsHandling : 'merge'
+                    relativeTo: this.route,
+                    replaceUrl: replace || this.CONFIG.isLocal,
+                    queryParamsHandling: 'merge'
                 }).then(success => {
                     resolve(success);
                 }, error => {
@@ -118,8 +118,8 @@ export class NxUriService {
         this.router
             .navigate([navigateTo], {
                 queryParams,
-                relativeTo : this.route,
-                replaceUrl : false
+                relativeTo: this.route,
+                replaceUrl: false
             })
             .catch(error => { console.error(error); });
     }
@@ -178,9 +178,9 @@ export class NxUriService {
                 // TODO: This probably needs to be refactored, temporary fix for lazy load
                 // TODO: parts of this seem like it had been broken -> should investigate what else needs refactoring here
                 const routeLookup = {
-                    cameraId : 'cameras',
-                    serverId : 'servers',
-                    userId   : 'users'
+                    cameraId: 'cameras',
+                    serverId: 'servers',
+                    userId: 'users'
                 };
                 childRoute = childRoute.slice(-1) + routeLookup[param] + '/' + value;
             }

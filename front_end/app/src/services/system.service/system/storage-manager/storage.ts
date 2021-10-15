@@ -54,22 +54,22 @@ export class StorageDataStructure {
         // The status field was added to 4.3 systems but isn't really needed here
         delete inputs.status;
         const defaults: StorageDataStructure = {
-            isBackup           : false,
-            reservedSpace      : 0,
-            serverId           : '',
-            storageType        : null,
-            totalSpace         : 0,
-            url                : '',
-            usedForWriting     : false,
-            freeSpace          : null,
-            isExternal         : false,
-            isOnline           : false,
-            isWritable         : false,
-            storageStatus      : '',
-            vmsSpace           : 0,
-            storageId          : '',
-            canUpdate          : null,
-            urlWithCredentials : ''
+            isBackup: false,
+            reservedSpace: 0,
+            serverId: '',
+            storageType: null,
+            totalSpace: 0,
+            url: '',
+            usedForWriting: false,
+            freeSpace: null,
+            isExternal: false,
+            isOnline: false,
+            isWritable: false,
+            storageStatus: '',
+            vmsSpace: 0,
+            storageId: '',
+            canUpdate: null,
+            urlWithCredentials: ''
         };
         Object.assign(this, { ...defaults, ...inputs });
     }
@@ -173,17 +173,17 @@ export class Storage extends StorageDataStructure {
     #serialize = (): SaveStoragePayload => {
         return this.canUpdate ? {
             addParams: {
-                name  : 'space',
-                value : this.totalSpace.toString()
+                name: 'space',
+                value: this.totalSpace.toString()
             },
-            id             : `{${this.storageId}}`,
-            isBackup       : this.isBackup,
-            parentId       : this.serverId,
-            spaceLimit     : this.reservedSpace.toString(),
-            storageType    : this.storageType,
-            typeId         : this.#typeId,
-            url            : this.urlWithCredentials,
-            usedForWriting : this.usedForWriting
+            id: `{${this.storageId}}`,
+            isBackup: this.isBackup,
+            parentId: this.serverId,
+            spaceLimit: this.reservedSpace.toString(),
+            storageType: this.storageType,
+            typeId: this.#typeId,
+            url: this.urlWithCredentials,
+            usedForWriting: this.usedForWriting
         } : null;
     }
 

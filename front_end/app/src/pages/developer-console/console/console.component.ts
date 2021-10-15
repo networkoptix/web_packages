@@ -19,9 +19,9 @@ export enum ConsoleMode {
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-dev-console',
-    templateUrl : 'console.component.html',
-    styleUrls   : ['console.component.scss']
+    selector: 'nx-dev-console',
+    templateUrl: 'console.component.html',
+    styleUrls: ['console.component.scss']
 })
 export class NxDevConsoleComponent {
     CONFIG: IConfig;

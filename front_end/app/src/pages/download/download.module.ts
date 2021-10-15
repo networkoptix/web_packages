@@ -67,8 +67,8 @@ const appRoutes: Routes = [
     declarations: [
         DownloadComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         DownloadComponent
     ]
 })

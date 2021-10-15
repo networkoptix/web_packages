@@ -1,7 +1,7 @@
 export type EASING = 'linear' | 'ease-in-out' | 'ease-in-out-sine'
 
 export function linear (x: number): number {
-    return x
+    return x;
 }
 
 export function easeInOutSine (x: number): number {

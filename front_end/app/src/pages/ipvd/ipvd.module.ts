@@ -45,8 +45,8 @@ const appRoutes: Routes = [
         CsvButtonComponent,
         BoolIconComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxIpvdComponent
     ]
 })

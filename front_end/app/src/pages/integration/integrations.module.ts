@@ -12,8 +12,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
-        path      : '',
-        component : NxIntegrationsComponent
+        path: '',
+        component: NxIntegrationsComponent
     }
 
 ];
@@ -29,12 +29,12 @@ const appRoutes: Routes = [
         IntegrationsListModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxIntegrationsComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxIntegrationsComponent
     ]
 })

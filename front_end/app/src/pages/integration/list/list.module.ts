@@ -19,12 +19,12 @@ import { NxIntegrationsListComponent } from './list.component';
         TranslateModule,
         ComponentsModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxIntegrationsListComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxIntegrationsListComponent
     ]
 })

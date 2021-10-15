@@ -17,7 +17,6 @@ import { ms, percentage } from '../../../utils/type-aliases';
 import VideoManagementSystemService from '../../vms/services/vms.service';
 
 import TimelineService from '../../timeline/services/timeline.service';
-import { IRecord } from '../../vms/datatypes/ICamera';
 import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
 
 @Injectable({
@@ -29,12 +28,14 @@ export class PlaybackService implements OnDestroy {
 
     protected _log (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
     protected _warn (...args: any[]) {
         if (isDevMode() && !this._logDisable) {
+            // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
@@ -155,25 +156,25 @@ export class PlaybackService implements OnDestroy {
 
     public playArchive (t: ms, paused = false) {
         if (!this.canPlayArchive(t)) {
-            this.playLive()
-            return
+            this.playLive();
+            return;
         }
         if (this._state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.stop();
-            setTimeout(() => this.playArchive(t, paused), 0)
-            return
+            setTimeout(() => this.playArchive(t, paused), 0);
+            return;
         }
         if (!paused) {
-            const LAST_MINUTE_SIZE = 9e4 // 1.5 minutes
+            const LAST_MINUTE_SIZE = 9e4; // 1.5 minutes
             const isThereRecord = this.vms.selectedCamera.isThereRecord(t);
             const nextRecord = this.vms.selectedCamera.getNextRecord(t);
             if (t > Date.now() - LAST_MINUTE_SIZE || (!isThereRecord && !nextRecord)) {
-                return this.playLive()
+                return this.playLive();
             } else if (!isThereRecord) {
                 t = this.vms.selectedCamera.getNextRecord(t)?.start;
                 if (!t) {
-                    this.playLive()
-                    return
+                    this.playLive();
+                    return;
                 }
             }
         }
@@ -217,10 +218,10 @@ export class PlaybackService implements OnDestroy {
                 break;
             case PLAYBACK_MODE.LIVE:
                 if (this.vms.selectedCamera.isRecording || this.vms.selectedCamera.hasArchive) {
-                    this._log('camera is recording, transition to archive playback')
+                    this._log('camera is recording, transition to archive playback');
                     this.playArchive(Date.now(), true);
                 } else {
-                    this._log('camera is not recording, playback stop')
+                    this._log('camera is not recording, playback stop');
                     this.stop();
                 }
                 break;
@@ -310,7 +311,6 @@ export class PlaybackService implements OnDestroy {
                 this._jumpOverTheGapIfNeeded();
 
                 if (this._state.started && !this._state.paused) {
-
                     // this._log('started', diff, this._state.currentTime)
                     this._state.currentTime += diff;
 
@@ -452,7 +452,7 @@ export class PlaybackService implements OnDestroy {
                     // TODO: request scroll jump animation
                     // this.timeline.jumpScrollTo(this._state.currentTime)
                     if (wasVisible) {
-                        this._log('jumbScroll', diff, diff + this.timeline.visibleRange.start)
+                        this._log('jumbScroll', diff, diff + this.timeline.visibleRange.start);
                         this.timeline.jumpScrollTo(diff + this.timeline.visibleRange.start, false);
                     }
 
@@ -513,18 +513,18 @@ export class PlaybackService implements OnDestroy {
     protected _prevState: PlaybackState
 
     public save () {
-        this._prevState = { ...this.state }
-        this._log('PLAYBACK STATE SAVED', { ...this.state })
+        this._prevState = { ...this.state };
+        this._log('PLAYBACK STATE SAVED', { ...this.state });
     }
 
     public restore (hasArchive = false) {
-        this._log('PLAYBACK SAVE RESTORE', hasArchive, { ...this._prevState })
+        this._log('PLAYBACK SAVE RESTORE', hasArchive, { ...this._prevState });
         if (hasArchive && this._prevState.mode === PLAYBACK_MODE.ARCHIVE) {
-            this._log('trying to start archive from the same place')
-            this.playArchive(this._prevState.currentTime, this._prevState.paused)
+            this._log('trying to start archive from the same place');
+            this.playArchive(this._prevState.currentTime, this._prevState.paused);
         } else {
-            this._log('trying to play live')
-            this.playLive()
+            this._log('trying to play live');
+            this.playLive();
         }
     }
 }

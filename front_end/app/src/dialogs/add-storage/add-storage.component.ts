@@ -20,9 +20,9 @@ import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-modal-add-storage',
-    templateUrl : 'add-storage.component.html',
-    styleUrls   : ['add-storage.component.scss']
+    selector: 'nx-modal-add-storage',
+    templateUrl: 'add-storage.component.html',
+    styleUrls: ['add-storage.component.scss']
 })
 export class AddStorageModalContent {
     @Input() serverId: string;
@@ -80,9 +80,9 @@ export class AddStorageModalContent {
 
     ngOnInit() {
         this.storageForm = new FormGroup({
-            url      : new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
-            login    : new FormControl(),
-            password : new FormControl()
+            url: new FormControl(null, [Validators.required, this.validateUrl.bind(this)]),
+            login: new FormControl(),
+            password: new FormControl()
         });
 
         this.storageFormValueSubscription = this.storageForm.valueChanges.subscribe(values => {
@@ -93,9 +93,9 @@ export class AddStorageModalContent {
         });
 
         const options = {
-            classname : this.CONFIG.toast.danger,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.danger,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         this.addStorage = this.processService
             .createProcess(async() => {
@@ -171,13 +171,13 @@ export class AddStorageModalContent {
                 const upperBound = 107374182400; // 100GB
                 const lowerBound = upperBound / 2; // 50GB
                 const res = await this.storageManager.saveStorage({
-                    parentId       : this.serverId,
-                    url            : smbShare,
-                    storageType    : 'smb',
-                    spaceLimit     : Math.min(Math.max(Math.round(size / 10), lowerBound), upperBound, size),
-                    usedForWriting : true,
-                    isWritable     : true,
-                    isBackup       : false
+                    parentId: this.serverId,
+                    url: smbShare,
+                    storageType: 'smb',
+                    spaceLimit: Math.min(Math.max(Math.round(size / 10), lowerBound), upperBound, size),
+                    usedForWriting: true,
+                    isWritable: true,
+                    isBackup: false
                 }).toPromise();
                 return res ? new Promise(resolve => {
                     this.cancelPolls();

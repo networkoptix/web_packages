@@ -4,8 +4,8 @@ import { IEnvironment } from './environment-config';
 // The list of file replacements can be found in `angular.json`.
 
 export const environment: IEnvironment = {
-    isLocal    : false,
-    production : false
+    isLocal: false,
+    production: false
 };
 
 /*

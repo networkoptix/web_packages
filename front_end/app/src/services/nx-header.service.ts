@@ -117,10 +117,10 @@ export class NxHeaderService {
                 childNode.queryParamsHandling = 'merge';
                 baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
                 const dynamicNode = {
-                    isSystem    : false,
-                    breadcrumbs : [...baseNode.breadcrumbs],
-                    childNode   : { ...baseNode },
-                    parentNode  : { ...childNode }
+                    isSystem: false,
+                    breadcrumbs: [...baseNode.breadcrumbs],
+                    childNode: { ...baseNode },
+                    parentNode: { ...childNode }
                 };
 
                 dynamicNode.parentNode.nodes = [{ ...baseNode, url: matchedRoute }];

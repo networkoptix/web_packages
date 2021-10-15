@@ -11,9 +11,9 @@ import { NxConfigService, IConfig }     from '@services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'push-notifications-component',
-    templateUrl : 'push-notifications.component.html',
-    styleUrls   : ['push-notifications.component.scss']
+    selector: 'push-notifications-component',
+    templateUrl: 'push-notifications.component.html',
+    styleUrls: ['push-notifications.component.scss']
 })
 
 export class PushComponent implements OnInit, OnDestroy {
@@ -39,19 +39,19 @@ export class PushComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.notification = {
-            title   : '',
-            body    : '',
-            payload : '',
-            options : ''
+            title: '',
+            body: '',
+            payload: '',
+            options: ''
         };
         this.newDevice = {
-            deviceToken      : '',
-            deviceTokenError : '',
-            name             : '',
-            model            : '',
-            provider         : '',
-            userId           : '',
-            success          : false
+            deviceToken: '',
+            deviceTokenError: '',
+            name: '',
+            model: '',
+            provider: '',
+            userId: '',
+            success: false
         };
         this.registered = undefined;
         this.devices = [];
@@ -185,8 +185,8 @@ export class PushComponent implements OnInit, OnDestroy {
         let deviceToken = '';
         const systems = [];
         const deviceInfo = {
-            name  : '',
-            model : ''
+            name: '',
+            model: ''
         };
         const isEnabled = true;
         let provider;
@@ -262,11 +262,11 @@ export class PushComponent implements OnInit, OnDestroy {
             })
         };
         this.http.post('/api/notifications/push_notification', {
-            systemId     : this.notification.system,
-            targets      : [this.account.email],
-            notification : {
-                title : this.notification.title,
-                body  : this.notification.body,
+            systemId: this.notification.system,
+            targets: [this.account.email],
+            notification: {
+                title: this.notification.title,
+                body: this.notification.body,
                 payload,
                 options
             }

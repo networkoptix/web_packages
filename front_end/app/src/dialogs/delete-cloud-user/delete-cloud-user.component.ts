@@ -7,8 +7,8 @@ import { NxProcessService, Process }   from '@services/process.service';
 import { LanguageI18NStaticTypes }     from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-delete-cloud-user-content',
-    templateUrl : 'delete-cloud-user.component.html'
+    selector: 'nx-modal-delete-cloud-user-content',
+    templateUrl: 'delete-cloud-user.component.html'
 })
 export class DeleteCloudUserModalContent {
     @Input() cloudApi;
@@ -37,8 +37,8 @@ export class DeleteCloudUserModalContent {
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
-                        forbidden       : this.LANG.errorCodes.cantDeleteAccountOwningSystems(),
-                        wrongParameters : () => {
+                        forbidden: this.LANG.errorCodes.cantDeleteAccountOwningSystems(),
+                        wrongParameters: () => {
                             this.deleteForm.form.controls.password.setErrors({ passwordMissing: true });
                             this.passwordError = this.LANG.passwordRequirements.missingMessage();
                         },

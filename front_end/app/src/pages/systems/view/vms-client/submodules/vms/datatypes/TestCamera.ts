@@ -91,8 +91,8 @@ export class TestCamera implements ICamera {
 
     public get availableTransportsAndResolutions () {
         return {
-            hls  : ['lo', 'hi', ''],
-            webm : ['AxB']
+            hls: ['lo', 'hi', ''],
+            webm: ['AxB']
         };
     }
 
@@ -105,13 +105,12 @@ export class TestCamera implements ICamera {
     }
 
     public isThereRecord (t: ms) {
-        return _isThereRecord(this.archive, t)
+        return _isThereRecord(this.archive, t);
     }
 
     public getNextRecord (t: ms): ISimpleTimeRange {
-        return _getNextRecord(this.archive, t)
+        return _getNextRecord(this.archive, t);
     }
-
 }
 
 export default TestCamera;

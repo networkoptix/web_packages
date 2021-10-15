@@ -23,7 +23,7 @@ const dateformat = df.default || df;
 export class TimelineTopRulerCanvasRendererService {
     constructor(
         protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService,
+        protected vms: VideoManagementSystemService
     ) {
     }
 
@@ -86,15 +86,15 @@ export class TimelineTopRulerCanvasRendererService {
     }
 
     protected _getSerifTimes (interval: IrregularLengthInterval): Array<ms> {
-        return interval ?
-            this.timeline.visibleRange.iterate(interval, this.vms.timeZoneOffset)
+        return interval
+            ? this.timeline.visibleRange.iterate(interval, this.vms.timeZoneOffset)
             : [];
     }
 
     protected _withContext (ctx, actualDrawing: () => void) {
-        ctx.save()
+        ctx.save();
         actualDrawing();
-        ctx.restore()
+        ctx.restore();
     }
 
     protected _drawSerif (
@@ -110,7 +110,7 @@ export class TimelineTopRulerCanvasRendererService {
             ? this.timeline.timeToCanvasOffsetX(nextTime)
             : x0 + this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval));
 
-            let x1 = xNext;
+        let x1 = xNext;
 
         if (x0 < 0) {
             x0 = 0;
@@ -155,7 +155,7 @@ export class TimelineTopRulerCanvasRendererService {
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
 
         // ctx.fillText(topString, x, y, x1 - x0);
-        const MIN_WIDTH = 100
+        const MIN_WIDTH = 100;
         if (x1 - x0 > MIN_WIDTH * this.timeline.canvasGeometry.dpr) {
             ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
             ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;

@@ -23,10 +23,10 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-system-alerts-component',
-    templateUrl   : 'alerts.component.html',
-    styleUrls     : ['alerts.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-system-alerts-component',
+    templateUrl: 'alerts.component.html',
+    styleUrls: ['alerts.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
@@ -84,8 +84,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
-            selects : [],
-            query   : ''
+            selects: [],
+            query: ''
         };
     }
 
@@ -267,11 +267,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.filterModel.selects.push(
             {
-                id       : 'alertType',
-                label    : '',
-                css      : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                items    : alertItems,
-                selected : selected || alertItems[0]
+                id: 'alertType',
+                label: '',
+                css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+                items: alertItems,
+                selected: selected || alertItems[0]
             });
     }
 
@@ -295,11 +295,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.filterModel.selects.push(
             {
-                id       : 'deviceType',
-                label    : '',
-                css      : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                items    : typesItems,
-                selected : selected || typesItems[0]
+                id: 'deviceType',
+                label: '',
+                css: 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+                items: typesItems,
+                selected: selected || typesItems[0]
             });
     }
 
@@ -321,11 +321,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.filterModel.selects.push(
             {
-                id       : 'server',
-                label    : '',
-                css      : 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
-                items    : serverItems,
-                selected : selected || serverItems[0]
+                id: 'server',
+                label: '',
+                css: 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
+                items: serverItems,
+                selected: selected || serverItems[0]
             });
     }
 
@@ -357,8 +357,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
-                    error   : 0,
-                    warning : 0
+                    error: 0,
+                    warning: 0
                 },
                 name: item.name
             };
@@ -386,32 +386,32 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     initializeHeader() {
         this.tableHeaders = {
-            id     : 'alerts',
-            values : [{
-                id     : '_',
-                name   : '',
-                values : [
+            id: 'alerts',
+            values: [{
+                id: '_',
+                name: '',
+                values: [
                     {
-                        display : 'table',
-                        name    : '',
-                        id      : 'alarm'
+                        display: 'table',
+                        name: '',
+                        id: 'alarm'
                     },
                     {
-                        display     : 'table',
-                        name        : 'Type',
-                        id          : 'type',
-                        formatClass : 'text'
+                        display: 'table',
+                        name: 'Type',
+                        id: 'type',
+                        formatClass: 'text'
                     },
                     {
-                        display     : 'table',
-                        name        : 'Server',
-                        id          : 'server',
-                        formatClass : 'long-text'
+                        display: 'table',
+                        name: 'Server',
+                        id: 'server',
+                        formatClass: 'long-text'
                     },
                     {
-                        display : 'table',
-                        name    : 'Alert',
-                        id      : 'message'
+                        display: 'table',
+                        name: 'Alert',
+                        id: 'message'
                     }
                 ]
             }]

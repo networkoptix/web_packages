@@ -24,8 +24,8 @@ describe('NumericComponent', () => {
                 CommonModule,
                 FormsModule
             ],
-            declarations : [NxNumericComponent],
-            providers    : []
+            declarations: [NxNumericComponent],
+            providers: []
         })
             .compileComponents()
             .then(() => {

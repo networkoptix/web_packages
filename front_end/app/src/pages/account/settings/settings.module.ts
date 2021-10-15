@@ -23,12 +23,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
         PipesModule,
         AngularSvgIconModule.forRoot()
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxAccountSettingsComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxAccountSettingsComponent
     ]
 })

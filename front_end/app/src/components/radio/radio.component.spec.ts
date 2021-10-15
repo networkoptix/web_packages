@@ -28,10 +28,10 @@ describe('NxRadioComponent', () => {
 
     it('should have defined states', () => {
         expect(component['_rbxStates']).toEqual({
-            rbFalse    : 'unchecked',
-            rbTrue     : 'checked',
-            rbDisabled : 'disabled',
-            rbOrElse   : 'tristate'
+            rbFalse: 'unchecked',
+            rbTrue: 'checked',
+            rbDisabled: 'disabled',
+            rbOrElse: 'tristate'
         });
     });
 

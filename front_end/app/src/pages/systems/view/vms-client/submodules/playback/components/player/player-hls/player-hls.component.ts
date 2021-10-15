@@ -22,9 +22,9 @@ import { LanguageI18NStaticTypes }                                       from '.
 import { NxLanguageProviderService }                                     from '../../../../../../../../../services/nx-language-provider';
 
 @Component({
-    selector    : 'player-hls',
-    templateUrl : './player-hls.component.html',
-    styleUrls   : ['./player-hls.component.scss']
+    selector: 'player-hls',
+    templateUrl: './player-hls.component.html',
+    styleUrls: ['./player-hls.component.scss']
 })
 @LoggerDecorator('HLS PLAYER ::', true)
 export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
@@ -261,7 +261,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     public onVideoEnded (e: MediaStreamEvent) {
         this._log('video ended');
-        this.playback.playLive()
+        this.playback.playLive();
     }
 }
 

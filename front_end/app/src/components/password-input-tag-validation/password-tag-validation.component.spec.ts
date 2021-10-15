@@ -20,19 +20,19 @@ describe('NxPasswordTagValidationComponent', () => {
     const translateMock = {
         translations: {
             passwordRequirements: {
-                common           : () => 'too common',
-                commonMessage    : () => 'This password is in top most popular passwords in the world',
-                fair             : () => 'fair',
-                fairMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger',
-                good             : () => 'good',
-                minLength        : () => 'too short',
-                minLengthMessage : () => 'Password must contain at least 8 characters',
-                missingMessage   : () => 'Password is required',
-                required         : () => 'incorrect',
-                requiredMessage  : () => 'Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces',
-                strongMessage    : () => 'Strong password!',
-                weak             : () => 'weak',
-                weakMessage      : () => 'Use numbers, upper and lower case letters and special characters to make your password stronger'
+                common: () => 'too common',
+                commonMessage: () => 'This password is in top most popular passwords in the world',
+                fair: () => 'fair',
+                fairMessage: () => 'Use numbers, upper and lower case letters and special characters to make your password stronger',
+                good: () => 'good',
+                minLength: () => 'too short',
+                minLengthMessage: () => 'Password must contain at least 8 characters',
+                missingMessage: () => 'Password is required',
+                required: () => 'incorrect',
+                requiredMessage: () => 'Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces',
+                strongMessage: () => 'Strong password!',
+                weak: () => 'weak',
+                weakMessage: () => 'Use numbers, upper and lower case letters and special characters to make your password stronger'
             }
         }
     };
@@ -41,13 +41,8 @@ describe('NxPasswordTagValidationComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                imports: [
-                    NgbModule
-                ],
-                declarations: [
-                    NxPasswordTagValidationComponent,
-                    NxTagComponent
-                ],
+                imports: [NgbModule],
+                declarations: [NxPasswordTagValidationComponent, NxTagComponent],
                 providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: NxConfigService, useValue: configMock }
@@ -61,17 +56,17 @@ describe('NxPasswordTagValidationComponent', () => {
 
                 // component.value = 'test1234';
                 component.forElement = {
-                    valid   : true,
-                    touched : true,
-                    dirty   : true,
-                    control : {
+                    valid: true,
+                    touched: true,
+                    dirty: true,
+                    control: {
                         fairPassword: false
                     },
                     errors: {
-                        minlength : false,
-                        common    : false,
-                        weak      : false,
-                        pattern   : false
+                        minlength: false,
+                        common: false,
+                        weak: false,
+                        pattern: false
                     }
                 };
 

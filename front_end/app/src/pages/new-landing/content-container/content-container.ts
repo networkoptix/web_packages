@@ -18,77 +18,77 @@ interface dataInput {
 }
 
 @Component({
-    selector    : 'nx-content-container',
-    templateUrl : './content-container.component.html',
-    styleUrls   : ['./content-container.component.scss']
+    selector: 'nx-content-container',
+    templateUrl: './content-container.component.html',
+    styleUrls: ['./content-container.component.scss']
 })
 export class NxContentContainerComponent implements AfterViewInit {
     @ViewChild('content') contentStartRef: ElementRef
     @Input() screenWidth: number;
     // Dummy Data
     @Input() data: dataInput = {
-        header1          : 'Expand Your Setup',
-        header2          : 'Additional Features',
-        firstSectionData : [
+        header1: 'Expand Your Setup',
+        header2: 'Additional Features',
+        firstSectionData: [
             {
-                title        : 'Connect to your systems from anywhere',
-                content      : 'Login to your Nx Witness System from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
-                url          : '',
-                externalLink : true,
-                svg          : 'camera'
+                title: 'Connect to your systems from anywhere',
+                content: 'Login to your Nx Witness System from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
+                url: '',
+                externalLink: true,
+                svg: 'camera'
             },
             {
-                title   : 'Simple user management',
-                content : 'Invite new users to the systems by email.\nUsers will get an invite link and be able to create an account.\n\nEach user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
-                url     : '/docs/developers/knowledgebase',
-                svg     : 'knowledgebase'
+                title: 'Simple user management',
+                content: 'Invite new users to the systems by email.\nUsers will get an invite link and be able to create an account.\n\nEach user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
+                url: '/docs/developers/knowledgebase',
+                svg: 'knowledgebase'
             },
             {
-                title   : 'Access the system in the browser',
-                content : 'Access the main system capabilities in the browser.\nView live and recorded videos, set up storage drives, activate licenses, enable recordings,\n\naccess system settings and view health report using the browser.',
-                url     : '',
-                svg     : 'desktop'
+                title: 'Access the system in the browser',
+                content: 'Access the main system capabilities in the browser.\nView live and recorded videos, set up storage drives, activate licenses, enable recordings,\n\naccess system settings and view health report using the browser.',
+                url: '',
+                svg: 'desktop'
             }
         ],
         secondSectionData: [
             {
-                title        : 'Viewing live and archive video',
-                content      : 's with the same credentials.\n \n Users can see the list of all accessible systems on one screen.',
-                url          : '',
-                externalLink : true,
-                svg          : 'camera'
+                title: 'Viewing live and archive video',
+                content: 's with the same credentials.\n \n Users can see the list of all accessible systems on one screen.',
+                url: '',
+                externalLink: true,
+                svg: 'camera'
             },
             {
-                title   : 'Simple user management',
-                content : 'Invite new users to the systems by email. \n Users will get an invite link and be able to create an account.\n \n Each user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
-                url     : 'ss',
-                svg     : 'camera'
+                title: 'Simple user management',
+                content: 'Invite new users to the systems by email. \n Users will get an invite link and be able to create an account.\n \n Each user can have access to an unliminted number of \nsystems with the same credentials. Users can see the list of all accessible systems on one screen.',
+                url: 'ss',
+                svg: 'camera'
             }
         ],
         cardData: [
             {
-                title   : 'Cameras & recording settings',
-                content : 'Basic recording settings without schedule.',
-                url     : 'ss',
-                svg     : 'camera'
+                title: 'Cameras & recording settings',
+                content: 'Basic recording settings without schedule.',
+                url: 'ss',
+                svg: 'camera'
             },
             {
-                title   : 'Simple user management',
-                content : 'All core system settings, including security.',
-                url     : 'ss',
-                svg     : 'camera'
+                title: 'Simple user management',
+                content: 'All core system settings, including security.',
+                url: 'ss',
+                svg: 'camera'
             },
             {
-                title   : 'API documentation',
-                content : 'Different software version and a test tool.',
-                url     : '',
-                svg     : 'camera'
+                title: 'API documentation',
+                content: 'Different software version and a test tool.',
+                url: '',
+                svg: 'camera'
             },
             {
-                title   : 'Universal remote connectivity',
-                content : 'You can open and login any system in the desktop client with one click.',
-                url     : '[oizz',
-                svg     : 'camera'
+                title: 'Universal remote connectivity',
+                content: 'You can open and login any system in the desktop client with one click.',
+                url: '[oizz',
+                svg: 'camera'
             }
             // {
             //     title   : 'Cameras & recording settings',

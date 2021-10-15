@@ -11,9 +11,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'setup-component',
-    templateUrl : 'setup.component.html',
-    styleUrls   : ['setup.component.scss']
+    selector: 'setup-component',
+    templateUrl: 'setup.component.html',
+    styleUrls: ['setup.component.scss']
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
@@ -45,8 +45,8 @@ export class NxSetupComponent implements OnInit, OnDestroy {
             this.plugin = plugin;
             this.pageService.pageDescription = NxLanguageProviderService.translate(
                 this.LANG.pageDescriptions.integrationSetup, {
-                    PLUGIN_NAME              : this.plugin.information?.name,
-                    PLUGIN_SHORT_DESCRIPTION : this.plugin.information?.shortDescription
+                    PLUGIN_NAME: this.plugin.information?.name,
+                    PLUGIN_SHORT_DESCRIPTION: this.plugin.information?.shortDescription
                 });
         });
     }

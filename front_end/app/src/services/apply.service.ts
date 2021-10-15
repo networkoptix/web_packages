@@ -428,7 +428,7 @@ export class NxApplyService {
                 if (result) {
                     updateOriginalForm();
                 }
-            }, err => {
+            }, _ => {
             });
 
             (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
@@ -505,8 +505,8 @@ export class NxApplyService {
         }
 
         const options: any = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
+            windowClass: 'modal-holder',
+            backdrop: 'static'
         };
 
         return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });

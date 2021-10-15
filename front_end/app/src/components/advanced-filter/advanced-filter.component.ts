@@ -25,9 +25,9 @@ export interface FilterUpdatePayload {
 }
 
 @Component({
-    selector    : 'nx-advanced-filter',
-    templateUrl : 'advanced-filter.component.html',
-    styleUrls   : ['advanced-filter.component.scss']
+    selector: 'nx-advanced-filter',
+    templateUrl: 'advanced-filter.component.html',
+    styleUrls: ['advanced-filter.component.scss']
 })
 export class NxAdvancedFilterComponent {
     @Output() onClose = new EventEmitter();
@@ -41,15 +41,15 @@ export class NxAdvancedFilterComponent {
     show = false;
 
     dateFormats = {
-        [GroupingOptions.DATE_DAY]   : 'shortDate',
-        [GroupingOptions.DATE_AUTO]  : 'shortDate',
-        [GroupingOptions.DATE_MONTH] : 'MMMM, y',
-        default                      : 'short'
+        [GroupingOptions.DATE_DAY]: 'shortDate',
+        [GroupingOptions.DATE_AUTO]: 'shortDate',
+        [GroupingOptions.DATE_MONTH]: 'MMMM, y',
+        default: 'short'
     }
 
     currentState: FilterState = {
-        sort       : FilterSort.NONE,
-        selections : []
+        sort: FilterSort.NONE,
+        selections: []
     }
 
     FILTER_SORT = FilterSort;
@@ -68,8 +68,8 @@ export class NxAdvancedFilterComponent {
     reset() {
         const value = !!this.filter.multiSelect;
         this.updateState({
-            sort       : FilterSort.NONE,
-            selections : this.currentState.selections.map(({ name }) => ({ name, value }))
+            sort: FilterSort.NONE,
+            selections: this.currentState.selections.map(({ name }) => ({ name, value }))
         });
     }
 

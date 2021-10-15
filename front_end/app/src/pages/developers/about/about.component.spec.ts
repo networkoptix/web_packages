@@ -34,8 +34,8 @@ describe('For Developers Landing', () => {
 
     const account = { is_superuser: false };
     const accountMock = {
-        get            : () => Promise.resolve(account),
-        accountSubject : new BehaviorSubject(account)
+        get: () => Promise.resolve(account),
+        accountSubject: new BehaviorSubject(account)
     };
     const ribbonMock: any = {
         hide() {
@@ -58,8 +58,8 @@ describe('For Developers Landing', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxAboutComponent],
-                imports      : [
+                declarations: [NxAboutComponent],
+                imports: [
                     CommonModule,
                     FormsModule,
                     TranslateTestingModule

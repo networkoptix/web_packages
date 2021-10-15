@@ -11,9 +11,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxUtilsService }            from '@services/utils.service';
 
 @Component({
-    selector    : 'nx-system-licenses',
-    templateUrl : 'licenses.component.html',
-    styleUrls   : ['licenses.component.scss']
+    selector: 'nx-system-licenses',
+    templateUrl: 'licenses.component.html',
+    styleUrls: ['licenses.component.scss']
 })
 export class NxSystemLicensesComponent implements OnInit {
     CONFIG: IConfig;
@@ -89,16 +89,16 @@ export class NxSystemLicensesComponent implements OnInit {
 
     private createLicenseInfo(item) {
         item.info = {
-            type          : '',
-            count         : '',
-            inuse         : '',
-            required      : 0,
-            serverName    : '',
-            hwid          : '',
-            expired       : false,
-            status        : '',
-            expiration    : '',
-            deactivations : '-'
+            type: '',
+            count: '',
+            inuse: '',
+            required: 0,
+            serverName: '',
+            hwid: '',
+            expired: false,
+            status: '',
+            expiration: '',
+            deactivations: '-'
         };
 
         const dynamicLicense = getDynamicLicense(this);
@@ -154,9 +154,9 @@ export class NxSystemLicensesComponent implements OnInit {
         } else {
             this.licenseSummaries.push({
                 type,
-                count      : parseInt(item.info.count) || 0,
-                countAvail : avail,
-                required   : item.info.required
+                count: parseInt(item.info.count) || 0,
+                countAvail: avail,
+                required: item.info.required
             });
         }
     }

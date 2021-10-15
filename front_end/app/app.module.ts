@@ -70,8 +70,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         LayoutModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
-            cookieName : 'csrftoken',
-            headerName : 'X-CSRFToken'
+            cookieName: 'csrftoken',
+            headerName: 'X-CSRFToken'
         }),
         OrderModule,
         InputTrimModule,
@@ -85,8 +85,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         AngularFireMessagingModule,
         TranslateModule.forRoot({
             compiler: {
-                provide  : TranslateCompiler,
-                useClass : TranslateMessageFormatCompiler
+                provide: TranslateCompiler,
+                useClass: TranslateMessageFormatCompiler
             }
         }),
         DeviceDetectorModule.forRoot(),
@@ -106,32 +106,32 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CookieService,
         NxUriCacheService,
         {
-            provide  : HTTP_INTERCEPTORS,
-            useClass : NxSwCacheInterceptor,
-            multi    : true
+            provide: HTTP_INTERCEPTORS,
+            useClass: NxSwCacheInterceptor,
+            multi: true
         },
         {
-            provide  : HTTP_INTERCEPTORS,
-            useClass : NxUriCachingInterceptor,
-            multi    : true
+            provide: HTTP_INTERCEPTORS,
+            useClass: NxUriCachingInterceptor,
+            multi: true
         },
         {
-            provide  : HTTP_INTERCEPTORS,
-            useClass : CloudUnavailableInterceptor,
-            multi    : true
+            provide: HTTP_INTERCEPTORS,
+            useClass: CloudUnavailableInterceptor,
+            multi: true
         },
         {
-            provide  : HTTP_INTERCEPTORS,
-            useClass : LocalSystemStatusInterceptor,
-            multi    : true
+            provide: HTTP_INTERCEPTORS,
+            useClass: LocalSystemStatusInterceptor,
+            multi: true
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
         {
-            provide    : FIREBASE_OPTIONS,
-            deps       : [NxConfigService],
-            useFactory : initializeApp
+            provide: FIREBASE_OPTIONS,
+            deps: [NxConfigService],
+            useFactory: initializeApp
         },
         AuthGuard,
         DevelopersGuard,

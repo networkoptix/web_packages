@@ -27,10 +27,10 @@ export class TypeResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     {
-        path        : 'account',
-        component   : NxAccountComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path: 'account',
+        component: NxAccountComponent,
+        canActivate: [AuthGuard],
+        children: [
             { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
             { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] },
             { path: 'security', component: NxAccountSecurityComponent, canDeactivate: [ApplyGuard] }
@@ -59,8 +59,8 @@ const appRoutes: Routes = [
     declarations: [
         NxAccountComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxAccountComponent
     ]
 })

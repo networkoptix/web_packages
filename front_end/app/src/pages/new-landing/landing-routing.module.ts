@@ -5,17 +5,17 @@ import { NxConfigService } from '@services/nx-config';
 import { FeatureFlagStrings }  from '@services/nx-config/base-config';
 
 @NgModule({
-    declarations : [],
-    imports      : [
+    declarations: [],
+    imports: [
         CommonModule,
         RouterModule
     ],
     providers: [
         {
-            provide    : ROUTES,
-            useFactory : landingRoutes,
-            deps       : [NxConfigService],
-            multi      : true
+            provide: ROUTES,
+            useFactory: landingRoutes,
+            deps: [NxConfigService],
+            multi: true
         }
     ]
 })

@@ -14,9 +14,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-health-update',
-    templateUrl : './update-info.component.html',
-    styleUrls   : ['update-info.component.scss']
+    selector: 'nx-health-update',
+    templateUrl: './update-info.component.html',
+    styleUrls: ['update-info.component.scss']
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();

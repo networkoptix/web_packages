@@ -20,12 +20,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
         PipesModule
         // RouterModule.forChild(appRoutes)
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxGridLayoutComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxGridLayoutComponent
     ]
 })

@@ -8,9 +8,9 @@ import { NxHeaderService }           from '@services/nx-header.service';
 import { WINDOW }                    from '@services/window-provider';
 
 @Component({
-    selector    : 'nx-nav-dropdown',
-    templateUrl : 'nav-dropdown.component.html',
-    styleUrls   : [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
+    selector: 'nx-nav-dropdown',
+    templateUrl: 'nav-dropdown.component.html',
+    styleUrls: [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     @ViewChild('dropDownButton') dropDownButton: ElementRef
@@ -34,6 +34,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
         const node = nodes.find(({ url }) => {
             return url === this.path;
         });
+        // eslint-disable-next-line camelcase
         this.name = node?.name || this.dropdownNode?.display_name || ''; // set name to '' until nodes update
         return nodes;
     }

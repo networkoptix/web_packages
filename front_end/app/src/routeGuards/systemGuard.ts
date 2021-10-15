@@ -44,12 +44,12 @@ export class SystemGuard implements CanActivate {
             const permissions: any = system.userManager?.permissions || {};
             const isOwner = system.userManager.isOwner(system.userManager.currentUser);
             const canViewChecks = {
-                users           : permissions.editUsers,
-                'cloud-storage' : system.canUserViewCloudStorage(),
-                health          : system.canViewInfo(),
-                licenses        : permissions.isAdmin || isOwner,
-                advanced        : permissions.isAdmin || isOwner,
-                servers         : permissions.isAdmin || isOwner
+                users: permissions.editUsers,
+                'cloud-storage': system.canUserViewCloudStorage(),
+                health: system.canViewInfo(),
+                licenses: permissions.isAdmin || isOwner,
+                advanced: permissions.isAdmin || isOwner,
+                servers: permissions.isAdmin || isOwner
             };
 
             return canViewChecks[currentRoute] || this.router.navigate(

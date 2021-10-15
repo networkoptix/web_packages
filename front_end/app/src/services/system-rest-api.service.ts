@@ -167,15 +167,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
         const config = {
-            name     : systemName,
-            settings : Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
-            local    : {
+            name: systemName,
+            settings: Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
+            local: {
                 password: password
             },
             cloud: {
-                systemId : cloudSystemID,
-                authKey  : cloudAuthKey,
-                owner    : owner
+                systemId: cloudSystemID,
+                authKey: cloudAuthKey,
+                owner: owner
             }
         };
         return this.post('/rest/v1/system/setup', config).toPromise();
@@ -183,9 +183,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string) {
         const params: any = {
-            grant_type    : 'refresh_token',
-            response_type : 'token',
-            refresh_token : refreshToken
+            grant_type: 'refresh_token',
+            response_type: 'token',
+            refresh_token: refreshToken
         };
 
         if (isSystem || remoteSystemId) {
@@ -424,8 +424,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
     loginOauth(code: string) {
         const params = {
             code,
-            grant_type    : 'authorization_code',
-            response_type : 'token'
+            grant_type: 'authorization_code',
+            response_type: 'token'
         };
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
             .pipe(
@@ -444,13 +444,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const window = this.injector.get(WINDOW);
         const { href } = window.location;
         const params = new URLSearchParams({
-            client_type   : 'loginWebadmin',
-            view_type     : 'web',
-            redirect_url  : href,
-            client_id     : 'webadmin',
-            response_type : 'code',
-            grant_type    : 'password',
-            scope         : `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
+            client_type: 'loginWebadmin',
+            view_type: 'web',
+            redirect_url: href,
+            client_id: 'webadmin',
+            response_type: 'code',
+            grant_type: 'password',
+            scope: `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
         });
         if (!allSystems) {
             const { signature } = await this.createSignature(href).toPromise();
@@ -479,9 +479,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
-            caption          : action,
-            backupNewCameras : true,
-            quality          : 'CameraBackupBoth'
+            caption: action,
+            backupNewCameras: true,
+            quality: 'CameraBackupBoth'
         }).toPromise();
     }
 
@@ -546,9 +546,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     remoteEndpoint,
                     remoteSessionToken,
                     // remoteCertificatePem          : '', // Currently optional.
-                    mergeOneServer                : false,
-                    ignoreIncompatible            : false,
-                    ignoreOfflineServerDuplicates : true
+                    mergeOneServer: false,
+                    ignoreIncompatible: false,
+                    ignoreOfflineServerDuplicates: true
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
             }),
@@ -572,9 +572,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {
         return this.post('/rest/v1/system/cloudBind',
             {
-                systemId : cloudSystemID,
-                authKey  : cloudAuthKey,
-                owner    : cloudAccountName
+                systemId: cloudSystemID,
+                authKey: cloudAuthKey,
+                owner: cloudAccountName
             })
             .pipe(retryWhen((request) => this.handleOldToken(request)));
     }
@@ -588,11 +588,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     getBookmarks(params = {
-        order        : 'desc',
-        column       : 'creationTime',
-        deviceId     : '*',
-        _keepDefault : 'true',
-        _orderBy     : 'creationTimeMs'
+        order: 'desc',
+        column: 'creationTime',
+        deviceId: '*',
+        _keepDefault: 'true',
+        _orderBy: 'creationTimeMs'
     }) {
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }

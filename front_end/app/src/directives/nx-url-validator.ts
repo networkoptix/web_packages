@@ -5,11 +5,11 @@ import {
 import { Directive, forwardRef } from '@angular/core';
 
 @Directive({
-    selector  : '[nxUrlValidator]',
-    providers : [{
-        provide     : NG_VALIDATORS,
-        useExisting : forwardRef(() => NxUrlValidatorDirective),
-        multi       : true
+    selector: '[nxUrlValidator]',
+    providers: [{
+        provide: NG_VALIDATORS,
+        useExisting: forwardRef(() => NxUrlValidatorDirective),
+        multi: true
     }]
 })
 export class NxUrlValidatorDirective implements Validator {

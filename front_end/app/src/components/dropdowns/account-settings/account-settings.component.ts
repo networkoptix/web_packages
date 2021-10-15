@@ -12,9 +12,9 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-account-settings-select',
-    templateUrl : 'account-settings.component.html',
-    styleUrls   : [environment.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
+    selector: 'nx-account-settings-select',
+    templateUrl: 'account-settings.component.html',
+    styleUrls: [environment.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
@@ -28,10 +28,10 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     widthSubscription: SubscriptionLike;
 
     settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser'> = {
-        name         : '',
-        email        : '',
-        is_staff     : false,
-        is_superuser : false
+        name: '',
+        email: '',
+        is_staff: false,
+        is_superuser: false
     };
 
     constructor(
@@ -47,17 +47,17 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
-                        name         : account.name,
-                        email        : account.email,
-                        is_staff     : account.is_staff,
-                        is_superuser : account.is_superuser
+                        name: account.name,
+                        email: account.email,
+                        is_staff: account.is_staff,
+                        is_superuser: account.is_superuser
                     };
                 } else {
                     this.settings = {
-                        name         : '',
-                        email        : '',
-                        is_staff     : false,
-                        is_superuser : false
+                        name: '',
+                        email: '',
+                        is_staff: false,
+                        is_superuser: false
                     };
                 }
             });

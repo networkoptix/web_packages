@@ -13,9 +13,9 @@ import { Storage, STORAGE_STATUS }   from '@services/system.service/system/stora
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-storage-size-component',
-    templateUrl : 'size.component.html',
-    styleUrls   : ['size.component.scss']
+    selector: 'nx-storage-size-component',
+    templateUrl: 'size.component.html',
+    styleUrls: ['size.component.scss']
 })
 export class NxStorageSizeComponent implements OnDestroy, OnChanges {
     @Input() store: Storage;
@@ -138,8 +138,8 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges {
 
         const [size, units] = friendlySize.split(' ');
         const fixed = {
-            GB : 1,
-            TB : 2
+            GB: 1,
+            TB: 2
         };
         return `${parseFloat(size).toFixed(fixed[units])} ${units}`;
     }

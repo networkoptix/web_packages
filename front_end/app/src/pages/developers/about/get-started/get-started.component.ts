@@ -9,9 +9,9 @@ import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-get-started',
-    templateUrl : 'get-started.component.html',
-    styleUrls   : ['get-started.component.scss']
+    selector: 'nx-get-started',
+    templateUrl: 'get-started.component.html',
+    styleUrls: ['get-started.component.scss']
 })
 export class NxGetStartedComponent implements OnChanges {
     @Input() getStartedNode: AboutNode;

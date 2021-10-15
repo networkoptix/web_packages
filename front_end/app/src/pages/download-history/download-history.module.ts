@@ -49,8 +49,8 @@ const appRoutes: Routes = [
         DownloadHistoryComponent,
         ReleaseComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         DownloadHistoryComponent
     ]
 })

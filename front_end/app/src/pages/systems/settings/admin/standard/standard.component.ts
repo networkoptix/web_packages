@@ -47,9 +47,9 @@ class AlexaSettings {
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-system-standard-admin-component',
-    templateUrl : 'standard.component.html',
-    styleUrls   : ['standard.component.scss']
+    selector: 'nx-system-standard-admin-component',
+    templateUrl: 'standard.component.html',
+    styleUrls: ['standard.component.scss']
 })
 
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
@@ -76,13 +76,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     settingsWatchersSet = false;
     settingsWatchers = {
-        autoDiscoveryEnabled         : new Watcher<boolean>(),
-        statisticsAllowed            : new Watcher<boolean>(),
-        cameraSettingsOptimization   : new Watcher<boolean>(),
-        auditTrailEnabled            : new Watcher<boolean>(),
-        trafficEncryptionForced      : new Watcher<boolean>(),
-        videoTrafficEncryptionForced : new Watcher<boolean>(),
-        sessionLimitMinutes          : new Watcher<number>()
+        autoDiscoveryEnabled: new Watcher<boolean>(),
+        statisticsAllowed: new Watcher<boolean>(),
+        cameraSettingsOptimization: new Watcher<boolean>(),
+        auditTrailEnabled: new Watcher<boolean>(),
+        trafficEncryptionForced: new Watcher<boolean>(),
+        videoTrafficEncryptionForced: new Watcher<boolean>(),
+        sessionLimitMinutes: new Watcher<number>()
     };
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
@@ -110,23 +110,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
             days: {
-                value   : 'days',
-                name    : this.LANG.system.settings.sessionLimitDuration.days(),
-                id      : 1,
-                max     : 999999,
-                default : 30
+                value: 'days',
+                name: this.LANG.system.settings.sessionLimitDuration.days(),
+                id: 1,
+                max: 999999,
+                default: 30
             },
             hours: {
-                value : 'hours',
-                name  : this.LANG.system.settings.sessionLimitDuration.hours(),
-                id    : 2,
-                max   : 999999
+                value: 'hours',
+                name: this.LANG.system.settings.sessionLimitDuration.hours(),
+                id: 2,
+                max: 999999
             },
             minutes: {
-                value : 'minutes',
-                name  : this.LANG.system.settings.sessionLimitDuration.minutes(),
-                id    : 3,
-                max   : 999999
+                value: 'minutes',
+                name: this.LANG.system.settings.sessionLimitDuration.minutes(),
+                id: 3,
+                max: 999999
             }
         };
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;

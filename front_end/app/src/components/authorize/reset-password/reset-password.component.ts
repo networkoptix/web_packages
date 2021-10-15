@@ -12,9 +12,9 @@ import { AuthorizeStateType }        from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-reset-password-component',
-    templateUrl : 'reset-password.component.html',
-    styleUrls   : ['reset-password.component.scss']
+    selector: 'nx-authorize-reset-password-component',
+    templateUrl: 'reset-password.component.html',
+    styleUrls: ['reset-password.component.scss']
 })
 export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;

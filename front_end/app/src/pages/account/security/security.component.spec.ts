@@ -27,8 +27,8 @@ import { NxCheckboxComponent }            from '@components/checkbox/checkbox.co
 import { FormsModule }                    from '@angular/forms';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -41,21 +41,21 @@ describe('NxAccountSecurityComponent', () => {
     const configMock = { getConfig: () => nxConfig };
     const translateMock = {
         translations: {
-            'Two-factor authentication' : 'Two-factor authentication',
-            pageTitles                  : {
+            'Two-factor authentication': 'Two-factor authentication',
+            pageTitles: {
                 security: 'Security'
             },
             security: {
                 twoFa: {
-                    twoFADescription_a1 : jasmine.createSpy(),
-                    twoFADescription_a2 : jasmine.createSpy(),
-                    systemsRemainder    : jasmine.createSpy(),
-                    v5Warning_a1        : jasmine.createSpy(),
-                    v5Warning_a2        : jasmine.createSpy(),
-                    v5Warning_a3        : jasmine.createSpy(),
-                    v5Warning_a4        : jasmine.createSpy(),
-                    v5Warning_a5        : jasmine.createSpy(),
-                    v5Warning_b         : jasmine.createSpy()
+                    twoFADescription_a1: jasmine.createSpy(),
+                    twoFADescription_a2: jasmine.createSpy(),
+                    systemsRemainder: jasmine.createSpy(),
+                    v5Warning_a1: jasmine.createSpy(),
+                    v5Warning_a2: jasmine.createSpy(),
+                    v5Warning_a3: jasmine.createSpy(),
+                    v5Warning_a4: jasmine.createSpy(),
+                    v5Warning_a5: jasmine.createSpy(),
+                    v5Warning_b: jasmine.createSpy()
                 }
             }
         }
@@ -73,8 +73,8 @@ describe('NxAccountSecurityComponent', () => {
 
         TestBed
             .configureTestingModule({
-                imports      : [TranslateTestingModule, FormsModule],
-                declarations : [
+                imports: [TranslateTestingModule, FormsModule],
+                declarations: [
                     NxAccountSecurityComponent, NxPreLoaderComponent, NxSwitchComponent,
                     NxContentBlockComponent, NxContentBlockSectionComponent, NxCheckboxComponent
                 ],
@@ -104,20 +104,20 @@ describe('NxAccountSecurityComponent', () => {
 
                 fixture.detectChanges();
                 component.account = {
-                    can_publish_integration : false,
-                    name                    : 'test',
-                    first_name              : 'Test',
-                    isCloud                 : false,
-                    is_staff                : false,
-                    language                : 'en_US',
-                    last_name               : '1234',
-                    permissions             : [],
-                    is_superuser            : false,
-                    id                      : 'test',
-                    email                   : 'test@test.com',
-                    is_authenticated        : false,
-                    cookie_reviewed         : true,
-                    account2faEnabled       : false
+                    can_publish_integration: false,
+                    name: 'test',
+                    first_name: 'Test',
+                    isCloud: false,
+                    is_staff: false,
+                    language: 'en_US',
+                    last_name: '1234',
+                    permissions: [],
+                    is_superuser: false,
+                    id: 'test',
+                    email: 'test@test.com',
+                    is_authenticated: false,
+                    cookie_reviewed: true,
+                    account2faEnabled: false
                 };
                 fixture.detectChanges();
             }));

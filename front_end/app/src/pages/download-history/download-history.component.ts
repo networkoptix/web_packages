@@ -23,9 +23,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'download-history',
-    templateUrl : 'download-history.component.html',
-    styleUrls   : ['download-history.component.scss']
+    selector: 'download-history',
+    templateUrl: 'download-history.component.html',
+    styleUrls: ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {

@@ -18,9 +18,9 @@ import { NxMenuService }             from '@src/menu';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-account-password-component',
-    templateUrl : 'password.component.html',
-    styleUrls   : ['password.component.scss']
+    selector: 'nx-account-password-component',
+    templateUrl: 'password.component.html',
+    styleUrls: ['password.component.scss']
 })
 
 export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
@@ -39,14 +39,14 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     changePassword: Process;
 
     watchers: any = {
-        password    : new Watcher<string>(),
-        newPassword : new Watcher<string>()
+        password: new Watcher<string>(),
+        newPassword: new Watcher<string>()
     };
 
     private setupDefaults() {
         this.pass = {
-            password    : '',
-            newPassword : ''
+            password: '',
+            newPassword: ''
         };
         this.menuService.detail = 'password';
     }
@@ -79,11 +79,11 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
                 : this.cloudApiService.changePassword(this.pass.newPassword, this.pass.password);
         }, {
             errorCodes: {
-                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch?.()
+                notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.()
             },
-            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix?.(),
-            ignoreUnauthorized : true
+            errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
+            ignoreUnauthorized: true
         }).then(() => {
             this.form.reset();
             this.setOriginal();

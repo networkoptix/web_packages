@@ -17,11 +17,11 @@ const appRoutes: Routes = [
         PipesModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NonSupportedBrowserComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         NonSupportedBrowserComponent
     ]

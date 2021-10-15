@@ -45,21 +45,27 @@ xdescribe('alignTimeStamp', () => {
             switch (i) {
                 case 'millenia': {
                     expect(v.getFullYear() % 1000).toEqual(0);
+                    break;
                 }
                 case 'century': {
                     expect(v.getFullYear() % 100).toEqual(0);
+                    break;
                 }
                 case 'decade': {
                     expect(v.getFullYear() % 10).toEqual(0);
+                    break;
                 }
                 case 'year': {
                     expect(v.getMonth()).toEqual(0);
+                    break;
                 }
                 case 'half-year': {
                     expect(v.getMonth() % 6).toEqual(0);
+                    break;
                 }
                 case 'quarter-year': {
                     expect(v.getMonth() % 3).toEqual(0);
+                    break;
                 }
                 case 'month': {
                     expect(v.getDate()).toEqual(1);

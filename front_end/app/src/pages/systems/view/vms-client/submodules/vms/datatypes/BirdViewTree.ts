@@ -111,7 +111,7 @@ export class BirdViewTree {
     }
 
     public setNewlyRecorded(ar) {
-        this._newlyRecorded = [...ar]
+        this._newlyRecorded = [...ar];
     }
 
     public appendNewlyRecorded(ar) {
@@ -153,20 +153,20 @@ export class BirdViewTree {
         if (sr.contains(this._originalArchiveRange)) {
             console.log('contains');
             return {
-                firstIndex : 0,
-                lastIndex  : this._originalArchive.length - 1
+                firstIndex: 0,
+                lastIndex: this._originalArchive.length - 1
             };
         }
         if (this._originalArchiveRange.isDisjointWith(sr)) {
             console.log('no overlap');
             return {
-                firstIndex : -1,
-                lastIndex  : -1
+                firstIndex: -1,
+                lastIndex: -1
             };
         }
         return {
-            firstIndex : this._binarySearchForTheFirstSubrangeIndex(sr.start),
-            lastIndex  : this._binarySearchForTheLastSubrangeIndex(sr.end)
+            firstIndex: this._binarySearchForTheFirstSubrangeIndex(sr.start),
+            lastIndex: this._binarySearchForTheLastSubrangeIndex(sr.end)
         };
     }
 

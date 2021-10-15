@@ -11,9 +11,9 @@ import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-disconnect-content',
-    templateUrl : 'disconnect.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-disconnect-content',
+    templateUrl: 'disconnect.component.html',
+    styleUrls: []
 })
 export class DisconnectModalContent {
     @Input() account;
@@ -76,8 +76,8 @@ export class DisconnectModalContent {
             }
             return this.account.disconnect(this.system.id);
         }, {
-            ignoreError        : true,
-            ignoreUnauthorized : true
+            ignoreError: true,
+            ignoreUnauthorized: true
             // errorCodes         : {
             //     'Wrong password.' : passwordError,
             //     wrongPassword     : passwordError
@@ -86,9 +86,9 @@ export class DisconnectModalContent {
         }, res => {
             this.activeModal.close(true);
             const options = {
-                classname : this.CONFIG.toast.success,
-                autohide  : true,
-                delay     : this.CONFIG.alertTimeout
+                classname: this.CONFIG.toast.success,
+                autohide: true,
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
         }, () => { });

@@ -35,8 +35,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
         NxApiLevel2ItemComponent,
         NxApiLevel3ItemComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxMenuApiComponent
     ]
 })

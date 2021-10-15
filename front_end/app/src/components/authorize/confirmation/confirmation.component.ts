@@ -9,9 +9,9 @@ import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-confirmation-component',
-    templateUrl : 'confirmation.component.html',
-    styleUrls   : ['confirmation.component.scss']
+    selector: 'nx-authorize-confirmation-component',
+    templateUrl: 'confirmation.component.html',
+    styleUrls: ['confirmation.component.scss']
 })
 export class NxAuthorizeConfirmationComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

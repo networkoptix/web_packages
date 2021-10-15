@@ -34,11 +34,11 @@ describe('NxHeaderMainButtonComponent', () => {
     const configMock = { getConfig: () => nxConfig };
     const headerMock = {
         currentLocation: {
-            path     : 'testUrl',
-            isSystem : false
+            path: 'testUrl',
+            isSystem: false
         },
-        showSubject  : new BehaviorSubject(true),
-        activeSystem : {
+        showSubject: new BehaviorSubject(true),
+        activeSystem: {
             name: 'activeSystemName'
         },
         lastActive$: new BehaviorSubject(true)
@@ -67,34 +67,26 @@ describe('NxHeaderMainButtonComponent', () => {
     };
 
     const node = {
-        display_name        : 'nodeName',
-        url                 : 'testUrl',
-        queryParamsHandling : undefined,
-        breadcrumbs         : [],
-        name                : 'nameNode',
-        nodes               : [],
-        authentication      : undefined,
-        new_window          : false,
-        asset_id            : null,
-        related_asset_ids   : [],
-        next_item           : false,
-        urlified            : 'testUrlified',
-        subtitle            : 'subtitleText',
-        name_raw            : 'nameRaw'
+        display_name: 'nodeName',
+        url: 'testUrl',
+        queryParamsHandling: undefined,
+        breadcrumbs: [],
+        name: 'nameNode',
+        nodes: [],
+        authentication: undefined,
+        new_window: false,
+        asset_id: null,
+        related_asset_ids: [],
+        next_item: false,
+        urlified: 'testUrlified',
+        subtitle: 'subtitleText',
+        name_raw: 'nameRaw'
     };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                NxHeaderMainButtonComponent,
-                NxDropMenu,
-                NxArrowNavDirective
-            ],
-            imports: [
-                CommonModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule
-            ],
+            declarations: [NxHeaderMainButtonComponent, NxDropMenu, NxArrowNavDirective],
+            imports: [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },

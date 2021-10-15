@@ -11,12 +11,12 @@ export const routes: Routes = [
     { path: 'timeline', component: TimelinePageComponent },
 
     {
-        path      : 'web-client',
-        component : SystemPageComponent,
-        children  : [
+        path: 'web-client',
+        component: SystemPageComponent,
+        children: [
             {
-                path      : ':camera-id',
-                component : CameraPageComponent
+                path: ':camera-id',
+                component: CameraPageComponent
             }
         ]
     }
@@ -24,8 +24,8 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    imports : [RouterModule.forChild(routes)],
-    exports : [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class VmsClientRoutingModule {
 }

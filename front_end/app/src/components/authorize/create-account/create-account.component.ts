@@ -12,9 +12,9 @@ import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-create-account-component',
-    templateUrl : 'create-account.component.html',
-    styleUrls   : ['create-account.component.scss']
+    selector: 'nx-authorize-create-account-component',
+    templateUrl: 'create-account.component.html',
+    styleUrls: ['create-account.component.scss']
 })
 export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
@@ -75,10 +75,10 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
         this.onCreateSubmit = () => {
             this.accountInfoChange.emit({
-                email     : this.existingEmail || this.createEmail,
-                firstName : this.createFirstName,
-                lastName  : this.createLastName,
-                password  : this.createPassword
+                email: this.existingEmail || this.createEmail,
+                firstName: this.createFirstName,
+                lastName: this.createLastName,
+                password: this.createPassword
             });
         };
     }

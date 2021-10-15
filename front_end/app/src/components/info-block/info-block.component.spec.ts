@@ -18,9 +18,9 @@ describe('NxInfoBlockComponent', () => {
     const translateMock = {
         translations: {
             common: {
-                ip      : () => 'IP Address',
-                os      : () => 'OS',
-                version : () => 'Server ver.'
+                ip: () => 'IP Address',
+                os: () => 'OS',
+                version: () => 'Server ver.'
             }
         }
     };
@@ -28,8 +28,8 @@ describe('NxInfoBlockComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxInfoBlockComponent],
-                providers    : [
+                declarations: [NxInfoBlockComponent],
+                providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: NxConfigService, useValue: configMock }
                 ]

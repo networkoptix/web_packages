@@ -12,9 +12,9 @@ import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-password-component',
-    templateUrl : 'password.component.html',
-    styleUrls   : ['password.component.scss']
+    selector: 'nx-authorize-password-component',
+    templateUrl: 'password.component.html',
+    styleUrls: ['password.component.scss']
 })
 export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
@@ -81,12 +81,12 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     setupText() {
         const auth = this.LANG.authorize;
         const connect = {
-            header    : auth.connectHeader(),
-            subHeader : auth.toAccountSubheader()
+            header: auth.connectHeader(),
+            subHeader: auth.toAccountSubheader()
         };
         const renew = {
-            header    : auth.expiredHeader(),
-            subHeader : auth.expiredAccountSubheader()
+            header: auth.expiredHeader(),
+            subHeader: auth.expiredAccountSubheader()
         };
         const subHeader = auth.asAccountSubheader();
         this.templateText = {
@@ -95,44 +95,44 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
                 subHeader
             },
             confirmPasswordDisconnect: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordDisconnect()
+                subHeaderSuffix: auth.passwordDisconnect()
             },
             confirmPasswordMerge: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordMerge()
+                subHeaderSuffix: auth.passwordMerge()
             },
             confirmPasswordCreateBackup: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordBackup()
+                subHeaderSuffix: auth.passwordBackup()
             },
             confirmPasswordRestoreBackup: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordRestore()
+                subHeaderSuffix: auth.passwordRestore()
             },
             confirmPasswordResetServer: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordReset()
+                subHeaderSuffix: auth.passwordReset()
             },
             confirmPasswordRestartServer: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordRestart()
+                subHeaderSuffix: auth.passwordRestart()
             },
             confirmPasswordDetachServer: {
-                header          : auth.loginCloudHeader(),
+                header: auth.loginCloudHeader(),
                 subHeader,
-                subHeaderSuffix : auth.passwordDetach()
+                subHeaderSuffix: auth.passwordDetach()
             },
-            connectSystemToCloud : connect,
-            setupWizard          : connect,
-            renewSessionDesktop  : renew,
-            renewSessionWeb      : renew
+            connectSystemToCloud: connect,
+            setupWizard: connect,
+            renewSessionDesktop: renew,
+            renewSessionWeb: renew
         };
     }
 

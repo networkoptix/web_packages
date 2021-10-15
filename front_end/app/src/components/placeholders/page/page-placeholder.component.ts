@@ -21,10 +21,10 @@ import { LanguageI18NStaticTypes }                                from '@app/lan
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-page-placeholder',
-    templateUrl   : 'page-placeholder.component.html',
-    styleUrls     : ['page-placeholder.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-page-placeholder',
+    templateUrl: 'page-placeholder.component.html',
+    styleUrls: ['page-placeholder.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() type: string;

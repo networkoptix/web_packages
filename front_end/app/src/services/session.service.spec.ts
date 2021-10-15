@@ -8,8 +8,8 @@ describe('Session service', () => {
 
     let localStorageMockStore = {};
     const localStorageMock = {
-        retrieve : (key: string) => localStorageMockStore[key],
-        store    : (key: string, value: any) => {
+        retrieve: (key: string) => localStorageMockStore[key],
+        store: (key: string, value: any) => {
             localStorageMockStore[key] = value;
         },
         observe: () => ({

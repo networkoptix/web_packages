@@ -1,21 +1,21 @@
 export const DEFAULT_EDITOR_CONFIG = {
-    base_url                   : '/static/tinymce',
-    suffix                     : '.min',
-    branding                   : false,
-    toolbar                    : 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
-    menubar                    : false,
-    paste_data_images          : true,
-    plugins                    : 'code, preview, -visualblocks, -advcode,paste, link, lists, autoresize',
-    min_height                 : 360,
-    allow_html_in_named_anchor : true,
-    extended_valid_elements    : '*[*]',
-    custom_elements            : 'style,link,~link',
-    valid_children             : '+a[*]',
-    closed                     : /^(br|hr|input|meta|img|link|param|area|path|line)$/,
-    protect                    : [/<svg.*\/svg>/],
-    relative_urls              : false,
-    images_dataimg_filter      : () => false,
-    paste_preprocess           : (plugin, args) => {
+    base_url: '/static/tinymce',
+    suffix: '.min',
+    branding: false,
+    toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
+    menubar: false,
+    paste_data_images: true,
+    plugins: 'code, preview, -visualblocks, -advcode,paste, link, lists, autoresize',
+    min_height: 360,
+    allow_html_in_named_anchor: true,
+    extended_valid_elements: '*[*]',
+    custom_elements: 'style,link,~link',
+    valid_children: '+a[*]',
+    closed: /^(br|hr|input|meta|img|link|param|area|path|line)$/,
+    protect: [/<svg.*\/svg>/],
+    relative_urls: false,
+    images_dataimg_filter: () => false,
+    paste_preprocess: (plugin, args) => {
         const isImage = args.content.indexOf('img') !== -1;
         const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -61,13 +61,13 @@ export const DEFAULT_EDITOR_CONFIG = {
 
         editor.on('postProcess', function (e) {
             const mapObj = {
-                lineargradient : 'linearGradient',
-                filterunits    : 'filterUnits',
-                feoffset       : 'feOffset',
-                fegaussianblur : 'feGaussianBlur',
-                fecolormatrix  : 'feColorMatrix',
-                fecomposite    : 'feComposite',
-                stddeviation   : 'stdDeviation'
+                lineargradient: 'linearGradient',
+                filterunits: 'filterUnits',
+                feoffset: 'feOffset',
+                fegaussianblur: 'feGaussianBlur',
+                fecolormatrix: 'feColorMatrix',
+                fecomposite: 'feComposite',
+                stddeviation: 'stdDeviation'
             };
 
             const re = new RegExp(Object.keys(mapObj).join('|'), 'g');

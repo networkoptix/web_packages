@@ -9,9 +9,9 @@ import TimelineService, { TimelineServiceStatus } from '../../services/timeline.
 type signType = int // -1 | 0 | 1
 
 @Component({
-    selector    : 'zoom-controls',
-    templateUrl : './zoom-controls.component.html',
-    styleUrls   : ['./zoom-controls.component.scss']
+    selector: 'zoom-controls',
+    templateUrl: './zoom-controls.component.html',
+    styleUrls: ['./zoom-controls.component.scss']
 })
 export class ZoomControlsComponent implements OnInit, OnDestroy {
     protected timelineSubscription: Subscription
@@ -53,7 +53,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
 
     public onTimelineSubjectChange (state: TimelineServiceStatus) {
         this.state = state;
-        this._updateEnabledDisabled()
+        this._updateEnabledDisabled();
     }
 
     public onVmsSubjectChange (state: VmsState) {

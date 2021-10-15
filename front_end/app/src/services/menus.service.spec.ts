@@ -24,8 +24,8 @@ describe('Menus service', () => {
     };
 
     const configMock = {
-        getConfig    : () => nxConfig,
-        flagsEnabled : () => false
+        getConfig: () => nxConfig,
+        flagsEnabled: () => false
     };
     const langMock = getMockTranslations();
 
@@ -62,9 +62,9 @@ describe('Menus service', () => {
     it('should get header menu', () => {
         langMock.translateSubject.next(langMock.translations);
         menu['menusStructure'].header = {
-            title       : '',
-            description : '',
-            nodes       : headerNodes
+            title: '',
+            description: '',
+            nodes: headerNodes
         };
         sessionMock.loginStateSubject.next('');
         menu.getMenu('header', false).subscribe((filtered) => {

@@ -1,5 +1,5 @@
 import { IConfig }                                          from '../../../nx-config';
-import {NxSystemAPI, NxSystemRestAPI} from '../../../system-api.service';
+import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
 import { NxUtilsService }                                   from '../../../utils.service';
 import { LanguageI18NStaticTypes }                          from '@app/language_i18n_static_types';
 import { NxSystemRole, NxSystemUser, SystemPermissions }    from './user-manager-types';
@@ -69,11 +69,11 @@ export class UserManager {
             isAdmin = this.isAdmin(this.currentUser);
         }
         const permissions: SystemPermissions = {
-            editAdmins   : isMine,
-            editUsers    : isAdmin,
-            isAdmin      : isAdmin,
-            editCameras  : isAdmin,
-            viewArchives : isAdmin
+            editAdmins: isMine,
+            editUsers: isAdmin,
+            isAdmin: isAdmin,
+            editCameras: isAdmin,
+            viewArchives: isAdmin
         };
 
         if (!isAdmin && this.currentUser) {

@@ -16,9 +16,9 @@ interface IParams<Value = any> {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-modal-embed-content',
-    templateUrl : 'embed.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-embed-content',
+    templateUrl: 'embed.component.html',
+    styleUrls: []
 })
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() systemId;
@@ -40,15 +40,15 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         public activeModal: NgbActiveModal
     ) {
         this.params = {
-            authString : '',
-            nocameras  : false,
-            noheader   : false,
-            nocontrols : false
+            authString: '',
+            nocameras: false,
+            noheader: false,
+            nocontrols: false
         };
 
         this.auth = {
-            email    : '',
-            password : ''
+            email: '',
+            password: ''
         };
 
         this.CONFIG = configService.getConfig();

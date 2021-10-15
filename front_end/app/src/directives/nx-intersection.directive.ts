@@ -31,9 +31,9 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
   ngOnInit() {
       const element = this.element.nativeElement;
       const config = {
-          root       : this.intersectionRoot,
-          rootMargin : this.intersectionRootMargin,
-          threshold  : this.intersectionThreshold
+          root: this.intersectionRoot,
+          rootMargin: this.intersectionRootMargin,
+          threshold: this.intersectionThreshold
       };
 
       fromIntersectionObserver(

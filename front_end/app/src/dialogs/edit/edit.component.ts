@@ -21,17 +21,17 @@ import { TranslateService }                 from '@ngx-translate/core';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {
-        [ModalType.CLIENT_EDIT]   : 'custom-clients',
-        [ModalType.CLIENT_CREATE] : 'custom-clients'
+        [ModalType.CLIENT_EDIT]: 'custom-clients',
+        [ModalType.CLIENT_CREATE]: 'custom-clients'
     };
     return config.manifest[manifestKeyLookup[type]];
 };
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-modal-edit',
-    templateUrl : 'edit.component.html',
-    styleUrls   : ['edit.component.scss']
+    selector: 'nx-modal-edit',
+    templateUrl: 'edit.component.html',
+    styleUrls: ['edit.component.scss']
 })
 export class EditModalContent implements ModalContent {
     @Input() heading: string;
@@ -83,16 +83,16 @@ export class EditModalContent implements ModalContent {
         const getMethod = (action: string) => {
             const [subAPI, method] = ({
                 [ModalType.CLIENT_EDIT]: {
-                    create : ['customClient', 'create'],
-                    save   : ['customClient', 'partialUpdate'],
-                    delete : ['customClient', 'destroy'],
-                    getVMS : ['customClient', 'getVMS']
+                    create: ['customClient', 'create'],
+                    save: ['customClient', 'partialUpdate'],
+                    delete: ['customClient', 'destroy'],
+                    getVMS: ['customClient', 'getVMS']
                 },
                 [ModalType.CLIENT_CREATE]: {
-                    create : ['customClient', 'create'],
-                    save   : ['customClient', 'partialUpdate'],
-                    delete : ['customClient', 'destroy'],
-                    getVMS : ['customClient', 'getVMS']
+                    create: ['customClient', 'create'],
+                    save: ['customClient', 'partialUpdate'],
+                    delete: ['customClient', 'destroy'],
+                    getVMS: ['customClient', 'getVMS']
                 }
             })[this.modal][action];
             return this.cloudApi[subAPI][method];
@@ -115,9 +115,9 @@ export class EditModalContent implements ModalContent {
         }
 
         const options = {
-            classname : this.CONFIG.toast.success,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.success,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
 
         const updateErrors = () => {

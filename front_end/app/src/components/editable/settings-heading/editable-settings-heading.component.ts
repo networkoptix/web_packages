@@ -7,9 +7,9 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxUtilsService }           from '@services/utils.service';
 
 @Component({
-    selector    : 'nx-editable-settings-heading',
-    templateUrl : 'editable-settings-heading.component.html',
-    styleUrls   : ['editable-settings-heading.component.scss']
+    selector: 'nx-editable-settings-heading',
+    templateUrl: 'editable-settings-heading.component.html',
+    styleUrls: ['editable-settings-heading.component.scss']
 })
 export class NxEditableSettingsHeading {
     @Input() nameWatcher: Watcher<string>;

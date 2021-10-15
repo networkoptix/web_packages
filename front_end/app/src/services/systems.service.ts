@@ -33,8 +33,8 @@ export class NxSystemsService implements OnDestroy {
     systemsSubject = new ReplaySubject<NxSystemWithUserInfo[]>(0);
     finishedMerged = false;
     systemsMerging: { primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo } = {
-        primary   : undefined,
-        secondary : undefined
+        primary: undefined,
+        secondary: undefined
     };
 
     constructor(
@@ -79,13 +79,13 @@ export class NxSystemsService implements OnDestroy {
                 this.LANG.dialogs.merge.mergeSuccess, { primaryName, secondaryName }
             ) : this.LANG.toastMessage.system.merge.success();
             this.systemsMerging = {
-                primary   : undefined,
-                secondary : undefined
+                primary: undefined,
+                secondary: undefined
             };
             const options = {
-                autohide  : true,
-                classname : this.CONFIG.toast.success,
-                delay     : this.CONFIG.alertTimeout
+                autohide: true,
+                classname: this.CONFIG.toast.success,
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
             this.finishedMerged = true;

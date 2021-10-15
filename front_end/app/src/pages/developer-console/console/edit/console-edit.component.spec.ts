@@ -23,8 +23,8 @@ const {
 } = forUnitTest;
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -43,8 +43,8 @@ describe('NxDevConsoleEditComponent', () => {
     const routeMock = {
         snapshot: {
             params: {
-                section : 'custom-clients',
-                id      : uuid()
+                section: 'custom-clients',
+                id: uuid()
             }
         }
     };
@@ -61,8 +61,8 @@ describe('NxDevConsoleEditComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxDevConsoleEditComponent],
-                providers    : [
+                declarations: [NxDevConsoleEditComponent],
+                providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxHeaderService, useValue: headerMock },
                     { provide: NxLanguageProviderService, useValue: translateMock },
@@ -81,12 +81,12 @@ describe('NxDevConsoleEditComponent', () => {
         fixture = TestBed.createComponent(NxDevConsoleEditComponent);
         component = fixture.componentInstance;
         expectedField = {
-            name        : uuid(),
-            type        : 'text',
-            placeholder : uuid(),
-            description : uuid(),
-            label       : uuid(),
-            optional    : false
+            name: uuid(),
+            type: 'text',
+            placeholder: uuid(),
+            description: uuid(),
+            label: uuid(),
+            optional: false
         };
         const context = { name: '', label: '', global: false, fields: [expectedField] };
         component.context = context;

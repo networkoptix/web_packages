@@ -35,20 +35,20 @@ describe('TwoFAModalContent', () => {
     const configMock = { getConfig: () => nxConfig };
     const translateMock = {
         translations: {
-            Next                                                : 'Next',
-            '2fa'                                               : 'Two-factor authentication',
-            requiredPassword                                    : "Enter your password to verify it's really you",
-            qrText                                              : "With the authentication app on your mobile device scan the following QR code to link the app to your %CLOUD_NAME% account. If you don't have an authentication app, you'll need to install one now.",
-            'Cannot scan QR code?'                              : 'Cannot scan QR code?',
-            'Show QR code'                                      : 'Show QR code',
-            paramsText                                          : 'Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.',
-            codeText                                            : 'From authentication app, get a code and enter it below to complete the verification process.',
-            'Enter authentication code'                         : 'Enter authentication code',
-            finishLine1                                         : 'Two-factor authentication is <span class="lineStrong">enabled</span> now!',
-            'Save this single-use backup code in a safe place.' : 'Save this single-use backup code in a safe place.',
-            finishNote                                          : "This backup code lets you login to %CLOUD_NAME% if you don't have access to your mobile authentication app.",
-            Ok                                                  : 'Ok',
-            pageTitles                                          : {
+            Next: 'Next',
+            '2fa': 'Two-factor authentication',
+            requiredPassword: "Enter your password to verify it's really you",
+            qrText: "With the authentication app on your mobile device scan the following QR code to link the app to your %CLOUD_NAME% account. If you don't have an authentication app, you'll need to install one now.",
+            'Cannot scan QR code?': 'Cannot scan QR code?',
+            'Show QR code': 'Show QR code',
+            paramsText: 'Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.',
+            codeText: 'From authentication app, get a code and enter it below to complete the verification process.',
+            'Enter authentication code': 'Enter authentication code',
+            finishLine1: 'Two-factor authentication is <span class="lineStrong">enabled</span> now!',
+            'Save this single-use backup code in a safe place.': 'Save this single-use backup code in a safe place.',
+            finishNote: "This backup code lets you login to %CLOUD_NAME% if you don't have access to your mobile authentication app.",
+            Ok: 'Ok',
+            pageTitles: {
                 security: 'Security'
             }
         }
@@ -74,29 +74,29 @@ describe('TwoFAModalContent', () => {
                 { backup_code: 'random3' },
                 { backup_code: 'random4' }
             ],
-            updateSessionWith2fa : { resultCode: 'tfaCode', errorClass: '', errorDetail: 0, errorText: '' },
-            account              : {
-                can_publish_integration : false,
-                name                    : 'Test',
-                first_name              : 'Test',
-                isCloud                 : false,
-                is_staff                : false,
-                language                : 'en_US',
-                last_name               : '1234',
-                permissions             : [],
-                is_superuser            : false,
-                id                      : 'test',
-                email                   : 'test@test.com',
-                is_authenticated        : false,
-                cookie_reviewed         : true,
-                account2faEnabled       : false
+            updateSessionWith2fa: { resultCode: 'tfaCode', errorClass: '', errorDetail: 0, errorText: '' },
+            account: {
+                can_publish_integration: false,
+                name: 'Test',
+                first_name: 'Test',
+                isCloud: false,
+                is_staff: false,
+                language: 'en_US',
+                last_name: '1234',
+                permissions: [],
+                is_superuser: false,
+                id: 'test',
+                email: 'test@test.com',
+                is_authenticated: false,
+                cookie_reviewed: true,
+                account2faEnabled: false
             }
         };
 
         TestBed
             .configureTestingModule({
-                declarations : [TwoFAModalContent],
-                providers    : [
+                declarations: [TwoFAModalContent],
+                providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxLanguageProviderService, useValue: translateMock },
                     { provide: NxProcessService, useValue: spyCreateProcess },

@@ -14,9 +14,9 @@ import { NxMenuService }            from '@src/menu/menu.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-level-3-item',
-    templateUrl : 'level-3-item.component.html',
-    styleUrls   : ['level-3-item.component.scss']
+    selector: 'nx-level-3-item',
+    templateUrl: 'level-3-item.component.html',
+    styleUrls: ['level-3-item.component.scss']
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() base: any = {};

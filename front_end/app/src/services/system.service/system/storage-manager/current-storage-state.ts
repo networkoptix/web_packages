@@ -144,8 +144,8 @@ export class CurrentStorageState {
     #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
 
     checkAnalytics = (storage: Storage) => ({
-        analyticsDbLocation : storage.storageId === this.#metadataStorageId,
-        canStoreAnalyticsDb : this.#checkCanStoreAnalytics(storage)
+        analyticsDbLocation: storage.storageId === this.#metadataStorageId,
+        canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage)
     })
 }
 
@@ -183,8 +183,8 @@ export const currentStorageStateFactory = (
             ...info,
             reservedSpace,
             serverId,
-            urlWithCredentials : info.url,
-            totalSpace         : addParams.find(({
+            urlWithCredentials: info.url,
+            totalSpace: addParams.find(({
                 name
             }) => name === 'space')?.value || 0
         }
@@ -229,19 +229,19 @@ export const currentStorageStateFactory = (
         }
     ]: [string, Partial<StorageDataStructure>]) => new Storage({
         storageId,
-        reservedSpace : +(reservedSpace || 0),
-        freeSpace     : +(freeSpace || 0),
-        totalSpace    : +(totalSpace || 0),
-        serverId      : serverId || storageServerId,
+        reservedSpace: +(reservedSpace || 0),
+        freeSpace: +(freeSpace || 0),
+        totalSpace: +(totalSpace || 0),
+        serverId: serverId || storageServerId,
         ...input
     }));
 
     const storages = {
         locations,
-        vmsSpaceLoaded     : !!vmsSpace,
-        storageInfoLoaded  : !!storageInfo,
-        storageStatsLoaded : !!storageStats,
-        analyticsLoaded    : !!analytics
+        vmsSpaceLoaded: !!vmsSpace,
+        storageInfoLoaded: !!storageInfo,
+        storageStatsLoaded: !!storageStats,
+        analyticsLoaded: !!analytics
     };
 
     return new CurrentStorageState(storages, analytics, serverManager);

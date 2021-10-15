@@ -14,9 +14,9 @@ import { AuthorizeStateType }        from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-backup-code-component',
-    templateUrl : 'backup-code.component.html',
-    styleUrls   : ['backup-code.component.scss']
+    selector: 'nx-authorize-backup-code-component',
+    templateUrl: 'backup-code.component.html',
+    styleUrls: ['backup-code.component.scss']
 })
 export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;

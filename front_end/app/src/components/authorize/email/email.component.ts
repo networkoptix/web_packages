@@ -12,9 +12,9 @@ import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-email-component',
-    templateUrl : 'email.component.html',
-    styleUrls   : ['email.component.scss']
+    selector: 'nx-authorize-email-component',
+    templateUrl: 'email.component.html',
+    styleUrls: ['email.component.scss']
 })
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
@@ -75,21 +75,21 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     setupText() {
         const auth = this.LANG.authorize;
         const connect = {
-            header    : auth.connectHeader(),
-            subHeader : auth.connectSubheader()
+            header: auth.connectHeader(),
+            subHeader: auth.connectSubheader()
         };
         const renew = {
-            header    : auth.expiredHeader(),
-            subHeader : auth.expiredSubheader()
+            header: auth.expiredHeader(),
+            subHeader: auth.expiredSubheader()
         };
         this.templateText = {
             loginToCloud: {
                 header: auth.loginCloudHeader()
             },
-            connectSystemToCloud : connect,
-            setupWizard          : connect,
-            renewSessionDesktop  : renew,
-            renewSessionWeb      : renew
+            connectSystemToCloud: connect,
+            setupWizard: connect,
+            renewSessionDesktop: renew,
+            renewSessionWeb: renew
         };
     }
 

@@ -23,10 +23,10 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-cam-table',
-    templateUrl   : './cam-table.component.html',
-    styleUrls     : ['./cam-table.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-cam-table',
+    templateUrl: './cam-table.component.html',
+    styleUrls: ['./cam-table.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
@@ -88,15 +88,15 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public csvFilename;
     public csvCameraData: any[];
     public csvOptions = {
-        fieldSeparator   : ',',
-        quoteStrings     : '"',
-        decimalseparator : '.',
-        showLabels       : true,
-        headers          : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
-        showTitle        : true,
-        title            : 'Camera List',
-        useBom           : false,
-        removeNewLines   : true
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        headers: ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
+        showTitle: true,
+        title: 'Camera List',
+        useBom: false,
+        removeNewLines: true
     };
 
     @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
@@ -154,8 +154,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         });
 
         this.disclaimerParams = {
-            companyName : this.CONFIG.company.name,
-            vmsName     : this.CONFIG.vmsName
+            companyName: this.CONFIG.company.name,
+            vmsName: this.CONFIG.vmsName
         };
     }
 
@@ -463,19 +463,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     getCsvData() {
         return this._elements.map(camera => ({
-            Vendor           : camera.vendor,
-            Model            : camera.model,
-            Type             : camera.hardwareType,
-            'Max Resolution' : camera.maxResolution,
-            'Max FPS'        : camera.maxFps,
-            Codec            : camera.primaryCodec,
-            Audio            : NxUtilsService.yesNo(camera.isAudioSupported),
-            '2-Way Audio'    : NxUtilsService.yesNo(camera.isTwAudioSupported),
-            PTZ              : NxUtilsService.yesNo(camera.isPtzSupported),
-            'Advanced PTZ'   : NxUtilsService.yesNo(camera.isAptzSupported),
-            Fisheye          : NxUtilsService.yesNo(camera.isFisheye),
-            Motion           : NxUtilsService.yesNo(camera.isMdSupported),
-            'I/O'            : NxUtilsService.yesNo(camera.isIoSupported)
+            Vendor: camera.vendor,
+            Model: camera.model,
+            Type: camera.hardwareType,
+            'Max Resolution': camera.maxResolution,
+            'Max FPS': camera.maxFps,
+            Codec: camera.primaryCodec,
+            Audio: NxUtilsService.yesNo(camera.isAudioSupported),
+            '2-Way Audio': NxUtilsService.yesNo(camera.isTwAudioSupported),
+            PTZ: NxUtilsService.yesNo(camera.isPtzSupported),
+            'Advanced PTZ': NxUtilsService.yesNo(camera.isAptzSupported),
+            Fisheye: NxUtilsService.yesNo(camera.isFisheye),
+            Motion: NxUtilsService.yesNo(camera.isMdSupported),
+            'I/O': NxUtilsService.yesNo(camera.isIoSupported)
         })
         );
     }

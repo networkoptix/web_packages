@@ -105,10 +105,10 @@ type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-api-tool',
-    styleUrls     : ['api-tool.component.scss'],
-    templateUrl   : 'api-tool.component.html',
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-api-tool',
+    styleUrls: ['api-tool.component.scss'],
+    templateUrl: 'api-tool.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class NxApiToolComponent implements OnInit {
     CONFIG: IConfig;
@@ -134,8 +134,8 @@ export class NxApiToolComponent implements OnInit {
     RTSPRequestShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     pageDescription = {
-        title       : 'API Information',
-        description : ''
+        title: 'API Information',
+        description: ''
     }
 
     private resizeSubscription: Subscription;
@@ -346,10 +346,10 @@ export class NxApiToolComponent implements OnInit {
                                         APIDoc = this.prepareSwaggerAPIDoc(APIDoc, server.id);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
-                                                value        : server.id,
-                                                name         : server.name,
-                                                apiDocFull   : APIDoc,
-                                                incompatible : false
+                                                value: server.id,
+                                                name: server.name,
+                                                apiDocFull: APIDoc,
+                                                incompatible: false
                                             });
                                         }
                                     }).catch(err => {
@@ -359,10 +359,10 @@ export class NxApiToolComponent implements OnInit {
                                         }
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
-                                                value        : server.id,
-                                                name         : server.name + ' - ' + typeOfError,
-                                                apiDocFull   : {} as APIDoc,
-                                                incompatible : true
+                                                value: server.id,
+                                                name: server.name + ' - ' + typeOfError,
+                                                apiDocFull: {} as APIDoc,
+                                                incompatible: true
                                             });
                                         }
                                     }).finally(async () => {
@@ -393,10 +393,10 @@ export class NxApiToolComponent implements OnInit {
                                     });
                             } else {
                                 this.serversDropdown.push({
-                                    value        : server.id,
-                                    name         : server.name + ' - Offline',
-                                    apiDocFull   : {} as APIDoc,
-                                    incompatible : true
+                                    value: server.id,
+                                    name: server.name + ' - Offline',
+                                    apiDocFull: {} as APIDoc,
+                                    incompatible: true
                                 });
                             }
                         });
@@ -486,18 +486,18 @@ export class NxApiToolComponent implements OnInit {
         // wait for the DOM element
         setTimeout(() => {
             this.swagger = new SwaggerUI({
-                dom_id  : '#swagger-ui',
-                layout  : 'BaseLayout',
-                presets : [
+                dom_id: '#swagger-ui',
+                layout: 'BaseLayout',
+                presets: [
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
-                spec                   : this.selectedServer.apiDocFull,
-                filter                 : filter,
-                docExpansion           : expand,
-                supportedSubmitMethods : this.getSupportedMethods(),
-                maxDisplayedTags       : expand === 'full' ? 1 : undefined,
-                requestInterceptor     : (request) => {
+                spec: this.selectedServer.apiDocFull,
+                filter: filter,
+                docExpansion: expand,
+                supportedSubmitMethods: this.getSupportedMethods(),
+                maxDisplayedTags: expand === 'full' ? 1 : undefined,
+                requestInterceptor: (request) => {
                     this.authenticateRequest(request);
                     if (this.CONFIG.isLocal) {
                         request.curlOptions = ['--insecure'];
@@ -606,24 +606,24 @@ export class NxApiToolComponent implements OnInit {
         const _content = {
             pageDescriptions: {
                 api_information: {
-                    title       : response.info?.title || 'API Information',
-                    description : response.info?.description || ''
+                    title: response.info?.title || 'API Information',
+                    description: response.info?.description || ''
                 }
             },
-            searchable             : false,
-            selectedSection        : 'api_information', // updated by selectedSectionSubject
-            selectedSubSection     : '', // updated by selectedSubSectionSubject
-            selectedDetailsSection : '',
-            system                 : {}, // updated by getSystemInfo
-            base                   : '', // no base - no navigation
-            level1                 : [
+            searchable: false,
+            selectedSection: 'api_information', // updated by selectedSectionSubject
+            selectedSubSection: '', // updated by selectedSubSectionSubject
+            selectedDetailsSection: '',
+            system: {}, // updated by getSystemInfo
+            base: '', // no base - no navigation
+            level1: [
                 {
-                    id     : 'api_information',
-                    svg    : '',
-                    label  : 'API Information',
-                    path   : '',
-                    level2 : [],
-                    level3 : []
+                    id: 'api_information',
+                    svg: '',
+                    label: 'API Information',
+                    path: '',
+                    level2: [],
+                    level3: []
                 }
             ]
         };
@@ -631,12 +631,12 @@ export class NxApiToolComponent implements OnInit {
         if (Object.keys(response || {}).length) {
             response.tags.forEach(tag => {
                 const categoryNode = {
-                    id     : tag.name,
-                    svg    : 'arrow_expand',
-                    label  : tag.name.slice(0, -2),
-                    path   : '',
-                    level2 : [],
-                    level3 : []
+                    id: tag.name,
+                    svg: 'arrow_expand',
+                    label: tag.name.slice(0, -2),
+                    path: '',
+                    level2: [],
+                    level3: []
                 };
                 _content.level1.push(categoryNode);
                 _content.searchable = true;
@@ -652,12 +652,12 @@ export class NxApiToolComponent implements OnInit {
                         return node.id === method[1].tags[0]; // if more tags?
                     });
                     categoryNode.level3.push({
-                        additionalLabel : '',
-                        id              : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                        isEnabled       : true, // is proprietary?
-                        label           : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                        path            : '',
-                        svgIcon         : ''
+                        additionalLabel: '',
+                        id: method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        isEnabled: true, // is proprietary?
+                        label: method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        path: '',
+                        svgIcon: ''
                     });
                 });
             });
@@ -685,17 +685,17 @@ export class NxApiToolComponent implements OnInit {
         const title = type[0].toUpperCase() + type.slice(1);
         const apiContent = baseContent;
         apiContent.level1.push({
-            id     : type,
-            svg    : 'arrow_expand',
-            label  : title,
-            path   : '',
-            level2 : [],
-            level3 : []
+            id: type,
+            svg: 'arrow_expand',
+            label: title,
+            path: '',
+            level2: [],
+            level3: []
         });
 
         baseContent.pageDescriptions[type] = {
-            title       : legacyApi.info?.title || `${type.toUpperCase()} API Information`,
-            description : legacyApi.info?.description || ''
+            title: legacyApi.info?.title || `${type.toUpperCase()} API Information`,
+            description: legacyApi.info?.description || ''
         };
 
         const _content = apiContent.level1.find(item => item.id === type);
@@ -704,12 +704,12 @@ export class NxApiToolComponent implements OnInit {
             legacyApi.tags.forEach(tag => {
                 if (!tag.name.includes('Proprietary')) {
                     const categoryNode = {
-                        id     : tag.name,
-                        svg    : 'arrow_expand',
-                        label  : tag.name.slice(0, -2),
-                        path   : '',
-                        level2 : [],
-                        level3 : []
+                        id: tag.name,
+                        svg: 'arrow_expand',
+                        label: tag.name.slice(0, -2),
+                        path: '',
+                        level2: [],
+                        level3: []
                     };
                     _content.level2.push(categoryNode);
                     _content.searchable = true;
@@ -725,12 +725,12 @@ export class NxApiToolComponent implements OnInit {
                         return node.id === method[1].tags[0]; // if more tags?
                     });
                     categoryNode.level3.push({
-                        additionalLabel : '',
-                        id              : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                        isEnabled       : true, // is proprietary?
-                        label           : method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                        path            : '',
-                        svgIcon         : ''
+                        additionalLabel: '',
+                        id: method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        isEnabled: true, // is proprietary?
+                        label: method[1].summary || this.getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                        path: '',
+                        svgIcon: ''
                     });
                 });
             });

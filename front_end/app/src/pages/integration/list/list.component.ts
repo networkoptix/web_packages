@@ -10,9 +10,9 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'integrations-list-component',
-    templateUrl : 'list.component.html',
-    styleUrls   : ['list.component.scss']
+    selector: 'integrations-list-component',
+    templateUrl: 'list.component.html',
+    styleUrls: ['list.component.scss']
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
@@ -62,9 +62,9 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.show(
             this.LANG.ribbon.integration.previewRibbon?.(),
             [{
-                type  : 'link',
-                text  : this.LANG.ribbon.integration.backToEditText?.(),
-                value : this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
+                type: 'link',
+                text: this.LANG.ribbon.integration.backToEditText?.(),
+                value: this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
             }]
         );
     }

@@ -119,10 +119,10 @@ export class Camera implements ICamera {
         if (resolutions.length && transport !== 'hls') {
             const primaryResolutionHeight = parseInt((result.high || result.low).split('x')[1]);
             const defaultResolutions = {
-                1080 : '1920x1080',
-                720  : '1280x720',
-                480  : '854x480',
-                360  : '640x360'
+                1080: '1920x1080',
+                720: '1280x720',
+                480: '854x480',
+                360: '640x360'
             };
             [1080, 720, 480, 360].forEach((yResolution) => {
                 if (primaryResolutionHeight >= yResolution) {

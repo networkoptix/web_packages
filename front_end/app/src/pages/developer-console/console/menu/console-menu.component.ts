@@ -12,9 +12,9 @@ export interface ConsoleMenuNode {
 }
 
 @Component({
-    selector    : 'console-menu',
-    templateUrl : 'console-menu.component.html',
-    styleUrls   : ['console-menu.component.scss']
+    selector: 'console-menu',
+    templateUrl: 'console-menu.component.html',
+    styleUrls: ['console-menu.component.scss']
 })
 export class NxDevConsoleMenuComponent {
     @Input() menu: ConsoleMenuNode[];
@@ -43,7 +43,7 @@ export class NxDevConsoleMenuComponent {
 
     ngOnChanges(changes: SimpleChanges) {
         const {
-            menu         : { currentValue: menu }
+            menu: { currentValue: menu }
         } = changes;
 
         const { parentNode } = this.headerService.currentLocation;

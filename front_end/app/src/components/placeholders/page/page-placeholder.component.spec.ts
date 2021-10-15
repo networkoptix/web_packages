@@ -25,8 +25,8 @@ describe('NxPagePlaceholderComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NxPagePlaceholderComponent],
-                providers    : [
+                declarations: [NxPagePlaceholderComponent],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock),
                     new MockProvider(NxScrollMechanicsService, scrollMock)

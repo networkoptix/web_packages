@@ -8,9 +8,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { Bookmark }                  from '../bookmark.service';
 
 @Component({
-    selector    : 'bookmarks-list-component',
-    templateUrl : 'list.component.html',
-    styleUrls   : ['list.component.scss']
+    selector: 'bookmarks-list-component',
+    templateUrl: 'list.component.html',
+    styleUrls: ['list.component.scss']
 })
 export class NxBookmarksListComponent implements OnDestroy {
     @Input() list: Bookmark[];

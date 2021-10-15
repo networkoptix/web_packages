@@ -39,8 +39,8 @@ export class TimelineSelectionService {
 
     protected _subject = new BehaviorSubject<TimelineSelectionServiceStatus>(
         {
-            isActive : false,
-            range    : new TimeRange(0, 0)
+            isActive: false,
+            range: new TimeRange(0, 0)
         }
     )
 
@@ -58,8 +58,8 @@ export class TimelineSelectionService {
 
     protected _emit () {
         this._subject.next({
-            isActive : this.isActive,
-            range    : this.range
+            isActive: this.isActive,
+            range: this.range
         });
     }
 

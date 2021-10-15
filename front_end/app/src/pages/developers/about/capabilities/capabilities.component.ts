@@ -5,9 +5,9 @@ import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @Component({
-    selector    : 'nx-capabilities',
-    templateUrl : 'capabilities.component.html',
-    styleUrls   : ['capabilities.component.scss']
+    selector: 'nx-capabilities',
+    templateUrl: 'capabilities.component.html',
+    styleUrls: ['capabilities.component.scss']
 })
 export class NxCapabilitiesComponent {
     @Input() capabilitiesNode: AboutNode;

@@ -9,9 +9,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSystem }                  from '@services/system.service';
 
 @Component({
-    selector    : 'nx-modal-detach-server-content',
-    templateUrl : 'detach-server.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-detach-server-content',
+    templateUrl: 'detach-server.component.html',
+    styleUrls: []
 })
 export class DetachServerModalContent {
     @Input() system: NxSystem;
@@ -37,9 +37,9 @@ export class DetachServerModalContent {
 
     ngOnInit() {
         const options = {
-            classname : this.CONFIG.toast.warning,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.warning,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         this.detachServer = this.processService
             .createProcess(

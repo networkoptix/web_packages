@@ -16,9 +16,9 @@ import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-authorize-activate-account-component',
-    templateUrl : 'activate-account.component.html',
-    styleUrls   : ['activate-account.component.scss']
+    selector: 'nx-authorize-activate-account-component',
+    templateUrl: 'activate-account.component.html',
+    styleUrls: ['activate-account.component.scss']
 })
 
 export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {

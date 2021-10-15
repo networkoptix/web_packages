@@ -10,8 +10,8 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-modal-change-storage',
-    templateUrl : 'change-storage.component.html'
+    selector: 'nx-modal-change-storage',
+    templateUrl: 'change-storage.component.html'
 })
 export class ChangeStorageModalContent {
     @Input() system: NxSystem;
@@ -59,7 +59,7 @@ export class ChangeStorageModalContent {
 
     async deleteAnalyticsDataProcess() {
         try {
-            const { reply: { settings:  { metadataStorageChangePolicy } } }  = await this.system.updateOrGetSystemSettings().toPromise();
+            const { reply: { settings: { metadataStorageChangePolicy } } }  = await this.system.updateOrGetSystemSettings().toPromise();
             if (metadataStorageChangePolicy !== 'remove') {
                 await this.system.updateOrGetSystemSettings({ metadataStorageChangePolicy: 'remove' }).toPromise();
             }
@@ -71,7 +71,7 @@ export class ChangeStorageModalContent {
 
     async keepAnalyticsDataProcess() {
         try {
-            const { reply: { settings:  { metadataStorageChangePolicy } } } = await this.system.updateOrGetSystemSettings().toPromise();
+            const { reply: { settings: { metadataStorageChangePolicy } } } = await this.system.updateOrGetSystemSettings().toPromise();
             if (metadataStorageChangePolicy !== 'keep') {
                 await this.system.updateOrGetSystemSettings({ metadataStorageChangePolicy: 'keep' }).toPromise();
             }

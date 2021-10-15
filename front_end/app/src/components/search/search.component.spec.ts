@@ -34,9 +34,9 @@ describe('NxSearchComponent', () => {
     const locationMock = new BehaviorSubject(null);
     const routeMock = { queryParams: new BehaviorSubject(params) };
     const uriMock = {
-        getParams : () => params,
-        getURL    : () => url,
-        updateURI : (newUrl, newParams, replaceUrl) => {
+        getParams: () => params,
+        getURL: () => url,
+        updateURI: (newUrl, newParams, replaceUrl) => {
             url = newUrl;
             params = newParams;
             routeMock.queryParams.next(params);
@@ -50,8 +50,8 @@ describe('NxSearchComponent', () => {
         waitForAsync(() => {
             const spyCreateSearch = jasmine.createSpyObj('NxSearchService', ['getMatchPatterns']);
             TestBed.configureTestingModule({
-                declarations : [NxSearchComponent],
-                imports      : [
+                declarations: [NxSearchComponent],
+                imports: [
                     CommonModule,
                     FormsModule,
                     DirectivesModule,

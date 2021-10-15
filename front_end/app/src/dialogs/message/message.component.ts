@@ -26,9 +26,9 @@ interface Subject {
 }
 
 @Component({
-    selector    : 'nx-modal-message-content',
-    templateUrl : 'message.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-message-content',
+    templateUrl: 'message.component.html',
+    styleUrls: []
 })
 export class MessageModalContent implements OnInit {
     @Input() account;
@@ -102,8 +102,8 @@ export class MessageModalContent implements OnInit {
         }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
-                value : subject,
-                name  : NxLanguageProviderService.translate(this.LANG.dialogs.message.subject[subject], { asset: this.data.asset })
+                value: subject,
+                name: NxLanguageProviderService.translate(this.LANG.dialogs.message.subject[subject], { asset: this.data.asset })
             };
         });
 

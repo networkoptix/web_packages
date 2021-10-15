@@ -9,9 +9,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSystemRole }              from '@services/system.service';
 
 @Component({
-    selector    : 'nx-modal-add-user-content',
-    templateUrl : 'add-user.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-add-user-content',
+    templateUrl: 'add-user.component.html',
+    styleUrls: []
 })
 export class AddUserModalContent {
     @Input() system;
@@ -93,12 +93,12 @@ export class AddUserModalContent {
     ngOnInit() {
         this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.systemName || this.system.info.name);
         this.user = {
-            email     : '',
-            isEnabled : true,
-            isCloud   : true,
-            role      : {
-                name        : this.CONFIG.accessRoles.default,
-                permissions : ''
+            email: '',
+            isEnabled: true,
+            isCloud: true,
+            role: {
+                name: this.CONFIG.accessRoles.default,
+                permissions: ''
             }
         };
         this.accessDescription = this.getRoleDescription();

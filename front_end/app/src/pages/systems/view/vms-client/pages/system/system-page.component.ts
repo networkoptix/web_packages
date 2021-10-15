@@ -5,9 +5,9 @@ import MediaServer from '../../submodules/vms/datatypes/MediaServer';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector    : 'system-page',
-    templateUrl : './system-page.component.html',
-    styleUrls   : ['./system-page.component.scss']
+    selector: 'system-page',
+    templateUrl: './system-page.component.html',
+    styleUrls: ['./system-page.component.scss']
 })
 export class SystemPageComponent implements OnInit {
     protected _state: VmsState

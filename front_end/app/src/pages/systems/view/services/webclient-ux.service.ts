@@ -8,9 +8,9 @@ export interface WebclientUxState {
 }
 
 const webClientUxInitialState = {
-    isFullScreen    : false,
-    isSidebarShown  : true,
-    isTimelineShown : true
+    isFullScreen: false,
+    isSidebarShown: true,
+    isTimelineShown: true
 };
 
 @Injectable({

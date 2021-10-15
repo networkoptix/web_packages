@@ -15,10 +15,10 @@ import {
  */
 
 @Component({
-    selector      : 'nx-alert-block',
-    templateUrl   : 'block.component.html',
-    styleUrls     : ['block.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-alert-block',
+    templateUrl: 'block.component.html',
+    styleUrls: ['block.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;

@@ -18,8 +18,8 @@ import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule {}
 
@@ -36,44 +36,44 @@ describe('NxFooterComponent', () => {
 
     const footers = [
         {
-            accepted          : true,
-            asset_id          : null,
-            asset_type        : null,
-            authentication    : 'Both',
-            breadcrumbs       : [],
-            display_name      : 'About Nx Cloud',
-            draft             : null,
-            icon              : '',
-            name              : 'About Nx Cloud',
-            name_raw          : 'About %CLOUD_NAME%',
-            new_window        : false,
-            next_item         : false,
-            nodes             : [],
-            order             : 1,
-            pending           : false,
-            related_asset_ids : [],
-            subtitle          : '',
-            url               : '/content/about'
+            accepted: true,
+            asset_id: null,
+            asset_type: null,
+            authentication: 'Both',
+            breadcrumbs: [],
+            display_name: 'About Nx Cloud',
+            draft: null,
+            icon: '',
+            name: 'About Nx Cloud',
+            name_raw: 'About %CLOUD_NAME%',
+            new_window: false,
+            next_item: false,
+            nodes: [],
+            order: 1,
+            pending: false,
+            related_asset_ids: [],
+            subtitle: '',
+            url: '/content/about'
         },
         {
-            accepted          : true,
-            asset_id          : null,
-            asset_type        : null,
-            authentication    : 'Both',
-            breadcrumbs       : [],
-            display_name      : 'Download Nx Witness',
-            draft             : null,
-            icon              : '',
-            name              : 'Download Nx Witness',
-            name_raw          : 'Download %VMS_NAME%',
-            new_window        : false,
-            next_item         : false,
-            nodes             : [],
-            order             : 2,
-            pending           : false,
-            related_asset_ids : [],
-            subtitle          : '',
-            url               : '/download'
+            accepted: true,
+            asset_id: null,
+            asset_type: null,
+            authentication: 'Both',
+            breadcrumbs: [],
+            display_name: 'Download Nx Witness',
+            draft: null,
+            icon: '',
+            name: 'Download Nx Witness',
+            name_raw: 'Download %VMS_NAME%',
+            new_window: false,
+            next_item: false,
+            nodes: [],
+            order: 2,
+            pending: false,
+            related_asset_ids: [],
+            subtitle: '',
+            url: '/download'
         }
     ];
 
@@ -86,14 +86,8 @@ describe('NxFooterComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                NxFooterComponent
-            ],
-            imports: [
-                CommonModule,
-                TranslateTestingModule,
-                RouterTestingModule
-            ],
+            declarations: [NxFooterComponent],
+            imports: [CommonModule, TranslateTestingModule, RouterTestingModule],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: DomSanitizer, useValue: {} },

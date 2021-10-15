@@ -39,9 +39,9 @@ interface DropdownStorage {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-standard-server-component',
-    templateUrl : 'server-standard.component.html',
-    styleUrls   : ['server-standard.component.scss']
+    selector: 'nx-standard-server-component',
+    templateUrl: 'server-standard.component.html',
+    styleUrls: ['server-standard.component.scss']
 })
 export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
@@ -260,9 +260,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     .catch(() => {
                         this.serverNameWatcher.reset();
                         const options = {
-                            classname : this.CONFIG.toast.warning,
-                            autohide  : true,
-                            delay     : this.CONFIG.alertTimeout
+                            classname: this.CONFIG.toast.warning,
+                            autohide: true,
+                            delay: this.CONFIG.alertTimeout
                         };
 
                         this.toastService.show(
@@ -484,9 +484,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         await this.system.update();
                     } else if (closeRes === 'error') {
                         const options = {
-                            classname : this.CONFIG.toast.warning,
-                            autohide  : true,
-                            delay     : this.CONFIG.alertTimeout
+                            classname: this.CONFIG.toast.warning,
+                            autohide: true,
+                            delay: this.CONFIG.alertTimeout
                         };
                         this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
@@ -523,13 +523,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.dropdownStorages = analyticsDbTargetLocations.map(({ url, isOnline, storageStatus, storageId, isWritable, freeSpace }) => {
                 const selected = this.currentAnalyticsDbId === storageId;
                 return {
-                    name        : url,
+                    name: url,
                     isOnline,
                     isWritable,
-                    isNotSystem : !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
+                    isNotSystem: !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
                     selected,
-                    id          : storageId,
-                    value       : storageId,
+                    id: storageId,
+                    value: storageId,
                     freeSpace
                 };
             });

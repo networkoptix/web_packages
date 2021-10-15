@@ -11,9 +11,9 @@ import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { NxAccountService }          from '@services/account.service';
 
 @Component({
-    selector    : 'mandatory-2fa',
-    templateUrl : 'mandatory-2fa.component.html',
-    styleUrls   : []
+    selector: 'mandatory-2fa',
+    templateUrl: 'mandatory-2fa.component.html',
+    styleUrls: []
 })
 export class Mandatory2faModalContent {
     @Input() system2faEnabled: boolean;
@@ -47,9 +47,9 @@ export class Mandatory2faModalContent {
     ngOnInit() {
         this.showError = !this.accountService.account.account2faEnabled;
         const options = {
-            classname : this.CONFIG.toast.warning,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.warning,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         this.mandatory2fa = this.processService
             .createProcess(

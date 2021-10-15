@@ -4,9 +4,9 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { System }                   from '@services/nx-cloud-api.types';
 
 @Component({
-    selector    : 'nx-system-tile',
-    templateUrl : 'system-tile.component.html',
-    styleUrls   : ['system-tile.component.scss']
+    selector: 'nx-system-tile',
+    templateUrl: 'system-tile.component.html',
+    styleUrls: ['system-tile.component.scss']
 })
 export class NxSystemTileComponent {
     @Input() system: System;

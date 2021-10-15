@@ -28,9 +28,9 @@ export enum AboutTemplates {
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({
-    selector    : 'nx-about',
-    templateUrl : 'about.component.html',
-    styleUrls   : ['about.component.scss']
+    selector: 'nx-about',
+    templateUrl: 'about.component.html',
+    styleUrls: ['about.component.scss']
 })
 export class NxAboutComponent {
     CONFIG: IConfig;
@@ -62,8 +62,8 @@ export class NxAboutComponent {
             ? `Template name "${template}" is not a valid template`
             : 'Template name is required';
         return {
-            name     : title,
-            [helper] : Object.values(AboutTemplates).reduce((
+            name: title,
+            [helper]: Object.values(AboutTemplates).reduce((
                 rest, cur, ind, arr
             ) => `${rest}"${cur}"${
                 arr.length === 1
@@ -135,11 +135,11 @@ export class NxAboutComponent {
         nodes
     }): AboutNode => {
         return ({
-            title       : displayName || name || asset.title,
+            title: displayName || name || asset.title,
             subtitle,
-            displayName : displayName || name,
-            nodes       : nodes && nodes.map(this.mapToAboutNode),
-            url         : url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
+            displayName: displayName || name,
+            nodes: nodes && nodes.map(this.mapToAboutNode),
+            url: url || (assetKB ? `/docs/${this.baseName}/${assetKB}/${assetId}` : ''),
             assetId,
             asset,
             icon,
@@ -150,8 +150,8 @@ export class NxAboutComponent {
     private mapToAboutStructure = (
         node
     ): AboutStructureNode => ({
-        template : node.icon.split(' ')[0],
-        node     : this.mapToAboutNode(node)
+        template: node.icon.split(' ')[0],
+        node: this.mapToAboutNode(node)
     });
 
     private mapDocToNodes = (
@@ -211,9 +211,9 @@ export class NxAboutComponent {
     showRibbon(id, state) {
         const ribbonActions: RibbonActionInput[] = [
             {
-                type  : 'link',
-                text  : this.LANG.ribbon.integration.backToEditText,
-                value : this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
+                type: 'link',
+                text: this.LANG.ribbon.integration.backToEditText,
+                value: this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
             }
         ];
         this.ribbonService.show(

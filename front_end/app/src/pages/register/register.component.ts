@@ -15,9 +15,9 @@ import { NxStorageService }          from '@services/storage.service';
 import { NxSessionService }          from '@services/session.service';
 
 @Component({
-    selector    : 'nx-register-component',
-    templateUrl : 'register.component.html',
-    styleUrls   : ['register.component.scss']
+    selector: 'nx-register-component',
+    templateUrl: 'register.component.html',
+    styleUrls: ['register.component.scss']
 })
 
 export class NxRegisterComponent implements OnInit {
@@ -126,12 +126,12 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
-            password  : '',
-            firstName : '',
-            lastName  : '',
-            accept    : false,
-            code      : this.code
+            email: this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            accept: false,
+            code: this.code
         };
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
@@ -161,8 +161,8 @@ export class NxRegisterComponent implements OnInit {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount?.()
             },
-            holdAlerts  : true,
-            errorPrefix : ''
+            holdAlerts: true,
+            errorPrefix: ''
         })
             .then((response) => {
                 if (response.resultCode === 'alreadyExists') {

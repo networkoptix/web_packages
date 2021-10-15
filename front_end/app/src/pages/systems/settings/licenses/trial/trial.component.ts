@@ -14,9 +14,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-license-trial-component',
-    templateUrl : 'trial.component.html',
-    styleUrls   : ['trial.component.scss']
+    selector: 'nx-license-trial-component',
+    templateUrl: 'trial.component.html',
+    styleUrls: ['trial.component.scss']
 })
 
 export class NxLicenseTrialComponent implements OnChanges, OnDestroy {

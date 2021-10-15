@@ -4,9 +4,9 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-license-summary-component',
-    templateUrl : 'summary.component.html',
-    styleUrls   : ['summary.component.scss']
+    selector: 'nx-license-summary-component',
+    templateUrl: 'summary.component.html',
+    styleUrls: ['summary.component.scss']
 })
 
 export class NxLicenseSummaryComponent {

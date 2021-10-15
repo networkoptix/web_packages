@@ -10,8 +10,8 @@ describe('NonSupportedBrowserComponent', () => {
     beforeEach(async(() => {
         TestBed
             .configureTestingModule({
-                declarations : [NonSupportedBrowserComponent],
-                providers    : []
+                declarations: [NonSupportedBrowserComponent],
+                providers: []
             })
             .compileComponents();
     }));

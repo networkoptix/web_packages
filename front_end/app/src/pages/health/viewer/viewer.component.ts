@@ -29,10 +29,10 @@ import { NxHeaderService }                 from '@services/nx-header.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-health-viewer-component',
-    templateUrl   : 'viewer.component.html',
-    styleUrls     : ['viewer.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-health-viewer-component',
+    templateUrl: 'viewer.component.html',
+    styleUrls: ['viewer.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxReportViewerComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
@@ -101,14 +101,14 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.healthService.importedData = false;
         this.menu = {
-            base            : '/health-report/viewer',
-            selectedSection : '', // updated by selectedSectionSubject
-            level1          : [
+            base: '/health-report/viewer',
+            selectedSection: '', // updated by selectedSectionSubject
+            level1: [
                 {
-                    id    : 'alerts',
-                    label : 'Alerts',
-                    path  : 'alerts',
-                    svg   : 'alerts'
+                    id: 'alerts',
+                    label: 'Alerts',
+                    path: 'alerts',
+                    svg: 'alerts'
                 }
             ]
         };
@@ -177,21 +177,21 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
             if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
                 menu.level1.push({
-                    id    : asset,
-                    label : this.healthService.manifest[asset].name,
-                    path  : asset,
-                    svg   : asset
+                    id: asset,
+                    label: this.healthService.manifest[asset].name,
+                    path: asset,
+                    svg: asset
                 });
             }
         });
         menu.level1[0].alerts = [
             {
-                count : this.healthService.alertsCount.error,
-                type  : 'error'
+                count: this.healthService.alertsCount.error,
+                type: 'error'
             },
             {
-                count : this.healthService.alertsCount.warning,
-                type  : 'warning'
+                count: this.healthService.alertsCount.warning,
+                type: 'warning'
             }
         ];
         this.menu = { ...menu };
@@ -231,18 +231,18 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         Object.keys(this.healthService.tableHeaders).forEach(metric => {
             if (!this.healthService.tableHeaders[metric].values._) {
                 this.healthService.tableHeaders[metric].values._ = {
-                    id     : '_',
-                    values : {}
+                    id: '_',
+                    values: {}
                 };
             }
             this.healthService.tableHeaders[metric].values.unshift({
-                id     : '_',
-                name   : '',
-                values : [
+                id: '_',
+                name: '',
+                values: [
                     {
-                        display : 'table',
-                        id      : 'alarm',
-                        name    : ''
+                        display: 'table',
+                        id: 'alarm',
+                        name: ''
                     }
                 ]
             });
@@ -277,8 +277,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 const alarmCount = {
-                    warning : 0,
-                    error   : 0
+                    warning: 0,
+                    error: 0
                 };
                 let highestAlarm;
 
@@ -307,9 +307,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
-                                    class   : alarm ? alarm.level : '',
-                                    tooltip : alarm ? this.getAlertText(metric, entity, alarm.text) : '',
-                                    icon    : alarm ? alarm.level : ''
+                                    class: alarm ? alarm.level : '',
+                                    tooltip: alarm ? this.getAlertText(metric, entity, alarm.text) : '',
+                                    icon: alarm ? alarm.level : ''
                                 };
 
                                 if (header.display) { // Search by displayed fields
@@ -388,8 +388,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                             }
                             alert._.server.formatClass = 'long-text';
                             alert._.type = {
-                                text        : this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
-                                formatClass : 'text'
+                                text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
+                                formatClass: 'text'
                             };
                             alert._.message = { text: alarm.text, formatClass: unset };
                             alert._.alarm = { icon: alarm.level };
@@ -490,29 +490,29 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     { systemName: data.system || '' }
                 );
                 this.headerService.currentLocation = {
-                    isSystem   : false,
-                    parentNode : {
-                        authentication : 'Both',
-                        display_name   : 'Services',
-                        icon           : 'services.svg',
-                        name           : 'Services',
-                        new_window     : false,
-                        nodes          : [
+                    isSystem: false,
+                    parentNode: {
+                        authentication: 'Both',
+                        display_name: 'Services',
+                        icon: 'services.svg',
+                        name: 'Services',
+                        new_window: false,
+                        nodes: [
                             {
-                                authentication : 'Both',
-                                display_name   : systemName,
-                                icon           : '',
-                                name           : 'ReportViewer',
-                                new_window     : false,
-                                nodes          : undefined,
-                                order          : 0,
-                                url            : 'health-report/viewer'
+                                authentication: 'Both',
+                                display_name: systemName,
+                                icon: '',
+                                name: 'ReportViewer',
+                                new_window: false,
+                                nodes: undefined,
+                                order: 0,
+                                url: 'health-report/viewer'
                             }
                         ]
                     },
-                    order : 1,
-                    url   : '',
-                    path  : 'health-report/viewer'
+                    order: 1,
+                    url: '',
+                    path: 'health-report/viewer'
                 };
 
                 let time = '-';
@@ -520,8 +520,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
                     time = new Date(data.time).toUTCString();
                 }
                 this.importedData = {
-                    imported : true,
-                    system   : data.system || '-',
+                    imported: true,
+                    system: data.system || '-',
                     time
                 };
             };

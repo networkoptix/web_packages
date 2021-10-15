@@ -4,14 +4,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR }  from '@angular/forms';
 import { DEFAULT_EDITOR_CONFIG } from './editor-config';
 
 @Component({
-    selector    : 'nx-html',
-    templateUrl : 'html-input.component.html',
-    styleUrls   : ['html-input.component.scss'],
-    providers   : [
+    selector: 'nx-html',
+    templateUrl: 'html-input.component.html',
+    styleUrls: ['html-input.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxHTMLComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxHTMLComponent),
+            multi: true
         }
     ]
 })

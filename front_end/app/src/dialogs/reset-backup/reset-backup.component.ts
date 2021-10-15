@@ -10,9 +10,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSystem }                  from '@services/system.service';
 
 @Component({
-    selector    : 'nx-modal-reset-backup',
-    templateUrl : 'reset-backup.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-reset-backup',
+    templateUrl: 'reset-backup.component.html',
+    styleUrls: []
 })
 export class ResetBackupModalContent {
     @Input() system: NxSystem;

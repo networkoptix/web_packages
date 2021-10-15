@@ -14,15 +14,17 @@ describe('NxNoSystemsComponent', () => {
     let el: DebugElement;
 
     beforeEach(waitForAsync(() => {
-        const translateSpy = { translations: {
-            pageTitles: {
-                systems: () => "Systems"
+        const translateSpy = {
+            translations: {
+                pageTitles: {
+                    systems: () => 'Systems'
+                }
             }
-        }};
+        };
         TestBed.configureTestingModule({
-            imports      : [HttpClientTestingModule],
-            declarations : [NxNoSystemsComponent],
-            providers    : [
+            imports: [HttpClientTestingModule],
+            declarations: [NxNoSystemsComponent],
+            providers: [
                 { provide: NxLanguageProviderService, useValue: translateSpy },
                 { provide: NxPageService }
             ]
@@ -42,5 +44,5 @@ describe('NxNoSystemsComponent', () => {
     it('should have 6 elements with no-data-panel-body class', () => {
         const spans = el.queryAll(By.css('.no-data-panel-body'));
         expect(spans.length).toBe(6);
-    })
+    });
 });

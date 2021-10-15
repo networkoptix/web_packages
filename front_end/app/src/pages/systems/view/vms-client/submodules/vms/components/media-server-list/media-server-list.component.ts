@@ -11,9 +11,9 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxUtilsService } from '../../../../../../../../services/utils.service';
 
 @Component({
-    selector    : 'media-server-list',
-    templateUrl : 'media-server-list.component.html',
-    styleUrls   : ['media-server-list.component.scss']
+    selector: 'media-server-list',
+    templateUrl: 'media-server-list.component.html',
+    styleUrls: ['media-server-list.component.scss']
 })
 export class MediaServerListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig

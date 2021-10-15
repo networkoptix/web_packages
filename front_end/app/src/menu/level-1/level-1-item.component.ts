@@ -11,9 +11,9 @@ import { NxMenuService }            from '@src/menu';
  */
 
 @Component({
-    selector    : 'nx-level-1-item',
-    templateUrl : 'level-1-item.component.html',
-    styleUrls   : ['level-1-item.component.scss']
+    selector: 'nx-level-1-item',
+    templateUrl: 'level-1-item.component.html',
+    styleUrls: ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() searchMode: boolean;

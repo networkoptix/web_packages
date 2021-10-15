@@ -24,9 +24,9 @@ interface Server {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-overlay-modal',
-    templateUrl : 'overlay-modal.component.html',
-    styleUrls   : ['overlay-modal.component.scss']
+    selector: 'nx-overlay-modal',
+    templateUrl: 'overlay-modal.component.html',
+    styleUrls: ['overlay-modal.component.scss']
 })
 export class NxOverlayModalComponent implements OnInit {
     system: NxSystem

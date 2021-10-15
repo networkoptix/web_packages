@@ -19,11 +19,11 @@ import { NxBookmarksListComponent } from './list.component';
         TranslateModule,
         ComponentsModule
     ],
-    providers : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxBookmarksListComponent
     ],
-    bootstrap : [],
+    bootstrap: [],
     exports: [
         NxBookmarksListComponent
     ]

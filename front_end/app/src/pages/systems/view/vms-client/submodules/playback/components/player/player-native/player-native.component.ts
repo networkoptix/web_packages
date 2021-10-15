@@ -1,19 +1,19 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
-import { HttpClient }                                                                                                               from '@angular/common/http';
-import PlaybackService                                                     from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_ERROR, PLAYBACK_MODE, LivePlaybackState } from '../../../datatypes/PlaybackState';
-import { Subscription }                                                    from 'rxjs';
-import Hls                                                                                                                          from 'hls.js';
-import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL }                                                            from '@pages/systems/view/vms-client/utils';
-import { WebClientUxService }                                                                                                       from '@pages/systems/view/services/webclient-ux.service';
-import { NxUtilsService }                                                                                                           from '@services/utils.service';
-import { NxLanguageProviderService }                                                                                                from '../../../../../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }                                                                                                  from '../../../../../../../../../../language_i18n_static_types';
+import { HttpClient } from '@angular/common/http';
+import PlaybackService from '../../../services/playback.service';
+import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
+import { Subscription } from 'rxjs';
+import Hls from 'hls.js';
+import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
+import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxLanguageProviderService }  from '../../../../../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '../../../../../../../../../../language_i18n_static_types';
 
 @Component({
-    selector    : 'player-native',
-    templateUrl : './player-native.component.html',
-    styleUrls   : ['./player-native.component.scss']
+    selector: 'player-native',
+    templateUrl: './player-native.component.html',
+    styleUrls: ['./player-native.component.scss']
 })
 @LoggerDecorator('NATIVE PLAYER ::', true)
 export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
@@ -95,6 +95,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this._handleRotation();
     }
 
+    // @ts-ignore
     @HostListener('window:resize', ['$event'])
     protected _handleRotation () {
         if (!this.videoView) {
@@ -185,6 +186,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
                     this._warn('Hls is not supported on this device');
                     break;
                 }
+            // eslint-disable-next-line no-fallthrough
             case 'mp4':
             case 'webm':
                 // case 'mpegts':
@@ -234,7 +236,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     public onVideoEnded (e: MediaStreamEvent) {
         this._log('video ended');
-        this.playback.playLive()
+        this.playback.playLive();
     }
 }
 

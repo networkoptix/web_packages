@@ -19,10 +19,10 @@ import {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'nx-server-logger-component',
-    templateUrl   : 'logger.component.html',
-    styleUrls     : ['logger.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-server-logger-component',
+    templateUrl: 'logger.component.html',
+    styleUrls: ['logger.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxServerLoggerComponent implements OnChanges {
@@ -90,34 +90,34 @@ export class NxServerLoggerComponent implements OnChanges {
 
         this.loggerOptions = [
             {
-                value : 'none',
-                name  : this.LANG.system.loggers.none.text(),
-                help  : this.LANG.system.loggers.none.help()
+                value: 'none',
+                name: this.LANG.system.loggers.none.text(),
+                help: this.LANG.system.loggers.none.help()
             },
             {
-                value : 'error',
-                name  : this.LANG.system.loggers.error.text(),
-                help  : this.LANG.system.loggers.error.help()
+                value: 'error',
+                name: this.LANG.system.loggers.error.text(),
+                help: this.LANG.system.loggers.error.help()
             },
             {
-                value : 'warning',
-                name  : this.LANG.system.loggers.warning.text(),
-                help  : this.LANG.system.loggers.warning.help()
+                value: 'warning',
+                name: this.LANG.system.loggers.warning.text(),
+                help: this.LANG.system.loggers.warning.help()
             },
             {
-                value : 'info',
-                name  : this.LANG.system.loggers.info.text(),
-                help  : this.LANG.system.loggers.info.help()
+                value: 'info',
+                name: this.LANG.system.loggers.info.text(),
+                help: this.LANG.system.loggers.info.help()
             },
             {
-                value : 'debug',
-                name  : this.LANG.system.loggers.debug.text(),
-                help  : this.LANG.system.loggers.debug.help()
+                value: 'debug',
+                name: this.LANG.system.loggers.debug.text(),
+                help: this.LANG.system.loggers.debug.help()
             },
             {
-                value : 'verbose',
-                name  : this.LANG.system.loggers.verbose.text(),
-                help  : this.LANG.system.loggers.verbose.help()
+                value: 'verbose',
+                name: this.LANG.system.loggers.verbose.text(),
+                help: this.LANG.system.loggers.verbose.help()
             }
         ];
 

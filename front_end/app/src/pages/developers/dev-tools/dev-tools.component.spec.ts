@@ -40,9 +40,9 @@ describe('For Developers Landing - Dev Tools', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxDevToolsComponent, RouterLinkDirectiveStub],
-                imports      : [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-                providers    : [
+                declarations: [NxDevToolsComponent, RouterLinkDirectiveStub],
+                imports: [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxCloudApiService, cloudApiMock),
                     new MockProvider(NxHeaderService, {}),

@@ -21,9 +21,9 @@ describe('NxExternalVideoComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxExternalVideoComponent],
-            imports      : [CommonModule, HttpClientTestingModule],
-            providers    : [
+            declarations: [NxExternalVideoComponent],
+            imports: [CommonModule, HttpClientTestingModule],
+            providers: [
                 { provide: NxConfigService, useValue: configMock }
             ]
         }).compileComponents()

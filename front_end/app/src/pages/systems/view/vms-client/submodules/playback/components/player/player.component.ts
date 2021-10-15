@@ -12,9 +12,9 @@ import VmsState from '../../../vms/datatypes/VmsState';
 import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair';
 
 @Component({
-    selector    : 'player',
-    templateUrl : './player.component.html',
-    styleUrls   : ['./player.component.scss']
+    selector: 'player',
+    templateUrl: './player.component.html',
+    styleUrls: ['./player.component.scss']
 })
 @LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -41,8 +41,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public handleClick: (e: MouseEvent) => void
 
     private serverErrors = {
-        cannotDecrypt : 'Cannot decrypt media',
-        setupPassword : 'Please set up camera password'
+        cannotDecrypt: 'Cannot decrypt media',
+        setupPassword: 'Please set up camera password'
     }
 
     constructor (

@@ -22,8 +22,8 @@ import { NxDialogsService }         from '@dialogs/dialogs.service';
 import { OauthService }             from '@services/oauth.service';
 
 export const DOC_TYPES = {
-    knowledgebase : 'kb',
-    struct        : 'struct'
+    knowledgebase: 'kb',
+    struct: 'struct'
 };
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
@@ -128,9 +128,9 @@ export class NxCloudApiService {
                 return this.customClient;
             default:
                 return {
-                    list        : (...args) => new BehaviorSubject([]),
-                    getManifest : () => new BehaviorSubject({ manifest: { contexts: {} } }),
-                    retrieve    : (id) => new BehaviorSubject({})
+                    list: (...args) => new BehaviorSubject([]),
+                    getManifest: () => new BehaviorSubject({ manifest: { contexts: {} } }),
+                    retrieve: (id) => new BehaviorSubject({})
                 };
         }
     }
@@ -162,9 +162,9 @@ export class NxCloudApiService {
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
         }
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
-            name     : systemName,
-            email    : email,
-            password : password
+            name: systemName,
+            email: email,
+            password: password
         }, { headers }).pipe(
             tap(() => {
                 if (accessToken) {
@@ -212,16 +212,16 @@ export class NxCloudApiService {
 
     getStaticLanding() {
         const httpOptions = {
-            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType : 'text' as 'text'
+            headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType: 'text' as 'text'
         };
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
     getStatic(url) {
         const httpOptions = {
-            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType : 'text' as 'text'
+            headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType: 'text' as 'text'
         };
         return this.http.get(url, httpOptions);
     }
@@ -269,8 +269,8 @@ export class NxCloudApiService {
     @swClear('cloudSystemAPI', '/systems', true)
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
         return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id : masterSystemId,
-            slave_system_id  : slaveSystemId,
+            master_system_id: masterSystemId,
+            slave_system_id: slaveSystemId,
             password
         }).toPromise();
     }
@@ -300,8 +300,8 @@ export class NxCloudApiService {
                 {
                     email,
                     password,
-                    first_name : firstName,
-                    last_name  : lastName,
+                    first_name: firstName,
+                    last_name: lastName,
                     code
                 })
             .toPromise();
@@ -348,8 +348,8 @@ export class NxCloudApiService {
     unshare(systemId: string, userEmail: string, password?: string) {
         let url = `${this.CONFIG.apiBase}/systems/${systemId}/users`;
         const data: any = {
-            user_email : userEmail,
-            role       : this.CONFIG.accessRoles.unshare
+            user_email: userEmail,
+            role: this.CONFIG.accessRoles.unshare
         };
         if (this.CONFIG.isLocal) {
             url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
@@ -383,9 +383,9 @@ export class NxCloudApiService {
         const body: any = {
             email,
             password,
-            client_id     : clientId,
-            redirect_uri  : redirectUrl,
-            response_type : responseType
+            client_id: clientId,
+            redirect_uri: redirectUrl,
+            response_type: responseType
         };
         state && (body.state = state);
         scope && (body.scope = scope);
@@ -479,21 +479,21 @@ export class NxCloudApiService {
     accountPost(account: Account) {
         // strip unnecessary account info
         const accountInfo = {
-            email        : account.email,
-            first_name   : account.first_name,
-            last_name    : account.last_name,
-            is_staff     : account.is_staff,
-            is_superuser : account.is_superuser || false,
-            language     : account.language,
-            permissions  : account.permissions
+            email: account.email,
+            first_name: account.first_name,
+            last_name: account.last_name,
+            is_staff: account.is_staff,
+            is_superuser: account.is_superuser || false,
+            language: account.language,
+            permissions: account.permissions
         };
         return this.http.post<t.AccountEdit>(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string, totp?: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password : newPassword,
-            old_password : oldPassword,
+            new_password: newPassword,
+            old_password: oldPassword,
             totp
         }).toPromise();
     }
@@ -668,8 +668,8 @@ export class NxCloudApiService {
     getTokensFromCloud(code: string) {
         const params = {
             code,
-            grant_type    : 'authorization_code',
-            response_type : 'token'
+            grant_type: 'authorization_code',
+            response_type: 'token'
         };
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params }).toPromise().then((tokens) => {
             this.oauthService.setTokens(tokens);

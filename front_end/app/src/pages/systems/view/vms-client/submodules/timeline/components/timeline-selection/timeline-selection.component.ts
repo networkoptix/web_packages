@@ -10,9 +10,9 @@ const DATE_FORMAT_STRING = 'ddd mmm dd yyyy';
 const TIME_FORMAT_STRING = 'HH:MM:ss';
 
 @Component({
-    selector    : 'timeline-selection',
-    templateUrl : './timeline-selection.component.html',
-    styleUrls   : ['./timeline-selection.component.scss']
+    selector: 'timeline-selection',
+    templateUrl: './timeline-selection.component.html',
+    styleUrls: ['./timeline-selection.component.scss']
 })
 export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewInit {
     protected subscription: Subscription
@@ -25,23 +25,23 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         if (!this.status || !this.status.isActive) {
             return {
                 left: {
-                    date : '',
-                    time : ''
+                    date: '',
+                    time: ''
                 },
                 right: {
-                    date : '',
-                    time : ''
+                    date: '',
+                    time: ''
                 }
             };
         }
         return {
             left: {
-                date : dateformat(this.status.range.start, DATE_FORMAT_STRING),
-                time : dateformat(this.status.range.start, TIME_FORMAT_STRING)
+                date: dateformat(this.status.range.start, DATE_FORMAT_STRING),
+                time: dateformat(this.status.range.start, TIME_FORMAT_STRING)
             },
             right: {
-                date : dateformat(this.status.range.end, DATE_FORMAT_STRING),
-                time : dateformat(this.status.range.end, TIME_FORMAT_STRING)
+                date: dateformat(this.status.range.end, DATE_FORMAT_STRING),
+                time: dateformat(this.status.range.end, TIME_FORMAT_STRING)
             }
         };
     }

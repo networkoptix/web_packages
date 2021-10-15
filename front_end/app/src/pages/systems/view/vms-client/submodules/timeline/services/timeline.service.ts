@@ -52,18 +52,18 @@ export class TimelineService {
 
     protected _emit () {
         this._subject.next({
-            fullRange                     : this.fullRange,
-            visibleRange                  : this.visibleRange,
-            canvasGeometry                : this.canvasGeometry,
-            zoom                          : this.zoomStatus,
-            canvasGeometryUpdateRequested : this.canvasGeometryUpdateRequested
+            fullRange: this.fullRange,
+            visibleRange: this.visibleRange,
+            canvasGeometry: this.canvasGeometry,
+            zoom: this.zoomStatus,
+            canvasGeometryUpdateRequested: this.canvasGeometryUpdateRequested
         });
     }
 
     public get zoomStatus () {
         return {
-            canZoomIn  : (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
-            canZoomOut : this._visibleRange.duration < this._fullRange.duration
+            canZoomIn: (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
+            canZoomOut: this._visibleRange.duration < this._fullRange.duration
         };
     }
 

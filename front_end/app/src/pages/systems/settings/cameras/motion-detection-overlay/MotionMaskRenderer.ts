@@ -100,8 +100,8 @@ export class MotionMaskRenderer {
             const cellActualWidth = rect.width / this.columns;
             const cellActualHeight = rect.height / this.rows;
             return {
-                x : Math.floor((event.clientX - rect.left) / cellActualWidth),
-                y : Math.floor((event.clientY - rect.top) / cellActualHeight)
+                x: Math.floor((event.clientX - rect.left) / cellActualWidth),
+                y: Math.floor((event.clientY - rect.top) / cellActualHeight)
             };
         };
 
@@ -131,8 +131,8 @@ export class MotionMaskRenderer {
         };
         // Base observables for managing UI state
         const shiftCtrlSubject$ = new BehaviorSubject({
-            ctrlKey  : false,
-            shiftKey : false
+            ctrlKey: false,
+            shiftKey: false
         });
         const shiftCtrlState = merge(keyDown$, keyUp$)
             .pipe(
@@ -435,10 +435,10 @@ export class MotionMaskRenderer {
         height : number;
     }) => {
         const { x, y, width, height } = {
-            x      : cursor.x * this.cellWidth,
-            y      : cursor.y * this.cellHeight,
-            width  : cursor.width * this.cellWidth,
-            height : cursor.height * this.cellHeight
+            x: cursor.x * this.cellWidth,
+            y: cursor.y * this.cellHeight,
+            width: cursor.width * this.cellWidth,
+            height: cursor.height * this.cellHeight
         };
         this.selectionCtx.clearRect(0, 0, this.width, this.height);
         this.renderSelection();

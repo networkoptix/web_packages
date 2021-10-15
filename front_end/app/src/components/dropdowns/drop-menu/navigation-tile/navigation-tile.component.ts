@@ -11,9 +11,9 @@ import { Auth, MenuNode }           from '@services/menus.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-navigation-tile',
-    templateUrl : 'navigation-tile.component.html',
-    styleUrls   : ['navigation-tile.component.scss']
+    selector: 'nx-navigation-tile',
+    templateUrl: 'navigation-tile.component.html',
+    styleUrls: ['navigation-tile.component.scss']
 })
 export class NxNavigationTileComponent {
     @Input() node: MenuNode;

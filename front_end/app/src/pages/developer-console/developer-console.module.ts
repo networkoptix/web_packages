@@ -17,30 +17,30 @@ import { NxDevConsoleEditComponent }     from './console/edit/console-edit.compo
 
 const appRoutes: Routes = [
     {
-        path      : '',
-        component : NxDevConsoleComponent,
-        pathMatch : 'full'
+        path: '',
+        component: NxDevConsoleComponent,
+        pathMatch: 'full'
     },
     {
-        path      : ':section',
-        pathMatch : 'full',
-        component : NxDevConsoleComponent
+        path: ':section',
+        pathMatch: 'full',
+        component: NxDevConsoleComponent
     },
     {
-        path      : ':section/:mode',
-        pathMatch : 'full',
-        component : NxDevConsoleComponent
+        path: ':section/:mode',
+        pathMatch: 'full',
+        component: NxDevConsoleComponent
     },
     {
-        path      : ':section/:mode/:id',
-        pathMatch : 'full',
-        component : NxDevConsoleComponent
+        path: ':section/:mode/:id',
+        pathMatch: 'full',
+        component: NxDevConsoleComponent
     },
     {
-        path          : ':section/:mode/:id/:context',
-        pathMatch     : 'full',
-        canDeactivate : [ApplyGuard],
-        component     : NxDevConsoleComponent
+        path: ':section/:mode/:id/:context',
+        pathMatch: 'full',
+        canDeactivate: [ApplyGuard],
+        component: NxDevConsoleComponent
     }
 ];
 
@@ -57,13 +57,13 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxDevConsoleComponent,
         NxDevConsoleMenuComponent,
         NxDevConsoleEditComponent
     ],
-    bootstrap : [],
-    exports   : []
+    bootstrap: [],
+    exports: []
 })
 export class NxDeveloperConsoleModule {}

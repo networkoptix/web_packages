@@ -16,9 +16,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-license-new-component',
-    templateUrl : 'new.component.html',
-    styleUrls   : ['new.component.scss']
+    selector: 'nx-license-new-component',
+    templateUrl: 'new.component.html',
+    styleUrls: ['new.component.scss']
 })
 
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
@@ -150,8 +150,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             }
         }, {
             errorCodes: {
-                offline           : () => {},
-                alreadyRegistered : () => {}
+                offline: () => {},
+                alreadyRegistered: () => {}
             }
         });
     }
@@ -177,9 +177,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
-                        name   : NxUtilsService.htmlToEntity(server.name),
-                        value  : server.id,
-                        status : server.status
+                        name: NxUtilsService.htmlToEntity(server.name),
+                        value: server.id,
+                        status: server.status
                     };
 
                     if (server.status !== 'Online') {

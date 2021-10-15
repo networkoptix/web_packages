@@ -31,8 +31,8 @@ const {
 } = forUnitTest;
 
 @NgModule({
-    imports : [TranslateModule.forRoot()],
-    exports : [TranslateModule]
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
 })
 class TranslateTestingModule { }
 
@@ -50,13 +50,13 @@ const [
     fieldPlaceholder
 ] = [...new Array(7)].map(uuid);
 const field = {
-    name        : fieldName,
-    label       : fieldLabel,
-    description : fieldDescription,
-    type        : 'text',
-    metaOnly    : false,
-    optional    : false,
-    placeholder : fieldPlaceholder
+    name: fieldName,
+    label: fieldLabel,
+    description: fieldDescription,
+    type: 'text',
+    metaOnly: false,
+    optional: false,
+    placeholder: fieldPlaceholder
 };
 
 describe('NxConsoleTableComponent', () => {
@@ -65,15 +65,15 @@ describe('NxConsoleTableComponent', () => {
     let el: DebugElement;
     const configMock = { getConfig: () => nxConfig };
     const localStorageMock = {
-        retrieve : () => { },
-        observe  : () => ({
+        retrieve: () => { },
+        observe: () => ({
             subscribe: () => { }
         })
     };
     const translateMock = {
         translations: {
-            'Reset Search' : () => 'Reset Search',
-            Search         : () => 'Search'
+            'Reset Search': () => 'Reset Search',
+            Search: () => 'Search'
         }
     };
     const menuMock = {
@@ -86,11 +86,11 @@ describe('NxConsoleTableComponent', () => {
                 manifest: {
                     contexts: [
                         {
-                            name   : contextName,
-                            label  : contextLabel,
-                            icon   : contextIcon,
-                            fields : [field],
-                            global : false
+                            name: contextName,
+                            label: contextLabel,
+                            icon: contextIcon,
+                            fields: [field],
+                            global: false
                         }
                     ]
                 }
@@ -120,8 +120,8 @@ describe('NxConsoleTableComponent', () => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
         TestBed
             .configureTestingModule({
-                declarations : [NxConsoleTableComponent, RouterLinkDirectiveStub],
-                providers    : [
+                declarations: [NxConsoleTableComponent, RouterLinkDirectiveStub],
+                providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxDialogsService, useValue: {} },
                     { provide: NxCloudApiService, useValue: cloudMock },

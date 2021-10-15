@@ -20,9 +20,9 @@ import { NxUtilsService }            from '@services/utils.service';
 import { NxSystem }                  from '@services/system.service';
 
 @Component({
-    selector    : 'nx-cloud-storage',
-    templateUrl : './cloud-storage.component.html',
-    styleUrls   : ['./cloud-storage.component.scss']
+    selector: 'nx-cloud-storage',
+    templateUrl: './cloud-storage.component.html',
+    styleUrls: ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent implements OnInit {
     @Input() layout;
@@ -206,8 +206,8 @@ export class NxCloudStorageComponent implements OnInit {
                     return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success?.(),
-            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix?.()
+            successMessage: this.LANG.dialogs.cloudStorage.enableCloudStorage.success?.(),
+            errorPrefix: this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix?.()
         }).then(() => {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();
@@ -249,12 +249,12 @@ export class NxCloudStorageComponent implements OnInit {
 }
 
 export const emptyUsage: IUsageStats = {
-    currentRecordings : '&mdash;',
-    whenFullyUsed     : '&mdash;',
-    amountUsed        : '&mdash;',
-    archiveFrom       : '&mdash;',
-    recordingBitrate  : '&mdash;',
-    delayFromLive     : '&mdash;'
+    currentRecordings: '&mdash;',
+    whenFullyUsed: '&mdash;',
+    amountUsed: '&mdash;',
+    archiveFrom: '&mdash;',
+    recordingBitrate: '&mdash;',
+    delayFromLive: '&mdash;'
 };
 
 export interface IUsageStats {

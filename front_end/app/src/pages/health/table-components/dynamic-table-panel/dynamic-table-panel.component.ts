@@ -14,9 +14,9 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 @Component({
-    selector    : 'nx-dynamic-table-panel-component',
-    templateUrl : './dynamic-table-panel.component.html',
-    styleUrls   : ['./dynamic-table-panel.component.scss']
+    selector: 'nx-dynamic-table-panel-component',
+    templateUrl: './dynamic-table-panel.component.html',
+    styleUrls: ['./dynamic-table-panel.component.scss']
 })
 export class NxDynamicTablePanelComponent implements AfterContentInit {
     @Input() panelParams;

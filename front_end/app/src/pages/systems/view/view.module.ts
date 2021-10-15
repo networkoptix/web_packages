@@ -47,8 +47,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
         NxSystemViewIndexPageComponent,
         NxSystemViewCameraPageComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxSystemViewIndexPageComponent
     ]
 })

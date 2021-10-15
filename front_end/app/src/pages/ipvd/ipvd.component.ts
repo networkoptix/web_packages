@@ -33,10 +33,10 @@ interface Params {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector      : 'ipvd',
-    templateUrl   : 'ipvd.component.html',
-    styleUrls     : ['ipvd.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'ipvd',
+    templateUrl: 'ipvd.component.html',
+    styleUrls: ['ipvd.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxIpvdComponent implements OnInit, AfterViewInit {
@@ -122,8 +122,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.uriPath = '/' + this.route.snapshot.parent.url.map(e => e.path).join('/');
 
         this.disclaimerParams = {
-            companyName : this.CONFIG.company.name,
-            vmsName     : this.CONFIG.vmsName
+            companyName: this.CONFIG.company.name,
+            vmsName: this.CONFIG.vmsName
         };
     }
 
@@ -334,10 +334,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.filterModel.selects.push(
             {
-                id       : 'resolution',
-                label    : this.LANG.search.minResolution(),
-                items    : this.resolutions,
-                selected : this.resolutions[0]
+                id: 'resolution',
+                label: this.LANG.search.minResolution(),
+                items: this.resolutions,
+                selected: this.resolutions[0]
             });
     }
 
@@ -345,11 +345,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (this.showAnalytics && this.analytics) {
             this.filterModel.multiselects.push(
                 {
-                    id                  : 'analytics',
-                    label               : this.LANG.search.analytics(),
-                    searchLabel         : this.LANG.search.analyticsSelected(),
-                    searchLabelSingular : '',
-                    items               : this.analytics
+                    id: 'analytics',
+                    label: this.LANG.search.analytics(),
+                    searchLabel: this.LANG.search.analyticsSelected(),
+                    searchLabelSingular: '',
+                    items: this.analytics
                         .map(v => (
                             { id: v, label: v })
                         ),
@@ -386,11 +386,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.filterModel.multiselects = [
             {
-                id       : 'hardwareTypes',
-                label    : this.LANG.search.hardwareTypes(),
-                singular : this.LANG.search.hardwareType(),
-                items    : this.hardwareTypes,
-                selected : []
+                id: 'hardwareTypes',
+                label: this.LANG.search.hardwareTypes(),
+                singular: this.LANG.search.hardwareType(),
+                items: this.hardwareTypes,
+                selected: []
             }
             // vendors will be added later
         ];
@@ -437,10 +437,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.filterModel
                     .multiselects.unshift(
                         {
-                            id       : 'vendors',
-                            label    : this.LANG.search.vendors(),
-                            singular : this.LANG.search.vendor(),
-                            items    : this.vendors.map(v => (
+                            id: 'vendors',
+                            label: this.LANG.search.vendors(),
+                            singular: this.LANG.search.vendor(),
+                            items: this.vendors.map(v => (
                                 { id: v.name, label: v.name }
                             )),
                             selected: []
@@ -580,8 +580,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         const type = (param === 'device') ? this.CONFIG.dialogs.message.type.ipvd_device : this.CONFIG.dialogs.message.type.ipvd_page;
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
-            disclaimer : this.LANG.privacyPolicy.ipvd(),
-            asset      : device
+            disclaimer: this.LANG.privacyPolicy.ipvd(),
+            asset: device
         };
         this.dialogs
             .message(this.accountService, type, data)

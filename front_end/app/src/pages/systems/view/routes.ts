@@ -5,14 +5,14 @@ import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-v
 
 export const routes: Routes = [
     {
-        path        : '',
-        component   : NxSystemViewIndexPageComponent,
-        canActivate : [AuthGuard],
-        children    : [
+        path: '',
+        component: NxSystemViewIndexPageComponent,
+        canActivate: [AuthGuard],
+        children: [
             {
-                path        : ':cameraId',
-                component   : NxSystemViewCameraPageComponent,
-                canActivate : [AuthGuard]
+                path: ':cameraId',
+                component: NxSystemViewCameraPageComponent,
+                canActivate: [AuthGuard]
             }
         ]
     }

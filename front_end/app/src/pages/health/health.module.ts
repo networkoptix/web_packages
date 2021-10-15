@@ -23,13 +23,13 @@ import { NxHealthLayoutService }   from './health-layout.service';
 
 const appRoutes: Routes = [
     {
-        path      : 'viewer',
-        component : NxReportViewerComponent,
-        children  : [
+        path: 'viewer',
+        component: NxReportViewerComponent,
+        children: [
             {
-                path      : '',
-                component : NxSystemAlertsComponent,
-                pathMatch : 'full'
+                path: '',
+                component: NxSystemAlertsComponent,
+                pathMatch: 'full'
             },
             {
                 path: 'alerts', component: NxSystemAlertsComponent
@@ -40,14 +40,14 @@ const appRoutes: Routes = [
         ]
     },
     {
-        path        : '',
-        component   : NxHealthComponent,
-        canActivate : [AuthGuard, SystemGuard],
-        children    : [
+        path: '',
+        component: NxHealthComponent,
+        canActivate: [AuthGuard, SystemGuard],
+        children: [
             {
-                path      : '',
-                component : NxSystemAlertsComponent,
-                pathMatch : 'full'
+                path: '',
+                component: NxSystemAlertsComponent,
+                pathMatch: 'full'
             },
             {
                 path: 'alerts', component: NxSystemAlertsComponent
@@ -76,8 +76,8 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers    : [NxHealthLayoutService],
-    declarations : [
+    providers: [NxHealthLayoutService],
+    declarations: [
         NxHealthComponent,
         NxReportViewerComponent,
         NxSystemAlertsComponent,
@@ -89,8 +89,8 @@ const appRoutes: Routes = [
         NxSystemAlertCardComponent,
         NxUpdateInfoComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxHealthComponent,
         NxReportViewerComponent,
         NxSystemAlertsComponent,

@@ -33,10 +33,10 @@ import { NxAppStateService }            from '@services/nx-app-state.service';
 @UntilDestroy({ checkProperties: true })
 @Component({
     // eslint-disable-next-line no-multi-spaces
-    selector    : 'nx-system-settings-component',
-    templateUrl : 'settings.component.html',
+    selector: 'nx-system-settings-component',
+    templateUrl: 'settings.component.html',
     // eslint-disable-next-line no-multi-spaces
-    styleUrls   : ['settings.component.scss']
+    styleUrls: ['settings.component.scss']
 })
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
@@ -183,18 +183,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.content = {
-            searchableResults  : false,
-            selectedSection    : '', // updated by selectedSectionSubject
-            selectedSubSection : '', // updated by selectedSubSectionSubject
-            system             : {}, // updated by getSystemInfo
-            base               : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
-            level1             : [
+            searchableResults: false,
+            selectedSection: '', // updated by selectedSectionSubject
+            selectedSubSection: '', // updated by selectedSubSectionSubject
+            system: {}, // updated by getSystemInfo
+            base: this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
+            level1: [
                 {
-                    id     : this.CONFIG.menus.systemSettings.admin.id,
-                    svg    : this.CONFIG.menus.systemSettings.admin.icon,
-                    label  : this.LANG.menu.titles.systemAdministration(),
-                    path   : this.CONFIG.menus.systemSettings.admin.path,
-                    level2 : []
+                    id: this.CONFIG.menus.systemSettings.admin.id,
+                    svg: this.CONFIG.menus.systemSettings.admin.icon,
+                    label: this.LANG.menu.titles.systemAdministration(),
+                    path: this.CONFIG.menus.systemSettings.admin.path,
+                    level2: []
                 }
             ]
         };
@@ -448,11 +448,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
-                    id     : this.CONFIG.menus.systemSettings.cameras.id,
-                    svg    : this.CONFIG.menus.systemSettings.cameras.icon,
-                    label  : this.LANG.menu.titles.cameras(),
-                    path   : this.CONFIG.menus.systemSettings.cameras.path,
-                    level3 : []
+                    id: this.CONFIG.menus.systemSettings.cameras.id,
+                    svg: this.CONFIG.menus.systemSettings.cameras.icon,
+                    label: this.LANG.menu.titles.cameras(),
+                    path: this.CONFIG.menus.systemSettings.cameras.path,
+                    level3: []
                 };
                 this.content.level1.push(camerasNode);
             }
@@ -462,13 +462,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }, NxUtilsService.sortASC);
                 this.system.cameras.sort(byParam);
                 camerasNode.level3 = this.system.cameras.map(camera => ({
-                    id              : camera.id.replace(/\s|\{|\}/g, ''),
-                    svgIcon         : this.getCameraStatusIcon(camera),
-                    isEnabled       : camera.status !== 'Offline' && camera.status !== 'Unauthorized',
-                    label           : camera.name,
-                    indent          : true,
-                    path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
+                    id: camera.id.replace(/\s|\{|\}/g, ''),
+                    svgIcon: this.getCameraStatusIcon(camera),
+                    isEnabled: camera.status !== 'Offline' && camera.status !== 'Unauthorized',
+                    label: camera.name,
+                    indent: true,
+                    path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                    additionalLabel: camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
                 }));
             } else {
                 camerasNode.level3 = [];
@@ -482,18 +482,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             if (!usersNode) {
                 usersNode = {
-                    id     : this.CONFIG.menus.systemSettings.users.id,
-                    svg    : this.CONFIG.menus.systemSettings.users.icon,
-                    label  : this.LANG.menu.titles.users(),
-                    path   : this.CONFIG.menus.systemSettings.users.path,
-                    level2 : [
+                    id: this.CONFIG.menus.systemSettings.users.id,
+                    svg: this.CONFIG.menus.systemSettings.users.icon,
+                    label: this.LANG.menu.titles.users(),
+                    path: this.CONFIG.menus.systemSettings.users.path,
+                    level2: [
                         {
-                            id    : this.CONFIG.menus.systemSettings.buttons.id,
-                            items : [
+                            id: this.CONFIG.menus.systemSettings.buttons.id,
+                            items: [
                                 {
-                                    id       : 'addUser',
-                                    label    : this.LANG['Add User']?.(),
-                                    disabled : true
+                                    id: 'addUser',
+                                    label: this.LANG['Add User']?.(),
+                                    disabled: true
                                 }
                             ],
                             level3: []
@@ -515,12 +515,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = NxUtilsService.cleanId(user.id);
                     const node: any = {
-                        additionalLabel : (this.LANG.accessRoles[user.role.name]?.label?.()) || user.role.name,
+                        additionalLabel: (this.LANG.accessRoles[user.role.name]?.label?.()) || user.role.name,
                         id,
-                        isEnabled       : user.isEnabled,
-                        label           : user.name || user.email,
-                        path            : 'users/' + id,
-                        svgIcon         : 'user'
+                        isEnabled: user.isEnabled,
+                        label: user.name || user.email,
+                        path: 'users/' + id,
+                        svgIcon: 'user'
                     };
                     if (!user.isCloud && user.name === 'admin') {
                         node.additionalLabel = 'Owner';
@@ -555,10 +555,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {
-                    id    : this.CONFIG.menus.systemSettings.servers.id,
-                    svg   : this.CONFIG.menus.systemSettings.servers.icon,
-                    label : this.LANG.servers.servers(),
-                    path  : this.CONFIG.menus.systemSettings.servers.path
+                    id: this.CONFIG.menus.systemSettings.servers.id,
+                    svg: this.CONFIG.menus.systemSettings.servers.icon,
+                    label: this.LANG.servers.servers(),
+                    path: this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
             }
@@ -575,13 +575,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     const id = NxUtilsService.cleanId(server.id);
 
                     serversNode.level3.push({
-                        id              : server.id,
-                        svgIcon         : this.getServerStatusIcon(server),
-                        label           : server.name,
-                        path            : `servers/${id}`,
-                        additionalLabel : server.ip,
-                        indent          : true,
-                        disabled        : server.status.toLowerCase() === 'offline'
+                        id: server.id,
+                        svgIcon: this.getServerStatusIcon(server),
+                        label: server.name,
+                        path: `servers/${id}`,
+                        additionalLabel: server.ip,
+                        indent: true,
+                        disabled: server.status.toLowerCase() === 'offline'
                     });
                 });
                 serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0]?.id || '')}`;
@@ -593,28 +593,28 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
 
         adminNode.level3 = [{
-            id    : this.CONFIG.menus.systemSettings.general.id,
-            svg   : this.CONFIG.menus.systemSettings.general.icon,
-            label : this.LANG.menu.titles.general(),
-            path  : this.CONFIG.menus.systemSettings.general.path
+            id: this.CONFIG.menus.systemSettings.general.id,
+            svg: this.CONFIG.menus.systemSettings.general.icon,
+            label: this.LANG.menu.titles.general(),
+            path: this.CONFIG.menus.systemSettings.general.path
         }];
 
         if (this.system.isAdmin || this.system.isOwner) {
             adminNode.level3.push({
-                id    : this.CONFIG.menus.systemSettings.licenses.id,
-                svg   : this.CONFIG.menus.systemSettings.licenses.icon,
-                label : this.LANG.menu.titles.licenses(),
-                path  : this.CONFIG.menus.systemSettings.licenses.path
+                id: this.CONFIG.menus.systemSettings.licenses.id,
+                svg: this.CONFIG.menus.systemSettings.licenses.icon,
+                label: this.LANG.menu.titles.licenses(),
+                path: this.CONFIG.menus.systemSettings.licenses.path
             });
         }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
         if (this.system.canUserViewCloudStorage()) {
             adminNode.level3.push({
-                id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
-                icon  : '',
-                label : this.LANG.dialogs.cloudStorage.title(),
-                path  : this.CONFIG.menus.systemSettings.cloudStorage.path
+                id: this.CONFIG.menus.systemSettings.cloudStorage.id,
+                icon: '',
+                label: this.LANG.dialogs.cloudStorage.title(),
+                path: this.CONFIG.menus.systemSettings.cloudStorage.path
             });
         }
 

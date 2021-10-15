@@ -49,48 +49,48 @@ describe('NxHeaderComponent', () => {
     const configMock = { getConfig: () => nxConfig };
     const menuMock = {
         getMenu: () => of({
-            description : '',
-            title       : '',
-            nodes       : [
+            description: '',
+            title: '',
+            nodes: [
                 {
-                    accepted          : true,
-                    asset_id          : null,
-                    asset_type        : null,
-                    authentication    : 'Both',
-                    breadcrumbs       : [],
-                    display_name      : 'For Developers',
-                    draft             : null,
-                    icon              : '',
-                    name              : 'For Developers',
-                    name_raw          : 'For Developers',
-                    new_window        : false,
-                    next_item         : false,
-                    nodes             : [],
-                    order             : 0,
-                    pending           : false,
-                    related_asset_ids : [],
-                    subtitle          : '',
-                    url               : ''
+                    accepted: true,
+                    asset_id: null,
+                    asset_type: null,
+                    authentication: 'Both',
+                    breadcrumbs: [],
+                    display_name: 'For Developers',
+                    draft: null,
+                    icon: '',
+                    name: 'For Developers',
+                    name_raw: 'For Developers',
+                    new_window: false,
+                    next_item: false,
+                    nodes: [],
+                    order: 0,
+                    pending: false,
+                    related_asset_ids: [],
+                    subtitle: '',
+                    url: ''
                 },
                 {
-                    accepted          : true,
-                    asset_id          : null,
-                    asset_type        : null,
-                    authentication    : 'Both',
-                    breadcrumbs       : [],
-                    display_name      : 'Services',
-                    draft             : null,
-                    icon              : 'services.svg',
-                    name              : 'Services',
-                    name_raw          : 'Services',
-                    new_window        : false,
-                    next_item         : false,
-                    nodes             : [],
-                    order             : 1,
-                    pending           : false,
-                    related_asset_ids : [],
-                    subtitle          : '',
-                    url               : ''
+                    accepted: true,
+                    asset_id: null,
+                    asset_type: null,
+                    authentication: 'Both',
+                    breadcrumbs: [],
+                    display_name: 'Services',
+                    draft: null,
+                    icon: 'services.svg',
+                    name: 'Services',
+                    name_raw: 'Services',
+                    new_window: false,
+                    next_item: false,
+                    nodes: [],
+                    order: 1,
+                    pending: false,
+                    related_asset_ids: [],
+                    subtitle: '',
+                    url: ''
                 }
             ]
         }),
@@ -100,12 +100,12 @@ describe('NxHeaderComponent', () => {
         queryParams: of({})
     };
     // const routerMock = {
-    //     url    : '',
-    //     events : of('')
+    //     url: '',
+    //     events: of('')
     // };
     const headerMock = {
-        systemIdSubject : of(''),
-        currentLocation : {}
+        systemIdSubject: of(''),
+        currentLocation: {}
     };
     const sessionMock = {
         loginStateSubject: of('')
@@ -115,9 +115,9 @@ describe('NxHeaderComponent', () => {
         accountSubject : new BehaviorSubject(null)
     };
     const systemsMock = {
-        getSystem          : () => {},
-        forceUpdateSystems : () => Promise.resolve('systemUpdated'),
-        systemsSubject     : of([])
+        getSystem: () => {},
+        forceUpdateSystems: () => Promise.resolve('systemUpdated'),
+        systemsSubject: of([])
     };
     const storageMock = {
         systemId: 'testSystemId'

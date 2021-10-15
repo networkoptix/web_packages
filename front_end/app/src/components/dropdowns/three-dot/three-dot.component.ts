@@ -15,15 +15,15 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
  */
 
 @Component({
-    selector      : 'nx-three-dot',
-    templateUrl   : 'three-dot.component.html',
-    styleUrls     : ['three-dot.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
+    selector: 'nx-three-dot',
+    templateUrl: 'three-dot.component.html',
+    styleUrls: ['three-dot.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxThreeDotDropdown),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxThreeDotDropdown),
+            multi: true
         }
     ]
 })

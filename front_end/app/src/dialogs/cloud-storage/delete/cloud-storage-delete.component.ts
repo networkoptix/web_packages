@@ -13,9 +13,9 @@ import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector    : 'nx-modal-cloud-storage-delete-content',
-    templateUrl : 'cloud-storage-delete.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-cloud-storage-delete-content',
+    templateUrl: 'cloud-storage-delete.component.html',
+    styleUrls: []
 })
 export class CloudStorageDeleteModalContent implements OnInit {
     @Input() system$: BehaviorSubject<NxSystem>;
@@ -77,8 +77,8 @@ export class CloudStorageDeleteModalContent implements OnInit {
                     return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.remove.success?.(),
-            errorPrefix    : this.LANG.dialogs.cloudStorage.remove.errorPrefix?.()
+            successMessage: this.LANG.dialogs.cloudStorage.remove.success?.(),
+            errorPrefix: this.LANG.dialogs.cloudStorage.remove.errorPrefix?.()
         }).then(() => {
             this.updateCallback();
             this.activeModal.close(true);

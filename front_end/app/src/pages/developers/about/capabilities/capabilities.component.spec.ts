@@ -34,9 +34,9 @@ describe('For Developers Landing - Capabilities Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxCapabilitiesComponent, RouterLinkDirectiveStub, NxSafePipe],
-                imports      : [CommonModule],
-                providers    : [
+                declarations: [NxCapabilitiesComponent, RouterLinkDirectiveStub, NxSafePipe],
+                imports: [CommonModule],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(WINDOW, {})
                 ]

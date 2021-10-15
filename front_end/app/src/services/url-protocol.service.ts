@@ -46,9 +46,9 @@ export class NxUrlProtocolService {
         }
 
         const source = {
-            from    : fromLocation || 'portal',
-            context : contextParam || 'none',
-            isApp   : false
+            from: fromLocation || 'portal',
+            context: contextParam || 'none',
+            isApp: false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
         return source;
@@ -56,15 +56,15 @@ export class NxUrlProtocolService {
 
     generateLink(linkSettings: linkSettings = {}) {
         let settings: linkSettings = {
-            native           : true,
-            from             : 'portal', // client, mobile, portal, webadmin
-            context          : undefined,
-            command          : 'client', // client, cloud, system
-            systemId         : undefined,
-            action           : undefined,
-            actionParameters : {}, // Object with parameters
-            auth             : true, // true for request, null for skipping, string for specific value
-            access_code      : undefined
+            native: true,
+            from: 'portal', // client, mobile, portal, webadmin
+            context: undefined,
+            command: 'client', // client, cloud, system
+            systemId: undefined,
+            action: undefined,
+            actionParameters: {}, // Object with parameters
+            auth: true, // true for request, null for skipping, string for specific value
+            access_code: undefined
         };
 
         if (linkSettings.systemId) {

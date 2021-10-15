@@ -12,9 +12,9 @@ import TimelineExtendToNowService from '../../../submodules/timeline/services/ti
 import FpsMeterService from '../../../../../../../services/fps-meter.service';
 
 @Component({
-    selector    : 'camera-page',
-    templateUrl : './camera-page.component.html',
-    styleUrls   : ['./camera-page.component.scss']
+    selector: 'camera-page',
+    templateUrl: './camera-page.component.html',
+    styleUrls: ['./camera-page.component.scss']
 })
 export class CameraPageComponent implements OnInit, OnDestroy {
     public id: string

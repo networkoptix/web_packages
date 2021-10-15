@@ -8,10 +8,10 @@ import { LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems
 import videojs                                              from 'video.js';
 
 @Component({
-    selector      : 'player-js',
-    templateUrl   : 'player-js.component.html',
-    styleUrls     : ['player-js.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'player-js',
+    templateUrl: 'player-js.component.html',
+    styleUrls: ['player-js.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 @LoggerDecorator('JS PLAYER ::', true)
 export class PlayerJsComponent implements OnDestroy, OnChanges {
@@ -43,8 +43,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         let stallTimer;
         const waitingTime = 8 * 1000;
         const options = {
-            autoplay          : true,
-            inactivityTimeout : 0
+            autoplay: true,
+            inactivityTimeout: 0
         };
 
         const resetTimer = () => {

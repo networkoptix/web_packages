@@ -12,9 +12,9 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-integrations',
-    templateUrl : 'integrations.component.html',
-    styleUrls   : ['integrations.component.scss']
+    selector: 'nx-integrations',
+    templateUrl: 'integrations.component.html',
+    styleUrls: ['integrations.component.scss']
 })
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;
@@ -54,9 +54,9 @@ export class NxIntegrationsComponent implements OnInit {
         const translatedCount = this.sanitizer.bypassSecurityTrustHtml(NxLanguageProviderService.translate(
             this.LANG.common.morePlugins,
             {
-                count    : this.pluginCount - show,
-                startTag : '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
-                endTag   : '</strong>'
+                count: this.pluginCount - show,
+                startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
+                endTag: '</strong>'
             }
         ));
         const plugins = allPlugins.slice(0, show);

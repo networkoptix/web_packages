@@ -14,9 +14,9 @@ import { NxAccountService } from '@services/account.service';
 import { IntersectionStatus } from '@directives/nx-intersection.directive';
 @UntilDestroy()
 @Component({
-    selector    : 'nx-intro-text',
-    templateUrl : './intro-text.component.html',
-    styleUrls   : ['./intro-text.component.scss']
+    selector: 'nx-intro-text',
+    templateUrl: './intro-text.component.html',
+    styleUrls: ['./intro-text.component.scss']
 })
 export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
   @ViewChild('createButton') createButtonRef: ElementRef<HTMLElement>;

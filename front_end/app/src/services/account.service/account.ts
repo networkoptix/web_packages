@@ -36,20 +36,20 @@ export class Account {
 }
 
 const DUMMY_ACCOUNT: Account = {
-    email                   : '',
-    first_name              : '',
-    name                    : '',
-    id                      : '',
-    last_name               : '',
-    language                : '',
-    is_staff                : true,
-    is_superuser            : true,
-    isCloud                 : true,
-    permissions             : [''],
-    can_publish_integration : true,
-    is_authenticated        : true,
-    cookie_reviewed         : true,
-    account2faEnabled       : true
+    email: '',
+    first_name: '',
+    name: '',
+    id: '',
+    last_name: '',
+    language: '',
+    is_staff: true,
+    is_superuser: true,
+    isCloud: true,
+    permissions: [''],
+    can_publish_integration: true,
+    is_authenticated: true,
+    cookie_reviewed: true,
+    account2faEnabled: true
 };
 
 // .requiresLogin() in account service doesn't return an actual Account object

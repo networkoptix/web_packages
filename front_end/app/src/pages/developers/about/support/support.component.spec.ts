@@ -28,8 +28,8 @@ describe('For Developers Landing - Support Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations : [NxSupportComponent, RouterLinkDirectiveStub],
-                imports      : [
+                declarations: [NxSupportComponent, RouterLinkDirectiveStub],
+                imports: [
                     CommonModule,
                     DirectivesModule
                 ],
@@ -46,10 +46,10 @@ describe('For Developers Landing - Support Node', () => {
             component.supportNode = supportNode;
             component.ngOnChanges({
                 supportNode: {
-                    currentValue  : supportNode,
-                    previousValue : null,
-                    firstChange   : true,
-                    isFirstChange : () => true
+                    currentValue: supportNode,
+                    previousValue: null,
+                    firstChange: true,
+                    isFirstChange: () => true
                 }
             });
             el = fixture.debugElement;

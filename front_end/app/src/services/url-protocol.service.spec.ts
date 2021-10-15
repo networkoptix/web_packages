@@ -19,8 +19,8 @@ describe('Url Protocol Service', () => {
     const configMock = { getConfig: () => nxConfig };
     const windowMock = {
         location: {
-            host     : 'localhost:7001',
-            protocol : 'http:'
+            host: 'localhost:7001',
+            protocol: 'http:'
         }
     };
     const cloudMock = {
@@ -32,8 +32,8 @@ describe('Url Protocol Service', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports   : [],
-            providers : [
+            imports: [],
+            providers: [
                 NxUrlProtocolService,
                 { provide: WINDOW, useValue: windowMock },
                 { provide: NxConfigService, useValue: configMock },
@@ -60,10 +60,10 @@ describe('Url Protocol Service', () => {
 
     it('should attach params if they exist', () => {
         const linkSettings = {
-            from        : 'client',
-            auth        : 'authString',
-            context     : 'someContext',
-            access_code : 'someCode'
+            from: 'client',
+            auth: 'authString',
+            context: 'someContext',
+            access_code: 'someCode'
         };
         expect(urlService.generateLink(linkSettings))
             .toBe('https://localhost:7001/client/?from=client&auth=authString&context=someContext&access_code=someCode');
@@ -71,8 +71,8 @@ describe('Url Protocol Service', () => {
 
     it('should attach systemId and action if they exist', () => {
         const linkSettings = {
-            systemId : 'systemId',
-            action   : 'actionString'
+            systemId: 'systemId',
+            action: 'actionString'
         };
         expect(urlService.generateLink(linkSettings))
             .toBe('https://localhost:7001/client/systemId/actionString?from=portal');

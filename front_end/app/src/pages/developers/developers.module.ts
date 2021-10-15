@@ -18,46 +18,46 @@ import { Nx404Component }           from '../404/404.component';
 
 const appRoutes: Routes = [
     {
-        path        : '',
-        component   : Nx404Component,
-        canActivate : [DevelopersGuard]
+        path: '',
+        component: Nx404Component,
+        canActivate: [DevelopersGuard]
     },
     {
-        path        : ':name',
-        canActivate : [DevelopersGuard],
-        children    : [
+        path: ':name',
+        canActivate: [DevelopersGuard],
+        children: [
             {
-                path      : '',
-                component : NxAboutComponent,
-                pathMatch : 'full'
+                path: '',
+                component: NxAboutComponent,
+                pathMatch: 'full'
             },
             {
-                path      : 'dev-tools',
-                component : NxDevToolsComponent,
-                children  : [
+                path: 'dev-tools',
+                component: NxDevToolsComponent,
+                children: [
                     {
-                        path      : ':level1',
-                        component : NxDevToolsComponent,
-                        children  : [
+                        path: ':level1',
+                        component: NxDevToolsComponent,
+                        children: [
                             {
-                                path      : ':level2',
-                                component : NxDevToolsComponent
+                                path: ':level2',
+                                component: NxDevToolsComponent
                             }
                         ]
                     }
                 ]
             },
             {
-                path     : ':kb-name',
-                children : [
+                path: ':kb-name',
+                children: [
                     {
-                        path      : ':level1',
-                        component : NxKnowledgeBaseComponent
+                        path: ':level1',
+                        component: NxKnowledgeBaseComponent
                     },
                     {
-                        path      : '',
-                        component : NxKnowledgeBaseComponent,
-                        pathMatch : 'full'
+                        path: '',
+                        component: NxKnowledgeBaseComponent,
+                        pathMatch: 'full'
                     }
                 ]
             }
@@ -78,12 +78,12 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxKnowledgeBaseComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxAboutComponent,
         NxKnowledgeBaseComponent
     ]

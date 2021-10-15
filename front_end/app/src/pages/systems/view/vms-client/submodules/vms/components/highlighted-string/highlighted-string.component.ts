@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector    : 'highlighted-string',
-    templateUrl : 'highlighted-string.component.html',
-    styleUrls   : ['highlighted-string.component.scss']
+    selector: 'highlighted-string',
+    templateUrl: 'highlighted-string.component.html',
+    styleUrls: ['highlighted-string.component.scss']
 })
 export class HighlightedStringComponent {
     @Input() string: string;

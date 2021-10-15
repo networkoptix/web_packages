@@ -6,9 +6,9 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { FormArray, FormGroup }     from '@angular/forms';
 
 @Component({
-    selector    : 'form-apply-example',
-    templateUrl : 'form-apply-example.component.html',
-    styleUrls   : ['form-apply-example.component.scss']
+    selector: 'form-apply-example',
+    templateUrl: 'form-apply-example.component.html',
+    styleUrls: ['form-apply-example.component.scss']
 })
 export class FormApplyExampleComponent {
     CONFIG: IConfig;
@@ -54,9 +54,9 @@ export class FormApplyExampleComponent {
         this.CONFIG = configService.config;
 
         this.options = {
-            classname : this.CONFIG.toast.success,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.success,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
 
         this.show1 = false;
@@ -112,7 +112,7 @@ export class FormApplyExampleComponent {
             return Promise.resolve();
         }, {}, result => {
             this.toastService.show('form1 saved', this.options);
-        }, err => {
+        }, _ => {
         });
 
         // ngModel should be ALWAYS initialized -> when comparing form values JSON stingify will omit undefined fields!!!
@@ -121,7 +121,7 @@ export class FormApplyExampleComponent {
             return Promise.resolve();
         }, {}, result => {
             this.toastService.show('form2 saved', this.options);
-        }, err => {
+        }, _ => {
         });
     }
 

@@ -10,10 +10,10 @@ import { NxConfigService }           from '@services/nx-config';
 import { NxSystemRole }              from '@services/system.service';
 
 @Component({
-    selector      : 'nx-permissions-select',
-    templateUrl   : 'permissions.component.html',
-    styleUrls     : ['permissions.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-permissions-select',
+    templateUrl: 'permissions.component.html',
+    styleUrls: ['permissions.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxPermissionsDropdown extends BaseDropdown {

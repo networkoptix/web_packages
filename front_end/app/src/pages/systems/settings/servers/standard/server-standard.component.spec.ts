@@ -34,9 +34,9 @@ describe('NxSystemStandardServerComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations : [NxSystemStandardServerComponent, RouterLinkDirectiveStub],
-            imports      : [CommonModule, HttpClientTestingModule],
-            providers    : [
+            declarations: [NxSystemStandardServerComponent, RouterLinkDirectiveStub],
+            imports: [CommonModule, HttpClientTestingModule],
+            providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 NxApplyService,
@@ -103,7 +103,7 @@ describe('NxSystemStandardServerComponent', () => {
                     isWritable: true,
                     isNotSystem: true,
                     freeSpace: 5
-                },
+                }
             ];
         });
 
@@ -131,7 +131,7 @@ describe('NxSystemStandardServerComponent', () => {
         });
 
         it('should pick storage with most free space if all system storages', () => {
-            component.dropdownStorages.forEach(store => store.isNotSystem = false);
+            component.dropdownStorages.forEach(store =>  { store.isNotSystem = false; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage3',
                 isOnline: true,
@@ -143,7 +143,7 @@ describe('NxSystemStandardServerComponent', () => {
         });
 
         it('should pick NON-SYSTEM storage if only one', () => {
-            component.dropdownStorages.forEach(store => store.isNotSystem = store.name === 'storage5');
+            component.dropdownStorages.forEach(store => { store.isNotSystem = store.name === 'storage5'; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage5',
                 isOnline: true,
@@ -169,7 +169,7 @@ describe('NxSystemStandardServerComponent', () => {
         it('should pick storage with most free space if all storages NOT USED FOR WRITING', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].freeSpace = 40;
-            component.dropdownStorages.forEach(store => store.isUsedForWriting = false);
+            component.dropdownStorages.forEach(store => { store.isUsedForWriting = false; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage2',
                 isOnline: true,
@@ -182,7 +182,7 @@ describe('NxSystemStandardServerComponent', () => {
 
         it('should pick storage USED FOR WRITING if only one', () => {
             component.dropdownStorages[0].isNotSystem = false;
-            component.dropdownStorages.forEach(store => store.isUsedForWriting = store.name === 'storage5');
+            component.dropdownStorages.forEach(store => { store.isUsedForWriting = store.name === 'storage5'; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage5',
                 isOnline: true,
@@ -210,7 +210,7 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[3].freeSpace = 40;
-            component.dropdownStorages.forEach(store => store.isOnline = false);
+            component.dropdownStorages.forEach(store => { store.isOnline = false; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage4',
                 isOnline: false,
@@ -224,7 +224,7 @@ describe('NxSystemStandardServerComponent', () => {
         it('should pick ONLINE storage if only one', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
-            component.dropdownStorages.forEach(store => store.isOnline = store.name === 'storage5');
+            component.dropdownStorages.forEach(store => { store.isOnline = store.name === 'storage5'; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage5',
                 isOnline: true,
@@ -254,7 +254,7 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[2].isOnline = false;
             component.dropdownStorages[4].freeSpace = 40;
-            component.dropdownStorages.forEach(store => store.isWritable = false);
+            component.dropdownStorages.forEach(store => { store.isWritable = false; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage5',
                 isOnline: true,
@@ -269,7 +269,7 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[2].isOnline = false;
-            component.dropdownStorages.forEach(store => store.isOnline = store.name === 'storage5');
+            component.dropdownStorages.forEach(store => { store.isOnline = store.name === 'storage5'; });
             expect(component.selectDefaultStorage()).toEqual({
                 name: 'storage5',
                 isOnline: true,

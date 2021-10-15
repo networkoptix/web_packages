@@ -83,10 +83,10 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             .pipe(
                 catchError(({ errorString: errorText, ...res }) => {
                     const errorLookup = {
-                        'Wrong password.'                                                                         : 'notAuthorized',
-                        'Wrong username or password.'                                                             : 'notAuthorized',
-                        'This user on your IP is locked out due to many filed attempts. Please, try again later.' : 'accountBlocked',
-                        'The user is locked out due to several failed attempts. Please try again later.'          : 'accountBlocked'
+                        'Wrong password.': 'notAuthorized',
+                        'Wrong username or password.': 'notAuthorized',
+                        'This user on your IP is locked out due to many filed attempts. Please, try again later.': 'accountBlocked',
+                        'The user is locked out due to several failed attempts. Please try again later.': 'accountBlocked'
                     };
                     const resultCode = errorLookup[errorText];
                     return Promise.resolve({ ...res, errorText, resultCode });

@@ -67,13 +67,13 @@ export interface SearchFilter {
 
 @UntilDestroy()
 @Component({
-    selector      : 'nx-search',
-    templateUrl   : './search.component.html',
-    encapsulation : ViewEncapsulation.None,
-    providers     : [{
-        provide     : NG_VALUE_ACCESSOR,
-        useExisting : forwardRef(() => NxSearchComponent),
-        multi       : true
+    selector: 'nx-search',
+    templateUrl: './search.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NxSearchComponent),
+        multi: true
     }],
     styleUrls: ['./search.component.scss']
 })

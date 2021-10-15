@@ -93,7 +93,7 @@ export class VideoManagementSystemService {
     protected _serverTimes: Array<ServerTimeInfo>
 
     public set serverTimes (st: Array<ServerTimeInfo>) {
-        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st)
+        this._log('serverTimes set', st.map(i => i.timeZoneOffset), st);
         this._serverTimes = [...st];
     }
 
@@ -137,31 +137,33 @@ export class VideoManagementSystemService {
     */
 
     public get timeZoneOffset (): ms {
-        let result = 0
+        let result = 0;
         if (!this.serverTimes?.length) {
-            this._warn('TZO no server times data')
+            this._warn('TZO no server times data');
         } else if (this.state.mode !== VMS_MODE.CAMERA_SELECTED) {
-            this._warn('TZO no camera selected')
+            this._warn('TZO no camera selected');
         } else {
             const preferredServerTime =
                 this.serverTimes.find(st => st.serverId === this.selectedCamera.preferredServerId) ||
                 this.serverTimes.find(st => st.serverId === this.selectedCamera.parentServerId) ||
                 this.serverTimes[0];
             const clientTZO = -(new Date()).getTimezoneOffset() * 60000;
-            const serverTZO = preferredServerTime?.timeZoneOffset
+            const serverTZO = preferredServerTime?.timeZoneOffset;
             if (serverTZO === undefined) {
                 return 0;
             }
             // this._log('TZO', preferredServerTime, serverTZO, clientTZO, serverTZO - clientTZO)
             result = serverTZO - clientTZO;
         }
-        return result
+        return result;
     }
+
     public tweakT (t: fairMs): tweakedMs {
-        return t + this.timeZoneOffset
+        return t + this.timeZoneOffset;
     }
+
     public untweakT (t: tweakedMs): fairMs {
-        return t - this.timeZoneOffset
+        return t - this.timeZoneOffset;
     }
 
     public setMediaServers (systemId: string, mediaServers: Array<IMediaServer>, updateCamerasOnly = false) {
@@ -208,7 +210,7 @@ export class VideoManagementSystemService {
         if (this._state.mode === VMS_MODE.CAMERA_SELECTED) {
             this.selectedCamera = this._state.selectedCamera;
         }
-        this._log('camera selected', this.selectedCamera)
+        this._log('camera selected', this.selectedCamera);
         const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
         this.cookieService.set(cookieName, cameraId, 365, '/');
         this._emit();

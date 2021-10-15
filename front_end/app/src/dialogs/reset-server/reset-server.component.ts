@@ -20,9 +20,9 @@ import { NxAppStateService }          from '@services/nx-app-state.service';
 import { environment }                from '@environments/environment';
 
 @Component({
-    selector    : 'nx-modal-reset-server-content',
-    templateUrl : 'reset-server.component.html',
-    styleUrls   : []
+    selector: 'nx-modal-reset-server-content',
+    templateUrl: 'reset-server.component.html',
+    styleUrls: []
 })
 export class ResetServerModalContent {
     @Input() system: NxSystem;
@@ -45,7 +45,7 @@ export class ResetServerModalContent {
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
-        @Inject(DOCUMENT) private document: Document,
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -53,9 +53,9 @@ export class ResetServerModalContent {
 
     ngOnInit() {
         const options = {
-            classname : this.CONFIG.toast.warning,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.warning,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
         const handleResetFailError = (from: string, error) => {
             console.error(`Error in reset-server dialog from ${from}:`, error);
@@ -83,12 +83,12 @@ export class ResetServerModalContent {
             .createProcess(() => {
                 return this.system.serverManager.restoreFactorySettings(this.serverId, this.password).toPromise();
             }, {
-                ignoreError        : true,
-                ignoreUnauthorized : true,
-                successMessage     : this.LANG.servers.beginReset?.(),
-                errorCodes         : {
-                    'Wrong password.' : wrongPasswordHandler,
-                    wrongPassword     : wrongPasswordHandler
+                ignoreError: true,
+                ignoreUnauthorized: true,
+                successMessage: this.LANG.servers.beginReset?.(),
+                errorCodes: {
+                    'Wrong password.': wrongPasswordHandler,
+                    wrongPassword: wrongPasswordHandler
                 }
             }, async() => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;

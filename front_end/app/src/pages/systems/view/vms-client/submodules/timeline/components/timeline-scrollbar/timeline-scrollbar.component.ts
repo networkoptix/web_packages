@@ -17,9 +17,9 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 const MIN_BAR_WIDTH_PX = 50;
 
 @Component({
-    selector    : 'timeline-scrollbar',
-    templateUrl : './timeline-scrollbar.component.html',
-    styleUrls   : ['./timeline-scrollbar.component.scss']
+    selector: 'timeline-scrollbar',
+    templateUrl: './timeline-scrollbar.component.html',
+    styleUrls: ['./timeline-scrollbar.component.scss']
 })
 @LoggerDecorator('TIMELINE SCROLLBAR ::', true)
 export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
@@ -239,25 +239,27 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     protected _prevMouseUpTime: number
     protected _doubleClickDelay: number = 300 // ms
     public buttonLeftHandleMouseUp () {
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.buttonLeftDblClickHandler()
+            this.buttonLeftDblClickHandler();
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
+
     public buttonRightHandleMouseUp () {
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.buttonRightDblClickHandler()
+            this.buttonRightDblClickHandler();
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
+
     public barHandleMouseUp (e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
-        const now = Date.now()
+        const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
-            this.barDblClickHandler(e)
+            this.barDblClickHandler(e);
         }
-        this._prevMouseUpTime = now
+        this._prevMouseUpTime = now;
     }
 
     public buttonLeftDblClickHandler () {

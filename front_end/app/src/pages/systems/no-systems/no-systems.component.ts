@@ -7,10 +7,10 @@ import { NxPageService }             from '@services/page.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
-    selector      : 'nx-no-systems',
-    templateUrl   : 'no-systems.component.html',
-    styleUrls     : ['no-systems.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector: 'nx-no-systems',
+    templateUrl: 'no-systems.component.html',
+    styleUrls: ['no-systems.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxNoSystemsComponent implements OnInit {

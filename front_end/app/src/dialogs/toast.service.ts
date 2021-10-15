@@ -29,9 +29,9 @@ export class NxToastService {
 
     notify(message: string, type = this.CONFIG.toast.info, hold = false) {
         const options = {
-            autohide  : !hold,
-            classname : type,
-            delay     : this.CONFIG.alertTimeout
+            autohide: !hold,
+            classname: type,
+            delay: this.CONFIG.alertTimeout
         };
 
         return this.show(message, options);

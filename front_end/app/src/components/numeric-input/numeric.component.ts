@@ -20,19 +20,19 @@ import {
  */
 
 @Component({
-    selector    : 'nx-numeric',
-    templateUrl : 'numeric.component.html',
-    styleUrls   : ['numeric.component.scss'],
-    providers   : [
+    selector: 'nx-numeric',
+    templateUrl: 'numeric.component.html',
+    styleUrls: ['numeric.component.scss'],
+    providers: [
         {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxNumericComponent),
-            multi       : true
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxNumericComponent),
+            multi: true
         },
         {
-            provide     : NG_VALIDATORS,
-            useExisting : forwardRef(() => NxNumericComponent),
-            multi       : true
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => NxNumericComponent),
+            multi: true
         }
     ]
 })

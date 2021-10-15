@@ -17,9 +17,9 @@ interface ThumbNail {
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'nx-image-section',
-    templateUrl : './image-section.component.html',
-    styleUrls   : ['./image-section.component.scss']
+    selector: 'nx-image-section',
+    templateUrl: './image-section.component.html',
+    styleUrls: ['./image-section.component.scss']
 })
 export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Input() cameraInfo;
@@ -63,9 +63,9 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             .map((cameraProp: any) => {
                 const time = cameraProp.thumbnail.text;
                 return {
-                    loaded : false,
+                    loaded: false,
                     time,
-                    url    : this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
+                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
                 };
             }).sort((a: any, b: any) => {
                 if (a.time === 'now') {

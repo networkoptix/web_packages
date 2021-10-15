@@ -8,14 +8,14 @@ import {
 } from '@angular/forms';
 
 @Component({
-    selector   : 'nx-switch',
+    selector: 'nx-switch',
     templateUrl: 'switch.component.html',
-    styleUrls  : ['switch.component.scss'],
-    providers  : [
+    styleUrls: ['switch.component.scss'],
+    providers: [
         {
-            provide    : NG_VALUE_ACCESSOR,
+            provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxSwitchComponent),
-            multi      : true
+            multi: true
         }
     ]
 })

@@ -30,9 +30,9 @@ import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
 
 @UntilDestroy()
 @Component({
-    selector    : 'nx-system-view-index-page',
-    templateUrl : 'system-view-index.page.component.html',
-    styleUrls   : ['system-view-index.page.component.scss']
+    selector: 'nx-system-view-index-page',
+    templateUrl: 'system-view-index.page.component.html',
+    styleUrls: ['system-view-index.page.component.scss']
 })
 @LoggerDecorator('SYSTEM VIEW INDEX PAGE ::', true)
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
@@ -425,11 +425,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     // await Promise.all(cameraIds.map(findCameraArchiveRanges));
 
                     cachedMediaServers = mediaServers.map(ms => NxUtilsService.formatURL(({
-                        id               : ms.id,
-                        name             : ms.name,
-                        networkAddresses : ms.networkAddresses,
-                        status           : ms.status,
-                        cameras          : ms.cameras.map((c: any) => processCameras(c, ms))
+                        id: ms.id,
+                        name: ms.name,
+                        networkAddresses: ms.networkAddresses,
+                        status: ms.status,
+                        cameras: ms.cameras.map((c: any) => processCameras(c, ms))
                     })));
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);

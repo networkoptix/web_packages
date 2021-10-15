@@ -6,9 +6,9 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NxToastService }                    from '@dialogs/toast.service';
 
 @Component({
-    selector    : 'dynamic-form-apply-example',
-    templateUrl : 'dynamic-form-apply-example.component.html',
-    styleUrls   : ['dynamic-form-apply-example.component.scss']
+    selector: 'dynamic-form-apply-example',
+    templateUrl: 'dynamic-form-apply-example.component.html',
+    styleUrls: ['dynamic-form-apply-example.component.scss']
 })
 
 export class DynamicFormApplyExampleComponent {
@@ -34,9 +34,9 @@ export class DynamicFormApplyExampleComponent {
         this.CONFIG = configService.config;
 
         this.options = {
-            classname : this.CONFIG.toast.success,
-            autohide  : true,
-            delay     : this.CONFIG.alertTimeout
+            classname: this.CONFIG.toast.success,
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
         };
     }
 
@@ -49,7 +49,7 @@ export class DynamicFormApplyExampleComponent {
             return Promise.resolve();
         }, {}, result => {
             this.toastService.show('form3 saved', this.options);
-        }, err => {
+        }, _ => {
         });
     }
 

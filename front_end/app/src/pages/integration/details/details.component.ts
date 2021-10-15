@@ -24,9 +24,9 @@ import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector    : 'integration-detail-component',
-    templateUrl : 'details.component.html',
-    styleUrls   : ['details.component.scss']
+    selector: 'integration-detail-component',
+    templateUrl: 'details.component.html',
+    styleUrls: ['details.component.scss']
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
@@ -84,25 +84,25 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                     // @ts-ignore
                     const query = Object.entries(results.query).length ? results.query : undefined;
                     this.content = {
-                        selectedSection : '', // updated by selectedSectionSubject
-                        base            : '/integrations/', // updated by route param
-                        level1          : [
+                        selectedSection: '', // updated by selectedSectionSubject
+                        base: '/integrations/', // updated by route param
+                        level1: [
                             {
-                                id     : '',
-                                label  : '',
-                                path   : '',
-                                level3 : [
+                                id: '',
+                                label: '',
+                                path: '',
+                                level3: [
                                     {
-                                        id    : 'how-it-works',
-                                        label : this.LANG['How it works']() || 'How it works',
+                                        id: 'how-it-works',
+                                        label: this.LANG['How it works']() || 'How it works',
                                         // path  : 'how-it-works',
-                                        path  : '',
+                                        path: '',
                                         query
                                     },
                                     {
-                                        id    : 'how-to-setup',
-                                        label : this.LANG['How to setup?']() || 'How to setup?',
-                                        path  : 'how-to-setup',
+                                        id: 'how-to-setup',
+                                        label: this.LANG['How to setup?']() || 'How to setup?',
+                                        path: 'how-to-setup',
                                         query
                                     }]
                             }]
@@ -122,9 +122,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                                 this.location.replaceState(newUrl, queryParams);
 
+                                // eslint-disable-next-line camelcase
                                 if (this.plugin.pending || this.plugin.draft || this.plugin.canEdit || this.account?.can_publish_integration) {
                                     const ribbonActions: RibbonActionInput[] = [];
 
+                                    // eslint-disable-next-line camelcase
                                     if (this.plugin.pending && this.account?.can_publish_integration) {
                                         this.acceptProcess = this.processService.createProcess(() => {
                                             return this.cloudApiService.acceptReview(this.plugin.review_id);
@@ -137,23 +139,23 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                         ribbonActions.push(
                                             {
-                                                type  : 'process-button',
-                                                text  : this.LANG.ribbon.integration.accept?.(),
-                                                value : this.acceptProcess
+                                                type: 'process-button',
+                                                text: this.LANG.ribbon.integration.accept?.(),
+                                                value: this.acceptProcess
                                             },
                                             {
-                                                type  : 'link',
-                                                text  : this.LANG.ribbon.integration.reject?.(),
-                                                value : `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
+                                                type: 'link',
+                                                text: this.LANG.ribbon.integration.reject?.(),
+                                                value: `/admin/cms/assetcustomizationreview/${this.plugin.review_id}/change/`
                                             }
                                         );
                                     }
 
                                     if (this.plugin.canEdit) {
                                         ribbonActions.push({
-                                            type  : 'link',
-                                            text  : this.LANG.ribbon.integration.backToEditText,
-                                            value : this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                            type: 'link',
+                                            text: this.LANG.ribbon.integration.backToEditText,
+                                            value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         });
                                     }
 
@@ -166,8 +168,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                 this.pageService.pageTitle = NxLanguageProviderService.translate(
                                     this.LANG.pageDescriptions.integrationDetails, {
-                                        PLUGIN_NAME              : this.plugin.information.name,
-                                        PLUGIN_SHORT_DESCRIPTION : this.CONFIG.vmsName
+                                        PLUGIN_NAME: this.plugin.information.name,
+                                        PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
                                     });
 
                                 this.integrationService.setIntegrationPlugin(this.plugin);
@@ -207,16 +209,16 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     openMessageDialog() {
         const disclaimer = NxLanguageProviderService.translate(
             this.LANG.privacyPolicy.integration, {
-                INTEGRATION_COMPANY        : this.plugin.information.companyName,
-                INTEGRATION_PRIVACY_POLICY : this.plugin.information.companyPrivacyPolicyLink
+                INTEGRATION_COMPANY: this.plugin.information.companyName,
+                INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
             });
 
         const data: MessageParams = {
-            to      : this.plugin.information.companyName,
-            email   : this.plugin.support.supportEmail,
+            to: this.plugin.information.companyName,
+            email: this.plugin.support.supportEmail,
             disclaimer,
-            assetId : this.plugin.id,
-            asset   : this.plugin.information.name
+            assetId: this.plugin.id,
+            asset: this.plugin.information.name
         };
         this.dialogs
             .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)

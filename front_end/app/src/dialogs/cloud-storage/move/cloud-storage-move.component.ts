@@ -16,9 +16,9 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxModalGenericComponent }   from '../../generic/generic.component';
 
 @Component({
-    selector    : 'nx-cloud-storage-move-content',
-    templateUrl : 'cloud-storage-move.component.html',
-    styleUrls   : ['cloud-storage-move.component.scss']
+    selector: 'nx-cloud-storage-move-content',
+    templateUrl: 'cloud-storage-move.component.html',
+    styleUrls: ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent implements OnInit {
     @Input() system$: BehaviorSubject<NxSystem>;
@@ -74,7 +74,7 @@ export class CloudStorageMoveModalContent implements OnInit {
                 if (systems && this.targetSystems.length < 2) {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
-                    const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
+                    const { dialogs: { cloudStorage: { noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
                     this.genericModal.openConfirm(message?.(), title?.(), ok?.());
                 }
             });
@@ -96,8 +96,8 @@ export class CloudStorageMoveModalContent implements OnInit {
                     return this.LANG.errorCodes.networkConnection();
                 }
             },
-            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
-            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
+            successMessage: this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
+            errorPrefix: this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
         }).then(() => {
             this.updateCallback();
             this.close();

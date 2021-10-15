@@ -24,9 +24,9 @@ import { NxNewCapabilitiesComponent } from './new-capabilities/capabilities.comp
 
 const appRoutes: Routes = [
     {
-        path        : ':name',
-        component   : NxAboutComponent,
-        canActivate : [DevelopersGuard]
+        path: ':name',
+        component: NxAboutComponent,
+        canActivate: [DevelopersGuard]
     }
 ];
 
@@ -42,8 +42,8 @@ const appRoutes: Routes = [
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxCapabilitiesComponent,
         NxSupportedTechComponent,
         NxDevToolsComponent,
@@ -54,8 +54,8 @@ const appRoutes: Routes = [
         NxErrorStateComponent,
         NxNewCapabilitiesComponent
     ],
-    bootstrap : [],
-    exports   : [
+    bootstrap: [],
+    exports: [
         NxCapabilitiesComponent,
         NxSupportedTechComponent,
         NxDevToolsComponent,
