@@ -37,11 +37,17 @@ export class NxLanguageProviderService {
         if (environment.isLocal) {
             this.currentLang = this.sessionService.language;
         }
-        this.translations = this.translate.translations[this.translate.currentLang];
-        this.translateSubject.next(this.translations);
-        this.translateSubject.subscribe(translations => {
-            this.translations = translations;
-        });
+        // TODO: Delete this if no issues *****************
+        // setting translations here has no effect (beside unnecessary subscriptions running)
+        // as we don't use translation loader and setting translations
+        // manually via setTranslations -- TT
+        //
+        // this.translations = this.translate.translations[this.translate.currentLang];
+        // this.translateSubject.next(this.translations);
+        // this.translateSubject.subscribe(translations => {
+        //     this.translations = translations;
+        // });
+        // ************************************************
         this.storageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
             if (!environment.isLocal) {
@@ -99,11 +105,8 @@ export class NxLanguageProviderService {
         this.translate.setTranslation(lang, translation);
         this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
 
-        this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
-    }
-
-    public get currentLanguage(): string {
-        return this.translate.currentLang;
+        this.translations = this.translate.translations[this.translate.currentLang];
+        this.translateSubject.next(this.translations);
     }
 
     public get defaultLanguage() {

@@ -44,7 +44,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
-        this.currentLang = languageService.currentLanguage;
+        this.currentLang = languageService.currentLang;
     }
 
     private splitLanguages() {

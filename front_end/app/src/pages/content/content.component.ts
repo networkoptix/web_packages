@@ -65,7 +65,7 @@ export class NxContentComponent implements OnInit {
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
-        this.langCode = languageService.currentLanguage;
+        this.langCode = languageService.currentLang;
         this.LANG = languageService.translations;
     }
 
