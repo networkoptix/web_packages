@@ -67,6 +67,12 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
 
+        // This is done to set the auth keys for video. Local doesn't need auth keys
+        // because cookies are same site and will be attached to all requests.
+        if (!this.CONFIG.isLocal) {
+            system.updateSystemAuth(true).catch(() => {});
+        }
+
         if (this.CONFIG.isLocal || skipSettingSystem) {
             return system;
         }

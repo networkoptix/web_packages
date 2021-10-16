@@ -548,16 +548,6 @@ export class NxSystem extends System {
         });
     }
 
-    public checkCameraThumbnail (cameraId) {
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.checkCameraThumbnail(cameraId)
-        );
-    }
-
-    public getCameraThumbnailUrl (cameraId, width = 128, height = 128, t?) {
-        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height, t);
-    }
-
     public getBookmarks() {
         return this.mediaserver.getBookmarks?.();
     }

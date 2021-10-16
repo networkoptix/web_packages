@@ -631,7 +631,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             data.height = height;
         }
 
-        if (rotate !== null) {
+        if (rotate) {
             data.rotate = rotate;
         }
 

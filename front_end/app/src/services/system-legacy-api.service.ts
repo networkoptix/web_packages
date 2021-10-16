@@ -958,10 +958,6 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        if (!environment.isLocal && !this.authGet) {
-            return EMPTY; // prevent unauthorized calls in cloud-portal
-        }
-
         return this.getRequestAggregator<
             t.NormalResponse<[t.SystemTime, t.GetCameras]>
         >(['ec2/getTimeOfServers', 'ec2/getCamerasEx']).pipe(
@@ -1083,7 +1079,7 @@ export class NxSystemAPI {
             data.height = height;
         }
 
-        if (rotate !== null) {
+        if (rotate) {
             data.rotate = rotate;
         }
 
@@ -1228,31 +1224,6 @@ export class NxSystemAPI {
         return this.get(endpoint, {}, headers);
     }
     // End of Health Monitor
-
-    public checkCameraThumbnail(cameraId, width = 70, height = 40) {
-        // it expects JSON yet normally gets JPG, thus rejects,
-        const _checker = (response) => {
-            if (!response || response.status !== 200) {
-                return Promise.reject(response);
-            } else {
-                return Promise.resolve(response);
-            }
-        };
-        return this.get(
-            `/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}`
-        )
-            .toPromise()
-            .then(_checker)
-            .catch(_checker);
-    }
-
-    public getCameraThumbnailUrl(cameraId, width = 128, height = 128, t?) {
-        return `${
-            this.urlBase
-        }/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${
-            this.authGet
-        }&time=${t || 'now'}`;
-    }
 
     public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
         let url;

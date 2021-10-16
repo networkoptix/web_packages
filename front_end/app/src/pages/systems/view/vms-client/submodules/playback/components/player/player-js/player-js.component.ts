@@ -167,8 +167,8 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const sourceUrl = this.sourceUrl || null;
         let posterUrl = BASE64_SINGLE_TRANSPARENT_PIXEL;
 
-        if (this.posterUrl) {
-            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' ? this.rotation : 0}`;
+        if (this.posterUrl && !this.posterUrl.includes('rotate')) {
+            posterUrl = `${this.posterUrl}&rotate=${this.transport !== 'hls' && this.rotation || 0}`;
         }
 
         if (!sourceUrl) {
