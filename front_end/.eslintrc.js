@@ -246,5 +246,13 @@ module.exports = {
         "promise/param-names": "error",
 
         "standard/no-callback-literal": "error"
-    }
+    },
+    overrides: [
+        {
+          files: ["**/*.spec.ts"],
+          rules: {
+            "dot-notation" : "off"
+          },
+        },
+      ],
 };
