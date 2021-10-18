@@ -63,11 +63,7 @@ Force Tags        cloud
     [Tags]        anon    ui    
     Go To    ${knowledge base}[url]
     Check Header Items    False
-<<<<<<< HEAD
     Go Back
-=======
-    Go To    ${ENV}
->>>>>>> d381c8334539d06f3a3548903f9da17b547da36b
 
 # User has no systems connected to cloud
 6. No systems: Header button text is correct
