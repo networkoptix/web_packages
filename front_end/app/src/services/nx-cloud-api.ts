@@ -533,7 +533,7 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/accept_review', {
             review_id: reviewId
         }).toPromise().then(response => {
-            this.cacheService.cachedData.clear();
+            this.cacheService.clearData();
             return response;
         });
     }

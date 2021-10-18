@@ -133,7 +133,7 @@ export class NxLanguageProviderService {
             this.sessionService.language = language;
         });
 
-        this.cacheService.cachedData.clear();
+        this.cacheService.clearData();
         this.swCacheService
             .clearAllCache()
             .catch((err) => console.error(err));
