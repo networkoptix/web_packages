@@ -19,7 +19,7 @@ import { concatMap, takeUntil }              from 'rxjs/operators';
  * currentSubscription.unsubscribe();
  *
  * To completely kill the poll.
- * examplePoll.unsubscribe();
+ * examplePoll.cancel();
  */
 export class NxPollService {
     unsub$ = new Subject();
@@ -27,6 +27,10 @@ export class NxPollService {
     }
 
     ngOnDestroy() {
+        this.unsub$.next('done');
+    }
+
+    cancel() {
         this.unsub$.next('done');
     }
 
