@@ -347,7 +347,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             err => {
                 if (err?.resultCode) {
-                    if (err.resultCode === 'notAuthorized') {
+                    if (['notAuthorized', 'forbidden'].includes(err.resultCode)) {
                         this.passwordErrorCode = 'wrongPassword';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
