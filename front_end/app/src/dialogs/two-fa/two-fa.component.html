@@ -205,6 +205,10 @@
     <div class="modal-body">
         <form #codeForm="ngForm" name="loginForm" novalidate>
             <div id="codeText" translate>From authentication app, get a code and enter it below to complete the verification process.</div>
+            <p *ngIf="num2FaSytems" class="danger">
+                <!-- TODO: Move to dedicated disable dialog -->
+                {{ LANG.security.twoFa.disableWarning({ count: num2FaSytems}) }}
+            </p>
             <div class="form-group mt-3">
                 <label for="tfaCodeInput" translate>Enter authentication code</label>
                 <input type="text" class="form-control"

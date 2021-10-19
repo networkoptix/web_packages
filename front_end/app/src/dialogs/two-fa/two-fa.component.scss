@@ -12,21 +12,21 @@
         .btn {
             margin: 0 !important;
             padding: 0 !important;
-            
+
             svg-icon {
                 width: 24px;
                 margin-left: 8px;
-                
+
                 svg path {
                     fill : $additional_light1;
                 }
             }
-            
+
             &.btn-back {
                 svg-icon {
                     width : 24px;
                     margin-left : 0;
-                    
+
                     svg path {
                         fill : $dark9;
                     }
@@ -34,17 +34,21 @@
             }
         }
     };
-    
+
     .modal-body {
         .lineStrong {
             font-family: $font-family-bold;
         }
-    
+
         .system-name {
             font-family : $font-family-medium;
             margin-left : 0.5rem;
         }
-    
+
+        .danger {
+            color: red;
+        }
+
         .code-area {
             display               : grid;
             grid-template-columns : 1fr 1fr;
@@ -53,26 +57,26 @@
             border                : 1px solid $light4;
             padding               : 1rem;
             margin-top            : 1rem;
-        
+
             &-code {
                 font-family : robotomonoregular, monospace;
                 font-size   : $h3-font-size;
                 text-align  : center;
                 user-select : none;
-                
+
                 &-idx {
                     color        : $light10;
                     margin-right : 0.5rem;
                 }
             }
-    
+
             &-copy {
                 display         : flex;
                 align-content   : center;
                 justify-content : center;
                 margin-top      : 0.5rem;
             }
-        
+
             &-note {
                 color         : $light16;
                 margin-top    : 16px;

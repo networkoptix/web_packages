@@ -779,6 +779,7 @@ export interface SecurityTwoFa {
     v5Warning_a4:        any;
     v5Warning_a5:        any;
     v5Warning_b:         any;
+    disableWarning:      any;
 }
 
 export interface ServerTabTitles {
@@ -1797,6 +1798,7 @@ const typeMap: any = {
         { json: "v5Warning_a4", js: "v5Warning_a4", typ: "any" },
         { json: "v5Warning_a5", js: "v5Warning_a5", typ: "any" },
         { json: "v5Warning_b", js: "v5Warning_b", typ: "any" },
+        { json: "disableWarning", js: "disableWarning", typ: "any" },
     ], false),
     "ServerTabTitles": o([
         { json: "View", js: "View", typ: "any" },

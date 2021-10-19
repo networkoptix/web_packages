@@ -1,24 +1,29 @@
 import {
-    Component, OnInit,
-    Input, ViewChild, Renderer2,
-    TemplateRef, AfterViewInit
-}                                                 from '@angular/core';
-import { NgbActiveModal }                         from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }              from '@services/nx-language-provider';
-import { NxConfigService, IConfig }               from '@services/nx-config';
-import { NxProcessService, Process }              from '@services/process.service';
-import { LanguageI18NStaticTypes }                from '@app/language_i18n_static_types';
-import { Account, NxAccountService }              from '@services/account.service';
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    Renderer2,
+    TemplateRef,
+    AfterViewInit
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxProcessService, Process } from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { Account, NxAccountService } from '@services/account.service';
 import {
-    InfoBlockLine, InfoBlockSection,
+    InfoBlockLine,
+    InfoBlockSection,
     InfoBlockSize
-}                                                 from '@components/info-block/info-block.component';
-import { NxToastService }                         from '@dialogs/toast.service';
-import { ClipboardService, IClipboardResponse }   from 'ngx-clipboard';
-import { UntilDestroy, untilDestroyed }           from '@ngneat/until-destroy';
+} from '@components/info-block/info-block.component';
+import { NxToastService } from '@dialogs/toast.service';
+import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService }                         from '@services/utils.service';
-import { NxCloudApiService }                      from '@services/nx-cloud-api';
+import { NxUtilsService } from '@services/utils.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 
 export enum T_FA_STEPS {
     ChangePassword,
@@ -38,11 +43,12 @@ export enum T_FA_STEPS {
     styleUrls: ['two-fa.component.scss']
 })
 export class TwoFAModalContent implements OnInit, AfterViewInit {
-    @Input() type;
-    @Input() cancellable;
-    @Input() closable;
-    @Input() newPassword;
-    @Input() oldPassword;
+    @Input() type: string;
+    @Input() cancellable: boolean;
+    @Input() closable: boolean;
+    @Input() newPassword: string;
+    @Input() oldPassword: string;
+    @Input() num2FaSytems: number;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;

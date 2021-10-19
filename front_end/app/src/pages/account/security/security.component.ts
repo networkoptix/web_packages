@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 
-import { NxApplyService, Watcher }                from '@services/apply.service';
-import { NxProcessService, Process }              from '@services/process.service';
-import { NxLanguageProviderService }              from '@services/nx-language-provider';
-import { NxConfigService, IConfig }               from '@services/nx-config';
-import { NxAccountService, Account }              from '@services/account.service';
-import { NxPageService }                          from '@services/page.service';
-import { NxDialogsService }                       from '@dialogs/dialogs.service';
-import { NxMenuService }                          from '@src/menu';
-import { LanguageI18NStaticTypes }                from '@app/language_i18n_static_types';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxProcessService } from '@services/process.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxPageService } from '@services/page.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxMenuService } from '@src/menu';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService }                         from '@services/utils.service';
-import { untilDestroyed, UntilDestroy }           from '@ngneat/until-destroy';
+import { NxUtilsService } from '@services/utils.service';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 
 export type TFAUTH = {
     on: boolean,
@@ -136,7 +136,7 @@ export class NxAccountSecurityComponent implements OnInit {
                 });
         } else {
             this.dialogs
-                .off2FA()
+                .off2FA(this.twoFaSystems.length)
                 .then((action) => {
                     this.tfauth.on = (action === 'canceled');
                     this.tfauth.enabled = (action !== 'disabled');

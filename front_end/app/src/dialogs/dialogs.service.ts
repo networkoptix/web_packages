@@ -1,52 +1,52 @@
-import { Inject, Injectable }                  from '@angular/core';
-import { DOCUMENT, Location }                  from '@angular/common';
-import { DomSanitizer }                        from '@angular/platform-browser';
-import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
-import { Router }                              from '@angular/router';
-import { NgForm }                              from '@angular/forms';
-import { UntilDestroy }                        from '@ngneat/until-destroy';
-import { BehaviorSubject, SubscriptionLike }   from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT, Location } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
-import { NxToastService }                      from './toast.service';
-import { NxLanguageProviderService }           from '@services/nx-language-provider';
-import { NxConfigService, IConfig }            from '@services/nx-config';
-import { NxSystem, ICamera, NxSystemUser }     from '@services/system.service';
-import { Process }                             from '@services/process.service';
-import { NxCloudApiService }                   from '@services/nx-cloud-api';
-import { LanguageI18NStaticTypes }             from '@app/language_i18n_static_types';
+import { NxToastService } from './toast.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxSystem, ICamera, NxSystemUser } from '@services/system.service';
+import { Process } from '@services/process.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
-import { GenericModalContent }                 from './generic/generic.component';
-import { AddUserModalContent }                 from './add-user/add-user.component';
-import { DisconnectModalContent }              from './disconnect/disconnect.component';
-import { MessageModalContent }                 from './message/message.component';
-import { EmbedModalContent }                   from './embed/embed.component';
-import { MergeModalContent }                   from './merge/merge.component';
-import { ApplyModalContent }                   from './apply/apply.component';
-import { RemoveSystemModalContent }            from './remove-system/remove-system.component';
-import { RemoveUserModalContent }              from './remove-user/remove-user.component';
-import { RestartServerModalContent }           from './restart-server/restart-server.component';
-import { DetachServerModalContent }            from './detach-server/detach-server.component';
-import { ResetServerModalContent }             from './reset-server/reset-server.component';
-import { DeleteCloudUserModalContent }         from './delete-cloud-user/delete-cloud-user.component';
-import { ChangePasswordModalContent }          from './change-password/change-password.component';
+import { GenericModalContent } from './generic/generic.component';
+import { AddUserModalContent } from './add-user/add-user.component';
+import { DisconnectModalContent } from './disconnect/disconnect.component';
+import { MessageModalContent } from './message/message.component';
+import { EmbedModalContent } from './embed/embed.component';
+import { MergeModalContent } from './merge/merge.component';
+import { ApplyModalContent } from './apply/apply.component';
+import { RemoveSystemModalContent } from './remove-system/remove-system.component';
+import { RemoveUserModalContent } from './remove-user/remove-user.component';
+import { RestartServerModalContent } from './restart-server/restart-server.component';
+import { DetachServerModalContent } from './detach-server/detach-server.component';
+import { ResetServerModalContent } from './reset-server/reset-server.component';
+import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
+import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
-import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/cloud-storage-delete.component';
-import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
-import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
-import { WizardModalContent }                  from './wizard/wizard.component';
-import { ResetBackupModalContent }             from './reset-backup/reset-backup.component';
-import { AddStorageModalContent }              from './add-storage/add-storage.component';
-import { ChangeStorageModalContent }           from './change-storage/change-storage.component';
-import { TwoFAModalContent }                   from './two-fa/two-fa.component';
-import { NxAccountService }                    from '@services/account.service';
-import { BaseAccount }                         from '@services/account.service/base';
-import { CloudAccount }                        from '@services/account.service/cloud';
-import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
-import { EditModalContent }                    from './edit/edit.component';
-import { ModalContent }                        from '@components/console-table/console-table.component';
-import { DownloadAsyncModalContent }           from './download-async/download-async.component';
-import { StorageManager }                      from '@services/system.service/system/storage-manager/storage-manager';
-import { Mandatory2faModalContent }            from './mandatory-2fa/mandatory-2fa.component';
+import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
+import { LoginWebadminModalContent } from './login-webadmin/login-webadmin.component';
+import { WizardModalContent } from './wizard/wizard.component';
+import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
+import { AddStorageModalContent } from './add-storage/add-storage.component';
+import { ChangeStorageModalContent } from './change-storage/change-storage.component';
+import { TwoFAModalContent } from './two-fa/two-fa.component';
+import { NxAccountService } from '@services/account.service';
+import { BaseAccount } from '@services/account.service/base';
+import { CloudAccount } from '@services/account.service/cloud';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { EditModalContent } from './edit/edit.component';
+import { ModalContent } from '@components/console-table/console-table.component';
+import { DownloadAsyncModalContent } from './download-async/download-async.component';
+import { StorageManager } from '@services/system.service/system/storage-manager/storage-manager';
+import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 
 import '@dialogs/dialogs.scss';
 
@@ -563,7 +563,7 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
-    public off2FA () {
+    public off2FA (num2FaSytems: number) {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static',
@@ -571,6 +571,7 @@ export class NxDialogsService {
         };
 
         const params: IParams = {
+            num2FaSytems,
             type: 'off',
             closable: true
         };
