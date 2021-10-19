@@ -9,10 +9,10 @@ const buildSkin = (color) => {
     const source = path.resolve(skinPath, color, 'front_end/styles/_custom_palette.scss');
 
     const skin = sass.renderSync({ file: source });
-    fs.writeFileSync(path.resolve(dest, `${color}.css`), skin.css.toString(), { flag: 'a+' });
+    fs.writeFileSync(path.resolve(dest, `${color}.css`), skin.css.toString(), { flag: 'w' });
     // Blue will be the default skin
     if (color === 'blue') {
-        fs.writeFileSync(path.resolve(dest, 'skin.css'), skin.css.toString(), { flag: 'a+' });
+        fs.writeFileSync(path.resolve(dest, 'skin.css'), skin.css.toString(), { flag: 'w' });
     }
 };
 
