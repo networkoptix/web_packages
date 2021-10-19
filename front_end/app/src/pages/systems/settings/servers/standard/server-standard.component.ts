@@ -81,6 +81,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     portChangeDisabled: boolean;
     serverUnavailable: boolean;
     serverOffline: boolean;
+    certError: boolean;
     fullInfoPath: string;
     parsedServerId: string;
     serverDetails: InfoBlockSection;
@@ -111,6 +112,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     private setupDefaults() {
         this.checking = false;
         this.serverOffline = false;
+        this.certError = false;
         this.renameDisabled = true;
         this.restartDisabled = true;
         this.detachDisabled = true;
@@ -321,6 +323,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status]?.() : '';
+        this.certError = (this.CONFIG.servers.status.certError === this.selectedServer.internalStatus);
         this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||

@@ -594,6 +594,7 @@ export interface ServersStatus {
     restarting: string;
     resetting: string;
     checking: string;
+    certError: string
 }
 
 export interface System {

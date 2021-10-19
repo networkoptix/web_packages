@@ -515,7 +515,8 @@ export const nxConfig: IConfig = {
             offline    : 'offline',
             restarting : 'restarting',
             resetting  : 'resetting',
-            checking   : 'checking'
+            checking   : 'checking',
+            certError  : 'mismatchedCertificate'
         }
     },
     sessionFreshnessSec : 600, // s or 10 minutes

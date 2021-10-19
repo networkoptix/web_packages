@@ -1,5 +1,13 @@
 <div class="row auth-visible">
     <nx-page-placeholder class="placeholder-section" type="NO_SETTINGS" *ngIf="(isOffline || !system.isAvailable) && !selectedServer"></nx-page-placeholder>
+    <nx-alert-block
+            *ngIf="certError"
+            class="col-12"
+            type="warning"
+            id="certificate-error"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+            [line1]="'CERTIFICATE ERROR' | translate">
+    </nx-alert-block>
     <div *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting || checking" class="col-12">
         <ng-container *ngIf="!checking">
             <nx-alert-block

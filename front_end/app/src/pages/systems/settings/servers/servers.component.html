@@ -1,5 +1,5 @@
 <nx-alert-block
-    *ngIf="storagesOutdated"
+    *ngIf="storagesOutdated && !isOffline"
     type="warning"
     id="storages-outdated"
     [line1]="'Storages outdated. Reload page to update.' | translate"
