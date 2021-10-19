@@ -1,30 +1,35 @@
 import {
-    ComponentFixture, TestBed,
-    waitForAsync, inject, tick, fakeAsync
-}                                         from '@angular/core/testing';
-import { NgModule }                       from '@angular/core';
-import { of }                             from 'rxjs';
-import { ActivatedRoute }                 from '@angular/router';
-import { nxConfig }                       from '@services/nx-config/config';
-import { NxConfigService }                from '@services/nx-config';
-import { NxLanguageProviderService }      from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }        from '@app/language_i18n_static_types';
-import { NxAccountSecurityComponent }     from '@pages/account/security/security.component';
-import { NxProcessService }               from '@services/process.service';
-import { NxDialogsService }               from '@dialogs/dialogs.service';
-import { NxCloudApiService }              from '@services/nx-cloud-api';
-import { NxSystemsService }               from '@services/systems.service';
-import { NxAccountService }               from '@services/account.service';
-import { NxMenuService }                  from '@src/menu';
-import { NxApplyService }                 from '@services/apply.service';
-import { NxPageService }                  from '@services/page.service';
-import { TranslateModule }                from '@ngx-translate/core';
-import { NxPreLoaderComponent }           from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
+    ComponentFixture,
+    TestBed,
+    waitForAsync,
+    inject,
+    tick,
+    fakeAsync
+} from '@angular/core/testing';
+import { NgModule } from '@angular/core';
+import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountSecurityComponent } from '@pages/account/security/security.component';
+import { NxProcessService } from '@services/process.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxSystemsService } from '@services/systems.service';
+import { NxAccountService } from '@services/account.service';
+import { NxMenuService } from '@src/menu';
+import { NxApplyService } from '@services/apply.service';
+import { NxPageService } from '@services/page.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxSwitchComponent }              from '@components/switch/switch.component';
-import { NxCheckboxComponent }            from '@components/checkbox/checkbox.component';
-import { FormsModule }                    from '@angular/forms';
+import { NxSwitchComponent } from '@components/switch/switch.component';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [TranslateModule.forRoot()],
@@ -73,10 +78,18 @@ describe('NxAccountSecurityComponent', () => {
 
         TestBed
             .configureTestingModule({
-                imports: [TranslateTestingModule, FormsModule],
+                imports: [
+                    TranslateTestingModule,
+                    FormsModule,
+                    NgbModule
+                ],
                 declarations: [
-                    NxAccountSecurityComponent, NxPreLoaderComponent, NxSwitchComponent,
-                    NxContentBlockComponent, NxContentBlockSectionComponent, NxCheckboxComponent
+                    NxAccountSecurityComponent,
+                    NxPreLoaderComponent,
+                    NxSwitchComponent,
+                    NxContentBlockComponent,
+                    NxContentBlockSectionComponent,
+                    NxCheckboxComponent
                 ],
                 providers: [
                     { provide: NxLanguageProviderService, useValue: translateMock },

@@ -1,23 +1,28 @@
+/* eslint-disable dot-notation */
 import {
-    ComponentFixture, TestBed,
-    waitForAsync, inject, fakeAsync
-}                                        from '@angular/core/testing';
-import { of }                            from 'rxjs';
-import { nxConfig }                      from '@services/nx-config/config';
-import { IConfig, NxConfigService }      from '@services/nx-config';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
-import { NxProcessService }              from '@services/process.service';
-import { NxAccountService }              from '@services/account.service';
+    ComponentFixture,
+    TestBed,
+    waitForAsync,
+    inject,
+    fakeAsync
+} from '@angular/core/testing';
+import { of } from 'rxjs';
+import { nxConfig } from '@services/nx-config/config';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxProcessService } from '@services/process.service';
+import { NxAccountService } from '@services/account.service';
 import { T_FA_STEPS, TwoFAModalContent } from '@dialogs/two-fa/two-fa.component';
-import { NgbActiveModal }                from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule }                   from '@angular/forms';
-import { HttpClientTestingModule }       from '@angular/common/http/testing';
-import { Renderer2 }                     from '@angular/core';
-import { NxToastService }                from '@dialogs/toast.service';
-import { ClipboardService }              from 'ngx-clipboard';
-import { NxSystemsService }              from '@services/systems.service';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Renderer2 } from '@angular/core';
+import { NxToastService } from '@dialogs/toast.service';
+import { ClipboardService } from 'ngx-clipboard';
+import { NxSystemsService } from '@services/systems.service';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 
 // Mock class for NgbModalRef
 export class MockNgbModalRef {
@@ -95,7 +100,9 @@ describe('TwoFAModalContent', () => {
 
         TestBed
             .configureTestingModule({
-                declarations: [TwoFAModalContent],
+                declarations: [
+                    TwoFAModalContent
+                ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxLanguageProviderService, useValue: translateMock },
@@ -105,10 +112,12 @@ describe('TwoFAModalContent', () => {
                     { provide: NgbActiveModal, useValue: {} },
                     { provide: NxToastService, useValue: {} },
                     { provide: ClipboardService, useValue: clipboardMock },
-                    { provide: NxSystemsService, useValue: systemsServiceMock }
+                    { provide: NxSystemsService, useValue: systemsServiceMock },
+                    { provide: NxCloudApiService, useValue: {} }
                 ],
                 imports: [
-                    FormsModule, HttpClientTestingModule,
+                    FormsModule,
+                    HttpClientTestingModule,
                     AngularSvgIconModule.forRoot()
                     // NgbModule.forRoot()
                 ]

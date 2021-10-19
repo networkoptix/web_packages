@@ -1,11 +1,15 @@
-import { v4 as uuid }                               from 'uuid';
-import { ComponentFixture, TestBed, waitForAsync }  from '@angular/core/testing';
-import { CommonModule }                             from '@angular/common';
-import { DebugElement, NgModule }                   from '@angular/core';
-import { TranslateModule }                          from '@ngx-translate/core';
+import { v4 as uuid } from 'uuid';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { DebugElement, NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { nxConfig }                                from '@services/nx-config/config';
-import { forUnitTest, NxDevConsoleMenuComponent }  from './console-menu.component';
+import { nxConfig } from '@services/nx-config/config';
+import { forUnitTest, NxDevConsoleMenuComponent } from './console-menu.component';
+
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const {
     NxConfigService,
@@ -31,17 +35,27 @@ describe('NxDevConsoleMenuComponent', () => {
         url: uuid(),
         icon: uuid()
     }));
+    const headerMock = {
+        currentLocation : { parentNode: { nodes: [] } },
+        setLocation     : () => { }
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations: [NxDevConsoleMenuComponent],
-                providers: [
-                    { provide: NxConfigService, useValue: configMock },
-                    { provide: NxHeaderService, useValue: { currentLocation: { parentNode: { nodes: [] } }, setLocation: () => { } } }
+                declarations: [
+                    NxDevConsoleMenuComponent
                 ],
                 imports: [
-                    CommonModule, TranslateTestingModule
+                    CommonModule,
+                    TranslateTestingModule,
+                    AngularSvgIconModule.forRoot(),
+                    HttpClientTestingModule,
+                    RouterTestingModule
+                ],
+                providers: [
+                    { provide: NxConfigService, useValue: configMock },
+                    { provide: NxHeaderService, useValue: headerMock }
                 ]
             })
             .compileComponents();

@@ -1,11 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync }  from '@angular/core/testing';
-import { CommonModule }                             from '@angular/common';
-import { DebugElement, Component }                  from '@angular/core';
-import { v4 as uuid }                               from 'uuid';
-import { BehaviorSubject, of }                      from 'rxjs';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { v4 as uuid } from 'uuid';
+import { BehaviorSubject, of } from 'rxjs';
 
-import { nxConfig }                                 from '@services/nx-config/config';
-import { forUnitTest, NxDevConsoleComponent }       from './console.component';
+import { nxConfig } from '@services/nx-config/config';
+import { forUnitTest, NxDevConsoleComponent } from './console.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 const {
     NxConfigService,
@@ -16,22 +17,35 @@ const {
 } = forUnitTest;
 
 @Component({
-    selector: 'console-menu',
-    template: '<p>Mock console menu</p>'
+    selector : 'console-menu',
+    template : '<div></div>'
 })
-class MockConsoleMenu { }
+class MockConsoleMenu {
+    @Input() menu;
+    @Input() base;
+    @Input() type;
+    @Input() sectionParam;
+}
 
 @Component({
-    selector: 'console-edit',
-    template: '<p>Mock console edit</p>'
+    selector : 'console-edit',
+    template : '<div></div>'
 })
-class MockConsoleEdit { }
+class MockConsoleEdit {
+    @Input() contextList;
+    @Input() asset;
+}
 
 @Component({
-    selector: 'console-table',
-    template: '<p>Mock console table</p>'
+    selector : 'console-table',
+    template : '<div></div>'
 })
-class MockConsoleTable { }
+class MockConsoleTable {
+    @Input() sectionParam;
+    @Input() contextList;
+
+    @Output() editValues = new EventEmitter();
+}
 
 describe('NxDevConsoleComponent', () => {
     let component: NxDevConsoleComponent;
@@ -68,7 +82,12 @@ describe('NxDevConsoleComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations: [NxDevConsoleComponent, MockConsoleEdit, MockConsoleTable, MockConsoleMenu],
+                declarations: [
+                    NxDevConsoleComponent,
+                    MockConsoleEdit,
+                    MockConsoleTable,
+                    MockConsoleMenu
+                ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: ActivatedRoute, useValue: routeMock },
@@ -77,7 +96,8 @@ describe('NxDevConsoleComponent', () => {
                     { provide: NxHeaderService, useValue: { currentLocation: { parentNode: { nodes: [] } }, setLocation: () => { } } }
                 ],
                 imports: [
-                    CommonModule
+                    CommonModule,
+                    HttpClientTestingModule
                 ]
             })
             .compileComponents();

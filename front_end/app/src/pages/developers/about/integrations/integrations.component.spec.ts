@@ -19,7 +19,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
-describe('For Developers Landing - Integrations Node', () => {
+describe('NxIntegrationsComponent', () => {
     let component: NxIntegrationsComponent;
     let fixture: ComponentFixture<NxIntegrationsComponent>;
     let el: DebugElement;

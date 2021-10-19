@@ -1,22 +1,31 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
-import { NxSupportComponent }        from './support.component';
-import { WINDOW }                    from '@services/window-provider';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxSupportComponent } from './support.component';
+import { WINDOW } from '@services/window-provider';
 import {
-    getMockTranslations, MockProvider, sanitizerMock
-}                                    from '@src/_mocks/helpers.test';
-import { supportNode }               from '@src/_mocks/knowledge_base_landing.mock';
+    getMockTranslations,
+    MockProvider,
+    sanitizerMock
+} from '@src/_mocks/helpers.test';
+import { supportNode } from '@src/_mocks/knowledge_base_landing.mock';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { DirectivesModule }          from '@directives/directives.module';
-import { RouterLinkDirectiveStub }   from '@src/_testing';
-import { ErrorStateManager }         from '../error-state/error-state-manager';
+import { DirectivesModule } from '@directives/directives.module';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+import { ErrorStateManager } from '../error-state/error-state-manager';
+import { NxErrorStateComponent } from '../error-state/error-state.component';
+import { NxAccountService } from '@services/account.service';
+import { RouterTestingModule } from "@angular/router/testing";
 
-describe('For Developers Landing - Support Node', () => {
+describe('NxSupportComponent', () => {
     let component: NxSupportComponent;
     let fixture: ComponentFixture<NxSupportComponent>;
     let el: DebugElement;
@@ -28,16 +37,22 @@ describe('For Developers Landing - Support Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxSupportComponent, RouterLinkDirectiveStub],
+                declarations: [
+                    NxSupportComponent,
+                    NxErrorStateComponent,
+                    RouterLinkDirectiveStub
+                ],
                 imports: [
                     CommonModule,
-                    DirectivesModule
+                    DirectivesModule,
+                    RouterTestingModule
                 ],
                 providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxLanguageProviderService, langMock),
                     new MockProvider(DomSanitizer, sanitizerMock),
-                    new MockProvider(WINDOW, window)
+                    new MockProvider(WINDOW, window),
+                    new MockProvider(NxAccountService, {})
                 ]
             });
 

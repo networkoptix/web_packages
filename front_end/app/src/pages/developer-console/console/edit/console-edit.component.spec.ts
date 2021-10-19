@@ -1,13 +1,15 @@
-import { v4 as uuid }                               from 'uuid';
-import { ComponentFixture, TestBed, waitForAsync }  from '@angular/core/testing';
-import { CommonModule }                             from '@angular/common';
-import { DebugElement, NgModule }                   from '@angular/core';
-import { TranslateModule }                          from '@ngx-translate/core';
-import { HttpClientTestingModule }                  from '@angular/common/http/testing';
-import { FormsModule }                              from '@angular/forms';
+import { v4 as uuid } from 'uuid';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { DebugElement, NgModule, Component, Input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
 
-import { nxConfig }                                 from '@services/nx-config/config';
-import { forUnitTest, NxDevConsoleEditComponent }   from './console-edit.component';
+import { nxConfig } from '@services/nx-config/config';
+import { forUnitTest, NxDevConsoleEditComponent } from './console-edit.component';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const {
     NxConfigService,
@@ -15,11 +17,9 @@ const {
     ActivatedRoute,
     Router,
     NxProcessService,
-    NxToastService,
     NxCloudApiService,
     NxHeaderService,
-    NxConsoleService,
-    Location
+    NxConsoleService
 } = forUnitTest;
 
 @NgModule({
@@ -27,6 +27,54 @@ const {
     exports: [TranslateModule]
 })
 class TranslateTestingModule {}
+
+@Component({
+    selector: 'nx-block',
+    template: `
+        <div>
+            <ng-content></ng-content>
+        </div>
+    `
+})
+class MockContentBlockComponent {}
+
+@Component({
+    selector: 'nx-section',
+    template: `
+        <div>
+            <ng-content></ng-content>
+        </div>
+    `
+})
+class MockContentBlockSectionComponent {}
+
+@Component({
+    selector: 'nx-process-button',
+    template: '<div></div>'
+})
+class MockProcessButtonComponent {
+    @Input() process;
+    @Input() actionType;
+    @Input() form;
+    @Input() clickFn;
+    @Input() removeMinWidth;
+    @Input() buttonText;
+}
+
+@Component({
+    selector: 'nx-cancel-button',
+    template: '<div></div>'
+})
+class MockProcessCancelButtonComponent {
+    @Input() discardFn;
+    @Input() customClass;
+}
+
+@Component({
+    selector: 'nx-pre-loader',
+    template: '<div></div>'
+})
+class MockPreLoaderComponentComponent {}
 
 describe('NxDevConsoleEditComponent', () => {
     let component: NxDevConsoleEditComponent;
@@ -61,7 +109,21 @@ describe('NxDevConsoleEditComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations: [NxDevConsoleEditComponent],
+                declarations: [
+                    NxDevConsoleEditComponent,
+                    MockContentBlockComponent,
+                    MockContentBlockSectionComponent,
+                    MockProcessButtonComponent,
+                    MockProcessCancelButtonComponent,
+                    MockPreLoaderComponentComponent
+                ],
+                imports: [
+                    CommonModule,
+                    TranslateTestingModule,
+                    HttpClientTestingModule,
+                    FormsModule,
+                    NgbModule
+                ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxHeaderService, useValue: headerMock },
@@ -71,9 +133,6 @@ describe('NxDevConsoleEditComponent', () => {
                     { provide: NxConsoleService, useValue: { unsavedAssets: {} } },
                     { provide: NxProcessService, useValue: processMock },
                     { provide: NxCloudApiService, useValue: cloudMock }
-                ],
-                imports: [
-                    CommonModule, TranslateTestingModule, HttpClientTestingModule, FormsModule
                 ]
             })
             .compileComponents();

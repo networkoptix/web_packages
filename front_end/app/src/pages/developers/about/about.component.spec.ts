@@ -1,20 +1,20 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement }           from '@angular/core';
-import { BehaviorSubject }        from 'rxjs';
-import { FormsModule }            from '@angular/forms';
+import { DebugElement, Input, Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule }           from '@angular/common';
+import { CommonModule } from '@angular/common';
 
-import { NxAboutComponent }          from './about.component';
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+import { NxAboutComponent } from './about.component';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxRibbonService }           from '@components/ribbon';
-import { NxAccountService }          from '@services/account.service';
-import { NxMenusService }            from '@services/menus.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { NxPageService }             from '@services/page.service';
+import { NxRibbonService } from '@components/ribbon';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxPageService } from '@services/page.service';
 import {
     landingRoute,
     docMenuMap,
@@ -24,8 +24,17 @@ import {
     routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
 import { getMockTranslations, MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
+import { RouterTestingModule } from '@angular/router/testing';
 
-describe('For Developers Landing', () => {
+@Component({
+    selector : 'nx-footer',
+    template : '<div></div>'
+})
+class MockFooterComponent {
+    @Input() center;
+}
+
+describe('NxAboutComponent', () => {
     let component: NxAboutComponent;
     let fixture: ComponentFixture<NxAboutComponent>;
     let el: DebugElement;
@@ -58,11 +67,15 @@ describe('For Developers Landing', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxAboutComponent],
+                declarations: [
+                    NxAboutComponent,
+                    MockFooterComponent
+                ],
                 imports: [
                     CommonModule,
                     FormsModule,
-                    TranslateTestingModule
+                    TranslateTestingModule,
+                    RouterTestingModule
                 ],
                 providers: [
                     new MockProvider(NxCloudApiService, cloudApiMock),

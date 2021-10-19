@@ -1,24 +1,51 @@
 import {
-    ComponentFixture, inject, TestBed,
+    ComponentFixture,
+    inject,
+    TestBed,
     waitForAsync
-}                                            from '@angular/core/testing';
-import { nxConfig }                          from '@services/nx-config/config';
-import { NxConfigService }                   from '@services/nx-config';
-import { NxMenuComponent }                   from './menu.component';
+} from '@angular/core/testing';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { NxMenuComponent } from './menu.component';
 import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }         from '@services/nx-language-provider';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { NxApplyService }           from '@services/apply.service';
-import { NxSearchService }          from '@services/search.service';
-import { NxMenuService }            from '@src/menu/menu.service';
-import { BehaviorSubject }          from 'rxjs';
-import { DebugElement }             from '@angular/core';
-import { NxLevel1ItemComponent }    from '@src/menu/level-1/level-1-item.component';
-import { NxLevel3ItemComponent }    from '@src/menu/level-3/level-3-item.component';
-import { AngularSvgIconModule }     from 'angular-svg-icon';
-import { NxSafePipe }               from '@src/pipes/nx-safe';
-import { HttpClientTestingModule }  from '@angular/common/http/testing';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { ActivatedRoute } from '@angular/router';
+import { NxApplyService } from '@services/apply.service';
+import { NxSearchService } from '@services/search.service';
+import { NxMenuService } from '@src/menu/menu.service';
+import { BehaviorSubject } from 'rxjs';
+import {
+    DebugElement,
+    NgModule,
+    Component,
+    Input,
+    Output,
+    EventEmitter
+} from '@angular/core';
+import { NxLevel1ItemComponent } from '@src/menu/level-1/level-1-item.component';
+import { NxLevel3ItemComponent } from '@src/menu/level-3/level-3-item.component';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NxSafePipe } from '@src/pipes/nx-safe';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+
+@NgModule({
+    imports: [TranslateModule.forRoot()],
+    exports: [TranslateModule]
+})
+class TranslateTestingModule {}
+
+@Component({
+    selector: 'nx-search',
+    template: '<div></div>'
+})
+class MockSearchComponent {
+    @Output() ngModelChange = new EventEmitter();
+    @Input() ngModel;
+    @Output() onFocus = new EventEmitter();
+    @Output() onFocusOut = new EventEmitter();
+}
 
 describe('NxMenuComponent', () => {
     let component: NxMenuComponent;
@@ -243,10 +270,20 @@ describe('NxMenuComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-                declarations: [NxMenuComponent, NxLevel1ItemComponent, NxLevel3ItemComponent, NxSafePipe],
+                imports: [
+                    AngularSvgIconModule.forRoot(),
+                    HttpClientTestingModule,
+                    RouterTestingModule,
+                    TranslateTestingModule
+                ],
+                declarations: [
+                    NxMenuComponent,
+                    NxLevel1ItemComponent,
+                    NxLevel3ItemComponent,
+                    NxSafePipe,
+                    MockSearchComponent
+                ],
                 providers: [
-                    new MockProvider(Router, {}),
                     new MockProvider(ActivatedRoute, routeMock),
                     new MockProvider(NxApplyService, {}),
                     new MockProvider(NxConfigService, configMock),

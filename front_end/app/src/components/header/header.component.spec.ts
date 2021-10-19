@@ -3,7 +3,7 @@ import {
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement, Renderer2 } from '@angular/core';
+import { DebugElement, Renderer2, Input, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -21,20 +21,33 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemService } from '@services/system.service';
 import { NxMenusService } from '@services/menus.service';
 import { WINDOW } from '@services/window-provider';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxStorageService } from '@services/storage.service';
 import { NxHeaderComponent } from './header.component';
 
-import { NxNavDropdownComponent } from '@components/header/nav-dropdown/nav-dropdown.component';
-import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';
-import { NxHeaderLanguageDropdown } from '@components/dropdowns/language/language.component';
-import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
-import { NxUriService } from '@services/uri.service';
-import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { LocalStorageService } from 'ngx-webstorage';
 import { RouterTestingModule } from '@angular/router/testing';
+
+@Component({
+    selector: 'nx-nav-dropdown',
+    template: '<div></div>'
+})
+class MockNavDropdown {
+    @Input() nodeLocation;
+}
+
+@Component({
+    selector: 'nx-account-settings-select',
+    template: '<div></div>'
+})
+class MockAccountSettings {
+    @Input() small;
+}
+
+@Component({
+    selector: 'nx-header-language-select',
+    template: '<div></div>'
+})
+class MockHeaderLanguageDropdown {}
 
 describe('NxHeaderComponent', () => {
     let component: NxHeaderComponent;
@@ -133,11 +146,9 @@ describe('NxHeaderComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 NxHeaderComponent,
-                NxNavDropdownComponent,
-                NxAccountSettingsDropdown,
-                NxHeaderLanguageDropdown,
-                NxDropMenu,
-                NxArrowNavDirective
+                MockNavDropdown,
+                MockAccountSettings,
+                MockHeaderLanguageDropdown
             ],
             imports: [
                 CommonModule,
@@ -160,11 +171,7 @@ describe('NxHeaderComponent', () => {
                 // { provide: Router, useValue: routerMock },
                 { provide: NxHeaderService, useValue: headerMock },
                 { provide: NxMenusService, useValue: menuMock },
-                { provide: WINDOW, useValue: window },
-                { provide: NxBootstrapProvider, useValue: {} },
-                { provide: NxUriService, useValue: {} },
-                { provide: NxCloudApiService, useValue: cloudMock },
-                { provide: LocalStorageService, useValue: {} }
+                { provide: WINDOW, useValue: window }
             ]
         }).compileComponents()
             .then(() => {

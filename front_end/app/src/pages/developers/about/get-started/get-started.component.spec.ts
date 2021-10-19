@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
-describe('For Developers Landing - Capabilities Node', () => {
+describe('NxGetStartedComponent', () => {
     const stepToTest = 1;
     const step = getStartedNode.nodes[stepToTest - 1];
     const [stepIcon, stepAnimatedIcon] = step.icon.split(' ');

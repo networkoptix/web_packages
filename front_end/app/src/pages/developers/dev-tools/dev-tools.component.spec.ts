@@ -1,26 +1,31 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement }            from '@angular/core';
-import { AngularSvgIconModule }    from 'angular-svg-icon';
-import { of }                      from 'rxjs';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CommonModule }            from '@angular/common';
+import { CommonModule } from '@angular/common';
 
-import { NxConfigService }     from '@services/nx-config';
-import { nxConfig }            from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxDevToolsComponent } from './dev-tools.component';
-import { WINDOW }              from '@services/window-provider';
+import { WINDOW } from '@services/window-provider';
 import {
     devToolsNode,
     docMenuMap
 } from '../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider }      from '../../../_mocks/helpers.test';
-import { ActivatedRoute }    from '@angular/router';
+import { MockProvider } from '../../../_mocks/helpers.test';
+import { ActivatedRoute } from '@angular/router';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxHeaderService }   from '@services/nx-header.service';
-import { NxAccountService }  from '@services/account.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxAccountService } from '@services/account.service';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 
-describe('For Developers Landing - Dev Tools', () => {
+describe('NxDevToolsComponent', () => {
     let component: NxDevToolsComponent;
     let fixture: ComponentFixture<NxDevToolsComponent>;
     let el: DebugElement;
@@ -40,8 +45,16 @@ describe('For Developers Landing - Dev Tools', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxDevToolsComponent, RouterLinkDirectiveStub],
-                imports: [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+                declarations: [
+                    NxDevToolsComponent,
+                    NxMatchHeightDirective,
+                    RouterLinkDirectiveStub
+                ],
+                imports: [
+                    CommonModule,
+                    AngularSvgIconModule.forRoot(),
+                    HttpClientTestingModule
+                ],
                 providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(NxCloudApiService, cloudApiMock),
