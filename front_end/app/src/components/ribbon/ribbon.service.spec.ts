@@ -1,20 +1,10 @@
-import { TestBed, inject, waitForAsync }      from '@angular/core/testing';
+import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { NxRibbonService, RibbonActionInput } from './ribbon.service';
-import { BehaviorSubject }                    from 'rxjs';
-import { NgModule }                           from '@angular/core';
-import { TranslateModule }                    from '@ngx-translate/core';
-import { NxAppStateService }                  from '@services/nx-app-state.service';
-import { NxHeaderService }                    from '@services/nx-header.service';
-import { NxDialogsService }                   from '@dialogs/dialogs.service';
-import { NxLanguageProviderService }          from '@services/nx-language-provider';
-import { HttpClient }                         from '@angular/common/http';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
+import { BehaviorSubject } from 'rxjs';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { HttpClient } from '@angular/common/http';
 
 describe('NxRibbonService', () => {
     const translateMock = {

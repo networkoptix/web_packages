@@ -3,7 +3,7 @@ import {
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement, NgModule } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -16,12 +16,6 @@ import { NxFooterComponent } from './footer.component';
 import { of } from 'rxjs';
 
 import { RouterTestingModule } from '@angular/router/testing';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
 
 describe('NxFooterComponent', () => {
     let component: NxFooterComponent;
@@ -87,7 +81,11 @@ describe('NxFooterComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NxFooterComponent],
-            imports: [CommonModule, TranslateTestingModule, RouterTestingModule],
+            imports: [
+                CommonModule,
+                TranslateModule.forRoot(),
+                RouterTestingModule
+            ],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: DomSanitizer, useValue: {} },

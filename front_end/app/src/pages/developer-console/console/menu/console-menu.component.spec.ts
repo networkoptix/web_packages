@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { DebugElement, NgModule } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { nxConfig } from '@services/nx-config/config';
@@ -17,12 +17,6 @@ const {
     ConsoleMode
 } = forUnitTest;
 
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
-
 describe('NxDevConsoleMenuComponent', () => {
     let component: NxDevConsoleMenuComponent;
     let fixture: ComponentFixture<NxDevConsoleMenuComponent>;
@@ -36,8 +30,8 @@ describe('NxDevConsoleMenuComponent', () => {
         icon: uuid()
     }));
     const headerMock = {
-        currentLocation : { parentNode: { nodes: [] } },
-        setLocation     : () => { }
+        currentLocation: { parentNode: { nodes: [] } },
+        setLocation: () => { }
     };
 
     beforeEach(waitForAsync(() => {
@@ -48,7 +42,7 @@ describe('NxDevConsoleMenuComponent', () => {
                 ],
                 imports: [
                     CommonModule,
-                    TranslateTestingModule,
+                    TranslateModule.forRoot(),
                     AngularSvgIconModule.forRoot(),
                     HttpClientTestingModule,
                     RouterTestingModule

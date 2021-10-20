@@ -16,7 +16,6 @@ import { NxMenuService } from '@src/menu/menu.service';
 import { BehaviorSubject } from 'rxjs';
 import {
     DebugElement,
-    NgModule,
     Component,
     Input,
     Output,
@@ -29,12 +28,6 @@ import { NxSafePipe } from '@src/pipes/nx-safe';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
 
 @Component({
     selector: 'nx-search',
@@ -274,7 +267,7 @@ describe('NxMenuComponent', () => {
                     AngularSvgIconModule.forRoot(),
                     HttpClientTestingModule,
                     RouterTestingModule,
-                    TranslateTestingModule
+                    TranslateModule.forRoot()
                 ],
                 declarations: [
                     NxMenuComponent,

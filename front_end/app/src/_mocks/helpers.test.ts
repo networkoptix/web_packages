@@ -1,13 +1,5 @@
-import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { Subject } from 'rxjs/internal/Subject';
 import staticLang from '../../language_i18n_static.json';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-export class TranslateTestingModule {}
 
 export class MockProvider<Provider, Value> {
     constructor(public provide: Provider, public useValue?: Value) {

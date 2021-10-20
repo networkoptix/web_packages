@@ -1,5 +1,5 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement, NgModule } from '@angular/core';
+import { DebugElement } from '@angular/core';
 
 import { NxLicenseNewComponent } from './new.component';
 import { NxConfigService } from '@services/nx-config';
@@ -15,13 +15,6 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxLicenseTrialComponent } from '@pages/systems/settings/licenses/trial/trial.component';
 import { CommonModule } from '@angular/common';
 import { NgxMaskModule } from 'ngx-mask';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
 
 describe('Licenses (New)', () => {
     let component: NxLicenseNewComponent;
@@ -58,7 +51,7 @@ describe('Licenses (New)', () => {
             imports: [
                 CommonModule,
                 FormsModule,
-                TranslateTestingModule,
+                TranslateModule.forRoot(),
                 NgxMaskModule.forRoot()
             ],
             providers: [

@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { DebugElement, NgModule, Component, Input } from '@angular/core';
+import { DebugElement, Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -21,12 +21,6 @@ const {
     NxHeaderService,
     NxConsoleService
 } = forUnitTest;
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
 
 @Component({
     selector: 'nx-block',
@@ -119,7 +113,7 @@ describe('NxDevConsoleEditComponent', () => {
                 ],
                 imports: [
                     CommonModule,
-                    TranslateTestingModule,
+                    TranslateModule.forRoot(),
                     HttpClientTestingModule,
                     FormsModule,
                     NgbModule

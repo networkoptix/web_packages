@@ -8,8 +8,11 @@ import { WINDOW } from '@services/window-provider';
 import {
     integrationsNode
 } from '../../../../_mocks/knowledge_base_landing.mock';
-import { getMockTranslations, MockProvider, sanitizerMock, TranslateTestingModule } from '../../../../_mocks/helpers.test';
-import { Router } from '@angular/router';
+import {
+    getMockTranslations,
+    MockProvider,
+    sanitizerMock
+} from '../../../../_mocks/helpers.test';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -18,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('NxIntegrationsComponent', () => {
     let component: NxIntegrationsComponent;
@@ -73,7 +77,7 @@ describe('NxIntegrationsComponent', () => {
                     PipesModule,
                     CommonModule,
                     NgbModule,
-                    TranslateTestingModule
+                    TranslateModule.forRoot()
                 ],
                 providers: [
                     new MockProvider(NxConfigService, configMock),

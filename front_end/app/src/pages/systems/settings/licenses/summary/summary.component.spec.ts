@@ -1,24 +1,18 @@
 import {
-    waitForAsync, ComponentFixture,
+    waitForAsync,
+    ComponentFixture,
     TestBed
-}                                           from '@angular/core/testing';
-import { DebugElement, NgModule }           from '@angular/core';
-import { NxLicenseSummaryComponent }        from './summary.component';
-import { NxConfigService }                  from '@services/nx-config';
-import { nxConfig }                         from '@services/nx-config/config';
-import { NxLanguageProviderService }        from '@services/nx-language-provider';
-import { NxContentBlockComponent }          from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent }   from '@components/content-block/section/section.component';
-import { FormsModule }                      from '@angular/forms';
-import { TranslateModule }                  from '@ngx-translate/core';
+} from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { NxLicenseSummaryComponent } from './summary.component';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
 
 describe('Licenses (Summary)', () => {
     let component: NxLicenseSummaryComponent;
@@ -51,7 +45,7 @@ describe('Licenses (Summary)', () => {
             imports: [
                 CommonModule,
                 FormsModule,
-                TranslateTestingModule
+                TranslateModule.forRoot()
             ],
             providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },

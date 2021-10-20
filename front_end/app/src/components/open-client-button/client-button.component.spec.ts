@@ -1,5 +1,5 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement, NgModule } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
@@ -11,13 +11,9 @@ import { NxClientButtonComponent } from './client-button.component';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
+import {
+    NxProcessButtonComponent
+} from '@components/process-button/process-button.component';
 
 describe('NxClientButtonComponent', () => {
     let component: NxClientButtonComponent;
@@ -41,7 +37,7 @@ describe('NxClientButtonComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NxClientButtonComponent, NxProcessButtonComponent],
-            imports: [CommonModule, TranslateTestingModule],
+            imports: [CommonModule, TranslateModule.forRoot()],
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxProcessService, useValue: processMock },

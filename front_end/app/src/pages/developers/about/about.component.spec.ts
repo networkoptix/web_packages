@@ -23,12 +23,13 @@ import {
     introNode,
     routeLandingMock
 } from '../../../_mocks/knowledge_base_landing.mock';
-import { getMockTranslations, MockProvider, TranslateTestingModule } from '../../../_mocks/helpers.test';
+import { getMockTranslations, MockProvider } from '../../../_mocks/helpers.test';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector : 'nx-footer',
-    template : '<div></div>'
+    selector: 'nx-footer',
+    template: '<div></div>'
 })
 class MockFooterComponent {
     @Input() center;
@@ -74,7 +75,7 @@ describe('NxAboutComponent', () => {
                 imports: [
                     CommonModule,
                     FormsModule,
-                    TranslateTestingModule,
+                    TranslateModule.forRoot(),
                     RouterTestingModule
                 ],
                 providers: [

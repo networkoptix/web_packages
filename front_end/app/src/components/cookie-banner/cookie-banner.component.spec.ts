@@ -1,23 +1,22 @@
 import {
-    waitForAsync, ComponentFixture, TestBed, tick, fakeAsync, inject
-}                                 from '@angular/core/testing';
-import { DebugElement, NgModule } from '@angular/core';
-import { LocalStorageService }    from 'ngx-webstorage';
-import { TranslateModule }        from '@ngx-translate/core';
-import { CommonModule }           from '@angular/common';
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    tick,
+    fakeAsync,
+    inject
+} from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { LocalStorageService } from 'ngx-webstorage';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 import { NxCookieBannerComponent } from './cookie-banner.component';
-import { NxConfigService }         from '@services/nx-config';
-import { nxConfig }                from '@services/nx-config/config';
-import { NxAccountService }        from '@services/account.service';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxAccountService } from '@services/account.service';
 import { RouterLinkDirectiveStub } from '../../_testing/router-link-directive-stub';
 import { of } from 'rxjs';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
 
 // test skipped until feature is reimplemented
 xdescribe('NxCookieBannerComponent', () => {
@@ -41,7 +40,7 @@ xdescribe('NxCookieBannerComponent', () => {
             declarations: [NxCookieBannerComponent, RouterLinkDirectiveStub],
             imports: [
                 CommonModule,
-                TranslateTestingModule
+                TranslateModule.forRoot()
             ],
             providers: [
                 { provide: NxConfigService, useValue: configMock },

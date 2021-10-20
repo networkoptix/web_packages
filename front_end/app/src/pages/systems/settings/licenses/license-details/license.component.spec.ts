@@ -1,23 +1,16 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement, NgModule }                  from '@angular/core';
-import { TranslateModule }                         from '@ngx-translate/core';
-import { NxLicenseDetailComponent }                from './license.component';
-import { nxConfig }                                from '@services/nx-config/config';
-import { NxContentBlockComponent }                 from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent }          from '@components/content-block/section/section.component';
-import { NxInfoBlockComponent }                    from '@components/info-block/info-block.component';
-import { FormsModule }                             from '@angular/forms';
-import { NxLanguageProviderService }               from '@services/nx-language-provider';
-import { NxConfigService }                         from '@services/nx-config';
-import { NxSystem }                                from '@services/system.service';
-import { CommonModule, DatePipe }                                from '@angular/common';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
+import { DebugElement } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { NxLicenseDetailComponent } from './license.component';
+import { nxConfig } from '@services/nx-config/config';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
+import { FormsModule } from '@angular/forms';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxConfigService } from '@services/nx-config';
+import { NxSystem } from '@services/system.service';
+import { CommonModule, DatePipe } from '@angular/common';
 
 describe('Licenses (Details)', () => {
     let component: NxLicenseDetailComponent;
@@ -50,7 +43,7 @@ describe('Licenses (Details)', () => {
             imports: [
                 CommonModule,
                 FormsModule,
-                TranslateTestingModule
+                TranslateModule.forRoot()
             ],
             providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },

@@ -1,28 +1,22 @@
 import {
-    waitForAsync, ComponentFixture,
+    waitForAsync,
+    ComponentFixture,
     TestBed
-}                                         from '@angular/core/testing';
-import { DebugElement, NgModule }         from '@angular/core';
-import { NxLicenseTrialComponent }        from './trial.component';
-import { NxConfigService }                from '@services/nx-config';
-import { nxConfig }                       from '@services/nx-config/config';
-import { NxLanguageProviderService }      from '@services/nx-language-provider';
-import { NxProcessService }               from '@services/process.service';
-import { NxDialogsService }               from '@dialogs/dialogs.service';
-import { NxContentBlockComponent }        from '@components/content-block/content-block.component';
+} from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { NxLicenseTrialComponent } from './trial.component';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { FormsModule }                    from '@angular/forms';
-import { NxProcessButtonComponent }       from '@components/process-button/process-button.component';
-import { TranslateModule }                from '@ngx-translate/core';
-import { NxSystem }                       from '@services/system.service';
+import { FormsModule } from '@angular/forms';
+import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { NxSystem } from '@services/system.service';
 import { CommonModule } from '@angular/common';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
 
 describe('Licenses (Trial)', () => {
     let component: NxLicenseTrialComponent;
@@ -54,7 +48,7 @@ describe('Licenses (Trial)', () => {
             imports: [
                 CommonModule,
                 FormsModule,
-                TranslateTestingModule
+                TranslateModule.forRoot()
             ],
             providers: [
                 { provide: NxLanguageProviderService, useValue: translateMock },

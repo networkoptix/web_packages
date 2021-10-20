@@ -1,42 +1,47 @@
-import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { DebugElement, ElementRef, NgModule }      from '@angular/core';
-import { HttpClientTestingModule }                 from '@angular/common/http/testing';
-import { TranslateModule }                         from '@ngx-translate/core';
-import { By }                                      from '@angular/platform-browser';
-import { ActivatedRoute, Router }                  from '@angular/router';
-import { FormsModule, ReactiveFormsModule }        from '@angular/forms';
-import { AngularSvgIconModule }                    from 'angular-svg-icon';
-import { DirectivesModule }                        from '@directives/directives.module';
-import { CommonModule }                            from '@angular/common';
-import { of }                                      from 'rxjs';
-import { LocalStorageService }                     from 'ngx-webstorage';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    tick,
+    fakeAsync
+} from '@angular/core/testing';
+import { DebugElement, ElementRef } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { By } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { DirectivesModule } from '@directives/directives.module';
+import { CommonModule } from '@angular/common';
+import { of } from 'rxjs';
+import { LocalStorageService } from 'ngx-webstorage';
 
-import { AuthorizeParams, AuthorizeState, ClientType, NxAuthorizeComponent } from './authorize.component';
-import { NxAuthorizeEmailComponent }            from './email/email.component';
-import { NxAuthorizePasswordComponent }         from './password/password.component';
-import { NxAuthorizeCreateAccountComponent }    from './create-account/create-account.component';
-import { NxAuthorizeActivateAccountComponent }  from './activate-account/activate-account.component';
-import { NxAuthorizeConfirmationComponent }     from './confirmation/confirmation.component';
-import { NxAuthorizeResetPasswordComponent }    from './reset-password/reset-password.component';
-import { NxAuthorizeResetRequestComponent }     from './reset-request/reset-request.component';
-import { NxAuthorizeConnectErrorComponent }     from './connect-error/connect-error.component';
-import { NxAuthorizeAuthCodeComponent }         from './auth-code/auth-code.component';
-import { NxAuthorizeBackupCodeComponent }       from './backup-code/backup-code.component';
+import {
+    AuthorizeParams,
+    AuthorizeState,
+    ClientType,
+    NxAuthorizeComponent
+} from './authorize.component';
+import { NxAuthorizeEmailComponent } from './email/email.component';
+import { NxAuthorizePasswordComponent } from './password/password.component';
+import { NxAuthorizeCreateAccountComponent } from './create-account/create-account.component';
+import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
+import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
+import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
+import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
+import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
+import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
+import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
 
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService }          from '@services/process.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxAccountService }          from '@services/account.service';
-import { WINDOW }                    from '@services/window-provider';
-import { ComponentsModule }          from '@components/components.module';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
+import { NxProcessService } from '@services/process.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxAccountService } from '@services/account.service';
+import { WINDOW } from '@services/window-provider';
+import { ComponentsModule } from '@components/components.module';
 
 describe('NxAuthorizeComponent', () => {
     let component: NxAuthorizeComponent;
@@ -190,9 +195,14 @@ describe('NxAuthorizeComponent', () => {
                 NxAuthorizeBackupCodeComponent
             ],
             imports: [
-                CommonModule, ReactiveFormsModule, FormsModule,
-                AngularSvgIconModule.forRoot(), HttpClientTestingModule,
-                TranslateTestingModule, ComponentsModule, DirectivesModule
+                CommonModule,
+                ReactiveFormsModule,
+                FormsModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule,
+                TranslateModule.forRoot(),
+                ComponentsModule,
+                DirectivesModule
             ],
             providers: [
                 { provide: NxConfigService, useValue: configMock },

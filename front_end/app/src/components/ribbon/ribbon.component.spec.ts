@@ -1,22 +1,15 @@
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement, NgModule }             from '@angular/core';
-import { NxRibbonComponent, RibbonAction }    from './ribbon.component';
-import { NxRibbonService, RibbonActionInput } from './ribbon.service';
-import { nxConfig }                           from '@services/nx-config/config';
-import { NxConfigService }                    from '@services/nx-config';
-import { NxHeaderService }                    from '@services/nx-header.service';
-import { RouterLinkDirectiveStub }            from '@src/_testing';
-import { TranslateModule }                    from '@ngx-translate/core';
-import { NxLanguageProviderService }          from '@services/nx-language-provider';
-import { setupConfig }                        from '@src/_mocks/config.test';
+import { DebugElement } from '@angular/core';
+import { NxRibbonComponent, RibbonAction } from './ribbon.component';
+import { NxRibbonService } from './ribbon.service';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { setupConfig } from '@src/_mocks/config.test';
 import { CommonModule } from '@angular/common';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {
-}
 
 describe('NxRibbonComponent', () => {
     let component: NxRibbonComponent;
@@ -35,7 +28,7 @@ describe('NxRibbonComponent', () => {
             declarations: [NxRibbonComponent, RouterLinkDirectiveStub],
             imports: [
                 CommonModule,
-                TranslateTestingModule
+                TranslateModule.forRoot()
             ],
             providers: [
                 NxRibbonService,

@@ -6,7 +6,6 @@ import {
     tick,
     fakeAsync
 } from '@angular/core/testing';
-import { NgModule } from '@angular/core';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { nxConfig } from '@services/nx-config/config';
@@ -30,12 +29,6 @@ import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-@NgModule({
-    imports: [TranslateModule.forRoot()],
-    exports: [TranslateModule]
-})
-class TranslateTestingModule {}
 
 describe('NxAccountSecurityComponent', () => {
     let component: NxAccountSecurityComponent;
@@ -79,7 +72,7 @@ describe('NxAccountSecurityComponent', () => {
         TestBed
             .configureTestingModule({
                 imports: [
-                    TranslateTestingModule,
+                    TranslateModule.forRoot(),
                     FormsModule,
                     NgbModule
                 ],
