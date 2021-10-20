@@ -23,7 +23,7 @@ import { RouterLinkDirectiveStub } from '@src/_testing';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { NxErrorStateComponent } from '../error-state/error-state.component';
 import { NxAccountService } from '@services/account.service';
-import { RouterTestingModule } from "@angular/router/testing";
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NxSupportComponent', () => {
     let component: NxSupportComponent;

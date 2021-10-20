@@ -17,8 +17,8 @@ const {
 } = forUnitTest;
 
 @Component({
-    selector : 'console-menu',
-    template : '<div></div>'
+    selector: 'console-menu',
+    template: '<div></div>'
 })
 class MockConsoleMenu {
     @Input() menu;
@@ -28,8 +28,8 @@ class MockConsoleMenu {
 }
 
 @Component({
-    selector : 'console-edit',
-    template : '<div></div>'
+    selector: 'console-edit',
+    template: '<div></div>'
 })
 class MockConsoleEdit {
     @Input() contextList;
@@ -37,8 +37,8 @@ class MockConsoleEdit {
 }
 
 @Component({
-    selector : 'console-table',
-    template : '<div></div>'
+    selector: 'console-table',
+    template: '<div></div>'
 })
 class MockConsoleTable {
     @Input() sectionParam;

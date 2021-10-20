@@ -46,9 +46,9 @@ export class NxAPIToolService {
 
     leftMenuContent: MenuContent;
     placeHolderContent = {
-        api_information : 'API Information',
-        legacy          : 'Legacy API',
-        deprecated      : 'Deprecated Endpoints'
+        api_information: 'API Information',
+        legacy: 'Legacy API',
+        deprecated: 'Deprecated Endpoints'
     }
 
     // Stores the currently selected API file's title and description
@@ -91,8 +91,8 @@ export class NxAPIToolService {
 
     changeAPIDescription(selectedSection) {
         this.APIDescription = {
-            title       : this.leftMenuContent.pageDescriptions[selectedSection].title,
-            description : this.leftMenuContent.pageDescriptions[selectedSection].description
+            title: this.leftMenuContent.pageDescriptions[selectedSection].title,
+            description: this.leftMenuContent.pageDescriptions[selectedSection].description
         };
     }
 
@@ -185,10 +185,10 @@ export class NxAPIToolService {
                                         this.setRequestUrl(APIDoc, server.id);
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
-                                                value        : server.id,
-                                                name         : server.name,
-                                                apiDocFull   : APIDoc,
-                                                incompatible : false
+                                                value: server.id,
+                                                name: server.name,
+                                                apiDocFull: APIDoc,
+                                                incompatible: false
                                             });
                                         }
                                     }).catch(err => {
@@ -198,10 +198,10 @@ export class NxAPIToolService {
                                         }
                                         if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
                                             this.serversDropdown.push({
-                                                value        : server.id,
-                                                name         : server.name + ' - ' + typeOfError,
-                                                apiDocFull   : {} as APIDoc,
-                                                incompatible : true
+                                                value: server.id,
+                                                name: server.name + ' - ' + typeOfError,
+                                                apiDocFull: {} as APIDoc,
+                                                incompatible: true
                                             });
                                         }
                                     }).finally(async () => {
@@ -232,10 +232,10 @@ export class NxAPIToolService {
                                     });
                             } else {
                                 this.serversDropdown.push({
-                                    value        : server.id,
-                                    name         : server.name + ' - Offline',
-                                    apiDocFull   : {} as APIDoc,
-                                    incompatible : true
+                                    value: server.id,
+                                    name: server.name + ' - Offline',
+                                    apiDocFull: {} as APIDoc,
+                                    incompatible: true
                                 });
                             }
                         });

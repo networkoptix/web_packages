@@ -1,20 +1,23 @@
+/* eslint-disable prefer-promise-reject-errors */
 import {
-    waitForAsync, TestBed,
-    fakeAsync, tick
-}                                    from '@angular/core/testing';
-import { NxProcessService }          from '@services/process.service';
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+    waitForAsync,
+    TestBed,
+    fakeAsync,
+    tick
+} from '@angular/core/testing';
+import { NxProcessService } from '@services/process.service';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService }          from '@services/session.service';
-import { NxCloudApiService }         from './nx-cloud-api';
-import { NxToastService }            from '@dialogs/toast.service';
+import { NxSessionService } from '@services/session.service';
+import { NxCloudApiService } from './nx-cloud-api';
+import { NxToastService } from '@dialogs/toast.service';
 
 describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;
     let toast: jasmine.SpyObj<NxToastService>;
     let toastSpy;
-    const toastOptions = { 'autohide': true, 'classname': 'danger', 'delay': 3000 };
+    const toastOptions = { autohide: true, classname: 'danger', delay: 3000 };
 
     const configMock = { getConfig: () => nxConfig };
 
@@ -28,8 +31,8 @@ describe('Process service', () => {
                 }
             },
             errorCodes: {
-                fail         : () => 'Fail',
-                unknownError : () => 'Unknown error'
+                fail: () => 'Fail',
+                unknownError: () => 'Unknown error'
             }
         }
     };
@@ -189,7 +192,7 @@ describe('Process service', () => {
 
     it('should create process and fail w/ error.data.resultCode ', fakeAsync(() => {
         process.createProcess(() => {
-            return Promise.reject({ error: { data: { resultCode: 'boom' }}});
+            return Promise.reject({ error: { data: { resultCode: 'boom' } } });
         }, {
             errorCodes: {
                 boom: 'Boom!'
@@ -198,7 +201,7 @@ describe('Process service', () => {
         }).then((response) => {
             expect(response).toBe('success');
         }, (error) => {
-            expect(error).toEqual({ data: { resultCode: 'boom' }});
+            expect(error).toEqual({ data: { resultCode: 'boom' } });
         }).run();
 
         tick();
@@ -207,7 +210,7 @@ describe('Process service', () => {
 
     it('should create process and fail w/ error.type ', fakeAsync(() => {
         process.createProcess(() => {
-            return Promise.reject({ error: { type: 'error' }});
+            return Promise.reject({ error: { type: 'error' } });
         }, {
             errorCodes: {
                 networkConnection: 'Network Connection Fail'

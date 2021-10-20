@@ -1,16 +1,16 @@
-import { waitForAsync, TestBed, fakeAsync, tick }     from '@angular/core/testing';
-import { nxConfig }                  from '@services/nx-config/config';
-import { NxConfigService }           from '@services/nx-config';
-import { HttpClientTestingModule }   from '@angular/common/http/testing';
+import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService }          from '@services/session.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { TranslateModule }           from '@ngx-translate/core';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { NxUriCacheService }         from '@services/uri-cache.service';
-import { Router }                    from '@angular/router';
-import { WINDOW }                    from '@services/window-provider';
-import { of }                        from 'rxjs';
+import { NxSessionService } from '@services/session.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { TranslateModule } from '@ngx-translate/core';
+import { LocalStorageService } from 'ngx-webstorage';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { Router } from '@angular/router';
+import { WINDOW } from '@services/window-provider';
+import { of } from 'rxjs';
 
 describe('Language provider service', () => {
     let langProvider: NxLanguageProviderService;
@@ -30,8 +30,8 @@ describe('Language provider service', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports   : [TranslateModule.forRoot(), HttpClientTestingModule],
-            providers : [
+            imports: [TranslateModule.forRoot(), HttpClientTestingModule],
+            providers: [
                 { provide: Router, useValue: {} },
                 { provide: NxConfigService, useValue: configMock },
                 { provide: LocalStorageService, useValue: localStorageMock },

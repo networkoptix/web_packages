@@ -14,9 +14,9 @@ import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.com
 
 const appRoutes: Routes = [
     {
-        path        : '',
-        component   : NxAPIToolComponent,
-        canActivate : [AuthGuard]
+        path: '',
+        component: NxAPIToolComponent,
+        canActivate: [AuthGuard]
     }
 ];
 
@@ -31,14 +31,14 @@ const appRoutes: Routes = [
         MenuApiModule,
         FormsModule
     ],
-    providers    : [],
-    declarations : [
+    providers: [],
+    declarations: [
         NxAPIToolComponent,
         NxSwaggerComponent,
         NxSystemDropdownComponent
     ],
-    bootstrap       : [],
-    entryComponents : [
+    bootstrap: [],
+    entryComponents: [
         NxAPIToolComponent
     ],
     exports: [

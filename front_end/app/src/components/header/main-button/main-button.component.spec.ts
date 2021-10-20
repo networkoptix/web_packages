@@ -44,25 +44,25 @@ describe('NxHeaderMainButtonComponent', () => {
         lastActive$: new BehaviorSubject(true)
     };
     const menusMock = {
-        currentSystemNode$     : new BehaviorSubject(null),
-        getMenu                : () => new Observable(null),
-        updateActiveSystemMenu : () => {}
+        currentSystemNode$: new BehaviorSubject(null),
+        getMenu: () => new Observable(null),
+        updateActiveSystemMenu: () => {}
     };
     const accountMock = {
         get: () => ({
-            can_publish_integration : false,
-            name                    : 'Test',
-            first_name              : 'Test',
-            isCloud                 : false,
-            is_staff                : false,
-            language                : 'en_US',
-            last_name               : '1234',
-            permissions             : [],
-            is_superuser            : false,
-            id                      : 'test',
-            email                   : 'test@test.com',
-            is_authenticated        : false,
-            cookie_reviewed         : true
+            can_publish_integration: false,
+            name: 'Test',
+            first_name: 'Test',
+            isCloud: false,
+            is_staff: false,
+            language: 'en_US',
+            last_name: '1234',
+            permissions: [],
+            is_superuser: false,
+            id: 'test',
+            email: 'test@test.com',
+            is_authenticated: false,
+            cookie_reviewed: true
         })
     };
 

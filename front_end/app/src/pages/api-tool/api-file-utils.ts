@@ -74,24 +74,24 @@ export const createMenuContent = (response: APIDoc): MenuContent => {
     const _menuContent = {
         pageDescriptions: {
             api_information: {
-                title       : response.info?.title || 'API Information',
-                description : response.info?.description || ''
+                title: response.info?.title || 'API Information',
+                description: response.info?.description || ''
             }
         },
-        searchable             : false,
-        selectedSection        : 'api_information', // updated by selectedSectionSubject
-        selectedSubSection     : '', // updated by selectedSubSectionSubject
-        selectedDetailsSection : '',
-        system                 : {}, // updated by getSystemInfo
-        base                   : '', // no base - no navigation
-        level1                 : [
+        searchable: false,
+        selectedSection: 'api_information', // updated by selectedSectionSubject
+        selectedSubSection: '', // updated by selectedSubSectionSubject
+        selectedDetailsSection: '',
+        system: {}, // updated by getSystemInfo
+        base: '', // no base - no navigation
+        level1: [
             {
-                id     : 'api_information',
-                svg    : '',
-                label  : 'API Information',
-                path   : '',
-                level2 : [],
-                level3 : []
+                id: 'api_information',
+                svg: '',
+                label: 'API Information',
+                path: '',
+                level2: [],
+                level3: []
             }
         ]
     };
@@ -99,12 +99,12 @@ export const createMenuContent = (response: APIDoc): MenuContent => {
     if (Object.keys(response || {}).length) {
         response.tags.forEach(tag => {
             const categoryNode = {
-                id     : tag.name,
-                svg    : 'arrow_expand',
-                label  : tag.name.slice(0, -2),
-                path   : '',
-                level2 : [],
-                level3 : []
+                id: tag.name,
+                svg: 'arrow_expand',
+                label: tag.name.slice(0, -2),
+                path: '',
+                level2: [],
+                level3: []
             };
             _menuContent.level1.push(categoryNode);
             _menuContent.searchable = true;
@@ -120,12 +120,12 @@ export const createMenuContent = (response: APIDoc): MenuContent => {
                     return node.id === method[1].tags[0];
                 });
                 categoryNode.level3.push({
-                    additionalLabel : '',
-                    id              : method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                    isEnabled       : true,
-                    label           : method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                    path            : '',
-                    svgIcon         : ''
+                    additionalLabel: '',
+                    id: method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                    isEnabled: true,
+                    label: method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                    path: '',
+                    svgIcon: ''
                 });
             });
         });
@@ -156,17 +156,17 @@ export const addSubMenuApi = (legacyApi: APIDoc, baseMenuContent: MenuContent, t
     const title = type[0].toUpperCase() + type.slice(1);
     const apiContent = baseMenuContent;
     apiContent.level1.push({
-        id     : type,
-        svg    : 'arrow_expand',
-        label  : title,
-        path   : '',
-        level2 : [],
-        level3 : []
+        id: type,
+        svg: 'arrow_expand',
+        label: title,
+        path: '',
+        level2: [],
+        level3: []
     });
 
     baseMenuContent.pageDescriptions[type] = {
-        title       : legacyApi.info?.title || `${type.toUpperCase()} API Information`,
-        description : legacyApi.info?.description || ''
+        title: legacyApi.info?.title || `${type.toUpperCase()} API Information`,
+        description: legacyApi.info?.description || ''
     };
 
     const _subMenuContent = apiContent.level1.find(item => item.id === type);
@@ -175,12 +175,12 @@ export const addSubMenuApi = (legacyApi: APIDoc, baseMenuContent: MenuContent, t
         legacyApi.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
                 const categoryNode = {
-                    id     : tag.name,
-                    svg    : 'arrow_expand',
-                    label  : tag.name.slice(0, -2),
-                    path   : '',
-                    level2 : [],
-                    level3 : []
+                    id: tag.name,
+                    svg: 'arrow_expand',
+                    label: tag.name.slice(0, -2),
+                    path: '',
+                    level2: [],
+                    level3: []
                 };
                 _subMenuContent.level2.push(categoryNode);
                 _subMenuContent.searchable = true;
@@ -196,12 +196,12 @@ export const addSubMenuApi = (legacyApi: APIDoc, baseMenuContent: MenuContent, t
                     return node.id === method[1].tags[0];
                 });
                 categoryNode.level3.push({
-                    additionalLabel : '',
-                    id              : method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                    isEnabled       : true,
-                    label           : method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
-                    path            : '',
-                    svgIcon         : ''
+                    additionalLabel: '',
+                    id: method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                    isEnabled: true,
+                    label: method[1].summary || getLegacyMenuText(endpoint, includeTypeOfRequest, method[0]),
+                    path: '',
+                    svgIcon: ''
                 });
             });
         });

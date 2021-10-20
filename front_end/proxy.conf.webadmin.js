@@ -1,28 +1,28 @@
 const defaultCloud = 'https://cloud-test.hdw.mx';
 const proxyTargetConfig = {
     brova: {
-        host  : 'http://brova.mykeenetic.ru:7001',
-        cloud : defaultCloud
+        host: 'http://brova.mykeenetic.ru:7001',
+        cloud: defaultCloud
     },
     demo: {
-        host  : 'http://demo.networkoptix.com:7001',
-        cloud : defaultCloud
+        host: 'http://demo.networkoptix.com:7001',
+        cloud: defaultCloud
     },
     local: {
-        host  : 'https://localhost:7001',
-        cloud : 'https://dev3.cloud.hdw.mx'
+        host: 'https://localhost:7001',
+        cloud: 'https://dev3.cloud.hdw.mx'
     },
     nuke: {
-        host  : 'https://10.1.5.210:7001',
-        cloud : defaultCloud
+        host: 'https://10.1.5.210:7001',
+        cloud: defaultCloud
     },
     sofia: {
-        host  : 'https://10.1.5.196:7001',
-        cloud : defaultCloud
+        host: 'https://10.1.5.196:7001',
+        cloud: defaultCloud
     },
     webpi: {
-        host  : 'https://10.1.5.111:7001',
-        cloud : 'https://dev3.cloud.hdw.mx'
+        host: 'https://10.1.5.111:7001',
+        cloud: 'https://dev3.cloud.hdw.mx'
     }
 };
 const useProxy = process.env.WEBADMIN_TARGET || 'local';
@@ -45,18 +45,18 @@ const PROXY_CONFIG = [
             '/web/api',
             '/web/hls'
         ],
-        target       : targets.host,
-        changeOrigin : true,
-        secure       : false
+        target: targets.host,
+        changeOrigin: true,
+        secure: false
     }, {
         context: [
             '/static/lang_en_US',
             '/static'
         ],
-        target       : 'https://localhost:9001',
-        changeOrigin : true,
-        secure       : false,
-        bypass       : function (req, res, proxyOptions) {
+        target: 'https://localhost:9001',
+        changeOrigin: true,
+        secure: false,
+        bypass: function (req, res, proxyOptions) {
             if (req.url.includes('/static/lang_en_US')) {
                 return req.url.replace('/static/lang_en_US', '');
             }
@@ -66,9 +66,9 @@ const PROXY_CONFIG = [
         context: [
             '/api/systems'
         ],
-        target       : targets.cloud,
-        changeOrigin : true,
-        secure       : false
+        target: targets.cloud,
+        changeOrigin: true,
+        secure: false
     }
 ];
 

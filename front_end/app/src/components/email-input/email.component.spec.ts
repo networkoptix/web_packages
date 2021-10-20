@@ -11,7 +11,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxEmailComponent } from './email.component';
 
 import { FormsModule } from '@angular/forms';
-import { NxFocusMeDirective } from '@directives/nx-focus-me'
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 
 describe('NxEmailComponent email input Unit Test', () => {
     let component: NxEmailComponent;

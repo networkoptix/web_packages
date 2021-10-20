@@ -124,8 +124,8 @@ describe('NxHeaderComponent', () => {
         loginStateSubject: of('')
     };
     const accountMock = {
-        get            : () => Promise.resolve({ email: 'testEmail@co.co' }),
-        accountSubject : new BehaviorSubject(null)
+        get: () => Promise.resolve({ email: 'testEmail@co.co' }),
+        accountSubject: new BehaviorSubject(null)
     };
     const systemsMock = {
         getSystem: () => {},

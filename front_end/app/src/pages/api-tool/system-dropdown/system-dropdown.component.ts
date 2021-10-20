@@ -4,9 +4,9 @@ import { NxSystemService }           from '@services/system.service';
 import { NxAPIToolService }          from '../api-tool.service';
 
 @Component({
-    selector    : 'nx-system-dropdown',
-    templateUrl : './system-dropdown.component.html',
-    styleUrls   : ['./system-dropdown.component.scss']
+    selector: 'nx-system-dropdown',
+    templateUrl: './system-dropdown.component.html',
+    styleUrls: ['./system-dropdown.component.scss']
 })
 export class NxSystemDropdownComponent {
     CONFIG: IConfig

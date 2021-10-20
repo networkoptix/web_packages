@@ -27,37 +27,37 @@ module.exports = function(config) {
         viewport: {
             breakpoints: [
                 {
-                    name : 'mobile',
-                    size : {
-                        width  : 320,
-                        height : 480
+                    name: 'mobile',
+                    size: {
+                        width: 320,
+                        height: 480
                     }
                 },
                 {
-                    name : 'tablet',
-                    size : {
-                        width  : 768,
-                        height : 1024
+                    name: 'tablet',
+                    size: {
+                        width: 768,
+                        height: 1024
                     }
                 },
                 {
-                    name : 'screen',
-                    size : {
-                        width  : 1440,
-                        height : 900
+                    name: 'screen',
+                    size: {
+                        width: 1440,
+                        height: 900
                     }
                 }
             ]
         },
 
         client: {
-            clearContext : false, // leave Jasmine Spec Runner output visible in browser
-            jasmine      : {
+            clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
                 // seed             : '4321',
                 // timeoutInterval  : 1000,
-                random            : false,
-                oneFailurePerSpec : true,
-                failFast          : true
+                random: false,
+                oneFailurePerSpec: true,
+                failFast: true
             }
         },
 
@@ -79,9 +79,9 @@ module.exports = function(config) {
         // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
-            dir                   : require('path').join(__dirname, './coverage/test-karma'),
-            reports               : ['html', 'lcovonly', 'text-summary'],
-            fixWebpackSourcePaths : true
+            dir: require('path').join(__dirname, './coverage/test-karma'),
+            reports: ['html', 'lcovonly', 'text-summary'],
+            fixWebpackSourcePaths: true
         },
 
         // web server port

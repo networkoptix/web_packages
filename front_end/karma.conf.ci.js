@@ -23,13 +23,13 @@ module.exports = function(config) {
         ],
 
         client: {
-            clearContext : false, // leave Jasmine Spec Runner output visible in browser
-            jasmine      : {
+            clearContext: false, // leave Jasmine Spec Runner output visible in browser
+            jasmine: {
                 // seed             : '4321',
                 // timeoutInterval  : 1000,
-                random            : false,
-                oneFailurePerSpec : true,
-                failFast          : true
+                random: false,
+                oneFailurePerSpec: true,
+                failFast: true
             }
         },
 
@@ -51,9 +51,9 @@ module.exports = function(config) {
         // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
-            dir                   : require( 'path' ).join( __dirname, './coverage/test-karma' ),
-            reports               : ['html', 'lcovonly', 'text-summary'],
-            fixWebpackSourcePaths : true
+            dir: require('path').join(__dirname, './coverage/test-karma'),
+            reports: ['html', 'lcovonly', 'text-summary'],
+            fixWebpackSourcePaths: true
         },
 
         // web server port
@@ -89,6 +89,6 @@ module.exports = function(config) {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox']
             }
-        },
+        }
     });
 };
