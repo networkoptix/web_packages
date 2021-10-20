@@ -4,17 +4,19 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
 import { ComponentsModule }     from '@components/components.module';
-import { NxApiToolComponent }   from './api-tool.component';
+import { NxAPIToolComponent }   from './api-tool.component';
+import { NxSwaggerComponent }   from './swagger/swagger.component';
 import { MenuApiModule }        from './menu/menu.module';
 import { FormsModule }          from '@angular/forms';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { AuthGuard } from '@guards/authGuard';
+import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.component';
 
 const appRoutes: Routes = [
     {
-        path: '',
-        component: NxApiToolComponent,
-        canActivate: [AuthGuard]
+        path        : '',
+        component   : NxAPIToolComponent,
+        canActivate : [AuthGuard]
     }
 ];
 
@@ -29,16 +31,18 @@ const appRoutes: Routes = [
         MenuApiModule,
         FormsModule
     ],
-    providers: [],
-    declarations: [
-        NxApiToolComponent
+    providers    : [],
+    declarations : [
+        NxAPIToolComponent,
+        NxSwaggerComponent,
+        NxSystemDropdownComponent
     ],
-    bootstrap: [],
-    entryComponents: [
-        NxApiToolComponent
+    bootstrap       : [],
+    entryComponents : [
+        NxAPIToolComponent
     ],
     exports: [
-        NxApiToolComponent,
+        NxAPIToolComponent,
         MenuApiModule
     ]
 })

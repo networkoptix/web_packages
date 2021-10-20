@@ -21,6 +21,7 @@ export interface BaseConfig {
     apiRequestAttempts: number;
     animations: Animations;
     apiBase: string;
+    apiDocURL: APIDocURL;
     cameraCredentialUpdateTimeout: number;
     cameraSettings: CameraSettings;
     clientMode: ClientMode;
@@ -164,6 +165,13 @@ export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
 
 export type FeatureFlags = {
     [key in FeatureFlagType]?: boolean
+}
+
+export type APIDocVersion = 'main' | 'legacy' | 'deprecated'
+export interface APIDocURL {
+    main: string;
+    legacy: string;
+    deprecated: string;
 }
 
 export interface AccessRoles {

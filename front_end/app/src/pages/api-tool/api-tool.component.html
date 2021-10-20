@@ -1,39 +1,16 @@
-<ng-container *ngIf="loadingFailure; then loadingError"></ng-container>
-<ng-container *ngIf="!loadingFailure">
+<ng-container *ngIf="(APIToolService.loadingFailure$ | async); then loadingError"></ng-container>
+
+<ng-container *ngIf="!(APIToolService.loadingFailure$ | async)">
+    <ng-container *ngTemplateOutlet="mainPage;context{ content: APIToolService.leftMenuContent }"></ng-container>
+</ng-container>
+
+<ng-template #mainPage let-content="content">
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
-
-                <div class="mb-3">
-                    <ng-container *ngIf="!CONFIG.isLocal">
-                        <nx-select
-                                [id]="'avail-systems'"
-                                [stillLoading]="!serversLoaded"
-                                [items]="systemsDropdown"
-                                (onSelected)="onSystemChange($event)"
-                                [selected]="selectedSystem || {}">
-                        </nx-select>
-                        <nx-select
-                                class="mt-2"
-                                [id]="'avail-systems'"
-                                [stillLoading]="!serversLoaded"
-                                [items]="serversDropdown"
-                                (onSelected)="onServerChange($event)"
-                                [selected]="selectedServer || {}">
-                        </nx-select>
-                    </ng-container>
-
-                    <div *ngIf="selectedServer?.incompatible" class="mt-2"
-                         style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center">
-                        The system uses the old API version. We recommend that you update the system
-                        to the new version in order to get
-                        access to new functions.
-                    </div>
-                </div>
-
-
+                <nx-system-dropdown></nx-system-dropdown>
                 <nx-pre-loader *ngIf="!content"></nx-pre-loader>
                 <nx-menu-api *ngIf="content"
                          [content]="content"
@@ -41,38 +18,17 @@
             </div>
             <!-- Offset for the fixed menu -->
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
-                <nx-pre-loader *ngIf="!this.content"></nx-pre-loader>
-
-                <ng-container *ngIf="this.content">
-                    <ng-container *ngIf="APIFileLoadingError; then APILoadingFailed"></ng-container>
-                    <div *ngIf="!placeHolderContent[this.content.selectedSection] || this.content.selectedSubSection.length; else description">
-                        <div style="padding: 0 1rem 1rem">
-                            <h2>{{ swaggerMenuTitle }}</h2>
-                            <p class="mt-3" *ngIf="swaggerMenuDescription">{{ swaggerMenuDescription }}</p>
-                        </div>
-                        <div id="swagger-ui" [class.RTSP-request]='RTSPRequestShowing'></div>
-                    </div>
-                </ng-container>
-
+                <nx-pre-loader *ngIf="!content"></nx-pre-loader>
+                <nx-swagger></nx-swagger>
             </div>
         </div>
     </div>
-</ng-container>
-
+</ng-template>
 
 <ng-template #loadingError>
-    <nx-page-placeholder [type]="loadingErrorType">
+    <nx-page-placeholder [type]="APIToolService.loadingErrorType">
         <button class="btn btn-primary main-button mx-auto">
             <a routerLink="/" translate>Go to Main Page</a>
         </button>
     </nx-page-placeholder>
-</ng-template>
-
-<ng-template #APILoadingFailed>
-    <h2 translate>Getting an API File for this system has failed.</h2>
-</ng-template>
-
-<ng-template #description>
-    <h2>{{ pageDescription.title }}</h2>
-    <div [innerHTML]="pageDescription.description | safe: 'html'"></div>
 </ng-template>

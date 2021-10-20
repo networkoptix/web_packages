@@ -11,13 +11,13 @@ import { ICamera, NxSystemUser }               from './system.service';
 import * as t                                  from './system-api.types';
 import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
+import type { APIDocVersion }                  from './nx-config/base-config';
 import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '@pages/health/health.service';
 import { IParams, ResourceParam }              from './system-api.service';
 import { User }                                from './system-api.types';
 import { environment }                         from '@environments/environment';
-import { APIDocVersion } from './system-rest-api.service';
 
 export class NxSystemAPI {
     /*

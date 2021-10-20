@@ -9,10 +9,6 @@
     min-height : auto !important;
 }
 
-.local-nx-search {
-    margin-top: -12px;
-}
-
 .nx-menu {
     position       : relative;
     border-radius  : 0 0 2px 2px;
@@ -42,7 +38,7 @@
     }
 
     &.local-nx-menu {
-        max-height: calc(100vh - 118px) !important; 
+        max-height: calc(100vh - 105px) !important; 
     }
 
     &-overlay {

@@ -5,7 +5,8 @@ import { NxCloudApiService }                                from '../../../nx-cl
 import { NxSystemAPIService, NxSystemAPI, ResourceParam }   from '../../../system-api.service';
 import { NxUtilsService }                                   from '../../../utils.service';
 import { NxSystemServer, ModuleInfo, IParams }              from '../system-types';
-import { APIDocVersion, NxSystemRestAPI }                                  from '@services/system-rest-api.service';
+import { NxSystemRestAPI }                                  from '@services/system-rest-api.service';
+import type { APIDocVersion }                               from '@services/nx-config/base-config';
 import { NxSystem }                                         from '../system';
 export class ServerManager {
     mediaserverConnections: {

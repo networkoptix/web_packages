@@ -16,7 +16,12 @@ export const nxConfig: IConfig = {
             leave : '0.25s ease-out'
         }
     },
-    apiBase                       : '/api',
+    apiBase   : '/api',
+    apiDocURL : {
+        main       : '/swagger-ui/openapi_v1.json',
+        legacy     : '/swagger-ui/openapi_legacy.json',
+        deprecated : '/swagger-ui/openapi_deprecated.json'
+    },
     cameraCredentialUpdateTimeout : 1500,
     cameraSettings                : {
         sensitivityColors: [
@@ -307,7 +312,7 @@ export const nxConfig: IConfig = {
                         options: {
                             defaultWidth: 108
                         },
-                        filter : {
+                        filter: {
                             sortable    : SortOptions.DATE,
                             grouping    : GroupingOptions.DATE_AUTO,
                             multiSelect : true

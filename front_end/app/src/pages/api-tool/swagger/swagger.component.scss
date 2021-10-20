@@ -1,0 +1,469 @@
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/buttons' as *;
+
+@import '~swagger-ui/dist/swagger-ui.css';
+@import '~bootstrap/scss/mixins/breakpoints';
+
+.swagger-ui {
+	/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
+	font-family : $font-family-regular;
+	color       : $dark9;
+}
+
+.swagger-ui .filter-container {
+	display: none;
+}
+
+.swagger-ui article, .swagger-ui aside, .swagger-ui footer, .swagger-ui header, .swagger-ui nav {
+	display : block
+}
+
+
+.swagger-ui section {
+	display : block;
+	padding : 0 !important;
+}
+
+.swagger-ui h1 {
+	font-size : $h1-font-size;
+}
+
+.swagger-ui button, .swagger-ui input, .swagger-ui optgroup, .swagger-ui select, .swagger-ui textarea {
+	font-family : $font-family-regular;
+}
+
+.swagger-ui table tr:nth-child(even){
+	background-color: #fafbfc;
+}
+
+.swagger-ui input {
+	display          : block;
+	height           : 32px;
+	font-size        : 14px;
+	line-height      : 1.428571429;
+	color            : $dark9;
+	background-color : $light1;
+	background-image : none;
+	border           : 1px solid $light6;
+	border-radius    : 2px;
+	transition       : none;
+	box-shadow       : none;
+	padding          : 5px 10px;
+	&::placeholder {
+		color: #fff
+	}
+	&:disabled {
+		&::placeholder {
+			color: #fafafa;
+		}
+	}
+	&.invalid {
+		&::placeholder{
+			color: #feebeb;
+		}
+	}
+}
+
+.swagger-ui .courier {
+	padding    : 0 16px;
+}
+
+
+.swagger-ui .code, .swagger-ui code {
+	font-family : $font-family-regular;
+	font-size: 14px;
+}
+
+.swagger-ui .wrapper {
+	padding    : 0 16px;
+}
+
+.swagger-ui .information-container.wrapper {
+	display : none;
+}
+
+.swagger-ui .opblock-tag {
+	display       : none;
+}
+
+.swagger-ui .opblock {
+	margin           : 0 0 15px;
+	box-shadow       : none;
+	background-color : $light1 !important;
+	background-clip  : border-box;
+	border           : 1px solid $light4 !important;
+	border-radius    : 2px;
+}
+
+.swagger-ui .opblock .opblock-section-header {
+	padding     : 16px 16px 0;
+    background: none;
+    box-shadow: none;
+}
+
+.swagger-ui .opblock .opblock-section-header h4 {
+	@include typography.regular18dark9;
+	flex   : initial;
+	margin : initial;
+}
+
+.swagger-ui .opblock .opblock-summary-method {
+	@include typography.medium13light1;
+	padding       : 2px 8px;
+	border-radius : 2px;
+}
+
+.swagger-ui b, .swagger-ui strong {
+	font-weight : inherit;
+}
+
+
+.swagger-ui .opblock .opblock-summary-path {
+	max-width: calc(100% - 10rem);
+	@media screen and (max-width: 670px) {
+		max-width: calc(100% - 40px -  14rem) !important;
+		min-width: 200px;
+	}
+}
+
+.swagger-ui .opblock .opblock-summary-path a{
+	@include typography.medium13dark9;
+	line-height : 16px;
+}
+
+.swagger-ui .opblock .opblock-summary-description {
+	color       : #3b4151;
+	padding-right: 20px;
+	@media screen and (max-width: 670px) {
+		max-width: calc(100% - 18rem);
+	}
+}
+
+.swagger-ui .opblock .opblock-summary {
+	display          : flex;
+	align-items      : center;
+	padding          : 12px;
+	cursor           : pointer;
+	background-color : $additional_light1 !important;
+	position         : relative;
+
+	&::after {
+		position   : absolute;
+		top        : 50%;
+		right      : 16px;
+		width      : 20px;
+		height     : 20px;
+		content    : " ";
+		background : transparent url(/static/images/icons/text_buttons/arrow_expand.svg) no-repeat;
+		transform  : translateY(-50%);
+	}
+}
+
+.swagger-ui .opblock .tab-header .tab-item.active h4 span:after {
+	position   : initial;
+	bottom     : initial;
+	left       : initial;
+	width      : initial;
+	height     : initial;
+	content    : initial;
+	transform  : initial;
+	background : initial;
+}
+
+
+.swagger-ui .opblock.is-open .opblock-summary {
+	border-bottom : 1px solid $light3 !important;
+
+	&::after {
+		transform  : translateY(-50%) scaleY(-1);
+	}
+}
+
+.swagger-ui .opblock.opblock-delete .tab-header .tab-item.active h4 span:after {
+	background: none;
+}
+
+.swagger-ui .opblock.opblock-get .tab-header .tab-item.active h4 span:after {
+    background: none;
+}
+
+.swagger-ui .opblock.opblock-put .tab-header .tab-item.active h4 span:after {
+	background: none;
+}
+
+.swagger-ui .opblock.opblock-patch .tab-header .tab-item.active h4 span:after {
+	background: none;
+}
+
+.swagger-ui .opblock.opblock-head .tab-header .tab-item.active h4 span:after {
+	background: none;
+}
+
+.swagger-ui .opblock.opblock-options .tab-header .tab-item.active h4 span:after {
+    background: none;
+}
+
+.swagger-ui .opblock.opblock-deprecated .tab-header .tab-item.active h4 span:after {
+	background: none;
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+	background : $brand-success;
+}
+
+.swagger-ui .opblock.opblock-put .opblock-summary-method {
+	background : $brand-warning;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+	background : $brand-info;
+}
+
+.swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
+	@include typography.regular13dark9;
+	margin      : 0;
+}
+
+.swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-external-docs-wrapper h4, .swagger-ui .opblock-title_normal h4 {
+	@include typography.regular13dark9;
+}
+
+.swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
+	@include typography.regular13dark9;
+	margin      : 0 !important;
+}
+
+.swagger-ui select.content-type {
+	pointer-events: none;
+}
+
+.swagger-ui .response-col_status {
+	width: 20%;
+    @include typography.regular13dark9;
+}
+
+.swagger-ui .response-col_links {
+	@include typography.regular13dark9;
+}
+
+
+.swagger-ui .response-col_status .response-undocumented {
+    @include typography.regular13dark9;
+}
+
+.swagger-ui .opblock-body pre.microlight {
+	font-size       : 14px;
+	border-radius   : 2px;
+	background      : $light16 !important;
+	font-family     : $font-family-regular;
+    font-weight     : initial;
+	color           : $light1;
+}
+
+.swagger-ui .highlight-code > .microlight {
+	min-height : 6em;
+}
+
+.swagger-ui .highlight-code > .microlight code span {
+	color : $light1 !important;
+}
+
+.RTSP-request{
+	.curl-command {
+		display: none;
+	}
+	.responses-inner {
+		h4:nth-child(3) {
+			display: none;
+		}
+	}
+	.responses-table.live-responses-table {
+		display:none;
+	}
+}
+
+.swagger-ui .curl-command {
+	position : relative;
+}
+
+.swagger-ui .curl-command .copy-to-clipboard {
+	bottom: 2px;
+	width: 30px;
+	height: 30px;
+}
+
+.swagger-ui .scheme-container {
+	display    : none;
+}
+
+.swagger-ui .response-control-media-type__accept-message {
+	font-size : 10px;
+    color     : initial;
+}
+
+.swagger-ui .btn {
+	background    : initial;
+	@include button;
+	color            : $dark9 !important;
+	background-color : $light4 !important;
+	box-shadow       : inset 0 -1px 0 0 $light7 !important;
+	font-family      : $font-family-medium;
+
+	&:hover:not([disabled]):not(.disabled) {
+		background-color : $light6 !important;
+		box-shadow       : inset 0 -1px 0 0 $light8;
+	}
+
+	&:active,
+	&.active {
+		background-color : $light6 !important;
+		box-shadow       : inset 0 1px 0 0 $light8 !important;
+	}
+}
+
+.swagger-ui .btn:hover {
+    box-shadow: none;
+}
+
+.swagger-ui select {
+	color              : $dark9 !important;
+	background-color   : $light4 !important;
+	box-shadow         : inset 0 -1px 0 0 $light7;
+	font-family        : $font-family-medium;
+	border             : none !important;
+	border-radius      : 2px;
+	height             : 32px;
+	-webkit-appearance : none;
+	-moz-appearance    : none;
+	appearance         : none;
+	background         : none;
+	// background-size    : 20px;
+	box-shadow         : none; 
+}
+
+.swagger-ui .scheme-container {
+	display    : none;
+}
+
+.swagger-ui input[type=email], .swagger-ui input[type=file], .swagger-ui input[type=password], .swagger-ui input[type=search], .swagger-ui input[type=text], .swagger-ui textarea {
+	min-width     : 100px;
+}
+
+.swagger-ui textarea {
+	font-size     : 14px;
+	width         : 100%;
+	min-height    : 280px;
+	padding       : 10px;
+	border        : none;
+	border-radius : 2px;
+	outline       : none;
+	background    : $light16 !important;
+	font-family   : $font-family-regular;
+	font-weight   : 600;
+	color         : $light1;
+}
+
+.swagger-ui table {
+	width           : 100%;
+	padding         : 0 10px;
+	border-collapse : collapse;
+	border          : 1px solid $light4;
+}
+
+.swagger-ui table thead tr td, .swagger-ui table thead tr th {
+	@include typography.medium13dark9;
+	padding       : 4px 16px;
+	text-align    : left;
+}
+
+.swagger-ui table thead {
+	background-color: $additional_light1;
+}
+
+.swagger-ui table tbody tr td {
+	@include typography.regular14dark9;
+	padding        : 8px 16px !important;
+	vertical-align : top;
+	border         : 1px solid $light4;
+}
+
+.swagger-ui table.headers td {
+	font-weight    : initial;
+}
+
+
+.swagger-ui .parameters-col_description input[type=text] {
+	width     : 100%;
+	max-width : 340px;
+}
+
+.swagger-ui .parameters-col_description select {
+	border-width : 1px;
+	height: 100%;
+	width: 100%;
+}
+
+.swagger-ui table tbody tr td:first-of-type {
+	min-width : 6em;
+}
+
+.swagger-ui table thead tr td, .swagger-ui table thead tr th {
+	text-align    : initial;
+	border-bottom : initial;
+	@include typography.regular13dark9;
+}
+
+.swagger-ui .parameter__name {
+	margin-right : initial;
+	@include typography.bold13dark9;
+}
+
+.swagger-ui .parameter__name.required {
+	font-weight : initial;
+}
+
+
+.swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameter__deprecated {
+	@include typography.regular13light8;
+}
+
+.swagger-ui .parameter__name.required:after {
+	content   : "";
+	color     : rgba(255, 0, 0, .6)
+}
+
+.swagger-ui .parameter__name.required span {
+	content   : "";
+	color     : rgba(255, 0, 0, .6)
+}
+
+.swagger-ui .table-container {
+	padding : 16px;
+}
+
+.swagger-ui .responses-table {
+	table-layout: fixed;
+	width: 100%
+}
+
+.swagger-ui .response-col_links {
+	min-width   : 6em;
+	width       : 20%;
+    @include typography.regular13dark9;
+}
+
+.swagger-ui .markdown p, .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown p, .swagger-ui .renderedMarkdown pre {
+	margin     : 0 auto 1em auto;
+	word-break : break-word;
+}
+
+.swagger-ui .markdown code, .swagger-ui .renderedMarkdown code {
+	font-size     : 14px;
+	padding       : 1px 6px;
+	border-radius : 2px;
+	border        : 1px solid $light10;
+	font-family   : monospace;
+	font-weight   : 400;
+	color         : $dark9;
+}

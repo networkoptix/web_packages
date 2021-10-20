@@ -3,7 +3,6 @@
         (ngModelChange)="modelChanged($event)"
         [ngModel]="menuModel.query"
         (onFocusOut)="resetNav()"
-        [ngClass]="{ 'local-nx-search': CONFIG.isLocal}"
         (onFocus)="setNav()"
         class="d-block mb-2"
         layout="search"

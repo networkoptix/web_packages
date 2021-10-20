@@ -9,6 +9,7 @@ import { catchError, map, mergeMap, retryWhen, switchMap, tap, timeout } from 'r
 import { NxHealthService }      from '@pages/health/health.service';
 import { NxAppStateService }    from './nx-app-state.service';
 import { IConfig }              from './nx-config';
+import type { APIDocVersion }   from './nx-config/base-config';
 import { NxSystemAPI }          from './system-legacy-api.service';
 import { IParams }              from './system.service';
 import { NxUriCacheService }    from './uri-cache.service';
@@ -18,13 +19,6 @@ import { NxDialogsService }     from '@dialogs/dialogs.service';
 import { NxStorageService }     from '@services/storage.service';
 import { WINDOW }               from '@services/window-provider';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-
-export type APIDocVersion = 'main' | 'legacy' | 'deprecated'
-enum APIDocURL {
-    main =  '/swagger-ui/openapi_v1.json',
-    legacy = '/swagger-ui/openapi_legacy.json',
-    deprecated = '/swagger-ui/openapi_deprecated.json'
-}
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -472,8 +466,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
-    getApiDoc(type: APIDocVersion = 'main') {
-        return this.get(APIDocURL[type]).toPromise();
+    getApiDoc(type: APIDocVersion  = 'main') {
+        return this.get(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {
