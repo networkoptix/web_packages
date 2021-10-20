@@ -57,7 +57,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     menuVisible: boolean;
     systemId;
     systemNoAccess: boolean;
-    canMerge: boolean;
     debugMode: boolean;
     betaMode: boolean;
     userDisconnectSystem: boolean;
