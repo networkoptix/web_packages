@@ -122,6 +122,13 @@ export interface Authorize {
     stayLoggedInHelpText:       any;
     termsAndConditionsHelpText: any;
     copiedToClipboard:          any;
+    authCode:                   AuthCode;
+}
+
+export interface AuthCode {
+    message: any;
+    newPass: any;
+    login:   any;
 }
 
 export interface CameraFilters {
@@ -1206,6 +1213,12 @@ const typeMap: any = {
         { json: "stayLoggedInHelpText", js: "stayLoggedInHelpText", typ: "any" },
         { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
         { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
+        { json: "authCode", js: "authCode", typ: r("AuthCode") },
+    ], false),
+    "AuthCode": o([
+        { json: "message", js: "message", typ: "any" },
+        { json: "newPass", js: "newPass", typ: "any" },
+        { json: "login", js: "login", typ: "any" },
     ], false),
     "CameraFilters": o([
         { json: "H265", js: "H265", typ: "any" },

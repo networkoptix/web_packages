@@ -123,7 +123,12 @@
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard"
+        "copiedToClipboard": "Copied to clipboard",
+        "authCode": {
+            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "log in"
+        }
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",

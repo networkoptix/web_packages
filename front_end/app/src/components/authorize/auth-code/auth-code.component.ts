@@ -25,6 +25,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @Input() viewType: string;
     @Input() clientType: string;
     @Input() smallView: boolean;
+    @Input() action: string;
     @Input() loginEmail: string;
     @Input() code: string;
     @Output() codeChange = new EventEmitter<string>();
@@ -37,6 +38,8 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @ViewChild('authCodeForm', { static: false }) authCodeForm: HTMLFormElement;
     @ViewChild('backToPasswordSpan', { static: false }) backToPasswordSpan: ElementRef;
     needLargerFooter = false;
+    restore = false;
+    suffixText: string;
 
     constructor(
         language: NxLanguageProviderService,
@@ -50,6 +53,10 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         this.sendCode = () => {
             this.codeChange.emit(this.code);
         };
+
+        this.restore = this.action === 'restore_password';
+        this.suffixText = this.restore ? this.LANG.authorize.authCode.newPass() : this.LANG.authorize.authCode.login();
+
 
         fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
             this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;

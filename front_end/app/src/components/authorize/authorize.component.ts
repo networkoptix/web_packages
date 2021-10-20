@@ -94,8 +94,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     windowSmallEnough = false;
     initialData: AuthorizeParams;
     checkEmailProcess: Process;
-    codeFromRoute: string;
+    loginCode: string;
     emailLocked = false;
+    action: 'restore_password'| 'activate';
 
     // email
     loginEmail: string;
@@ -106,7 +107,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginPassword: string;
     passwordErrorCode: string;
     redirectLink: string;
-    loginCode: string;
     // shouldStayLoggedIn: boolean;
 
     // create account
@@ -185,10 +185,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
         this.initProcesses();
 
-        const { action } = this.route.snapshot?.data;
-        if (action) {
-            this.codeFromRoute = this.route.snapshot.params.code;
-            this.loginEmail = atob(this.codeFromRoute).split(':')[1];
+        this.action = this.route.snapshot?.data?.action;
+        if (this.action) {
+            this.loginCode = this.route.snapshot.params.code;
+            this.loginEmail = atob(this.loginCode).split(':')[1];
         }
         this.route.queryParams.subscribe(async(params: any) => {
             this.initialData = NxUtilsService.deepCopy(params);
@@ -217,14 +217,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.loginCode = access_token || access_code;
                 this.redirectLink = redirect_url;
                 this.currentState = AuthorizeState.auth;
-            } else if (action === 'restore_password') {
+            } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
-            } else if (action === 'activate') {
-                await this.cloudService.activate(this.codeFromRoute).catch(err => console.error(err));
+            } else if (this.action === 'activate') {
+                await this.cloudService.activate(this.loginCode).catch(err => console.error(err));
                 this.fromEmail$.next(true);
                 this.activated$.next(true);
                 this.currentState = AuthorizeState.activate;
-            } else if (this.clientType.includes('Password')) {
+            } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;
                 this.currentState = AuthorizeState.password;
@@ -235,13 +235,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleCloudConnectionError(err: any, process: Process) {
-        if (err && ([500, 503].includes(err.status) || err.message.includes('timeout'))) {
+        if (err && ([500, 503].includes(err?.status) || err?.message.includes('timeout'))) {
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }
     }
 
     handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
+        if (this.action === 'restore_password') {
+            this.errorDialog$.value && this.errorDialog$.next(false);
+            this.action = undefined;
+            this.confirmReset = true;
+            this.currentState = AuthorizeState.reset;
+            return;
+        }
         const params = link.includes('?') && new URLSearchParams(
             link.match(/.*(\?.*)/i)[1]
         );
@@ -451,15 +458,19 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.resetPasswordProcess = this.processService.createProcess(
-            () => this.cloudService.restorePassword(this.codeFromRoute, this.resetPassword),
-            { ignoreError: true, timeoutMs },
+            () => this.cloudService.restorePassword(this.loginCode, this.resetPassword),
+            { ignoreError: true, timeoutMs, ignoreUnauthorized: true },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
                 this.confirmReset = true;
             },
             err => {
                 console.error('err in resetPassword process', err);
-                this.handleCloudConnectionError(err, this.resetPasswordProcess);
+                if (err.errorText === 'unauthorized') {
+                    this.currentState = AuthorizeState.auth;
+                } else {
+                    this.handleCloudConnectionError(err, this.resetPasswordProcess);
+                }
             }
         );
 
