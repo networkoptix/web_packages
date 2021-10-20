@@ -37,7 +37,7 @@ RUN mkdir /debs
 COPY "${mediaserver_deb}" /debs/
 
 # Installing the mediaserver
-RUN apt-get update -qq && apt install -y -qq --no-install-recommends /debs/${mediaserver_deb}
+RUN apt-get update -qq && apt install -y -qq --no-install-recommends /debs/${mediaserver_deb} && apt-get install -y curl
 
 RUN echo 'logLevel = verbose' >> /opt/networkoptix/mediaserver/etc/mediaserver.conf
 RUN echo 'tranLogLevel = verbose' >> /opt/networkoptix/mediaserver/etc/mediaserver.conf
