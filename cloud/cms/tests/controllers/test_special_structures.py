@@ -29,7 +29,7 @@ class TestSpecialStructures:
 
         self.ds = existing_ds or baker.make(
             SpecialStructure, name=self.DS_TEST_NAME, config=self.DS_TEST_CONFIG)
-    
+
     @pytest.fixture()
     def mock_actual_values(self, mocker):
         ds, ds_value, config  = [str(uuid4()) for _ in range(3)]
@@ -69,7 +69,7 @@ class TestSpecialStructures:
         customization = self.special_structure.calc("%CUSTOMIZATION_NAME%", self.cloud_portal_asset)
 
         assert customization == self.cloud_portal_asset.customizations.first().name
-    
+
     def test_calc_lang_codes(self):
         lang_codes = self.special_structure.calc_lang_codes(self.cloud_portal_asset)
 
@@ -79,7 +79,7 @@ class TestSpecialStructures:
         cloud_host = self.special_structure.calc_cloud_host(self.cloud_portal_asset)
 
         assert cloud_host == self.CLOUD_HOST
-    
+
     def test_calc_cloud_link(self):
         cloud_link = self.special_structure.calc_cloud_link(self.cloud_portal_asset)
 
@@ -89,7 +89,7 @@ class TestSpecialStructures:
         license_types = self.special_structure.calc_license_type(self.cloud_portal_asset)
 
         assert license_types == LicenseType.get_license_types()
-    
+
     def test_get_vms_and_config(self, mock_actual_values):
         expected_vms_asset, expected_vms_dss, expected_config = mock_actual_values[-1]
         vms_asset, vms_dss, config = self.special_structure.get_vms_and_config(self.cloud_portal_asset, self.DS_TEST_NAME)
@@ -106,18 +106,18 @@ class TestSpecialStructures:
 
         assert_actual_values_used()
         assert ds_val == expected_value
-    
+
     def test_calc_vms_win_path(self, mock_actual_values):
         expected_value, _, ds, struct_data = mock_actual_values
         vms_asset, vms_dss, config = struct_data
- 
+
         vms_win_path = self.special_structure.calc_vms_win_path(self.cloud_portal_asset)
 
         self.mock_filter_ds.assert_called_with(vms_dss, config, 'vms_name_ds')
         self.mock_find_value.assert_called_with(ds, vms_asset)
         self.mock_get_vms_and_config.assert_called_once_with(self.cloud_portal_asset, VMS_WIN_PATH)
         assert vms_win_path == f'{SpecialStructures.WIN_PATH_PREFIX}{expected_value}\\{expected_value}'
-    
+
     def test_calc_vms_lin_path(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
 
@@ -125,7 +125,7 @@ class TestSpecialStructures:
 
         assert_actual_values_used()
         assert lin_path == SpecialStructures.LIN_PATH.replace('{vmsName}', expected_value)
-    
+
     def test_calc_vms_company_id(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
 
@@ -133,14 +133,14 @@ class TestSpecialStructures:
 
         assert_actual_values_used()
         assert company_id == SpecialStructures.COMPANY_ID.replace('{companyId}', expected_value)
-    
+
     def test_calc_vms_lin_service_name(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
         service_name = self.special_structure.calc_vms_lin_service_name(self.cloud_portal_asset)
 
         assert_actual_values_used()
         assert service_name == SpecialStructures.LIN_SERVICE_NAME.replace('{companyId}', expected_value)
-    
+
     def test_calc_vms_mac_company_id(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
 
@@ -148,7 +148,7 @@ class TestSpecialStructures:
 
         assert_actual_values_used()
         assert mac_company_id == SpecialStructures.VMS_MAC_COMPANY_ID.replace('{macCompanyId}', expected_value)
-    
+
     def test_calc_vms_win_executable(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
 
@@ -156,11 +156,18 @@ class TestSpecialStructures:
 
         assert_actual_values_used()
         assert win_executable == SpecialStructures.VMS_WIN_EXECUTABLE.replace('{win_executable}', expected_value)
-    
+
     def test_calc_vms_id(self, mock_actual_values):
         expected_value, assert_actual_values_used, *_ = mock_actual_values
 
         vms_id = self.special_structure.calc_vms_id(self.cloud_portal_asset)
-        
+
         assert_actual_values_used()
         assert vms_id == SpecialStructures.VMS_ID.replace('{vmsId}', expected_value)
+
+    def test_calc_abbreviation_nx(self, mocker, default_portal):
+        assert self.special_structure.calc_abbreviation(default_portal) == 'Nx'
+
+    def test_calc_abbreviation_non_nx(self, mocker, other_portal):
+        mocker.patch('cms.models.DataStructure.find_actual_value', return_value='Great VMS')
+        assert self.special_structure.calc_abbreviation(other_portal) == 'Great VMS'

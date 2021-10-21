@@ -35,16 +35,20 @@ class BaseModelTest:
         assert getattr(self, 'expected_meta')
         check_against_expected_meta(self.model_class, self.expected_meta)
 
+
 def generateJSON():
     return json.dumps({
         str(uuid4()): str(uuid4()),
         str(uuid4()): [str(uuid4()) for _ in range(randint(1, 20))]
     })
 
+
 def generate_uuids(amount):
     return [str(uuid4()) for _ in range(amount)]
 
+
 baker.generators.add('jsonfield.fields.JSONField', 'conftest.generateJSON')
+
 
 @pytest.fixture(scope='session')
 def django_db_setup(django_db_setup, django_db_blocker, django_db_createdb, django_db_keepdb):
@@ -131,7 +135,7 @@ def other_customization(english_language, db):
 
 @pytest.fixture()
 def other_portal(other_customization, cloud_portal_type, db):
-    return Asset.objects.get_or_create(name='Other Cloud', asset_type=cloud_portal_type)[0]
+    return Asset.objects.filter(customizations=other_customization, asset_type=cloud_portal_type).first()
 
 
 @pytest.fixture

@@ -43,6 +43,7 @@ class SpecialStructures:
         self.add_function('%VMS_WIN_EXECUTABLE%', self.calc_vms_win_executable, 'VMS Windows Executable', 'VMS executable name on windows')
         self.add_function('%VMS_ID%', self.calc_vms_id, 'VMS Id', 'VMS Id from vms pack')
         self.add_function('%MOBILE_DISPLAY_NAME%', self.calc_mobile_display_name, 'Mobile Client Display Name', 'The name used when referring to the mobile client throughout cloud portal. Does not affect the actual iOS or Android application name', shortcut=True)
+        self.add_function('%ABV%', self.calc_abbreviation, 'VMS Abbreviation', 'VMS abbreviation if applicable, otherwise uses %VMS_NAME%')
 
     def add_function(self, tag: str, function, label='', description='', hidden=False, shortcut=False):
         self.function_dict[tag] = {
@@ -194,3 +195,12 @@ class SpecialStructures:
     def calc_mobile_display_name(asset):
         customization = asset.customizations.first()
         return get_cloud_portal_asset(customization.name).read_global_value('%MOBILE_DISPLAY_NAME%') or 'the mobile client'
+
+    @staticmethod
+    def calc_abbreviation(asset):
+        customization = asset.customizations.first()
+        if customization.name in ['default', 'default_cn', 'default_zh_CN', 'metavms']:
+            return 'Nx'
+        else:
+            vms_name_ds: DataStructure = DataStructure.objects.filter(name='%VMS_NAME%', context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
+            return vms_name_ds.find_actual_value(asset)
