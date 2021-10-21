@@ -1178,10 +1178,7 @@ class DataStructure(models.Model):
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
                                      DataStructure.DATA_TYPES.multiselect]:
             if not value:
-                if data_structure.type in [DataStructure.DATA_TYPES.object]:
-                    value = {}
-                else:
-                    value = []
+                value = {} if data_structure.type in [DataStructure.DATA_TYPES.object] else []
             # Only parse as json if str
             elif type(value) is str:
                 value = json.loads(value)
@@ -2459,7 +2456,7 @@ class ZendeskArticleManager(models.Manager):
             if field not in kwargs}
         kwarg_mapping['article_id'] = article.id
 
-        super().create(**kwargs, **kwarg_mapping)
+        return super().create(**kwargs, **kwarg_mapping)
 
 
 class ZendeskArticle(models.Model):

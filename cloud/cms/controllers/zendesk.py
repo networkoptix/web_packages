@@ -6,6 +6,7 @@ from cms.controllers import modify_db
 from cms.controllers import structure
 from cms import forms
 from cms.models import *
+from util.helpers import substitute_branding
 
 from django.conf import settings
 from django.utils.http import urlencode
@@ -48,14 +49,6 @@ def generate_branding_dict():
     return rep
 
 
-def substitute_branding(repl_dict, text):
-    if not text:
-        return ''
-    # Searches for any the keys from replacement dict
-    # When one is found, the lambda function returns the value for that key and it is used as the replacement
-    return re.sub("|".join(repl_dict.keys()), lambda match: repl_dict[re.escape(match.group(0))], text)
-
-
 class CategoryNotFoundException(Exception):
     pass
 
@@ -90,8 +83,7 @@ def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, logger=No
                 try:
                     return func_to_retry(*args, **kwargs)
                 except exception_to_retry as err:
-                    message = f"{str(err)}, Retrying in {next_delay} seconds..."
-
+                    message = f'{err}, Retrying in {next_delay} seconds...'
                     if logger:
                         logger.warning(message)
                     else:
@@ -173,19 +165,26 @@ class Importer:
         return {'category': target_category, 'sections': section_list}
 
     @staticmethod
-    def sub_image_sources(files_target):
+    def sub_image_sources(files_target, branding):
         def _sub_image_sources(match_obj):
             file_id = str(uuid.uuid4())
-            files_target[file_id] = structure.external_file_to_content_file(match_obj[2])
+            try:
+                files_target[file_id] = structure.external_file_to_content_file(match_obj[2], branding)
+            except Exception as e:
+                tag = match_obj[1]
+                url = match_obj[2]
+                return f'{tag}src="{url}"'
+                
             return f'{match_obj[1]}src="{{image_import:{file_id}}}"'
 
         return _sub_image_sources
 
     def _get_data_records(self, article, body):
+        image_sources = ['%ZENDESK_DOMAIN%']
         files = {}
         data_records = {
             'title': substitute_branding(self.branding, article.title),
-            'body': re.sub(r'(<img[^>]*?)src="(.*?)"', Importer.sub_image_sources(files), body),
+            'body': re.sub(r'(<img[^>]*?)src="(.*?)"', Importer.sub_image_sources(files, {val: key for key, val in self.branding.items() if val in image_sources}), body),
             'labels': ', '.join(set(article.label_names))
         }
         return data_records, files

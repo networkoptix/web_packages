@@ -213,7 +213,7 @@ def process_select(state: RecordSaveState):
     if hasattr(state.request_data, 'getlist'):
         state.new_record_value = state.request_data.getlist(state.data_structure_name, getlist_default_value)
     else:
-        state.new_record_value = state.request_data[state.data_structure_name] or getlist_default_value
+        state.new_record_value = state.request_data.get(state.data_structure_name, getlist_default_value)
     if state.new_record_value != "" and state.data_structure.type == DataStructure.DATA_TYPES.select:
         state.new_record_value = state.new_record_value[0]
     return True

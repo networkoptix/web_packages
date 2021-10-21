@@ -17,6 +17,7 @@ from cms.controllers.generate_structure import templatify_json
 from cms.controllers.modify_db import save_unrevisioned_records, send_version_for_review, update_draft_state
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
     Menu, AssetCustomizationReview, Permission
+from util.helpers import substitute_branding
 
 logger = logging.getLogger(__name__)
 
@@ -501,13 +502,16 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.save()
 
 
-def external_file_to_content_file(url):
-    if url.startswith('//'):
-        url = f'https:{url}'
-    file_request = requests.get(url)
+def external_file_to_content_file(url, branding={}):
+    request_url = substitute_branding(branding, url) if branding else url
+
+    if request_url.startswith('//'):
+        request_url = f'https:{request_url}'
+
+    file_request = requests.get(request_url.replace('\\', ''))
     file_content = file_request.content
     content_type = file_request.headers.get('Content-Type', 'image/png')
-    filename = url.split('/')[-1]
+    filename = request_url.split('/')[-1]
     content_file = ContentFile(file_content, name=filename)
     content_file.content_type = content_type
     return content_file
