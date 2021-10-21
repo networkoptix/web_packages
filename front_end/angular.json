@@ -17,6 +17,27 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "md5",
+              "uuid",
+              "ng2-trim-directive",
+              "qrcode",
+              "@firebase/util",
+              "@firebase/component",
+              "core-js/features/array/is-array",
+              "rxjs/internal/scheduler/animationFrame",
+              "dateformat",
+              "@videojs/xhr",
+              "videojs-vtt.js",
+              "global/document",
+              "@babel/runtime/helpers/possibleConstructorReturn",
+              "@babel/runtime/helpers/inheritsLoose",
+              "@babel/runtime/helpers/construct",
+              "@babel/runtime/helpers/inherits",
+              "mux.js/lib/mp4/probe",
+              "mux.js/lib/tools/ts-inspector.js",
+              "swagger-ui"
+            ],
             "outputPath": "dist",
             "index": "app/index.html",
             "main": "app/main.ts",

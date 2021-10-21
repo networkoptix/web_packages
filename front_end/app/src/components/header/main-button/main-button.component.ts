@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 import { environment }              from '@environments/environment';
-import { MenuNode }                 from '@services/menus.service';
+import { MenuNode }                 from '@services/menus.service.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxHeaderService }         from '@services/nx-header.service';

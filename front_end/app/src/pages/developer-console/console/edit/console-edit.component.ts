@@ -10,43 +10,12 @@ import { NxCloudApiService }            from '@services/nx-cloud-api';
 import { ContextManifest }              from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }     from '@services/nx-config';
 import { NxProcessService, Process }    from '@services/process.service';
-import { ConfigType, ConsoleSection }   from '@components/console-table/console-table.component';
+import { ConfigType, ConsoleSection }   from '@components/console-table/console-table.component.types';
 import { NxHeaderService }              from '@services/nx-header.service';
 import { NxConsoleService }             from '@pages/developer-console/console/console.service';
-import { ConsoleMode }                  from '../console.component';
+import { ConsoleMode }                  from '../console.component.types';
 import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
 import { NxLanguageProviderService }    from '@services/nx-language-provider';
-
-export enum DataStructureType {
-    TEXT='text',
-    DROPDOWN='dropdown'
-}
-
-export enum SortOptions {
-    TEXT='text',
-    DATE='date'
-}
-
-export enum GroupingOptions {
-    TEXT='textAlpha',
-    DATE_DAY='dateDay',
-    DATE_MONTH='dateMonth',
-    DATE_AUTO='dateAuto'
-}
-
-export interface DataStructureFilter {
-    sortable?: SortOptions,
-    multiSelect?: boolean,
-    grouping?: GroupingOptions
-}
-
-export interface DataStructureMeta {
-    options?: Record<any, any>,
-    icon?: string,
-    tooltip?: string,
-    styles? : string,
-    filter? : DataStructureFilter
-}
 
 @UntilDestroy()
 @Component({

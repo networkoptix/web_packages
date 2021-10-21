@@ -9,9 +9,8 @@ import { NxProcessService } from '@services/process.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService } from '@services/session.service';
-import { NxCloudApiService } from './nx-cloud-api';
-import { NxToastService } from '@dialogs/toast.service';
+import { NxSessionService }          from '@services/session.service';
+import { NxToastService }            from '@dialogs/toast.service';
 
 describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;
@@ -48,7 +47,6 @@ describe('Process service', () => {
                 NxToastService,
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxConfigService, useValue: configMock },
-                { provide: NxCloudApiService, useValue: cloudMock },
                 { provide: NxSessionService, useValue: {} }
             ]
         });

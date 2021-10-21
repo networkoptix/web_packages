@@ -13,7 +13,7 @@ import { switchMap, tap, delay, map, filter, startWith }            from 'rxjs/o
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
 import { NxHeaderService }                      from '@services/nx-header.service';
-import { MenuNode }                             from '@services/menus.service';
+import { MenuNode }                             from '@services/menus.service.types';
 import { MenuNodeWithParent, RelatedLinks }     from '@components/left-menu/left-menu.component';
 import { SearchFilter }                         from '@components/search/search.component';
 import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';

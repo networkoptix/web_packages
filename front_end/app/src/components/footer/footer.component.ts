@@ -8,7 +8,8 @@ import { Subscription }             from 'rxjs';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxAppStateService }        from '@services/nx-app-state.service';
-import { NxMenusService, MenuNode } from '@services/menus.service';
+import { NxMenusService } from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

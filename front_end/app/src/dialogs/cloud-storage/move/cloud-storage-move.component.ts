@@ -8,12 +8,13 @@ import { BehaviorSubject }           from 'rxjs';
 import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService }          from '@services/systems.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxSystem }                  from '@services/system.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxModalGenericComponent }   from '../../generic/generic.component';
+import * as t from '@services/nx-cloud-api.types';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'nx-cloud-storage-move-content',
@@ -44,9 +45,9 @@ export class CloudStorageMoveModalContent implements OnInit {
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         public renderer: Renderer2,
+        private http: HttpClient,
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
         private genericModal: NxModalGenericComponent
     ) {
         this.CONFIG = configService.getConfig();
@@ -54,6 +55,13 @@ export class CloudStorageMoveModalContent implements OnInit {
 
         this.targetSystems = [];
         this.errorText = '';
+    }
+
+    private moveCloudStorage(sourceSystemId: string, destinationSystemId: string) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/move', {
+            sourceSystemId,
+            destinationSystemId
+        }).toPromise();
     }
 
     ngOnInit() {
@@ -81,7 +89,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         });
 
         // Move Process
-        this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
+        this.move = this.processService.createProcess(() => this.moveCloudStorage(this.systemId, this.currentTarget), {
             errorCodes: {
                 500: () => {
                     return this.LANG.common.systemServerError?.();

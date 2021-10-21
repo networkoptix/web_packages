@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { NxMenuService }                           from '@src/menu';
+import { NxMenuService }                           from '@src/menu/menu.service';
 
 /* Usage
  */

@@ -6,7 +6,6 @@ import { map, takeUntil }            from 'rxjs/operators';
 
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService }            from '@dialogs/toast.service';
-import { NxCloudApiService }         from './nx-cloud-api';
 import { NxConfigService, IConfig }  from './nx-config';
 import { NxSessionService }          from './session.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
@@ -45,7 +44,6 @@ export class Process {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
         caller$: Observable<any>,
         settings: Partial<ProcessSettings> = {},
@@ -58,6 +56,14 @@ export class Process {
         this.settings.errorPrefix = settings?.errorPrefix || '';
         this.settings = { ...this.settings, ...settings };
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
+    }
+
+    private checkResponseHasError<T extends any>(data: any) {
+        // this is not a repetition
+        if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+            return data;
+        }
+        return false;
     }
 
     public run = (successHandler = (...args: any) => null, errorHandler = (...args: any) => null) => {
@@ -90,7 +96,7 @@ export class Process {
     public onSuccess = async (res) => {
         if (this.canceled) { return; }
         const data = await res;
-        const error = this.cloudApiService.checkResponseHasError(data);
+        const error = this.checkResponseHasError(data);
         if (error || data?.error && data.error !== '0') {
             return this.errorHelper(error || data);
         } else {
@@ -203,7 +209,6 @@ export class NxProcessService {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        private cloudApiService: NxCloudApiService,
         private toastService: NxToastService
     ) { }
 
@@ -230,7 +235,6 @@ export class NxProcessService {
             this.configService,
             this.languageService,
             this.sessionService,
-            this.cloudApiService,
             this.toastService,
             _caller,
             settings,

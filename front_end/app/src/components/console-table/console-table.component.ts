@@ -7,11 +7,10 @@ import { NxDialogsService }                           from '@dialogs/dialogs.ser
 import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
 import { TranslateService }                           from '@ngx-translate/core';
 import { map, switchMap }                             from 'rxjs/operators';
-import md5                                            from 'md5';
 
 import { CustomClientAPI, NxCloudApiService }                from '@services/nx-cloud-api';
 import {
-    ContentManifest, ContentSettings, ContextManifest, DocAsset
+    ContentManifest, ContextManifest, DocAsset
 }                                                            from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }                          from '@services/nx-config';
 import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
@@ -24,155 +23,15 @@ import { NxUriService }                                      from '@services/uri
 import { NxConsoleService }                                  from '@pages/developer-console/console/console.service';
 import { FilterState, FilterUpdatePayload }                  from '@components/advanced-filter/advanced-filter.component';
 import { DropdownItem }                                      from '@components/dropdowns/generic/dropdown.component';
-import { ConsoleMode }                                       from '@pages/developer-console/console/console.component';
-import { DataStructureMeta }                                 from '@pages/developer-console/console/edit/console-edit.component';
-
-export enum ConfigType {
-    TEXT='text',
-    HTML='html',
-    DATE='date',
-    COMMENTS='comments',
-    STATUS='status',
-    ICON_LINK='icon_link',
-    ICON_MODAL='icon_modal',
-    ASYNC_HANDLER='async_handler',
-    DROPDOWN='dropdown'
-}
-
-export interface ColumnConfig {
-    type: ConfigType,
-    name: string,
-    label: string,
-    description?: string,
-    placeholder?: string,
-    hidden?: boolean,
-    meta?: DataStructureMeta
-}
-
-export enum ActionType {
-    PRIMARY='primary',
-    SECONDARY='secondary',
-    SUCCESS='success',
-    DANGER='danger',
-    WARNING='warning',
-    INFO='info'
-}
-
-interface ActionConfig {
-    title: string,
-    modal: ModalType,
-    subheading?: string,
-    icon?: string,
-    type?: ActionType,
-}
-
-export interface ModalManifest {
-    label: string,
-    fields: ColumnConfig[]
-}
-
-export enum OptionalFeatures {
-    FILTER='filter',
-    SEARCH='search',
-    PER_PAGE='perPage'
-}
-
-export interface ConsoleManifest {
-    // intro?: {
-    //     title: string,
-    //     content: string
-    // },
-    sort: number,
-    title: string,
-    url: string,
-    icon: string
-    perPage: number,
-    pagesToShow: number,
-    searchSubheading: string,
-    noResultsMessage: string,
-    minItemsAdvanced: number,
-    disabled: Record<OptionalFeatures, boolean>,
-    perPageOptions: DropdownItem[],
-    excludeFromSearch: string[],
-    contexts: ColumnConfig[],
-    editManifest: ModalManifest,
-    downloadManifest: ModalManifest,
-    actions: ActionConfig[]
-}
-
-export enum ModalType {
-    CLIENT_EDIT='client-edit',
-    CLIENT_CREATE='client-create',
-    CLIENT_DOWNLOAD='client-download'
-}
-
-export interface ModalContent {
-    id?: number,
-    modal: ModalType,
-    heading?: string,
-    values?: Record<string, any>
-}
-
-export enum ConsoleSection {
-    CUSTOM_CLIENTS='custom-clients'
-}
-
-export class ListSerializer<Initial, Serialized> {
-    #serializer: (data: Initial[]) => Serialized[]
-    editManifest: ModalManifest;
-    downloadManifest: ModalManifest;
-    data: Serialized[] = []
-
-    constructor(
-        route: string,
-        manifest: ConsoleManifest,
-        initialData?: Initial[],
-        private contentSettings?: ContentSettings
-    ) {
-        this.editManifest = manifest.editManifest;
-        this.downloadManifest = manifest.downloadManifest;
-        switch (route) {
-            case 'custom-clients':
-                this.#serializer = this.#customClientsSerializer;
-                break;
-            default:
-                this.#serializer = (data: unknown) => data as Serialized[];
-        }
-        if (initialData?.length) {
-            this.update(initialData);
-        }
-    }
-
-    update(data) {
-        this.data = this.#serializer(data);
-    }
-
-    #customClientsSerializer = (data) => {
-        const createHash = (values: Record<any, any>) => md5(JSON.stringify(Object.entries(values).sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)));
-        const createDownloadAsyncValues = ({ values: _, ...values }) => ({
-            modal: ModalType.CLIENT_DOWNLOAD,
-            heading: this.downloadManifest.label,
-            manifest: this.downloadManifest,
-            settings: this.contentSettings || {},
-            lookupKey: createHash(values),
-            values
-        });
-        const createSettingsModalValues = ({ values: _, ...values }) => ({
-            modal: ModalType.CLIENT_EDIT,
-            heading: this.editManifest.label,
-            manifest: this.editManifest,
-            settings: this.contentSettings || {},
-            values
-        });
-
-        return data.map(
-            item => ({
-                ...item,
-                downloadAsync: createDownloadAsyncValues(item),
-                settingsModal: createSettingsModalValues(item)
-            }));
-    }
-}
+import { ConsoleMode }                                       from '@pages/developer-console/console/console.component.types';
+import {
+    AdditionalFilter,
+    ConfigType, ConsoleManifest,
+    ConsoleSection,
+    ListSerializer,
+    ModalType,
+    OptionalFeatures
+} from '@components/console-table/console-table.component.types';
 
 @UntilDestroy()
 @Component({
@@ -430,8 +289,6 @@ export class NxConsoleTableComponent {
         event.stopPropagation();
     }
 }
-
-export type AdditionalFilter = <Data>(data: Data[]) => Data[]
 
 class TableDataSource extends DataSource<any> {
     #baseData$: BehaviorSubject<any[]> = new BehaviorSubject([]);

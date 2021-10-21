@@ -10,7 +10,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import {
     ConsoleSection, ModalContent, ModalManifest, ModalType
-}                                    from '@components/console-table/console-table.component';
+}                                    from '@components/console-table/console-table.component.types';
 import {
     CustomClientAPI, NxCloudApiService
 }                                    from '@services/nx-cloud-api';

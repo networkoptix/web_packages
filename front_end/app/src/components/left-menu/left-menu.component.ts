@@ -5,7 +5,7 @@ import { timer, Subject }                                   from 'rxjs';
 import { UntilDestroy, untilDestroyed }                     from '@ngneat/until-destroy';
 
 import { WINDOW }                                   from '@services/window-provider';
-import { MenuNode }                                 from '@services/menus.service';
+import { MenuNode }                                 from '@services/menus.service.types';
 import { IConfig, NxConfigService }                 from '@services/nx-config';
 import { NxKnowledgebaseService }                   from '@pages/developers/knowledge-base/knowledge-base.service';
 

@@ -10,7 +10,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService }           from '@services/nx-config';
 import { NxUriService }              from '@services/uri.service';
 import { NxHeaderService }           from '@services/nx-header.service';
-import { NxMenusService, MenuNode }  from '@services/menus.service';
+import { NxMenusService }  from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
 import { NxAccountService }          from '@services/account.service';
 
 @UntilDestroy({ checkProperties: true })

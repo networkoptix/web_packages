@@ -1,8 +1,7 @@
-import { Injectable, OnDestroy }         from '@angular/core';
-import { QueryParamsHandling }           from '@angular/router';
+import { Injectable }         from '@angular/core';
 import { TranslateService }              from '@ngx-translate/core';
 import {
-    BehaviorSubject, Subject,
+    BehaviorSubject,
     from, combineLatest, Observable
 }                                        from 'rxjs';
 import {
@@ -13,49 +12,10 @@ import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
 import { NxLanguageProviderService }     from './nx-language-provider';
 import { NxSessionService }              from './session.service';
-import { NxCloudApiService }             from './nx-cloud-api';
 import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+import { Auth, MenuNode } from '@services/menus.service.types';
+import { HttpClient } from '@angular/common/http';
 
-export enum Auth {
-    BOTH='Both',
-    LOGGED_IN='Logged In',
-    LOGGED_OUT='Logged Out'
-}
-
-export class MenuNode {
-    public icon?: string;
-    public currentRoute?: boolean;
-    public accepted?: boolean
-    public draft?: boolean;
-    public pending?: boolean;
-    public indented?: boolean;
-    // eslint-disable-next-line camelcase
-    public asset_type?: any;
-    public order?: number;
-    public state?: 'pending' | 'draft'
-    public breadcrumbs: MenuNode[];
-    public queryParamsHandling: QueryParamsHandling = ''
-
-    constructor(
-        public name = '',
-        public url: string,
-        public display_name = name,
-        currentRoute = false,
-        icon = '',
-        public nodes: MenuNode[] = [],
-        public authentication: Auth = Auth.BOTH,
-        public new_window = false,
-        public asset_id = null,
-        public related_asset_ids = [],
-        public next_item = false,
-        public urlified = '',
-        public subtitle = '',
-        public name_raw = ''
-    ) {
-        this.icon = icon;
-        this.currentRoute = currentRoute;
-    }
-}
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -75,7 +35,7 @@ export class NxMenusService {
         private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
-        private cloudApi: NxCloudApiService
+        private http: HttpClient
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -121,7 +81,7 @@ export class NxMenusService {
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
-                    ? this.cloudApi.getMenu(name).pipe(
+                    ? this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(name)}`).pipe(
                         map((menu): [string, MenuStructure] => [login, menu])
                     )
                     : Promise.resolve([login, menu])

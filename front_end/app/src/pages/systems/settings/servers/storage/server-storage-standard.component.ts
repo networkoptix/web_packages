@@ -21,9 +21,11 @@ import { ChildRoutes, NxUriService } from '@services/uri.service';
 import { ChangedIdReturned }         from '@services/system-api.types';
 import { NxUtilsService }            from '@services/utils.service';
 import {
-    CurrentStorageState, MODE, STORAGE_TYPES
-}                                    from '@services/system.service/system/storage-manager/current-storage-state';
-import { STORAGE_STATUS, Storage }   from '@services/system.service/system/storage-manager/storage';
+    STORAGE_STATUS,
+    Storage,
+    STORAGE_TYPES,
+    CurrentStorageState, MODE
+} from '@services/system.service/system/storage-manager/storage';
 import { UpdateTriggers }            from '@services/system.service/system/storage-manager/storage-state';
 
 enum MODE_INDEX {

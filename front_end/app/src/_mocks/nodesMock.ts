@@ -1,4 +1,4 @@
-import { Auth, MenuNode } from '@services/menus.service';
+import { Auth, MenuNode } from '@services/menus.service.types';
 
 export const headerNodes: Partial<MenuNode[]> = [
     {

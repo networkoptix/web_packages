@@ -5,7 +5,7 @@ import {
 import { Router }                   from '@angular/router';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxMenuService }            from '@src/menu';
+import { NxMenuService }            from '@src/menu/menu.service';
 
 /* Usage
  */

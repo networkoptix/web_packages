@@ -6,7 +6,6 @@ import { Router }                    from '@angular/router';
 import { of }                        from 'rxjs';
 import { tap, catchError }           from 'rxjs/operators';
 
-import { Exactly }                   from '../utils.service';
 import { NxConfigService }           from '../nx-config';
 import { NxCloudApiService }         from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';
@@ -20,13 +19,12 @@ import { BaseAccount }               from './base';
 import { Account }                   from './account';
 import { NxStorageService }          from '../storage.service';
 import { CookieService }             from 'ngx-cookie-service';
+import { NxLoginService } from '../login.service';
 
-/**
- * LocalAcount overrides BaseAccount, should maintain the same interface.
- * This is enforced using the Exactly<BaseAccount, LocalAccount> type.
- */
 @Injectable()
-export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, LocalAccount> {
+export class LocalAccount extends BaseAccount {
+    closeResult: string;
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -42,7 +40,8 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
         injector: Injector,
-        protected nxSystemAPIService: NxSystemAPIService
+        protected nxSystemAPIService: NxSystemAPIService,
+        protected loginService: NxLoginService
     ) {
         super(
             configService,
@@ -58,7 +57,8 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             appStateService,
             pollService,
             injector,
-            nxSystemAPIService
+            nxSystemAPIService,
+            loginService
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), true);
@@ -141,13 +141,12 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         redirectHome = false,
         blockNavigation = false
     ): void {
-        this.dialogs.login(this, keepPage, redirectClose, redirectHome, blockNavigation);
+        this.loginService.login(keepPage, redirectClose, redirectHome, blockNavigation);
     }
 
     private showLoginDialog(): Promise<string | Account> {
         this.loginDialogActive = true;
-        return this.dialogs
-            .login(this, true, true).then((result: string) => {
+        return this.loginService.login(true, true).then((result: string) => {
                 this.storageService.loginRegister = true;
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);

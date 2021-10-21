@@ -8,14 +8,9 @@ import { NxCloudApiService }        from '@services/nx-cloud-api';
 import { ContentManifest }          from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { ConsoleMenuNode }          from './menu/console-menu.component';
-import { ConsoleSection }           from '@components/console-table/console-table.component';
+import { ConsoleSection }           from '@components/console-table/console-table.component.types';
 import { NxHeaderService }          from '@services/nx-header.service';
-
-export enum ConsoleMode {
-    DEFAULT='default',
-    EDIT='edit',
-    QUICK_EDIT='quick-edit'
-}
+import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
 
 @UntilDestroy()
 @Component({

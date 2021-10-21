@@ -12,7 +12,7 @@ import { Watcher }                   from '@services/apply.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { IConfig, NxConfigService }  from '@services/nx-config';
-import { CurrentStorageState }       from '@services/system.service/system/storage-manager/current-storage-state';
+import { CurrentStorageState } from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

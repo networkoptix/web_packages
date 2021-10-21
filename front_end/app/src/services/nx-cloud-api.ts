@@ -7,19 +7,16 @@ import { EMPTY, of, from, BehaviorSubject, throwError, Observable } from 'rxjs';
 import { v4 as uuid }                            from 'uuid';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { Account }                  from './account.service';
-import { NxSystemWithUserInfo }     from './systems.service';
+import { Account }                  from './account.service/account';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
-import { MenuStructure }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
-import { NxAccountService }         from '@services/account.service';
-import { ConsoleSection }           from '@components/console-table/console-table.component';
+import { ConsoleSection }           from '@components/console-table/console-table.component.types';
 import { PackageStatus }            from '@dialogs/download-async/download-async.component';
 import { NxConsoleService }         from '@pages/developer-console/console/console.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxDialogsService }         from '@dialogs/dialogs.service';
 import { OauthService }             from '@services/oauth.service';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 export const DOC_TYPES = {
     knowledgebase: 'kb',
@@ -31,17 +28,10 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
     descriptor.value = function(...args) {
         return of('').pipe(
             switchMap(_ => {
-                if (this.currentAccount !== undefined) {
-                    return of(this.currentAccount);
+                if (this.currentAccountEmail !== undefined) {
+                    return of(this.currentAccountEmail);
                 }
-                return this.accountService.get().then(account => {
-                    if (account) {
-                        this.currentAccount = account;
-                    } else {
-                        this.currentAccount = null;
-                    }
-                    return account;
-                });
+                return this.account(true);
             }),
             switchMap((account: Account) => {
                 // eslint-disable-next-line camelcase
@@ -92,8 +82,7 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
-    private accountService: any;
-    private currentAccount: Account;
+    private currentAccountEmail: string;
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
@@ -109,16 +98,6 @@ export class NxCloudApiService {
         private oauthService: OauthService
     ) {
         this.CONFIG = configService.getConfig();
-        setTimeout(_ => {
-            this.accountService = injector.get(NxAccountService);
-            this.accountService.accountSubject.subscribe(account => {
-                if (account) {
-                    this.currentAccount = account;
-                } else {
-                    this.currentAccount = null;
-                }
-            });
-        });
         this.customClient = new CustomClientAPI(this, this.CONFIG, this.http, this.consoleService);
     }
 
@@ -133,10 +112,6 @@ export class NxCloudApiService {
                     retrieve: (id) => new BehaviorSubject({})
                 };
         }
-    }
-
-    getLanguage() {
-        return this.http.get('/api/utils/language');
     }
 
     checkResponseHasError<T extends any>(data: any) {
@@ -317,7 +292,7 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
         }).toPromise().then((result) => {
-            this.systems('clearCache');
+            // this.systems('clearCache');
             return result;
         });
     }
@@ -332,13 +307,6 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/feedback', {
             message, asset, type, userName, userEmail
         });
-    }
-
-    systems(systemId?: string) {
-        if (systemId) {
-            return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems/' + systemId);
-        }
-        return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems');
     }
 
     users(systemId: string) {
@@ -416,7 +384,9 @@ export class NxCloudApiService {
     }
 
     loginCode(code: string) {
-        return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).toPromise();
+        return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
+            tap((account: Account) => this.currentAccountEmail = account.email)
+        ).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
@@ -546,20 +516,6 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    deleteCloudStorage(systemId: string, password: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/delete', {
-            systemId,
-            password
-        }).toPromise();
-    }
-
-    moveCloudStorage(sourceSystemId: string, destinationSystemId: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/move', {
-            sourceSystemId,
-            destinationSystemId
-        }).toPromise();
-    }
-
     /**
      * Expected repsonse:
      *
@@ -645,15 +601,11 @@ export class NxCloudApiService {
             });
     }
 
-    getMenu(menuName: string) {
-        return this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(menuName)}`);
-    }
-
     ensureSessionFreshness(state?: string, email?: string) {
         return this.getTimeSinceLogin().pipe(
             switchMap((res) => {
                 if (res.timeSincePassword >= this.CONFIG.sessionFreshnessSec) {
-                    return this.reauthenticate(state, email || this.currentAccount.email);
+                    return this.reauthenticate(state, email || this.currentAccountEmail);
                 }
                 return of(true);
             })
@@ -677,7 +629,7 @@ export class NxCloudApiService {
     }
 
     reauthenticate(state?: string, email?: string) {
-        const dialogService = this.injector.get(NxDialogsService);
+        const dialogService = this.injector.get(NxSimpleDialogsService);
         const LANG = this.injector.get(NxLanguageProviderService).translations;
         const { action, message, title } = LANG.dialogs?.renewAuth;
         return from(

@@ -14,11 +14,14 @@ import { NxSystemAPI }          from './system-legacy-api.service';
 import { IParams }              from './system.service';
 import { NxUriCacheService }    from './uri-cache.service';
 import * as t                   from './system-api.types';
-import { NxAccountService }     from '@services/account.service';
-import { NxDialogsService }     from '@dialogs/dialogs.service';
 import { NxStorageService }     from '@services/storage.service';
 import { WINDOW }               from '@services/window-provider';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxLoginService } from '@services/login.service';
+import { GenericModalContent } from '@dialogs/generic/generic.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -72,7 +75,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     private get dialogService() {
-        return this.injector.get(NxDialogsService);
+        return this.injector.get(NxSimpleDialogsService);
     }
 
     private get storageService() {
@@ -128,8 +131,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ));
     }
 
-    private reauthenticate(allSystems?: boolean) {
-        const dialogService = this.dialogService;
+    private reauthenticate(allSystems?: boolean): any {
         const LANG = this.injector.get(NxLanguageProviderService).translations;
         const { action, message, title } = LANG.dialogs?.renewAuth;
         return from(
@@ -142,9 +144,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     return this.logout().then(() => this.redirectOauth(allSystems));
                 }
 
-                const accountService: NxAccountService = this.injector.get(NxAccountService);
+                const loginService: NxLoginService = this.injector.get(NxLoginService);
                 return this.logout()
-                    .then(() => dialogService.login(accountService, false, false, false, true));
+                    .then(() => loginService.login(false, false, false, true));
             })
         );
     }

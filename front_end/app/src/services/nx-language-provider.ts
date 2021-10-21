@@ -3,7 +3,6 @@ import { HttpClient }              from '@angular/common/http';
 import { BehaviorSubject }         from 'rxjs';
 import { TranslateService }        from '@ngx-translate/core';
 import { environment }             from '@environments/environment';
-import { NxCloudApiService }       from './nx-cloud-api';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSessionService }        from './session.service';
 import { LocalStorageService }     from 'ngx-webstorage';
@@ -26,7 +25,6 @@ export class NxLanguageProviderService {
     constructor(
         private translate: TranslateService,
         private http: HttpClient,
-        private cloudApiService: NxCloudApiService,
         private sessionService: NxSessionService,
         private storageService: LocalStorageService,
         private cacheService: NxUriCacheService,
@@ -98,7 +96,7 @@ export class NxLanguageProviderService {
 
         return (environment.isLocal
             ? this.http.get(`/static/lang_${lang}/language_compiled.json`)
-            : this.cloudApiService.getLanguage()).toPromise();
+            : this.http.get('/api/utils/language')).toPromise();
     }
 
     setTranslations(lang: string, translation): void {

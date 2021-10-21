@@ -7,7 +7,7 @@ import { SubscriptionLike } from 'rxjs';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxSessionService }         from '@services/session.service';
 import { NxHeaderService }          from '@services/nx-header.service';
-import { Auth, MenuNode }           from '@services/menus.service';
+import { Auth, MenuNode }           from '@services/menus.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

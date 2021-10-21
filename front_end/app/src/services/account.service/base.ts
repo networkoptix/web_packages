@@ -7,7 +7,6 @@ import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
-import { NxDialogsService }                from '@dialogs/dialogs.service';
 import { NxSessionService }                from '../session.service';
 import { NxApplyService }                  from '../apply.service';
 import { WINDOW }                          from '../window-provider';
@@ -19,6 +18,8 @@ import { NxSystemAPIService }              from '../system-api.service';
 import { Account }                         from './account';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
 import { NxStorageService }                from '../storage.service';
+import { NxLoginService } from '@services/login.service';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -46,7 +47,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected queryParamSubscription: Subscription;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    dialogs: NxDialogsService;
+    dialogs: NxSimpleDialogsService;
     protected applyService: NxApplyService;
     public mediaServerApi: any;
 
@@ -77,7 +78,8 @@ export abstract class BaseAccount implements OnDestroy {
         protected appStateService: NxAppStateService,
         protected pollService: NxPollService,
         injector: Injector,
-        protected nxSystemAPIService: NxSystemAPIService
+        protected nxSystemAPIService: NxSystemAPIService,
+        protected loginService: NxLoginService
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
@@ -119,7 +121,7 @@ export abstract class BaseAccount implements OnDestroy {
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
-        this.dialogs = injector.get(NxDialogsService);
+        this.dialogs = injector.get(NxSimpleDialogsService);
         this.applyService = injector.get(NxApplyService);
     }
 
@@ -266,8 +268,7 @@ export abstract class BaseAccount implements OnDestroy {
             }).catch(() => {
                 this.sessionService.email = '';
                 // If the key login fails ask the user to login manually.
-                return this.dialogs
-                    .login(this, true, true)
+                return this.loginService.login(true, true)
                     .catch(() => {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);

@@ -9,14 +9,14 @@ import { NxToastService }                   from '../toast.service';
 import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
 import {
     ConfigType, ModalContent, ModalManifest, ModalType
-}                                           from '@components/console-table/console-table.component';
+}                                           from '@components/console-table/console-table.component.types';
 import { NxCloudApiService }                from '@services/nx-cloud-api';
 import { DropdownItem }                     from '@components/dropdowns/generic/dropdown.component';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
 import { NxHeaderService }                  from '@services/nx-header.service';
 import { NxConsoleService }                 from '@pages/developer-console/console/console.service';
 import { Router }                           from '@angular/router';
-import { ConsoleMode }                      from '@pages/developer-console/console/console.component';
+import { ConsoleMode }                      from '@pages/developer-console/console/console.component.types';
 import { TranslateService }                 from '@ngx-translate/core';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {

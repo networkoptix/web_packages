@@ -1,9 +1,9 @@
 import { IConfig }                               from './config-types';
 import { environment }                           from '@environments/environment';
 
-import { ActionType, ConfigType, ConsoleSection, ModalType, OptionalFeatures }  from '@components/console-table/console-table.component';
+import { ActionType, ConfigType, ConsoleSection, ModalType, OptionalFeatures }  from '@components/console-table/console-table.component.types';
 import { FeatureFlagStrings }                                                   from '@services/nx-config/base-config';
-import { GroupingOptions, SortOptions }                                         from '@pages/developer-console/console/edit/console-edit.component';
+import { GroupingOptions, SortOptions }                                         from '@pages/developer-console/console/edit/console-edit.component.types';
 
 export const nxConfig: IConfig = {
     alertTimeout: 3 * 1000, // Alerts are shown for 3 seconds,

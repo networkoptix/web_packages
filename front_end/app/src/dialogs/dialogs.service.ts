@@ -32,18 +32,15 @@ import { ChangePasswordModalContent } from './change-password/change-password.co
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
-import { LoginWebadminModalContent } from './login-webadmin/login-webadmin.component';
 import { WizardModalContent } from './wizard/wizard.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import { NxAccountService } from '@services/account.service';
-import { BaseAccount } from '@services/account.service/base';
-import { CloudAccount } from '@services/account.service/cloud';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { EditModalContent } from './edit/edit.component';
-import { ModalContent } from '@components/console-table/console-table.component';
+import { ModalContent } from '@components/console-table/console-table.component.types';
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { StorageManager } from '@services/system.service/system/storage-manager/storage-manager';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
@@ -155,7 +152,7 @@ export class NxDialogsService {
         actionType?: string,
         cancelLabel?: string,
         footerClass?: string
-    ) {
+    ): any {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static'
@@ -175,63 +172,6 @@ export class NxDialogsService {
         };
 
         return this.createModal(GenericModalContent, options, params);
-    }
-
-    public login (
-        account: NxAccountService | BaseAccount | CloudAccount,
-        keepPage?: boolean,
-        redirectClose?: boolean,
-        redirectHome = false,
-        blockNavigation = false
-    ) {
-        if (this.CONFIG.browserNotSupported) {
-            return;
-        }
-
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static',
-            size: 'sm'
-        };
-
-        const params: IParams = {
-            account: account,
-            login: this.login,
-            cancellable: !keepPage || false,
-            closable: true,
-            location: this.location,
-            keepPage: (keepPage !== undefined) ? keepPage : true,
-            redirectClose: redirectClose || false,
-            redirectHome,
-            blockNavigation
-        };
-
-        if (this.CONFIG.isLocal) {
-            if (this.bootstrapProvider.newSystem) {
-                return;
-            }
-            Object.assign(options, {
-                centered: true,
-                keyboard: false,
-                backdropClass: 'webadmin-backdrop',
-                windowClass: 'webadmin-window'
-            });
-        }
-
-        return this.createModal(LoginWebadminModalContent, options, params)
-            // handle how the dialog was closed
-            // required if we need to have dismissible dialog otherwise
-            // will raise a JS error ( Uncaught [in promise] )
-            .then((result) => {
-                this.closeResult = `Closed with: ${result}`;
-
-                if (redirectClose && result === 'canceled') {
-                    return this.router.navigate([this.CONFIG.redirect.unauthorised]);
-                }
-                return result;
-            }, (reason) => {
-                this.closeResult = 'Dismissed';
-            });
     }
 
     public addUser (system: NxSystem) {

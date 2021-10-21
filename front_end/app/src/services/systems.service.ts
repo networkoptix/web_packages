@@ -4,7 +4,6 @@ import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxCloudApiService }         from './nx-cloud-api';
 import { NxPollService }             from './poll.service';
 import { NxToastService }            from '@dialogs/toast.service';
 import { NxUtilsService }            from './utils.service';
@@ -13,6 +12,7 @@ import { NxRibbonService }           from '@components/ribbon/ribbon.service';
 import { NxSystem }                  from './system.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from './storage.service';
+import { HttpClient } from '@angular/common/http';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -41,7 +41,7 @@ export class NxSystemsService implements OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
-        private cloudApi: NxCloudApiService,
+        private http: HttpClient,
         private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -50,7 +50,7 @@ export class NxSystemsService implements OnDestroy {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
         if (!this.CONFIG.isLocal) {
-            this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+            this.systemsPoll = pollService.createPoll(() => this._getSystems(), this.CONFIG.updateInterval);
         } else {
             this.systemsSubject.next([]);
         }
@@ -92,6 +92,13 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
+    private _getSystems(systemId?: string) {
+        if (systemId) {
+            return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems/' + systemId);
+        }
+        return this.http.get<NxSystemWithUserInfo[]>(this.CONFIG.apiBase + '/systems');
+    }
+
     forceUpdateSystems(userEmail?: string): Observable<NxSystemWithUserInfo[]> {
         if (userEmail) {
             this.currentUser = userEmail;
@@ -102,7 +109,7 @@ export class NxSystemsService implements OnDestroy {
             return of([]);
         }
 
-        return this.cloudApi.systems().pipe(tap((systems) => {
+        return this._getSystems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
@@ -153,7 +160,7 @@ export class NxSystemsService implements OnDestroy {
         if (system && useCache) { // Cache success
             return of(system);
         } else { // Cache miss
-            return this.cloudApi.systems(systemId).pipe(map((systems) => {
+            return this._getSystems(systemId).pipe(map((systems) => {
                 return systems[0];
             }));
         }

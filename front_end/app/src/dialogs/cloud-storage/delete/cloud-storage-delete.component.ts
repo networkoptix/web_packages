@@ -9,8 +9,9 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem }                  from '@services/system.service';
 import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import * as t from '@services/nx-cloud-api.types';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'nx-modal-cloud-storage-delete-content',
@@ -38,12 +39,19 @@ export class CloudStorageDeleteModalContent implements OnInit {
         config: NxConfigService,
         language: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
+        private http: HttpClient,
         private processService: NxProcessService,
-        private renderer: Renderer2,
-        private cloudApiService: NxCloudApiService
+        private renderer: Renderer2
     ) {
         this.LANG = language.translations;
         this.CONFIG = config.getConfig();
+    }
+
+    private deleteCloudStorage(systemId: string, password: string) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/delete', {
+            systemId,
+            password
+        }).toPromise();
     }
 
     ngOnInit() {
@@ -58,7 +66,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
             this.deleteForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
             const { LANG } = this;
-            return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
+            return this.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
             errorCodes: {
                 500: () => {

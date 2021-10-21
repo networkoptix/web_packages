@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 
-import { DataStructureFilter, GroupingOptions, SortOptions } from '@pages/developer-console/console/edit/console-edit.component';
-import { AdditionalFilter }                                  from '@components/console-table/console-table.component';
+import { DataStructureFilter, GroupingOptions, SortOptions } from '@pages/developer-console/console/edit/console-edit.component.types';
+import { AdditionalFilter }                                  from '@components/console-table/console-table.component.types';
 
 export enum FilterSort {
     ASC='asc',

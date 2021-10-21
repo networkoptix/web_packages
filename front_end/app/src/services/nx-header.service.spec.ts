@@ -1,6 +1,7 @@
 import { waitForAsync, TestBed }          from '@angular/core/testing';
 import { NxHeaderService }                from '@services/nx-header.service';
-import { MenuNode, NxMenusService }       from '@services/menus.service';
+import { NxMenusService }       from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
 import { Router, RouterEvent }            from '@angular/router';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { setupTestSystem }                from '@src/_mocks/system.test';
