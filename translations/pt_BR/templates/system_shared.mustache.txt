@@ -1,11 +1,11 @@
 Olá {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) compartilhou o acesso ao sistema de monitorização de vídeo "{{message.system_name}}" consigo.
+{{message.sharer_name}} ({{message.sharer_email}}) compartilhou o acesso ao sistema de gerenciamento de vídeo "{{message.system_name}}" com você.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Recebeu acesso ao sistema de gestão de vídeo "{{message.system_name}}".
+Você recebeu acesso ao sistema de gerenciamento de vídeo "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Visualizar no Portal de %CLOUD_NAME%: {{config.portal_url}}/systems/{{message.system_id}}
+Ver no Portal %CLOUD_NAME% {{config.portal_url}}/ sistemas /{{message.system_id}}
