@@ -260,7 +260,7 @@ class TestAccountViews:
 
     @pytest.fixture()
     def mock_change_password(self):
-        def change_pass(email, old_password, new_password):
+        def change_pass(request, email, old_password, new_password, totp=None, headers=None):
             if old_password == 'old_pass':
                 return True
             else:

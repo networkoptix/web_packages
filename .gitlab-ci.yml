@@ -15,12 +15,12 @@ workflow:
     - when: never
 
 stages:
+  - check
   - build
   - test
 
-django-unit-test:
+.django-python:
   image: python:3.8-alpine3.12
-  stage: test
   services:
     - name: mysql:5.7
       alias: mysql
@@ -35,11 +35,34 @@ django-unit-test:
     MYSQL_PASSWORD: ''
   before_script:
     - apk update
-    - apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib curl jq netcat-openbsd
-  script:
+    - apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib curl jq netcat-openbsd bash
     - cd cloud
     # Add pip cache and venv later
     - pip install -r requirements.txt --index-url="$PIP_INDEX_URL" --extra-index-url="$PIP_EXTRA_INDEX_URL" --trusted-host="$PIP_TRUSTED_HOST"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+
+django-checks:
+  extends: .django-python
+  stage: check
+  script:
+    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
+    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
+
+nx-mentions-check:
+  stage: check
+  script: ci/nx_mentions.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+
+django-unit-test:
+  extends: .django-python
+  stage: test
+  script:
     - pytest -m "not integration" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
   coverage: /^TOTAL.+?(\d+\%)$/
   artifacts:
@@ -47,10 +70,6 @@ django-unit-test:
     reports:
       junit: cloud/report.xml
       cobertura: cloud/coverage.xml
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
-      when: never
 
 frontend-unit-test:
   image: nx/node-chrome

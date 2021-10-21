@@ -32,7 +32,7 @@ export class NxContentContainerComponent implements AfterViewInit {
         firstSectionData: [
             {
                 title: 'Connect to your systems from anywhere',
-                content: 'Login to your Nx Witness System from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
+                content: 'Login to your VMS from anywhere, anytime, on any device. /n No need to set up VPN tunnel or do port forwarding. We automatically find the best way to connect to your servers – direct, nat traversal or through our proxies.',
                 url: '',
                 externalLink: true,
                 svg: 'camera'
