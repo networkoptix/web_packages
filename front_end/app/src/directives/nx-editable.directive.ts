@@ -8,7 +8,8 @@ import {
     selector: '[NxEditable]'
 })
 export class NxEditableDirective implements OnInit {
-    /*
+    /*  DEPRECATED -> use NxTextEditableComponent
+
         This directive makes any text field editable and binds value. Applies default styling if none specified.
 
         Example usage:

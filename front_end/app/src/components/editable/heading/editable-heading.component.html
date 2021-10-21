@@ -1,0 +1,16 @@
+<div class="header-title"
+     [ngClass]="{'w-100 d-block': editMode, 'w-auto': !editMode}">
+    <nx-text-editable
+        required="true"
+        ngDefaultControl
+        [disabled]="!editEnabled"
+        (onEditModeChanged)="editModeChanged($event)"
+        [ngClass]="{'has-edit-icon': !editMode}"
+        [(ngModel)]="name"></nx-text-editable>
+    <div *ngIf="!editMode && editEnabled" class="edit-button">
+        <img alt="pencil icon button to edit camera name"
+             [src]="CONFIG.icons.dirNonStandard + 'edit.png'"
+             width="20"
+             height="20"/>
+    </div>
+</div>

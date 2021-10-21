@@ -57,17 +57,18 @@ import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/addition
 import { NxTabsComponent }                  from './header/tabs/tabs.component';
 import { NxNavDropdownComponent }           from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent }          from './overlay-modal/overlay-modal.component';
-import { NxInfoBlockComponent }             from './info-block/info-block.component';
-import { NxImageComponent }                 from '@pages/health/table-components/image/image.component';
-import { NxEditableSettingsHeading }        from './editable/settings-heading/editable-settings-heading.component';
-import { QuicklinkModule }                  from 'ngx-quicklink';
-import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
-import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
-import { NxHTMLComponent }                  from '@components/html-input/html-input.component';
-import { PipesModule }                      from '@src/pipes/pipes.module';
-import { NxCookieBannerComponent }          from './cookie-banner/cookie-banner.component';
-import { NxAdvancedFilterComponent }        from './advanced-filter/advanced-filter.component';
-import { NxConsoleTableComponent }          from './console-table/console-table.component';
+import { NxInfoBlockComponent }      from './info-block/info-block.component';
+import { NxImageComponent }          from '@pages/health/table-components/image/image.component';
+import { NxEditableHeading }         from './editable/heading/editable-heading.component';
+import { QuicklinkModule }           from 'ngx-quicklink';
+import { NxNumericComponent }        from '@components/numeric-input/numeric.component';
+import { NxPaginatorComponent }      from '@components/paginator/paginator.component';
+import { NxHTMLComponent }           from '@components/html-input/html-input.component';
+import { PipesModule }               from '@src/pipes/pipes.module';
+import { NxCookieBannerComponent }   from './cookie-banner/cookie-banner.component';
+import { NxAdvancedFilterComponent } from './advanced-filter/advanced-filter.component';
+import { NxConsoleTableComponent }   from './console-table/console-table.component';
+import { NxTextEditableComponent }   from '@components/editable/editable.component';
 
 @NgModule({
     imports: [
@@ -135,12 +136,13 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading,
+        NxEditableHeading,
         NxPaginatorComponent,
         NxHTMLComponent,
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
-        NxConsoleTableComponent
+        NxConsoleTableComponent,
+        NxTextEditableComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -178,11 +180,12 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading,
+        NxEditableHeading,
         NxPaginatorComponent,
         NxHTMLComponent,
         NxAdvancedFilterComponent,
-        NxConsoleTableComponent
+        NxConsoleTableComponent,
+        NxTextEditableComponent
     ],
     exports: [
         QuicklinkModule,
@@ -235,12 +238,13 @@ import { NxConsoleTableComponent }          from './console-table/console-table.
         NxOverlayModalComponent,
         NxLeftMenuComponent,
         NxImageComponent,
-        NxEditableSettingsHeading,
+        NxEditableHeading,
         NxPaginatorComponent,
         NxHTMLComponent,
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
-        NxConsoleTableComponent
+        NxConsoleTableComponent,
+        NxTextEditableComponent
     ]
 })
 export class ComponentsModule {

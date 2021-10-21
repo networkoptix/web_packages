@@ -74,7 +74,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     showAnalytics = false;
 
     betaMode: boolean;
-    renameDisabled: boolean;
+    enableEdit: boolean;
     restartDisabled: boolean;
     detachDisabled: boolean;
     resetDisabled: boolean;
@@ -113,7 +113,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checking = false;
         this.serverOffline = false;
         this.certError = false;
-        this.renameDisabled = true;
+        this.enableEdit = false;
         this.restartDisabled = true;
         this.detachDisabled = true;
         this.resetDisabled = true;
@@ -211,7 +211,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
         const { isAdmin, editAdmins } = this.system.userManager.permissions;
-        this.renameDisabled = !isAdmin;
+        this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;
         this.detachDisabled = !editAdmins;
         this.resetDisabled = !editAdmins;

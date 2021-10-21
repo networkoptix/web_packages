@@ -6,23 +6,22 @@
     min-width    : 0;
     height       : 40px;
     max-width    : 100%;
-
+    
     .heading-style {
-        font-family    : $font-family-medium;
-        line-height    : 40px;
-        height         : 40px;
-        font-size      : 24px;
-        display        : block;
-        white-space    : nowrap;
-        overflow       : hidden;
-        text-overflow  : ellipsis;
+        font-family   : $font-family-medium;
+        line-height   : 40px;
+        height        : 40px;
+        font-size     : 24px;
+        display       : block;
+        white-space   : nowrap;
     }
 
     .header-title {
+        width      : fit-content;
         text-align : left !important;
         position   : relative;
 
-        h2 {
+        nx-text-editable {
             @extend .heading-style;
             
             &.editable-directive-edit {

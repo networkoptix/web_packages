@@ -64,6 +64,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     currentMergeInfo: any = undefined;
     merging: boolean;
     editMode = false;
+    enableEdit = false;
     connectToCloudProcess: Process
 
     settingsForSystem;
@@ -210,6 +211,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
+
+                        this.enableEdit = this.system.isOnline && this.system.userManager.permissions.isAdmin && !this.settings.renameDisabled;
 
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();

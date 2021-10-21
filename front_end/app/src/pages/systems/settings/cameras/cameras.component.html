@@ -41,40 +41,38 @@
             <div class="col-12 camera-settings-info">
                 <nx-block header-style="extended">
                     <header>
-                        <div class="header-top-bar mb-3">
-                            <nx-editable-settings-heading
+                        <div class="header-editable mb-3">
+                            <nx-editable-heading
                                     (editModeState)="editMode = $event"
                                     [nameWatcher]="cameraNameWatcher"
-                                    [editEnabled]="system.userManager.permissions.isAdmin || system.userManager.permissions.editCameras"
-                            ></nx-editable-settings-heading>
-
-                        <div *ngIf="!editMode" class="camera-button-div">
-                            <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
-                                <span>
-                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'play.svg'" [applyClass]="true"></svg-icon>
-                                </span>
-                                <span class="ml-1" translate>View</span>
-                            </button>
-                            <button *ngIf="canSeeInfo" class="camera-buttons" id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
-                                <span>
-                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true"></svg-icon>
-                                </span>
-                                <span class="ml-1" translate>Detailed Info</span>
-                            </button>
+                                    [editEnabled]="enableEdit"></nx-editable-heading>
+                            <div *ngIf="!editMode" class="camera-button-div">
+                                <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
+                                    <span>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'play.svg'" [applyClass]="true"></svg-icon>
+                                    </span>
+                                    <span class="ml-1" translate>View</span>
+                                </button>
+                                <button *ngIf="canSeeInfo" class="camera-buttons" id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                                    <span>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true"></svg-icon>
+                                    </span>
+                                    <span class="ml-1" translate>Detailed Info</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="camera-feed-img" [style.width.px]="previewWidth" [style.height.px]="120">
-                        <nx-health-image [isPrimary]="true"
-                            aspect="override"
-                            [preloader]="true"
-                            [state]="selectedCamera.status"
-                            [url]="preview + '&reload=' + (reload$ | async)"
-                            [lightBackground]="true"></nx-health-image>
-                    </div>
-                    <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
-                </header>
-                <nx-section>
-                    <h4 class="mb-3" translate>Image</h4>
+                        <div class="camera-feed-img" [style.width.px]="previewWidth" [style.height.px]="120">
+                            <nx-health-image [isPrimary]="true"
+                                aspect="override"
+                                [preloader]="true"
+                                [state]="selectedCamera.status"
+                                [url]="preview + '&reload=' + (reload$ | async)"
+                                [lightBackground]="true"></nx-health-image>
+                        </div>
+                        <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
+                    </header>
+                    <nx-section>
+                        <h4 class="mb-3" translate>Image</h4>
 
                         <div class="grid-container">
                             <div class="grid-item">

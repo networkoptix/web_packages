@@ -64,6 +64,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraIdFromParams: string;
     parsedCameraId: string;
     selectedCamera: ICamera;
+    enableEdit: boolean;
     fullInfoPath: string;
     cameraViewPath: string;
     alerts: Alert[];
@@ -632,7 +633,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     getCanvasSize() {
         const wrapperWidth = this.width$.value;
-        const maxCanvasHeightinPixels = 480;
+        const maxCanvasHeightInPixels = 480;
         const rotation = <number> this.selectedRotation.value || 0;
         const rotated = <number>rotation % 180;
         const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
@@ -640,11 +641,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const defaultAspectRatio = 1.77778;
         const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
         const aspectWithRotation = rotated ? 1 / aspect : aspect;
-        const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightinPixels;
+        const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightInPixels;
         let height, width;
 
         if (constrainedByHeight) {
-            const size = Math.floor(maxCanvasHeightinPixels / RowsToRoundPixelsByMultiple);
+            const size = Math.floor(maxCanvasHeightInPixels / RowsToRoundPixelsByMultiple);
             height = RowsToRoundPixelsByMultiple * size;
             width = Math.floor(height * aspectWithRotation / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
         } else {
@@ -769,6 +770,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         let cameraIndex: number;
         if (this.system && this.system.cameraManager.cameras) {
+            this.enableEdit = this.system.userManager.permissions.isAdmin || this.system.userManager.permissions.editCameras;
             const { cameras } = this.system.cameraManager;
             cameraIndex = cameras.findIndex(camera => camera?.id === `{${this.parsedCameraId}}`);
             this.system.show404 = (!!this.parsedCameraId && cameraIndex === -1) || !this.system.userManager.permissions.editCameras;

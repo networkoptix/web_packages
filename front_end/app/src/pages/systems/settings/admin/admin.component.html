@@ -5,11 +5,11 @@
 
         <nx-block type="mb-3" header-style="extended">
             <header>
-                <div class="d-flex">
-                    <nx-editable-settings-heading
+                <div class="header-editable">
+                    <nx-editable-heading
                             (editModeState)="editMode = $event"
                             [nameWatcher]="systemNameWatcher"
-                            [editEnabled]="system.isOnline && system.userManager.permissions.isAdmin && !settings.renameDisabled"></nx-editable-settings-heading>
+                            [editEnabled]="enableEdit"></nx-editable-heading>
                     <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
                 </div>
 
