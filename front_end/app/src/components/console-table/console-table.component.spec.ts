@@ -22,9 +22,9 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 import {
     forUnitTest,
-    NxConsoleTableComponent,
-    ListSerializer
+    NxConsoleTableComponent
 } from './console-table.component';
+import { ListSerializer } from './console-table.component.types';
 
 const {
     NxConfigService,

@@ -1,16 +1,17 @@
-import { waitForAsync, TestBed }     from '@angular/core/testing';
-import { TranslateService }          from '@ngx-translate/core';
-import { ReplaySubject, Subject }    from 'rxjs';
-import { NxMenusService }            from '@services/menus.service';
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { ReplaySubject } from 'rxjs';
+import { NxMenusService } from '@services/menus.service';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService }          from './session.service';
-import { WINDOW }                    from './window-provider';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { getMockTranslations }       from '@src/_mocks/helpers.test';
-import { headerNodes }               from '@src/_mocks/nodesMock';
-import { setupTestSystem }           from '@src/_mocks/system.test';
+import { NxSessionService } from './session.service';
+import { WINDOW } from './window-provider';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { getMockTranslations } from '@src/_mocks/helpers.test';
+import { headerNodes } from '@src/_mocks/nodesMock';
+import { setupTestSystem } from '@src/_mocks/system.test';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('Menus service', () => {
     let menu: NxMenusService;
@@ -31,6 +32,7 @@ describe('Menus service', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
             providers: [
                 NxMenusService,
                 { provide: NxLanguageProviderService, useValue: langMock },

@@ -1,7 +1,11 @@
-import { IConfig }     from '@services/nx-config';
+import { IConfig } from '@services/nx-config';
 import { environment } from '@environments/environment';
-import { ConfigType, ConsoleSection, ModalType } from '@components/console-table/console-table.component.types';
-import { FeatureFlagStrings }                    from '@services/nx-config/base-config';
+import {
+    ConfigType,
+    ConsoleSection,
+    ModalType
+} from '@components/console-table/console-table.component.types';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
 
 export function setupConfig(): IConfig {
     return {
@@ -17,6 +21,11 @@ export function setupConfig(): IConfig {
             }
         },
         apiBase: '/api',
+        apiDocURL: {
+            main: '/swagger-ui/openapi_v1.json',
+            legacy: '/swagger-ui/openapi_legacy.json',
+            deprecated: '/swagger-ui/openapi_deprecated.json'
+        },
         browserNotSupported: false,
         cameraCredentialUpdateTimeout: 1500,
         cameraSettings: {
@@ -474,7 +483,8 @@ export function setupConfig(): IConfig {
                 offline: 'offline',
                 restarting: 'restarting',
                 resetting: 'resetting',
-                checking: 'checking'
+                checking: 'checking',
+                certError: 'mismatchedCertificate'
             }
         },
         supportedLanguages: [],
