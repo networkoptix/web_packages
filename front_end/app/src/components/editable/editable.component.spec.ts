@@ -1,43 +1,28 @@
-import { Component, DebugElement } from '@angular/core';
 import {
-    async,
     ComponentFixture, fakeAsync, TestBed,
-    tick,
-    waitForAsync
+    tick, waitForAsync
 }                              from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { NxTextEditableComponent } from './editable.component';
 
-@Component({
-    template: `<div nx-text-editable
-                   required
-                   [disabled]="!enableEdit"
-                   (onEditModeChanged)="editMode = $event"
-                   [ngClass]="{'has-edit-icon': !editMode}"
-                   [(ngModel)]="modelVar">{{modelVar}}</div>`
-})
-class TestNxTextEditableComponent {
-    enableEdit: boolean = true;
-    editMode: boolean = false;
-    modelVar: string = 'blah';
-}
-
 describe('NxTextEditableComponent', () => {
-    let component: TestNxTextEditableComponent;
-    let fixture: ComponentFixture<TestNxTextEditableComponent>;
+    let component: NxTextEditableComponent;
+    let fixture: ComponentFixture<NxTextEditableComponent>;
     let el: HTMLElement;
 
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                declarations: [TestNxTextEditableComponent, NxTextEditableComponent],
+                imports: [FormsModule],
+                declarations: [NxTextEditableComponent],
                 providers: []
             })
             .compileComponents();
 
-        fixture = TestBed.createComponent(TestNxTextEditableComponent);
+        fixture = TestBed.createComponent(NxTextEditableComponent);
         component = fixture.componentInstance;
         el = fixture.debugElement.nativeElement;
-        // component.enableEdit = false;
+        component.writeValue('Test');
 
         fixture.detectChanges();
     }));
@@ -46,51 +31,84 @@ describe('NxTextEditableComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should initialize component', fakeAsync(() => {
-        component.modelVar = 'test';
-        fixture.detectChanges();
-
-        // expect(el.classList.contains('editable-directive-initial')).toBeTrue();
-        expect(el.getAttribute('contenteditable')).toBeTruthy();
-    }));
+    it('should initialize component', () => {
+        expect(component.initialClass).toBe('editable-initial');
+        expect(component.editClass).toBe('editable-edit');
+        expect(component.errorClass).toBe('editable-error');
+        expect(el.innerHTML).toBe('Test');
+        expect(el.classList.contains('editable-initial')).toBeTrue();
+    });
 
     it('should set valid value', fakeAsync(() => {
+        spyOn(component.onEditModeChanged, 'emit');
+
+        el.dispatchEvent(new Event('focus'));
         tick();
-        expect(el.innerHTML).toBe('test');
+        expect(el.getAttribute('contenteditable')).toBe('true');
+        expect(el.classList.contains('editable-edit')).toBeTrue();
+        expect(component.onEditModeChanged.emit).toHaveBeenCalledWith(true);
+
+        el.textContent = 'Sofia';
+        el.dispatchEvent(new Event('input'));
+        tick();
+        expect(el.innerHTML).toBe('Sofia');
+
+        el.dispatchEvent(new Event('blur'));
+        tick();
+        expect(el.classList.contains('editable-initial')).toBeTrue();
+        expect(component.onEditModeChanged.emit).toHaveBeenCalledWith(false);
     }));
 
-    // describe('should set state on @Input(change) change', () => {
-    //     it('to false', () => {
-    //         component.ngOnChanges({
-    //             checked: new SimpleChange(undefined, false, true)
-    //         });
-    //         fixture.detectChanges();
-    //         component.value = false;
-    //         expect(component.state).toBe(component['cbxStates'].false);
-    //     });
-    //
-    //     it('to true', () => {
-    //         component.ngOnChanges({
-    //             checked: new SimpleChange(undefined, true, false)
-    //         });
-    //         fixture.detectChanges();
-    //         expect(component.value).toBeTrue();
-    //         expect(component.state).toBe(component['cbxStates'].true);
-    //     });
-    //
-    //     it('on toggle', () => {
-    //         let emitValue: boolean;
-    //
-    //         component.value = true;
-    //         component.onClick.subscribe(value => {
-    //             emitValue = value;
-    //         });
-    //
-    //         component.changeState(null);
-    //         fixture.detectChanges();
-    //         expect(emitValue).toBeFalse();
-    //         expect(component.value).toBeFalse();
-    //         expect(component.state).toBe(component['cbxStates'].false);
-    //     });
-    // });
+    it('should handle "ENTER" key', fakeAsync(() => {
+        el.dispatchEvent(new Event('focus'));
+        tick();
+
+        const spy = spyOn(component, 'callOnEnter');
+        const event = new KeyboardEvent('keyup', {
+            key: 'Enter'
+        });
+        el.dispatchEvent(event);
+        tick();
+        expect(el.innerHTML).toBe('Test');
+        expect(spy.calls.count()).toBe(1);
+    }));
+
+    it('should not react on invalid value (not required)', fakeAsync(() => {
+        el.dispatchEvent(new Event('focus'));
+        tick();
+
+        el.textContent = '';
+        el.dispatchEvent(new Event('input'));
+        tick();
+        expect(el.classList.contains('editable-error')).toBeFalse();
+    }));
+
+    it('should react on invalid value (required)', fakeAsync(() => {
+        component.required = true;
+        el.dispatchEvent(new Event('focus'));
+        tick();
+
+        el.textContent = '';
+        el.dispatchEvent(new Event('input'));
+        tick();
+        expect(el.classList.contains('editable-error')).toBeTrue();
+    }));
+
+    it('should retain original value if invalid (required)', fakeAsync(() => {
+        component.required = true;
+        el.dispatchEvent(new Event('focus'));
+        tick();
+        el.textContent = '';
+        el.dispatchEvent(new Event('input'));
+        tick();
+        el.dispatchEvent(new Event('blur'));
+        tick();
+        expect(el.innerHTML).toBe('Test');
+    }));
+
+    it('should set disabled state', fakeAsync(() => {
+        component.setDisabledState(true);
+        expect(el.getAttribute('contenteditable')).toBe('false');
+        expect(el.getAttribute('disabled')).toBe('true');
+    }));
 });
