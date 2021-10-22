@@ -825,6 +825,16 @@
             "fieldset": "Features"
           },
           {
+            "label": "Enable Dashboard",
+            "name": "%DASHBOARD_ENABLED%",
+            "description": "Enables drag and drop dashboard for user.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true,
+            "fieldset": "Features"
+          },
+          {
             "old_name": "supportEmail",
             "name": "%SUPPORT_EMAIL%",
             "label": "Support E-mail",

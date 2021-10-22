@@ -153,7 +153,8 @@ export interface Capabilities {
 const FeatureFlagKeys = [
     'customClients',
     'landingPage',
-    'bookmarks'
+    'bookmarks',
+    'dashboard'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
