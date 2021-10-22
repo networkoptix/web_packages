@@ -1029,8 +1029,9 @@ def update_zd_article(node: MenuNode, site: ZendeskSite, parent_section: Zendesk
     enabled = node.asset.customizations.filter(id=customization.id).exists()
     publish = enabled and asset_accepted
     zd_article.menu_node = node
-    zd_article.position = position
-    zd_article.section = parent_section
+    if not zd_article.ignore_structure:
+        zd_article.position = position
+        zd_article.section = parent_section
     zd_article.site = site
     zd_article.draft = not publish
     zd_article.asset = node.asset

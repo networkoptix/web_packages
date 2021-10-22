@@ -2487,6 +2487,8 @@ class ZendeskArticle(models.Model):
     sync = models.BooleanField(default=True)
 
     needs_sync = models.BooleanField(default=False)
+    ignore_structure = models.BooleanField(default=False)
+
 
     objects = ZendeskArticleManager()
 
@@ -2543,7 +2545,8 @@ SYNC_STATES = Choices((0, "in_progress", "In Progress"),
 @receiver(pre_delete, sender=ZendeskArticle)
 def archive_on_zendesk(sender, instance, **kwargs):
     from cms.controllers.zendesk import Exporter
-    Exporter(customization_name=instance.site.customization.name).sync_article(instance, delete=True)
+    if not instance.ignore_structure:
+        Exporter(customization_name=instance.site.customization.name).sync_article(instance, delete=True)
 
 
 class ZendeskSyncLog(models.Model):
