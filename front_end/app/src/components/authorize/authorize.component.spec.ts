@@ -78,7 +78,10 @@ describe('NxAuthorizeComponent', () => {
                 connectErrorAdditional: () => 'Please try again later.',
                 setupErrorAdditional: () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
                 passResetHeader: () => 'Reset Password',
-                newPassHeader: () => 'Set New Password'
+                newPassHeader: () => 'Set New Password',
+                authCode: {
+                    login: () => 'log in'
+                }
             }
         }
     };
@@ -246,7 +249,7 @@ describe('NxAuthorizeComponent', () => {
         fixture.detectChanges();
         expect(component.footerItems.length).toBe(3);
         const links = el.nativeElement.querySelectorAll('a');
-        expect(links.length).toBe(3);
+        expect(links.length).toBe(0);
     });
 
     it('should set up default states', () => {
@@ -572,7 +575,7 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.auth;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Authentication code');
+        expect(labels[0].innerHTML).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
@@ -592,7 +595,7 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.auth;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Authentication code');
+        expect(labels[0].innerHTML).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
