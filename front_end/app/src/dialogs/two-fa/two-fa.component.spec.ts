@@ -4,7 +4,8 @@ import {
     TestBed,
     waitForAsync,
     inject,
-    fakeAsync
+    fakeAsync,
+    tick
 } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { nxConfig } from '@services/nx-config/config';
@@ -23,6 +24,7 @@ import { ClipboardService } from 'ngx-clipboard';
 import { NxSystemsService } from '@services/systems.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { QrCodeModule } from 'ng-qrcode';
 
 // Mock class for NgbModalRef
 export class MockNgbModalRef {
@@ -118,7 +120,8 @@ describe('TwoFAModalContent', () => {
                 imports: [
                     FormsModule,
                     HttpClientTestingModule,
-                    AngularSvgIconModule.forRoot()
+                    AngularSvgIconModule.forRoot(),
+                    QrCodeModule
                     // NgbModule.forRoot()
                 ]
             }).compileComponents()
@@ -200,11 +203,13 @@ describe('TwoFAModalContent', () => {
     describe('when in QR mode', () => {
         const keyUrl = 'otpauth://totp/ttsolov@networkoptix.com?secret=JBSWY3DPEHPK3PXP';
 
-        beforeEach(waitForAsync(() => {
-            component.setTemplate(T_FA_STEPS.WizardQR);
-            // compare templates before HTML is compiled
-            expect(component.templateType).toBe(component.wizardQRTemplate);
+        beforeEach(fakeAsync(() => {
             fixture.detectChanges();
+            component.ngAfterViewInit();
+            component.setTemplate(T_FA_STEPS.WizardQR);
+            tick();
+            fixture.detectChanges();
+            expect(component.templateType).toEqual(component.wizardQRTemplate);
         }));
 
         it('should have elements (QR mode)', () => {
@@ -239,11 +244,13 @@ describe('TwoFAModalContent', () => {
     });
 
     describe('when in CODE mode', () => {
-        beforeEach(waitForAsync(() => {
-            component.setTemplate(T_FA_STEPS.WizardCode);
-            // compare templates before HTML is compiled
-            expect(component.templateType).toBe(component.wizardCodeTemplate);
+        beforeEach(fakeAsync(() => {
             fixture.detectChanges();
+            component.ngAfterViewInit();
+            component.setTemplate(T_FA_STEPS.WizardCode);
+            tick();
+            fixture.detectChanges();
+            expect(component.templateType).toEqual(component.wizardCodeTemplate);
         }));
 
         it('should have elements', () => {
@@ -268,11 +275,13 @@ describe('TwoFAModalContent', () => {
     });
 
     describe('when in FINISH mode', () => {
-        beforeEach(waitForAsync(() => {
-            component.setTemplate(T_FA_STEPS.WizardFinish);
-            // compare templates before HTML is compiled
-            expect(component.templateType).toBe(component.wizardFinishTemplate);
+        beforeEach(fakeAsync(() => {
             fixture.detectChanges();
+            component.ngAfterViewInit();
+            component.setTemplate(T_FA_STEPS.WizardFinish);
+            tick();
+            fixture.detectChanges();
+            expect(component.templateType).toEqual(component.wizardFinishTemplate);
         }));
 
         it('should have elements', () => {
