@@ -20,3 +20,10 @@ def chunked_queryset(queryset, chunk_size):
         yield queryset.filter(pk__gt=start_pk).filter(pk__lte=end_pk)
 
         start_pk = end_pk
+
+
+# TODO: Remove when we upgrade to Python 3.9 since it has it as built-in
+def remove_suffix(string, suffix):
+    if string.endswith(suffix):
+        return string[:-len(suffix)]
+    return string

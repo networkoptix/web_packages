@@ -246,6 +246,12 @@
     reviewButton.addEventListener('click', checkForBranding)
 </script>
 <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRFToken': document.cookie.split('csrftoken=')[1].split(' ')[0]
+        }
+    });
+
     let imagesBeingUploaded = 0
     var bytesToMb = "{{ BYTES_TO_MB }}";
     function openPreview() {
@@ -488,7 +494,7 @@
                 const file = blobInfo.blob()
                 uploadImage(imageUploadUrl, file, {}, success)
             },
-            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview image, table',
+            toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code | sanitize | removeformat paste pastetext preview image table ',
             menubar: false,
             resize: 'both',
             theme: 'silver',
@@ -545,6 +551,24 @@
 
                 // Set initial width of editor to width of original textarea
                 editor.settings.width = $(editor.getElement()).width();
+
+                editor.ui.registry.addButton('sanitize', {
+                    text: 'Sanitize HTML',
+                    onAction: function (_) {
+                        const content = editor.getContent();
+                        editor.mode.set('readonly');
+                        const timeout = setTimeout(() => {
+                            editor.mode.set('design');
+                            console.log('here');
+                        }, 5000);
+
+                        $.post('/api/sanitize_html', {'html': content}, function(data) {
+                            editor.setContent(data.sanitizedHTML);
+                            editor.mode.set('design');
+                            clearTimeout(timeout);
+                        });
+                    }
+                });
             }
         });
         {% endif %}
@@ -592,7 +616,7 @@
     if (customPreview) {
         const customPreviewInput = document.getElementById('customPreviewInput')
         customPreviewInput.value = previewFrame.src = customPreview
-        
+
     }
 </script>
 <script type="text/javascript">

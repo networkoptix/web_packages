@@ -76,6 +76,12 @@ def superuser(django_user_model, db):
     return django_user_model.objects.get_or_create(email='auto_superuser@networkoptix.com', is_superuser=True, is_staff=True)[0]
 
 
+@pytest.fixture
+def temp_superuser(django_user_model):
+    return django_user_model(email='temp_superuser@networkoptix.com', is_superuser=True, is_staff=True)
+
+
+
 @pytest.fixture()
 def client():
     return NxTestClient()

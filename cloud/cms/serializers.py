@@ -252,3 +252,7 @@ class CheckPackageCustomClientSerializer(serializers.Serializer):
 
 class PackageDownloadIdSerializer(serializers.Serializer):
     downloadId = serializers.UUIDField()
+
+
+class SanitizeHTMLSerializer(serializers.Serializer):
+    html = serializers.CharField()
