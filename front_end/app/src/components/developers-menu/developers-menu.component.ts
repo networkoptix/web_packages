@@ -1,31 +1,43 @@
-import { Component, Output, EventEmitter, Inject, OnInit }  from '@angular/core';
+import { Component, Output, EventEmitter, Inject, OnInit, Input }  from '@angular/core';
 import { Location }                                         from '@angular/common';
 import { takeUntil }                                        from 'rxjs/operators';
-import { timer, Subject }                                   from 'rxjs';
+import { timer, Subject, Observable, BehaviorSubject }                                   from 'rxjs';
 import { UntilDestroy, untilDestroyed }                     from '@ngneat/until-destroy';
 
 import { WINDOW }                                   from '@services/window-provider';
 import { MenuNode }                                 from '@services/menus.service.types';
 import { IConfig, NxConfigService }                 from '@services/nx-config';
-import { NxKnowledgebaseService }                   from '@pages/developers/knowledge-base/knowledge-base.service';
+import { MenuStructure } from '@services/nx-config/base-config';
+import { NxUtilsService }  from '@services/utils.service';
+import { NxUriService } from '@services/uri.service';
 
 export interface RelatedLinks {
     type: string,
     nodes: MenuNodeWithParent[]
 }
 
-@UntilDestroy({ checkProperties: true })
+export interface ClickEvent {
+    node: MenuNodeWithParent,
+    clearSearch: boolean
+}
+
+@UntilDestroy()
 @Component({
-    selector: 'nx-left-menu',
-    templateUrl: 'left-menu.component.html',
-    styleUrls: ['left-menu.component.scss']
+    selector: 'nx-developers-menu',
+    templateUrl: 'developers-menu.component.html',
+    styleUrls: ['developers-menu.component.scss']
 })
-export class NxLeftMenuComponent implements OnInit {
-    @Output() onClick = new EventEmitter();
+export class NxDevelopersMenuComponent implements OnInit {
+    @Output() onClick = new EventEmitter<ClickEvent>();
     @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
+    @Input()  menuSubject: Observable<MenuStructure>
+    @Input()  activeAssetIdSubject: Observable<string>
+    @Input()  searchEnabled = true;
+    @Input()  service;
 
     CONFIG: IConfig;
+    displayedMenuNodes: MenuNodeWithParent[] = [];
     menuNodes: MenuNodeWithParent[] = [];
     activeRouteNodes: string[] = [];
     openNodes: string[] = [];
@@ -33,15 +45,16 @@ export class NxLeftMenuComponent implements OnInit {
     prefetchedDocuments = [];
     firstUrl = '';
     highlightedTopNode: string;
-    ignoreQuery = true;
+    searchQuery$ = new BehaviorSubject('');
+    queryChanged = false;
 
     constructor(
-        configService: NxConfigService,
-        public location: Location,
-        public kbService: NxKnowledgebaseService,
+        configService   : NxConfigService,
+        public location : Location,
+        private uriService: NxUriService,
         @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = configService.config;
+        this.CONFIG = configService.getConfig();
     }
 
     updateActive = (activeAssetId, activeAssetState) => {
@@ -61,7 +74,7 @@ export class NxLeftMenuComponent implements OnInit {
                     this.location.replaceState(newUrl);
                 }
 
-                this.kbService.activeNode = node;
+                this.service.activeNode = node;
                 // If activeNode is set we don't want firstUrl to be highlighted anymore
                 this.firstUrl = '';
             }
@@ -75,7 +88,7 @@ export class NxLeftMenuComponent implements OnInit {
         const relatedNodes = [];
         const findActiveNode = (nodes: MenuNodeWithParent[], targetAssetId, targetState, action: string = 'update') => {
             const checkNode = (node: MenuNodeWithParent) => {
-                if (node.asset_id === targetAssetId && (!node.state && !this.kbService.activeAssetState || node.state === this.kbService.activeAssetState)) {
+                if (node.asset_id === targetAssetId && (!node.state && !activeAssetState || node.state === activeAssetState)) {
                     if (action === 'update') {
                         updateActiveRoutes(node, true);
                         if (node.next_item) {
@@ -101,9 +114,10 @@ export class NxLeftMenuComponent implements OnInit {
     }
 
     toggleOpen(node: MenuNode) {
-        const getRootNode = (name, nodesToCheck = this.menuNodes, rootNode: MenuNodeWithParent[] = []) => {
+        this.handleClick(node, false);
+        const getRootNode = (name, nodesToCheck = this.displayedMenuNodes, rootNode: MenuNodeWithParent[] = []) => {
             const checkNode = (currentNode: MenuNodeWithParent) => {
-                const currentNodeName = currentNode.display_name || currentNode.name;
+                const currentNodeName = currentNode.name || currentNode.display_name;
                 if (currentNodeName === name) {
                     rootNode.push(currentNode);
                 } else {
@@ -119,7 +133,7 @@ export class NxLeftMenuComponent implements OnInit {
         };
         const getChildNodes = (nodeNames: string[], current: MenuNodeWithParent) => {
             const pushCurrent = (current: MenuNodeWithParent) => {
-                const currentNodeName = current.display_name || current.name;
+                const currentNodeName = current.name || current.display_name;
                 nodeNames.push(currentNodeName);
                 current.nodes.forEach(pushCurrent);
             };
@@ -128,7 +142,7 @@ export class NxLeftMenuComponent implements OnInit {
         };
         const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
         const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
-        const name = node.display_name || node.name;
+        const name = node.name || node.display_name;
         const nodeIndex = this.openNodes.indexOf(name);
         if (nodeIndex === -1) {
             this.openNodes.push(name);
@@ -147,27 +161,97 @@ export class NxLeftMenuComponent implements OnInit {
         }
     }
 
-    handleClick(event) {
-        this.onClick.emit(event);
+    handleClick(node: MenuNodeWithParent, clearSearch: boolean) {
+        this.onClick.emit({ node, clearSearch });
+    }
+
+    openNodeAndParents = (node: MenuNodeWithParent) => {
+        this.openNodes.push(node.name || node.display_name);
+        let loopProtector = 0;
+        while (node.parentNode && loopProtector < 10) {
+            node = node.parentNode;
+            this.openNodes.push(node.name || node.display_name);
+            loopProtector++; // Just in case the nodes have an invalid structure for whatever reason
+        }
+    }
+
+    updateSearchQuery({ query }) {
+        if (query === this.searchQuery$.value) return;
+        this.queryChanged = true;
+        this.searchQuery$.next(query);
+    }
+
+    filterMenuItems(query: string) {
+        const newDisplayedNodes: MenuNodeWithParent[] = [];
+        const newOpenNodes: string[] = [];
+        const highlightText = (node: MenuNodeWithParent, startInd: number) => {
+            return NxUtilsService.highlight(node.display_name || node.name, startInd, startInd + query.length);
+        };
+        const search = (menuNode: MenuNodeWithParent) => {
+            let inQuery = false;
+            const name = menuNode.display_name.toLowerCase();
+            const startInd = name.indexOf(query.toLowerCase());
+            const displayedNode = NxUtilsService.deepCopyWithCircularReference(menuNode);
+            displayedNode.nodes = [];
+            let newName = displayedNode.display_name || displayedNode.name;
+            if (startInd !== -1) {
+                newName = highlightText(menuNode, startInd);
+                inQuery = true;
+            }
+            for (const node of menuNode.nodes) {
+                const childNode = search(node);
+                if (childNode) {
+                    inQuery = true;
+                    displayedNode.nodes.push(childNode);
+                }
+            }
+            if (inQuery) {
+                displayedNode.display_name = newName;
+                newOpenNodes.push(displayedNode.name);
+                return displayedNode;
+            }
+            return false;
+        };
+        for (const node of this.menuNodes) {
+            const queriedNode = search(node);
+            if (queriedNode) {
+                newDisplayedNodes.push(queriedNode);
+            }
+        }
+        this.openNodes = newOpenNodes;
+        this.displayedMenuNodes = newDisplayedNodes;
     }
 
     ngOnInit() {
-        this.kbService.menuSubject.pipe(
+        this.service.menuSubject?.pipe(
             untilDestroyed(this)
-        ).subscribe((menu) => {
-            if (menu?.nodes) {
-                this.menuNodes = menu.nodes;
-                // eslint-disable-next-line camelcase
-                if (this.kbService.account?.is_superuser) {
-                    this.ignoreQuery = false;
+        ).subscribe(menu => {
+            if (menu?.nodes?.length) {
+                this.menuNodes = this.displayedMenuNodes = menu.nodes;
+                if (this.searchEnabled && this.uriService.queryParams.search && !this.queryChanged) {
+                    this.filterMenuItems(this.uriService.queryParams.search);
                 }
             } else {
-                this.menuNodes = [];
+                this.menuNodes = this.displayedMenuNodes =  [];
             }
         });
 
-        this.kbService.activeAssetIdSubject.subscribe(id => {
-            this.updateActive(id, this.kbService.activeAssetState);
+        this.service.activeAssetIdSubject?.pipe(
+            untilDestroyed(this)
+            ).subscribe(id => {
+                this.updateActive(id, this.service.activeAssetState);
+            });
+
+        this.searchQuery$.pipe(untilDestroyed(this)).subscribe((query) => {
+            if (query !== '') {
+                this.filterMenuItems(query);
+            } else {
+                this.displayedMenuNodes = this.menuNodes;
+                this.openNodes = [];
+                if (this.service.activeNode) {
+                    this.openNodeAndParents(this.service.activeNode);
+                }
+            }
         });
     }
 };

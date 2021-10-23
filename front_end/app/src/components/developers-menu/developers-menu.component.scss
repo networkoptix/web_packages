@@ -1,6 +1,23 @@
 @use '../../../styles/theme_variables' as *;
 @use '../../styles/typography';
 
+.block {
+    margin-top: -32px;
+    top: -32px;
+    position: sticky;
+    height: 32px;
+    background-color: $additional_light2;
+    z-index: 4;
+}
+
+nx-search {
+    margin: 0px 16px;
+    position: sticky;
+    top: 0px;
+    z-index: 3;
+    background-color:  $light2 !important;
+}
+
 .activated-highlight {
     background: $light16 !important;
     color: $light1 !important;
@@ -45,6 +62,14 @@
             }
     }
 }
+
+.no-nodes-placeholder {
+    font-size  : 16px;
+    text-align : center;
+    margin-top : 16px;
+    color      : $light16;
+}
+
 
 .child-level {
     @extend .base-level;

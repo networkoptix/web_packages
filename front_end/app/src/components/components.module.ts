@@ -47,7 +47,7 @@ import { NxSectionPlaceholderComponent }      from './placeholders/section/secti
 import { NxPlayerPlaceholderComponent }       from './placeholders/player/player-placeholder.component';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
-import { NxLeftMenuComponent }                from './left-menu/left-menu.component';
+import { NxDevelopersMenuComponent }          from './developers-menu/developers-menu.component';
 import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
 import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
 import { NxHeaderMainButtonComponent }      from './header/main-button/main-button.component';
@@ -134,7 +134,7 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxTabsComponent,
         NxNavDropdownComponent,
         NxOverlayModalComponent,
-        NxLeftMenuComponent,
+        NxDevelopersMenuComponent,
         NxImageComponent,
         NxEditableHeading,
         NxPaginatorComponent,
@@ -178,7 +178,7 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         ToastsContainer,
         NxInfoBlockComponent,
         NxOverlayModalComponent,
-        NxLeftMenuComponent,
+        NxDevelopersMenuComponent,
         NxImageComponent,
         NxEditableHeading,
         NxPaginatorComponent,
@@ -236,7 +236,7 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxAdditionalSystemsTileComponent,
         NxNavDropdownComponent,
         NxOverlayModalComponent,
-        NxLeftMenuComponent,
+        NxDevelopersMenuComponent,
         NxImageComponent,
         NxEditableHeading,
         NxPaginatorComponent,

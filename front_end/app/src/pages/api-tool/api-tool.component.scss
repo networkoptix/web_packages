@@ -4,7 +4,6 @@
 
 @import '~bootstrap/scss/mixins/breakpoints';
 
-
 .fixed-sidebar {
 	margin        : 0 !important;
 	padding-left  : 1rem !important;
@@ -28,7 +27,26 @@
 		max-width : calc(#{$fluid-container-max-width} / 4);
 	}
 
-	nx-menu {
-		max-height : 100%;
-	}
+	nx-developers-menu {
+        background: $additional_light2;
+        // margin: 1rem -1rem 1rem -1rem;
+        padding: 1rem 0;
+        grid-column: span 12;
+        grid-row: 1 / -1;
+
+        @include media-breakpoint-up(md) {
+            position: sticky;
+            overflow-y: auto;
+            max-height: calc(100vh - 3rem);
+            &.with-ribbon {
+                max-height: calc(100vh - 3rem - 33px);
+            }
+            top: 0;
+            margin: -1rem 0 -1rem -1rem;
+            grid-column: span 4;
+        }
+        @include media-breakpoint-up(xl) {
+            grid-column: span 3;
+        }
+    }
 }

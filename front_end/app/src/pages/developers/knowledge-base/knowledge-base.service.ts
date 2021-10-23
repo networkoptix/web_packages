@@ -5,9 +5,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAccountService, Account } from '@services/account.service';
-import { filter, skip, take, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { MenuStructure } from '@services/nx-config/base-config';
-import { MenuNodeWithParent } from '@components/left-menu/left-menu.component';
 import { Router } from '@angular/router';
 
 @Injectable({

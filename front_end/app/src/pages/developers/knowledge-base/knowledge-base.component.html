@@ -80,11 +80,13 @@
 <!-- End of Search Results Templates -->
 
 <div *ngIf="kbService.basePath" [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'">
-    <nx-left-menu *ngIf="kbService.menuName"
+    <nx-developers-menu *ngIf="kbService.menuName"
         [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
-        (onClick)="clearSearch()"
+        [service]="kbService"
+        [searchEnabled]="false"
+        (onClick)="handleClick($event)"
         (relatedLinks)="relatedLinks$.next($event)"
-        (handlePrefetch)="prefetchDocument($event)"></nx-left-menu>
+        (handlePrefetch)="prefetchDocument($event)"></nx-developers-menu>
     <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
             <nx-search *ngIf="!kbService.contentAssetId"

@@ -1,4 +1,5 @@
 import { Component }                 from '@angular/core';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxSystemService }           from '@services/system.service';
 import { NxAPIToolService }          from '../api-tool.service';
@@ -15,10 +16,10 @@ export class NxSystemDropdownComponent {
         this.CONFIG = configService.getConfig();
     }
 
-    onSystemChange(system) {
-        this.APIToolService.leftMenuContent = undefined;
-        this.APIToolService.system = this.systemService.createSystem('', system.value);
-        this.APIToolService.selectedSystem = { value: system.value, name: system.name };
+    onSystemChange(system: DropdownItem) {
+        this.APIToolService.menuNodes = undefined;
+        this.APIToolService.system = this.systemService.createSystem('', system.value as string);
+        this.APIToolService.selectedSystem = system;
         this.APIToolService.getServersInfo();
     }
 

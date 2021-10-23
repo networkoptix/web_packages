@@ -1,10 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { UntilDestroy, untilDestroyed }         from '@ngneat/until-destroy';
-import { filter }                               from 'rxjs/operators';
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { UntilDestroy }         from '@ngneat/until-destroy';
 import SwaggerUI                                from 'swagger-ui';
 import { NxMenuService }                        from '@src/menu';
 import { IConfig, NxConfigService }             from '@services/nx-config';
 import { NxAPIToolService }                     from '../api-tool.service';
+import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
 
 @UntilDestroy()
 @Component({
@@ -13,7 +13,8 @@ import { NxAPIToolService }                     from '../api-tool.service';
     templateUrl: './swagger.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class NxSwaggerComponent {
+export class NxSwaggerComponent implements OnChanges {
+    @Input() activeNode: MenuNodeWithParent;
     CONFIG: IConfig;
 
     swagger: SwaggerUI;
@@ -30,59 +31,21 @@ export class NxSwaggerComponent {
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
     constructor(public APIToolService: NxAPIToolService, private configService: NxConfigService, private menuService: NxMenuService) {
-        this.CONFIG = configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
         this.subscribeToMenuServiceSections();
     }
 
-    private subscribeToMenuServiceSections() {
-        this.menuService
-            .selectedSectionSubject
-            .pipe(filter(value => value !== ''), untilDestroyed(this)).subscribe(selection => {
-                if (this.APIToolService.leftMenuContent) {
-                    this.APIToolService.leftMenuContent.selectedSection = selection;
-                    if (this.placeHolderContent[selection]) {
-                        this.APIToolService.changeAPIDescription(selection);
-                    }
-                    this.APIToolService.leftMenuContent = { ...this.APIToolService.leftMenuContent }; // trigger onChange
-                    if (typeof selection === 'string') {
-                        this.setMenuTitle(selection);
-                    }
-                    this.initSwagger(this.APIToolService.leftMenuContent.selectedSection);
-                }
-            });
-
-        this.menuService
-            .selectedSubSectionSubject
-            .pipe(untilDestroyed(this)).subscribe((selection: any) => {
-                if (this.APIToolService.leftMenuContent) {
-                    this.APIToolService.leftMenuContent.selectedSubSection = selection;
-                    if (typeof selection === 'string') {
-                        this.setMenuTitle(selection);
-                    }
-                    this.APIToolService.leftMenuContent = { ...this.APIToolService.leftMenuContent };
-                    this.initSwagger(this.APIToolService.leftMenuContent.selectedSubSection);
-                }
-            });
-
-        this.menuService
-            .selectedDetailsSection
-            .pipe(untilDestroyed(this)).subscribe(selection => {
-                if (this.APIToolService.leftMenuContent) {
-                    if (selection instanceof Array) {
-                        const [detail, subNode] = selection;
-                        this.APIToolService.leftMenuContent.selectedDetailsSection = detail;
-                        this.APIToolService.leftMenuContent.selectedSubSection = subNode;
-                        this.setMenuTitle(subNode);
-                    } else {
-                        this.APIToolService.leftMenuContent.selectedDetailsSection = selection;
-                    }
-                    this.APIToolService.leftMenuContent = { ...this.APIToolService.leftMenuContent }; // trigger onChange
-                    this.initSwagger(this.APIToolService.leftMenuContent.selectedDetailsSection, 'full');
-                }
-            });
+    /** Check if node is a leaf node.
+     *  If so, then the node is an API Route path Node (ex: /) and some actions must be handled differently
+     */
+    isAPIPathNode = (node: MenuNodeWithParent) => {
+        return !node.nodes.length;
     }
 
-    private setMenuTitle(selection: string) {
+    private subscribeToMenuServiceSections() {
+    }
+
+    private setSwaggerDescription(selection: string) {
         this.swaggerMenuDescription = {
             // slice(0, -2) to remove the hidden tags that are added
             title: selection.slice(0, -2),
@@ -90,11 +53,11 @@ export class NxSwaggerComponent {
         };
     }
 
-    private initSwagger(filter, expand = 'list') {
+    private initSwagger(filter: string | string[], expand = 'list') {
         if (filter === '' || filter?.length === 0) {
             return;
         }
-        if (this.placeHolderContent[this.APIToolService.leftMenuContent.selectedSection] && !this.APIToolService.leftMenuContent.selectedSubSection.length) {
+        if (this.placeHolderContent[this.APIToolService.activeNode?.name]) {
             this.swagger = undefined;
             return;
         }
@@ -176,5 +139,26 @@ export class NxSwaggerComponent {
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + systemMediaServerConnections[serverID][authParam];
         request.url = Url.toString();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.activeNode.currentValue) {
+            const node = changes.activeNode.currentValue;
+            let expand: 'full' | 'list';
+            let nodeName: string;
+            if (this.isAPIPathNode(node)) {
+                nodeName = node.parentNode?.name || node.name;
+                expand = 'full';
+            } else {
+                nodeName = node.name;
+                expand = 'list';
+            }
+            this.initSwagger(node.name, expand);
+            this.setSwaggerDescription(nodeName);
+            const pageDescription = this.APIToolService.pageDescriptions[nodeName];
+            if (pageDescription) {
+                this.APIToolService.currentDescription = pageDescription;
+            }
+        }
     }
 }

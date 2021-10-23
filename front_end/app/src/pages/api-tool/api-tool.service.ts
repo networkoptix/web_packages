@@ -8,24 +8,27 @@ import { IConfig, NxConfigService }                 from '@services/nx-config';
 import { NxUtilsService }                           from '@services/utils.service';
 import { NxAccountService }                         from '@services/account.service';
 import { NxHeaderService }                          from '@services/nx-header.service';
-import { APIDocVersion }                            from '@services/nx-config/base-config';
+import { APIDocVersion, MenuStructure }                            from '@services/nx-config/base-config';
 import { NxMenuService }                            from '@src/menu';
+import { ClickEvent, MenuNodeWithParent }           from '@components/developers-menu/developers-menu.component';
+import { DropdownItem }                             from '@components/dropdowns/generic/dropdown.component';
 import { BehaviorSubject, Subscription }            from 'rxjs';
 import {
     delay, distinctUntilChanged,
     finalize, map, retryWhen, take
 }                                                   from 'rxjs/operators';
 import {
-    addSubMenuApi, createMenuContent,
+    addSubMenuAPI,
     modifyPathTags, modifyTagNames,
+    createMenuContent,
     prepareSwaggerAPIDoc,
     removeProprietaryEndpoints
 }                                                   from './api-file-utils';
 import type {
     APIDoc,
-    MenuContent,
-    ServerDropdownItem,
-    SystemDropdownItem
+    PageDescription,
+    PageDescriptions,
+    ServerDropdownItem
 }                                                   from './api-tool-types';
 
 /** Provides the currently selected system and server. Also provides the content for the left menu.   */
@@ -35,29 +38,35 @@ export class NxAPIToolService {
     CONFIG: IConfig;
 
     systems: NxSystemWithUserInfo[];
-    systemsDropdown: SystemDropdownItem[] = [];
-    selectedSystem: SystemDropdownItem;
+    systemsDropdown: DropdownItem[] = [];
+    selectedSystem: DropdownItem;
     system: NxSystem;
+    mediaServerUpdating = false;
 
     serversDropdown: ServerDropdownItem[] = [];
     selectedServer: ServerDropdownItem;
     serversLoaded: boolean;
     private serverSubscription: Subscription;
 
-    leftMenuContent: MenuContent;
-    placeHolderContent = {
-        api_information: 'API Information',
-        legacy: 'Legacy API',
-        deprecated: 'Deprecated Endpoints'
-    }
+    // developers-menu properties
+    menuSubject = new BehaviorSubject<MenuStructure>({
+        title: 'API',      // title and description not used
+        description: '',   // MenuStructure type is used for compatibility with developers-menu
+        nodes: undefined   // undefined triggers preloader
+    });
+
+    activeAssetIdSubject = new BehaviorSubject<string>('');
+    activeNode: MenuNodeWithParent;
+    activeAssetState = ''; // Not used yet
 
     // Stores the currently selected API file's title and description
-    APIDescription = { title: 'API Information', description: '' }
+    currentDescription : PageDescription = { title: '', description: '' }
+    pageDescriptions   : PageDescriptions = {} as PageDescriptions
 
-    loadingFailure$ = new BehaviorSubject(false);
+    loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
     loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
-    APIFileLoadingError = false;
-    mediaServerUpdating = false;
+    postSystemLoadingError = false; // For errors that will give the user an opportunity to change what system they're using with the system dropdown.
+    postSystemLoadingErrorText = '';
 
     constructor(
         configService: NxConfigService,
@@ -84,23 +93,48 @@ export class NxAPIToolService {
         }
     }
 
+    set menuNodes(content: MenuNodeWithParent[]) {
+        this.menuSubject.next({
+            title: 'API',
+            description: '',
+            nodes: content
+        });
+    }
+
+    get menuNodes() {
+        return this.menuSubject.value.nodes;
+    }
+
     isRestAPI(serverID = this.selectedServer.value) {
         // REST API servers are 5.0 and above
         return this.system.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
-    changeAPIDescription(selectedSection) {
-        this.APIDescription = {
-            title: this.leftMenuContent.pageDescriptions[selectedSection].title,
-            description: this.leftMenuContent.pageDescriptions[selectedSection].description
+    changeAPIDescription(apiType: string) {
+        this.currentDescription = this.pageDescriptions[apiType];
+    }
+
+    addAPIDescription(apiName: string, responseInfo: PageDescription) {
+        this.pageDescriptions[apiName] = {
+            title: responseInfo.title,
+            description: responseInfo.description
         };
+    }
+
+    handleMenuClick = (click: ClickEvent) => {
+        this.activeNode = click.node;
+    }
+
+    systemIsOnline = (system: NxSystemWithUserInfo) => {
+        return system.stateOfHealth === 'online';
     }
 
     async getSystem() {
         this.systems.forEach(system => {
             if (system.name !== undefined) {
-                const sysName = (system.stateOfHealth !== 'online') ? system.name + ' - Offline' : system.name;
-                this.systemsDropdown.push({ value: system.id, name: sysName });
+                const onlineSystem = this.systemIsOnline(system);
+                const sysName = onlineSystem ? system.name : system.name + ' - Offline';
+                this.systemsDropdown.push({ value: system.id, name: sysName, disabled: !onlineSystem });
             }
         });
 
@@ -114,10 +148,10 @@ export class NxAPIToolService {
             });
         }  else if (cachedSystem) {
             this.system = cachedSystem;
-            this.selectedSystem = { value: this.system.id, name: this.system.info.name };
+            this.selectedSystem = { value: this.system.id, name: this.system.info.name, disabled: false };
         } else {
-            const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.headerService.lastActive.stateOfHealth === 'online'
-                ? this.headerService.lastActive : this.systems.find(system => system.stateOfHealth === 'online');
+            const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
+                ? this.headerService.lastActive : this.systems.find(system => this.systemIsOnline(system));
 
             if (validSystem) {
                 this.system = await this.systemService.createSystem('', validSystem.id);
@@ -133,6 +167,9 @@ export class NxAPIToolService {
 
     getServersInfo() {
         this.serversLoaded = false;
+        this.postSystemLoadingError = false;
+        this.postSystemLoadingErrorText = '';
+        let mediaServerRetryCount = 0;
         if (this.serverSubscription) {
             this.serverSubscription.unsubscribe();
         }
@@ -141,7 +178,7 @@ export class NxAPIToolService {
                 untilDestroyed(this),
                 map(system => {
                     if (system) {
-                        this.selectedSystem = { value: system.id, name: system.info.name };
+                        this.selectedSystem = { value: system.id, name: system.info.name, disabled: false };
                         return system;
                     }
                     if (!system || !system.serverManager.servers || system.serverManager.servers.length === 0) {
@@ -149,7 +186,7 @@ export class NxAPIToolService {
                     }
                 }),
                 retryWhen(err => {
-                    return err.pipe(delay(1000), take(10));
+                    return err.pipe(delay(1000), take(7));
                 }),
                 finalize(() => {
                     if (!this.serversLoaded) {
@@ -160,7 +197,13 @@ export class NxAPIToolService {
             )
             .subscribe(_system => {
                 if (!this.mediaServerUpdating) {
+                    if (mediaServerRetryCount === 4) {
+                        this.loadingFailure$.next(true);
+                        this.loadingErrorType = 'SYSTEM_FAILED_TO_LOAD_API_TOOL';
+                        this.serverSubscription.unsubscribe();
+                    }
                     this.updateMediaServers();
+                    mediaServerRetryCount++;
                 }
             });
     }
@@ -188,6 +231,7 @@ export class NxAPIToolService {
                                                 value: server.id,
                                                 name: server.name,
                                                 apiDocFull: APIDoc,
+                                                disabled: false,
                                                 incompatible: false
                                             });
                                         }
@@ -201,6 +245,7 @@ export class NxAPIToolService {
                                                 value: server.id,
                                                 name: server.name + ' - ' + typeOfError,
                                                 apiDocFull: {} as APIDoc,
+                                                disabled: true,
                                                 incompatible: true
                                             });
                                         }
@@ -215,11 +260,14 @@ export class NxAPIToolService {
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
                                             if (this.selectedServer.incompatible) {
                                                 // If for whatever reason, all servers are marked as incompatible
-                                                this.APIFileLoadingError = true;
-                                                this.leftMenuContent = {} as any;
+                                                this.postSystemLoadingError = true;
+                                                this.postSystemLoadingErrorText = 'Getting an API File for this system has failed.';
+                                                this.menuNodes = [];
                                             } else {
-                                                this.leftMenuContent = createMenuContent(this.selectedServer.apiDocFull);
+                                                this.menuNodes =  createMenuContent(this.selectedServer.apiDocFull);
+                                                this.addAPIDescription('api_information', this.selectedServer.apiDocFull.info);
                                                 this.changeAPIDescription('api_information');
+                                                this.activeNode = this.menuNodes[0];
                                                 await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
                                                 this.menuService.section = 'api_information';
                                             }
@@ -235,6 +283,7 @@ export class NxAPIToolService {
                                     value: server.id,
                                     name: server.name + ' - Offline',
                                     apiDocFull: {} as APIDoc,
+                                    disabled: true,
                                     incompatible: true
                                 });
                             }
@@ -246,6 +295,14 @@ export class NxAPIToolService {
                     });
             } else {
                 this.mediaServerUpdating = false;
+                // If for whatever reason, there are no servers but system thinks it is online.
+                this.postSystemLoadingError = true;
+                this.postSystemLoadingErrorText = 'Error Getting Servers';
+                this.serversLoaded = true;
+                this.menuNodes = [];
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
             }
         }
     }
@@ -279,16 +336,21 @@ export class NxAPIToolService {
         await legacyAPICall;
         await deprecatedAPICall;
 
+        const menuContent = this.menuNodes;
         if (legacyAPI) {
             apiDocFull.tags = [...apiDocFull.tags, ...legacyAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths,  legacyAPI.paths);
-            addSubMenuApi(legacyAPI,
-                this.leftMenuContent, 'legacy');
+            const APIType: APIDocVersion = 'legacy';
+            addSubMenuAPI(legacyAPI, menuContent, APIType);
+            this.addAPIDescription(APIType, legacyAPI.info);
         }
         if (deprecatedAPI) {
+            const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths,  deprecatedAPI.paths);
-            addSubMenuApi(deprecatedAPI, this.leftMenuContent, 'deprecated');
+            addSubMenuAPI(deprecatedAPI, menuContent, APIType);
+            this.addAPIDescription(APIType, deprecatedAPI.info);
         }
+        this.menuNodes = menuContent;
     }
 }

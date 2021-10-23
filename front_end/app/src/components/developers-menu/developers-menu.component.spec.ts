@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NxLeftMenuComponent } from './left-menu.component';
+import { NxDevelopersMenuComponent } from './developers-menu.component';
 import { MockProvider } from '../../_mocks/helpers.test';
 import { NxConfigService } from '@services/nx-config';
 import { CommonModule, Location } from '@angular/common';
@@ -13,13 +13,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { DebugElement } from '@angular/core';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-
-describe('NxLeftMenuComponent', () => {
-    let component: NxLeftMenuComponent;
-    let fixture: ComponentFixture<NxLeftMenuComponent>;
+describe('Test NxDevelopersMenuComponent', () => {
+    let component: NxDevelopersMenuComponent;
+    let fixture: ComponentFixture<NxDevelopersMenuComponent>;
     let el: DebugElement;
 
     const initialNode = kbMenu.nodes[0];
@@ -59,8 +55,8 @@ describe('NxLeftMenuComponent', () => {
                     HttpClientTestingModule,
                     RouterTestingModule
                 ],
-                declarations: [NxLeftMenuComponent, RouterLinkDirectiveStub],
-                providers: [
+                declarations : [NxDevelopersMenuComponent, RouterLinkDirectiveStub],
+                providers    : [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(Location, locationMock),
                     new MockProvider(NxKnowledgebaseService, kbMock),
@@ -68,7 +64,7 @@ describe('NxLeftMenuComponent', () => {
                 ]
             }).compileComponents();
 
-            fixture = TestBed.createComponent(NxLeftMenuComponent);
+            fixture = TestBed.createComponent(NxDevelopersMenuComponent);
             component = fixture.componentInstance;
             el = fixture.debugElement;
             fixture.whenStable();

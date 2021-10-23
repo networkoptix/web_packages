@@ -14,7 +14,7 @@ import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
 import { NxHeaderService }                      from '@services/nx-header.service';
 import { MenuNode }                             from '@services/menus.service.types';
-import { MenuNodeWithParent, RelatedLinks }     from '@components/left-menu/left-menu.component';
+import { ClickEvent, MenuNodeWithParent, RelatedLinks }     from '@components/developers-menu/developers-menu.component';
 import { SearchFilter }                         from '@components/search/search.component';
 import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';
 import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
@@ -84,11 +84,15 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.searchQuery$.next({ query: query || '' });
     }
 
+    handleClick = (click: ClickEvent) => {
+        if (click.clearSearch) this.clearSearch();
+    }
+
     clearSearch = () => {
         this.searchLoading = false;
         this.searchResults$.next([]);
         this.searchMode = false;
-    };
+    }
 
     navigateSearch(event) {
         const openNewWindow = event?.metaKey || event?.ctrlKey;

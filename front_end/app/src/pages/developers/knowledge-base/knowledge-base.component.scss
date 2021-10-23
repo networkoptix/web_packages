@@ -18,7 +18,7 @@ $custom-xl: 1440px;
     @include bootstrap.media-breakpoint-up(md) {
         grid-auto-rows: auto;
     }
-    nx-left-menu {
+    nx-developers-menu {
         background: $additional_light2;
         margin: -1rem -1rem 1rem -1rem;
         padding: 1rem 0;

@@ -16,7 +16,6 @@ import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { HttpClient } from '@angular/common/http';
 
-
 @UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root'

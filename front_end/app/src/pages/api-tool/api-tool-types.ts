@@ -24,41 +24,12 @@ export interface APIDoc {
 
 export type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
 
-export interface Level1Item {
-  searchable? : boolean,
-  id          : string,
-  svg         : string,
-  label       : string,
-  path        : string,
-  level2      : any[],
-  level3      : any[]
-}
-export interface MenuContent {
-  pageDescriptions       : {
-      [API: string]: {
-          title: string,
-          description: string
-      }
-  },
-  searchable             : boolean,
-  selectedSection        : string,
-  selectedSubSection     : string, // updated by selectedSubSectionSubject
-  selectedDetailsSection : string,
-  system                 : object,
-  base                   : string, // no base - no navigation
-  level1                 : Level1Item[]
-}
-
-export interface SystemDropdownItem {
-    name: string,
-    value: string
-}
-
 export interface ServerDropdownItem {
     value        : string,
     name         : string,
     apiDocFull   : APIDoc,
     incompatible : boolean
+    disabled     : boolean
 }
 
 export enum requestTypes {
@@ -69,4 +40,12 @@ export enum requestTypes {
     DELETE = 'delete',
     PATCH = 'patch',
     OPTIONS = 'options'
+}
+
+export interface PageDescription {
+    title: string,
+    description: string
+}
+export interface PageDescriptions {
+    [key: string]: PageDescription
 }

@@ -60,6 +60,19 @@ export class NxUtilsService {
         return JSON.parse(JSON.stringify(obj));
     }
 
+    static deepCopyWithCircularReference(obj, hash = new WeakMap()) {
+        if (Object(obj) !== obj || obj instanceof Function) return obj;
+        if (hash.has(obj)) return hash.get(obj); // Cyclic reference
+        const result = Object.create(Object.getPrototypeOf(obj));
+        if (obj instanceof Map) {
+            Array.from(obj, ([key, val]) => result.set(NxUtilsService.deepCopyWithCircularReference(key, hash),
+                NxUtilsService.deepCopyWithCircularReference(val, hash)));
+        } else if (obj instanceof Set) { Array.from(obj, (key) => result.add(NxUtilsService.deepCopyWithCircularReference(key, hash))); }
+        hash.set(obj, result);
+        return Object.assign(result, ...Object.keys(obj).map(
+            key => ({ [key]: NxUtilsService.deepCopyWithCircularReference(obj[key], hash) })));
+    }
+
     static escapeRegExp(string) {
         return string.replace(/[.*+?^${}()[\]\\]/g, '\\$&'); // $& means the whole matched string
     }

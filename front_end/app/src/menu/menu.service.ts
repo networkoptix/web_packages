@@ -11,7 +11,7 @@ import { NxSearchService } from '@services/search.service';
 export class NxMenuService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject('');
     selectedSubSectionSubject = new BehaviorSubject([]);
-    selectedDetailsSection = new BehaviorSubject<string | string[]>('');
+    selectedDetailsSection = new BehaviorSubject<string>('');
     contentSubject = new BehaviorSubject([]);
     navItemSubject = new BehaviorSubject('');
 
@@ -67,10 +67,6 @@ export class NxMenuService implements OnDestroy {
 
     get subSection() {
         return this.selectedSubSectionSubject.getValue();
-    }
-
-    setSubSection(section) {
-        this.selectedSubSectionSubject.next(section);
     }
 
     ngOnDestroy() {

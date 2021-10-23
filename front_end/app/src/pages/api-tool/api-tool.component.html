@@ -1,25 +1,22 @@
 <ng-container *ngIf="(APIToolService.loadingFailure$ | async); then loadingError"></ng-container>
 
 <ng-container *ngIf="!(APIToolService.loadingFailure$ | async)">
-    <ng-container *ngTemplateOutlet="mainPage;context{ content: APIToolService.leftMenuContent }"></ng-container>
+    <ng-container *ngTemplateOutlet="mainPage;context{ menuNodes: APIToolService.menuNodes }"></ng-container>
 </ng-container>
 
-<ng-template #mainPage let-content="content">
+<ng-template #mainPage let-menuNodes="menuNodes">
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
                 <nx-system-dropdown></nx-system-dropdown>
-                <nx-pre-loader *ngIf="!content"></nx-pre-loader>
-                <nx-menu-api *ngIf="content"
-                         [content]="content"
-                         [searchable]="content.searchable"></nx-menu-api>
+                <nx-developers-menu *ngIf="!APIToolService.postSystemLoadingError" [service]="APIToolService" (onClick)="APIToolService.handleMenuClick($event)">
+                </nx-developers-menu>
             </div>
             <!-- Offset for the fixed menu -->
             <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
-                <nx-pre-loader *ngIf="!content"></nx-pre-loader>
-                <nx-swagger></nx-swagger>
+                <nx-swagger [activeNode]="APIToolService.activeNode"></nx-swagger>
             </div>
         </div>
     </div>

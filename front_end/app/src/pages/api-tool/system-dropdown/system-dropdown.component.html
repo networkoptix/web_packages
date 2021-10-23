@@ -1,23 +1,25 @@
 <div class="mb-3" *ngIf="!CONFIG.isLocal">
-     <nx-select
-            [id]="'avail-systems'"
-            [stillLoading]="!APIToolService.serversLoaded"
-            [items]="APIToolService.systemsDropdown"
-            (onSelected)="onSystemChange($event)"
-            [selected]="APIToolService.selectedSystem || {}">
-    </nx-select>
-    <nx-select
-            class="mt-2"
-            [id]="'avail-systems'"
-            [stillLoading]="!APIToolService.serversLoaded"
-            [items]="APIToolService.serversDropdown"
-            (onSelected)="onServerChange($event)"
-            [selected]="APIToolService.selectedServer || {}">
-    </nx-select>
-    <div *ngIf="APIToolService.selectedServer?.incompatible" class="mt-2"
-         style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center"  translate>
-        The system uses the old API version. We recommend that you update the system
-        to the new version in order to get
-        access to new functions.
-    </div>
+        <nx-select
+               [id]="'avail-systems'"
+               [stillLoading]="!APIToolService.serversLoaded"
+               [items]="APIToolService.systemsDropdown"
+               (onSelected)="onSystemChange($event)"
+               [selected]="APIToolService.selectedSystem || {}">
+       </nx-select>
+       <nx-select
+               *ngIf="APIToolService.serversDropdown.length"
+               class="mt-2"
+               [id]="'avail-systems'"
+               [stillLoading]="!APIToolService.serversLoaded"
+               [items]="APIToolService.serversDropdown"
+               (onSelected)="onServerChange($event)"
+               [selected]="APIToolService.selectedServer || {}">
+       </nx-select>
+       <div *ngIf="APIToolService.selectedServer?.incompatible" class="mt-2"
+            style="border: 1px solid #eedc9e; background-color: #ffeeb5; padding: 0.5rem 1rem; text-align: center"  translate>
+           The system uses the old API version. We recommend that you update the system
+           to the new version in order to get
+           access to new functions.
+       </div>
 </div>
+   
