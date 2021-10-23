@@ -29,13 +29,11 @@ describe('NxEmailComponent email input Unit Test', () => {
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock }
             ]
-        }).compileComponents()
-            .then(() => {
-                fixture = TestBed.createComponent(NxEmailComponent);
-                component = fixture.componentInstance;
-                el = fixture.debugElement;
-            })
-            .catch(err => console.error(err));
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(NxEmailComponent);
+        component = fixture.componentInstance;
+        el = fixture.debugElement;
     }));
 
     it('should create the component', () => {
@@ -44,46 +42,41 @@ describe('NxEmailComponent email input Unit Test', () => {
 
     it('should show normal email input', () => {
         fixture.detectChanges();
+        const input = el.nativeElement.querySelector('input');
+        expect(input.attributes.getNamedItem('ng-reflect-name')).toBeNull();
         component.componentId = 'exampleId';
         component.lockEmail = false;
         fixture.detectChanges();
-        const input = el.nativeElement.querySelector('input');
-        expect(input.name).toBe('exampleId');
-        expect(input.className).toBe('form-control');
+        expect(input.attributes.getNamedItem('ng-reflect-name')?.value).toBe('exampleId');
+        expect(input.className).toContain('form-control');
         expect(input.type).toBe('email');
         expect(el.nativeElement.querySelectorAll('.hide-errors').length).toBe(0);
     });
 
     it('should show email input with hide-errors class', () => {
-        fixture.detectChanges();
         component.componentId = 'exampleId';
         component.hideErrors = true;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
-        expect(input.name).toBe('exampleId');
-        expect(input.className).toBe('hide-errors form-control');
+        expect(input.className).toContain('hide-errors form-control');
     });
 
     it('should show non-web email input', () => {
-        fixture.detectChanges();
         component.componentId = 'exampleId';
         component.hideErrors = false;
         component.web = false;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
-        expect(input.name).toBe('exampleId');
-        expect(input.className).toBe('');
+        expect(input.className).not.toContain('form-control');
     });
 
     it('should show locked email input', () => {
-        fixture.detectChanges();
         component.lockEmail = true;
         component.web = true;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
-        console.log('inputAH', input);
-        expect(input.name).toBe('registerEmailLocked');
+        expect(input.attributes.getNamedItem('ng-reflect-name')?.value).toBe('registerEmailLocked');
         expect(input.type).toBe('text');
-        expect(input.className).toBe('form-control');
+        expect(input.className).toContain('form-control');
     });
 });
