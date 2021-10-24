@@ -29,14 +29,17 @@ export class NxLandingComponent implements OnInit {
         this.LANG = this.language.translations;
     }
 
-    constructor(configService: NxConfigService,
+    constructor(private configService: NxConfigService,
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private router: Router
     ) {
-        this.setupDefaults(configService);
+        this.setupDefaults(this.configService);
+        if (this.configService.flagsEnabled('landingPage')) {
+            this.router.navigateByUrl('new-landing', { skipLocationChange: true });
+        }
     }
 
     ngOnInit(): void {

@@ -22,17 +22,6 @@ import { FeatureGuard }              from '@src/routeGuards';
 import { FeatureFlagStrings }        from '@services/nx-config/base-config';
 import { BookmarksGuard }            from '@guards/bookmarksGuard';
 import { PipesModule }               from '@src/pipes/pipes.module';
-import { Platform } from '@angular/cdk/platform';
-
-const determineLandingPageRoutingStrategy = () => {
-    const platform = new Platform('browser');
-    // Safari has a bug with routing to the base route '' and the landing-routing module so it uses a different approach for choosing which landing page to display:
-    // Load NewLanding module. If the feature flag for new landing is not enabled, redirect back to old landing
-    if (platform.SAFARI) {
-        return () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule);
-    }
-    return () => import('./new-landing/landing-routing.module').then(m => m.LandingRoutingModule);
-};
 
 const lazyRoutes: Routes = [
     {
@@ -41,7 +30,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: '',
-        loadChildren: determineLandingPageRoutingStrategy(),
+        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
         pathMatch: 'full',
         canActivate: [RedirectGuard]
     },
@@ -58,8 +47,8 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./health/health.module').then(m => m.NxHealthModule)
     },
     {
-        path: 'old-landing',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+        path: 'new-landing',
+        loadChildren: () => import('./new-landing/new-landing.module').then(m => m.NewLandingModule)
     },
     {
         path: 'systems/:systemId/health',
@@ -121,7 +110,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'content/about',
-        loadChildren: () => import('./new-landing/landing-routing.module').then(m => m.LandingRoutingModule)
+        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
     },
     {
         path: 'content',
