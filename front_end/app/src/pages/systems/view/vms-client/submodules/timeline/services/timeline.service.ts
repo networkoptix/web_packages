@@ -5,6 +5,7 @@ import TimeRange from './TimeRange';
 import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases';
 import cfg from './timeline.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import VideoManagementSystemService from '../../vms/services/vms.service';
 
 export interface TimelineServiceStatus {
     fullRange: TimeRange,
@@ -29,7 +30,10 @@ export class TimelineService {
     protected _subject = new Subject<TimelineServiceStatus>()
     protected _canvasGeometryUpdateRequested: boolean = true
 
-    public constructor (browserDetector: DeviceDetectorService) {
+    public constructor (
+        protected vms: VideoManagementSystemService,
+        browserDetector: DeviceDetectorService,
+    ) {
         const _60fps = Math.ceil(1000 / 17);
         const _30fps = Math.ceil(1000 / 34);
 
@@ -71,12 +75,27 @@ export class TimelineService {
         return this._subject;
     }
 
+    public get archiveRange (): TimeRange {
+        const sc = this.vms.selectedCamera
+        if (sc?.hasArchive) {
+            return new TimeRange(this.fullRange.start, sc.archiveEnd)
+        } else {
+            return this.fullRange
+        }
+    }
+
     public get fullRange (): TimeRange {
         return this._fullRange.clone();
     }
 
     public get visibleRange (): TimeRange {
         return this._visibleRange.clone();
+    }
+
+    public set visibleRange (r: TimeRange) {
+        this._visibleRange.start = Math.max(r.start, this.fullRange.start)
+        this._visibleRange.end = Math.min(r.end, this.fullRange.end)
+        this._emit()
     }
 
     public get canvasGeometry (): CanvasGeometry {
@@ -188,8 +207,13 @@ export class TimelineService {
     public stepScrollToStartTime (targetT: ms, step = cfg.SCROLL_STEP) {
         targetT = this._sanitizeScrollStartTimeAim(targetT);
         const dt = targetT - this._visibleRange.start;
-        const offset = Math.round(dt * step);
-        this._visibleRange.shift(offset);
+        if (dt) {
+            const offset = Math.round(dt * step);
+            this._visibleRange.shift(offset);
+            return true
+        } else {
+            return false
+        }
         // TODO: check why not calling emit() here
     }
 
@@ -208,7 +232,7 @@ export class TimelineService {
             this._initialScrollMs = this._visibleRange.start;
             this._targetScrollMs = targetT;
         } else {
-            this.stepScrollToStartTime(targetT, 1.0);
+            return this.stepScrollToStartTime(targetT, 1.0);
         }
     }
 

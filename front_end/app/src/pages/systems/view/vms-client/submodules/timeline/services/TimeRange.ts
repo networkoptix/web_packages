@@ -36,6 +36,30 @@ export class TimeRange {
         }
     }
 
+    public fitWithin (enclosingRange: TimeRange) {
+        return this.fitStart(enclosingRange) && this.fitEnd(enclosingRange)
+    }
+
+    public fitStart (enclosingRange: TimeRange) {
+        if (this.start < enclosingRange.start) {
+            this.start = enclosingRange.start
+            return true
+        }
+        return false
+    }
+
+    public fitEnd (enclosingRange: TimeRange) {
+        if (this.end > enclosingRange.end) {
+            this.end = enclosingRange.end
+            return true
+        }
+        return false
+    }
+
+    public contains (t: ms) {
+        return this.start <= t && t <= this.end
+    }
+
     public clone () {
         return new TimeRange(this.start, this.end);
     }

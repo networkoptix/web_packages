@@ -429,13 +429,13 @@ $border-color: $light6;
         playback-controls {
           flex-grow   : 0;
           flex-shrink : 0;
-          z-index     : 2;
+          z-index     : 12;
         }
 
         zoom-controls {
           flex-grow   : 0;
           flex-shrink : 0;
-          z-index     : 2;
+          z-index     : 12;
         }
 
         timeline {

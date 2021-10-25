@@ -14,7 +14,15 @@
     class="current-playback-indicator"
     #currentPlayback
     [ngClass]="{ 'active': isPlaying }"
-    [ngStyle]="{ 'left.px': playbackLeftPixel }"></div>
+    [ngStyle]="{ 'left.px': playbackLeftPixel }">
+  </div>
+
+  <div
+    class="current-selection-indicator"
+    #currentSelection
+    [ngClass]="{ 'active': isSelected }"
+    [ngStyle]="{ 'left.px': selectionLeftPixel, 'width.px': selectionWidthPixel }">
+  </div>
 
   <div
     class="bar"

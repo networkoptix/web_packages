@@ -13,6 +13,7 @@ import { float, px } from '../../../../utils/type-aliases';
 import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 import { NxUtilsService } from '@services/utils.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
+import TimelineSelectionService, { TimelineSelectionServiceStatus } from '../../services/timeline.selection.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -34,9 +35,11 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     @ViewChild('currentPlayback') currentPlaybackView: ElementRef;
     @ViewChild('left') leftView: ElementRef;
     @ViewChild('right') rightView: ElementRef;
+    @ViewChild('currentSelection') currentSelectionView: ElementRef;
 
     protected scrollbarSubscription: Subscription;
     protected playbackSubscription: Subscription;
+    protected selectionSubscription: Subscription;
 
     public canScrollLeft: boolean = false;
     public canScrollRight: boolean = false;
@@ -53,12 +56,14 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
         protected scrollbarRelative: TimelineScrollbarRelativeService,
         protected playback: PlaybackService,
+        protected selection: TimelineSelectionService,
         configService: NxConfigService,
         nxUtilsService: NxUtilsService
     ) {
         this.CONFIG = configService.getConfig();
         this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this);
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
+        this.onSelectionSubjectChange = this.onSelectionSubjectChange.bind(this);
         this.useTouch = nxUtilsService.isTablet() || nxUtilsService.isMobile();
     }
 
@@ -69,6 +74,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
             });
         });
         this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
+        this.selectionSubscription = this.selection.subject.subscribe(this.onSelectionSubjectChange);
         this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
         setTimeout(() => this.onResize(), 0);
     }
@@ -104,6 +110,10 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public isPlaying: boolean = false;
     public playbackLeftPixel: px = -1;
 
+    public isSelected: boolean = false;
+    public selectionLeftPixel: px = -1;
+    public selectionWidthPixel: px = 0;
+
     public onPlaybackSubjectChange (s: PlaybackState) {
         if (s.mode === PLAYBACK_MODE.STOPPED) {
             this.isPlaying = false;
@@ -136,6 +146,18 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
                 }
                 this.isPlaying = true;
             }, 0);
+        }
+    }
+
+    public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
+        this.isSelected = s.isActive
+        if (s.isActive) {
+            const bgw = this.backgroundView.nativeElement.getBoundingClientRect().width
+            this.selectionLeftPixel =  bgw * (s.range.start - this.timeline.fullRange.start) / this.timeline.fullRange.duration
+            this.selectionWidthPixel = bgw * s.range.duration / this.timeline.fullRange.duration
+        } else {
+            this.selectionLeftPixel = -1
+            this.selectionWidthPixel = 0
         }
     }
 

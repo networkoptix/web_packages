@@ -1124,6 +1124,27 @@ export class NxSystemAPI {
         return this.generateGetUrl(url, data, force);
     }
 
+    public getExportUrl ({ transport, cameraId, pos, endPos, duration }) {
+        let url = ''
+        switch (transport) {
+            case 'hls':
+                url = `/hls/${cameraId}.mkv`
+                break
+            default:
+                url = `/media/${cameraId}.${transport}`
+        }
+        const params = {
+            auth: this.authGet,
+
+            pos, endPos, duration,
+
+            // see VMS-29347
+            download: true,
+            export: true
+        }
+        return this.generateGetUrl(url, params)
+    }
+
     /* End of formatting urls */
 
     /* Working with archive */

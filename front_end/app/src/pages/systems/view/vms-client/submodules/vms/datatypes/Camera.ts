@@ -198,6 +198,14 @@ export class Camera implements ICamera {
     public getNextRecord (t: ms): ISimpleTimeRange {
         return this._birdViewTree.getNextRecord(t);
     }
+
+    public get archiveEnd (): ms {
+        if (this.hasArchive) {
+            return this._birdViewTree.archiveEnd
+        } else {
+            return -Infinity
+        }
+    }
 }
 
 export default Camera;

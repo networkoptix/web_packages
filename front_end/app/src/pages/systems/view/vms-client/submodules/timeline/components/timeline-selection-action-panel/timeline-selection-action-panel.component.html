@@ -1,0 +1,10 @@
+<div class="duration-selected"
+  (click)="handleDurationClick($event)"
+  (dblclick)="handleDurationDoubleClick($event, true)"
+>
+  <span class="duration">{{ duration$ | async }}</span>
+  <!-- <span class="duration" (click)="handleDurationClick($event)">{{ duration }}</span> -->
+  selected
+</div>
+
+<a class="export-link" [href]="exportUrl" target="_blank" download type="application/octet-stream">Export</a>

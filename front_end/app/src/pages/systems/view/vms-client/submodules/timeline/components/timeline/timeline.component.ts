@@ -10,7 +10,8 @@ import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
-const CANVAS_SELECTION_HEIGHT = 50;
+const CANVAS_SELECTION_OFFSET_START = 60;
+const CANVAS_SELECTION_OFFSET_END = 85;
 const MOUSE_MINIMAL_MOVE_PX = 2;
 const MOUSE_HIDE_UNTIL_PX = 8;
 // const MAX_TIMES_RENDERED = 1
@@ -101,6 +102,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public canvasMouseMoveHandler (e: MouseEvent|TouchEvent): void {
         this.timeUnderMouse.handleMouseMove(e);
+        if (this.selection.handleMouseMove(e as MouseEvent)) {
+            return
+        }
         const screenX = NxUtilsService.calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
@@ -137,20 +141,27 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         e.stopPropagation();
         e.preventDefault();
-        // console.log('mouse down', e.screenX)
-        this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
-        this._mouseNotReleasedYet = true;
-        this.timeUnderMouse.handleMouseDown();
+        const offsetY = NxUtilsService.calcOffsetY(e)
+        if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
+            offsetY <= CANVAS_SELECTION_OFFSET_END
+        ) {
+            this.selection.handleBackgroundMouseDown(e as MouseEvent)
+        } else {
+            this.selection.reset()
+            this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+            this._mouseNotReleasedYet = true;
+            this.timeUnderMouse.handleMouseDown()
+        }
     }
 
     public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
+        this.selection.handleMouseUp(e as MouseEvent)
         const screenX = NxUtilsService.calcScreenX(e);
         const offsetX = NxUtilsService.calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         // console.log('mouse up', e.screenX, delta)
         if (!this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX) {
             const time = this.timeline.domOffsetXtoTime(offsetX);
-            // this.selection.reset()
             this.playback.playArchive(time);
             this.hideTimeUnderMouse = true;
             this._mouseDownScreenX = screenX;
@@ -177,23 +188,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public documentMouseUpHandler (e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
+        this.selection.handleMouseUp(e as MouseEvent)
     }
-
-    // public canvasClickHandler (e: MouseEvent): void {
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    //   // if (e.offsetY > CANVAS_SELECTION_HEIGHT) {
-    //     const time = this.timeline.domOffsetXtoTime(e.offsetX)
-    //     this.selection.reset()
-    //     this.playback.playArchive(time)
-    //   // }
-    // }
-
-    // public canvasMouseDownHandler (e: MouseEvent): void {
-    //   if (e.offsetY <= CANVAS_SELECTION_HEIGHT) {
-    //     this.selection.handleBackgroundMouseDown(e)
-    //   }
-    // }
 }
 
 export default TimelineComponent;

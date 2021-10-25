@@ -78,6 +78,7 @@ export interface ICamera {
     hasArchive: boolean,
     archiveRange: ISimpleTimeRange,
     archive: CameraArchive,
+    readonly archiveEnd: ms,
 
     thumbnailUrl: string,
 

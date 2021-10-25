@@ -12,6 +12,8 @@ export interface TimelineScrollbarRelativeServiceStatus {
     canScrollRight: boolean,
 }
 
+const SCROLL_TRESHOLD_MS = 10
+
 @Injectable({
     providedIn: 'root'
 })
@@ -78,10 +80,12 @@ export class TimelineScrollbarRelativeService {
 
     public get canScrollLeft (): boolean {
         return this.timeline.visibleRange.start > this.timeline.fullRange.start;
+        // return this.timeline.visibleRange.start - this.timeline.fullRange.start > SCROLL_TRESHOLD_MS;
     }
 
     public get canScrollRight (): boolean {
-        return this.timeline.visibleRange.end < this.timeline.fullRange.end;
+        return this.timeline.fullRange.end > this.timeline.visibleRange.end;
+        // return this.timeline.fullRange.end - this.timeline.visibleRange.end > SCROLL_TRESHOLD_MS;
     }
 
     public handleBarDblClick (e: MouseEvent|TouchEvent) {

@@ -13,6 +13,12 @@
       "root": "",
       "sourceRoot": "app",
       "prefix": "src",
+      "stylePreprocessorOptions": {
+        "includePaths": [
+          "app/src/styles",
+          "app/styles"
+        ]
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

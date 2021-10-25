@@ -326,7 +326,7 @@ export class NxUtilsService {
 
     static calcClientX(e: MouseEvent|TouchEvent): number {
         let clientX;
-        if (e instanceof MouseEvent) {
+        if (e instanceof MouseEvent || 'clientX' in e) {
             clientX = e.clientX;
         } else {
             clientX = NxUtilsService.findTouch(e).clientX || 0;
@@ -336,7 +336,7 @@ export class NxUtilsService {
 
     static calcOffsetX(e: MouseEvent|TouchEvent): number {
         let offsetX;
-        if (e instanceof MouseEvent) {
+        if (e instanceof MouseEvent || 'offsetX' in e) {
             offsetX = e.offsetX;
         } else {
             // @ts-ignore
@@ -346,9 +346,21 @@ export class NxUtilsService {
         return offsetX;
     }
 
+    static calcOffsetY(e: MouseEvent|TouchEvent): number {
+        let offsetY;
+        if (e instanceof MouseEvent || 'offsetY' in e) {
+            offsetY = e.offsetY;
+        } else {
+            // @ts-ignore
+            const rect = (e.target)?.getBoundingClientRect();
+            offsetY = (NxUtilsService.findTouch(e)?.pageY || 0) - rect.top;
+        }
+        return offsetY;
+    }
+
     static calcScreenX(e: MouseEvent|TouchEvent): number {
         let screenX;
-        if (e instanceof MouseEvent) {
+        if (e instanceof MouseEvent || 'screenX' in e) {
             screenX = e.screenX;
         } else {
             screenX = NxUtilsService.findTouch(e)?.screenX || 0;
