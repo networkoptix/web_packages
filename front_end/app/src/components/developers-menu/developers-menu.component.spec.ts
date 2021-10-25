@@ -12,6 +12,9 @@ import { nxConfig } from '@services/nx-config/config';
 import { DirectivesModule } from '@directives/directives.module';
 import { DebugElement } from '@angular/core';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('Test NxDevelopersMenuComponent', () => {
     let component: NxDevelopersMenuComponent;
@@ -55,8 +58,11 @@ describe('Test NxDevelopersMenuComponent', () => {
                     HttpClientTestingModule,
                     RouterTestingModule
                 ],
-                declarations : [NxDevelopersMenuComponent, RouterLinkDirectiveStub],
-                providers    : [
+                declarations: [
+                    NxDevelopersMenuComponent,
+                    RouterLinkDirectiveStub
+                ],
+                providers: [
                     new MockProvider(NxConfigService, configMock),
                     new MockProvider(Location, locationMock),
                     new MockProvider(NxKnowledgebaseService, kbMock),
