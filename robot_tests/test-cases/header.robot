@@ -68,10 +68,14 @@ Force Tags        cloud
 # User has no systems connected to cloud
 6. No systems: Header button text is correct
     [Tags]        no_sys    
+    IF    '''${mode}''' == '''cloud'''
+        go to     ${ENV}
+    ELSE
+        go to     ${QA BURBANK IP}:${main system}[port]
+    END
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Sleep    5
     Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
-    Validate Header Button Text    ${expected text}
 
 7. No systems: Logo goes to landing page
     [Tags]        no_sys    
@@ -236,6 +240,8 @@ Force Tags        cloud
     [Tags]        many_sys    
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
+    Go to    ${ENV}/systems/${main system}[cloud id]
+    Wait Until Element is Visible    ${HEADER ICON LINK}
     Click Element    ${HEADER ICON LINK}
     Wait Until Location is    ${ENV}/systems
 
@@ -357,16 +363,19 @@ Force Tags        cloud
         ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
+    Click Element    ${SYSTEMS DROPDOWN}
 
 28. Check External links
     [Tags]        other    
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    sleep    10
     Click Element    ${SYSTEMS DROPDOWN}
     Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
     Wait Until Element Is Not Visible    ${DROPDOWN SYSTEMS GRID}
     ${links names}=   Get External Links Names   ${EXTERNAL LINKS TEXT}
     FOR    ${name}    IN    @{links names}
         ${actual url}=   Get Element Attribute    ${EXTERNAL LINK}\[contains(text(), "${name}")]    href
-        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
+        ${expected url}=    Get From Dictionary    ${EXTERNAL LINKS}    ${name}
         Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
     END
