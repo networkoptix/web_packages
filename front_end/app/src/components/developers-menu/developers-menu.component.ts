@@ -10,6 +10,7 @@ import { IConfig, NxConfigService }                 from '@services/nx-config';
 import { MenuStructure } from '@services/nx-config/base-config';
 import { NxUtilsService }  from '@services/utils.service';
 import { NxUriService } from '@services/uri.service';
+import { NxRibbonService } from '@components/ribbon';
 
 export interface RelatedLinks {
     type: string,
@@ -51,6 +52,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     constructor(
         configService   : NxConfigService,
         public location : Location,
+        public ribbonService: NxRibbonService,
         private uriService: NxUriService,
         @Inject(WINDOW) private window: Window
     ) {

@@ -6,6 +6,7 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 :host {
+    margin-top: 16px;
     margin-right: 16px;
 
     @include media-breakpoint-down(sm) {

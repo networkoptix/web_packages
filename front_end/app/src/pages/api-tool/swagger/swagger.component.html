@@ -1,8 +1,8 @@
 <ng-container *ngIf="APIToolService.postSystemLoadingError; then APILoadingFailed"></ng-container>
 
 <ng-container  #swagger *ngIf="APIToolService.menuNodes; else preloader">
-    <div *ngIf="APIToolService.activeNode && !placeHolderContent[APIToolService.activeNode?.name]; else description">
-        <div style="padding: 0 1rem 1rem">
+    <div *ngIf="APIToolService.activeNode" [ngClass]="{'api-info': APIToolService.APIInfoNodes[APIToolService.activeNode.name]}">
+        <div style="padding: 0 1rem 1rem" class="swagger-description">
             <h2>{{ this.swaggerMenuDescription.title }}</h2>
             <p class="mt-3" *ngIf="this.swaggerMenuDescription.description">
                 {{ this.swaggerMenuDescription.description }}
@@ -18,9 +18,4 @@
 
 <ng-template #APILoadingFailed>
     <h2>{{ APIToolService.postSystemLoadingErrorText }}</h2>
-</ng-template>
-
-<ng-template #description>
-    <h2>{{ APIToolService.currentDescription.title }}</h2>
-    <div [innerHTML]="APIToolService.currentDescription.description | safe: 'html'"></div>
 </ng-template>

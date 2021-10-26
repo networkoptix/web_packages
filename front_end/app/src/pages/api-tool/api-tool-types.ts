@@ -1,10 +1,8 @@
+import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
+
 // Could make this type more accurate, but have to watch out for different/older versions of the API
 export interface APIDoc {
-    info? : {
-        title: string,
-        description: string,
-        version : string
-    }
+    info? : APIInfo,
     tags  : {
                 name: string,
                 description?: string,
@@ -42,10 +40,18 @@ export enum requestTypes {
     OPTIONS = 'options'
 }
 
-export interface PageDescription {
+export interface APIInfo {
     title: string,
-    description: string
+    description: string,
+    version: string
 }
-export interface PageDescriptions {
-    [key: string]: PageDescription
+export interface APIInfoStore {
+    [key: string]: APIInfo
+}
+
+export interface APIDropdownItem {
+    value    : string, // This value is used to get the API Info from the APIInfoStore
+    name     : string,
+    menu     : MenuNodeWithParent[],
+    disabled : boolean
 }

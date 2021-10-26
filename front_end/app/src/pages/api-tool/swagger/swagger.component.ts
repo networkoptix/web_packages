@@ -18,12 +18,6 @@ export class NxSwaggerComponent implements OnChanges {
     CONFIG: IConfig;
 
     swagger: SwaggerUI;
-    placeHolderContent = {
-        api_information: 'API Information',
-        legacy: 'Legacy API',
-        deprecated: 'Deprecated Endpoints'
-    }
-
     swaggerMenuDescription = { title: '', description: '' }
 
     // Misc properties
@@ -55,10 +49,6 @@ export class NxSwaggerComponent implements OnChanges {
 
     private initSwagger(filter: string | string[], expand = 'list') {
         if (filter === '' || filter?.length === 0) {
-            return;
-        }
-        if (this.placeHolderContent[this.APIToolService.activeNode?.name]) {
-            this.swagger = undefined;
             return;
         }
 
@@ -155,10 +145,6 @@ export class NxSwaggerComponent implements OnChanges {
             }
             this.initSwagger(node.name, expand);
             this.setSwaggerDescription(nodeName);
-            const pageDescription = this.APIToolService.pageDescriptions[nodeName];
-            if (pageDescription) {
-                this.APIToolService.currentDescription = pageDescription;
-            }
         }
     }
 }

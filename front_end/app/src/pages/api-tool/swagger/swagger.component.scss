@@ -5,6 +5,38 @@
 @import '~swagger-ui/dist/swagger-ui.css';
 @import '~bootstrap/scss/mixins/breakpoints';
 
+:host{
+	@include media-breakpoint-down(sm){
+		margin: 0px 16px;
+	}
+}
+
+.swagger-ui .information-container.wrapper {
+	display : none;
+}
+
+.api-info {
+	.information-container.wrapper {
+		display : block;
+		.info .title span{
+			display: none;
+		}
+	}
+
+	.block.block-desktop.col-12-desktop {
+		display: none;
+	}
+
+	.swagger-description {
+		display: none;
+	}
+
+	#swagger-ui {
+		margin-top: -45px;
+	}
+}
+
+
 .swagger-ui {
 	/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 	font-family : $font-family-regular;
@@ -77,10 +109,6 @@
 
 .swagger-ui .wrapper {
 	padding    : 0 16px;
-}
-
-.swagger-ui .information-container.wrapper {
-	display : none;
 }
 
 .swagger-ui .opblock-tag {

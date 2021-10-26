@@ -1,6 +1,7 @@
 <ng-template #recursiveNodes let-nodes="nodes" let-level="level">
     <div *ngFor="let node of nodes">
-        <div *ngIf="level === 1 || openNodes.includes(node.parentNode?.display_name) || openNodes.includes(node.parentNode?.name)"
+        <ng-container *ngIf="node.name.includes('-seperator'); then seperator"></ng-container>
+        <div *ngIf="(!node.name.includes('-seperator') && (level === 1 || openNodes.includes(node.parentNode?.display_name) || openNodes.includes(node.parentNode?.name)))"
             [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
                 (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state)"
@@ -43,6 +44,11 @@
                     [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
             </div>
         </div>
+            <ng-template #seperator>
+                <div class="seperator">
+                    <span class="seperator-text">{{ node.display_name }}</span>
+                </div>
+            </ng-template>
             <ng-container *ngIf="node.nodes.length">
                 <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:node.nodes, level: level + 1}"></ng-container>
             </ng-container>
@@ -57,16 +63,17 @@
 
 <ng-template #leftMenu>
     <ng-container *ngIf="searchEnabled">
-        <div class="block"></div> 
-        <nx-search
-            (ngModelChange)="updateSearchQuery($event)"
-            [ngModel]="(searchQuery$ | async)"
-            class="d-block mb-2"
-            layout="search"
-            instant>
-        </nx-search>
+            <nx-search
+                (ngModelChange)="updateSearchQuery($event)"
+                [ngModel]="(searchQuery$ | async)"
+                class="d-block mb-2"
+                layout="search"
+                instant>
+            </nx-search>
     </ng-container>
     <ng-container *ngIf="displayedMenuNodes.length; else noNodes">
-        <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:displayedMenuNodes, level: 1}"></ng-container>
+        <div [ngClass]="{'nodes-container': searchEnabled, 'with-ribbon': ribbonService.context.visibility, 'webadmin-scroll': searchEnabled && CONFIG.isLocal}">
+            <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:displayedMenuNodes, level: 1}"></ng-container>
+        </div>
     </ng-container>
 </ng-template>

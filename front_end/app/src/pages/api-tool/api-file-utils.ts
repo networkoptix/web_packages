@@ -75,11 +75,15 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
  */
 export const createMenuContent = (api: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
-    menuContent.push(new MenuNode('api_information', '', 'API Information'));
+    if (api.info && api.info.description) {
+        menuContent.push(new MenuNode('api_information', '', 'API Information'));
+    }
 
     if (Object.keys(api || {}).length) {
         api.tags.forEach(tag => {
-            menuContent.push(new MenuNode(tag.name, '', tag.name.slice(0, -2)));
+            if (!tag.name.includes('Proprietary')) {
+                menuContent.push(new MenuNode(tag.name, '', tag.name.slice(0, -2)));
+            }
         });
     }
 
@@ -101,33 +105,25 @@ export const createMenuContent = (api: APIDoc) => {
     return menuContent;
 };
 
-/**
-    Adds an API file to the developers-menu nodes as a node
- */
-export const addSubMenuAPI = (legacyApi: APIDoc, baseMenuContent: MenuNodeWithParent[], type: 'legacy' | 'deprecated') => {
-    const title = type[0].toUpperCase() + type.slice(1);
-    const apiContent = baseMenuContent;
+export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
+    menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
 
-    apiContent.push(new MenuNode(type, '', title));
-
-    const subAPIMenuNode: MenuNodeWithParent = apiContent[apiContent.length - 1];
-
-    if (Object.keys(legacyApi || {}).length) {
-        legacyApi.tags.forEach(tag => {
+    if (Object.keys(API || {}).length) {
+        API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
                 const tagNode: MenuNodeWithParent = new MenuNode(tag.name, '', tag.name.slice(0, -2));
-                tagNode.parentNode = subAPIMenuNode;
-                subAPIMenuNode.nodes.push(tagNode);
+                // tagNode.parentNode = menuNodes;
+                menuNodes.push(tagNode);
             }
         });
     }
 
     let tag: MenuNodeWithParent;
-    Object.keys(legacyApi.paths).forEach(endpoint => {
-        const endpointObj = Object.entries(legacyApi.paths[endpoint]);
+    Object.keys(API.paths).forEach(endpoint => {
+        const endpointObj = Object.entries(API.paths[endpoint]);
         const includeTypeOfRequest = endpointObj.length > 1;
         endpointObj.forEach((method: any) => {
-            tag = subAPIMenuNode.nodes.find(node => node.name === method[1].tags[0]);
+            tag = menuNodes.find(node => node.name === method[1].tags[0]);
             const methodName = getAPIRouteName(endpoint, includeTypeOfRequest, method[0]);
             const methodNode: MenuNodeWithParent = new MenuNode(methodName, '', method[1].summary || methodName);
             methodNode.parentNode = tag;

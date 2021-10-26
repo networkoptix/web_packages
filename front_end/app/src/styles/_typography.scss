@@ -195,6 +195,10 @@ p {
     @include font-source($font-family-regular, $h4-font-size, $dark9);
 }
 
+@mixin regular11light7 {
+    @include font-source($font-family-regular, $h5-font-size, $light7);
+}
+
 @mixin regular15light {
     @include font-source($font-family-regular, $h4-font-size, $light16);
 }

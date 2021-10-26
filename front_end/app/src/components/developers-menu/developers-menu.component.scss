@@ -1,21 +1,31 @@
 @use '../../../styles/theme_variables' as *;
 @use '../../styles/typography';
 
-.block {
-    margin-top: -32px;
-    top: -32px;
-    position: sticky;
-    height: 32px;
-    background-color: $additional_light2;
-    z-index: 4;
+@import '~bootstrap/scss/mixins/breakpoints';
+
+.nodes-container {
+    background: $additional_light2;
+
+    @include media-breakpoint-up(md) {
+        overflow-y: auto;
+        max-height: calc(100vh - 225px);
+        &.with-ribbon {
+            max-height: calc(100vh - 258px);
+        }
+        grid-column: span 4;
+    }
+    @include media-breakpoint-up(xl) {
+        grid-column: span 3;
+    }
 }
 
-nx-search {
-    margin: 0px 16px;
-    position: sticky;
-    top: 0px;
-    z-index: 3;
-    background-color:  $light2 !important;
+.webadmin-scroll {
+    @include media-breakpoint-up(md) {
+        max-height: calc(100vh - 152px) !important;
+        &.with-ribbon {
+            max-height: calc(100vh - 188px) !important;
+        }
+    }
 }
 
 .activated-highlight {
@@ -32,6 +42,39 @@ nx-search {
 
 .down > svg-icon {
     transform: rotate(0) !important;
+}
+
+.seperator{
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap; 
+
+    > span {
+        @include typography.regular11light7;
+        position: relative;
+        display: inline-block;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 9999px;
+            height: 1px;
+            background: $light7
+        }
+
+        &:before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        &:after {
+            left: 100%;
+            margin-left: 15px;
+        }
+    }
 }
 
 .base-level {

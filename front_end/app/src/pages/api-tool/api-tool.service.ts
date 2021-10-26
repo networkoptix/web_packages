@@ -9,7 +9,6 @@ import { NxUtilsService }                           from '@services/utils.servic
 import { NxAccountService }                         from '@services/account.service';
 import { NxHeaderService }                          from '@services/nx-header.service';
 import { APIDocVersion, MenuStructure }                            from '@services/nx-config/base-config';
-import { NxMenuService }                            from '@src/menu';
 import { ClickEvent, MenuNodeWithParent }           from '@components/developers-menu/developers-menu.component';
 import { DropdownItem }                             from '@components/dropdowns/generic/dropdown.component';
 import { BehaviorSubject, Subscription }            from 'rxjs';
@@ -18,16 +17,17 @@ import {
     finalize, map, retryWhen, take
 }                                                   from 'rxjs/operators';
 import {
-    addSubMenuAPI,
     modifyPathTags, modifyTagNames,
     createMenuContent,
     prepareSwaggerAPIDoc,
-    removeProprietaryEndpoints
+    removeProprietaryEndpoints,
+    addSeperatedAPI
 }                                                   from './api-file-utils';
 import type {
     APIDoc,
-    PageDescription,
-    PageDescriptions,
+    APIDropdownItem,
+    APIInfo,
+    APIInfoStore,
     ServerDropdownItem
 }                                                   from './api-tool-types';
 
@@ -48,6 +48,9 @@ export class NxAPIToolService {
     serversLoaded: boolean;
     private serverSubscription: Subscription;
 
+    APIDropdown: APIDropdownItem[] = [];
+    selectedAPI: APIDropdownItem;
+
     // developers-menu properties
     menuSubject = new BehaviorSubject<MenuStructure>({
         title: 'API',      // title and description not used
@@ -59,9 +62,12 @@ export class NxAPIToolService {
     activeNode: MenuNodeWithParent;
     activeAssetState = ''; // Not used yet
 
-    // Stores the currently selected API file's title and description
-    currentDescription : PageDescription = { title: '', description: '' }
-    pageDescriptions   : PageDescriptions = {} as PageDescriptions
+    APIInfoStore   : APIInfoStore = {} as APIInfoStore
+    APIInfoNodes = {
+        api_information: 'API Information',
+        legacy: 'Legacy API',
+        deprecated: 'Deprecated Endpoints'
+    }
 
     loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
     loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
@@ -74,7 +80,6 @@ export class NxAPIToolService {
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private headerService: NxHeaderService,
-        private menuService: NxMenuService,
         private router: Router) {
         this.CONFIG = configService.getConfig();
         this.systems = this.systemsService.systems || [];
@@ -110,19 +115,25 @@ export class NxAPIToolService {
         return this.system.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
-    changeAPIDescription(apiType: string) {
-        this.currentDescription = this.pageDescriptions[apiType];
-    }
-
-    addAPIDescription(apiName: string, responseInfo: PageDescription) {
-        this.pageDescriptions[apiName] = {
-            title: responseInfo.title,
-            description: responseInfo.description
-        };
+    addAPIDescription(apiName: string, responseInfo: APIInfo) {
+        if (responseInfo && responseInfo.description) {
+            this.APIInfoStore[apiName] = {
+                title: responseInfo.title,
+                description: responseInfo.description,
+                version: responseInfo.version
+            };
+        }
     }
 
     handleMenuClick = (click: ClickEvent) => {
+        if (this.APIInfoNodes[click.node.name]) {
+            this.setAPIInfo();
+        }
         this.activeNode = click.node;
+    }
+
+    setAPIInfo = () => {
+        this.selectedServer.apiDocFull.info = this.APIInfoStore[this.selectedAPI.value];
     }
 
     systemIsOnline = (system: NxSystemWithUserInfo) => {
@@ -264,12 +275,20 @@ export class NxAPIToolService {
                                                 this.postSystemLoadingErrorText = 'Getting an API File for this system has failed.';
                                                 this.menuNodes = [];
                                             } else {
-                                                this.menuNodes =  createMenuContent(this.selectedServer.apiDocFull);
+                                                // Success
+                                                const mainAPIContent = createMenuContent(this.selectedServer.apiDocFull);
+                                                this.APIDropdown.push({
+                                                    value: 'api_information',
+                                                    name: 'Current Version',
+                                                    menu: mainAPIContent,
+                                                    disabled: false
+                                                });
                                                 this.addAPIDescription('api_information', this.selectedServer.apiDocFull.info);
-                                                this.changeAPIDescription('api_information');
-                                                this.activeNode = this.menuNodes[0];
-                                                await this.getLegacyAPIDocs(server.id, this.selectedServer.apiDocFull);
-                                                this.menuService.section = 'api_information';
+                                                this.selectedAPI = this.APIDropdown[0];
+                                                this.setAPIInfo();
+                                                await this.getLegacyAPIDocs(server.id, mainAPIContent, this.selectedServer.apiDocFull);
+                                                this.menuNodes = mainAPIContent;
+                                                this.activeNode = mainAPIContent[0];
                                             }
                                             this.mediaServerUpdating = false;
                                             this.serversLoaded = true;
@@ -317,7 +336,7 @@ export class NxAPIToolService {
         api.servers[0].url = this.system.serverManager.mediaserverConnections[serverID].urlBase;
     }
 
-    async getLegacyAPIDocs(serverID, apiDocFull: APIDoc) {
+    async getLegacyAPIDocs(serverID, mainMenuContent: MenuNodeWithParent[], apiDocFull: APIDoc) {
         let legacyAPI;
         let deprecatedAPI;
 
@@ -336,21 +355,25 @@ export class NxAPIToolService {
         await legacyAPICall;
         await deprecatedAPICall;
 
-        const menuContent = this.menuNodes;
         if (legacyAPI) {
             apiDocFull.tags = [...apiDocFull.tags, ...legacyAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths,  legacyAPI.paths);
             const APIType: APIDocVersion = 'legacy';
-            addSubMenuAPI(legacyAPI, menuContent, APIType);
+            addSeperatedAPI(legacyAPI, mainMenuContent, 'LEGACY');
             this.addAPIDescription(APIType, legacyAPI.info);
         }
         if (deprecatedAPI) {
             const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths,  deprecatedAPI.paths);
-            addSubMenuAPI(deprecatedAPI, menuContent, APIType);
+            const deprecatedMenuContent = createMenuContent(deprecatedAPI);
+            this.APIDropdown.push({
+                value: 'deprecated',
+                name: 'Deprecated',
+                menu: deprecatedMenuContent,
+                disabled: false
+            });
             this.addAPIDescription(APIType, deprecatedAPI.info);
         }
-        this.menuNodes = menuContent;
     }
 }
