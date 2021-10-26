@@ -123,6 +123,7 @@ export abstract class BaseAccount implements OnDestroy {
         // setTimeout(() => {
         this.dialogs = injector.get(NxSimpleDialogsService);
         this.applyService = injector.get(NxApplyService);
+        this.loginService.accountService = this;
     }
 
     ngOnDestroy() {

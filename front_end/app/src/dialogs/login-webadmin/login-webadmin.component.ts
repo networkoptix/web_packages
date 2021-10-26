@@ -24,7 +24,6 @@ import type { NxAccountService } from '@services/account.service';
 })
 export class LoginWebadminModalContent implements OnInit {
     @Input() account: NxAccountService;
-    @Input() login;
     @Input() keepPage: boolean;
     @Input() blockNavigation: boolean;
 
@@ -33,6 +32,7 @@ export class LoginWebadminModalContent implements OnInit {
 
     locationService: Location;
     auth;
+    login;
     next: string;
     password: string;
     remember: boolean;

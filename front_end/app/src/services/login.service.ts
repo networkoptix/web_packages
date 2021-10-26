@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import type { NxAccountService } from '@services/account.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,7 @@ import { Injectable } from '@angular/core';
 export class NxLoginService {
     CONFIG: IConfig;
     closeResult: string;
+    private _accountService: NxAccountService
 
     constructor(configService: NxConfigService,
                 private location: Location,
@@ -21,6 +23,10 @@ export class NxLoginService {
                 private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
+    }
+
+    set accountService(accountService) {
+        this._accountService = accountService;
     }
 
     private createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any> (
@@ -48,8 +54,8 @@ export class NxLoginService {
         };
 
         const params: IParams = {
-            account: this,
-            login: this.login,
+            account: this._accountService,
+            login: this._accountService.mediaServerApi.loginToken,
             cancellable: !keepPage || false,
             closable: true,
             location: this.location,
