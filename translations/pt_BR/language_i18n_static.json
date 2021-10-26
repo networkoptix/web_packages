@@ -163,7 +163,7 @@
         "systemUnreachable": "SISTEMA INACESSÍVEL",
         "systemUnresponsive": "O sistema parece não responder. Por favor recarregue a página.",
         "unknown": "Desconhecido",
-        "vendor": "Fabricante",
+        "vendor": "Fornecedor",
         "model": "Modelo",
         "ip": "Endereço IP",
         "server": "Servidor",
@@ -535,7 +535,7 @@
         "c_Info": "para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
     "ipvdTopXByVolume": "Top {value} por volume:",
-    "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
+    "ipvdDisclaimer": "Esta lista é limitada a dispositivos encontrados em {vmsName} onde os usuários permitiram relatórios automáticos de especificações do dispositivo para {companyName}. Nenhuma informação pessoal é coletada e cada usuário permanece completamente anônimo.",
     "menu": {
         "titles": {
             "cameras": "Câmeras",
@@ -551,14 +551,14 @@
         "activate": "Ativar conta",
         "activateCode": "Ativar conta",
         "activateSuccess": "Conta ativada",
-        "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "articleTitle": "{ARTICLE_TITLE} por {VMS_NAME}",
         "changePassword": "Mudar Senha",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% para ",
         "failedToAccessSystem": "Falha ao acessar o sistema",
-        "failedToAccessCamera": "Failed to access camera",
+        "failedToAccessCamera": "Falha ao acessar a câmera",
         "integrations": "%VMS_NAME% integrações",
         "login": "Fazer login",
         "pageNotFound": "Página não encontrada",
@@ -572,12 +572,12 @@
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visualizar câmaras",
-        "apiTool": "API testing tool"
+        "apiTool": "Ferramenta de teste de API"
     },
     "pageDescriptions": {
         "integrations": "As integrações de Marketplace é um ecossistema centralizado de produtos que se integram perfeitamente com produtos VMS como %VMS_NAME%, todos disponíveis em %CLOUD_NAME% para que você possa encontrar soluções para construir e personalizar seu sistema de Vídeo IP.",
-        "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
-        "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
+        "integrationSetup": "Instruções de configuração para {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
+        "integrationDetails": "{PLUGIN_NAME} por {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
         "common": "muito comum",
@@ -600,11 +600,11 @@
             "message": "Por favor, certifique-se de que seus servidores estão online e tente novamente."
         },
         "merge": {
-            "title": "This system is being merged to {systemName}.",
+            "title": "Este sistema está sendo mesclado em {systemName}.",
             "message": {
                 "dependingOnSize": "Dependendo do tamanho do banco de dados, isso pode levar várias horas.",
                 "untilFinished": "Até que a mesclagem seja concluída, você pode fazer login neste sistema e assistir ao vídeo, mas não pode alterar as configurações.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "Quando a fusão for concluída, todos os usuários e câmeras deste sistema ficarão disponíveis no {systemName} e este sistema será excluído."
             }
         },
         "server": {
@@ -614,7 +614,7 @@
     },
     "pleaseSelect": "Por favor, selecione...",
     "privacyPolicy": {
-        "integration": "You will find the {INTEGRATION_COMPANY} privacy policy <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Você encontrará a {INTEGRATION_COMPANY} política de privacidade <a href=\"{INTEGRATION_PRIVACY_POLICY}\" target=\"_blank\">aqui</a>. A %COMPANY_NAME% política de privacidade, que inclui instruções sobre como retirar seu consentimento, está disponível <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a>.",
         "ipvd": "Ao enviar este formulário, você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará a %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
     },
     "registration": {
@@ -627,11 +627,11 @@
         },
         "finishingMerge": "Finalizando mesclagem de sistemas",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Aceitar",
+            "reject": "Rejeitar",
             "backToEditText": "Voltar para as interfaces de edição",
             "previewRibbon": "Esta página é uma prévia das alterações mais recentes e não corresponde à versão disponível publicamente.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Esta página é a versão ao vivo que está disponível publicamente."
         },
         "systemOffline": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
         "systemsMerging": "Este sistema está atualmente envolvido em uma operação de mesclagem."
@@ -643,28 +643,28 @@
         "analyticsSelected": "eventos analíticos",
         "filter applied": "filtro aplicado",
         "filters applied": "filtros aplicados",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
+        "appliedFilters": "{count, plural, =0{# filtros} one{# filtro} other{# filtros}} aplicado",
         "hardwareType": "Tipo",
         "hardwareTypes": "Tipos",
         "minResolution": "Resolução Mínima",
         "search_ipvd": "Pesquise por modelo ou fabricante",
-        "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
+        "selected": "{count, plural, =0{# selecionado} one{# selecionado} other{# selecionado}}",
         "vendor": "Fabricante",
         "vendors": "Fabricantes"
     },
     "servers": {
-        "analyticsDataPolicyError": "Error deleting or keeping analytics data",
-        "autoRefresh": "auto refresh in {time}s...",
+        "analyticsDataPolicyError": "Erro ao excluir ou manter dados analíticos",
+        "autoRefresh": "atualização automática em {time}s...",
         "beginDetach": "O servidor está sendo desanexado",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "O servidor agora está sendo reiniciado.",
         "detachSystemFailed": "Falha ao desanexar o servidor do sistema. Verifique se a senha digitada está correta e o servidor está online e tente novamente.",
         "detachSystemSuccess": "O servidor foi desanexado do sistema com sucesso.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "portWarning": "Os números de porta menores que 1024 são restritos. O servidor pode ficar inacessível.",
+        "refresh": "Atualizar",
+        "refreshing": "Atualizando...",
         "removeMediaserverFailed": "Falha ao remover o servidor do sistema.",
         "resetFailed": "Falha ao redefinir o servidor. Verifique se a senha digitada está correta e o servidor está online e tente novamente.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "O servidor {serverName} foi redefinido para os padrões.",
         "restartFailed": "Ocorreu um problema ao reiniciar o servidor.",
         "restartSuccessful": "O servidor foi reiniciado com sucesso.",
         "serverOffline": "O servidor está offline.",
@@ -672,20 +672,20 @@
         "status": {
             "checking": "verificando...",
             "offline": "offline",
-            "resetting": "resetting...",
+            "resetting": "redefinindo...",
             "restarting": "reiniciando..."
         },
         "successRename": "Nome do servidor salvo."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Visualizar",
+        "Settings": "Confirgurações",
+        "Information": "Informações"
     },
     "system": {
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
+        "connected": "Conectado",
+        "not_connected": "Não conectado",
+        "MERGE_FINISHES": "Quando a mesclagem terminar, todos os usuários e câmeras deste sistema ficarão disponíveis no Sistema <strong>{targetSystemName}</strong> e este sistema será excluído.",
         "mergeUnknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
@@ -738,8 +738,8 @@
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",
-            "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "network": "Rede, adicionada por meio do sistema operacional",
+            "smb": "Rede (smb), adicionada por meio de VMS",
             "cloud": "Nuvem"
         }
     },
@@ -845,15 +845,15 @@
         "backupNewCamerasByDefault": "Backup de novas câmeras por padrão",
         "backupQualities": "Qualidades de backup",
         "cameraSettingsOptimization": "Permitir otimização de configuração de dispositivo",
-        "clientStatisticsSettingsUrl": "Url relativo às estatísticas do cliente",
+        "clientStatisticsSettingsUrl": "Url relativo das estatísticas do cliente",
         "cloudAccountName": "Conta do proprietário da nuvem",
         "cloudConnectRelayingEnabled": "Ativar retransmissão para conexão na nuvem",
         "cloudConnectUdpHolePunchingEnabled": "Ativar perfuração UDP para conexão em nuvem",
         "cloudHost": "Host de nuvem",
-        "cloudSystemID": "Id do sistema Cloud",
+        "cloudSystemID": "Id do sistema em nuvem",
         "disabledVendors": "Fornecedores desativados",
-        "ec2AliveUpdateIntervalSec": "Intervalo de atualização do sistema vivo (segundos)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Tempo limite de manutenção da conexão (segundos)",
+        "ec2AliveUpdateIntervalSec": "Intervalo de atualização do sistema (segundos)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Tempo limite para manter a conexão ativa (segundos)",
         "ec2KeepAliveProbeCount": "Conexão mantém sondas vivas (segundos)",
         "emailFrom": "E-mail de",
         "emailSignature": "Assinatura de e-mail",
@@ -866,50 +866,50 @@
         "ldapUri": "URI do LDAP",
         "localSystemId": "ID do sistema local",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Diferença máxima entre o tempo sincronizado e o da Internet (milissegundos)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Diferença máxima entre tempo sincronizado e local (milissegundos)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Diferença máxima entre a hora sincronizada e local (milissegundos)",
         "maxP2pQueueSizeBytes": "Tamanho máximo da fila P2P (bytes)",
         "maxRecordQueueSizeBytes": "Tamanho máximo da fila de registros (bytes)",
         "maxRecordQueueSizeElements": "Tamanho máximo da fila de registros (elementos)",
-        "maxRemoteArchiveSynchronizationThreads": "Encadeamentos Máximos de Sincronização de Archive Remoto",
+        "maxRemoteArchiveSynchronizationThreads": "Máximo de threads de sincronização de arquivo remoto",
         "maxRtspConnectDurationSeconds": "Duração máx conexão Rtsp segundos",
-        "maxSceneItems": "Itens de cena máxima (0 significa padrão)",
+        "maxSceneItems": "Máximo de itens de cena (0 significa padrão)",
         "proxyConnectTimeoutSec": "Tempo Limite de Conexão do Proxy (segundos)",
         "rtpTimeoutMs": "Tempo limite de RTP (milissegundos)",
         "sequentialFlirOnvifSearcherEnabled": "Use o buscador sequencial Flir Onvif",
-        "serverDiscoveryPingTimeoutSec": "Timeout de descoberta do servidor",
-        "smtpConnectionType": "Tipo de ligação SMTP",
+        "serverDiscoveryPingTimeoutSec": "Tempo limite de descoberta do servidor",
+        "smtpConnectionType": "Tipo de conexão SMTP",
         "smtpHost": "Host SMTP",
         "smtpPort": "Porta SMTP",
         "smtpSimple": "SMTP simples",
-        "smtpTimeout": "Timeout do SMTP",
-        "smtpUser": "Utilizador de SMTP",
+        "smtpTimeout": "Tempo limite de SMTP",
+        "smtpUser": "Usuário SMTP",
         "statisticsAllowed": "Enviar anonimamente estatísticas de uso e relatórios de falhas",
         "statisticsReportLastNumber": "Relatório de estatísticas - último número",
         "statisticsReportLastTime": "Relatório de estatísticas - última vez",
         "statisticsReportLastVersion": "Relatório de estatísticas - última versão",
         "statisticsReportServerApi": "Servidor api de estatísticas",
         "statisticsReportTimeCycle": "Intervalo do relatório de estatísticas",
-        "statisticsReportUpdateDelay": "Relatório de estatísticas - atraso da actualização",
-        "synchronizeTimeWithInternet": "Sincronize o tempo com a Internet",
+        "statisticsReportUpdateDelay": "Relatório de estatísticas - atraso na atualização",
+        "synchronizeTimeWithInternet": "Sincronizar a hora com a Internet",
         "SystemName": "Nome do Sistema",
         "takeCameraOwnershipWithoutLock": "Tome posse de câmaras sem bloqueio",
-        "timeSynchronizationEnabled": "Sincronização de tempo activada",
+        "timeSynchronizationEnabled": "Sincronização de tempo habilitada",
         "primaryTimeServer": "Servidor de sincronização de tempo primário",
         "osTimeChangeCheckPeriodMs": "Período de verificação de mudança de horário do sistema operacional",
         "syncTimeExchangePeriod": "Intervalo de sincronização de hora para requisições de rede",
         "syncTimeEpsilon": "Tempo de sincronização epsilon. O novo valor não será aplicado se o tempo delta for menor que epsilon",
         "maxVirtualCameraArchiveSynchronizationThreads": "Máximo de threads de sincronização de arquivo de câmera virtual",
-        "updateNotificationsEnabled": "Notificações de actualização habilitadas",
-        "upnpPortMappingEnabled": "Mapeamento de portas UPNP activado",
-        "useTextEmailFormat": "Enviar e-mails de texto simples",
+        "updateNotificationsEnabled": "Notificações de atualização ativadas",
+        "upnpPortMappingEnabled": "Mapeamento de porta UPNP habilitado",
+        "useTextEmailFormat": "Enviar e-mails em texto simples",
         "useWindowsEmailLineFeed": "Use o feed de linha do Windows em emails",
         "trafficEncryptionForced": "Forçar criptografia de tráfego",
         "videoTrafficEncryptionForced": "Forçar criptografia de tráfego de vídeo",
         "updateStatus": "Atualizar o status",
         "watermarkSettings": "Configurações de marca d'água",
         "maxHttpTranscodingSessions": "Quantidade máxima de conexões HTTP usando transcodificação para o servidor. O Chrome abre 2 conexões ao mesmo tempo e fecha a primeira. Portanto, é recomendável definir o valor> = 2 para este parâmetro.",
-        "maxEventLogRecords": "Registro máximo de registros de eventos para manter no banco de dados. A quantidade real de registros não gravados pode ser até 20% superior ao valor especificado.",
-        "forceLiveCacheForPrimaryStream": "Se deseja armazenar alguns quadros para o fluxo principal. Valores: \"sim\" - sempre habilitado (pode usar muito de RAM), \"não\" - sempre desativado, exceto quando necessário pela reprodução (ex.: HLS), \"auto\" - similar a \"não\", mas ativado quando melhorar a experiência do usuário (por exemplo, quando alguns plugins Analytics estão trabalhando na câmera)."
+        "maxEventLogRecords": "Máximo de registros de log de eventos a serem mantidos no banco de dados. A quantidade real de registros não excluídos pode ser até 20% maior do que o valor especificado.",
+        "forceLiveCacheForPrimaryStream": "Se deve armazenar em cache alguns quadros para o fluxo principal. Valores: \"sim\" - sempre ativado (pode usar muita RAM), \"não\" - sempre desativado, exceto quando exigido pela reprodução (por exemplo, HLS), \"automático\" - semelhante a \"não\", mas ativado quando melhora o experiência do usuário (por exemplo, quando algum plugin do Analytics está funcionando na câmera)."
     },
     "result": "{count, plural, =0{# resultados} one{# resultado} other{# resultados}}",
     "additionalSystems": "{count, plural, =0{+ # Sistemas} one{+ # Sistema} other{+ # Sistemas}}",

@@ -64,7 +64,7 @@
       "errorLoading": "Ocorreu um erro ao carregar este vídeo.",
       "unauthorized": "Autentificação requerida",
       "noData": "Sem dados",
-      "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "o iOS não oferece suporte a vídeos maiores que fullHD (2MP: 1920x1080).",
       "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
       "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeos no Internet Explorer.",
       "noArmSupport": "Este navegador ou dispositivo não oferece suporte à reprodução de vídeo de servidores baseados em ARM.",
