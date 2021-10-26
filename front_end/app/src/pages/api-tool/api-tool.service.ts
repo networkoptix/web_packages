@@ -10,7 +10,7 @@ import { NxAccountService }                         from '@services/account.serv
 import { NxHeaderService }                          from '@services/nx-header.service';
 import { APIDocVersion, MenuStructure }                            from '@services/nx-config/base-config';
 import { ClickEvent, MenuNodeWithParent }           from '@components/developers-menu/developers-menu.component';
-import { DropdownItem }                             from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem }                             from '@components/dropdowns/generic/dropdown.component.types';
 import { BehaviorSubject, Subscription }            from 'rxjs';
 import {
     delay, distinctUntilChanged,

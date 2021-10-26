@@ -1,5 +1,5 @@
 import { Component }                 from '@angular/core';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxSystemService }           from '@services/system.service';
 import { NxAPIToolService }          from '../api-tool.service';
