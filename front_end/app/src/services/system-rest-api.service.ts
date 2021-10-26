@@ -18,9 +18,6 @@ import { NxStorageService }     from '@services/storage.service';
 import { WINDOW }               from '@services/window-provider';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxLoginService } from '@services/login.service';
-import { GenericModalContent } from '@dialogs/generic/generic.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DomSanitizer } from '@angular/platform-browser';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 /**

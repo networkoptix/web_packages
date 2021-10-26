@@ -5,7 +5,7 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject }           from 'rxjs';
 
-import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component.types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystemsService }          from '@services/systems.service';
 import { NxProcessService, Process } from '@services/process.service';

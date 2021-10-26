@@ -12,7 +12,7 @@ import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { ConsoleSection }           from '@components/console-table/console-table.component.types';
-import { PackageStatus }            from '@dialogs/download-async/download-async.component';
+import { PackageStatus }            from '@dialogs/download-async/download-async.component.types';
 import { NxConsoleService }         from '@pages/developer-console/console/console.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService }             from '@services/oauth.service';

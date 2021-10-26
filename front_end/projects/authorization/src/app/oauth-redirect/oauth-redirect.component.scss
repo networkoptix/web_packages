@@ -1,0 +1,54 @@
+@use '../../../../../app/src/styles/typography';
+@use '../../../../../app/src/styles/mixins';
+@use '../../../../../app/styles/theme_variables' as *;
+
+.oauth-redirect {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.container-d, &.container-m {
+        background-color: $dark8;
+    }
+    .container {
+        max-width: 991px;
+        padding: 0 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .oauth-redirect-btn {
+        color: $light1 !important;
+        background-color: var(--brand-core);
+        width: 250px;
+        height: 120px !important;
+        font-size: rem(32px) !important;
+        border-radius: 15px !important;
+    }
+
+    .oauth-text {
+        color: $light1 !important;
+        &.oauth-error {
+            background-color: $error;
+        }
+        &:not(.oauth-error) {
+            background-color: var(--brand-core);
+        }
+        width: 250px;
+        height: 120px !important;
+        font-size: rem(18px) !important;
+        border-radius: 12px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 30px;
+        p {
+            margin-bottom: 0;
+        }
+    }
+}

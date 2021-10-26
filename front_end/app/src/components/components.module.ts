@@ -9,17 +9,14 @@ import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { EditorModule, TINYMCE_SCRIPT_SRC }   from '@tinymce/tinymce-angular';
 
 import { DirectivesModule }                   from '@directives/directives.module';
-import { NxProcessButtonComponent }           from './process-button/process-button.component';
-import { NxCheckboxComponent }                from './checkbox/checkbox.component';
 import { NxRadioComponent }                   from './radio/radio.component';
 import { NxAlertBlockComponent }              from './content-block/alert/block.component';
 import { NxContentBlockComponent }            from './content-block/content-block.component';
 import { NxContentBlockSectionComponent }     from './content-block/section/section.component';
 import { NxExternalVideoComponent }           from './external-video/external-video.component';
 // import { NxLayoutRightComponent }             from './layout-right/layout.component';
-import { NxTagComponent }                     from './tag/tag.component';
 import { NxCarouselComponent }                from './carousel/carousel.component';
-import { NxRibbonComponent, NxRibbonService } from './ribbon';
+import { NxRibbonComponent } from './ribbon';
 import { NxVendorListComponent }              from './vendor-list/vendor-list.component';
 import { NxSearchComponent }                  from './search/search.component';
 import { NxFooterComponent }                  from './footer/footer.component';
@@ -32,23 +29,17 @@ import { NxActiveSystemDropdown }             from './dropdowns/active-system/ac
 import { NxPermissionsDropdown }              from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }              from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent }          from './landing-display/landing-display.component';
-import { NxPasswordComponent }                from './password-input/password.component';
-import { NxPasswordValidationComponent }      from './password-input-validation/password-validation.component';
-import { NxEmailComponent }                   from './email-input/email.component';
 import { NxClientButtonComponent }            from './open-client-button/client-button.component';
 import { NxSwitchComponent }                  from './switch/switch.component';
 import { ToastsContainer }                    from './toast/toast.component';
 import { NxHeaderComponent }                  from './header/header.component';
 import { NxNavLocationDropdown }              from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }                   from './apply/apply.component';
-import { NxPreLoaderComponent }               from './placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderComponent }         from './placeholders/page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
 import { NxPlayerPlaceholderComponent }       from './placeholders/player/player-placeholder.component';
-import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
 import { NxDevelopersMenuComponent }          from './developers-menu/developers-menu.component';
-import { NxProcessCancelButtonComponent }     from './process-cancel-Button/process-cancel-button.component';
 import { NxDropMenu }                         from './dropdowns/drop-menu/drop-menu.component';
 import { NxHeaderMainButtonComponent }      from './header/main-button/main-button.component';
 import { NxSystemTileComponent }            from './dropdowns/drop-menu/system-tile/system-tile.component';
@@ -57,18 +48,20 @@ import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/addition
 import { NxTabsComponent }                  from './header/tabs/tabs.component';
 import { NxNavDropdownComponent }           from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent }          from './overlay-modal/overlay-modal.component';
-import { NxInfoBlockComponent }      from './info-block/info-block.component';
-import { NxImageComponent }          from '@pages/health/table-components/image/image.component';
-import { NxEditableHeading }         from './editable/heading/editable-heading.component';
-import { QuicklinkModule }           from 'ngx-quicklink';
-import { NxNumericComponent }        from '@components/numeric-input/numeric.component';
-import { NxPaginatorComponent }      from '@components/paginator/paginator.component';
-import { NxHTMLComponent }           from '@components/html-input/html-input.component';
-import { PipesModule }               from '@src/pipes/pipes.module';
-import { NxCookieBannerComponent }   from './cookie-banner/cookie-banner.component';
-import { NxAdvancedFilterComponent } from './advanced-filter/advanced-filter.component';
-import { NxConsoleTableComponent }   from './console-table/console-table.component';
+import { NxInfoBlockComponent }             from './info-block/info-block.component';
+import { NxImageComponent }                 from '@pages/health/table-components/image/image.component';
+import { NxEditableHeading }        from './editable/heading/editable-heading.component';
+import { QuicklinkModule }                  from 'ngx-quicklink';
+import { NxNumericComponent }               from '@components/numeric-input/numeric.component';
+import { NxPaginatorComponent }             from '@components/paginator/paginator.component';
+import { NxHTMLComponent }                  from '@components/html-input/html-input.component';
+import { PipesModule }                      from '@src/pipes/pipes.module';
+import { NxCookieBannerComponent }          from './cookie-banner/cookie-banner.component';
+import { NxAdvancedFilterComponent }        from './advanced-filter/advanced-filter.component';
+import { NxConsoleTableComponent }          from './console-table/console-table.component';
 import { NxTextEditableComponent }   from '@components/editable/editable.component';
+
+import { SharedComponentsModule } from '@components/shared-components.module';
 
 @NgModule({
     imports: [
@@ -83,7 +76,8 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         AngularSvgIconModule.forRoot(),
         QuicklinkModule,
         CdkTableModule,
-        EditorModule
+        EditorModule,
+        SharedComponentsModule
     ],
     declarations: [
         NxThreeDotDropdown,
@@ -96,17 +90,12 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxPreLoaderComponent,
-        NxCheckboxComponent,
         NxRadioComponent,
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
-        NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
         NxVendorListComponent,
@@ -115,10 +104,6 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
-        NxPasswordComponent,
-        NxPasswordValidationComponent,
-        NxPasswordTagValidationComponent,
-        NxEmailComponent,
         NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -146,16 +131,11 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxPreLoaderComponent,
-        NxCheckboxComponent,
         NxRadioComponent,
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         // NxLayoutRightComponent,
-        NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
         NxVendorListComponent,
@@ -164,10 +144,6 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
-        NxPasswordComponent,
-        NxPasswordValidationComponent,
-        NxPasswordTagValidationComponent,
-        NxEmailComponent,
         NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -199,17 +175,12 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxPreLoaderComponent,
-        NxCheckboxComponent,
         NxRadioComponent,
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
-        NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
         NxVendorListComponent,
@@ -218,10 +189,6 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
-        NxPasswordComponent,
-        NxPasswordValidationComponent,
-        NxPasswordTagValidationComponent,
-        NxEmailComponent,
         NxNumericComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -244,7 +211,8 @@ import { NxTextEditableComponent }   from '@components/editable/editable.compone
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
-        NxTextEditableComponent
+        NxTextEditableComponent,
+        SharedComponentsModule
     ]
 })
 export class ComponentsModule {

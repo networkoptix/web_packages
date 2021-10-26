@@ -61,6 +61,7 @@ enum breakpoints {
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
+    authorizeUrl = '/authorize'
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -237,6 +238,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.hideTabsAndDropdown$.next(hideTabsAndDropdown);
             this.hiddenBreadcrumbs$.next(hiddenBreadcrumbs);
         });
+
+        if (!environment.production) {
+            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
+        }
     }
 
     private isActive(val: string) {

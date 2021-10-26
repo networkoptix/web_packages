@@ -3,7 +3,7 @@ import { HttpClient }                from '@angular/common/http';
 
 import { IConfig, NxConfigService }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSystemRole }              from './system.service';
+import { NxSystemRole }              from './system.service/system/user-manager/user-manager-types';
 import { NxPageService }             from './page.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 

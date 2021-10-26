@@ -13,16 +13,17 @@ import {
     ContentManifest, ContextManifest, DocAsset
 }                                                            from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService }                          from '@services/nx-config';
-import { BehaviorSubject, combineLatest, Observable }        from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable } from 'rxjs';
 import { NxHeaderService }                                   from '@services/nx-header.service';
 import { NxMenusService }                                    from '@services/menus.service';
-import { PackageHandler, PackageProgress }                   from '@dialogs/download-async/download-async.component';
+import { PackageHandler } from '@dialogs/download-async/download-async.component';
+import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
 import { WINDOW }                                            from '@services/window-provider';
 import { NxToastService }                                    from '@dialogs/toast.service';
 import { NxUriService }                                      from '@services/uri.service';
 import { NxConsoleService }                                  from '@pages/developer-console/console/console.service';
 import { FilterState, FilterUpdatePayload }                  from '@components/advanced-filter/advanced-filter.component';
-import { DropdownItem }                                      from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem }                                      from '@components/dropdowns/generic/dropdown.component.types';
 import { ConsoleMode }                                       from '@pages/developer-console/console/console.component.types';
 import {
     AdditionalFilter,

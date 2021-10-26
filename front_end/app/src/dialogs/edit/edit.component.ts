@@ -11,7 +11,7 @@ import {
     ConfigType, ModalContent, ModalManifest, ModalType
 }                                           from '@components/console-table/console-table.component.types';
 import { NxCloudApiService }                from '@services/nx-cloud-api';
-import { DropdownItem }                     from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem }                     from '@components/dropdowns/generic/dropdown.component.types';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
 import { NxHeaderService }                  from '@services/nx-header.service';
 import { NxConsoleService }                 from '@pages/developer-console/console/console.service';

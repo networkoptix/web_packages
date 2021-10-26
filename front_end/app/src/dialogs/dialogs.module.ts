@@ -8,6 +8,7 @@ import { RouterModule }                from '@angular/router';
 import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
+import { QrCodeModule }                   from 'ng-qrcode';
 
 import { ComponentsModule }            from '@components/components.module';
 import { DirectivesModule }            from '@directives/directives.module';
@@ -27,10 +28,6 @@ import { ChangePasswordModalContent }  from './change-password/change-password.c
 import { WizardModalContent }          from './wizard/wizard.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import {
-    GenericModalContent,
-    NxModalGenericComponent
-}                                         from './generic/generic.component';
-import {
     ApplyModalContent,
     NxModalApplyComponent
 }                                         from './apply/apply.component';
@@ -46,8 +43,8 @@ import { EditModalContent }               from './edit/edit.component';
 import { TwoFAModalContent }              from './two-fa/two-fa.component';
 import { DownloadAsyncModalContent }      from './download-async/download-async.component';
 import { NxDialogsService }               from './dialogs.service';
-import { QrCodeModule }                   from 'ng-qrcode';
 import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.component';
+import { GenericDialogModule } from './generic/generic.module';
 
 @NgModule({
     imports: [
@@ -62,7 +59,8 @@ import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.co
         NgbModule,
         AngularSvgIconModule.forRoot(),
         PipesModule,
-        QrCodeModule
+        QrCodeModule,
+        GenericDialogModule
     ],
     declarations: [
         LoginWebadminModalContent,
@@ -74,7 +72,6 @@ import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.co
         MessageModalContent,
         RemoveUserModalContent,
         EmbedModalContent,
-        GenericModalContent,
         ApplyModalContent,
         NxModalApplyComponent,
         RestartServerModalContent,
@@ -83,7 +80,6 @@ import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.co
         ChangePasswordModalContent,
         WizardModalContent,
         DeleteCloudUserModalContent,
-        NxModalGenericComponent,
         CloudStorageDeleteModalContent,
         CloudStorageMoveModalContent,
         UpdateCameraCredentialsModalContent,
@@ -97,10 +93,11 @@ import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.co
     ],
     providers: [
         NxDialogsService,
-        NxModalGenericComponent,
         NxModalApplyComponent
     ],
-    exports: []
+    exports: [
+        GenericDialogModule
+    ]
 })
 export class DialogsModule {
 }

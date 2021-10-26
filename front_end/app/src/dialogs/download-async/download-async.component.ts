@@ -14,28 +14,7 @@ import {
 import {
     CustomClientAPI, NxCloudApiService
 }                                    from '@services/nx-cloud-api';
-
-export enum PackageProgress {
-    STARTING,
-    GENERATING,
-    DOWNLOAD_READY,
-    PACKAGE_ERROR
-}
-
-export enum PackageState {
-    PENDING='pending',
-    READY='ready',
-    FAILED='failed'
-}
-
-export interface PackageStatus {
-    state: PackageState,
-    message?: string,
-    errors: string[],
-    current: number,
-    total: number
-
-}
+import { PackageProgress, PackageState, PackageStatus } from '@dialogs/download-async/download-async.component.types';
 
 type DownloadId = string;
 

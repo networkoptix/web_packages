@@ -13,11 +13,15 @@
     "serve-webadmin-nuke": "export WEBADMIN_TARGET=nuke && npm run serve:webadmin",
     "serve-webadmin-sofia": "export WEBADMIN_TARGET=sofia && npm run serve:webadmin",
     "serve-webadmin-webpi": "export WEBADMIN_TARGET=webpi && npm run serve:webadmin",
+    "serve:auth": "npm run setVarSkin && npm run lang && npm run update-lang-types && ng serve authorization --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy.conf.front_end.js",
     "serve:webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.js",
-    "build": "npm run lang && ng build --prod",
+    "build": "npm run build:cloud && npm run build:auth",
+    "build:auth": "ng build authorization --prod",
+    "build:cloud": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
     "bundle-report": "npm run lang && ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
+    "bundle-report:auth": "npm run lang && ng build authorization --prod --stats-json && webpack-bundle-analyzer dist/authorization/stats.json -s gzip",
     "postbuild": "./cloud-portal-postbuild.sh",
     "postbuild-webadmin": "./cloud-portal-postbuild.sh true",
     "postinstall": "ngcc && node setSkin.js --skin blue",
@@ -40,7 +44,7 @@
     "setVarSkin": "node buildSkins.js ./app/styles",
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
-    "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
+    "update-lang": "ngx-translate-extract -i ./app/src ./projects/authorization/src -o ./app/language_i18n.json --clean --sort --format json",
     "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts; rm app/language_i18n_static_types.ts-e"
   },
   "private": true,
@@ -155,6 +159,7 @@
     "typescript": "4.0.5",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-dev-server": "3.11.0"
   }
 }

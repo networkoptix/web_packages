@@ -1,7 +1,7 @@
 import md5                                            from 'md5';
 
 import { DataStructureMeta } from '../../pages/developer-console/console/edit/console-edit.component.types';
-import { DropdownItem } from '../dropdowns/generic/dropdown.component';
+import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 import { ContentSettings } from '../../services/nx-cloud-api.types';
 
 export enum ConfigType {

@@ -97,7 +97,7 @@ urlpatterns = [
     url(r'^ngsw-worker.js$',
         TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
                              content_type='application/javascript')),
-
+    url(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
     url(r'^(?!static|preview|admin).*',
         TemplateView.as_view(template_name="static/index.html"))
 ]

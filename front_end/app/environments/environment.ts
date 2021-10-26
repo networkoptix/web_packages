@@ -5,7 +5,8 @@ import { IEnvironment } from './environment-config';
 
 export const environment: IEnvironment = {
     isLocal: false,
-    production: false
+    production: false,
+    cloudHost: 'dev3.cloud.hdw.mx'
 };
 
 /*

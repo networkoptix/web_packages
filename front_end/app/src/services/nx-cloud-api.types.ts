@@ -1,4 +1,4 @@
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { ConfigType }   from '@components/console-table/console-table.component.types';
 
 /* eslint-disable camelcase */

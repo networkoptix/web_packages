@@ -8,8 +8,8 @@ import {
 }                                                  from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
-import { fromEvent }                               from 'rxjs';
+import { debounceTime, delay, filter, finalize, map, retryWhen, take, timeout } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 import { LocalStorageService }                     from 'ngx-webstorage';
 import { NxRibbonService }                         from '@components/ribbon';
 import { WINDOW }                                  from '@services/window-provider';
@@ -31,17 +31,14 @@ require('./scripts/vendor/protocolcheck');
     selector: 'nx-app',
     template: `
         <div class="headerContainer">
-            <nx-header *ngIf="!appStateService.authorizing && (appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
+            <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"
              *ngIf="appStateService.ready"
             [ngStyle]="{ 'height': appStateService.appContainerHeight }">
             <div class="mainContainer" [ngClass]="{
-                altMainBackground: appStateService.altBackground,
-                'full-screen': appStateService.authorizing,
-                desktopBackground: viewType === 'desktop',
-                mobileBackground: viewType === 'mobile'
+                altMainBackground: appStateService.altBackground
             }" nxScrollHelper #mainContainer>
                 <nx-cookie-banner></nx-cookie-banner>
                 <router-outlet></router-outlet>
@@ -91,15 +88,32 @@ export class AppComponent {
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
             .subscribe((ev: NavigationEnd) => {
-                this.appStateService.authorizing =
-                    ev.url.includes('authorize') ||
-                    ev.url.includes('activate') ||
-                    ev.url.includes('restore_password') ||
-                    ev.url.includes('redirect-oauth');
-
-                this.viewType = ev.url.includes('?') && new URLSearchParams(
-                    ev.url.match(/.*(\?.*)/i)[1]
-                ).get('view_type') || 'web';
+                const link = ev.url;
+                const params = link.includes('?') && new URLSearchParams(
+                    link.match(/.*(\?.*)/i)[1]
+                );
+                let code;
+                if (params) {
+                    code = params?.get('code');
+                }
+                if (code && link.includes('/?code')) {
+                    return this.cloudApiService.loginCode(code)
+                        .then(() => this.cloudApiService.account(true)
+                            .pipe(
+                                map(res => {
+                                    if (!res) {
+                                        throw Error('undefined response from cloud service account');
+                                    }
+                                    return res;
+                                }),
+                                retryWhen(errors => errors.pipe(delay(500), take(10)))
+                            ).subscribe(() => {
+                                const route = link.replace(this.window.location.origin, '').split('?')[0];
+                                const queryParams = { state: params.get('state') };
+                                return this.router.navigate([route || '/systems'], { queryParams })
+                                    .then(() => this.window.location.reload());
+                            }));
+                }
             });
 
         /* No real need to update often unless some browser have major upgrade

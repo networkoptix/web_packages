@@ -8,7 +8,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Watcher }                   from '@services/apply.service';
+import { DropdownItem } from './dropdown.component.types';
 
 /* Usage
  <nx-select [id]="select.id"
@@ -116,14 +116,4 @@ export class NxGenericDropdown extends BaseDropdown {
             this.change(item);
         }
     }
-}
-
-export class DropdownItem {
-    constructor(
-        public name: string,
-        public help?: string,
-        public value?: string | number,
-        public state?: string,
-        public disabled?: boolean
-    ) {}
 }

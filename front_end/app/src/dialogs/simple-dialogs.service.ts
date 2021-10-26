@@ -1,10 +1,10 @@
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Inject, Injectable } from '@angular/core';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IConfig, NxConfigService } from '../services/nx-config';
 import { DOCUMENT, Location } from '@angular/common';
 import { SubscriptionLike } from 'rxjs';
-import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NxToastService } from './toast.service';
 import { DomSanitizer } from '@angular/platform-browser';
