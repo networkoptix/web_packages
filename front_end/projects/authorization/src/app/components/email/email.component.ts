@@ -82,10 +82,12 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
             header: auth.expiredHeader(),
             subHeader: auth.expiredSubheader()
         };
+        const login = {
+            header: auth.loginCloudHeader()
+        };
         this.templateText = {
-            loginToCloud: {
-                header: auth.loginCloudHeader()
-            },
+            loginToCloud: login,
+            loginToWebadmin: login,
             connectSystemToCloud: connect,
             setupWizard: connect,
             renewSessionDesktop: renew,

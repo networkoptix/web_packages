@@ -89,11 +89,13 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
             subHeader: auth.expiredAccountSubheader()
         };
         const subHeader = auth.asAccountSubheader();
+        const login = {
+            header: auth.loginCloudHeader(),
+            subHeader
+        };
         this.templateText = {
-            loginToCloud: {
-                header: auth.loginCloudHeader(),
-                subHeader
-            },
+            loginToCloud: login,
+            loginToWebadmin: login,
             confirmPasswordDisconnect: {
                 header: auth.loginCloudHeader(),
                 subHeader,
