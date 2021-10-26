@@ -13,7 +13,7 @@ import { NxSupportComponent } from './support.component';
 import { WINDOW } from '@services/window-provider';
 import {
     getMockTranslations,
-    MockProvider,
+    HelperMockProvider,
     sanitizerMock
 } from '@src/_mocks/helpers.test';
 import { supportNode } from '@src/_mocks/knowledge_base_landing.mock';
@@ -48,11 +48,11 @@ describe('NxSupportComponent', () => {
                     RouterTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(DomSanitizer, sanitizerMock),
-                    new MockProvider(WINDOW, window),
-                    new MockProvider(NxAccountService, {})
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(DomSanitizer, sanitizerMock),
+                    new HelperMockProvider(WINDOW, window),
+                    new HelperMockProvider(NxAccountService, {})
                 ]
             });
 

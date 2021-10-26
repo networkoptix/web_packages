@@ -6,9 +6,9 @@ import { BehaviorSubject, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { nxConfig }                          from '@services/nx-config/config';
 import { NxConfigService }                   from '@services/nx-config';
-import { NxPagePlaceholderComponent }        from './page-placeholder.component';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }         from '@services/nx-language-provider';
+import { NxPagePlaceholderComponent }              from './page-placeholder.component';
+import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
+import { NxLanguageProviderService }               from '@services/nx-language-provider';
 import { NxScrollMechanicsService }          from '@services/scroll-mechanics.service';
 
 describe('NxPagePlaceholderComponent', () => {
@@ -27,9 +27,9 @@ describe('NxPagePlaceholderComponent', () => {
             .configureTestingModule({
                 declarations: [NxPagePlaceholderComponent],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(NxScrollMechanicsService, scrollMock)
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(NxScrollMechanicsService, scrollMock)
                 ]
             })
             .compileComponents();

@@ -16,9 +16,9 @@ import { WINDOW } from '@services/window-provider';
 import {
     devToolsNode,
     docMenuMap
-} from '../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider } from '../../../_mocks/helpers.test';
-import { ActivatedRoute } from '@angular/router';
+}                             from '../../../_mocks/knowledge_base_landing.mock';
+import { HelperMockProvider } from '../../../_mocks/helpers.test';
+import { ActivatedRoute }     from '@angular/router';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxAccountService } from '@services/account.service';
@@ -56,12 +56,12 @@ describe('NxDevToolsComponent', () => {
                     HttpClientTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxCloudApiService, cloudApiMock),
-                    new MockProvider(NxHeaderService, {}),
-                    new MockProvider(NxAccountService, {}),
-                    new MockProvider(ActivatedRoute, mockRoute),
-                    new MockProvider(WINDOW, {})
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxCloudApiService, cloudApiMock),
+                    new HelperMockProvider(NxHeaderService, {}),
+                    new HelperMockProvider(NxAccountService, {}),
+                    new HelperMockProvider(ActivatedRoute, mockRoute),
+                    new HelperMockProvider(WINDOW, {})
                 ]
             }).compileComponents()
                 .then(() => {

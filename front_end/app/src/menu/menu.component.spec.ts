@@ -6,9 +6,9 @@ import {
 } from '@angular/core/testing';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config';
-import { NxMenuComponent } from './menu.component';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxMenuComponent }                         from './menu.component';
+import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
+import { NxLanguageProviderService }               from '@services/nx-language-provider';
 import { ActivatedRoute } from '@angular/router';
 import { NxApplyService } from '@services/apply.service';
 import { NxSearchService } from '@services/search.service';
@@ -277,10 +277,10 @@ describe('NxMenuComponent', () => {
                     MockSearchComponent
                 ],
                 providers: [
-                    new MockProvider(ActivatedRoute, routeMock),
-                    new MockProvider(NxApplyService, {}),
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(ActivatedRoute, routeMock),
+                    new HelperMockProvider(NxApplyService, {}),
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
                     NxSearchService,
                     NxMenuService
                 ]

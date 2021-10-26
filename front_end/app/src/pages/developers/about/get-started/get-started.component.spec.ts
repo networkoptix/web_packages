@@ -8,9 +8,9 @@ import { WINDOW } from '@services/window-provider';
 import {
     routeLandingMock,
     getStartedNode
-} from '../../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider } from '../../../../_mocks/helpers.test';
-import { Router } from '@angular/router';
+}                             from '../../../../_mocks/knowledge_base_landing.mock';
+import { HelperMockProvider } from '../../../../_mocks/helpers.test';
+import { Router }             from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 
@@ -40,9 +40,9 @@ describe('NxGetStartedComponent', () => {
                 declarations: [NxGetStartedComponent, RouterLinkDirectiveStub],
                 imports: [CommonModule],
                 providers: [
-                    new MockProvider(Router, routeLandingMock),
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(WINDOW, {})
+                    new HelperMockProvider(Router, routeLandingMock),
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(WINDOW, {})
                 ]
             });
 

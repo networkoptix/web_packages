@@ -5,9 +5,9 @@ import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxCapabilitiesComponent } from './capabilities.component';
 import { WINDOW } from '@services/window-provider';
-import { capabilitiesNode } from '../../../../_mocks/knowledge_base_landing.mock';
-import { MockProvider } from '../../../../_mocks/helpers.test';
-import { CommonModule } from '@angular/common';
+import { capabilitiesNode }   from '../../../../_mocks/knowledge_base_landing.mock';
+import { HelperMockProvider } from '../../../../_mocks/helpers.test';
+import { CommonModule }       from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 import { NxSafePipe } from '@src/pipes/nx-safe';
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
@@ -50,8 +50,8 @@ xdescribe('NxCapabilitiesComponent', () => {
                     HttpClientTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(WINDOW, {})
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(WINDOW, {})
                 ]
             });
 

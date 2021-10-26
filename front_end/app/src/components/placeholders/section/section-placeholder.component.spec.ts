@@ -10,8 +10,8 @@ import { NxSectionPlaceholderComponent } from './section-placeholder.component';
 import { DebugElement }                  from '@angular/core';
 import { NxLanguageProviderService }     from '@services/nx-language-provider';
 import { NxConfigService }               from '@services/nx-config';
-import { nxConfig }                      from '@services/nx-config/config';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
+import { nxConfig }                                from '@services/nx-config/config';
+import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
 
 describe('NxSectionPlaceholderComponent', () => {
     let component: NxSectionPlaceholderComponent;
@@ -26,8 +26,8 @@ describe('NxSectionPlaceholderComponent', () => {
             imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
             declarations: [NxSectionPlaceholderComponent],
             providers: [
-                new MockProvider(NxConfigService, configMock),
-                new MockProvider(NxLanguageProviderService, langMock)
+                new HelperMockProvider(NxConfigService, configMock),
+                new HelperMockProvider(NxLanguageProviderService, langMock)
             ]
         }).compileComponents();
 

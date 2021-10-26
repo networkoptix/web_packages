@@ -4,9 +4,9 @@ import {
 import { BrowserAnimationsModule }           from '@angular/platform-browser/animations';
 import { nxConfig }                          from '@services/nx-config/config';
 import { NxConfigService }                   from '@services/nx-config';
-import { NxCarouselComponent }               from './carousel.component';
-import { getMockTranslations, MockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }         from '@services/nx-language-provider';
+import { NxCarouselComponent }                     from './carousel.component';
+import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
+import { NxLanguageProviderService }               from '@services/nx-language-provider';
 
 describe('NxCarouselComponent', () => {
     let component: NxCarouselComponent;
@@ -33,8 +33,8 @@ describe('NxCarouselComponent', () => {
                 imports: [BrowserAnimationsModule],
                 declarations: [NxCarouselComponent],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock)
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock)
                 ]
             })
             .compileComponents();

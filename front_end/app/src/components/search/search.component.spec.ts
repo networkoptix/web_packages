@@ -2,9 +2,9 @@ import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angul
 import { CommonModule, Location } from '@angular/common';
 
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
-import { getMockTranslations, MockProvider } from '../../_mocks/helpers.test';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { nxConfig }                                from '@services/nx-config/config';
+import { getMockTranslations, HelperMockProvider } from '../../_mocks/helpers.test';
+import { NxLanguageProviderService }               from '@services/nx-language-provider';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
@@ -61,13 +61,13 @@ describe('NxSearchComponent', () => {
                     HttpClientTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(ActivatedRoute, routeMock),
-                    new MockProvider(Location, locationMock),
-                    new MockProvider(NxUriService, uriMock),
-                    new MockProvider(NxSearchService, spyCreateSearch),
-                    new MockProvider(NxScrollMechanicsService)
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(ActivatedRoute, routeMock),
+                    new HelperMockProvider(Location, locationMock),
+                    new HelperMockProvider(NxUriService, uriMock),
+                    new HelperMockProvider(NxSearchService, spyCreateSearch),
+                    new HelperMockProvider(NxScrollMechanicsService)
                 ]
             });
 

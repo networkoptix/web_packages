@@ -10,7 +10,7 @@ import {
 } from '../../../../_mocks/knowledge_base_landing.mock';
 import {
     getMockTranslations,
-    MockProvider,
+    HelperMockProvider,
     sanitizerMock
 } from '../../../../_mocks/helpers.test';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -80,11 +80,11 @@ describe('NxIntegrationsComponent', () => {
                     TranslateModule.forRoot()
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(NxLanguageProviderService, langMock),
-                    new MockProvider(WINDOW, {}),
-                    new MockProvider(NxCloudApiService, cloudApiMock),
-                    new MockProvider(DomSanitizer, sanitizerMock)
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    new HelperMockProvider(WINDOW, {}),
+                    new HelperMockProvider(NxCloudApiService, cloudApiMock),
+                    new HelperMockProvider(DomSanitizer, sanitizerMock)
                 ]
             });
 

@@ -22,9 +22,9 @@ import {
     documentation,
     introNode,
     routeLandingMock
-} from '../../../_mocks/knowledge_base_landing.mock';
-import { getMockTranslations, MockProvider } from '../../../_mocks/helpers.test';
-import { RouterTestingModule } from '@angular/router/testing';
+}                                                  from '../../../_mocks/knowledge_base_landing.mock';
+import { getMockTranslations, HelperMockProvider } from '../../../_mocks/helpers.test';
+import { RouterTestingModule }                     from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -79,17 +79,17 @@ describe('NxAboutComponent', () => {
                     RouterTestingModule
                 ],
                 providers: [
-                    new MockProvider(NxCloudApiService, cloudApiMock),
+                    new HelperMockProvider(NxCloudApiService, cloudApiMock),
                     NxHeaderService,
-                    new MockProvider(ActivatedRoute, landingRoute),
-                    new MockProvider(Router, routeLandingMock),
-                    new MockProvider(NxRibbonService, ribbonMock),
-                    new MockProvider(NxLanguageProviderService, translateMock),
-                    new MockProvider(NxMenusService, mockMenu),
+                    new HelperMockProvider(ActivatedRoute, landingRoute),
+                    new HelperMockProvider(Router, routeLandingMock),
+                    new HelperMockProvider(NxRibbonService, ribbonMock),
+                    new HelperMockProvider(NxLanguageProviderService, translateMock),
+                    new HelperMockProvider(NxMenusService, mockMenu),
                     NxPageService,
-                    new MockProvider(NxAccountService, accountMock),
-                    new MockProvider(NxConfigService, configMock)
-                ].map(MockProvider.mapServices)
+                    new HelperMockProvider(NxAccountService, accountMock),
+                    new HelperMockProvider(NxConfigService, configMock)
+                ].map(HelperMockProvider.mapServices)
             });
 
             fixture = TestBed.createComponent(NxAboutComponent);

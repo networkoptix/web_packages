@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxDevelopersMenuComponent } from './developers-menu.component';
-import { MockProvider } from '../../_mocks/helpers.test';
-import { NxConfigService } from '@services/nx-config';
+import { HelperMockProvider }        from '../../_mocks/helpers.test';
+import { NxConfigService }           from '@services/nx-config';
 import { CommonModule, Location } from '@angular/common';
 import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
 import { BehaviorSubject } from 'rxjs';
@@ -63,10 +63,10 @@ describe('Test NxDevelopersMenuComponent', () => {
                     RouterLinkDirectiveStub
                 ],
                 providers: [
-                    new MockProvider(NxConfigService, configMock),
-                    new MockProvider(Location, locationMock),
-                    new MockProvider(NxKnowledgebaseService, kbMock),
-                    new MockProvider(WINDOW, windowMock)
+                    new HelperMockProvider(NxConfigService, configMock),
+                    new HelperMockProvider(Location, locationMock),
+                    new HelperMockProvider(NxKnowledgebaseService, kbMock),
+                    new HelperMockProvider(WINDOW, windowMock)
                 ]
             }).compileComponents();
 
