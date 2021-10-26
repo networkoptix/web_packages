@@ -147,12 +147,12 @@ export class LocalAccount extends BaseAccount {
     private showLoginDialog(): Promise<string | Account> {
         this.loginDialogActive = true;
         return this.loginService.login(true, true).then((result: string) => {
-                this.storageService.loginRegister = true;
-                if (result === 'register') {
-                    return this.router.navigate(['/register']).then(() => result);
-                }
-                return this.get();
-            })
+            this.storageService.loginRegister = true;
+            if (result === 'register') {
+                return this.router.navigate(['/register']).then(() => result);
+            }
+            return this.get();
+        })
             .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
             .finally(() => {
                 this.loginDialogActive = false;

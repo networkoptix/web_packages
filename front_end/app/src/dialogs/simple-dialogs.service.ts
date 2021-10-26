@@ -14,7 +14,6 @@ interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
 export class NxSimpleDialogsService {

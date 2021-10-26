@@ -385,7 +385,7 @@ export class NxCloudApiService {
 
     loginCode(code: string) {
         return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => this.currentAccountEmail = account.email)
+            tap((account: Account) => { this.currentAccountEmail = account.email; })
         ).toPromise();
     }
 

@@ -3,7 +3,7 @@ import { BehaviorSubject }              from 'rxjs';
 import { Router, NavigationStart }      from '@angular/router';
 import { environment }                  from '@environments/environment';
 import { NxMenusService }     from './menus.service';
-import { MenuNode} from './menus.service.types';
+import { MenuNode } from './menus.service.types';
 import { ContextManifest }              from './nx-cloud-api.types';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 

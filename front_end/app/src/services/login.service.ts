@@ -84,7 +84,7 @@ export class NxLoginService {
                 return result;
             }, (reason) => {
                 this.closeResult = 'Dismissed';
-                return reason
+                return reason;
             });
     }
 }
