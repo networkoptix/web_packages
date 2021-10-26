@@ -26,6 +26,7 @@ import { NxHeaderComponent } from './header.component';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NxUnsafePipe } from '@src/pipes/nx-unsafe'
 
 @Component({
     selector: 'nx-nav-dropdown',
@@ -148,7 +149,8 @@ describe('NxHeaderComponent', () => {
                 NxHeaderComponent,
                 MockNavDropdown,
                 MockAccountSettings,
-                MockHeaderLanguageDropdown
+                MockHeaderLanguageDropdown,
+                NxUnsafePipe
             ],
             imports: [
                 CommonModule,
