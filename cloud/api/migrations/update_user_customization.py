@@ -1,14 +1,7 @@
 from django.db import connection, migrations
 
+# Keeping this migration just to keep current graph consistent with history on prod
 
-#migratedb shouldn't assume cloud_db database exists at the moment
-#currently not in use do nothing
-
-
-def update_customizations_from_clouddb(apps, schema_editor):
-    return
-    with connection.cursor() as cursor:
-        cursor.execute('UPDATE cloudportal.api_account db1 JOIN clouddb.account db2 ON db1.email=db2.email SET db1.customization=db2.customization')
 
 class Migration(migrations.Migration):
 
@@ -17,5 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_customizations_from_clouddb),
     ]
