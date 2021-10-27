@@ -96,7 +96,7 @@ export class AppComponent {
                 if (params) {
                     code = params?.get('code');
                 }
-                if (code && link.includes('/?code')) {
+                if (code && link.includes('?code')) {
                     return this.cloudApiService.loginCode(code)
                         .then(() => this.cloudApiService.account(true)
                             .pipe(
