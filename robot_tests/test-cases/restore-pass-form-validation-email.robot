@@ -9,8 +9,10 @@ Force Tags        email    form    Threaded
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
+${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),"${EMAIL INVALID TEXT}")]
+${EMAIL IS REQUIRED HEBREW}   //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
+${EMAIL INVALID HEBREW}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
 
 *** Test Cases ***                        EMAIL
 1. Empty Email                               ${EMPTY}
@@ -72,5 +74,11 @@ Test Email Invalid
 Check Email Outline
     [Arguments]    ${email}
     Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::nx-email-input/parent::form//span[contains(@class,'input-error')]
-    Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
-    Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID}
+    IF    "${LANGUAGE}"=="he_IL"
+        Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED HEBREW}
+        Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID HEBREW}
+    ELSE
+        Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
+        Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID}
+    END
+    
