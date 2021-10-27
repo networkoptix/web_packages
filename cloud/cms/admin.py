@@ -1254,7 +1254,7 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
             mapper = ZendeskMapper(customization_name=customization)
         except ZendeskNotConfigured:
             return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': 'Zendesk Sync not configured'})
-            
+
         mapper.build_struct()
         context = {
             'items': mapper.struct,
@@ -1429,19 +1429,26 @@ class MenuNodeAdmin(CMSAdmin):
         return super().save_model(request, obj, form, change)
 
 
-
 class LicenseTypeAdmin(CMSAdmin):
     list_display = ('name', 'title', 'deactivations_allowed')
     list_display_links = ('name', 'title')
     list_filter = ('deactivations_allowed',)
 
+
+@admin.register(ZendeskSection)
+class ZendeskSectionAdmin(CMSAdmin):
+    search_fields = ['title', 'id', 'section_id']
+    autocomplete_fields = ['menu_node', 'parent_section']
+
+
+@admin.register(ZendeskArticle)
+class ZendeskArticleAdmin(CMSAdmin):
+    autocomplete_fields = ['section', 'asset', 'menu_node']
+
+
 admin.site.register(LicenseType, LicenseTypeAdmin)
-
-
 admin.site.register(ZendeskSite, CMSAdmin)
 admin.site.register(ZendeskCategory, CMSAdmin)
-admin.site.register(ZendeskSection, CMSAdmin)
-admin.site.register(ZendeskArticle, CMSAdmin)
 admin.site.register(ZendeskArticleLabel, CMSAdmin)
 
 

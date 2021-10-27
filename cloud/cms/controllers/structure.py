@@ -548,6 +548,7 @@ def sub_vars(asset):
 
 
 def update_asset_by_json(asset, asset_json, user):
+    errors = False
     def sub_image_sources(match_obj):
         file_id = str(uuid.uuid4())
         files[file_id] = external_file_to_content_file(match_obj[1])
@@ -576,7 +577,9 @@ def update_asset_by_json(asset, asset_json, user):
                             ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
                         ds["value"] = re.sub(r'{%(.*?)%}', sub_vars(asset), ds["value"])
                     data_records[ds["name"]] = ds["value"]
-        save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
+        if save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user):
+            errors = True
+    return errors
 
 
 def import_assets_from_json(assets_list, user, publish=False, increment_progress=None):
@@ -595,14 +598,14 @@ def import_assets_from_json(assets_list, user, publish=False, increment_progress
         asset_obj.name = asset_dict['name']
         try:
             asset_obj.save()
-            update_asset_by_json(asset_obj, asset_dict, user)
+            errors = update_asset_by_json(asset_obj, asset_dict, user)
         except Exception as e:
             # Fallback in case some exception occurs and is not caught during save or update.
             # If an exception is ever caught here we should add better handling for it in update_asset_by_json or asset.save
             increment_progress(f'Failed to import <b>"{asset_obj.name}"</b>: {str(e)}')
             continue
 
-        if publish and asset_obj.is_dirty:
+        if publish and asset_obj.is_dirty and not errors:
             published = False
             # Send for review
             send_version_for_review(asset_obj, user, notify=False)

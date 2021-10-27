@@ -329,8 +329,6 @@ def publish_review(request, target_review, target_customization='', message=True
     else:
         modify_db.update_draft_state(
             target_review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
-        if message:
-            return 'success', f"Version {target_review.version.id} has been accepted"
         if asset.is_documentation:
             DOC_CACHE.clear_cache()
             zd_articles = ZendeskArticle.objects.filter(
@@ -341,6 +339,8 @@ def publish_review(request, target_review, target_customization='', message=True
                 from cms.tasks import async_zendesk_push_article
                 async_zendesk_push_article.apply_async(
                     args=[asset.id, target_customization])
+        if message:
+            return 'success', f"Version {target_review.version.id} has been accepted"
     return None, None
 
 

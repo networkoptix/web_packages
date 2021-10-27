@@ -11,6 +11,7 @@ from util.helpers import substitute_branding
 from django.conf import settings
 from django.utils.http import urlencode
 
+import logging
 import re
 import uuid
 import time
@@ -18,8 +19,10 @@ import threading
 from functools import wraps
 from typing import List
 from zenpy import Zenpy
-from zenpy.lib.api_objects.help_centre_objects import Category, Section, Article, Translation
+from zenpy.lib.api_objects.help_centre_objects import Category, Section, Article, Translation, Label
 from zenpy.lib.exception import APIException, RecordNotFoundException, ZenpyException
+
+logger = logging.getLogger(__name__)
 
 
 def clean_nodes(nodes):
@@ -66,11 +69,11 @@ def background(f):
     @wraps(f)
     def background_func(*args, **kwargs):
         threading.Thread(target=f, args=args, kwargs=kwargs).start()
-    
+
     return background_func
 
 
-def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, logger=None, block_final_exception=False):
+def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, block_final_exception=False):
     """Retries function after certain exceptions, also optionally catches final exception.
     """
     def deco_retry(func_to_retry):
@@ -86,9 +89,6 @@ def retry(exception_to_retry=Exception, retries=3, delay=3, backoff=2, logger=No
                     message = f'{err}, Retrying in {next_delay} seconds...'
                     if logger:
                         logger.warning(message)
-                    else:
-                        # For local debugging
-                        print(message)
 
                     time.sleep(next_delay)
                     next_delay *= backoff
@@ -576,7 +576,7 @@ class Exporter(ZendeskBase):
 
         if delete and not zd_article.article_id:
             return
-
+        zenpy_article = None
         if zd_article.article_id:
             try:
                 zenpy_article = self.zen_client.help_center.articles(
@@ -610,8 +610,6 @@ class Exporter(ZendeskBase):
         zenpy_article.user_segment_id = zd_article.user_segment_id
         zenpy_article.draft = zd_article.draft
         zenpy_article.title = zd_article.title
-        zenpy_article.label_names = list(
-            zd_article.labels.values_list('name', flat=True))
 
         if not zenpy_article.id:
             zenpy_article = self.zen_client.help_center.articles.create(
@@ -663,9 +661,14 @@ class Exporter(ZendeskBase):
                 try:
                     attachment = self.zen_client.help_center.attachments.create(
                         zenpy_article, external_file.file.file, inline=True, file_name=file_info['external_file_name'])
-                except (ZenpyException, ValueError, OSError, APIException):
+                except (ZenpyException, ValueError, OSError, APIException) as exception:
                     # ZenpyException: Most likely from a file being too large.
                     # ValueError or OSError: Most likely an ExternalFile is missing it's file.
+                    logger.warning(f'Error creating attachment. Asset: {zd_article and zd_article.asset.id} '
+                                   f'Zenpy Article ID: {zenpy_article.id}, '
+                                   f'Ext File ID: {external_file.id}, '
+                                   f'File name: {file_info["external_file_name"]}, '
+                                   f'Exception: {exception}')
                     return
 
             # Use zendesk url if attachment was created else link to cloud portal
@@ -675,12 +678,14 @@ class Exporter(ZendeskBase):
             if original not in body:
                 try:
                     self.zen_client.help_center.attachments.delete(attachment)
-                except RecordNotFoundException:
+                except RecordNotFoundException as exception:
                     # Handle deleting none existing attachment
+                    logger.warning(f'Error deleting attachment. Attachment Id: {attachment and attachment.id}, '
+                                   f'Exception: {exception}')
                     return
 
             return body.replace(original, replacement)
-        
+
         return _handler
 
     def _update_body_with_attachments(self, content, zenpy_article, portal_url):
@@ -714,16 +719,21 @@ class Exporter(ZendeskBase):
         if abandoned_attachments:
             self._clean_attachments(abandoned_attachments)
             attachments_changed = True
-    
+
         zd_article.title = content['title']
 
         labels_changed = set(content['labels']) != set(
             zenpy_article.label_names)
         zenpy_article.label_names = content['labels']
-
+        if labels_changed:
+            existing_labels = set(ZendeskArticleLabel.objects.filter(site=zd_article.site).values_list('name', flat=True))
+            new_labels = set(zenpy_article.label_names).difference(existing_labels)
+            for new_label in new_labels:
+                label = Label(name=new_label)
+                self.zen_client.help_center.labels.create(zenpy_article, label)
         if labels_changed or attachments_changed:
             self.zen_client.help_center.articles.update(zenpy_article)
-        
+
         return updated_body, zd_article.title
 
     def _update_or_create_article_translation(self, zenpy_article, zenpy_translation):
@@ -738,7 +748,7 @@ class Exporter(ZendeskBase):
         customization = Customization.objects.get(name=self.customization_name)
         site = ZendeskSite.objects.filter(customization=customization).first()
         labels = [ZendeskArticleLabel.objects.get_or_create(
-            name=label, site=site)[0] for label in zenpy_article.label_names]
+            name=label.name, label_id=label.id, site=site)[0] for label in self.zen_client.help_center.articles.labels(zenpy_article)]
         zd_article.labels.set(labels)
 
         return labels
@@ -903,7 +913,7 @@ class Exporter(ZendeskBase):
             try:
                 self.zen_client.help_center.categories.update_translation(
                     zenpy_category, zenpy_translation)
-                
+
                 return zenpy_translation
 
             except RecordNotFoundException:
@@ -1007,7 +1017,7 @@ def update_zd_section(node: MenuNode, site: ZendeskSite, parent_zd: ZendeskCateg
 def update_zd_article(node: MenuNode, site: ZendeskSite, parent_section: ZendeskSection,
                       exporter: Exporter, customization: Customization, position: int, parent_enabled=True, zd_article: ZendeskArticle = None, force_update=False, custom_name=None, sync_log=None):
     """This generator yields a ZendeskArticle object as its first output then it outputs an boolean that indicates whether the article was successfully saved.
-    A generator is being used to keep the logic of checking/creating a ZendeskArticle encapsulated but making the instance available to use outside the functions scope to be used to instantiate an ZendeskSyncItem. 
+    A generator is being used to keep the logic of checking/creating a ZendeskArticle encapsulated but making the instance available to use outside the functions scope to be used to instantiate an ZendeskSyncItem.
     """
     zd_article = zd_article or node.zendeskarticle_set.filter(
         site=site).first()
@@ -1041,9 +1051,9 @@ def update_zd_article(node: MenuNode, site: ZendeskSite, parent_section: Zendesk
         if publish:
             doc_json = documentation.generate_doc_json(
                 [node.asset], lang, external_link=True)[0]
-        doc_json['title'] = custom_name or doc_json.get('title', '')
-        zd_article.title = doc_json['title'] or node.name or node.asset.name
-   
+            doc_json['title'] = custom_name or doc_json.get('title', '')
+        zd_article.title = doc_json.get('title') or node.name or node.asset.name
+
     zd_article.save()
 
     if new_article:
@@ -1072,12 +1082,11 @@ def check_if_article_can_sync(zendesk_sync_log, node):
 
 @background
 def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, position, node, cloud_portal=None):
-    if result := check_if_article_can_sync(zendesk_sync_log, node):
-        if not result:
-            return
+    if not (result := check_if_article_can_sync(zendesk_sync_log, node)):
+        return
 
-        zd_article, review = result
-    site = parent_zd.parent_category.site
+    zd_article, review = result
+    site = parent_zd.site
     customization = site.customization
     exporter = Exporter(customization_name=customization.name, cloud_portal=cloud_portal)
     nodes_list = getattr(node, 'nodes_list', node.nodes.all())
@@ -1105,8 +1114,7 @@ def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, pos
 
 @background
 def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk_sync_log: ZendeskSyncLog = None, force_update=False):
-    site = parent_zd.site if type(
-        parent_zd) is ZendeskCategory else parent_zd.parent_category.site
+    site = parent_zd.site
     exporter = Exporter(customization_name=site.customization.name)
     for _position, node in enumerate(nodes, 1):
         position = _position * 100
@@ -1132,8 +1140,7 @@ def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk
 
 
 def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, position, node):
-    site = parent_zd.site if type(
-        parent_zd) is ZendeskCategory else parent_zd.parent_category.site
+    site = parent_zd.site
     customization = site.customization
     exporter = Exporter(customization_name=site.customization.name)
     enabled = next(
@@ -1192,7 +1199,7 @@ def sync_menu(menu: Menu, customizations: List[Customization] = None, force_upda
     """Iterates over each customization and runs an async task for each to sync with zendesk.
 
     Args:
-        menu (Menu): Menu object to update 
+        menu (Menu): Menu object to update
 
     Yields:
         Generator[AsyncResult, None, None]: This can be used in the future for tracking task state

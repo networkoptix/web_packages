@@ -2471,7 +2471,7 @@ class ZendeskArticle(models.Model):
     draft = models.BooleanField(default=False)
     edited_at = models.CharField(max_length=100, blank=True)
     html_url = models.CharField(max_length=1000, blank=True)
-    labels = models.ManyToManyField(ZendeskArticleLabel)
+    labels = models.ManyToManyField(ZendeskArticleLabel, blank=True)
     permission_group_id = models.BigIntegerField(blank=True, null=True)
     position = models.IntegerField(default=0)
     promoted = models.BooleanField(default=False)
@@ -2506,8 +2506,6 @@ class ZendeskArticle(models.Model):
     def latest_sync(self, sync_log):
         latest = ZendeskSyncItem.objects.filter(zendesk_article=self).last()
         return latest.sync_log == sync_log if latest else True
-
-
 
     def map_sync_stats(self, customization, target=[], include_published=False):
         if not self.sync or not self.article_id:
@@ -2594,15 +2592,18 @@ class ZendeskSyncLog(models.Model):
                 nodes_in_progress += 1
 
             section_added = next(
-                filter(lambda existing_item: existing_item['zd_section_id'] == section['zd_section_id'], sections), None)
+                filter(lambda existing_item: existing_item['zd_section_id'] == section['zd_section_id'] and
+                                             existing_item['zd_section_id'] is not None,
+                       sections), None)
             article_added = next(
-                filter(lambda existing_item: existing_item['zd_article_id'] == article['zd_article_id'], articles), None)
+                filter(lambda existing_item: existing_item['zd_article_id'] == article['zd_article_id'] and
+                                             existing_item['zd_article_id'] is not None, articles), None)
             if not section_added:
                 sections.append(section)
             if not article_added:
                 articles.append(article)
 
-        progress = round(nodes_success  / nodes_total * 100) if nodes_success  else 0
+        progress = round(nodes_success / nodes_total * 100) if nodes_success  else 0
 
         sync_time = self.sync_time
         pending_time = datetime.now() - timedelta(seconds=30)
