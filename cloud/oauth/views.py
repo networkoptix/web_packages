@@ -154,15 +154,12 @@ def authenticate(request):
     if signature := get_param(request, "signature"):
         check_signature(signature, scope, redirect_uri)
 
-    try:
-        res = Auth.get_code(email=get_param(request, "email"),
-                            password=get_param(request, "password"),
-                            client_id=get_param(request, "client_id"),
-                            ip=ip,
-                            redirect_uri=redirect_uri,
-                            scope=scope)
-    except APILogicException:
-        raise APINotAuthorisedException("Invalid credentials", error_code=ErrorCodes.not_authorized)
+    res = Auth.get_code(email=get_param(request, "email"),
+                        password=get_param(request, "password"),
+                        client_id=get_param(request, "client_id"),
+                        ip=ip,
+                        redirect_uri=redirect_uri,
+                        scope=scope)
 
     data = {
         "access_code": res.get('access_code'),
