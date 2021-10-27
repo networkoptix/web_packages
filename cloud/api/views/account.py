@@ -483,7 +483,7 @@ def restore_password(request):
             raise APIRequestException('Wrong new password', ErrorCodes.wrong_parameters,
                                       error_data={'new_password': error.detail})
 
-        totp = request.data['totp']
+        totp = request.data.get('totp')
         email = Account.extract_temp_credentials(code)[1]
         Account.restore_password(code, new_password, totp)
         models.Account.objects.get(email=email).password_changed()
