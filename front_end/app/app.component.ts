@@ -5,7 +5,7 @@ import {
 import {
     ActivationEnd, ActivatedRoute, ActivationStart, Event,
     GuardsCheckEnd, GuardsCheckStart, NavigationEnd, Router
-}                                                  from '@angular/router';
+} from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
 import { debounceTime, delay, filter, finalize, map, retryWhen, take, timeout } from 'rxjs/operators';
@@ -87,8 +87,8 @@ export class AppComponent {
         // hides header if an authorize (oauth) route
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
-            .subscribe((ev: NavigationEnd) => {
-                const link = ev.url;
+            .subscribe(() => {
+                const link = this.window.location.href;
                 const params = link.includes('?') && new URLSearchParams(
                     link.match(/.*(\?.*)/i)[1]
                 );
@@ -110,7 +110,7 @@ export class AppComponent {
                             ).subscribe(() => {
                                 const route = link.replace(this.window.location.origin, '').split('?')[0];
                                 const queryParams = { state: params.get('state') };
-                                return this.router.navigate([route || '/systems'], { queryParams })
+                                return this.router.navigate([['/', '/new-landing'].includes(route) ? '/systems' : route], { queryParams })
                                     .then(() => this.window.location.reload());
                             }));
                 }
