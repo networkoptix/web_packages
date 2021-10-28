@@ -9,24 +9,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxFooterComponent } from './footer.component';
 import { of } from 'rxjs';
 
 import { RouterTestingModule } from '@angular/router/testing';
+import { MockProvider } from 'ng-mocks';
 
 describe('NxFooterComponent', () => {
     let component: NxFooterComponent;
     let fixture: ComponentFixture<NxFooterComponent>;
     let el: DebugElement;
-
-    nxConfig.company.name = 'Nx Cloud';
-    const configMock = { getConfig: () => nxConfig };
-    const appStateMock = {
-        footerVisibleSubject: of(true)
-    };
 
     const footers = [
         {
@@ -87,9 +81,9 @@ describe('NxFooterComponent', () => {
                 RouterTestingModule
             ],
             providers: [
-                { provide: NxConfigService, useValue: configMock },
-                { provide: DomSanitizer, useValue: {} },
-                { provide: NxAppStateService, useValue: appStateMock },
+                MockProvider(DomSanitizer),
+                MockProvider(NxConfigService),
+                MockProvider(NxAppStateService),
                 { provide: NxMenusService, useValue: menuMock }
             ]
         }).compileComponents()

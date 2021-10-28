@@ -1,15 +1,13 @@
 import {
-    ComponentFixture, fakeAsync, TestBed, tick, waitForAsync
+    ComponentFixture, fakeAsync, TestBed, waitForAsync
 } from '@angular/core/testing';
 import { FormsModule, NgModel } from '@angular/forms';
 import { NxPasswordComponent } from '@components/password-input/password.component';
-import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { CommonModule } from '@angular/common';
+import { MockProvider } from 'ng-mocks';
 
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -29,15 +27,7 @@ describe('NxPasswordComponent', () => {
     let fixture: ComponentFixture<NxPasswordComponent>;
     let el: HTMLInputElement;
 
-    const translateMock = {
-        translations: {}
-    };
-    const configMock = { getConfig: () => nxConfig };
-
-    let apiSpy: jasmine.SpyObj<NxCloudApiService>;
-
     beforeEach(waitForAsync(() => {
-        const spyApi = jasmine.createSpyObj('NxCloudApiService', ['getCommonPasswords']);
 
         TestBed.configureTestingModule({
             imports: [
@@ -48,9 +38,9 @@ describe('NxPasswordComponent', () => {
             ],
             declarations: [NxPasswordComponent, NxPasswordTagValidationComponent],
             providers: [
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxCloudApiService, useValue: spyApi }
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
+                MockProvider(NxCloudApiService)
             ]
         })
             .compileComponents()
@@ -60,17 +50,11 @@ describe('NxPasswordComponent', () => {
                 component.component = { valid: true } as NgModel;
                 el = fixture.debugElement.nativeElement.querySelector('input');
 
-                apiSpy = TestBed.inject(NxCloudApiService) as jasmine.SpyObj<NxCloudApiService>;
-                apiSpy.getCommonPasswords.and.returnValue(of({ test1234: 1, 12345678: 1 }).pipe(delay(1)));
-
                 fixture.detectChanges();
             });
     }));
 
     it('should create component and initialize commonPasswordsList', fakeAsync(() => {
-        expect(apiSpy.getCommonPasswords).toHaveBeenCalledWith();
-        tick(1);
-
         expect(component.CONFIG.commonPasswordsList).toEqual({ 12345678: 1, test1234: 1 });
         expect(component).toBeTruthy();
     }));

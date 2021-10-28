@@ -2,7 +2,7 @@ import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/t
 import { DebugElement } from '@angular/core';
 import { NxRibbonComponent, RibbonAction } from './ribbon.component';
 import { NxRibbonService } from './ribbon.service';
-import { nxConfig } from '@services/nx-config/config';
+import { MockProvider } from 'ng-mocks';
 import { NxConfigService } from '@services/nx-config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { RouterLinkDirectiveStub } from '@src/_testing';
@@ -16,10 +16,6 @@ describe('NxRibbonComponent', () => {
     let fixture: ComponentFixture<NxRibbonComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {}
-    };
-    const configMock = { getConfig: () => nxConfig };
 
     beforeEach(waitForAsync(() => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
@@ -32,9 +28,9 @@ describe('NxRibbonComponent', () => {
             ],
             providers: [
                 NxRibbonService,
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxHeaderService, useValue: spyHeader },
-                { provide: NxConfigService, useValue: configMock }
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
+                { provide: NxHeaderService, useValue: spyHeader }
             ]
         }).compileComponents()
             .then(() => {
@@ -65,23 +61,6 @@ describe('NxRibbonComponent', () => {
     it('should use NxRibbonService to get data', inject(
         [NxRibbonService],
         (service: NxRibbonService) => {
-            service.CONFIG = setupConfig();
-            service.LANG.ribbon = {
-                beingMerged: {
-                    mayTake: () => 'Depending on the size of the database, it may take up to several hours.',
-                    to: () => 'is being merged to this system'
-                },
-                finishingMerge: () => 'Finishing systems merge',
-                integration: {
-                    accept: () => 'Accept',
-                    backToEditText: () => 'Back to the editing interfaces',
-                    previewRibbon: () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
-                    publishedRibbon: () => 'This page is the live version that is publicly available.',
-                    reject: () => 'Reject'
-                },
-                systemOffline: () => 'System is offline. Some settings may not be available.',
-                systemsMerging: () => 'This system is currently involved in a merge operation.'
-            };
 
             const actions: RibbonAction[] = [{
                 type: 'link',

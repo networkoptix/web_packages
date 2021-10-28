@@ -3,10 +3,10 @@ import {
     waitForAsync, inject, async, fakeAsync, tick
 }                              from '@angular/core/testing';
 import { InfoBlockLine, InfoBlockSection, NxInfoBlockComponent } from './info-block.component';
-import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { MockProvider } from 'ng-mocks';
 
 describe('NxInfoBlockComponent', () => {
     let component: NxInfoBlockComponent;
@@ -14,24 +14,13 @@ describe('NxInfoBlockComponent', () => {
     let el: HTMLElement;
     let LANG: LanguageI18NStaticTypes;
 
-    const configMock = { getConfig: () => nxConfig };
-    const translateMock = {
-        translations: {
-            common: {
-                ip: () => 'IP Address',
-                os: () => 'OS',
-                version: () => 'Server ver.'
-            }
-        }
-    };
-
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
                 declarations: [NxInfoBlockComponent],
                 providers: [
-                    { provide: NxLanguageProviderService, useValue: translateMock },
-                    { provide: NxConfigService, useValue: configMock }
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService)
                 ]
             })
             .compileComponents().then(inject([NxLanguageProviderService], (service: NxLanguageProviderService) => {

@@ -5,7 +5,7 @@ import {
 } from '@angular/core/testing';
 import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
 import { DebugElement } from '@angular/core';
-import { nxConfig } from '@services/nx-config/config';
+import { MockProvider } from 'ng-mocks';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService } from '@services/nx-config';
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -17,35 +17,14 @@ describe('NxPasswordTagValidationComponent', () => {
     let fixture: ComponentFixture<NxPasswordTagValidationComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            passwordRequirements: {
-                common: () => 'too common',
-                commonMessage: () => 'This password is in top most popular passwords in the world',
-                fair: () => 'fair',
-                fairMessage: () => 'Use numbers, upper and lower case letters and special characters to make your password stronger',
-                good: () => 'good',
-                minLength: () => 'too short',
-                minLengthMessage: () => 'Password must contain at least 8 characters',
-                missingMessage: () => 'Password is required',
-                required: () => 'incorrect',
-                requiredMessage: () => 'Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces',
-                strongMessage: () => 'Strong password!',
-                weak: () => 'weak',
-                weakMessage: () => 'Use numbers, upper and lower case letters and special characters to make your password stronger'
-            }
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
-
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
                 imports: [NgbModule],
                 declarations: [NxPasswordTagValidationComponent, NxTagComponent],
                 providers: [
-                    { provide: NxLanguageProviderService, useValue: translateMock },
-                    { provide: NxConfigService, useValue: configMock }
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService)
                 ]
             })
             .compileComponents()

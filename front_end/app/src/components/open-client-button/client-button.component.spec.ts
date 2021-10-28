@@ -2,7 +2,6 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
@@ -10,6 +9,7 @@ import { NxProcessService } from '@services/process.service';
 import { NxClientButtonComponent } from './client-button.component';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
 
 import {
     NxProcessButtonComponent
@@ -20,16 +20,6 @@ describe('NxClientButtonComponent', () => {
     let fixture: ComponentFixture<NxClientButtonComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            system: () => 'system'
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
-    const processMock = {
-        createProcess: () => Promise.resolve()
-    };
-
     const system = {
         capabilities: []
     };
@@ -39,12 +29,12 @@ describe('NxClientButtonComponent', () => {
             declarations: [NxClientButtonComponent, NxProcessButtonComponent],
             imports: [CommonModule, TranslateModule.forRoot()],
             providers: [
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxProcessService, useValue: processMock },
-                { provide: NxUrlProtocolService, useValue: {} },
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxDialogsService, useValue: {} },
-                { provide: Router, useValue: {} }
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
+                MockProvider(NxUrlProtocolService),
+                MockProvider(NxDialogsService),
+                MockProvider(NxProcessService),
+                MockProvider(Router)
             ]
         }).compileComponents()
             .then(() => {

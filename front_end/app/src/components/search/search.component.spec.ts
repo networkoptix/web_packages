@@ -2,9 +2,9 @@ import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angul
 import { CommonModule, Location } from '@angular/common';
 
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig }                                from '@services/nx-config/config';
-import { getMockTranslations, HelperMockProvider } from '../../_mocks/helpers.test';
-import { NxLanguageProviderService }               from '@services/nx-language-provider';
+import { MockProvider } from 'ng-mocks';
+import { HelperMockProvider } from '@src/_mocks/helpers.test';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,8 +27,6 @@ describe('NxSearchComponent', () => {
     let el: DebugElement;
     let inputElement: HTMLInputElement;
 
-    const configMock = { config: nxConfig, getConfig: () => nxConfig };
-    const langMock = getMockTranslations();
     let params = { search: 'initial search' };
     let url = '/mock/url';
     const locationMock = new BehaviorSubject(null);
@@ -61,13 +59,13 @@ describe('NxSearchComponent', () => {
                     HttpClientTestingModule
                 ],
                 providers: [
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService),
+                    MockProvider(NxScrollMechanicsService),
                     new HelperMockProvider(ActivatedRoute, routeMock),
                     new HelperMockProvider(Location, locationMock),
                     new HelperMockProvider(NxUriService, uriMock),
-                    new HelperMockProvider(NxSearchService, spyCreateSearch),
-                    new HelperMockProvider(NxScrollMechanicsService)
+                    new HelperMockProvider(NxSearchService, spyCreateSearch)
                 ]
             });
 

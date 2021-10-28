@@ -8,6 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NxConfigService }          from '@services/nx-config';
 import { nxConfig }                 from '@services/nx-config/config';
 import { NxExternalVideoComponent } from './external-video.component';
+import { MockProvider } from 'ng-mocks';
 
 describe('NxExternalVideoComponent', () => {
     let component: NxExternalVideoComponent;
@@ -24,7 +25,7 @@ describe('NxExternalVideoComponent', () => {
             declarations: [NxExternalVideoComponent],
             imports: [CommonModule, HttpClientTestingModule],
             providers: [
-                { provide: NxConfigService, useValue: configMock }
+                MockProvider(NxConfigService)
             ]
         }).compileComponents()
             .then(() => {

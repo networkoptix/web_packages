@@ -1,4 +1,4 @@
-@import '../../../../../../../../../styles/theme_variables';
+@use 'styles/theme_variables' as *;
 
 :host {
   display: block;
@@ -39,7 +39,7 @@
   }
 
   > .export-link {
-    background-image: url('./export-icon.png');
+    background-image: url("./export-icon.png");
     background-position: 6px center;
     background-size: 20px 20px;
     background-repeat: no-repeat;
@@ -47,7 +47,7 @@
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       background-color: $light1;
       width: 1px;
       height: 20px;

@@ -1,8 +1,6 @@
-@import 'styles/_theme_palette';
-
+@use 'styles/_theme_palette' as *;
 
 :host {
-  display: inline-block;
   box-sizing: border-box;
   background-color: $additional_light2;
   width: 40px;
@@ -21,10 +19,8 @@
   }
 
   > .button {
-    display: block;
     flex-grow: 1;
     text-align: center;
-
     display: flex;
     flex-direction: column;
     justify-content: center;

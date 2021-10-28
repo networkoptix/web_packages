@@ -1,20 +1,16 @@
 import {
     ComponentFixture, TestBed, waitForAsync
-}                                            from '@angular/core/testing';
-import { BrowserAnimationsModule }           from '@angular/platform-browser/animations';
-import { nxConfig }                          from '@services/nx-config/config';
-import { NxConfigService }                   from '@services/nx-config';
-import { NxCarouselComponent }                     from './carousel.component';
-import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }               from '@services/nx-language-provider';
+}                                    from '@angular/core/testing';
+import { BrowserAnimationsModule }   from '@angular/platform-browser/animations';
+import { NxConfigService }           from '@services/nx-config';
+import { NxCarouselComponent }       from './carousel.component';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { MockProvider }              from 'ng-mocks';
 
 describe('NxCarouselComponent', () => {
     let component: NxCarouselComponent;
     let fixture: ComponentFixture<NxCarouselComponent>;
     let el;
-
-    const configMock = { getConfig: () => nxConfig };
-    const langMock = getMockTranslations();
 
     const screenshots = [{
         id: 'Screenshot1',
@@ -33,8 +29,8 @@ describe('NxCarouselComponent', () => {
                 imports: [BrowserAnimationsModule],
                 declarations: [NxCarouselComponent],
                 providers: [
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(NxLanguageProviderService, langMock)
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(NxConfigService)
                 ]
             })
             .compileComponents();

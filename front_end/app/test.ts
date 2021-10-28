@@ -4,16 +4,27 @@ import { getTestBed }                from '@angular/core/testing';
 import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
-}                                    from '@angular/platform-browser-dynamic/testing';
-import { MockInstance, ngMocks }     from 'ng-mocks';
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { BehaviorSubject, EMPTY }    from 'rxjs';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import staticLang                    from '@app/language_compiled.json';
+}                                                    from '@angular/platform-browser-dynamic/testing';
+import { MockInstance, ngMocks }                     from 'ng-mocks';
+import { NxConfigService }                           from '@services/nx-config';
+import { nxConfig }                                  from '@services/nx-config/config';
+import { LocalStorageService }                       from 'ngx-webstorage';
+import { BehaviorSubject, EMPTY, of, ReplaySubject } from 'rxjs';
+import { NxLanguageProviderService }                 from '@services/nx-language-provider';
+import staticLang                                    from '@app/language_compiled.json';
+import { NxSessionService }                          from '@services/session.service';
+import { TranslateService }                          from '@ngx-translate/core';
+import { NxAccountService }                          from '@services/account.service';
+import { NxAppStateService }                         from '@services/nx-app-state.service';
+import { NxProcessService }                          from '@services/process.service';
+import { NxCloudApiService }                         from '@services/nx-cloud-api';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 // HELPERS ******************************************
+nxConfig.company.name = 'Nx Cloud';
+
+const localStorageMockStore = {};
+
 const parseStaticTranslations = (staticLangNode) => Object.entries(
     staticLangNode
 ).reduce((
@@ -38,7 +49,8 @@ jasmine.getEnv().addReporter({
 });
 
 ngMocks.defaultMock(NxConfigService, () => ({
-    getConfig: () => nxConfig
+    getConfig: () => nxConfig,
+    flagsEnabled: () => false
 }));
 
 ngMocks.defaultMock(NxLanguageProviderService, () => ({
@@ -46,8 +58,59 @@ ngMocks.defaultMock(NxLanguageProviderService, () => ({
     translateSubject: new BehaviorSubject(null)
 }));
 
+ngMocks.defaultMock(NxCloudApiService, () => ({
+    getCommonPasswords: () => of({ test1234: 1, 12345678: 1 })
+}));
+
+// @ts-ignore
+ngMocks.defaultMock(NxAccountService, () => ({
+    get: () => of({
+        can_publish_integration: false,
+        name: 'Test',
+        first_name: 'Test',
+        isCloud: false,
+        is_staff: false,
+        language: 'en_US',
+        last_name: '1234',
+        permissions: [],
+        is_superuser: false,
+        id: 'test',
+        email: 'test@test.com',
+        is_authenticated: false,
+        cookie_reviewed: true
+    }).toPromise(),
+    accountSubject: new BehaviorSubject(null)
+}));
+
 ngMocks.defaultMock(LocalStorageService, () => ({
-    observe: () => EMPTY
+    observe: () => EMPTY,
+    retrieve: (key: string) => !!localStorageMockStore[key],
+    store: (key: string) => {
+        localStorageMockStore[key] = true;
+    }
+}));
+
+ngMocks.defaultMock(NxAppStateService, () => ({
+    footerVisibleSubject: new BehaviorSubject(true),
+    systemAvailable$: new BehaviorSubject(true),
+    lastErrorStatus$: new BehaviorSubject(undefined)
+}));
+
+ngMocks.defaultMock(NxSessionService, () => ({
+    loginStateSubject: new ReplaySubject<string>(0)
+}));
+
+ngMocks.defaultMock(TranslateService, () => ({
+    instant: (text) => text
+}));
+
+// @ts-ignore
+ngMocks.defaultMock(NxProcessService, () => ({
+    createProcess: () => Promise.resolve()
+}));
+
+ngMocks.defaultMock(NxScrollMechanicsService, () => ({
+    windowSizeSubject: new BehaviorSubject({ height: 0, width: 0 })
 }));
 
 declare const require: {

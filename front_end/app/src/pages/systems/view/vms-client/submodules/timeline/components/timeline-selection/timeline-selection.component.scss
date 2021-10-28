@@ -1,4 +1,4 @@
-@import '../../../../../../../../../styles/theme_variables';
+@use "styles/theme_variables" as *;
 // $brand_core: #2fa2db;
 // $light1: #fff;
 // $font-family-bold: 'robotobold';
@@ -16,7 +16,7 @@
   > .selected-range {
     display: none;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     height: 63px;
     background-color: transparentize($brand_core, 0.7);
     transition: opacity 0.2s ease-in-out;
@@ -55,7 +55,7 @@
       }
 
       &::before {
-        content: '';
+        content: "";
         width: 0;
         height: 0;
         position: absolute;
@@ -86,7 +86,7 @@
         }
 
         &::after {
-          content: '';
+          content: "";
           left: 0;
           top: 0;
           height: 100px;
@@ -98,7 +98,7 @@
 
       &.playback {
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           width: 3px;
           background: black;

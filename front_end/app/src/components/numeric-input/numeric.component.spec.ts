@@ -2,7 +2,6 @@ import {
     ComponentFixture, TestBed, waitForAsync
 }                             from '@angular/core/testing';
 import { FormsModule }        from '@angular/forms';
-import { DebugElement }       from '@angular/core';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { CommonModule } from '@angular/common';
 

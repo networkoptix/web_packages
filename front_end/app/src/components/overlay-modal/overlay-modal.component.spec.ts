@@ -10,28 +10,19 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSystemService } from '@services/system.service';
 import { NxAccountService } from '@services/account.service';
 import { NxOverlayModalComponent } from './overlay-modal.component';
 import { BehaviorSubject, of } from 'rxjs';
+import { MockProvider } from 'ng-mocks';
 
 describe('NxOverlayModalComponent', () => {
     let component: NxOverlayModalComponent;
     let fixture: ComponentFixture<NxOverlayModalComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            servers: {
-                refresh: () => 'Refresh',
-                refreshing: () => 'Refreshing'
-            }
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
     const localStorageMock = {
         retrieve: () => false
     };
@@ -70,12 +61,12 @@ describe('NxOverlayModalComponent', () => {
             declarations: [NxOverlayModalComponent],
             imports: [CommonModule, TranslateModule.forRoot()],
             providers: [
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxLanguageProviderService, useValue: translateMock },
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
+                MockProvider(Router),
                 { provide: NxAppStateService, useValue: appStateMock },
                 { provide: NxSystemService, useValue: systemServiceMock },
                 { provide: NxAccountService, useValue: accountMock },
-                { provide: Router, useValue: {} },
                 { provide: LocalStorageService, useValue: localStorageMock }
 
             ]
