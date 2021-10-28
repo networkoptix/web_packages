@@ -61,7 +61,7 @@ describe('NxPasswordTagValidationComponent', () => {
     it('should be "GOOD"', () => {
         const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-success-bright');
+        expect(tag[0].className).toContain('badge small badge-success-bright static');
         expect(tag[0].innerText).toBe('GOOD');
     });
 
@@ -71,7 +71,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#successMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-warning-bright');
+        expect(tag[0].className).toContain('badge small badge-warning-bright static');
         expect(tag[0].innerText).toBe('FAIR');
     });
 
@@ -84,7 +84,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('TOO SHORT');
     });
 
@@ -97,7 +97,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('TOO COMMON');
     });
 
@@ -110,7 +110,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('WEAK');
     });
 
@@ -124,7 +124,7 @@ describe('NxPasswordTagValidationComponent', () => {
 
         const tag = el.nativeElement.querySelectorAll('span#failMessages nx-tag a');
         expect(tag.length).toBe(1);
-        expect(tag[0].className).toContain('badge badge-danger-bright');
+        expect(tag[0].className).toContain('badge small badge-danger-bright static');
         expect(tag[0].innerText).toBe('INCORRECT');
     });
 });

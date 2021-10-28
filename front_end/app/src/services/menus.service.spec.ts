@@ -52,15 +52,6 @@ describe('Menus service', () => {
         expect(menu).toBeTruthy();
     });
 
-    it('should update menu on language change', () => {
-        langMock.translateSubject.next(langMock.translations);
-        const stricture = menu['menusStructure'];
-        expect(stricture).toBeDefined();
-        expect(stricture.authorizeFooter.title).toBe('Demo');
-        expect(stricture.authorizeFooter.description).toBe('demo');
-        expect(stricture.authorizeFooter.nodes.length).toBe(3);
-    });
-
     it('should get header menu', () => {
         langMock.translateSubject.next(langMock.translations);
         menu['menusStructure'].header = {
