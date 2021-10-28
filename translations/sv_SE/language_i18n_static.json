@@ -66,11 +66,14 @@
         }
     },
     "account": {
+        "account": "Konto",
+        "key": "Nyckel",
         "accountSavedSuccess": "Ditt konto har sparats",
         "accountSettings": "Kontoinställningar",
         "activationLinkSent": "Aktiveringslänk skickad",
         "agreementAccepted": "Avtal har accepterats",
         "changePassword": "Ändra lösenord",
+        "security": "Säkerhet",
         "newPasswordLabel": "Nytt lösenord",
         "passwordChangedSuccess": "Lösenordet har sparats",
         "saveChanges": "Spara"
@@ -80,6 +83,52 @@
         "sendConfirm": "Skicka aktiveringslänk igen",
         "setNewPassword": "Spara lösenord",
         "setNewPasswordLabel": "Nytt lösenord"
+    },
+    "authorize": {
+        "loginCloudHeader": "Logga in på %CLOUD_NAME%",
+        "connectHeader": "Anslut systemet till %CLOUD_NAME%",
+        "expiredHeader": "Din session har upphört att gälla",
+        "loginSystemSubheader": "Med ditt %CLOUD_NAME% konto",
+        "connectSubheader": "För att komma åt den var som helst och aktivera ytterligare funktioner",
+        "expiredSubheader": "Var snäll och logga in igen",
+        "connectAdditional": "Detta konto får ägarens åtkomstnivå",
+        "createText": "Skapa konto",
+        "setupText": "Konfigurera icke-moln system",
+        "asAccountSubheader": "Som",
+        "toAccountSubheader": "Till",
+        "forAccountSubheader": "För {accountEmail}",
+        "passwordDisconnect": "för att koppla bort systemet från %CLOUD_NAME%",
+        "passwordMerge": "att slå samman system",
+        "passwordBackup": "att skapa säkerhetskopia",
+        "passwordRestore": "för att återställa systemet från säkerhetskopiering",
+        "passwordReset": "att återställa servern",
+        "passwordRestart": "för att starta om servern",
+        "passwordDetach": "att koppla från servern",
+        "expiredAccountSubheader": "Logga in igen som",
+        "createAccountHeader": "Skapa %CLOUD_NAME% konto",
+        "activateHeader": "Aktivera %CLOUD_NAME% konto",
+        "createdText": "Konto skapat!",
+        "activatedText": "Kontot aktiverat!",
+        "createdAdditional": "<p class=\"mb-2\">Bekräftelsemeddelande med aktiveringslänken skickas till {accountEmail}.</p><p>Vänligen aktivera kontot och återvänd hit för att slutföra processen.</p>",
+        "activatedAdditional": "<p>Nu kan du fortsätta att logga in på %CLOUD_NAME% här eller någon annanstans</p>",
+        "passResetHeader": "Återställ lösenord",
+        "newPassHeader": "Ange nytt lösenord",
+        "newPassConfirmText": "Lösenord sparat!",
+        "confirmHeader": "System anslutet till %CLOUD_NAME%!",
+        "loginError": "Kan inte ansluta till %CLOUD_NAME%",
+        "loginErrorAdditional": "Försök igen eller logga in på systemet direkt med ditt lokala konto.",
+        "connectErrorAdditional": "Försök igen senare.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Försök igen eller konfigurera ett icke-moln system.</p><p>Du kommer att kunna ansluta den till %CLOUD_NAME% när som helst efter.</p>",
+        "connectedText": "System anslutet till %CLOUD_NAME%",
+        "setupConnectedText": "System anslutet",
+        "stayLoggedInHelpText": "Kryssruta för att vara inloggad",
+        "termsAndConditionsHelpText": "Kryssrutan godkänner villkoren och sekretesspolicyn",
+        "copiedToClipboard": "Kopierat till Urklipp",
+        "authCode": {
+            "message": "Ange en kod från din autentiseringsapp för att bekräfta att det verkligen är du som försöker {suffix}",
+            "newPass": "ange nytt lösenord",
+            "login": "logga in"
+        }
     },
     "cameraFilters": {
         "H265": "H.265 kameror",
@@ -129,6 +178,7 @@
             "unauthorized": "Autentisering krävs"
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
+        "copiedToClipboard": "Kopierat till Urklipp",
         "login": "logga in",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
         "disableMotionWarning": "Inspelningsläget ändras till \"Spela alltid in\"",
@@ -146,6 +196,7 @@
             "low": "Låg"
         },
         "general": "Allmänt",
+        "generalError": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
         "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} fler integrationer...} one{#{endTag} mer integration...} other{#{endTag} fler integrationer...}}",
         "searchCamPlaceholder": "Sök",
@@ -185,7 +236,14 @@
         },
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
+    "devConsole": {
+        "create": "Skapa"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "När du har aktiverat tvåfaktorsautentisering kommer du inte att kunna logga in på {count, plural, =0{# system} one{# systemet} other{# system}} från %VMS_NAME% klienter och webbadmin:",
+            "wizardWarningDescr": "De äldre versionerna av %VMS_NAME% klient och webbadministratör stöder inte tvåfaktorsautentisering."
+        },
         "addUser": {
             "alreadyExists": "Denna e-post har redan registrerats i %systemName% -systemet"
         },
@@ -194,6 +252,8 @@
             "createAccount": "Skapa nytt konto",
             "delete": "Radera",
             "deleteAccount": "Radera konto",
+            "disable": "Avaktivera",
+            "enable": "Aktivera",
             "download": "Ladda ner %VMS_NAME%",
             "logoutAuthorised": "Logga ut",
             "ok": "OK",
@@ -290,12 +350,15 @@
             "systemVersionOld": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera %targetSystem% till {downloadHTML} att slå samman den med den aktuella.",
             "systemVersionNew": "System {targetSystem} har en nyare programversion som är inkompatibel med det nuvarande systemet. Uppdatera det aktuella systemet till {downloadHTML} för att slå ihop det med {targetSystem} -systemet.",
             "systemVersionsNotMatch": "Systemen har programvaruversioner som inte matchar varandra. Uppdatera båda till {downloadHTML}.",
+            "targetSystemBoundToCloud": "Detta system är inte anslutet till molnet. Kan inte gå samman med system bundna till molnet.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "Det kommer att finnas mer än <strong>{maxServers}</strong> servrar i det sammanslagna systemet."
         },
         "message": {
+            "system2faEnabled": "Tvåfaktorsautentisering kommer nu att tvingas till detta system.",
+            "system2faDisabled": "Tvåfaktorsautentisering krävs inte för detta system.",
             "storageSettingsSaved": "Lagringsinställningar sparade.",
             "storageSettingsNotSaved": "Det gick inte att spara lagringsinställningar.",
             "settingsSaved": "Inställningar sparade.",
@@ -318,6 +381,11 @@
                 "integration": "Kontakta {companyName}",
                 "ipvd_feedback_device": "Feedback om {asset}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
+            },
+            "twoFactor": {
+                "required": "Tvåfaktorsautentisering krävs.",
+                "configure": "Du kan konfigurera det i din",
+                "accountLink": "kontoinställningar"
             }
         },
         "removeSystem": {
@@ -325,21 +393,33 @@
             "message": "Du håller på att koppla bort detta system från ditt konto. Du kommer inte att kunna komma åt detta system längre. Är du säker?",
             "title": "Koppla från systemet?"
         },
+        "renewAuth": {
+            "action": "Logga in",
+            "message": "Sessionen är för gammal. Logga in och försök igen",
+            "title": "Förnya inloggningssessionen"
+        },
         "titles": {
             "error": "Fel",
             "success": "Klart",
             "changeAccount": "Du är redan inloggad som {email}",
+            "changePasswordFor": "Ändra lösenord för användare \"{username}\"",
             "deleteUser": "Radera användaren?",
+            "failedLoginTo": "Det gick inte att logga in på {systemName}",
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare?",
             "serversDetach": "Koppla från servern \"{ title }\" från nuvarande system?",
             "serversReset": "Återställ servern \"{ title }\" till standard?",
-            "serversRestart": "Starta om servern \"{ title }\"?",
-            "changePasswordFor": "Ändra lösenord för användare \"{username}\""
+            "serversRestart": "Starta om servern \"{ title }?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
+        },
+        "twoFactor": {
+            "action": "Logga in",
+            "message": "Tvåfaktorsautentisering är aktiverat för det här kontot. Vänligen logga in.",
+            "title": "Två faktorer krävs!",
+            "wizardWarning": "När du har aktiverat tvåfaktorsautentisering kommer du inte att kunna logga in på {count, plural, =0{# system} one{# systemet} other{# system}} från %VMS_NAME% klienter och webbadmin:"
         }
     },
     "downloads": {
@@ -477,8 +557,8 @@
         "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning.",
-        "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncrypted": "ARKIV\nKRYPTERAD",
+        "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet för att dekryptera detta arkiv."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -572,7 +652,8 @@
         "systems": "System",
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visa kameror",
-        "apiTool": "API-testverktyg"
+        "apiTool": "API-testverktyg",
+        "security": "Säkerhet"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
@@ -610,6 +691,14 @@
         "server": {
             "title": "Servern är inte tillgänglig",
             "message": "Systemet är offline och därför är servrar inte tillgängliga."
+        },
+        "noSystemApiTool": {
+            "title": "Inget giltigt system hittades",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "Det gick inte att ladda systemet",
+            "message": ""
         }
     },
     "pleaseSelect": "Vänligen välj...",
@@ -678,9 +767,10 @@
         "successRename": "Servernamn sparat."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Visa",
+        "Settings": "Inställningar",
+        "Information": "Information",
+        "Bookmarks": "Bokmärken"
     },
     "system": {
         "connected": "Ansluten",
@@ -694,7 +784,8 @@
             "notAbleToLoadSystem": "Kan inte ladda systeminställningar.",
             "sessionLimitDuration": {
                 "hours": "timmar",
-                "minutes": "minuter"
+                "minutes": "minuter",
+                "days": "dagar"
             },
             "warningMessages": {
                 "videoEncryption": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
@@ -913,6 +1004,20 @@
     },
     "result": "{count, plural, =0{# results} one{# result} other{# results}}",
     "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription_a1": "För närvarande har du",
+            "twoFADescription_a2": "{count, plural, =0{# sådana system} one{# sådant system} other{# sådana system}}",
+            "systemsRemainder": "och {count} mer...",
+            "v5Warning_a1": "Du har",
+            "v5Warning_a2": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
+            "v5Warning_a3": "med mjukvaruversion lägre än 5.0. {count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer inte att vara tillgängliga via",
+            "v5Warning_a4": "%VMS_NAME% klient",
+            "v5Warning_a5": "eftersom tidigare versioner av %VMS_NAME% Client inte stöder tvåfaktorsautentisering, så kommer du inte att kunna ange en verifieringskod för ditt %CLOUD_NAME% konto.",
+            "v5Warning_b": "{count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara fullt tillgänglig så snart som möjligt {count, plural, =0{dom är} one{det är} other{dom är}} uppgraderad till 5.0 -versionen.",
+            "disableWarning": "Du har {count, plural, one{# systemet} other{# system}} den där {count, plural, one{kräver} other{kräva}} tvåfaktorsautentisering. Du kommer inte att kunna logga in på {count, plural, one{detta system} other{dessa system}} efter att ha inaktiverat tvåfaktorsautentisering."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Omindexering av huvudlagring slutförd",

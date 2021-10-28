@@ -6,5 +6,5 @@ Link para revisão: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{
 
 Nesta página você pode
 1) Criar uma pré-visualização para ver as alterações mais recentes.
-2) Publicar esta versão que irá atualizar todo o conteúdo.
-3) Editar os contextos clicando no botão de edição de gravação. Para ver estar alterações, precisará criar uma nova versão.
+2) Publique esta versão que atualizará todo o conteúdo.
+3) Edite contextos clicando no botão editar registro. Para ver essas mudanças, você precisará criar uma nova versão.

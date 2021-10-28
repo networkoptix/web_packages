@@ -66,11 +66,14 @@
         }
     },
     "account": {
+        "account": "Account",
+        "key": "Chiave",
         "accountSavedSuccess": "Il tuo account è stato aggiornato correttamente",
         "accountSettings": "Impostazioni dell'account",
         "activationLinkSent": "Link di attivazione inviato",
         "agreementAccepted": "L'accordo è stato accettato",
         "changePassword": "Cambio Password",
+        "security": "Sicurezza",
         "newPasswordLabel": "Nuova password",
         "passwordChangedSuccess": "Password salvata correttamente",
         "saveChanges": "Salva"
@@ -80,6 +83,52 @@
         "sendConfirm": "Rinvia il link di attivazione",
         "setNewPassword": "Salva password",
         "setNewPasswordLabel": "Nuova password"
+    },
+    "authorize": {
+        "loginCloudHeader": "Accedi a %CLOUD_NAME%",
+        "connectHeader": "Connetti il ​​sistema a %CLOUD_NAME%",
+        "expiredHeader": "La tua sessione è scaduta",
+        "loginSystemSubheader": "Con il tuo %CLOUD_NAME% Account",
+        "connectSubheader": "Per accedervi da qualsiasi luogo e abilitare funzionalità aggiuntive",
+        "expiredSubheader": "Per favore esegui l'accesso di nuovo",
+        "connectAdditional": "Questo account otterrà il livello di accesso del proprietario",
+        "createText": "Creare un account",
+        "setupText": "Configurazione del sistema non cloud",
+        "asAccountSubheader": "Come",
+        "toAccountSubheader": "A",
+        "forAccountSubheader": "Per {accountEmail}",
+        "passwordDisconnect": "scollegare il sistema da %CLOUD_NAME%",
+        "passwordMerge": "unione dei sistemi",
+        "passwordBackup": "creare il backup",
+        "passwordRestore": "ripristinare il sistema dal backup",
+        "passwordReset": "per ripristinare il server",
+        "passwordRestart": "per riavviare il server",
+        "passwordDetach": "per scollegare il server",
+        "expiredAccountSubheader": "Per favore, accedi di nuovo come",
+        "createAccountHeader": "Creare %CLOUD_NAME% account",
+        "activateHeader": "Attiva %CLOUD_NAME% Account",
+        "createdText": "Account creato!",
+        "activatedText": "Account attivato!",
+        "createdAdditional": "<p class=\"mb-2\">messaggio di conferma con il link di attivazione viene inviato a {accountEmail}.</p><p>Per favore, attiva l'account e torna qui per completare il processo.</p>",
+        "activatedAdditional": "<p>Ora puoi continuare ad accedere a %CLOUD_NAME% qui o altrove</p>",
+        "passResetHeader": "Reimpostare la password",
+        "newPassHeader": "Imposta nuova password",
+        "newPassConfirmText": "Password impostata!",
+        "confirmHeader": "Sistema connesso a %CLOUD_NAME%!",
+        "loginError": "Impossibile connettersi a %CLOUD_NAME%",
+        "loginErrorAdditional": "Riprova o accedi al sistema direttamente con il tuo account locale.",
+        "connectErrorAdditional": "Si prega di riprovare più tardi.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Riprova o configura un sistema non cloud.</p><p>Potrai collegarlo a %CLOUD_NAME% qualsiasi momento dopo.</p>",
+        "connectedText": "Sistema connesso a %CLOUD_NAME%",
+        "setupConnectedText": "Sistema connesso",
+        "stayLoggedInHelpText": "Casella di controllo per rimanere loggato",
+        "termsAndConditionsHelpText": "Casella di controllo che accetta termini e condizioni e l'informativa sulla privacy",
+        "copiedToClipboard": "Copiato negli appunti",
+        "authCode": {
+            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "newPass": "set a new password",
+            "login": "log in"
+        }
     },
     "cameraFilters": {
         "H265": "Telecamere H.265",
@@ -129,6 +178,7 @@
             "unauthorized": "Autenticazione richiesta"
         },
         "chromeCastWarning": "Chromecast richiede molte risorse e potrebbe causare problemi al suo server.",
+        "copiedToClipboard": "Copiato negli appunti",
         "login": "accesso",
         "recordingSettingsWarning": "Aggiorna le impostazioni di registrazione mancanti.",
         "disableMotionWarning": "La modalità di registrazione verrà modificata in \"Registra sempre\"",
@@ -146,6 +196,7 @@
             "low": "Basso"
         },
         "general": "Generale",
+        "generalError": "Si è verificato un errore, riprova più tardi. Se il problema persiste, contattare il team di supporto.",
         "inaccessibleFeatureMessage": "Il sistema è offline e quindi le informazioni non sono accessibili.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} più integrazioni ...} one{#{endTag} più integrazione ...} other{#{endTag} più integrazioni ...}}",
         "searchCamPlaceholder": "Ricerca",
@@ -185,7 +236,14 @@
         },
         "viewingOutdatedReport": "Stai visualizzando un rapporto obsoleto."
     },
+    "devConsole": {
+        "create": "Creare"
+    },
     "dialogs": {
+        "twoFa": {
+            "wizardWarning": "Dopo aver abilitato l'autenticazione a due fattori non sarai in grado di accedere a {count, plural, =0{# sistemi} one{# sistema} other{# sistemi}} da %VMS_NAME% client e Web Admin:",
+            "wizardWarningDescr": "Le versioni precedenti di %VMS_NAME% client e Web Admin non supportano l'autenticazione a due fattori."
+        },
         "addUser": {
             "alreadyExists": "Questa email è già stata registrata nel sistema %systemName%"
         },
@@ -194,6 +252,8 @@
             "createAccount": "Crea nuovo account",
             "delete": "Elimina",
             "deleteAccount": "Eliminare l'account",
+            "disable": "Disable",
+            "enable": "Enable",
             "download": "Scarica %VMS_NAME%",
             "logoutAuthorised": "Disconnetti",
             "ok": "Ok",
@@ -290,12 +350,15 @@
             "systemVersionOld": "Il sistema {targetSystem} ha una versione software precedente che non è compatibile con il sistema corrente. Aggiorna da %targetSystem% a {downloadHTML} per unirlo a quello attuale.",
             "systemVersionNew": "Il sistema {targetSystem} ha una versione software più recente che non è compatibile con il sistema corrente. Aggiorna il sistema corrente a {downloadHTML} per unirlo al sistema {targetSystem}.",
             "systemVersionsNotMatch": "I sistemi hanno versioni software non corrispondenti. Si prega di aggiornare entrambi allo {downloadHTML}.",
+            "targetSystemBoundToCloud": "Questo sistema non è connesso al cloud. Impossibile eseguire l'unione con i sistemi legati al cloud.",
             "urlEmpty": "Inserire l'indirizzo del server",
             "urlNotValid": "Inserisci un URL valido",
             "unknownError": "Si è verificato un errore sconosciuto. Aggiorna la pagina e riprova. Se il problema persiste, contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
             "warning": "Ci saranno più di <strong>{maxServers}</strong> server nel sistema unito."
         },
         "message": {
+            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
+            "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "Impostazioni di archiviazione salvate.",
             "storageSettingsNotSaved": "Impossibile salvare le impostazioni di archiviazione.",
             "settingsSaved": "Impostazioni salvate.",
@@ -318,6 +381,11 @@
                 "integration": "Mettiti in contatto con {companyName}",
                 "ipvd_feedback_device": "Feedback su {asset}",
                 "ipvd_feedback_page": "Feedback per la pagina delle telecamere"
+            },
+            "twoFactor": {
+                "required": "Autenticazione a due fattori obbligatoria.",
+                "configure": "Puoi configurarlo nel tuo",
+                "accountLink": "impostazioni dell'account"
             }
         },
         "removeSystem": {
@@ -325,21 +393,33 @@
             "message": "Stai per disconnettere questo sistema dal tuo account. Non sarai più in grado di accedere a questo sistema. Sei sicuro?",
             "title": "Scollegare il sistema?"
         },
+        "renewAuth": {
+            "action": "Accesso",
+            "message": "La sessione ha troppo tempo. Effettua il login e riprova",
+            "title": "Rinnova la sessione di accesso"
+        },
         "titles": {
             "error": "Errore",
             "success": "Successo",
             "changeAccount": "Hai già effettuato l'accesso come {email}",
+            "changePasswordFor": "Modifica la password per l'utente \"{username}\"",
             "deleteUser": "Eliminare utente?",
+            "failedLoginTo": "Impossibile accedere a {systemName}",
             "loggedFromOtherAccount": "Verrà effettuato l'accesso con un altro account",
             "noClientDetected": "Installa %VMS_NAME% per visualizzare il tuo sistema",
             "removeUser": "Rimuovere l'utente?",
             "serversDetach": "Scollegare il server \"{ title }\" dal sistema corrente?",
             "serversReset": "Reimpostare il server \"{ title }\" ai valori predefiniti?",
-            "serversRestart": "Riavviare il server \"{ title }\"?",
-            "changePasswordFor": "Modifica la password per l'utente \"{username}\""
+            "serversRestart": "Riavviare il server \"{ title }?"
         },
         "tooltips": {
             "deleteAccount": "Disconnetti tutti i sistemi di cui sei il proprietario dal portale %CLOUD_NAME% per eliminare il tuo account."
+        },
+        "twoFactor": {
+            "action": "Accesso",
+            "message": "L'autenticazione a due fattori è abilitata per questo account. Accedere prego.",
+            "title": "Sono necessari due fattori!",
+            "wizardWarning": "Dopo aver abilitato l'autenticazione a due fattori non sarai in grado di accedere a {count, plural, =0{# sistemi} one{# sistema} other{# sistemi}} da %VMS_NAME% client e Web Admin:"
         }
     },
     "downloads": {
@@ -572,7 +652,8 @@
         "systems": "Sistemi",
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visualizza telecamere",
-        "apiTool": "Strumento di test API"
+        "apiTool": "Strumento di test API",
+        "security": "Sicurezza"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace è un ecosistema centralizzato di prodotti che si integrano perfettamente con i prodotti VMS come %VMS_NAME%, tutti disponibili in %CLOUD_NAME% +permettendo di trovare soluzioni per costruire e personalizzare il tuo sistema video IP.",
@@ -610,6 +691,14 @@
         "server": {
             "title": "Server non accessibile",
             "message": "Il sistema è offline e quindi i server non sono accessibili."
+        },
+        "noSystemApiTool": {
+            "title": "Nessun sistema valido trovato",
+            "message": ""
+        },
+        "systemLoadFailureApiTool": {
+            "title": "Impossibile caricare il sistema",
+            "message": ""
         }
     },
     "pleaseSelect": "Selezionare...",
@@ -680,7 +769,8 @@
     "serverTabTitles": {
         "View": "Visualizza",
         "Settings": "Impostazioni",
-        "Information": "Informazioni"
+        "Information": "Informazioni",
+        "Bookmarks": "Segnalibri"
     },
     "system": {
         "connected": "Connesso",
@@ -694,7 +784,8 @@
             "notAbleToLoadSystem": "Impossibile caricare le impostazioni di sistema.",
             "sessionLimitDuration": {
                 "hours": "ore",
-                "minutes": "minuti"
+                "minutes": "minuti",
+                "days": "giorni"
             },
             "warningMessages": {
                 "videoEncryption": "Crittografia del traffico video aumenterà in modo significativo l'utilizzo della CPU."
@@ -913,6 +1004,20 @@
     },
     "result": "{count, plural, =0{# risultati} one{# risultato} other{# risultati}}",
     "additionalSystems": "{count, plural, =0{+ # Sistemi} one{+ # Sistema} other{+ # Sistemi}}",
+    "security": {
+        "twoFa": {
+            "twoFADescription_a1": "Attualmente hai",
+            "twoFADescription_a2": "{count, plural, =0{# tali sistemi} one{# tale sistema} other{# tali sistemi}}",
+            "systemsRemainder": "e {count} di più...",
+            "v5Warning_a1": "Hai",
+            "v5Warning_a2": "{count, plural, =0{# sistemi} one{# sistema} other{# sistemi}}",
+            "v5Warning_a3": "con versione software inferiore alla 5.0. {count, plural, =0{Questi sistemi} one{Questo sistema} other{Questi sistemi}} sarà inaccessibile tramite",
+            "v5Warning_a4": "%VMS_NAME% Client",
+            "v5Warning_a5": "as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
+            "v5Warning_b": "{count, plural, =0{Questi sistemi} one{Questo sistema} other{Questi sistemi}} sarà completamente accessibile al più presto {count, plural, =0{loro sono} one{è} other{loro sono}} aggiornato alla versione 5.0.",
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}} after disabling two-factor authentication."
+        }
+    },
     "storage": {
         "reindexingDone": {
             "mainSuccess": "Reindicizzazione della memoria principale completata",
