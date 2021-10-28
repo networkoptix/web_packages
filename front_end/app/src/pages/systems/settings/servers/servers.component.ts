@@ -33,7 +33,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     serverId$ = new BehaviorSubject('')
 
     advanced: boolean;
-    params: Params;
     isOffline = false;
     serverLoaded = false;
     storagesOutdated = false;
@@ -67,8 +66,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             if (!serverId) {
                 return;
             }
-            this.params = this.route.snapshot.queryParams;
-            this.advanced = (this.params.advanced !== undefined);
 
             this.serverIdFromParams = serverId
                 .replace('%7B', '{')
@@ -87,6 +84,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.storagesOutdated = true;
             });
         });
+
+        this.route.queryParams
+            .pipe(untilDestroyed(this))
+            .subscribe(params => {
+                this.advanced = (params.advanced !== undefined);
+            });
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 

@@ -121,13 +121,16 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.buttonArrowTypeUp = ButtonArrowType.up;
         this.buttonArrowTypeDown = ButtonArrowType.down;
 
-        this.location.subscribe((event: PopStateEvent) => {
-            // force search component update
-            setTimeout(() => {
-                this.updateFilter(this.uri.getParams());
-                this.modelChanged(false);
-            });
-        });
+        // TODO: remove if no issues found post 21.1 QA
+        // Causing issues with routing when manually inputing params into url
+        // Removing doesn't seem to effect functionality of search component, though
+        // this.location.subscribe((event: (PopStateEvent | any)) => {
+        //     // force search component update
+        //     setTimeout(() => {
+        //         this.updateFilter(this.uri.getParams());
+        //         this.modelChanged(false);
+        //     });
+        // });
 
         this.searchUpdated = new Subject<any>();
         this.modelUpdated = new Subject<any>();

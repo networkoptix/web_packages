@@ -84,7 +84,6 @@ export class AppComponent {
     ) {
         this.CONFIG = configService.getConfig();
 
-        // hides header if an authorize (oauth) route
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
             .subscribe(() => {
