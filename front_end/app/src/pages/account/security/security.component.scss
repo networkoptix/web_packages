@@ -1,4 +1,4 @@
-@use "../../../../styles/theme_variables" as *;
+@use "../../../../styles/theme_variables" as theme_vars;
 @import "../account.component";
 
 :host {
@@ -7,21 +7,21 @@
      }
 
      .system-name {
-         font-family: $font-family-medium;
+         font-family: theme_vars.$font-family-medium;
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
      }
 
     .reminder {
-        font-family : $font-family-medium;
-        color: $light16;
+        font-family : theme_vars.$font-family-medium;
+        color: var(--light16);
         margin-left: 28px;
     }
 }
 
-$border-blue: rgba($blue10, 0.298);
-$body-blue: rgba($blue10, 0.098);
+$border-blue: rgba(var(--blue10--rgb), 0.298);
+$body-blue: rgba(var(--blue10--rgb), 0.098);
 
 .tfauth-v5-warning {
     border: 1px solid $border-blue;
