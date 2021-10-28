@@ -370,7 +370,7 @@ class PushNotification(models.Model):
             data_payload['description'] = body or ''
 
             futures = [
-                executor.submit(device.send_message, None, title=None, extra={**payload, 'targets': device.targets}, **options)
+                executor.submit(device.send_message, None, title=None, extra={**data_payload, 'targets': device.targets}, **options)
                 for device in data_devices
             ]
             data_responses = [future.result() for future in as_completed(futures)]
