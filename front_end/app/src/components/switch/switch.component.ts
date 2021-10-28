@@ -33,7 +33,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     private _invalid: boolean;
     private _touched: boolean;
 
-    _value: boolean;
+    _value: boolean = false;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
