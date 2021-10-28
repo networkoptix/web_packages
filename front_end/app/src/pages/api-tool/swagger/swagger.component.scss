@@ -237,15 +237,23 @@
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-	background : $brand-success;
+	background : $green_l1;
+}
+
+.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+	background : $cyan400;
+}
+
+.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+	background : $red_l1;
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary-method {
-	background : $brand-warning;
+	background : #FF7D20;
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method {
-	background : $brand-info;
+	background : $blue9;
 }
 
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
