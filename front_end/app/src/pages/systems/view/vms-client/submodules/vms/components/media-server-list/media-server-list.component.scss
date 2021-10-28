@@ -1,5 +1,3 @@
-@use "../../../../../../../../../styles/_theme_palette" as *;
-
 :host {
     .media-server-list {
         *::-webkit-scrollbar-track {
@@ -7,7 +5,7 @@
             -webkit-border-radius : initial;
             border-radius         : initial;
 
-            background-color      : $additional_light2;
+            background-color      : var(--additional_light2);
         }
 
         .server-list {
@@ -23,7 +21,7 @@
                 width: 100%;
                 position: relative;
                 padding: 8px 0;
-                border-bottom: 1px solid $light6;
+                border-bottom: 1px solid var(--light6);
 
                 &.show-ip {
                     .server-name {
@@ -57,7 +55,7 @@
                     cursor: pointer;
 
                     &:hover {
-                        background-color: $additional_light3;
+                        background-color: var(--additional_light3);
                     }
 
                     > svg-icon {
@@ -86,7 +84,7 @@
                     }
 
                     .name {
-                        color: $dark10;
+                        color: var(--dark10);
                         font-family: "robotomedium", "roboto", sans-serif;
                         font-weight: 500;
                         height: 40px;
@@ -99,7 +97,7 @@
 
                     .ip-info {
                         font-size     : 12px;
-                        color         : $light16;
+                        color         : var(--light16);
                         width         : 40%;
                         float         : right;
                         text-align    : right;
@@ -132,15 +130,15 @@
                         padding: 8px 16px 8px 87px;
 
                         &:hover {
-                            background-color: $additional_light3;
+                            background-color: var(--additional_light3);
                         }
 
                         &.selected {
-                            background-color: $light5;
+                            background-color: var(--light5);
                         }
 
                         > .name {
-                            color: $dark10;
+                            color: var(--dark10);
                             font-family: "robotomedium", "roboto", sans-serif;
                             font-size: 14px;
                             height: 40px;
@@ -162,7 +160,7 @@
                             height: 16px;
                             line-height: 16px;
                             overflow: hidden;
-                            color: $light16;
+                            color: var(--light16);
                             opacity: 0;
                             // transition: opacity .2s ease-in-out;
                         }
@@ -174,17 +172,17 @@
                             top: 8px;
                             width: 70px;
                             height: 40px;
-                            border: 1px solid $light5;
-                            background: $light3;
+                            border: 1px solid var(--light5);
+                            background: var(--light3);
                             > img {
                                 width: 100%;
                                 height: 100%;
                                 object-fit: contain;
                                 z-index: 1;
                             }
-                            
+
                             svg-icon svg path {
-                                fill: $light16;
+                                fill: var(--light16);
                             }
 
                             > .preloader {
@@ -206,9 +204,9 @@
                                 top: 4px;
                                 width: 10px;
                                 height: 10px;
-                                background: $red_main;
+                                background: var(--red_main);
                                 border-radius: 5px;
-                                border: 2px solid $red_main !important;
+                                border: 2px solid var(--red_main) !important;
                             }
                         }
 
@@ -216,7 +214,7 @@
                         &.unauthorized,
                         &.error {
                             > .name {
-                                color: $light16;
+                                color: var(--light16);
                             }
 
                             > .preview {
@@ -226,9 +224,9 @@
                                     left: 50%;
                                     width: 36%;
                                     transform: translate(-50%, -50%);
-                                    
+
                                     svg path {
-                                        fill: $light16 !important;
+                                        fill: var(--light16) !important;
                                     }
                                 }
                                 > img {
@@ -246,7 +244,7 @@
                                 width: 10px;
                                 height: 10px;
                                 border-radius: 5px;
-                                border: 2px solid $red_main !important;
+                                border: 2px solid var(--red_main) !important;
                             }
                         }
 
@@ -259,7 +257,7 @@
                                 width: 10px;
                                 height: 10px;
                                 border-radius: 5px;
-                                border: 2px solid $dark15;
+                                border: 2px solid var(--dark15);
                             }
                         }
 

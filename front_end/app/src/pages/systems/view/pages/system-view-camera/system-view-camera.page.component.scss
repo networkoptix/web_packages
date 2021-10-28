@@ -1,5 +1,3 @@
-@use 'styles/_theme_palette';
-@use 'styles/theme_variables' as *;
 @use 'bootstrap_utils' as bootstrap;
 
 $header-background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
@@ -7,7 +5,7 @@ $header-foreground: white;
 
 $player-background: black;
 
-$border-color: $light6;
+$border-color: var(--light6);
 
 :host {
   width: 100vw;
@@ -122,7 +120,7 @@ $border-color: $light6;
         opacity: 1.0;
         // background-color: green;
         // background-color: red;
-        border: 2px solid $dark15;
+        border: 2px solid var(--dark15);
       }
       &.isRecording {
         opacity: 1.0;
@@ -181,12 +179,12 @@ $border-color: $light6;
           line-height: initial;
 
           svg path {
-            fill : $light3;
+            fill : var(--light3);
           }
         }
 
         &:hover svg-icon svg path {
-          fill : $light1;
+          fill : var(--light1);
         }
 
         > svg {
@@ -234,7 +232,7 @@ $border-color: $light6;
         &:after {
           content: "";
           display: block;
-          background-color: $light16; // #698796
+          background-color: var(--light16); // #698796
           opacity: .2;
           height: 1px;
           width: 100%;
@@ -255,10 +253,10 @@ $border-color: $light6;
             padding: 0 8px !important;
           }
           &:hover > div {
-            background-color: rgba($light16, .1);
+            background-color: rgba(var(--light16), .1);
           }
           &.selected > div {
-            background-color: $brand_l1;
+            background-color: var(--brand_l1);
           }
           &.disabled > div {
             opacity: .2;
@@ -268,7 +266,7 @@ $border-color: $light6;
         > .divider:after {
           content: "";
           display: block;
-          background-color: $light16; // #698796
+          background-color: var(--light16); // #698796
           opacity: .2;
           height: 1px;
           width: calc(100% - 16px);
@@ -325,13 +323,13 @@ $border-color: $light6;
         > svg {
           width        : 96px;
           height       : 100px;
-          stroke       : $light1;
+          stroke       : var(--light1);
           opacity      : 0.6;
           stroke-width : 3px;
         }
 
         > span {
-          color       : $light1;
+          color       : var(--light1);
           margin-top  : 24px;
           line-height : 48px;
           opacity     : 0.6;
@@ -388,7 +386,7 @@ $border-color: $light6;
         .controls-toggling-ear {
           width           : 40px;
           height          : 16px;
-          background      : $additional_light2 url("./img/arrow-down.png") no-repeat center center;
+          background      : var(--additional_light2) url("./img/arrow-down.png") no-repeat center center;
           background-size : 16px 16px;
           box-shadow      : 0 2px 0 0 rgba(0, 0, 0, 0.1);
           cursor          : pointer;
@@ -417,7 +415,7 @@ $border-color: $light6;
         display        : flex;
         flex-direction : row;
         z-index        : 100;
-        background     : $additional_light2;
+        background     : var(--additional_light2);
 
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none;   /* Safari */
@@ -457,7 +455,7 @@ $border-color: $light6;
           border-left      : 1px solid $border-color;
           border-right     : 1px solid $border-color;
           color            : #a5b7c0;
-          background-color : $additional_light2;
+          background-color : var(--additional_light2);
           z-index          : 2;
         }
 

@@ -1,4 +1,4 @@
-@use '../../../../styles/theme_variables' as *;
+@use '../../../../styles/theme_variables' as theme_vars;
 @use '../../../styles/_mixins';
 
 //nx-systems-list-component {
@@ -10,7 +10,7 @@
 
         .input-overlay-left {
             position    : absolute;
-            color       : $light8;
+            color       : var(--light8);
             left        : 17px;
             display     : flex;
             align-items : center;
@@ -18,7 +18,7 @@
 
         .input-overlay-right {
             position    : absolute;
-            color       : $light8;
+            color       : var(--light8);
             right       : 17px;
             display     : flex;
             align-items : center;
@@ -42,7 +42,7 @@
         }
 
         .user-name {
-            font-size     : $h6-font-size;
+            font-size     : theme_vars.$h6-font-size;
             line-height   : 16px;
             display       : block;
             margin-bottom : 12px;
@@ -52,8 +52,8 @@
     .search-block {
         padding-top    : 10px;
         padding-bottom : 10px;
-        /*border-top:1px solid $common-border-color;
-        border-bottom:1px solid $common-border-color;*/
+        /*border-top:1px solid var(--common-border-color);
+        border-bottom:1px solid var(--common-border-color);*/
         margin-bottom  : 10px;
     }
 

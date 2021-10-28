@@ -8,7 +8,7 @@
 .camera-settings-info {
     font-family: typography.$font-family-regular;
     font-size: typography.$font-size-base;
-    color: $dark9;
+    color: var(--dark9);
 
     .grid-container {
         display               : grid;
@@ -90,7 +90,7 @@
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
-                border-bottom: 1px dotted $light6;
+                border-bottom: 1px dotted var(--light6);
                 flex-grow: 1;
             }
         }
@@ -131,9 +131,9 @@
 }
 
 .preview-wrapper {
-    background: $additional_light1;
+    background: var(--additional_light1);
     border-radius: 2px;
-    border: 1px solid $light3;
+    border: 1px solid var(--light3);
     overflow: hidden;
     padding: 0;
 }
@@ -150,7 +150,7 @@
   }
 
   .sensitivity-buttons {
-      color: $dark9 !important;
+      color: var(--dark9) !important;
       border-radius: 2px;
       font-size: 12px;
       width: 32px !important;
@@ -164,14 +164,14 @@
   .button {
       &-0 {
         background-color: #FFFFFF4D;
-        border: 1px solid $light4 !important;
+        border: 1px solid var(--light4) !important;
         &:hover {
-            border: 1px solid $light6 !important;
+            border: 1px solid var(--light6) !important;
             background-color: #FFFFFF66 !important;
         }
         &:active, &.active{
             background-color: #FFFFFF80 !important;
-            border: 1px solid $light13 !important;
+            border: 1px solid var(--light13) !important;
         }
 
       }
@@ -273,10 +273,10 @@
 }
 
 .control-label {
-    color : $dark9;
+    color : var(--dark9);
 
     &:hover {
-        color : $dark1;
+        color : var(--dark1);
     }
 }
 
@@ -312,7 +312,7 @@
                     position: relative;
                     display: inline-block;
                     margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted $light3;
+                    border-bottom: 1px dotted var(--light3);
                     z-index: 1;
                     min-width: 16px;
                     flex-basis: 1;
@@ -333,7 +333,7 @@
     // do not use typography as we can't overwrite color with input-error
     font-family: $font-family-regular;
     font-size: $font-size-base;
-    color: $dark9;
+    color: var(--dark9);
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;
@@ -346,7 +346,7 @@
 }
 
 .sensitivity-hint {
-    color: $light16;
+    color: var(--light16);
 }
 
 .shake-hint {

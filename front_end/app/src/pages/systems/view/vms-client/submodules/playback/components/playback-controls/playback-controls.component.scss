@@ -1,5 +1,3 @@
-@use '../../../../../../../../../styles/_theme_palette' as *;
-
 :host {
   display: inline-block;
   width: 63px;
@@ -9,7 +7,7 @@
 
   > .playback-control-button {
     text-align: center;
-    border-left: 1px solid $light4;
+    border-left: 1px solid var(--light4);
     position: absolute;
     left: 0;
     top: 0;
@@ -42,13 +40,13 @@
       }
     }
 
-    color: $light4;
-    background-color: $additional_light2;
+    color: var(--light4);
+    background-color: var(--additional_light2);
     transition: all .2s ease-in-out;
 
     &.enabled {
       cursor: pointer;
-      color: $light16;
+      color: var(--light16);
       z-index: 1;
 
       > .glyph {
@@ -56,13 +54,13 @@
       }
 
       // &:hover {
-      //   background-color: $light4;
+      //   background-color: var(--light4);
       // }
       &:hover {
-        background-color: $additional_light3;
+        background-color: var(--additional_light3);
       }
       &:active {
-        background-color: $light5 !important;
+        background-color: var(--light5) !important;
       }
     }
   }

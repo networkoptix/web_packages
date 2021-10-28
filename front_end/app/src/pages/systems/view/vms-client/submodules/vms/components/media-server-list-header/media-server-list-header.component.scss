@@ -1,22 +1,19 @@
-@import 'styles/_theme_palette';
-$brand_core: #2FA2DB;
-
 :host {
   .search-box {
     height: 44px;
     width: 100%;
-    border-bottom: 1px solid $light6;
+    border-bottom: 1px solid var(--light6);
     position: relative;
-    background-color: $additional_light2;
+    background-color: var(--additional_light2);
 
     // transition: background-color .2s ease-in-out;
 
     &:hover {
-      background-color: $light2;
+      background-color: var(--light2);
     }
 
     &:focus-within {
-      background-color: $light1;
+      background-color: var(--light1);
     }
 
     > .search-reset-icon {
@@ -70,7 +67,7 @@ $brand_core: #2FA2DB;
       box-shadow: none !important;
 
       &::placeholder {
-        color: $light16;
+        color: var(--light16);
       }
     }
 
@@ -84,28 +81,28 @@ $brand_core: #2FA2DB;
       cursor: pointer;
 
       &:hover {
-        background: $additional_light3;
+        background: var(--additional_light3);
       }
       &:active {
-        background: $light5;
+        background: var(--light5);
       }
 
       > svg {
-        > * {
+        // > * {
           // transition: fill .2s ease-in-out;
-        }
+        // }
         > .outer-circle {
-          stroke: $light16;
+          stroke: var(--light16);
           stroke-width: 2;
           fill: transparent;
         }
         > .i-body {
-          stroke: $light16;
+          stroke: var(--light16);
           stroke-width: 2;
         }
         > .point-over-i {
           stroke-width: 0;
-          fill: $light16;
+          fill: var(--light16);
         }
       }
 

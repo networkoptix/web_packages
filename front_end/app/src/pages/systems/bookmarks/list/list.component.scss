@@ -1,21 +1,21 @@
 @use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
+@use '../../../../../styles/theme_variables' as theme_vars;
 
 .feed .bookmark-card {
     width: 100%;
-    background-color: $light1;
+    background-color: var(--light1);
     border-radius: 10px;
     margin-bottom: 20px;
     header {
-        background-color: $additional_light1;
+        background-color: var(--additional_light1);
         padding: 18px 20px 15px 20px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         border-radius: 10px 10px 0 0;
         .name {
-            font-family: $font-family-bold;
-            font-size: $font-size-lg;
+            font-family: theme_vars.$font-family-bold;
+            font-size: theme_vars.$font-size-lg;
         }
     }
     main {

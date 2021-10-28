@@ -1,5 +1,4 @@
 @use "../../../../../styles/typography";
-@use '../../../../../../styles/theme_variables' as *;
 
 .storage-container {
     table {
@@ -31,8 +30,8 @@
     th {
         @include typography.medium13dark9;
         padding          : 5px 15px;
-        background-color : $additional_light1;
-        border-bottom    : 1px solid $light3;
+        background-color : var(--additional_light1);
+        border-bottom    : 1px solid var(--light3);
     }
 
     th:last-child {
@@ -41,8 +40,8 @@
 
     td {
         padding          : 5px 0 5px 15px;
-        background-color : $light1;
-        color            : $dark9;
+        background-color : var(--light1);
+        color            : var(--dark9);
         display          : flex;
         align-items      : center;
     }
@@ -60,7 +59,7 @@
 .server-info {
     font-family : typography.$font-family-regular;
     font-size   : typography.$font-size-base;
-    color       : $dark9;
+    color       : var(--dark9);
 
     .header-top-bar {
         display       : flex;
@@ -92,11 +91,11 @@
             }
 
             .offline {
-                background-color : $error;
+                background-color : var(--error);
             }
 
             .checking {
-                background-color : $light16;
+                background-color : var(--light16);
             }
         }
     }
@@ -116,7 +115,7 @@
 
             .cell-ellipsis {
                 margin-bottom : 2px;
-                border-bottom : 1px dotted $light6;
+                border-bottom : 1px dotted var(--light6);
                 flex-grow     : 1;
             }
         }
@@ -154,7 +153,7 @@
 
 .help-block {
     @include typography.regular11error;
-    color            : $error;
+    color            : var(--error);
     padding          : .25rem 0 .5rem;
     background-color : transparent;
 }

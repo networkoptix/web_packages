@@ -1,12 +1,12 @@
 @use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as variables;
+@use '../../../../styles/theme_variables' as theme_vars;
 @use '../../../styles/buttons' as buttons;
 @use 'bootstrap_utils' as bootstrap;
 
 nx-block {
 	.username,
 	.system-name {
-		font-family : variables.$font-family-medium;
+		font-family : theme_vars.$font-family-medium;
 	}
 
 	.user-name,
@@ -15,7 +15,7 @@ nx-block {
 	}
 
 	.name {
-		font-family : variables.$font-family-bold;
+		font-family : theme_vars.$font-family-bold;
 	}
 }
 
@@ -33,17 +33,15 @@ nx-block {
   @include bootstrap.media-breakpoint-up(lg) {
     position: fixed;
     left: 0;
-    width: calc((100% - #{variables.$scrollbar-height}) / 3)
+    width: calc((100% - #{theme_vars.$scrollbar-height}) / 3)
   }
 
   // replicate col-xl-3
   @include bootstrap.media-breakpoint-up(xl) {
-    width: calc((100% - #{variables.$scrollbar-height}) / 4);
-    max-width:  calc(#{variables.$fluid-container-max-width} / 4);
+    width: calc((100% - #{theme_vars.$scrollbar-height}) / 4);
+    max-width:  calc(#{theme_vars.$fluid-container-max-width} / 4);
   }
   nx-menu {
     height: 100%;
   }
 }
-
-

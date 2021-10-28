@@ -1,5 +1,4 @@
 @use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
 @use '../../../styles/bootstrap_utils' as bootstrap;
 
 nx-no-systems {
@@ -7,7 +6,7 @@ nx-no-systems {
         width            : 100%;
         z-index          : 100;
         text-align       : center;
-        background-color : $body-bg;
+        background-color : var(--body-bg);
         padding          : 2rem 0;
 
         &-body {
