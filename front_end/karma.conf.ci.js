@@ -20,7 +20,8 @@ module.exports = function(config) {
             require('karma-coverage-istanbul-reporter'),
             require('karma-spec-reporter'),
             require('@angular-devkit/build-angular/plugins/karma'),
-            require('karma-viewport')
+            require('karma-viewport'),
+            require('karma-junit-reporter')
         ],
 
         // Viewport configuration
@@ -75,13 +76,17 @@ module.exports = function(config) {
         // possible values: 'dots', 'progress', 'coverage-istanbul', 'kjhtml', 'spec'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         // reporters: ['progress'],
-        reporters: ['progress'],
+        reporters: ['progress', 'junit', 'coverage-istanbul'],
         // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
             dir: require('path').join(__dirname, './coverage/test-karma'),
-            reports: ['html', 'lcovonly', 'text-summary'],
+            reports: ['html', 'lcovonly', 'text-summary', 'cobertura'],
             fixWebpackSourcePaths: true
+        },
+
+        junitReporter: {
+            outputDir: 'reports' // results will be saved as $outputDir/$browserName.xml
         },
 
         // web server port

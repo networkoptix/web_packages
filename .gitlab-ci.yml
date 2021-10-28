@@ -83,6 +83,7 @@ django-unit-test:
     reports:
       junit: cloud/report.xml
       cobertura: cloud/coverage.xml
+  needs: ['django-checks']
 
 frontend-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
@@ -92,7 +93,13 @@ frontend-unit-test:
   script:
     - cd front_end
     - npm install
-    - npm run test:ci
+    - npm run lang
+    - npm run test:ci front-end
+  artifacts:
+    reports:
+      junit: front_end/reports/*.xml
+      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+  needs: ['nx-mentions-check']
 
 build-webadmin:
   stage: build

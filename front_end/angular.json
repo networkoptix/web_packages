@@ -198,10 +198,13 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/"
+                "node_modules/",
+                "app/src/styles",
+                "app/styles"
               ]
             },
-            "scripts": []
+            "scripts": [],
+            "codeCoverage": true
           }
         },
         "lint": {
