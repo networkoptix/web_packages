@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy }         from '@ngneat/until-destroy';
 import SwaggerUI                                from 'swagger-ui';
-import { NxMenuService }                        from '@src/menu';
 import { IConfig, NxConfigService }             from '@services/nx-config';
 import { NxAPIToolService }                     from '../api-tool.service';
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
@@ -24,9 +23,9 @@ export class NxSwaggerComponent implements OnChanges {
     RTSPRequestShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
-    constructor(public APIToolService: NxAPIToolService, private configService: NxConfigService, private menuService: NxMenuService) {
+    constructor(public APIToolService: NxAPIToolService,
+                private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();
-        this.subscribeToMenuServiceSections();
     }
 
     /** Check if node is a leaf node.
@@ -34,9 +33,6 @@ export class NxSwaggerComponent implements OnChanges {
      */
     isAPIPathNode = (node: MenuNodeWithParent) => {
         return !node.nodes.length;
-    }
-
-    private subscribeToMenuServiceSections() {
     }
 
     private setSwaggerDescription(selection: string) {

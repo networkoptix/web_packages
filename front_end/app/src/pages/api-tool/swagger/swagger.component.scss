@@ -326,8 +326,7 @@
 }
 
 .swagger-ui .response-control-media-type__accept-message {
-	font-size : 10px;
-    color     : initial;
+	display: none;
 }
 
 .swagger-ui .btn {
@@ -486,7 +485,7 @@
 	word-break : break-word;
 }
 
-.swagger-ui .markdown code, .swagger-ui .renderedMarkdown code {
+.swagger-ui .markdown code {
 	font-size     : 14px;
 	padding       : 1px 6px;
 	border-radius : 2px;
@@ -494,4 +493,18 @@
 	font-family   : monospace;
 	font-weight   : 400;
 	color         : $dark9;
+}
+
+.swagger-ui .renderedMarkdown code {
+	border-radius: 2px;
+	font-size: rem(13px);
+	font-weight: normal;
+	letter-spacing: normal;
+	font-family: robotomonoregular, monospace !important;
+	padding: 2px;
+	display: inline-block;
+	color: $dark18;
+	line-height: 1;
+	border: solid 1px $additional_light8;
+	background: $additional_light7;
 }
