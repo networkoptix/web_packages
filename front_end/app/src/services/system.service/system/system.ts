@@ -571,7 +571,7 @@ export class NxSystem extends System {
     }
 
     public getExportUrl (params) {
-        return this.mediaserver.getExportUrl(params)
+        return this.mediaserver.getExportUrl(params);
     }
 
     public getServerTimes(): Promise<Array<ServerTimeInfo>> {

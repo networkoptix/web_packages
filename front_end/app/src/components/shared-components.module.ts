@@ -26,7 +26,7 @@ import { NxPreLoaderComponent } from './placeholders/pre-loader/pre-loader.compo
         NgbModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot()
     ],
     declarations: [
         NxCheckboxComponent,
@@ -37,7 +37,7 @@ import { NxPreLoaderComponent } from './placeholders/pre-loader/pre-loader.compo
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent,
+        NxTagComponent
     ],
     providers: [
         NxCheckboxComponent,
@@ -48,7 +48,7 @@ import { NxPreLoaderComponent } from './placeholders/pre-loader/pre-loader.compo
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent,
+        NxTagComponent
     ],
     exports: [
         NxCheckboxComponent,
@@ -59,7 +59,7 @@ import { NxPreLoaderComponent } from './placeholders/pre-loader/pre-loader.compo
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent,
+        NxTagComponent
     ]
 })
 export class SharedComponentsModule {

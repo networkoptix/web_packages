@@ -38,6 +38,9 @@
     "lint": "eslint app --ext .ts --ignore-pattern *.spec.ts --fix",
     "lint:tests": "eslint app --ext .spec.ts --fix",
     "lint:all": "eslint app --ext .ts --fix",
+    "esprint": "esprint check --fix",
+    "esprint4": "esprint check --fix --workers=4",
+    "esprint8": "esprint check --fix --workers=8",
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
     "buildSkins": "node buildSkins.js",
     "setSkin": "node setSkin.js --skin",
@@ -135,6 +138,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
+    "esprint": "^3.1.0",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "identity-obj-proxy": "^3.0.0",
@@ -159,8 +163,8 @@
     "ts-node": "8.10.1",
     "typescript": "4.0.5",
     "webpack": "4.43.0",
-    "webpack-cli": "3.3.11",
     "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.11.0"
   }
 }

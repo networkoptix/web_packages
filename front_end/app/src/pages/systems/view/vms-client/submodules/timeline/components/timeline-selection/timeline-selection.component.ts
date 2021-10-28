@@ -66,7 +66,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         protected selection: TimelineSelectionService,
         protected playback: PlaybackService,
         protected wheel: TimelineWheelHandlerService,
-        protected timeUnderMouse: TimelineTimeUnderMouseService,
+        protected timeUnderMouse: TimelineTimeUnderMouseService
     ) {
         this.onSelectionSubjectChange = this.onSelectionSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
@@ -95,8 +95,8 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
             const width = this.timeline.durationToDomWidth(this.selectionStatus.range.duration);
             this.selectedRangeView.nativeElement.style.left = `${left}px`;
             this.selectedRangeView.nativeElement.style.width = `${width}px`;
-            this.leftEarView.nativeElement.classList.toggle('playback', this._leftEarOverPlayback)
-            this.rightEarView.nativeElement.classList.toggle('playback', this._rightEarOverPlayback)
+            this.leftEarView.nativeElement.classList.toggle('playback', this._leftEarOverPlayback);
+            this.rightEarView.nativeElement.classList.toggle('playback', this._rightEarOverPlayback);
         } else if (this.selectedRangeView) {
             this.selectedRangeView.nativeElement.classList.remove('active');
         }
@@ -104,28 +104,28 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
 
     protected _playbackOverlays (t: ms): boolean {
         if (this.playback.state.mode !== PLAYBACK_MODE.ARCHIVE) {
-            return false
+            return false;
         }
-        const duration = Math.abs(t - this.playback.state.currentTime)
-        const width = this.timeline.durationToDomWidth(duration)
-        return width < PLAYBACK_OVERLAY_TRESHOLD_PX
+        const duration = Math.abs(t - this.playback.state.currentTime);
+        const width = this.timeline.durationToDomWidth(duration);
+        return width < PLAYBACK_OVERLAY_TRESHOLD_PX;
     }
 
     protected get _leftEarOverPlayback (): boolean {
-        return this._playbackOverlays(this.selectionStatus.range.start)
+        return this._playbackOverlays(this.selectionStatus.range.start);
     }
 
     protected get _rightEarOverPlayback (): boolean {
-        return this._playbackOverlays(this.selectionStatus.range.end)
+        return this._playbackOverlays(this.selectionStatus.range.end);
     }
 
     public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
         this.selectionStatus = s;
-        this._updateCss()
+        this._updateCss();
     }
 
     public onTimelineSubjectChange (s: TimelineServiceStatus) {
-        this._updateCss()
+        this._updateCss();
     }
 
     @HostListener('mousedown', ['$event'])
@@ -151,14 +151,14 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
 
     @HostListener('document:mousemove', ['$event'])
     public mouseMoveHandler (e: MouseEvent) {
-        const $host = this.selectedRangeView.nativeElement.parentElement
+        const $host = this.selectedRangeView.nativeElement.parentElement;
         // @ts-ignore
         this.timeUnderMouse.handleMouseMove({
             offsetX:
                 (e.target as HTMLElement).getBoundingClientRect().left -
                 $host.getBoundingClientRect().left +
-                e.offsetX,
-        })
+                e.offsetX
+        });
         this.selection.handleMouseMove(e);
     }
 
@@ -181,7 +181,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     @HostListener('wheel', ['$event'])
     public wheelHandler (e: WheelEvent): void {
         e.preventDefault();
-        const $host = this.selectedRangeView.nativeElement.parentElement
+        const $host = this.selectedRangeView.nativeElement.parentElement;
         if (e.target !== $host) {
             // @ts-ignore
             this.wheel.handleWheel({
@@ -190,12 +190,11 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
                     $host.getBoundingClientRect().left +
                     e.offsetX,
                 deltaX: e.deltaX,
-                deltaY: e.deltaY,
+                deltaY: e.deltaY
             });
         } else {
             this.wheel.handleWheel(e);
         }
-
     }
 }
 

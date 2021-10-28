@@ -150,14 +150,14 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
-        this.isSelected = s.isActive
+        this.isSelected = s.isActive;
         if (s.isActive) {
-            const bgw = this.backgroundView.nativeElement.getBoundingClientRect().width
-            this.selectionLeftPixel =  bgw * (s.range.start - this.timeline.fullRange.start) / this.timeline.fullRange.duration
-            this.selectionWidthPixel = bgw * s.range.duration / this.timeline.fullRange.duration
+            const bgw = this.backgroundView.nativeElement.getBoundingClientRect().width;
+            this.selectionLeftPixel =  bgw * (s.range.start - this.timeline.fullRange.start) / this.timeline.fullRange.duration;
+            this.selectionWidthPixel = bgw * s.range.duration / this.timeline.fullRange.duration;
         } else {
-            this.selectionLeftPixel = -1
-            this.selectionWidthPixel = 0
+            this.selectionLeftPixel = -1;
+            this.selectionWidthPixel = 0;
         }
     }
 

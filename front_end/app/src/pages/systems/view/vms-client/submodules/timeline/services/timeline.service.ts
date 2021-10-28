@@ -32,7 +32,7 @@ export class TimelineService {
 
     public constructor (
         protected vms: VideoManagementSystemService,
-        browserDetector: DeviceDetectorService,
+        browserDetector: DeviceDetectorService
     ) {
         const _60fps = Math.ceil(1000 / 17);
         const _30fps = Math.ceil(1000 / 34);
@@ -76,11 +76,11 @@ export class TimelineService {
     }
 
     public get archiveRange (): TimeRange {
-        const sc = this.vms.selectedCamera
+        const sc = this.vms.selectedCamera;
         if (sc?.hasArchive) {
-            return new TimeRange(this.fullRange.start, sc.archiveEnd)
+            return new TimeRange(this.fullRange.start, sc.archiveEnd);
         } else {
-            return this.fullRange
+            return this.fullRange;
         }
     }
 
@@ -93,9 +93,9 @@ export class TimelineService {
     }
 
     public set visibleRange (r: TimeRange) {
-        this._visibleRange.start = Math.max(r.start, this.fullRange.start)
-        this._visibleRange.end = Math.min(r.end, this.fullRange.end)
-        this._emit()
+        this._visibleRange.start = Math.max(r.start, this.fullRange.start);
+        this._visibleRange.end = Math.min(r.end, this.fullRange.end);
+        this._emit();
     }
 
     public get canvasGeometry (): CanvasGeometry {
@@ -210,9 +210,9 @@ export class TimelineService {
         if (dt) {
             const offset = Math.round(dt * step);
             this._visibleRange.shift(offset);
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
         // TODO: check why not calling emit() here
     }

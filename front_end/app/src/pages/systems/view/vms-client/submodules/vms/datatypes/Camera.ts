@@ -201,9 +201,9 @@ export class Camera implements ICamera {
 
     public get archiveEnd (): ms {
         if (this.hasArchive) {
-            return this._birdViewTree.archiveEnd
+            return this._birdViewTree.archiveEnd;
         } else {
-            return -Infinity
+            return -Infinity;
         }
     }
 }

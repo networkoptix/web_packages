@@ -103,7 +103,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public canvasMouseMoveHandler (e: MouseEvent|TouchEvent): void {
         this.timeUnderMouse.handleMouseMove(e);
         if (this.selection.handleMouseMove(e as MouseEvent)) {
-            return
+            return;
         }
         const screenX = NxUtilsService.calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
@@ -141,21 +141,21 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         e.stopPropagation();
         e.preventDefault();
-        const offsetY = NxUtilsService.calcOffsetY(e)
+        const offsetY = NxUtilsService.calcOffsetY(e);
         if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
             offsetY <= CANVAS_SELECTION_OFFSET_END
         ) {
-            this.selection.handleBackgroundMouseDown(e as MouseEvent)
+            this.selection.handleBackgroundMouseDown(e as MouseEvent);
         } else {
-            this.selection.reset()
+            this.selection.reset();
             this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
             this._mouseNotReleasedYet = true;
-            this.timeUnderMouse.handleMouseDown()
+            this.timeUnderMouse.handleMouseDown();
         }
     }
 
     public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
-        this.selection.handleMouseUp(e as MouseEvent)
+        this.selection.handleMouseUp(e as MouseEvent);
         const screenX = NxUtilsService.calcScreenX(e);
         const offsetX = NxUtilsService.calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
@@ -188,7 +188,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public documentMouseUpHandler (e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
-        this.selection.handleMouseUp(e as MouseEvent)
+        this.selection.handleMouseUp(e as MouseEvent);
     }
 }
 

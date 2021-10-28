@@ -75,7 +75,7 @@ export class BirdViewTree {
     }
 
     public get archiveEnd (): ms {
-        return this._treeRoot.archiveEnd
+        return this._treeRoot.archiveEnd;
     }
 
     public isThereRecord(t: ms) {
@@ -332,9 +332,9 @@ export class BirdViewTreeNode {
 
     public get archiveEnd (): ms {
         if (this._rightChild) {
-            return this._rightChild.archiveEnd || this._records[this._records.length - 1]?.end
+            return this._rightChild.archiveEnd || this._records[this._records.length - 1]?.end;
         } else {
-            return this._records[this._records.length - 1]?.end
+            return this._records[this._records.length - 1]?.end;
         }
     }
 

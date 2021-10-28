@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, Afte
 import { TimelineSelectionService, TimelineSelectionServiceStatus } from '../../services/timeline.selection.service';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
 import TimelineService from '../../services/timeline.service';
-import { msDurationToString } from './utils'
+import { msDurationToString } from './utils';
 import { throttle, map, distinctUntilChanged } from 'rxjs/operators';
 import { NxAccountService } from '../../../../../../../../services/account.service';
 import { NxSystem, NxSystemService } from '../../../../../../../../services/system.service';
@@ -10,14 +10,13 @@ import { IConfig, NxConfigService } from '../../../../../../../../services/nx-co
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimeRange from '../../services/TimeRange';
 
-
-const THROTTLE_MS = 50
-const EAR_WIDTH = 120
+const THROTTLE_MS = 50;
+const EAR_WIDTH = 120;
 
 @Component({
-    selector    : 'timeline-selection-action-panel',
-    templateUrl : './timeline-selection-action-panel.component.html',
-    styleUrls   : ['./timeline-selection-action-panel.component.scss']
+    selector: 'timeline-selection-action-panel',
+    templateUrl: './timeline-selection-action-panel.component.html',
+    styleUrls: ['./timeline-selection-action-panel.component.scss']
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     protected subscription: Subscription
@@ -27,12 +26,12 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     CONFIG: IConfig;
 
     public get duration (): string {
-        return msDurationToString(Math.floor(this.selection.range.duration / 1000) * 1000)
+        return msDurationToString(Math.floor(this.selection.range.duration / 1000) * 1000);
     }
 
     public get exportUrl (): string {
         // return this.selection.exportUrl
-        return this.system ? this.system.getExportUrl(this.selection.exportUrlParams) : ''
+        return this.system ? this.system.getExportUrl(this.selection.exportUrlParams) : '';
     }
 
     constructor(
@@ -42,14 +41,14 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected selection: TimelineSelectionService,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
-        protected vms: VideoManagementSystemService,
+        protected vms: VideoManagementSystemService
     ) {
         this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
     protected get $self (): HTMLElement {
-        return this.self.nativeElement
+        return this.self.nativeElement;
     }
 
     public duration$: Observable<String>
@@ -63,7 +62,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         //     .pipe(map(s => msDurationToString(Math.floor(s.range.duration / 1000) * 1000)))
 
         // a fallback jitter reduction solution
-        this.duration$ = interval(THROTTLE_MS).pipe(map(_ => this.duration)).pipe(distinctUntilChanged())
+        this.duration$ = interval(THROTTLE_MS).pipe(map(_ => this.duration)).pipe(distinctUntilChanged());
 
         this.accountService.get().then((account) => {
             if (!account) {
@@ -89,24 +88,24 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
 
     public onSubjectChange (s: TimelineSelectionServiceStatus) {
         this.status = s;
-        this.$self.classList.toggle('active', s.isActive)
+        this.$self.classList.toggle('active', s.isActive);
     }
 
     public handleDurationClick (e: MouseEvent) {
         this.timeline.jumpScrollTo(
             this.selection.range.start -
             this.timeline.domWidthToDuration(EAR_WIDTH)
-        )
+        );
     }
 
     public handleDurationDoubleClick (e: MouseEvent, recalibrate: boolean = false) {
-        let margin = this.timeline.domWidthToDuration(EAR_WIDTH)
+        const margin = this.timeline.domWidthToDuration(EAR_WIDTH);
         this.timeline.visibleRange = new TimeRange(
             this.selection.range.start - margin,
-            this.selection.range.end + margin,
-        )
+            this.selection.range.end + margin
+        );
         if (recalibrate) {
-            setTimeout(() => this.handleDurationDoubleClick(e), 0)
+            setTimeout(() => this.handleDurationDoubleClick(e), 0);
         }
     }
 }
