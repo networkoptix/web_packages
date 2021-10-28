@@ -12,7 +12,7 @@
             <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
                 <nx-system-dropdown></nx-system-dropdown>
-                <nx-developers-menu *ngIf="!APIToolService.postSystemLoadingError" [service]="APIToolService" (onClick)="APIToolService.handleMenuClick($event)">
+                <nx-developers-menu [service]="APIToolService" (onClick)="APIToolService.handleMenuClick($event)">
                 </nx-developers-menu>
             </div>
             <!-- Offset for the fixed menu -->

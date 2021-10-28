@@ -42,6 +42,7 @@ export class NxAPIToolService {
     selectedSystem: DropdownItem;
     system: NxSystem;
     mediaServerUpdating = false;
+    validSystems: NxSystemWithUserInfo[] = []
 
     serversDropdown: ServerDropdownItem[] = [];
     selectedServer: ServerDropdownItem;
@@ -70,9 +71,7 @@ export class NxAPIToolService {
     }
 
     loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
-    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
-    postSystemLoadingError = false; // For errors that will give the user an opportunity to change what system they're using with the system dropdown.
-    postSystemLoadingErrorText = '';
+    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = '';
 
     constructor(
         configService: NxConfigService,
@@ -146,6 +145,9 @@ export class NxAPIToolService {
                 const onlineSystem = this.systemIsOnline(system);
                 const sysName = onlineSystem ? system.name : system.name + ' - Offline';
                 this.systemsDropdown.push({ value: system.id, name: sysName, disabled: !onlineSystem });
+                if (onlineSystem) {
+                    this.validSystems.push(system);
+                }
             }
         });
 
@@ -167,8 +169,7 @@ export class NxAPIToolService {
             if (validSystem) {
                 this.system = await this.systemService.createSystem('', validSystem.id);
             } else {
-                this.loadingErrorType = 'NO_SYSTEM_FOUND_API_TOOL';
-                this.loadingFailure$.next(true);
+                this.showError();
                 return;
             }
         }
@@ -176,10 +177,31 @@ export class NxAPIToolService {
         this.getServersInfo();
     }
 
+    showError = () => {
+        this.loadingFailure$.next(true);
+        this.loadingErrorType = this.CONFIG.isLocal || this.systemsDropdown.length === 1 ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
+        if (this.serverSubscription) {
+            this.serverSubscription.unsubscribe();
+        }
+    }
+
+    async tryNextSystem() {
+        const invalidSystemItem = this.systemsDropdown.find(item => item.value === this.system.id);
+        invalidSystemItem.name = invalidSystemItem.name + ' - Error';
+        invalidSystemItem.disabled = true;
+        this.validSystems = this.validSystems.filter(system => system.id !== this.system.id);
+
+        if (this.validSystems.length) {
+            this.system = await this.systemService.createSystem('', this.validSystems[0].id);
+            this.getServersInfo();
+            return;
+        }
+        // No more valid systems left
+        this.showError();
+    }
+
     getServersInfo() {
         this.serversLoaded = false;
-        this.postSystemLoadingError = false;
-        this.postSystemLoadingErrorText = '';
         let mediaServerRetryCount = 0;
         if (this.serverSubscription) {
             this.serverSubscription.unsubscribe();
@@ -201,17 +223,14 @@ export class NxAPIToolService {
                 }),
                 finalize(() => {
                     if (!this.serversLoaded) {
-                        this.loadingFailure$.next(true);
-                        this.loadingErrorType = 'SYSTEM_FAILED_TO_LOAD_API_TOOL';
+                        this.tryNextSystem();
                     }
                 })
             )
             .subscribe(_system => {
                 if (!this.mediaServerUpdating) {
                     if (mediaServerRetryCount === 4) {
-                        this.loadingFailure$.next(true);
-                        this.loadingErrorType = 'SYSTEM_FAILED_TO_LOAD_API_TOOL';
-                        this.serverSubscription.unsubscribe();
+                        this.tryNextSystem();
                     }
                     this.updateMediaServers();
                     mediaServerRetryCount++;
@@ -271,9 +290,7 @@ export class NxAPIToolService {
                                         if (this.serversDropdown.length === this.system.serverManager.servers.length) {
                                             if (this.selectedServer.incompatible) {
                                                 // If for whatever reason, all servers are marked as incompatible
-                                                this.postSystemLoadingError = true;
-                                                this.postSystemLoadingErrorText = 'Getting an API File for this system has failed.';
-                                                this.menuNodes = [];
+                                                this.tryNextSystem();
                                             } else {
                                                 // Success
                                                 const mainAPIContent = createMenuContent(this.selectedServer.apiDocFull);
@@ -313,15 +330,9 @@ export class NxAPIToolService {
                         console.error(error);
                     });
             } else {
+                // Something is wrong with the system's servers but it thinks it is online
                 this.mediaServerUpdating = false;
-                // If for whatever reason, there are no servers but system thinks it is online.
-                this.postSystemLoadingError = true;
-                this.postSystemLoadingErrorText = 'Error Getting Servers';
-                this.serversLoaded = true;
-                this.menuNodes = [];
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
+                // this.tryNextSystem();
             }
         }
     }

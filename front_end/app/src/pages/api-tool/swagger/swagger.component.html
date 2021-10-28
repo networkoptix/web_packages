@@ -1,5 +1,3 @@
-<ng-container *ngIf="APIToolService.postSystemLoadingError; then APILoadingFailed"></ng-container>
-
 <ng-container  #swagger *ngIf="APIToolService.menuNodes; else preloader">
     <div *ngIf="APIToolService.activeNode" [ngClass]="{'api-info': APIToolService.APIInfoNodes[APIToolService.activeNode.name]}">
         <div style="padding: 0 1rem 1rem" class="swagger-description">
@@ -14,8 +12,4 @@
 
 <ng-template #preloader>
     <nx-pre-loader></nx-pre-loader>
-</ng-template>
-
-<ng-template #APILoadingFailed>
-    <h2>{{ APIToolService.postSystemLoadingErrorText }}</h2>
 </ng-template>
