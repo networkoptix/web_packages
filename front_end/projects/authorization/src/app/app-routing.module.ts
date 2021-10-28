@@ -6,7 +6,7 @@ const routes: Routes = [
         path: 'redirect-oauth',
         loadChildren: () => import('./oauth-redirect/oauth-redirect.module').then(m => m.NxOAuthRedirectModule)
     }, {
-        path: '',
+        path: 'authorize',
         loadChildren: () => import('./components/authorize.module').then(m => m.NxAuthorizeModule)
     },
     {

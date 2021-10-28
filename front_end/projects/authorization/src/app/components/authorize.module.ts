@@ -9,7 +9,6 @@ import {
     ReactiveFormsModule, FormsModule
 }                               from '@angular/forms';
 
-
 import { DirectivesModule } from '@directives/directives.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 
@@ -24,13 +23,11 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService } from '@services/session.service';
 
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
     { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
-    { path: '**', component: NxAuthorizeComponent },
+    { path: '**', component: NxAuthorizeComponent }
 ];
 
 @NgModule({
@@ -44,8 +41,7 @@ export const authorizedRoutes: Routes = [
         SharedComponentsModule,
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule.forRoot(),
-
-        DirectivesModule,
+        DirectivesModule
     ],
     providers: [
     ],
@@ -60,7 +56,7 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
         NxAuthorizeAuthCodeComponent,
-        NxAuthorizeBackupCodeComponent,
+        NxAuthorizeBackupCodeComponent
     ],
     exports: [
         NxAuthorizeComponent
