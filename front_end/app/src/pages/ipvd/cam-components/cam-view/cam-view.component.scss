@@ -1,12 +1,9 @@
 @use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
 @use '../../../../styles/mixins';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
 
 .camview {
     padding          : 0;
-    background-color : $light4;
+    background-color : var(--light4);
     border-top       : 1px solid transparent;
 
     &.view-scroll-fixed-top {
@@ -25,7 +22,7 @@
 
     h2 {
         font-size : 0.9375rem;
-        color     : $dark9;
+        color     : var(--dark9);
     }
 
     .camview-link {
@@ -34,7 +31,7 @@
     }
 
     .info-label {
-        color : $light16;
+        color : var(--light16);
     }
 
     .analytics-label {
@@ -99,11 +96,11 @@
     }
 
     .blue {
-        color : $blue1;
+        color : var(--blue1);
     }
 
     .firmware-line {
-        stroke       : $brand-primary;
+        stroke       : var(--brand-primary);
         stroke-width : 2
     }
 
