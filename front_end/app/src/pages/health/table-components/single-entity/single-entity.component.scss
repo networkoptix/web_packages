@@ -1,7 +1,4 @@
-@use '../../../../../styles/theme_variables' as *;
 @use '../../../../components/tag/tag.component' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-single-entity{
     display: block;
@@ -12,7 +9,7 @@ nx-single-entity{
         span {
             position: relative;
             z-index: 2;
-            background-color: $light1;
+            background-color: var(--light1);
             padding-right: 8px;
         }
 
@@ -22,7 +19,7 @@ nx-single-entity{
             bottom: 4px;
             left: 0;
             right: 0;
-            border-bottom: 1px solid $light3;
+            border-bottom: 1px solid var(--light3);
             z-index: 1;
             min-width: 16px;
         }
