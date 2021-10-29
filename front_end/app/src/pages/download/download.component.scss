@@ -79,15 +79,15 @@
     height           : auto !important;
     box-shadow       : none !important;
     background-color : transparent !important;
-    border           : 1px solid $light5 !important;
+    border           : 1px solid var(--light5) !important;
 
     &:hover {
-        border-color     : $light8 !important;
-        background-color : rgba($light5, .25) !important;
+        border-color     : var(--light8) !important;
+        background-color : rgba(var(--light5--rgb), .25) !important;
     }
 
     &:active {
-        background-color : rgba($light5, .5) !important;
+        background-color : rgba(var(--light5--rgb), .5) !important;
     }
 
     .installer-name {
@@ -121,7 +121,7 @@
     }
 
     & + p {
-        color         : $light16;
+        color         : var(--light16);
         margin-bottom : 1rem;
         font-size     : rem(12px);
     }
@@ -142,7 +142,7 @@ h2.version-number {
             .nav-link {
                 border-top-left-radius  : 2px;
                 border-top-right-radius : 2px;
-                color                   : $dark12;
+                color                   : var(--dark12);
                 font-size               : $h5-font-size;
                 font-family             : $font-family-medium;
                 line-height             : 26px;
@@ -150,17 +150,17 @@ h2.version-number {
                 text-decoration         : none;
 
                 &.active {
-                    background-color : $light1 !important;
+                    background-color : var(--light1) !important;
                     border-bottom    : 1px solid transparent;
 
                     .tab-heading {
-                        border-bottom : 1px solid #d7dfe3;
+                        border-bottom : 1px solid var(--light5);
                         padding       : 14px 0;
                     }
                 }
 
                 &:hover {
-                    background-color : transparentize($light5, 0.75);
+                    background-color : rgba(var(--light5--rgb), 0.25);
                 }
             }
         }
@@ -172,4 +172,3 @@ h2.version-number {
         }
     }
 }
-
