@@ -28,7 +28,6 @@ describe('NxPasswordComponent', () => {
     let el: HTMLInputElement;
 
     beforeEach(waitForAsync(() => {
-
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,

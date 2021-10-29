@@ -12,7 +12,7 @@ describe('NxTagComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NxTagComponent]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(NxTagComponent);
         component = fixture.componentInstance;

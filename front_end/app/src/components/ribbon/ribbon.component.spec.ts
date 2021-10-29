@@ -16,7 +16,6 @@ describe('NxRibbonComponent', () => {
     let fixture: ComponentFixture<NxRibbonComponent>;
     let el: DebugElement;
 
-
     beforeEach(waitForAsync(() => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
 
@@ -61,7 +60,6 @@ describe('NxRibbonComponent', () => {
     it('should use NxRibbonService to get data', inject(
         [NxRibbonService],
         (service: NxRibbonService) => {
-
             const actions: RibbonAction[] = [{
                 type: 'link',
                 text: 'Go back',
