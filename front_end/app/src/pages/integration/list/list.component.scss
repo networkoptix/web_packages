@@ -1,5 +1,5 @@
 @use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
+@use '../../../../styles/theme_variables' as theme_vars;
 
 .plugin {
     text-decoration : none;
@@ -45,8 +45,8 @@
         }
 
         &-by {
-            color     : $light16;
-            font-size : $font-size-ssm;
+            color     : var(--light16);
+            font-size : theme_vars.$font-size-ssm;
         }
 
         &-descr {
