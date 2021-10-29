@@ -1,6 +1,7 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
     <svg-icon nx-add-svg-src
+        [ngStyle]="{'minWidth.px': '280', 'minHeight.px': '120'}"
         [src]="CONFIG.icons.dirSectionPlaceholder + (CONFIG.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'"
         [svgStyle]="{'width.px': '280', 'height.px': '120'}"
         [applyClass]="true"></svg-icon>
@@ -71,6 +72,7 @@
                 type="button"
             >
                 <svg-icon nx-add-svg-src
+                    [ngStyle]="{'minWidth.px': '20', 'minHeight.px': '20'}"
                     [src]="CONFIG.icons.dir + 'plus.svg'"
                     [svgStyle]="{'width.px': '20', 'height.px': '20'}"
                     [applyClass]="true"></svg-icon>
