@@ -43,7 +43,7 @@ export class ActivatedResolver implements Resolve<any> {
 const appRoutes: Routes = [
     { path: 'activate', component: NxActivateComponent, canActivate: [ManualAccessGuard], resolve: { uriParam: ParamResolver } },
     { path: 'activate/success', component: NxActivateComponent, canActivate: [ManualAccessGuard], resolve: { uriParam: ActivatedResolver } },
-    { path: 'activate/:code', redirectTo: 'authorize/activate/:code' }
+    { path: 'activate/:code', component: NxActivateComponent, canActivate: [ManualAccessGuard] }
 ];
 
 @NgModule({

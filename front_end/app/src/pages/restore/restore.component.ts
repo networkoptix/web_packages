@@ -1,4 +1,4 @@
-import { Component, Input, OnInit }  from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
@@ -13,6 +13,7 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxStorageService }          from '@services/storage.service';
 import { NxSessionService }          from '@services/session.service';
 import { NxAppStateService }         from '@services/nx-app-state.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-restore-component',
@@ -50,6 +51,7 @@ export class NxRestoreComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        @Inject(WINDOW) private window: Window,
         private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private accountService: NxAccountService,
@@ -116,20 +118,12 @@ export class NxRestoreComponent implements OnInit {
                                 console.error(error);
                             });
                     } else {
-                        this.router
-                            .navigate(['/restore_password/' + code])
-                            .catch(error => {
-                                console.error(error);
-                            });
+                        this.window.location.replace(`${this.window.location.origin}/authorize/restore_password/${code}`);
                     }
                 }, () => {
                     // Wrong activation code or some error - send to activation page
                     this.appStateService.canManuallyAccess = true;
-                    this.router
-                        .navigate(['/activate/' + code])
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    this.window.location.replace(`${this.window.location.origin}/authorize/activate/${code}`);
                 });
         }
 

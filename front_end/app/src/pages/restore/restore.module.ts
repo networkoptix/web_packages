@@ -8,6 +8,7 @@ import { ComponentsModule }   from '@components/components.module';
 import { DirectivesModule }   from '@directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { ManualAccessGuard } from '@guards/manualAccessGuard';
 
 @Injectable()
 export class ParamResolver implements Resolve<any> {
@@ -43,7 +44,7 @@ const appRoutes: Routes = [
     { path: 'restore_password', component: NxRestoreComponent, resolve: { uriParam: ParamResolver } },
     { path: 'restore_password/sent', component: NxRestoreComponent, resolve: { uriParam: SentResolver } },
     { path: 'restore_password/success', component: NxRestoreComponent, resolve: { uriParam: SuccessResolver } },
-    { path: 'restore_password/:code', redirectTo: 'authorize/restore_password/:code' }
+    { path: 'restore_password/:code', component: NxRestoreComponent, canActivate: [ManualAccessGuard] }
 ];
 
 // TODO: Remove it after test
