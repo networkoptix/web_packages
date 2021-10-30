@@ -48,14 +48,14 @@ export const localSettingsRoutes: Routes = [
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard],
+                canActivate: [SystemGuard, UsersGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard],
+                canActivate: [SystemGuard, UsersGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
