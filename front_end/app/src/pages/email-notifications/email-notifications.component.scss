@@ -1,0 +1,97 @@
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+
+nx-section {
+  padding: 0.5rem;
+}
+
+.h-100,
+.payload-preview {
+  min-height: 360px;
+}
+
+.payload-preview {
+  margin-top: 16px;
+}
+
+.checkbox-wrapper {
+  margin: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  & > div {
+    width: 288px;
+  }
+}
+
+.email-content-wrapper,
+nx-select {
+  max-width: 648px;
+  margin: 16px;
+}
+
+.send-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.send-section {
+  min-width: 324px;
+  flex: 1;
+}
+
+.email-content-wrapper {
+  display: flex;
+  & > label {
+    width: 180px;
+  }
+
+  & > input,
+  & > textarea {
+    width: 100%;
+  }
+
+  & > textarea {
+    overflow: hidden;
+  }
+}
+
+pre {
+  margin-bottom: 24px;
+  border-radius: 2px;
+  font-size: rem(13px);
+  font-weight: normal;
+  letter-spacing: normal;
+  font-family: robotomonoregular, monospace !important;
+  border: solid 1px $dark11;
+  background-color: $dark13;
+  color: $additional_light1;
+  padding: 12px 8px;
+}
+
+.user-email {
+  color: $light11;
+}
+
+.attachment {
+  position: relative;
+  padding: 2px 32px 2px 4px;
+  margin: 0 4px 4px 0;
+  display: inline-block;
+  background: $additional_light1;
+  border-radius: 4px;
+  border: solid 1px $light6;
+  cursor: pointer;
+
+  &:after {
+    content: "\2715";
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.drop-zone {
+  border-radius: 6px;
+  border: 2px dashed transparentize($brand_core, 0.9);
+}

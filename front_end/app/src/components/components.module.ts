@@ -60,8 +60,10 @@ import { NxCookieBannerComponent }          from './cookie-banner/cookie-banner.
 import { NxAdvancedFilterComponent }        from './advanced-filter/advanced-filter.component';
 import { NxConsoleTableComponent }          from './console-table/console-table.component';
 import { NxTextEditableComponent }   from '@components/editable/editable.component';
-
+import { NxStepperComponent }               from './stepper/stepper.component';
 import { SharedComponentsModule } from '@components/shared-components.module';
+import { CdkStepperModule }                 from '@angular/cdk/stepper';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @NgModule({
     imports: [
@@ -73,9 +75,11 @@ import { SharedComponentsModule } from '@components/shared-components.module';
         NgbModule,
         DirectivesModule,
         PipesModule,
+        CdkStepperModule,
         AngularSvgIconModule.forRoot(),
         QuicklinkModule,
         CdkTableModule,
+        TextFieldModule,
         EditorModule,
         SharedComponentsModule
     ],
@@ -127,7 +131,8 @@ import { SharedComponentsModule } from '@components/shared-components.module';
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
-        NxTextEditableComponent
+        NxTextEditableComponent,
+        NxStepperComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -161,7 +166,8 @@ import { SharedComponentsModule } from '@components/shared-components.module';
         NxHTMLComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
-        NxTextEditableComponent
+        NxTextEditableComponent,
+        NxStepperComponent
     ],
     exports: [
         QuicklinkModule,
@@ -212,7 +218,10 @@ import { SharedComponentsModule } from '@components/shared-components.module';
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
         NxTextEditableComponent,
-        SharedComponentsModule
+        NxStepperComponent,
+        SharedComponentsModule,
+        CdkStepperModule,
+        TextFieldModule
     ]
 })
 export class ComponentsModule {

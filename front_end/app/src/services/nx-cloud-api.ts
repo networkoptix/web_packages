@@ -654,6 +654,10 @@ export class NxCloudApiService {
         }
         return throwError('No token was present');
     }
+
+    testEmailNotification(emailNotificationPayload: t.EmailNotification) {
+        return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
+    }
 }
 
 export class CustomClientAPI {

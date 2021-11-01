@@ -12,7 +12,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 const appRoutes: Routes = [
     {
-        path: 'push-notifications', component: PushComponent
+        path: '', component: PushComponent
     }
 ];
 

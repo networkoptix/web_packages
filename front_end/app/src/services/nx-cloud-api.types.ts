@@ -303,3 +303,19 @@ export interface DocAsset {
 export interface TwoFactorBackupCodes {
     backup_code: string
 }
+
+
+export interface NotificationAttachment {
+    filename: string,
+    content: string,
+    mimetype: string
+}
+
+export interface EmailNotification {
+    targets: string[],
+    subject: string,
+    systemId?: string,
+    messageHtml?: string,
+    messageText?: string,
+    attachments?: NotificationAttachment[]
+}
