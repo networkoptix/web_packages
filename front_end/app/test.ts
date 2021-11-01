@@ -16,7 +16,7 @@ import { NxSessionService }                          from '@services/session.ser
 import { TranslateService }                          from '@ngx-translate/core';
 import { NxAccountService }                          from '@services/account.service';
 import { NxAppStateService }                         from '@services/nx-app-state.service';
-import { NxProcessService }                          from '@services/process.service';
+import { NxProcessService, Process } from '@services/process.service';
 import { NxCloudApiService }                         from '@services/nx-cloud-api';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
@@ -107,6 +107,11 @@ ngMocks.defaultMock(TranslateService, () => ({
 // @ts-ignore
 ngMocks.defaultMock(NxProcessService, () => ({
     createProcess: () => Promise.resolve()
+}));
+
+// @ts-ignore
+ngMocks.defaultMock(Process, () => ({
+    run: () => {}
 }));
 
 ngMocks.defaultMock(NxScrollMechanicsService, () => ({
