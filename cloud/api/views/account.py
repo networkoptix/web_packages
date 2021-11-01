@@ -262,8 +262,13 @@ def index(request):
         #    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
     data = serializer.data
-    cdb_account = Account.get(request) if request.user.is_authenticated else dict()
+    cdb_account = dict()
+    cdb_account_security = dict()
+    if request.user.is_authenticated:
+        cdb_account = Account.get(request)
+        cdb_account_security = Account.get_2fa_settings(request)
     data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
+    data["totpExistsForAccount"] = cdb_account_security.get("totpExistsForAccount", False)
     return api_success(data)
 
 
@@ -349,7 +354,8 @@ def security(request):
     if action == SecurityAction.activate.name:
         return api_success(Account.update_2fa_settings(request, totp, True, password=password))
     else:
-        return api_success(Account.update_2fa_settings(request, totp, False, password=password))
+        Account.update_2fa_settings(request, totp, False, password=password)
+        return api_success(Auth.delete_2fa_key(request))
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

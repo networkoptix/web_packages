@@ -538,6 +538,12 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
+    def get_2fa_settings(request, headers=None):
+        return get_wrapper(f"{CLOUD_DB_URL}/account/self/settings/security", headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
     def update_2fa_settings(request, totp, tfa_enabled, password=None, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
@@ -823,6 +829,12 @@ class Auth(object):
         if not codes:
             codes = ""
         return delete_wrapper(f"{CLOUD_2FA_URL}/backup-code/{codes}", headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def delete_2fa_key(request, headers=None):
+        return delete_wrapper(f"{CLOUD_2FA_URL}/totp/key", headers=headers)
 
     @staticmethod
     @validate_response
