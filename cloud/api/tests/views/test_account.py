@@ -363,7 +363,7 @@ class TestAccountViews:
 
     def restore_password_with_code(self, password):
         self.code = str(base64.b64encode(('restore_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
-        req = self.arf.post('/api/account/restorePassword', data={'code': self.code, 'new_password': password})
+        req = self.arf.post('/api/account/restorePassword', data={'code': self.code, 'new_password': password, 'totp': 'totp'})
         req.session = {}
         self.timezone_now = timezone.now()
         self.timezone_mock = self.mocker.patch.object(timezone, 'now', return_value=self.timezone_now)
@@ -380,7 +380,7 @@ class TestAccountViews:
         self.user.refresh_from_db()
         assert self.user.activated_date == self.timezone_now
         assert not PushDevice.objects.filter(user=self.user).exists()
-        self.restore_mock.assert_called_with(self.code, 'new_pass')
+        self.restore_mock.assert_called_with(self.code, 'new_pass', 'totp')
 
         # Check that date is only updated if none exists
         old_time = self.timezone_now

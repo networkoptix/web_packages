@@ -98,7 +98,7 @@ class TestOauthViews:
 
     def test_authenticate_raises_not_authorized(self, mocker):
                                                                 # This exception requires some positional arguments
-        mocker.patch('api.controllers.cloud_api.Auth.get_code', side_effect=APILogicException('', Auth.RESPONSE_TYPE.code), return_value='')
+        mocker.patch('oauth.views.Auth.get_code', side_effect=APINotAuthorisedException('Invalid credentials'), return_value='')
         response = self.authenticate('wrongPassword', Auth.RESPONSE_TYPE.code)
 
         assert response.status_code == 401

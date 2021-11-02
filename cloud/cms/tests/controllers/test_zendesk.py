@@ -1,12 +1,13 @@
 import pytest
 from collections import defaultdict, OrderedDict
 from uuid import uuid4
-from random import randint, choice, shuffle, sample
+from random import randint, choice, shuffle, sample, getrandbits
 from unittest.mock import call
 from model_bakery import baker
 
 from cms.controllers.zendesk import *
 from api.tests.utils import unwrap
+
 
 def test_clean_nodes(mocker):
     generated_assets = []
@@ -225,19 +226,21 @@ class TestImporter:
     def test_sub_image_sources(self, mocker):
         mock_content_file, *match_obj = [
             str(uuid4()) for _ in range(4)]
-        mocker.patch.object(
+        mock_external = mocker.patch.object(
             structure, 'external_file_to_content_file', return_value=mock_content_file)
         files_target = {}
 
-        sub_handler = Importer.sub_image_sources(files_target)
+        sub_handler = Importer.sub_image_sources(files_target, mocker.sentinel.branding)
         result = sub_handler(match_obj)
         file_id, file_content = list(files_target.items())[0]
         assert result == f'{match_obj[1]}src="{{image_import:{file_id}}}"'
         assert mock_content_file == file_content
+        mock_external.assert_called_with(match_obj[2], mocker.sentinel.branding)
 
     def test_get_data_records(self, mocker, importer_instance):
-        branding, title, substituted_title, src, mock_content_file, *labels = [
+        title, substituted_title, src, mock_content_file, *labels = [
             str(uuid4()) for _ in range(randint(10, 20))]
+        branding = {str(uuid4()): str(uuid4()) for _ in range(randint(10, 20))}
         importer_instance.branding = branding
         mock_article = mocker.MagicMock()
         mock_article.title = title
@@ -1019,12 +1022,17 @@ class TestExporter:
         exporter._clean_attachments(attachments)
         mock_delete.assert_has_calls(expected_calls)
 
-    def test_update_attachments_from_content(self, mocker, get_exporter_instance, db):
+    def test_update_attachments_from_content(self, mocker, get_exporter_instance, db, mock_set):
         exporter = get_exporter_instance()
         title, portal_url, *labels = [
             str(uuid4()) for _ in range(randint(5, 15))]
+        existing_labels = labels[2:5]
         zd_article, zenpy_article, updated_body, abandoned_attachments = [
             mocker.MagicMock() for _ in range(4)]
+        zd_site = baker.prepare(ZendeskSite)
+        zenpy_article.configure_mock(label_names=existing_labels)
+        zd_article.configure_mock(site=zd_site)
+
         content = {
             'title': title,
             'labels': labels
@@ -1037,6 +1045,11 @@ class TestExporter:
             exporter, '_clean_attachments')
         mock_update = mocker.patch.object(
             exporter.zen_client.help_center.articles, 'update')
+        mock_create_label = mocker.patch.object(
+            exporter.zen_client.help_center.labels, 'create')
+        mocker.patch(
+            'cms.controllers.zendesk.ZendeskArticleLabel.objects', mock_set(*(ZendeskArticleLabel(name=label, site=zd_site) for label in existing_labels))
+        )
 
         assert exporter._update_attachments_from_content(
             zd_article, zenpy_article, content) == (updated_body, zd_article.title)
@@ -1048,6 +1061,14 @@ class TestExporter:
             abandoned_attachments)
         mock_update.assert_called_once_with(
             zenpy_article)
+
+        new_labels = labels[:2] + labels[5:]
+        assert mock_create_label.call_count == len(new_labels)
+        for create_call in mock_create_label.calls:
+            article, label = create_call.call_args.args
+            assert article == zenpy_article
+            assert label.name in new_labels
+            new_labels.remove(label.name)
 
     def test_update_or_create_article_translation(self, mocker, get_exporter_instance, db):
         zenpy_article = mocker.MagicMock()
@@ -1076,17 +1097,22 @@ class TestExporter:
         site = baker.make(ZendeskSite)
         mock_zd_article = mocker.MagicMock()
         mock_zenpy_article = mocker.MagicMock()
-        mock_zenpy_article.label_names = [
-            str(uuid4())for _ in range(randint(5, 15))]
+        existing_zenpy_labels = {}
+        for _ in range(randint(5, 15)):
+            id = getrandbits(32)
+            existing_zenpy_labels[id] = Label(name=str(uuid4()), id=id)
         exporter = get_exporter_instance(site.customization.name)
+        mocker.patch.object(exporter.zen_client.help_center.articles, 'labels', return_value=existing_zenpy_labels.values())
 
         labels = exporter._update_labels(
             mock_zd_article, mock_zenpy_article)
 
-        assert labels
+        for label in labels:
+            assert label.label_id in existing_zenpy_labels
+            del existing_zenpy_labels[label.label_id]
+        assert not existing_zenpy_labels
+
         mock_zd_article.labels.set.assert_called_once_with(labels)
-        assert mock_zenpy_article.label_names == [
-            label.name for label in labels]
 
     def test_sync_article(self, mocker, get_exporter_instance, db):
         exporter = get_exporter_instance()
@@ -1471,11 +1497,11 @@ def test_update_zd_article(mocker, get_exporter_instance, db):
     section = baker.make(
         ZendeskSection, site=site, parent_category=category, section_id=randint(1, 1000))
     asset = baker.make(
-        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first())
+        Asset, asset_type=AssetType.objects.filter(type=AssetType.ASSET_TYPES.documentation).first(), customizations=[customization])
     review = baker.make(
         AssetCustomizationReview, customization=site.customization, version__asset=asset, state=AssetCustomizationReview.REVIEW_STATES.accepted)
     article = baker.make(
-        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization], needs_sync=True)
+        ZendeskArticle, site=site, section=section, menu_node__asset=asset, menu_node__parent_menu__zendesk_sync_enabled=[customization], needs_sync=True, sync=True)
     mock_sync_article = mocker.patch.object(exporter, 'sync_article')
 
     state = update_zd_article(article.menu_node, site,
@@ -1486,7 +1512,7 @@ def test_update_zd_article(mocker, get_exporter_instance, db):
     updated_article = ZendeskArticle.objects.filter(
         id=existing_article.id).first()
     mock_sync_article.assert_called_once_with(
-        updated_article, {'title': ''}, delete=False, sync_log=None)
+        updated_article, {'title': '', 'blocks': [], 'external_files': [], 'id': asset.id, 'labels': [], 'shortDescription': '', 'script': ''}, delete=False, sync_log=None)
 
 
 def test_check_if_article_can_sync(mocker, db):
