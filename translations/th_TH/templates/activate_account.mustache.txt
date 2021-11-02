@@ -2,7 +2,7 @@
 
   โปรดเปิดลิงก์ด้านล่างเพื่อยืนยันที่อยู่อีเมลของคุณและเปิดใช้งานบัญชี
 
-{{config.portal_url}}/activate/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 หากคุณไม่ได้ลงทะเบียนใน %CLOUD_NAME% แค่ไม่สนใจอีเมลนี้
 อย่าแชร์ข้อความหรือลิงก์กับทุกคน

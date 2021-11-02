@@ -2,7 +2,7 @@ Olá {{message.userFullName}},
 
   Por favor, clique no botão abaixo para confirmar o seu endereço de e-mail e activar a conta.
 
-{{config.portal_url}}/activar/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 Se você não se registou em %CLOUD_NAME%, ignore este e-mail.
 Não compartilhe esta mensagem ou o link com ninguém.

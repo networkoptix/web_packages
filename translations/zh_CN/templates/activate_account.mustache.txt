@@ -2,7 +2,7 @@
 
   请访问下面的连结以确认您的电子邮件地址并激活帐户。
 
-{{config.portal_url}}/激活/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 如果你没有在 %CLOUD_NAME% 中注册，請忽略这封电子邮件。
 不要与任何人分享信息或链接。

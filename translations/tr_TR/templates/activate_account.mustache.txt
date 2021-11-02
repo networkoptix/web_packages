@@ -2,7 +2,7 @@ Merhaba, {{message.userFullName}},
 
   Lütfen e-posta adresinizi onaylamak ve hesabı etkinleştirmek için aşağıdaki bağlantıyı açın.
 
-{{config.portal_url}}/etkinleştir/{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 %CLOUD_NAME%'e kaydolmadıysanız, bu e-postayı yok sayın.
 İletiyi veya bağlantıyı kimseyle paylaşmayın.

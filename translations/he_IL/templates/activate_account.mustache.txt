@@ -2,7 +2,7 @@
 
   לחץ על הלחצן למטה כדי לאשר את כתובת הדוא"ל שלך ולהפעיל את החשבון.
 
-הפעל חשבון: {{config.portal_url}} / הפעל / {{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 אם לא נרשמת ל- %CLOUD_NAME%, פשוט התעלם מדוא"ל זה.
 אל תשתף את ההודעה או את הקישור עם אף אחד.

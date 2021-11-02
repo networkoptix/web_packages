@@ -2,7 +2,7 @@ Buongiorno, {{message.userFullName}},
 
   Si prega di aprire il link qui sotto per confermare il tuo indirizzo email e attivare l'account.
 
-{{config.portal_url}}/ attivare /{{message.code}}
+{{config.portal_url}}/authorize/activate/{{message.code}}
 
 Se non sei registrato in %CLOUD_NAME%, ignora questa email.
 Non condividere il messaggio o il collegamento con nessuno.
