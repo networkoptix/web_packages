@@ -186,6 +186,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.route.queryParams.subscribe(async(params: any) => {
             this.initialData = NxUtilsService.deepCopy(params);
+            this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
