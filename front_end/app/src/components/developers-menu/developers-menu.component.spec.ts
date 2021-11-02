@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxDevelopersMenuComponent } from './developers-menu.component';
-import { NxConfigService }           from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config';
 import { CommonModule } from '@angular/common';
-import { PipesModule }                      from '@src/pipes/pipes.module';
+import { PipesModule } from '@src/pipes/pipes.module';
 import { BehaviorSubject } from 'rxjs';
 import { WINDOW } from '@services/window-provider';
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
@@ -13,9 +13,11 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NxUriService } from '@services/uri.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockProvider }              from 'ng-mocks';
+import { MockProvider, MockComponent, MockDirective }  from 'ng-mocks';
 import { NxRibbonService } from '@components/ribbon';
 import { HelperMockProvider } from '@src/_mocks/helpers.test';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NgModel } from '@angular/forms';
 
 describe('Test NxDevelopersMenuComponent', () => {
     let component: NxDevelopersMenuComponent;
@@ -62,7 +64,9 @@ describe('Test NxDevelopersMenuComponent', () => {
                 ],
                 declarations: [
                     NxDevelopersMenuComponent,
-                    RouterLinkDirectiveStub
+                    RouterLinkDirectiveStub,
+                    MockComponent(NxSearchComponent),
+                    MockDirective(NgModel)
                 ],
                 providers: [
                     new HelperMockProvider(NxRibbonService, ribbonMock),
@@ -87,7 +91,7 @@ describe('Test NxDevelopersMenuComponent', () => {
 
     it('should set displayedMenuNodes', () => {
         expect(component.displayedMenuNodes.length).toBeTruthy();
-    })
+    });
 
     it('should highlight the correct initial activated node', () => {
         const activeNode = el.nativeElement.querySelector('.activated-highlight');

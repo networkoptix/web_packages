@@ -18,7 +18,7 @@ describe('NxSwitchComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NxSwitchComponent]
         })
-        .compileComponents();
+            .compileComponents();
 
         fixture = TestBed.createComponent(NxSwitchComponent);
         component = fixture.componentInstance;

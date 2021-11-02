@@ -304,7 +304,6 @@ export interface TwoFactorBackupCodes {
     backup_code: string
 }
 
-
 export interface NotificationAttachment {
     filename: string,
     content: string,
