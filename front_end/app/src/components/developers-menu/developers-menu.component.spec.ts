@@ -1,20 +1,21 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxDevelopersMenuComponent } from './developers-menu.component';
-import { HelperMockProvider }        from '../../_mocks/helpers.test';
 import { NxConfigService }           from '@services/nx-config';
-import { CommonModule, Location } from '@angular/common';
-import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
+import { CommonModule } from '@angular/common';
+import { PipesModule }                      from '@src/pipes/pipes.module';
 import { BehaviorSubject } from 'rxjs';
 import { WINDOW } from '@services/window-provider';
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
-import { docMenuMap } from '../../_mocks/knowledge_base_landing.mock';
-import { nxConfig } from '@services/nx-config/config';
 import { DirectivesModule } from '@directives/directives.module';
 import { DebugElement } from '@angular/core';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NxUriService } from '@services/uri.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MockProvider }              from 'ng-mocks';
+import { NxRibbonService } from '@components/ribbon';
+import { HelperMockProvider } from '@src/_mocks/helpers.test';
 
 describe('Test NxDevelopersMenuComponent', () => {
     let component: NxDevelopersMenuComponent;
@@ -28,24 +29,24 @@ describe('Test NxDevelopersMenuComponent', () => {
             search: ''
         }
     };
-    const kbMock = {
+
+    const mockURIService = {
+        queryParams: {
+            search: ''
+        }
+    };
+
+    const ribbonMock: any = {
+        context: {
+            visibility: ''
+        }
+    };
+
+    const mockService: any = {
         menuSubject: new BehaviorSubject(kbMenu),
-        activeAssetIdSubject: new BehaviorSubject(initialNode.asset_id)
-    };
-    const configMock = {
-        config: {
-            ...nxConfig,
-            docMenuMap
-        }
-    };
-    const locationMock = {
-        _path: initialNode.url,
-        path: () => locationMock._path,
-        replaceState: (newUrl) => {
-            const [url, search = ''] = newUrl.split('?');
-            windowMock.location.search = search;
-            locationMock._path = url;
-        }
+        activeAssetIdSubject: new BehaviorSubject(initialNode.asset_id),
+        activeNode: initialNode,
+        activeAssetState: ''
     };
 
     beforeEach(
@@ -56,22 +57,24 @@ describe('Test NxDevelopersMenuComponent', () => {
                     DirectivesModule,
                     AngularSvgIconModule,
                     HttpClientTestingModule,
-                    RouterTestingModule
+                    RouterTestingModule,
+                    PipesModule
                 ],
                 declarations: [
                     NxDevelopersMenuComponent,
                     RouterLinkDirectiveStub
                 ],
                 providers: [
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(Location, locationMock),
-                    new HelperMockProvider(NxKnowledgebaseService, kbMock),
-                    new HelperMockProvider(WINDOW, windowMock)
+                    new HelperMockProvider(NxRibbonService, ribbonMock),
+                    MockProvider(NxConfigService),
+                    new HelperMockProvider(WINDOW, windowMock),
+                    new HelperMockProvider(NxUriService, mockURIService)
                 ]
             }).compileComponents();
 
             fixture = TestBed.createComponent(NxDevelopersMenuComponent);
             component = fixture.componentInstance;
+            component.service = mockService;
             el = fixture.debugElement;
             fixture.whenStable();
             fixture.detectChanges();
@@ -81,6 +84,10 @@ describe('Test NxDevelopersMenuComponent', () => {
     it('should create component', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should set displayedMenuNodes', () => {
+        expect(component.displayedMenuNodes.length).toBeTruthy();
+    })
 
     it('should highlight the correct initial activated node', () => {
         const activeNode = el.nativeElement.querySelector('.activated-highlight');
@@ -124,5 +131,16 @@ describe('Test NxDevelopersMenuComponent', () => {
         expect(openNodes.length).toBe(3);
         expect(openNodes).toEqual([initialNode.name, firstNodeName, secondNodeName]);
         component.openNodes = [initialNode.name];
+    });
+
+    it('should filter nodes by the query', () => {
+        const parent = component.displayedMenuNodes.find(node => node.nodes.length);
+        const child = parent.nodes[0];
+        component.filterMenuItems(child.name);
+        const openNodes = component.openNodes;
+        const displayedNodes = component.displayedMenuNodes;
+        expect(openNodes.length).toBe(2);
+        expect(openNodes).toEqual([child.name, parent.name]);
+        expect(displayedNodes.length).toBe(1);
     });
 });

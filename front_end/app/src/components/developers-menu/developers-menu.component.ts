@@ -1,13 +1,12 @@
 import { Component, Output, EventEmitter, Inject, OnInit, Input }  from '@angular/core';
 import { Location }                                         from '@angular/common';
 import { takeUntil }                                        from 'rxjs/operators';
-import { timer, Subject, Observable, BehaviorSubject }                                   from 'rxjs';
+import { timer, Subject, BehaviorSubject }                                   from 'rxjs';
 import { UntilDestroy, untilDestroyed }                     from '@ngneat/until-destroy';
 
 import { WINDOW }                                   from '@services/window-provider';
 import { MenuNode }                                 from '@services/menus.service.types';
 import { IConfig, NxConfigService }                 from '@services/nx-config';
-import { MenuStructure } from '@services/nx-config/base-config';
 import { NxUtilsService }  from '@services/utils.service';
 import { NxUriService } from '@services/uri.service';
 import { NxRibbonService } from '@components/ribbon';
@@ -32,8 +31,6 @@ export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();
     @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
-    @Input()  menuSubject: Observable<MenuStructure>
-    @Input()  activeAssetIdSubject: Observable<string>
     @Input()  searchEnabled = true;
     @Input()  service;
 
