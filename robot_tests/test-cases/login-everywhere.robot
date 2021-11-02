@@ -77,8 +77,13 @@ Restart
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     Check Log In
@@ -96,8 +101,13 @@ Restart
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
     Click Button    ${RESET PASSWORD BUTTON}
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${random email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${random email}    restore_password
@@ -117,8 +127,13 @@ Restart
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
     Click Button    ${RESET PASSWORD BUTTON}
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${random email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${random email}    restore_password
@@ -142,8 +157,13 @@ Restart
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
     Click Button    ${RESET PASSWORD BUTTON}
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${random email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${random email}    restore_password

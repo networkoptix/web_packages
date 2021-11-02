@@ -94,7 +94,6 @@ Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
     Sleep    2
 
 Set Language Anonymous
