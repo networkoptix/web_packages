@@ -13,6 +13,7 @@ $brand_d5:      #57730E;
 $brand_d6:      #496207;
 $brand_d7:      #3E5502;
 
+$brand_core--rgb: red($brand-core), green($brand-core), blue($brand-core);
 $brand_core_d10: transparentize($brand_core, 0.1);
 $brand_core_d15: transparentize($brand_core, 0.15);
 $brand_core_t90: transparentize($brand_core, 0.9);
@@ -37,6 +38,7 @@ $brand_l2_d15: darken($brand_l2, 0.15);
     --brand-d6: #{$brand_d6};
     --brand-d7: #{$brand_d7};
 
+    --brand-core--rgb: #{$brand_core--rgb};
     --brand-core-d10: #{$brand_core_d10};
     --brand-core-d15: #{$brand_core_d15};
     --brand-core-t90: #{$brand_core_t90};
