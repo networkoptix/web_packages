@@ -48,7 +48,11 @@ Get Restore Code and Open the Link
     [Tags]    email    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+    END
     Location Should Be    ${url}/restore_password/sent
 
 2. Can still log in if you don't finish the process
@@ -81,7 +85,7 @@ Get Restore Code and Open the Link
     Click Link    ${RESET SUCCESS LOG IN LINK}
     Log In    ${email}    ${password}    validate=${False}    button=None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    button=None
+    Log In    ${email}    ${ALT PASSWORD}    validate=${False}    button=None
 
 6. Displays password masked, shows password and changes eye icon when clicked
     [Tags]    C26260    
@@ -140,8 +144,13 @@ Get Restore Code and Open the Link
     Send "Restore Password" Email    ${email}
 
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    IF    "${LANGUAGE}"=="he_IL"
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE HEBREW}
+    ELSE
+        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+        ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
 
@@ -149,12 +158,20 @@ Get Restore Code and Open the Link
     Click Button    ${LOGGED IN CLOSE BUTTON}
     Wait Until Element Is Not Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Go To    ${url}/restore_password/${code}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    IF    "${LANGUAGE}"=="fr_FR"
+        Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${DISCONNECT MODAL BUTTON}
+    ELSE
+        Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    END
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-
     Go To    ${url}/restore_password/${code}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN LOG OUT BUTTON}
+    IF    "${LANGUAGE}"=="fr_FR"
+        Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${DISCONNECT MODAL BUTTON}
+        Click Element    ${DISCONNECT MODAL BUTTON}
+    ELSE
+        Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+        Click Element    ${LOGGED IN LOG OUT BUTTON}
+    END
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 

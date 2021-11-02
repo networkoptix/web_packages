@@ -150,6 +150,7 @@ ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${D
 # extra spaces here temporarily
 ${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
 ${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
+${DISCONNECT MODAL BUTTON}               ${MODAL DIALOG}//button/span[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
 ${JUMBOTRON}                          //div[@class='jumbotron']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
