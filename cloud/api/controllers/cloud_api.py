@@ -13,6 +13,7 @@ from rest_framework import status
 
 from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                     APINotAuthorisedException, APINotFoundException, get_client_ip)
+from cloud.utils import get_authenticated_session_cookie_age
 
 logger = logging.getLogger(__name__)
 
@@ -737,12 +738,13 @@ class Auth(object):
         headers = {
             "X-Forwarded-For": ip
         }
+        session_age = get_authenticated_session_cookie_age()
         params = {
             "client_id": client_id,
             "grant_type": Auth.GRANT_TYPE.password,
             "response_type": Auth.RESPONSE_TYPE.token,
-            "expiration_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
-            "prolongation_period": settings.AUTHENTICATED_SESSION_COOKIE_AGE,
+            "expiration_period": session_age,
+            "prolongation_period": session_age,
             "username": email,
             "password": password
         }

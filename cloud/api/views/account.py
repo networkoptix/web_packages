@@ -30,6 +30,7 @@ from api.helpers.exceptions import (
     require_params, kill_session)
 from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountUpdateSerializer)
+from cloud.utils import get_authenticated_session_cookie_age
 
 logger = logging.getLogger(__name__)
 
@@ -184,7 +185,7 @@ def login(request):
     if 'remember' not in request.data or not request.data['remember']:
         request.session.set_expiry(0)
     else:
-        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+        request.session.set_expiry(get_authenticated_session_cookie_age())
 
     return login_helper(request, token, user)
 
@@ -202,7 +203,7 @@ def login_with_code(request):
     except models.Account.DoesNotExist:
         raise APINotFoundException("User not in cloud")
 
-    request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
+    request.session.set_expiry(get_authenticated_session_cookie_age())
     return login_helper(request, token, user)
 
 

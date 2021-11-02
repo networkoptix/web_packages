@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.urls import path
 
-from cms.views import asset, celery, menu
+from cms.views import asset, celery, menu, utils
 
 urlpatterns = [
     url(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
@@ -26,3 +27,8 @@ urlpatterns = [
     path('asset_info/by_menu/<int:menu_id>', asset.get_asset_info_by_menu, name='asset_info_by_menu'),
     path('menu_node_autocomplete', menu.MenuNodeAutocomplete.as_view(), name='menu_node_autocomplete')
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('qa_settings', utils.QASettings.as_view(), name='qa_settings')
+    ]

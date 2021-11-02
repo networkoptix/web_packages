@@ -220,6 +220,9 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             'zapier': None
         }
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
+
 REDIS_CACHE = {
     "BACKEND": "django_redis.cache.RedisCache",
     "TIMEOUT": None,
@@ -323,15 +326,21 @@ CACHES = {
     }
 }
 
+if DEBUG:
+    CACHES["testing"] = {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/13',
+        "KEY_PREFIX": 'testing'
+    }
+
 if TESTING:
     for key, cache in CACHES.items():
         cache['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
         cache['OPTIONS'] = {}
         cache['LOCATION'] = key
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 if LOCAL_ENVIRONMENT:
     INSTALLED_APPS += ('silk',)
@@ -465,7 +474,8 @@ AUTHENTICATION_BACKENDS = (
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
+# Don't access this directly, use function in cloud/utils
+_AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 1 month
 
 ADMINS = conf['admins']
 

@@ -72,7 +72,7 @@ def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
     special_structures = SpecialStructures()
 
     mapper = createMapper(cloud_portal, vals, special_structures)
-    
+
     brands = mapper(brand_structures, lambda structure: structure['shortcut'])
     hidden_brands = mapper(hidden_branding_structures, lambda structure: not structure['shortcut'] and not structure['hidden'])
 
@@ -99,7 +99,7 @@ def get_restricted_keywords(customization = settings.CUSTOMIZATION):
                                      asset_type=get_cloud_portal_asset().asset_type)
         default_vals = DataStructure.find_actual_values(restricted_struct, asset=default_cloud_portal)
         restricted += get_restricted(default_vals)
-    
+
     return restricted
 
 def createMapper(cloud_portal, vals, special_structures):
@@ -112,7 +112,7 @@ def createMapper(cloud_portal, vals, special_structures):
             mapped.extend([(
                 {'name': name, 'label': structure['label'], 'description': structure['description']},
                 structure['function'](cloud_portal))
-                for name, structure in special_structures.function_dict.items() if special_structure_filter(structure) 
+                for name, structure in special_structures.function_dict.items() if special_structure_filter(structure)
             ])
         return mapped
     return mapper
@@ -565,7 +565,7 @@ class MenuNodeChangeForm(forms.ModelForm):
             self.fields['parent_node'].queryset = MenuNode.objects.filter(id__in=node_ids)
             self.fields['parent_menu'] = forms.ModelChoiceField(queryset=Menu.objects.all(), widget=forms.HiddenInput, required=False)
         else:
-            # if parent is none, that means we are creating a new MenuNode. 
+            # if parent is none, that means we are creating a new MenuNode.
             # In this case, hide the parent_node field and let the user choose a menu to attach the node to with parent_menu field
             # menu.required is set to false for creating a new node to avoid a validation error, it will be overwritten on submit by the value of parent_menu
             self.fields['parent_menu'].required = True
@@ -582,7 +582,7 @@ class MenuNodeChangeForm(forms.ModelForm):
                 raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
         return enabled
 
-        
+
 class MenuNodeInlineForm(forms.ModelForm):
     class Meta:
         model = MenuNode
@@ -723,3 +723,17 @@ class ZendeskImportForm(forms.Form):
             if not data['zendesk_category_name']:
                 raise ValidationError('Zendesk Category Name required if importing')
         return data
+
+
+class QASettingsForm(forms.Form):
+    session_age = forms.IntegerField(help_text=f'Lifetime of new authenticated sessions in seconds. Default: {settings._AUTHENTICATED_SESSION_COOKIE_AGE} (1 month)', initial=settings._AUTHENTICATED_SESSION_COOKIE_AGE)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            cache_val = caches['testing'].get(name)
+            field.initial = cache_val if cache_val is not None else field.initial
+
+    def update_cache(self):
+        for name, val in self.cleaned_data.items():
+            caches['testing'].set(name, val)

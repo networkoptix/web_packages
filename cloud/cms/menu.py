@@ -32,7 +32,8 @@ class CustomMenu(Menu):
             ),
             items.AppList(
                 _('Internal'),
-                exclude=settings.ADMIN_DASHBOARD
+                exclude=settings.ADMIN_DASHBOARD,
+                children=[items.MenuItem('QA Settings', reverse('qa_settings'))]
             ),
             items.MenuItem('Help', '/static/help/cms/'),
         ]

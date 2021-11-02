@@ -1,3 +1,7 @@
+from django.conf import settings
+from django.core.cache import caches
+
+
 def chunked_queryset(queryset, chunk_size):
     """ Slice a queryset into chunks. """
 
@@ -27,3 +31,11 @@ def remove_suffix(string, suffix):
     if string.endswith(suffix):
         return string[:-len(suffix)]
     return string
+
+
+def get_authenticated_session_cookie_age():
+    if settings.DEBUG:
+        session_age = caches['testing'].get('session_age')
+        return session_age if session_age is not None else settings._AUTHENTICATED_SESSION_COOKIE_AGE
+    else:
+        return settings._AUTHENTICATED_SESSION_COOKIE_AGE
