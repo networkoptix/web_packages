@@ -154,6 +154,7 @@ const FeatureFlagKeys = [
     'customClients',
     'landingPage',
     'bookmarks',
+    'kbInstantSearch',
     'dashboard'
 ] as const;
 

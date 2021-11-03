@@ -58,6 +58,8 @@ class FLAGS(metaclass=_FlagType):
 
 class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
+    kb_instant_search = ('KnowledgeBase Instant Search', 'kbInstantSearch')
+
 
 
 class SAMPLES(metaclass=_FlagType):

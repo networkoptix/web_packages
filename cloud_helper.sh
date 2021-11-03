@@ -142,7 +142,7 @@ function start_celery() {
 
 function start_docker_containers() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
-        printf "Starting mysql and redis containers\n\n"
+        printf "Starting mysql, redis, and meilisearch containers\n\n"
         docker-compose -f ${DOCKER_COMPOSE} up -d
         printf "\n\n"
     else

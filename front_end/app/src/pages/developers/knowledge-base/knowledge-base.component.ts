@@ -8,7 +8,7 @@ import {
 import { WINDOW }                                                   from '@services/window-provider';
 import { UntilDestroy, untilDestroyed }                             from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest, EMPTY, Observable, of }    from 'rxjs';
-import { switchMap, tap, delay, map, filter, startWith }            from 'rxjs/operators';
+import { switchMap, tap, delay, map, filter, startWith, catchError }            from 'rxjs/operators';
 
 import { NxConfigService, IConfig }             from '@services/nx-config';
 import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
@@ -126,7 +126,18 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     fetchSearchHandler({ query, page }) {
-        return this.kbService.contentAssetId ? of({}) : this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, { query, page }).pipe(delay(this.CONFIG.search.debounceTime));
+        return this.cloudApi.documentationInstantSearch(this.route.snapshot.paramMap.get(
+            'kb-name'),  query, { page }
+        ).pipe(
+            catchError(err => {
+                console.error(err.message === 'Instant search feature not enabled' ? err : new Error('Error using instance search fallback to legacy search'));
+                return this.cloudApi.getDocumentation(
+                    this.kbService.kbName, DOC_TYPES.knowledgebase, { query, page }
+                ).pipe(
+                    delay(this.CONFIG.search.debounceTime)
+                );
+            })
+        );
     }
 
     constructor(
@@ -157,14 +168,17 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     parseResults({ docs }) {
-        return (docs || []).map(({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
+        const processLegacySearch = ({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
             const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
                 snippet: content ? NxUtilsService.highlight(content, matchStart, matchEnd) : shortDescription,
                 title: NxUtilsService.highlight(title, titleMatchStart, titleMatchEnd)
             };
-        });
+        };
+
+        const processInstantSearch = ({ id: docId, title, body: snippet}) => ({ docId, title, snippet });
+        return (docs || []).map(doc => (doc.snippets ? processLegacySearch : processInstantSearch)(doc));
     }
 
     showRibbon(id, state, reviewId?) {

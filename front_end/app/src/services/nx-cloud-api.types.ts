@@ -304,6 +304,14 @@ export interface TwoFactorBackupCodes {
     backup_code: string
 }
 
+export interface InstantSearchOptions {
+    query: string;
+    kbMenus?: string[],
+    labels?: string[];
+    cropLength?: number;
+    perPage?: number;
+    page?: number;
+}
 export interface NotificationAttachment {
     filename: string,
     content: string,

@@ -10,12 +10,15 @@ import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service/account';
 import * as t                       from './nx-cloud-api.types';
 import { NxUriCacheService }        from './uri-cache.service';
+import { FeatureFlagStrings }            from '@services/nx-config/base-config';
 import { NxSwCacheService }         from '@services/sw-cache.service';
 import { ConsoleSection }           from '@components/console-table/console-table.component.types';
 import { PackageStatus }            from '@dialogs/download-async/download-async.component.types';
 import { NxConsoleService }         from '@pages/developer-console/console/console.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService }             from '@services/oauth.service';
+import { InstantSearchOptions } from './nx-cloud-api.types';
+import { NxUtilsService } from './utils.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 export const DOC_TYPES = {
@@ -568,6 +571,16 @@ export class NxCloudApiService {
                 return of(error);
             }
         }));
+    }
+
+    @staffSWBypass
+    documentationInstantSearch(name, query, options?: Partial<InstantSearchOptions>) {
+        if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
+            return throwError(new Error('Instant search feature not enabled'));
+        }
+        const params = NxUtilsService.mapValuesToStrings({ query, ...options });
+        const route = `${this.CONFIG.apiBase}/documentation/kb/${name}/search?`;
+        return this.http.get<any>(route,  { params });
     }
 
     getDocAsset(assetId) {

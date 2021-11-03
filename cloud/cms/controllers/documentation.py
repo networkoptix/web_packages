@@ -1,19 +1,114 @@
+from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
 import sass
-
-from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
-from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
+from bs4 import BeautifulSoup
+from mistletoe import markdown
+from html2text import HTML2Text
+from waffle import switch_is_active
+from cms.feature_flags import SWITCHES
 
 from util.base_cache import BaseCache
+from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
+from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
+from util.helpers import get_meilisearch_client
+from meilisearch.errors import MeiliSearchApiError
+
+def html2md(html):
+    parser = HTML2Text()
+    parser.ignore_images = True
+    parser.ignore_links = True
+    parser.body_width = 0
+    return parser.handle(html)
 
 
+def fixup_markdown_formatting(text):
+    # Strip off table formatting
+    text = re.sub(r'(^|\n)\|\s*', r'\1', text)
+    # Strip off extra emphasis
+    text = re.sub(r'\*\*', '', text)
+    # Remove trailing whitespace and leading newlines
+    text = re.sub(r' *$', '', text)
+    text = re.sub(r'\n\n+', r'\n\n', text)
+    return re.sub(r'^\n+', '', text)
 
 
-DOC_CACHE = BaseCache(cache_key='documentation')
+def html2plain(html):
+    md = html2md(html)
+    html_simple = markdown(md)
+    text = BeautifulSoup(html_simple).getText()
+    return fixup_markdown_formatting(text)
+
+
+def ignore_index_not_found(func):
+    @wraps(func)
+    def _ignore_index_not_found(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except MeiliSearchApiError as e: 
+            if e.error_code != 'index_not_found':
+                raise e        
+
+    return _ignore_index_not_found
+
+class SearchableCache(BaseCache):
+    def __init__(self, *args, **kwargs):
+        self.custom_settings = kwargs.pop('search_settings', {})
+        self.current_settings = None
+        super().__init__(*args, **kwargs)
+        client = get_meilisearch_client()
+        self.search_index = client.index(self.cache_key)
+        self.fields_from_doc = self.custom_settings.pop('fields')
+        self.check_and_update_custom_settings()
+    
+    @ignore_index_not_found
+    def check_and_update_custom_settings(self):
+        if self.custom_settings:
+            self.current_settings = self.search_index.get_settings()
+            if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
+                self.search_index.update_settings(self.custom_settings)
+
+    @ignore_index_not_found            
+    def clear_cache(self):
+        super().clear_cache()
+        self.search_index.delete_all_documents()
+
+    def __setitem__(self, lookup_key, doc):
+        """Sets doc to cache using the lookup_key attribute.
+
+        Args:
+            doc: Doc to be added to cache
+        """
+        self.check_and_update_custom_settings()
+        super().__setitem__(lookup_key, doc)
+
+        if isinstance(doc, list):
+            return
+
+        from_doc = {
+            key_from_doc: doc[key_from_doc]
+            for key_from_doc in self.fields_from_doc
+        }
+
+        if switch_is_active(SWITCHES.kb_instant_search) and lookup_key.endswith('release'):
+            self.search_index.add_documents(
+                [{
+                    'cacheKey': lookup_key,
+                    'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks'])),
+                    **from_doc
+                }],
+                primary_key='cacheKey'
+            )
+
+
+SEARCH_SETTINGS = {
+    'fields': ['title', 'shortDescription', 'version', 'id', 'labels', 'kbMenus'],
+    'filterableAttributes': ['labels', 'kbMenus'],
+}
+DOC_CACHE = SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS)
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
@@ -88,7 +183,7 @@ def apply_replacements(html, replacements):
         html = html.replace(replacement['original'], replacement['updated'])
     return html
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link = False):
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link = False, force_update = False):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
@@ -135,7 +230,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             # Requested state is published, but no published version exists
             continue
 
-        if not doc_dict or (external_link or not trust_cache and (doc_dict.get('version', None) != version or draft)):
+        if force_update or not doc_dict or (external_link or not trust_cache and (doc_dict.get('version', None) != version or draft)):
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
@@ -176,6 +271,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
                 doc_dict['reviewId'] = pending_review.id
 
             if not draft:
+                doc_dict['kbMenus'] = [node.get_parent().name for node in doc.nodes.all()]
                 DOC_CACHE[cache_key] = doc_dict
 
         doc_dict_copy = doc_dict.copy()

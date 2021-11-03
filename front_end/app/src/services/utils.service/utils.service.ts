@@ -377,4 +377,19 @@ export class NxUtilsService {
     )).reduce((
         result, section, curInd
     ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
+
+    static mapValuesToStrings = (obj) => {
+        Object.keys(obj).forEach(key => {
+            const isObject = typeof obj[key] === 'object';
+            const isArray = Array.isArray(obj[key]);
+            if (isArray) {
+                obj[key] = obj[key].map(val => '' + val);
+            } else if (isObject) {
+                return NxUtilsService.mapValuesToStrings(obj[key]);
+            } else {
+                obj[key] = '' + obj[key];
+            }
+        });
+        return obj;
+    };
 }

@@ -3,9 +3,11 @@ from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
+from math import ceil
+from rest_framework import status
 
 from api.helpers.exceptions import (
-    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+    APIInternalException, api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
 from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
@@ -13,8 +15,7 @@ from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_por
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
 from cms.views.integration import make_integrations_json
-
-from util.helpers import get_language_object_from_request
+from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
 
 PAGE_NOT_FOUND = 'Page not found'
@@ -168,6 +169,117 @@ page_size__query_param = openapi.Parameter("pageSize", openapi.IN_QUERY,
 kb_name__path_param = openapi.Parameter(
     'name', openapi.IN_PATH, type=openapi.TYPE_STRING, description='Knowledgebase name'
 )
+
+
+def sync_search_for_menu(request, name):
+    cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
+    docs = DOC_CACHE[cache_key]
+    language = get_language_object_from_request(request)
+    knowledgebase_menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+    if not knowledgebase_menu:
+        raise APINotFoundException(f'Knowledgebase {name} not found')
+    knowledgebase = knowledgebase_menu['nodes']
+    docs = []
+    populate_docs_from_knowledgebase(knowledgebase, docs)
+    DOC_CACHE[cache_key] = docs
+    return generate_doc_json(docs, language=language, force_update=True)
+
+
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def sync_search(request, name = None):
+    """Force sync either instant search for either a single knowledgebase or for all docs.
+
+    This will mostly be available for admins in case something weird happens where the instant search gets in a weird state.
+    """
+    if not name:
+        index = get_meilisearch_client().index('documentation')
+        index.delete_all_documents()
+
+    docs = sync_search_for_menu(
+        request, name) if name else generate_doc_json(
+            Asset.objects.filter(
+                asset_type__type=AssetType.ASSET_TYPES.documentation
+            ).values_list(
+                'pk', flat=True
+            ),
+            language=get_language_object_from_request(request),
+            force_update=True
+        )
+
+    if docs:
+        return api_success(docs)
+    else:
+        raise APINotFoundException(f'Knowledgebase {name} not found')
+
+
+SEARCH_NOT_CONFIGURED = 'Instant search not properly configured for this instance'
+SEARCH_INDEX_NOT_FOUND = 'Instant Search index for "documentation" not found. Needs to be initialized'
+
+
+@api_view(("GET", ))
+@permission_classes((CanViewDevelopers, ))
+@handle_exceptions
+def kb_search(request, name):
+    if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
+        raise APIInternalException(SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
+
+    query = request.query_params.get('query', '')
+    kb_menus_filter = [name] if name else request.query_params.get('kbMenus', '').split(',')
+    labels_filter = request.query_params.get('labels', '').split(',')
+    filter_counts = request.query_params.get('filterCounts', '*').split(',')
+    crop_length = int(request.query_params.get('cropLength', 150))
+    to_highlight = request.query_params.get('highlight', '*').split(',')
+    perPage = int(request.query_params.get('perPage', 10))
+    page = int(request.query_params.get('page', 1))
+
+    index = get_meilisearch_client().index('documentation')
+    try:
+        index_updated = index.fetch_info().updated_at
+    except:
+        index_updated = False
+
+    if not index_updated:
+        docs_json = sync_search_for_menu(request, name)
+        if not docs_json:
+            raise APIInternalException(SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
+
+    kb_menus_filter = [f'kbMenus = {kb}' for kb in kb_menus_filter if kb]
+    labels_filter = [f'labels = {label}' for label in labels_filter if label]
+
+    options = {
+        'attributesToHighlight': to_highlight,
+        'cropLength': crop_length,
+        'facetsDistribution': filter_counts,
+        'filter': [*kb_menus_filter, *labels_filter],
+        'limit': perPage,
+        'offset': page * perPage - perPage
+    }
+
+    raw_results = index.search(query, options)
+    doc_keys = ['body', 'title', 'shortDescription', 'labels', 'kbMenus', 'id']
+    unformatted = ['kbMenus']
+    docs = [
+        {
+            key: val.replace('</em> <em>', ' ').replace('</em>', '</strong>').replace('<em>', '<strong class="highlighted">') if isinstance(val, str) and key not in unformatted else val
+            for key, val in hit['_formatted'].items()
+            if key in doc_keys
+        }
+        for hit in raw_results.get('hits', [])
+        if hit['kbMenus']
+    ]
+    num_hits = raw_results.get('nbHits', 0)
+    search_result = {
+        'docs': docs,
+        'page': 1,
+        'pageSize': perPage,
+        'totalPages': int(ceil(num_hits / perPage)),
+        'totalResults': num_hits,
+        **raw_results.get('facetsDistribution', {}).pop('labels', {})
+    }
+    
+    return api_success(search_result)
 
 
 @swagger_auto_schema(method="GET",

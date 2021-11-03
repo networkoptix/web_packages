@@ -5,7 +5,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from api.models import Account
 from cms.models import AssetCustomizationReview, AssetType, cloud_portal_customization_cache, Language
 from django.urls import reverse
+from meilisearch import Client
 
+
+def get_meilisearch_client():
+    return Client(settings.MEILISEARCH_ENDPOINT, settings.MEILISEARCH_MASTER_KEY)
 
 def get_languages(customization=None):
     if not customization:
