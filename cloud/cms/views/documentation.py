@@ -17,6 +17,7 @@ from cms.serializers import *
 from cms.views.integration import make_integrations_json
 from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
+from meilisearch.errors import MeiliSearchApiError
 
 PAGE_NOT_FOUND = 'Page not found'
 KB_NOT_FOUND = 'Kb not found'
@@ -237,8 +238,11 @@ def kb_search(request, name):
     index = get_meilisearch_client().index('documentation')
     try:
         index_updated = index.fetch_info().updated_at
-    except:
-        index_updated = False
+    except MeiliSearchApiError as e:
+        if e.error_code == 'index_not_found':
+            index_updated = False
+        else:
+            raise e
 
     if not index_updated:
         docs_json = sync_search_for_menu(request, name)

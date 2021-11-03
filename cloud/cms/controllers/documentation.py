@@ -15,7 +15,6 @@ from util.base_cache import BaseCache
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
 from util.helpers import get_meilisearch_client
-from meilisearch.errors import MeiliSearchApiError
 
 def html2md(html):
     parser = HTML2Text()
@@ -43,16 +42,18 @@ def html2plain(html):
     return fixup_markdown_formatting(text)
 
 
-def ignore_index_not_found(func):
-    @wraps(func)
-    def _ignore_index_not_found(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except MeiliSearchApiError as e: 
-            if e.error_code != 'index_not_found':
-                raise e        
+# def ignore_index_not_found(func):
+#     """Not sure if this needed anymore
+#     """
+#     @wraps(func)
+#     def _ignore_index_not_found(*args, **kwargs):
+#         try:
+#             return func(*args, **kwargs)
+#         except MeiliSearchApiError as e: 
+#             if e.error_code != 'index_not_found':
+#                 raise e          
 
-    return _ignore_index_not_found
+#     return _ignore_index_not_found
 
 class SearchableCache(BaseCache):
     def __init__(self, *args, **kwargs):
@@ -62,16 +63,15 @@ class SearchableCache(BaseCache):
         client = get_meilisearch_client()
         self.search_index = client.index(self.cache_key)
         self.fields_from_doc = self.custom_settings.pop('fields')
-        self.check_and_update_custom_settings()
     
-    @ignore_index_not_found
+    # @ignore_index_not_found
     def check_and_update_custom_settings(self):
         if self.custom_settings:
             self.current_settings = self.search_index.get_settings()
             if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
                 self.search_index.update_settings(self.custom_settings)
 
-    @ignore_index_not_found            
+    # @ignore_index_not_found            
     def clear_cache(self):
         super().clear_cache()
         self.search_index.delete_all_documents()
