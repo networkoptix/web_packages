@@ -414,7 +414,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             }));
     }
 
-    loginOauth(code: string) {
+    loginOauth(code: string, skipSetting?: boolean) {
         const params = {
             code,
             grant_type: 'authorization_code',
@@ -423,12 +423,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
             .pipe(
                 switchMap((tokens) => {
+                    if(skipSetting) {
+                        return of(tokens);
+                    }
                     this.setTokens(tokens, false);
                     // @ts-ignore
                     return this.refreshTokens(tokens.refresh_token, true);
                 }),
                 tap((systemTokens) => {
-                    this.setTokens(systemTokens, true);
+                    !skipSetting && this.setTokens(systemTokens, true);
                 })
             );
     }
@@ -568,8 +571,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 systemId: cloudSystemID,
                 authKey: cloudAuthKey,
                 owner: cloudAccountName
-            })
-            .pipe(retryWhen((request) => this.handleOldToken(request)));
+            });
     }
 
     setupCloudSystem(systemName: string, cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string, systemSettings: t.SystemConfigSettings) {

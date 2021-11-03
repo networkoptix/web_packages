@@ -103,6 +103,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.CONFIG.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
                 !this.CONFIG.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
             } else if (params.code && params.state) {
+                // Remove all of this dialog logic w/ state.
                 let loginPromise: Promise<any> = Promise.resolve(true);
                 if (this.CONFIG.isLocal && params.code) {
                     loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
@@ -115,9 +116,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.uriService.updateURI(undefined, params, true)
                         .finally(() => {
                             switch (state) {
-                                case 'connect':
-                                    this.connectToCloudProcess.run();
-                                    break;
                                 case 'disconnect':
                                     return this.disconnectFromCloud();
                                 default:
@@ -294,23 +292,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    async connectLocalToCloud() {
-        if (!this.system.useRest) {
-            return;
-        }
-        const continueProcess = await this.system.mediaserver.ensureFreshSession().toPromise();
-        if (!continueProcess) {
-            return true;
-        }
-        // Check if we have a cloud session. If not redirect to oauth.
-        // Once there is a cloud session make a request to add the system to cloud.
-        // Lastly bind those cloud credentials to the mediaserver.
-        return this.cloudApiService.validateToken().pipe(
-            catchError(async () => this.cloudApiService.redirectOauth('connect')),
-            switchMap((res) => this.cloudApiService.connect(this.system.info.systemName, res.username, '')),
-            catchError(() => throwError(true)),
-            switchMap((res: any) => this.system.mediaserver.saveCloudSystemCredentials(res.id, res.authKey, res.ownerAccountEmail))
-        ).toPromise();
+    connectLocalToCloud() {
+        return this.dialogs.connectLocalToCloud(this.accountService, this.system);
     }
 
     async disconnectFromCloud() {

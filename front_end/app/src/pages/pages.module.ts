@@ -128,6 +128,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
     },
     {
+        path: 'cloud-authorize',
+        loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
+    },
+    {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
     },

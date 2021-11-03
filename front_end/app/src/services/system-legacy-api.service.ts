@@ -53,6 +53,7 @@ export class NxSystemAPI {
     protected authPlay: string;
 
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+    protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
     public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;
@@ -549,16 +550,15 @@ export class NxSystemAPI {
         return this.get('/api/getTimeZones').toPromise();
     }
 
+    /**
+        @deprecated
+     */
     saveCloudSystemCredentials(
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string
     ) {
-        return this.post('/web/api/saveCloudSystemCredentials', {
-            cloudSystemID,
-            cloudAuthKey,
-            cloudAccountName
-        });
+        throw Error(this.forbiddenMsg);
     }
 
     checkInternet(reload = true) {

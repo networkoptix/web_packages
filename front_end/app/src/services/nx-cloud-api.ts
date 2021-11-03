@@ -660,14 +660,6 @@ export class NxCloudApiService {
         return this.oauthService.redirectOauth(state, email);
     }
 
-    validateToken(): Observable<any> {
-        const token = this.oauthService.cloudApiAccessToken;
-        if (token) {
-            return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
-        }
-        return throwError('No token was present');
-    }
-
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
     }

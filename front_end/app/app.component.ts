@@ -30,12 +30,12 @@ require('./scripts/vendor/protocolcheck');
 @Component({
     selector: 'nx-app',
     template: `
-        <div class="headerContainer">
+        <div *ngIf="!reauthorizing" class="headerContainer">
             <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"
-             *ngIf="appStateService.ready"
+             *ngIf="appStateService.ready || reauthorizing"
             [ngStyle]="{ 'height': appStateService.appContainerHeight }">
             <div class="mainContainer" [ngClass]="{
                 altMainBackground: appStateService.altBackground
@@ -44,9 +44,11 @@ require('./scripts/vendor/protocolcheck');
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
-        <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
-        <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
+        <ng-container *ngIf="!reauthorizing">
+            <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
+            <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
+            <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+        </ng-container>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
@@ -57,7 +59,7 @@ export class AppComponent {
     isInIframe: boolean;
     newSystem: boolean;
     loading: boolean;
-    viewType: string; // 'desktop' | 'mobile' | 'web'
+    reauthorizing: boolean;
 
     CONFIG: IConfig;
 
@@ -82,6 +84,7 @@ export class AppComponent {
         private localStorageService: LocalStorageService,
         @Inject(WINDOW) private window: Window
     ) {
+        this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
 
         this.router.events
@@ -95,7 +98,7 @@ export class AppComponent {
                 if (params) {
                     code = params?.get('code');
                 }
-                if (code && link.includes('?code')) {
+                if (code && link.includes('?code') && !link.includes('/cloud-authorize')) {
                     return this.cloudApiService.loginCode(code)
                         .then(() => this.cloudApiService.account(true)
                             .pipe(

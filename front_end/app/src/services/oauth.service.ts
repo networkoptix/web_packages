@@ -6,6 +6,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IConfig, NxConfigService } from './nx-config';
 import { NxStorageService } from './storage.service';
 import { WINDOW } from './window-provider';
+import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -31,9 +32,13 @@ export class OauthService {
         return this.storage.cloudApiRefreshToken;
     }
 
-    logoutTokens() {
-        const accessToken = this.cloudApiAccessToken;
-        const refreshToken = this.cloudApiRefreshToken;
+    logoutTokens(accessToken?: string, refreshToken?: string) {
+        if (!accessToken) {
+            accessToken = this.cloudApiAccessToken;
+        }
+        if (!refreshToken) {
+            refreshToken = this.cloudApiRefreshToken;
+        }
         return this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { cloudAccessToken: accessToken, refreshToken })
             .pipe(
                 tap(() => {
@@ -66,7 +71,8 @@ export class OauthService {
         if (email) {
             params.append('email', email);
         }
-        this.window.location.href = `${this.CONFIG.cloudHost ?? ''}/authorize?${params.toString()}`;
+        const host = environment.production ? `${this.CONFIG.cloudHost ?? ''}` : environment.cloudHost ? `https://${environment.cloudHost}` : this.CONFIG.cloudHost;
+        this.window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
     }
 

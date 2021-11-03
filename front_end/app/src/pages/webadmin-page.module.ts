@@ -48,6 +48,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
     },
     {
+        path: 'cloud-authorize',
+        loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
+    },
+    {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
     },

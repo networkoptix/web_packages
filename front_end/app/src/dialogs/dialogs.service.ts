@@ -46,6 +46,7 @@ import { StorageManager } from '@services/system.service/system/storage-manager/
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 
 import '@dialogs/dialogs.scss';
+import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -268,6 +269,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(CloudStorageMoveModalContent, options, params);
+    }
+
+    connectLocalToCloud(account: NxAccountService, system: NxSystem) {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: IParams = {
+            account,
+            system,
+            closable: true
+        };
+
+        return this.createModal(ConnectCloudModalContent, options, params);
     }
 
     public disconnect (account: NxAccountService, system: NxSystem) {

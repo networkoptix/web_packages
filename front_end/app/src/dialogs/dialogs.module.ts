@@ -45,6 +45,7 @@ import { DownloadAsyncModalContent }      from './download-async/download-async.
 import { NxDialogsService }               from './dialogs.service';
 import { Mandatory2faModalContent }       from './mandatory-2fa/mandatory-2fa.component';
 import { GenericDialogModule } from './generic/generic.module';
+import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
 
 @NgModule({
     imports: [
@@ -89,7 +90,8 @@ import { GenericDialogModule } from './generic/generic.module';
         EditModalContent,
         TwoFAModalContent,
         DownloadAsyncModalContent,
-        Mandatory2faModalContent
+        Mandatory2faModalContent,
+        ConnectCloudModalContent
     ],
     providers: [
         NxDialogsService,
