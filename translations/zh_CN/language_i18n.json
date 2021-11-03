@@ -231,7 +231,7 @@
     "List of Integrations": "List of Integrations",
     "List of cameras by manufacturer and device type": "List of cameras by manufacturer and device type",
     "Log In": "登录",
-    "Log In with %CLOUD_PORTAL%": "Log In with %CLOUD_PORTAL%",
+    "Log In with %CLOUD_NAME%": "Log In with %CLOUD_NAME%",
     "Log Out": "退出登录",
     "Log in to your System using %VMS_NAME%": "使用%VMS_NAME%登录到您的系统",
     "Log settings": "日志设置",

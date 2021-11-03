@@ -231,7 +231,7 @@
     "List of Integrations": "Lista över integrationer",
     "List of cameras by manufacturer and device type": "Lista över kameror efter tillverkare och enhetstyp",
     "Log In": "Logga in",
-    "Log In with %CLOUD_PORTAL%": "Logga in på %CLOUD_PORTAL%",
+    "Log In with %CLOUD_NAME%": "Log In with %CLOUD_NAME%",
     "Log Out": "Logga ut",
     "Log in to your System using %VMS_NAME%": "Logga in på ditt system med %VMS_NAME%",
     "Log settings": "Logginställningar",

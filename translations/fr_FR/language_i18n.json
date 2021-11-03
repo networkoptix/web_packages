@@ -231,7 +231,7 @@
     "List of Integrations": "Liste des intégrations",
     "List of cameras by manufacturer and device type": "Liste des caméras par fabricant et type d'appareil",
     "Log In": "Se connecter",
-    "Log In with %CLOUD_PORTAL%": "Se connecter avec %CLOUD_PORTAL%",
+    "Log In with %CLOUD_NAME%": "Log In with %CLOUD_NAME%",
     "Log Out": "Déconnexion",
     "Log in to your System using %VMS_NAME%": "Connectez-vous à votre système en utilisant %VMS_NAME%",
     "Log settings": "Paramètres du journal d'événement",
