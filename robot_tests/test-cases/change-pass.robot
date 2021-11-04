@@ -61,9 +61,10 @@ Reset DB and Open New Browser On Failure
 *** Test Cases ***
 1. Can be accessed via dropdown or direct link
     [tags]    C41576
+    ${random user}=   Register and activate account with random email    mark    hamill    ${password}
     Go To    ${url}/account/password
     # note: user below requires a system for verification purposes but no interaction with the system nor any modifications to the account are made - thats why original account used here.
-    Log In    ${EMAIL VIEWER}    ${password}    ${True}    button=None
+    Log In    ${random user}    ${password}    ${True}    button=None
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
     Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
@@ -75,6 +76,8 @@ Reset DB and Open New Browser On Failure
     Click Link    ${CHANGE PASSWORD BUTTON DROPDOWN}
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
+    Log Out
+    Delete Account    ${ENV}    ${random user}    ${password}
 
 2. password can be changed
     Log In To Change Password Page
