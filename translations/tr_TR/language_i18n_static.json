@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
         "cantChangePasswordPrefix": "Parola kaydedilemiyor",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Sistem silinemiyor",
         "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
         "cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",

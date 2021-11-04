@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "A módosítások nem menthetők el",
         "cantChangePasswordPrefix": "Jelszó mentése nem lehetséges",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "A rendszer törlése nem lehetséges",
         "cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
         "cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",

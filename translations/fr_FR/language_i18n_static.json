@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Impossible d'enregistrer les changements",
         "cantChangePasswordPrefix": "Ne peut pas enregistrer le mot de passe",
         "cantDeleteAccountOwningSystems": "Impossible de supprimer le compte qui possède des systèmes",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Impossible de supprimer le système",
         "cantEditAdmin": "Cet utilisateur dispose d’autorisations administrateur",
         "cantEditYourself": "Modification des propres autorisations n’est pas autorisée",

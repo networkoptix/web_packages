@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Kan ikke lagre endringer",
         "cantChangePasswordPrefix": "Kan ikke lagre passord",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Kan ikke slette system",
         "cantEditAdmin": "Denne brukeren har administratorrettigheter",
         "cantEditYourself": "Endring av egne tillatelser er ikke tillatt",

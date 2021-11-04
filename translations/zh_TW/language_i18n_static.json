@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "無法儲存變更",
         "cantChangePasswordPrefix": "無法儲存密碼",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "無法刪除系統",
         "cantEditAdmin": "此使用者具有管理員權限",
         "cantEditYourself": "不允許變更自己的權限",

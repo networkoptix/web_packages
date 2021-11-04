@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "ไม่สามารถบันทึกการเปลี่ยนแปลงได้",
         "cantChangePasswordPrefix": "ไม่สามารถบันทึกรหัสผ่านได้",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "ไม่สามารถลบระบบได้",
         "cantEditAdmin": "ผู้ใช้มีสิทธิ์ของผู้ดูแลระบบ",
         "cantEditYourself": "ไม่อนุญาตให้เปลี่ยนสิทธิ์ของตัวเอง",

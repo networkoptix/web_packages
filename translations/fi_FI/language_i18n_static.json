@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Muutoksia ei voida tallentaa",
         "cantChangePasswordPrefix": "Salasanaa ei voida tallentaa",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Järjestelmää ei voi poistaa",
         "cantEditAdmin": "Tällä käyttäjällä on järjestelmänvalvojan oikeudet",
         "cantEditYourself": "Oman käyttöoikeuden muuttaminen ei ole sallittua",

@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "No es poden desar els canvis",
         "cantChangePasswordPrefix": "No es pot desar la contrasenya",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "No es pot eliminar el sistema",
         "cantEditAdmin": "Aquest usuari té permisos d'administrador",
         "cantEditYourself": "No es permet canviar els permisos propis",

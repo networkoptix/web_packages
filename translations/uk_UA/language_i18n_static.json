@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Не вдається зберегти зміни",
         "cantChangePasswordPrefix": "Не вдається зберегти пароль",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Невдається видалити систему",
         "cantEditAdmin": "Цей користувач має права адміністратора",
         "cantEditYourself": "Зміна власних дозволів не допускається",

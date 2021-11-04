@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Nie można zapisać zmian",
         "cantChangePasswordPrefix": "Nie można zapisać hasła",
         "cantDeleteAccountOwningSystems": "Nie można usunąć konta, które posiada systemy",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Nie można usunąć systemu",
         "cantEditAdmin": "Ten użytkownik ma uprawnienia administratora",
         "cantEditYourself": "Zmiana własnych uprawnień nie jest dozwolona",

@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "לא ניתן לשמור שינויים",
         "cantChangePasswordPrefix": "לא ניתן לשמור סיסמא",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "לא ניתן למחוק את המערכת",
         "cantEditAdmin": "למשתמש זה יש הרשאות מנהל",
         "cantEditYourself": "שינוי הרשאות של המשתמש אינו מאופשר",

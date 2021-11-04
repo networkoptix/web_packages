@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Cannot save changes",
         "cantChangePasswordPrefix": "Cannot save password",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Cannot delete System",
         "cantEditAdmin": "This user has administrator permissions",
         "cantEditYourself": "Changing own permissions is not allowed",

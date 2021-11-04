@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "변경 사항을 저장할 수 없습니다.",
         "cantChangePasswordPrefix": "패스워드를 저장할 수 없습니다.",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "시스템을 삭제할 수 없습니다.",
         "cantEditAdmin": "이 사용자는 관리자 권한이 있습니다.",
         "cantEditYourself": "자신의 사용 권한 변경은 허용 되지 않습니다.",

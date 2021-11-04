@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Změny nelze uložit",
         "cantChangePasswordPrefix": "Heslo nelze uložit",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Systém nelze smazat",
         "cantEditAdmin": "Tento uživatel má oprávnění správce",
         "cantEditYourself": "Změna vlastních oprávnění není povolena",

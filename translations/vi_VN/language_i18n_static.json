@@ -520,6 +520,7 @@
         "cantChangeAccountPrefix": "Không thể lưu thay đổi",
         "cantChangePasswordPrefix": "Không thể lưu mật khẩu",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
+        "cantConnectSystemPrefix": "Cannot connect System",
         "cantDisconnectSystemPrefix": "Không thể xóa bỏ hệ thống",
         "cantEditAdmin": "Người dùng này có quyền quản trị viên",
         "cantEditYourself": "Không cho phép thay đổi quyền riêng tư",
