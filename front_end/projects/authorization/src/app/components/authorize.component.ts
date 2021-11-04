@@ -230,7 +230,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleCloudConnectionError(err: any, process: Process) {
-        if (err && ([500, 503].includes(err?.status) || err?.message.includes('timeout'))) {
+        if (err && (
+            [500, 503, 504].includes(err?.status) ||
+            err?.message?.includes('timeout') ||
+            err.includes('Error occured while trying to proxy to:')
+        )) {
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }
