@@ -65,6 +65,18 @@ export class AppComponent {
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 
+    private cleanQueryParams(queryParams) {
+        queryParams = { ...queryParams };
+        if (queryParams.code) {
+            delete queryParams.code;
+        }
+        return queryParams;
+    }
+
+    private extractRoute(link) {
+        return link.replace(this.window.location.origin, '').split('?')[0];
+    }
+
     constructor(
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
@@ -88,17 +100,12 @@ export class AppComponent {
         this.CONFIG = configService.getConfig();
 
         this.router.events
-            .pipe(filter(ev => ev instanceof NavigationEnd), debounceTime(50))
+            .pipe(filter(ev => ev instanceof NavigationEnd))
             .subscribe(() => {
-                const link = this.window.location.href;
-                const params = link.includes('?') && new URLSearchParams(
-                    link.match(/.*(\?.*)/i)[1]
-                );
-                let code;
-                if (params) {
-                    code = params?.get('code');
-                }
-                if (code && link.includes('?code') && !link.includes('/cloud-authorize')) {
+                const link = this.router.url;
+                const params = this.route.snapshot.queryParams;
+                const code = params?.code;
+                if (code && link.includes('?code') && !this.reauthorizing) {
                     return this.cloudApiService.loginCode(code)
                         .then(() => this.cloudApiService.account(true)
                             .pipe(
@@ -110,11 +117,16 @@ export class AppComponent {
                                 }),
                                 retryWhen(errors => errors.pipe(delay(500), take(10)))
                             ).subscribe(() => {
-                                const route = link.replace(this.window.location.origin, '').split('?')[0];
-                                const queryParams = { state: params.get('state') };
-                                return this.router.navigate([['/', '/new-landing'].includes(route) ? '/systems' : route], { queryParams })
+                                const route = this.extractRoute(link);
+                                const queryParams = this.cleanQueryParams(this.route.snapshot.queryParams);
+                                return this.router.navigate([['/', '/new-landing', '/authorize'].includes(route) ? '/systems' : route], { queryParams })
                                     .then(() => this.window.location.reload());
-                            }));
+                            })
+                        ).catch(() => {
+                            const route = this.extractRoute(link);
+                            const queryParams = this.cleanQueryParams(this.route.snapshot.queryParams);
+                            return this.router.navigate([route], { queryParams });
+                        });
                 }
             });
 
