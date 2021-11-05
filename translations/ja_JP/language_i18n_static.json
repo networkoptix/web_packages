@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
         "cantDeleteAccountOwningSystems": "システムを所有しているアカウントは削除できません。",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "システムに接続できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
         "cantEditAdmin": "このユーザーは管理者権限を持っています",
         "cantEditYourself": "自分のアクセス権限を変更することはできません",

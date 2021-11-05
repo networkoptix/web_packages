@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
         "cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
         "cantDeleteAccountOwningSystems": "Kan het account dat eigen systemen heeft niet verwijderen",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Kan geen verbinding maken",
         "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
         "cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
         "cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",

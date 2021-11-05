@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "Não é possível salvar as alterações",
         "cantChangePasswordPrefix": "Não é possível salvar a senha",
         "cantDeleteAccountOwningSystems": "Não é possível excluir a conta que possui sistemas",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Não é possível conectar o sistema",
         "cantDisconnectSystemPrefix": "Não é possível apagar o Sistema",
         "cantEditAdmin": "Este usuário tem permissões de administrador",
         "cantEditYourself": "Alterar as próprias permissões não é permitido",

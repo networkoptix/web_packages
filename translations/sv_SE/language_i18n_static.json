@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "Kan inte spara ändringar",
         "cantChangePasswordPrefix": "Kan inte spara lösenord",
         "cantDeleteAccountOwningSystems": "Kan inte ta bort konto som äger system",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Kan inte ansluta systemet",
         "cantDisconnectSystemPrefix": "Kan inte ta bort System",
         "cantEditAdmin": "Detta konto har administratörsrättigheter",
         "cantEditYourself": "Ändring av egna behörigheter är inte tillåtet",
