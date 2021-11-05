@@ -97,7 +97,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     public set accessToken(token) {
         if (this.isSessionOauth) {
-            this.deleteToken(this.accessToken).toPromise().catch(() => {});
+            this.deleteToken(this.accessToken).toPromise()
+                .then(() => {
+                    this.accessToken = '';
+                }, () => {});
         }
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
@@ -197,6 +200,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public setAccessTokenAsCookie() {
+        if (this.CONFIG.newSystem || !this.accessToken) {
+            return Promise.resolve();
+        }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}?setCookie=true`, {}, { withCredentials: 'true' }).toPromise();
     }
 
@@ -217,13 +223,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private clearTokens() {
         const storageService = this.storageService;
         this.cookieService.delete(this.cloudAccessTokenName);
-        storageService.clear = this.cloudToken;
-        storageService.clear = this.refreshToken;
+        this.cookieService.delete('x-runtime-guid');
+        storageService.clear(this.cloudToken);
+        storageService.clear(this.refreshToken);
+        this.accessToken = '';
     }
 
     private deleteToken(token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        return this.http.post(`${host}/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${token}` } });
+        return this.http.post(`${host}/api/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${token}` } });
     }
 
     protected retryHandler(request) {
@@ -375,7 +383,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     });
                     return this.currentUser;
                 });
-        } else if (environment.isLocal) { // Local system mode ???
+        } else if (environment.isLocal && !this.CONFIG.newSystem && this.accessToken) { // Local system mode ???
             const endpoint = `/rest/v1/login/sessions/${this.accessToken}`;
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result :any) => {
@@ -385,6 +393,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     // Todo: convert result to match getCurrentUser result.
                     this.currentUser = result[0];
                     return this.currentUser;
+                }).catch(err => {
+                    // Unknown session token
+                    if (err.errorId === 'cantProcessRequest') {
+                        this.accessToken = '';
+                    }
                 });
         } else {
             this.userRequest = Promise.resolve(undefined);
@@ -396,6 +409,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public ensureFreshSession() {
+        if (this.CONFIG.newSystem || !this.accessToken) {
+            return of();
+        }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap((res) => {
                 if (res.ageS >= this.CONFIG.sessionFreshnessSec) {
@@ -494,7 +510,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     disconnectFromCloud() {
         return this.post('/rest/v1/system/cloudUnbind', { password: '' }).pipe(
             retryWhen((request) => this.handleOldToken(request))
-        ).toPromise();
+        ).toPromise().then(() => this.clearTokens());
     }
 
     checkMergeStatus(forceReload = true) {

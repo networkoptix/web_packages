@@ -42,8 +42,8 @@ export class OauthService {
         return this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { cloudAccessToken: accessToken, refreshToken })
             .pipe(
                 tap(() => {
-                    this.storage.clear = 'cloudApiAccessToken';
-                    this.storage.clear = 'cloudApiRefreshToken';
+                    this.storage.clear('cloudApiAccessToken');
+                    this.storage.clear('cloudApiRefreshToken');
                 })
             ).toPromise();
     }

@@ -106,9 +106,18 @@ export class LoginWebadminModalContent implements OnInit {
         const code = params.get('code');
         if (code) {
             this.oauthLogin(code);
+            this.activeModal.close(); // don't show login dialog after oauth login
+            return;
         }
-        // remove leftover cookie
+
+        // remove any leftovers  *****************************
         this.cookieService.delete('x-runtime-guid');
+        this.storageService.clear('refreshToken');
+        this.storageService.clear('cloudAccessToken');
+        this.storageService.clear('cloudApiAccessToken');
+        this.storageService.clear('cloudApiRefreshToken');
+        // ****************************************************
+
         // Check the url queryParams for next. if it exists set next equal to it.
         const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
         if (nextUrl && nextUrl.length > 1) {
@@ -196,9 +205,11 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     oauthLogin(code: string) {
-        this.account.mediaServerApi.loginOauth(code).subscribe(() => {
-            this.window.location.href = this.window.location.href.split('?')[0];
-            this.window.location.reload();
-        });
+        this.account.mediaServerApi
+            .loginOauth(code)
+            .subscribe(() => {
+                this.window.location.href = this.window.location.href.split('?')[0];
+                this.window.location.reload();
+            });
     }
 }

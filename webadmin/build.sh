@@ -3,6 +3,7 @@
 set -e
 
 WEBADMIN_PACKAGE="webadmin.zip"
+EXTERNAL_PACKAGE="external.dat"
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Check prerequisites.
 if [ "$SOURCE_DIR" = "$PWD" ]
@@ -15,12 +16,14 @@ fi
 [ -e front_end ] && rm -rf front_end
 [ -e skins ] && rm -rf skins
 [ -e translations ] && rm -rf translations
+[ -e "$WEBADMIN_PACKAGE" ] && rm "$WEBADMIN_PACKAGE"
+[ -e "$EXTERNAL_PACKAGE" ] && rm "$EXTERNAL_PACKAGE"
 
 # Add v flag to see what's being copied.
 rsync -a --progress $SOURCE_DIR/../build_scripts .
 rsync -a --progress $SOURCE_DIR/../skins .
 rsync -a --progress $SOURCE_DIR/../translations .
-rsync -a --progress $SOURCE_DIR/../front_end . --exclude node_modules --exclude dist --exclude .idea
+rsync -a --progress $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --exclude dist --exclude .idea
 
 if [ $IS_LOCAL ]
 then
@@ -30,17 +33,7 @@ then
     pip install -r build_scripts/requirements.txt
 fi
 
-# Update sources.
-echo "Update sources" >&2
-
 pushd front_end
-
-echo "Clean old directories" >&2
-[ -e node_modules ] && rm -rf node_modules
-[ -e static ] && rm -rf static
-[ -e server-external ] && rm -rf server-external
-[ -e "$WEBADMIN_PACKAGE" ] && rm "$WEBADMIN_PACKAGE"
-
 # Install dependencies.
 echo "Install node dependencies" >&2
 npm install

@@ -13,12 +13,12 @@ export class NxStorageService {
         this.storage = localStorageService;
     }
 
-    get clear() {
-        return '';
-    }
-
-    set clear(what) {
-        this.storage.clear(what);
+    clear(key?: string) {
+        if (key) {
+            this.storage.clear(key);
+        } else {
+            this.storage.clear();
+        }
     }
 
     get systemId(): string {

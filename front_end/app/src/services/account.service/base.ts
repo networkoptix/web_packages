@@ -341,7 +341,7 @@ export abstract class BaseAccount implements OnDestroy {
                 return this.cloudApi.logout().finally(() => {
                     this.stopAccountPoll();
                     this.account = undefined;
-                    this.storageService.clear = 'all'; // Clear session
+                    this.storageService.clear(); // Clear session
                     return this.loginWithAuthKey(auth).then(() => {
                         return this.document.location.reload();
                     });

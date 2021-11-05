@@ -141,7 +141,7 @@ export class NxRegisterComponent implements OnInit {
 
         this.fromClient = this.urlProtocol.getSource().isApp;
 
-        this.storageService.clear = 'regProcess';
+        this.storageService.clear('regProcess');
 
         this.register = this.processService.createProcess(() => {
             this.accountService.email = this.accountInfo.email;
@@ -187,7 +187,7 @@ export class NxRegisterComponent implements OnInit {
                             this.storageService.regActivated = this.activated;
                         });
                 } else {
-                    this.storageService.clear = 'loginRegister';
+                    this.storageService.clear('loginRegister');
                     this.uriService
                         .updateURI('/register/success', {}, true)
                         .catch(error => {

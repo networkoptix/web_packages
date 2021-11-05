@@ -52,7 +52,7 @@
             [form]="loginForm"
             [process]="login">
         </nx-process-button>
-        <ng-container *ngIf="CONFIG.isLocal && CONFIG.cloudSystemId">
+        <ng-container *ngIf="CONFIG.cloudSystemId">
             <div class="separator" translate>or</div>
             <button class="btn btn-default oauth-login"
                (click)="redirectOauthLogin()">
