@@ -1,21 +1,29 @@
 import { environment } from '@environments/environment';
 import { Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Location }             from '@angular/common';
-import { CookieService }        from 'ngx-cookie-service';
+import { Location } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError } from 'rxjs';
-import { catchError, map, mergeMap, retryWhen, switchMap, tap, timeout } from 'rxjs/operators';
+import {
+    catchError,
+    map,
+    mergeMap,
+    retryWhen,
+    switchMap,
+    tap,
+    timeout
+} from 'rxjs/operators';
 
-import { NxHealthService }      from '@pages/health/health.service';
-import { NxAppStateService }    from './nx-app-state.service';
-import { IConfig }              from './nx-config';
-import type { APIDocVersion }   from './nx-config/base-config';
-import { NxSystemAPI }          from './system-legacy-api.service';
-import { IParams }              from './system.service';
-import { NxUriCacheService }    from './uri-cache.service';
-import * as t                   from './system-api.types';
-import { NxStorageService }     from '@services/storage.service';
-import { WINDOW }               from '@services/window-provider';
+import { NxHealthService } from '@pages/health/health.service';
+import { NxAppStateService } from './nx-app-state.service';
+import { IConfig } from './nx-config';
+import type { APIDocVersion } from './nx-config/base-config';
+import { NxSystemAPI } from './system-legacy-api.service';
+import { IParams } from './system.service';
+import { NxUriCacheService } from './uri-cache.service';
+import * as t from './system-api.types';
+import { NxStorageService } from '@services/storage.service';
+import { WINDOW } from '@services/window-provider';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxLoginService } from '@services/login.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -423,12 +431,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     loginToken(username: string, password: string, remember: boolean) {
-        return this.post('/rest/v1/login/sessions', { username, password, setCookie: remember })
-            .pipe(tap((res) => {
-                if (remember) {
-                    this.accessToken = res.token;
-                }
-            }));
+        return this.post(
+            '/rest/v1/login/sessions',
+            { username, password, setCookie: remember }
+        );
     }
 
     loginOauth(code: string, skipSetting?: boolean) {
