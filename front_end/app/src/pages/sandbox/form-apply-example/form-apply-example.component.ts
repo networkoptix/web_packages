@@ -20,8 +20,11 @@ export class FormApplyExampleComponent {
 
     @ViewChild('form1') form1;
     formWatcher: any;
-    form1Field1Input: string;
-    form1Field2Input: string;
+    account = {
+        form1Field1Input: '',
+        form1Field2Input: ''
+    };
+
     saveForm1 : Process;
 
     @ViewChild('form2') form2;
@@ -39,6 +42,7 @@ export class FormApplyExampleComponent {
     itemsSelected: any;
 
     itemsDDSingle: any[];
+    langCode: string = 'en_US';
     selectedDDItem: any;
 
     tags: any[];
@@ -104,10 +108,10 @@ export class FormApplyExampleComponent {
     }
 
     ngOnInit() {
-        this.applyService.initPageWatcher(this.pageApply);
+        this.account.form1Field1Input = 'Tsanko';
+        this.account.form1Field2Input = 'Tsolov';
+        this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.form1Field1Input = 'Tsanko';
-        this.form1Field2Input = 'Tsolov';
         this.saveForm1 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
@@ -150,5 +154,10 @@ export class FormApplyExampleComponent {
     ddSingleModelChanged(result: {}) {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
+    }
+
+    changeLanguage(result: string) {
+        // ensure 'change' will be triggered
+        this.langCode = result;
     }
 }

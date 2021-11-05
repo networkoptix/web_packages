@@ -65,7 +65,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     }
 
     setLanguage() {
-        if (this.activeLanguage.language !== this.langCode) {
+        if (this.activeLanguage?.language !== this.langCode) {
             this.activeLanguage = this.languages.find(lang => {
                 return (lang.language === this.langCode);
             });
@@ -95,6 +95,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
+
         this.cloudApi.getLanguages().then((data) => {
             this.languages = this.CONFIG?.supportedLanguages?.length === 0
                 ? data

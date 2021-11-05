@@ -1,5 +1,4 @@
 <ng-container *ngIf="account?.id || account?.email; else preloader">
-
     <div class="col-12 p-0">
         <nx-block>
             <header>
@@ -7,7 +6,9 @@
             </header>
 
             <nx-section>
-                <form #accountForm="ngForm" name="accountForm" class="form" novalidate [ngClass]="{'hide-errors': hideErrors}">
+                <form #accountForm="ngForm" name="accountForm"
+                      class="form" novalidate
+                      [ngClass]="{'hide-errors': hideErrors}">
                     <div class="inputs d-block d-md-table w-100 mw-100">
                         <div class="form-group d-block d-md-table-row mb-2">
                             <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
@@ -17,8 +18,7 @@
                                 <div class="row pb-md-2">
                                     <div class="col-12 col-md-7 pb-2 pb-md-0">
                                         <input type="text" class="form-control"
-                                               [ngModel]="account.first_name"
-                                               (ngModelChange)="changeFirstName($event)"
+                                               [(ngModel)]="account.first_name"
                                                name="firstName" id="firstName" #firstName="ngModel"
                                                pattern="\S+.*"
                                                maxlength="255"
@@ -40,8 +40,7 @@
                                 <div class="row pb-md-2">
                                     <div class="col-12 col-md-7 pb-2 pb-md-0">
                                         <input type="text" class="form-control"
-                                               [ngModel]="account.last_name"
-                                               (ngModelChange)="changeLastName($event)"
+                                               [(ngModel)]="account.last_name"
                                                name="lastName" id="lastName" #lastName="ngModel"
                                                pattern="\S+.*"
                                                maxlength="255"
@@ -83,9 +82,14 @@
             </header>
 
             <nx-section>
+                <form #langForm="ngForm" name="langForm"
+                      class="form" novalidate
+                      [ngClass]="{'hide-errors': hideErrors}">
                     <nx-language-select
-                    [ngModel]="langCode"
-                    (ngModelChange)="changeLanguage($event)"></nx-language-select>
+                        name="langSelect"
+                        [ngModel]="langCode"
+                        (ngModelChange)="changeLanguage($event)"></nx-language-select>
+                </form>
             </nx-section>
         </nx-block>
     </div>
@@ -93,4 +97,4 @@
 
 <ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
 
-<ng-container #applyContainer></ng-container>
+<ng-container #pageApply></ng-container>
