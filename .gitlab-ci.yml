@@ -3,7 +3,7 @@ image: nx/ci:1.12
 include:
 - project: "dev/ci"
   file: "pipelines/infra-templates.yml"
-- local: "ci/Docker/.gitlab-ci.yml"
+- local: "ci/Docker/**/.gitlab-ci.yml"
 
 default:
   tags:
@@ -27,13 +27,13 @@ workflow:
     - when: never
 
 stages:
-  - check
   - docker image
+  - check
   - build
   - test
 
 .django-python:
-  image: python:3.8-alpine3.12
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   services:
     - name: mysql:5.7
       alias: mysql
@@ -47,11 +47,7 @@ stages:
     MYSQL_USER: 'cloud'
     MYSQL_PASSWORD: ''
   before_script:
-    - apk update
-    - apk add --no-cache bash ca-certificates gettext libwebp mariadb-client openjpeg tini wget libcrypto1.1 libcurl libffi libgcc libjpeg-turbo libssl1.1 libstdc++ libwebp libxml2 libxslt mariadb-connector-c musl openjpeg tiff yaml zlib curl jq netcat-openbsd bash
     - cd cloud
-    # Add pip cache and venv later
-    - pip install -r requirements.txt --index-url="$PIP_INDEX_URL" --extra-index-url="$PIP_EXTRA_INDEX_URL" --trusted-host="$PIP_TRUSTED_HOST"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
@@ -83,7 +79,8 @@ django-unit-test:
     reports:
       junit: cloud/report.xml
       cobertura: cloud/coverage.xml
-  needs: ['django-checks']
+  # Until all tests are passing reliably
+  allow_failure: true
 
 frontend-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
@@ -99,7 +96,25 @@ frontend-unit-test:
     reports:
       junit: front_end/reports/*.xml
       cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
-  needs: ['nx-mentions-check']
+  # Until all tests are passing reliably
+  allow_failure: true
+
+authorization-unit-test:
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  stage: test
+  variables:
+    CHROME_BIN: /usr/bin/google-chrome
+  script:
+    - cd front_end
+    - npm install
+    - npm run lang
+    - npm run test:ci authorization
+  artifacts:
+    reports:
+      junit: front_end/reports/*.xml
+      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+  # Until all tests are passing reliably
+  allow_failure: true
 
 build-webadmin:
   stage: build

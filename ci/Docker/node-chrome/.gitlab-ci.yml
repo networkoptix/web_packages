@@ -2,11 +2,11 @@ variables:
   NODE_JS_IMAGE: "nx/cloud_portal_node_js"
   NODE_JS_IMAGE_TAG: "1.0"
 
-docker:build:
+docker:build-node-chrome:
   extends: .docker.template
   before_script:
   - |
-    DOCKER_DIR="ci/Docker"
+    DOCKER_DIR="ci/Docker/node-chrome"
     touch build.env
     if [[ "${CI_PIPELINE_SOURCE}" == "merge_request_event" ]]; then
       NODE_JS_IMAGE_TAG="${NODE_JS_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}.SNAPSHOT"
@@ -27,4 +27,4 @@ docker:build:
   - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
     changes:
-    - ci/Docker/*
+    - ci/Docker/node-chrome/*
