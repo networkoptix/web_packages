@@ -273,8 +273,8 @@ export class NxDialogsService {
 
     connectLocalToCloud(account: NxAccountService, system: NxSystem) {
         const options: IParams = {
-            windowClass : 'modal-holder',
-            backdrop    : 'static'
+            windowClass: 'modal-holder',
+            backdrop: 'static'
         };
 
         const params: IParams = {

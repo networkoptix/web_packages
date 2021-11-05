@@ -423,7 +423,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
             .pipe(
                 switchMap((tokens) => {
-                    if(skipSetting) {
+                    if (skipSetting) {
                         return of(tokens);
                     }
                     this.setTokens(tokens, false);

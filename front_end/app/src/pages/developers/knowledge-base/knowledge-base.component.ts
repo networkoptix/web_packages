@@ -177,7 +177,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             };
         };
 
-        const processInstantSearch = ({ id: docId, title, body: snippet}) => ({ docId, title, snippet });
+        const processInstantSearch = ({ id: docId, title, body: snippet }) => ({ docId, title, snippet });
         return (docs || []).map(doc => (doc.snippets ? processLegacySearch : processInstantSearch)(doc));
     }
 
