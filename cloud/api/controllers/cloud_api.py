@@ -323,10 +323,7 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def unbind(request, system_id, headers=None):
-        params = {
-            'systemId': system_id,
-        }
-        return post_wrapper(System.get_request_url('unbind'), json=params, headers=headers)
+        return delete_wrapper(f'{CLOUD_DB_URL}/system/{system_id}', headers=headers)
 
     @staticmethod
     @validate_response

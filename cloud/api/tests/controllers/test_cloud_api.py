@@ -89,6 +89,10 @@ class TestSystemAPI:
     def cloud_api_post_mock(self, mocker):
         return mocker.patch.object(cloud_api, 'post_wrapper', return_value=MockResponse(json=self.sample_data))
 
+    @pytest.fixture
+    def cloud_api_delete_mock(self, mocker):
+        return mocker.patch.object(cloud_api, 'delete_wrapper', return_value=MockResponse(json=self.sample_data))
+
     def test_get_request_url_no_args(self):
         assert System.get_request_url() == f'{CLOUD_DB_URL}/system/get'
 
@@ -177,11 +181,10 @@ class TestSystemAPI:
         )
         assert roles.json() == self.sample_data
 
-    def test_unbind(self, cloud_api_post_mock):
+    def test_unbind(self, cloud_api_delete_mock):
         unbind = unwrap(System.unbind)(self.request, self.system_id, headers=self.headers)
-        cloud_api_post_mock.assert_called_with(
-            System.get_request_url('unbind'),
-            json={'systemId': self.system_id},
+        cloud_api_delete_mock.assert_called_with(
+            f"{CLOUD_DB_URL}/system/{self.system_id}",
             headers=self.headers
         )
         assert unbind.json() == self.sample_data
