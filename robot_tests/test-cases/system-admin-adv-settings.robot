@@ -536,7 +536,11 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN    timeout=60
+    IF    "${LANGUAGE}"=="he_IL"
+        Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN HEBREW    timeout=60
+    ELSE
+        Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    SIXTEEN    timeout=60
+    END
 
     Log    Step 1
     Changing setting changes it on server    ${UPNP PORT MAPPING ENABLED CHECKBOX}      upnpPortMappingEnabled    advanced=True
