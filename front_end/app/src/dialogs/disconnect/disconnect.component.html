@@ -2,7 +2,7 @@
       <!-- [ngClass]="{'hide-errors': hideErrors}"
       (submit)="hideErrors = false"> -->
     <div class="modal-header">
-        <h1 class="modal-title" translate>Disconnect System from %CLOUD_NAME%?</h1>
+        <h1 class="modal-title" translate>Disconnect System from %CLOUD_NAME%</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">
@@ -11,8 +11,9 @@
     </div>
 
     <div class="modal-body">
-        <p class="warning-label" translate>All cloud users will be deleted.</p>
+        <p translate>You will be logged out.</p>
         <p translate>System will be accessible through local network with local administrator account.</p>
+        <p class="warning-label" translate>All cloud users will be deleted.</p>
         <!-- <p translate class="mb-3">Enter password to continue.</p> -->
 
         <!-- <div class="form-group" *ngIf="isLocal">
@@ -44,7 +45,7 @@
         <nx-process-button [process]="disconnect"
                            [form]="disconnectForm"
                            [actionType]="'danger'"
-                           buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
+                           buttonText="{{ 'Continue' | translate }}"></nx-process-button>
         <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>
