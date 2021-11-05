@@ -140,7 +140,9 @@ export class LoginWebadminModalContent implements OnInit {
 
                     this.accountBlocked = true;
                     this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
-                }
+                },
+                'This authorization method is forbidden. Please contact your system administrator.':
+                    this.LANG.toastMessage.webAdminCloudCredentialError()
             }
         }, (result) => {
             this.activeModal.close(result);

@@ -263,9 +263,9 @@ export interface ProcessSettings {
 }
 
 export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
-    if (error?.status === 422) {
+    if (error.error && typeof error.error === 'object') {
         error = error.error;
-        // Error object is nested
+        // Unpack nested error
     }
     const errorCode =
         error?.data?.resultCode ||
