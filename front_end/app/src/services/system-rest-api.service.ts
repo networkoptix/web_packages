@@ -373,6 +373,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (this.userRequest) { // Currently requesting user
             return this.userRequest;
         }
+
         if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
             const endpoint = '/ec2/getUsers';
             this.cacheService.addToCache(endpoint);
