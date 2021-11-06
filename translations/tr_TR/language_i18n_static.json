@@ -866,7 +866,8 @@
             "rename": {
                 "success": "Sistem ismi kaydedildi"
             }
-        }
+        },
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

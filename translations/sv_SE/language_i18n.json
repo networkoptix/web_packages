@@ -296,7 +296,7 @@
     "Passwords do not match": "Lösenorden matchar inte",
     "Platform Overview": "Plattformsöversikt",
     "Please activate your account by visiting this link.": "Vänligen aktivera ditt konto genom att besöka denna länk.",
-    "Please complete cloud login.": "Vänligen slutför molninloggning.",
+    "Please complete cloud login to continue.": "Please complete cloud login to continue.",
     "Please enter a valid Email": "Vänligen ange en giltig e-postadress",
     "Please enter a valid name": "Ange ett giltigt namn",
     "Please follow instructions there to reset your password and return here to log in again.": "Följ instruktionerna där för att återställa ditt lösenord och återvänd hit för att logga in igen.",

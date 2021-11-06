@@ -866,7 +866,8 @@
             "rename": {
                 "success": "保存的系统名称"
             }
-        }
+        },
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
     },
     "headerLabels": {
         "healthReportForSystem": "系统资源报告浏览器{systemName}"
