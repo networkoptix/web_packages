@@ -867,7 +867,7 @@
                 "success": "Systemnamnet sparat"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare"
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"
