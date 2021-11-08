@@ -867,7 +867,7 @@
                 "success": "システム名は保存されました"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください"
     },
     "headerLabels": {
         "healthReportForSystem": "システム {systemName} のヘルスレポート"
