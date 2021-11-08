@@ -53,7 +53,9 @@ export const colors = {
     dark15: '#49626F',
     dark16: '#4E6977',
     dark17: '#53707F',
-    dark18: '#2C3F48',
+    dark18: '#587785',
+
+    additional_dark1: '#2C3F48',
 
     light1: '#FFFFFF',
     light2: '#F5F7F8',
