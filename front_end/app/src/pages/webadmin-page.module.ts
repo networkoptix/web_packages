@@ -3,7 +3,6 @@ import { Angular2CsvModule }         from 'angular2-csv';
 
 import { DirectivesModule }          from '@directives/directives.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { NxAccountModule }           from './account/account.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { Nx500Module }               from './500/500.module';
 import { RouterModule, Routes }      from '@angular/router';
@@ -67,7 +66,6 @@ const lazyRoutes: Routes = [
         PipesModule,
         NonSupportedBrowserModule,
         Angular2CsvModule,
-        NxAccountModule,
         NxDebugModule,
         Nx500Module,
         RouterModule.forRoot(lazyRoutes, {
