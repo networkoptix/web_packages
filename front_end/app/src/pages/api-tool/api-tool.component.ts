@@ -1,11 +1,13 @@
 import {
     Component,
+    ElementRef,
+    ViewChild,
     ViewEncapsulation
 }                                    from '@angular/core';
 import { NxPageService }             from '@services/page.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { debounceTime }              from 'rxjs/operators';
+import { debounceTime, filter }              from 'rxjs/operators';
 import {
     UntilDestroy,
     untilDestroyed
@@ -24,9 +26,11 @@ import { NxAPIToolService }          from './api-tool.service';
     encapsulation: ViewEncapsulation.None
 })
 export class NxAPIToolComponent {
+    @ViewChild('developersMenu') developersMenuRef: ElementRef<HTMLElement>;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     headerHeight: number;
+    menuOffset: number = 0;
 
     constructor(
         configService: NxConfigService,
@@ -45,8 +49,19 @@ export class NxAPIToolComponent {
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this), debounceTime(25)).subscribe(({ width }) => {
             if (width >= 768) {
                 this.setHeaderHeight();
+                if (this.developersMenuRef.nativeElement) {
+                    this.setMenuOffset();
+                }
             }
         });
+
+        this.APIToolService.serversLoaded$.pipe(untilDestroyed(this), filter(loaded => loaded)).subscribe(loaded => {
+            this.setMenuOffset();
+        });
+    }
+
+    setMenuOffset() {
+        this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top;
     }
 
     setHeaderHeight() {

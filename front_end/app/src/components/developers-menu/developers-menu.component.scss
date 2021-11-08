@@ -5,26 +5,14 @@
 
 .nodes-container {
     background: $additional_light2;
-
-    @include media-breakpoint-up(md) {
-        overflow-y: auto;
-        max-height: calc(100vh - 225px);
-        &.with-ribbon {
-            max-height: calc(100vh - 258px);
-        }
+    overflow-y: auto;
+    @include media-breakpoint-down(sm) {
+        overflow-y: hidden;
+        max-height: none !important;
         grid-column: span 4;
     }
     @include media-breakpoint-up(xl) {
         grid-column: span 3;
-    }
-}
-
-.webadmin-scroll {
-    @include media-breakpoint-up(md) {
-        max-height: calc(100vh - 152px) !important;
-        &.with-ribbon {
-            max-height: calc(100vh - 188px) !important;
-        }
     }
 }
 

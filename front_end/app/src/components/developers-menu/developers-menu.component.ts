@@ -33,6 +33,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
     @Input()  searchEnabled = true;
     @Input()  service;
+    @Input()  offsetHeight = 0;
 
     CONFIG: IConfig;
     displayedMenuNodes: MenuNodeWithParent[] = [];

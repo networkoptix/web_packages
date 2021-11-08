@@ -1,4 +1,4 @@
-import { Injectable }                               from '@angular/core';
+import { Injectable }                   from '@angular/core';
 import { Router }                                   from '@angular/router';
 import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
 import { NxSystem, NxSystemService }                from '@services/system.service';
@@ -14,6 +14,7 @@ import { DropdownItem }                             from '@components/dropdowns/
 import { BehaviorSubject, Subscription }            from 'rxjs';
 import {
     delay, distinctUntilChanged,
+    filter,
     finalize, map, retryWhen, take
 }                                                   from 'rxjs/operators';
 import {
@@ -41,12 +42,13 @@ export class NxAPIToolService {
     systemsDropdown: DropdownItem[] = [];
     selectedSystem: DropdownItem;
     system: NxSystem;
+    systemVersion: Number = 5.0;
     mediaServerUpdating = false;
     validSystems: NxSystemWithUserInfo[] = []
 
     serversDropdown: ServerDropdownItem[] = [];
     selectedServer: ServerDropdownItem;
-    serversLoaded: boolean;
+    serversLoaded$ = new BehaviorSubject(false);
     private serverSubscription: Subscription;
 
     APIDropdown: APIDropdownItem[] = [];
@@ -71,7 +73,8 @@ export class NxAPIToolService {
     }
 
     loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
-    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = '';
+    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
+    outDatedSystem = false;
 
     constructor(
         configService: NxConfigService,
@@ -173,8 +176,7 @@ export class NxAPIToolService {
                 return;
             }
         }
-
-        this.getServersInfo();
+        this.handleSystemChange();
     }
 
     showError = () => {
@@ -201,7 +203,7 @@ export class NxAPIToolService {
     }
 
     getServersInfo() {
-        this.serversLoaded = false;
+        this.serversLoaded$.next(false);
         let mediaServerRetryCount = 0;
         if (this.serverSubscription) {
             this.serverSubscription.unsubscribe();
@@ -222,7 +224,7 @@ export class NxAPIToolService {
                     return err.pipe(delay(1000), take(7));
                 }),
                 finalize(() => {
-                    if (!this.serversLoaded) {
+                    if (!this.serversLoaded$.value) {
                         this.tryNextSystem();
                     }
                 })
@@ -308,7 +310,7 @@ export class NxAPIToolService {
                                                 this.activeNode = mainAPIContent[0];
                                             }
                                             this.mediaServerUpdating = false;
-                                            this.serversLoaded = true;
+                                            this.serversLoaded$.next(true);
                                             if (this.serverSubscription) {
                                                 this.serverSubscription.unsubscribe();
                                             }
@@ -335,6 +337,25 @@ export class NxAPIToolService {
                 // this.tryNextSystem();
             }
         }
+    }
+
+    handleSystemChange = () => {
+        this.system.infoSubject.pipe(filter(system => system?.info !== undefined), take(1)).subscribe(system => {
+            if (system.info && !system.info.version) {
+                this.outDatedSystem = true;
+            } else {
+                this.systemVersion = parseFloat(system.info.version);
+            }
+            if (this.outDatedSystem || this.systemVersion < 4) {
+                // System version is too old
+                this.serversLoaded$.next(true);
+                this.outDatedSystem = true;
+                this.menuNodes = [];
+                this.selectedSystem = this.systemsDropdown.find(system => system.value === this.system.id);
+                return;
+            }
+            this.getServersInfo();
+        });
     }
 
     private getAPIDoc(serverId: string, type: APIDocVersion) {

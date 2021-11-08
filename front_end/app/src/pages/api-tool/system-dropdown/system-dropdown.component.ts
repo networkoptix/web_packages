@@ -22,7 +22,8 @@ export class NxSystemDropdownComponent {
         this.APIToolService.system = this.systemService.createSystem('', system.value as string);
         this.APIToolService.APIDropdown = [];
         this.APIToolService.selectedSystem = system;
-        this.APIToolService.getServersInfo();
+        this.APIToolService.outDatedSystem = false;
+        this.APIToolService.handleSystemChange();
     }
 
     onServerChange(server) {

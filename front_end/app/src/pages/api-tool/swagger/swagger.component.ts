@@ -29,7 +29,7 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     /** Check if node is a leaf node.
-     *  If so, then the node is an API Route path Node (ex: /) and some actions must be handled differently
+     *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
      */
     isAPIPathNode = (node: MenuNodeWithParent) => {
         return !node.nodes.length;

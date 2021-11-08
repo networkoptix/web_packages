@@ -72,7 +72,8 @@
             </nx-search>
     </ng-container>
     <ng-container *ngIf="displayedMenuNodes.length; else noNodes">
-        <div [ngClass]="{'nodes-container': searchEnabled, 'with-ribbon': ribbonService.context.visibility, 'webadmin-scroll': searchEnabled && CONFIG.isLocal}">
+        <div [ngClass]="{'nodes-container': searchEnabled}" 
+             [ngStyle]="{'max-height': searchEnabled ? 'calc(100vh - ' + (offsetHeight + 32) + 'px)' : 'none'}">
             <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:displayedMenuNodes, level: 1}"></ng-container>
         </div>
     </ng-container>
