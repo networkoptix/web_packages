@@ -867,7 +867,7 @@
                 "success": "Nome do sistema salvo"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Faça login com %CLOUD_NAME% para acessar este sistema como usuário da nuvem"
     },
     "headerLabels": {
         "healthReportForSystem": "Relatório de saúde para o sistema {systemName}"
