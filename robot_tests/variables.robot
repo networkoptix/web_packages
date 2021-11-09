@@ -79,7 +79,7 @@ ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
-${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "Open in Nx Witness")]
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "${OPEN IN NX WITNESS BUTTON TEXT}")]
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
