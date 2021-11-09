@@ -96,8 +96,6 @@ frontend-unit-test:
     reports:
       junit: front_end/reports/*.xml
       cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
-  # Until all tests are passing reliably
-  allow_failure: true
 
 authorization-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
