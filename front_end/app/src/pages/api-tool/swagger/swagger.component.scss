@@ -323,10 +323,14 @@
 	position : relative;
 }
 
-.swagger-ui .curl-command .copy-to-clipboard {
-	bottom: 2px;
-	width: 30px;
-	height: 30px;
+.swagger-ui .copy-to-clipboard {
+	display: none;
+}
+
+.swagger-ui .download-contents {
+	bottom: 6px;
+	right: 40px;
+	background: none;
 }
 
 .swagger-ui .scheme-container {

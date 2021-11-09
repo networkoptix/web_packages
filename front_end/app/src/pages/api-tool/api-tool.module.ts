@@ -10,6 +10,8 @@ import { FormsModule }          from '@angular/forms';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { AuthGuard } from '@guards/authGuard';
 import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.component';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NxCopyToClipboardComponent } from './swagger/copy-to-clipboard/copy-to-clipboard.component';
 
 const appRoutes: Routes = [
     {
@@ -26,6 +28,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         PipesModule,
+        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         FormsModule
     ],
@@ -33,7 +36,8 @@ const appRoutes: Routes = [
     declarations: [
         NxAPIToolComponent,
         NxSwaggerComponent,
-        NxSystemDropdownComponent
+        NxSystemDropdownComponent,
+        NxCopyToClipboardComponent
     ],
     bootstrap: [],
     entryComponents: [

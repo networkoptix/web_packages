@@ -1,9 +1,15 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntilDestroy }         from '@ngneat/until-destroy';
+import {
+    Component, ComponentFactoryResolver,
+    Inject, Input, OnChanges, SimpleChanges,
+    ViewContainerRef, ViewEncapsulation
+}                                               from '@angular/core';
+import { UntilDestroy }                         from '@ngneat/until-destroy';
 import SwaggerUI                                from 'swagger-ui';
 import { IConfig, NxConfigService }             from '@services/nx-config';
 import { NxAPIToolService }                     from '../api-tool.service';
-import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
+import { MenuNodeWithParent }                   from '@components/developers-menu/developers-menu.component';
+import { DOCUMENT }                             from '@angular/common';
+import { NxCopyToClipboardComponent }           from './copy-to-clipboard/copy-to-clipboard.component';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +30,10 @@ export class NxSwaggerComponent implements OnChanges {
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
     constructor(public APIToolService: NxAPIToolService,
-                private configService: NxConfigService) {
+                private configService: NxConfigService,
+                private viewContainerRef: ViewContainerRef,
+                private componentFactoryResolver: ComponentFactoryResolver,
+                @Inject(DOCUMENT) private document: Document) {
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -57,6 +66,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
+                plugins: [this.FindCodeBlocksPlugin],
                 spec: this.APIToolService.selectedServer.apiDocFull,
                 filter: filter,
                 docExpansion: expand,
@@ -125,6 +135,37 @@ export class NxSwaggerComponent implements OnChanges {
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + systemMediaServerConnections[serverID][authParam];
         request.url = Url.toString();
+    }
+
+    // swagger-ui plugin system
+    private FindCodeBlocksPlugin = () => ({
+        wrapComponents: {
+            operation: (Responses, { React }) => (props) => {
+                // If operation is open
+                if (props.isShown) {
+                    const codeBlocks = this.document.getElementsByClassName('microlight');
+                    // Get all code blocks rendered
+                    for (const codeBlock of codeBlocks as any) {
+                        if (!codeBlock.parentElement.getElementsByClassName('copy-button').length) {
+                            // Add clipboard button to codeblocks that dont have a clipboard button
+                            const container = codeBlock.closest('div') as HTMLElement;
+                            container.classList.add('highlight-code');
+
+                            this.addCopyToClipBoardButton(codeBlock);
+                        }
+                    }
+                }
+                return  React.createElement(Responses, props);
+            }
+        }
+    })
+
+    addCopyToClipBoardButton = (codeBlock: HTMLElement) => {
+        const factory = this.componentFactoryResolver.resolveComponentFactory(NxCopyToClipboardComponent);
+        const instance = this.viewContainerRef.createComponent(factory);
+        const el = instance.location.nativeElement as HTMLElement;
+
+        codeBlock.insertAdjacentElement('afterend', el);
     }
 
     ngOnChanges(changes: SimpleChanges) {
