@@ -382,7 +382,7 @@ Skip If Image Is
     END
     
 Wait Until Storages Are Outdated and Refresh
-    Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}
+    Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}     timeout=65
     Click Element    ${RELOAD ICON} 
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN} 
     
