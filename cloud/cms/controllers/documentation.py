@@ -5,16 +5,20 @@ from django.conf import settings
 from inlinestyler.utils import inline_css
 import re
 import sass
+import logging
 from bs4 import BeautifulSoup
 from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
 from cms.feature_flags import SWITCHES
 
+from meilisearch.errors import MeiliSearchCommunicationError
 from util.base_cache import BaseCache
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
 from util.helpers import get_meilisearch_client
+
+logger = logging.getLogger(__name__)
 
 def html2md(html):
     parser = HTML2Text()
@@ -49,9 +53,9 @@ def html2plain(html):
 #     def _ignore_index_not_found(*args, **kwargs):
 #         try:
 #             return func(*args, **kwargs)
-#         except MeiliSearchApiError as e: 
+#         except MeiliSearchApiError as e:
 #             if e.error_code != 'index_not_found':
-#                 raise e          
+#                 raise e
 
 #     return _ignore_index_not_found
 
@@ -63,18 +67,26 @@ class SearchableCache(BaseCache):
         client = get_meilisearch_client()
         self.search_index = client.index(self.cache_key)
         self.fields_from_doc = self.custom_settings.pop('fields')
-    
+
     # @ignore_index_not_found
     def check_and_update_custom_settings(self):
         if self.custom_settings:
-            self.current_settings = self.search_index.get_settings()
-            if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
-                self.search_index.update_settings(self.custom_settings)
+            try:
+                self.current_settings = self.search_index.get_settings()
+                if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
+                    self.search_index.update_settings(self.custom_settings)
+            except TypeError as e:
+                # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
+                logger.info(e)
 
-    # @ignore_index_not_found            
+    # @ignore_index_not_found
     def clear_cache(self):
         super().clear_cache()
-        self.search_index.delete_all_documents()
+        try:
+            self.search_index.delete_all_documents()
+        except MeiliSearchCommunicationError as e:
+            # raised when meilisearch service is unavailable
+            logger.warning(e)
 
     def __setitem__(self, lookup_key, doc):
         """Sets doc to cache using the lookup_key attribute.
@@ -246,7 +258,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
             internal_link_replacements = get_internal_links(external_link, cloud_portal, doc, doc_dict, values)
-                    
+
 
             doc_dict['blocks'] = values['body']
             doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
@@ -326,6 +338,6 @@ def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
                 internal_link_replacements.append(internal_default)
         else:
             internal_link_replacements.append(internal_default)
-    
+
     return internal_link_replacements
 
