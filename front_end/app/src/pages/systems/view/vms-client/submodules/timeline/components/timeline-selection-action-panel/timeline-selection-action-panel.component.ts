@@ -9,9 +9,12 @@ import { NxSystem, NxSystemService } from '../../../../../../../../services/syst
 import { IConfig, NxConfigService } from '../../../../../../../../services/nx-config';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimeRange from '../../services/TimeRange';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 
 const THROTTLE_MS = 50;
 const EAR_WIDTH = 120;
+
+type ssRange = { start: number, end: number }
 
 @Component({
     selector: 'timeline-selection-action-panel',
@@ -41,7 +44,8 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected selection: TimelineSelectionService,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
-        protected vms: VideoManagementSystemService
+        protected vms: VideoManagementSystemService,
+        protected dialogs: NxDialogsService,
     ) {
         this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
@@ -106,6 +110,17 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         );
         if (recalibrate) {
             setTimeout(() => this.handleDurationDoubleClick(e), 0);
+        }
+    }
+
+    public initSetTimeDialog () {
+        const dialog = this.dialogs.selectTimeRange();
+        dialog.then(this._onTimeSetDialogDone);
+    }
+
+    public _onTimeSetDialogDone = (result: boolean | ssRange) => {
+        if (result['start']) {
+            this.selection.range = result as TimeRange
         }
     }
 }

@@ -37,7 +37,9 @@ export class TimeRange {
     }
 
     public fitWithin (enclosingRange: TimeRange) {
-        return this.fitStart(enclosingRange) && this.fitEnd(enclosingRange);
+        const a = this.fitStart(enclosingRange)
+        const b = this.fitEnd(enclosingRange)
+        return a || b
     }
 
     public fitStart (enclosingRange: TimeRange) {

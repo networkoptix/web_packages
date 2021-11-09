@@ -25,6 +25,7 @@ import { RestartServerModalContent }   from './restart-server/restart-server.com
 import { DetachServerModalContent }    from './detach-server/detach-server.component';
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { SelectTimeRangeModalContent }  from './select-time-range/select-time-range.component';
 import { WizardModalContent }          from './wizard/wizard.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import {
@@ -91,7 +92,8 @@ import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.c
         TwoFAModalContent,
         DownloadAsyncModalContent,
         Mandatory2faModalContent,
-        ConnectCloudModalContent
+        ConnectCloudModalContent,
+        SelectTimeRangeModalContent,
     ],
     providers: [
         NxDialogsService,

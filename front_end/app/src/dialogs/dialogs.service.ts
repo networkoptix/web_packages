@@ -44,6 +44,7 @@ import { ModalContent } from '@components/console-table/console-table.component.
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { StorageManager } from '@services/system.service/system/storage-manager/storage-manager';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
+import { SelectTimeRangeModalContent } from './select-time-range/select-time-range.component';
 
 import '@dialogs/dialogs.scss';
 import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
@@ -595,5 +596,18 @@ export class NxDialogsService {
         };
 
         return this.createModal(Mandatory2faModalContent, options, params);
+    }
+
+    public selectTimeRange () {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {
+            closable: true
+        };
+
+        return this.createModal(SelectTimeRangeModalContent, options, params);
     }
 }

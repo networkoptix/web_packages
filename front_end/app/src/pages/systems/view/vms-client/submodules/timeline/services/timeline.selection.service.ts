@@ -88,8 +88,15 @@ export class TimelineSelectionService {
         return this._isActive;
     }
 
-    public get range () {
+    public get range (): TimeRange {
         return this._selectedRange.clone();
+    }
+
+    public set range (r: TimeRange) {
+        this._selectedRange.start = r.start
+        this._selectedRange.end = r.end
+        this._sanitizeRange()
+        this._emit()
     }
 
     public get pixelRange () {
