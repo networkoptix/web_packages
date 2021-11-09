@@ -544,8 +544,8 @@ def sub_vars(asset):
 def update_asset_by_json(asset, asset_json, user):
     def sub_image_sources(match_obj):
         file_id = str(uuid.uuid4())
-        files[file_id] = external_file_to_content_file(match_obj[1])
-        return f'src="{{image_import:{file_id}}}"'
+        files[file_id] = external_file_to_content_file(match_obj[2])
+        return f'{match_obj[0]}src="{{image_import:{file_id}}}"'
 
     asset_type = asset.asset_type
     for context in asset_json["contexts"]:
@@ -567,7 +567,7 @@ def update_asset_by_json(asset, asset_json, user):
                         files[ds['name']] = external_file_to_content_file(ds['value'])
                     elif ds_type == DataStructure.DATA_TYPES.html:
                         if ds_obj.meta_settings.get('upload_data_images', False):
-                            ds["value"] = re.sub(r'src="(.*?)"', sub_image_sources, ds["value"])
+                            ds["value"] = re.sub(r'(<img [^>]*?src=")([^%].*?)"', sub_image_sources, ds["value"])
                         ds["value"] = re.sub(r'{%(.*?)%}', sub_vars(asset), ds["value"])
                     data_records[ds["name"]] = ds["value"]
         save_unrevisioned_records(asset, context_model, None, context_model.datastructure_set.all(), data_records, files, user)
