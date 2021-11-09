@@ -68,7 +68,7 @@ export class AppComponent {
     private cleanQueryParams(queryParams) {
         queryParams = { ...queryParams };
         if (queryParams.code) {
-            delete queryParams.code;
+            queryParams.code = null;
         }
         return queryParams;
     }
@@ -102,9 +102,12 @@ export class AppComponent {
         this.router.events
             .pipe(filter(ev => ev instanceof NavigationEnd))
             .subscribe(() => {
-                const link = this.router.url;
-                const params = this.route.snapshot.queryParams;
-                const code = params?.code;
+                const link = this.window.location.href.replace('/#', '');
+                const parts = link.split('?');
+                const params = parts.length > 1 && new URLSearchParams(
+                    parts[1]
+                );
+                const code = params && params?.get('code');
                 if (code && link.includes('?code') && !this.reauthorizing) {
                     return this.cloudApiService.loginCode(code)
                         .then(() => this.cloudApiService.account(true)

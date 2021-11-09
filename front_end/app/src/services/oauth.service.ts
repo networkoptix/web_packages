@@ -50,6 +50,14 @@ export class OauthService {
 
     redirectOauth(state?: string, email?: string) {
         const { href } = this.window.location;
+        const cleanRedirect = (url) => {
+            const [baseUrl, query] = url.split('?');
+            let params = new URLSearchParams(query);
+            if (params.has('code')) {
+                params.delete('code')
+            }
+            return `${baseUrl}?${params.toString()}`;
+        }
         const clientTypes = {
             connect: 'connect',
             login: 'loginWebadmin',
@@ -61,7 +69,7 @@ export class OauthService {
         const params = new URLSearchParams({
             client_type: state in clientTypes ? clientTypes[state] : clientTypes.login,
             view_type: 'web',
-            redirect_url: href,
+            redirect_url: cleanRedirect(href),
             client_id: this.CONFIG.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
             grant_type: 'password',
