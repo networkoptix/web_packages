@@ -29,6 +29,8 @@
 	@include generateVarAndRgb(--jumbotron-bg, $jumbotron-bg);
 	@include generateVarAndRgb(--modal-backdrop-bg, $modal-backdrop-bg);
 	@include generateVarAndRgb(--modal-content-bg, $modal-content-bg);
+	@include generateVarAndRgb(--warning-message-bg, $warning-message-bg);
+	@include generateVarAndRgb(--warning-message-border, $warning-message-border);
 	@include generateVarAndRgb(--link-color, $brand-d2);
 	@include generateVarAndRgb(--link-hover-color, $brand-core);
 	@include generateVarAndRgb(--dropdown-link-active-bg, $dropdown-link-active-bg);

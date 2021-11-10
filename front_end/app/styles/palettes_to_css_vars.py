@@ -9,11 +9,11 @@ from pathlib import Path
 
 def main():
     palette_files = [
-        Path("./_theme_palette.scss"),
-        Path("./native-theme/_theme_palette.scss")
+        Path("./native-theme/_theme_palette.scss"),
+        Path("./_theme_palette.scss")
     ]
 
-    var_name_regex = re.compile(fr"^\$([\w\-]+)")
+    var_name_regex = re.compile(fr"^ *\$([\w\-]+)")
 
     for palette in palette_files:
         css_vars = [

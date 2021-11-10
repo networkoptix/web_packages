@@ -53,6 +53,8 @@
 	@include generateVarAndRgb(--dark17, $dark17);
 	@include generateVarAndRgb(--dark18, $dark18);
 
+	@include generateVarAndRgb(--additional_dark1, $additional_dark1);
+
 	@include generateVarAndRgb(--light1, $light1);
 	@include generateVarAndRgb(--light2, $light2);
 	@include generateVarAndRgb(--light3, $light3);

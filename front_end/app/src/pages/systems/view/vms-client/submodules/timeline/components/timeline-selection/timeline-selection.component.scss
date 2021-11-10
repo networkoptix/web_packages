@@ -1,6 +1,6 @@
 @use "styles/theme_variables" as *;
-// $brand_core: #2fa2db;
-// $light1: #fff;
+// var(--brand-core): #2fa2db;
+// var(--light1): #fff;
 // $font-family-bold: 'robotobold';
 
 :host {
@@ -18,11 +18,11 @@
     position: absolute;
     bottom: 0;
     height: 63px;
-    background-color: transparentize($brand_core, 0.7);
+    background-color: rgba(var(--brand-core--rgb), 0.3);
     transition: opacity 0.2s ease-in-out;
     min-width: 1px;
-    // border-left: 1px solid transparentize($brand_core, 0.1);
-    // border-right: 1px solid transparentize($brand_core, 0.1);
+    // border-left: 1px solid rgba(var(--brand-core--rgb), 0.9);
+    // border-right: 1px solid rgba(var(--brand-core--rgb), 0.9);
     cursor: move;
 
     &.active {
@@ -32,14 +32,14 @@
     > .ear {
       width: 120px;
       position: absolute;
-      background-color: transparentize($brand_core, 0.1);
+      background-color: rgba(var(--brand-core--rgb), 0.9);
       padding: 2px 4px;
       top: 0;
       height: 34px;
       font-size: 12px;
       line-height: 1.2em;
 
-      color: $light1;
+      color: var(--light1);
 
       cursor: col-resize;
 
@@ -60,7 +60,7 @@
         height: 0;
         position: absolute;
         bottom: -4px;
-        border-top: 4px solid transparentize($brand_core, 0.1);
+        border-top: 4px solid rgba(var(--brand-core--rgb), 0.9);
       }
 
       &.left {

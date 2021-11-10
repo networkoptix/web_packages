@@ -20,8 +20,8 @@
     }
 }
 
-$border-blue: rgba(var(--blue10--rgb), 0.298);
-$body-blue: rgba(var(--blue10--rgb), 0.098);
+$border-blue: rgba(var(--blue10--rgb), 0.3);
+$body-blue: rgba(var(--blue10--rgb), 0.1);
 
 .tfauth-v5-warning {
     border: 1px solid $border-blue;

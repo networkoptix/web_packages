@@ -10,8 +10,8 @@
   right: 8px;
   bottom: 108px;
 
-  background: $brand_core;
-  color: $light1;
+  background: var(--brand-core);
+  color: var(--light1);
   border-radius: 2px;
 
   font-size: 13px;
@@ -31,7 +31,7 @@
   }
 
   > a {
-    color: $light1;
+    color: var(--light1);
   }
 
   > .duration-selected {
@@ -48,7 +48,7 @@
 
     &::before {
       content: "";
-      background-color: $light1;
+      background-color: var(--light1);
       width: 1px;
       height: 20px;
       position: absolute;
