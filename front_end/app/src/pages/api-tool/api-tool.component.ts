@@ -61,7 +61,9 @@ export class NxAPIToolComponent {
     }
 
     setMenuOffset() {
-        this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top;
+        if (this.developersMenuRef?.nativeElement) {
+            this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top;
+        }
     }
 
     setHeaderHeight() {

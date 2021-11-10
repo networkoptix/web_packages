@@ -332,30 +332,47 @@ export class NxAPIToolService {
                         console.error(error);
                     });
             } else {
-                // Something is wrong with the system's servers but it thinks it is online
                 this.mediaServerUpdating = false;
-                // this.tryNextSystem();
             }
         }
     }
 
-    handleSystemChange = () => {
+    async handleSystemChange() {
+        if (this.CONFIG.isLocal) {
+            const systemInfo = await this.system.serverManager.getModuleInfo().toPromise();
+            const version = parseFloat(systemInfo?.reply?.version);
+
+            if (!version || version < 4) {
+                this.markSystemOutdated();
+            } else {
+                this.systemVersion = version;
+                this.getServersInfo();
+            }
+            return;
+        }
+
         this.system.infoSubject.pipe(filter(system => system?.info !== undefined), take(1)).subscribe(system => {
             if (system.info && !system.info.version) {
                 this.outDatedSystem = true;
             } else {
                 this.systemVersion = parseFloat(system.info.version);
             }
+
             if (this.outDatedSystem || this.systemVersion < 4) {
                 // System version is too old
-                this.serversLoaded$.next(true);
-                this.outDatedSystem = true;
-                this.menuNodes = [];
-                this.selectedSystem = this.systemsDropdown.find(system => system.value === this.system.id);
+                this.markSystemOutdated();
                 return;
             }
+
             this.getServersInfo();
         });
+    }
+
+    markSystemOutdated = () => {
+        this.serversLoaded$.next(true);
+        this.outDatedSystem = true;
+        this.menuNodes = [];
+        this.selectedSystem = this.systemsDropdown.find(system => system.value === this.system.id);
     }
 
     private getAPIDoc(serverId: string, type: APIDocVersion) {
