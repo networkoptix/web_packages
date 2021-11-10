@@ -45,7 +45,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
         protected vms: VideoManagementSystemService,
-        protected dialogs: NxDialogsService,
+        protected dialogs: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
@@ -119,8 +119,9 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     }
 
     public _onTimeSetDialogDone = (result: boolean | ssRange) => {
+        // eslint-disable-next-line dot-notation
         if (result['start']) {
-            this.selection.range = result as TimeRange
+            this.selection.range = result as TimeRange;
         }
     }
 }

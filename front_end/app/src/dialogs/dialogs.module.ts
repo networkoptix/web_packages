@@ -93,7 +93,7 @@ import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.c
         DownloadAsyncModalContent,
         Mandatory2faModalContent,
         ConnectCloudModalContent,
-        SelectTimeRangeModalContent,
+        SelectTimeRangeModalContent
     ],
     providers: [
         NxDialogsService,

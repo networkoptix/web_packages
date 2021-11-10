@@ -93,10 +93,10 @@ export class TimelineSelectionService {
     }
 
     public set range (r: TimeRange) {
-        this._selectedRange.start = r.start
-        this._selectedRange.end = r.end
-        this._sanitizeRange()
-        this._emit()
+        this._selectedRange.start = r.start;
+        this._selectedRange.end = r.end;
+        this._sanitizeRange();
+        this._emit();
     }
 
     public get pixelRange () {

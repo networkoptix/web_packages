@@ -52,12 +52,12 @@ export class OauthService {
         const { href } = this.window.location;
         const cleanRedirect = (url) => {
             const [baseUrl, query] = url.split('?');
-            let params = new URLSearchParams(query);
+            const params = new URLSearchParams(query);
             if (params.has('code')) {
-                params.delete('code')
+                params.delete('code');
             }
             return `${baseUrl}?${params.toString()}`;
-        }
+        };
         const clientTypes = {
             connect: 'connect',
             login: 'loginWebadmin',
