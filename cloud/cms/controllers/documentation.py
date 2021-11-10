@@ -84,7 +84,7 @@ class SearchableCache(BaseCache):
         super().clear_cache()
         try:
             self.search_index.delete_all_documents()
-        except MeiliSearchCommunicationError as e:
+        except (MeiliSearchCommunicationError, TypeError) as e:
             # raised when meilisearch service is unavailable
             logger.warning(e)
 
