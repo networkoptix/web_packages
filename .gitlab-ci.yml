@@ -68,6 +68,14 @@ nx-mentions-check:
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
       when: never
 
+frontend-lint-check:
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npx esprint check
+
 django-unit-test:
   extends: .django-python
   stage: test
