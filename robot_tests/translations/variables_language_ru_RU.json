@@ -158,6 +158,7 @@
     "PAGE NOT FOUND TEXT": "Страница не найдена",
     "GO TO MAIN PAGE TEXT": "Перейти на главную страницу",
     "OPEN NX WITNESS BUTTON TEXT": "Открыть %VMS_NAME%",
+    "OPEN IN NX WITNESS BUTTON TEXT": "Open in %VMS_NAME%",
     "PASSWORD IS WEAK BADGE TEXT": "СЛАБЫЙ",
     "PASSWORD IS TOO SHORT BADGE TEXT": "КОРОТКИЙ",
     "PASSWORD IS TOO COMMON BADGE TEXT": "ЧАСТО ВСТРЕЧАЮЩИЙСЯ",
