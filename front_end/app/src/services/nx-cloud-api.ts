@@ -490,10 +490,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    restorePassword(code: string, newPassword: string) {
+    restorePassword(code: string, newPassword: string, totp?: string, isBackup = false) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
-            new_password: newPassword
+            new_password: newPassword,
+            totp,
+            isBackup
         }).toPromise();
     }
 

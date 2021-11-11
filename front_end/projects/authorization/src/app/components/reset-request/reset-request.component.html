@@ -23,7 +23,6 @@
                 [(ngModel)]="resetEmail"
                 [disabled]="resetRequestProcess.processing"
                 #email="ngModel"
-                autocomplete="off"
                 required
                 email
                 nxFocusMe>
@@ -54,7 +53,7 @@
                 <span translate>Back</span>
             </button>
             <nx-process-button
-                [clickFn]="!confirm && sendEmail"
+                [clickFn]="sendEmail"
                 buttonText="{{ (confirm ? 'Log In' : 'Reset Password') | translate }}"
                 [process]="confirm ? loginProcess : resetRequestProcess">
             </nx-process-button>

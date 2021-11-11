@@ -83,7 +83,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     footerItems: { name: string, url: string }[];
 
     // shared
-    currentState: string;
+    currentState: AuthorizeState;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
     windowLargeEnough = false;
@@ -148,7 +148,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (event.code === 'Enter') {
+        if (['Enter', 'NumpadEnter'].includes(event.code)) {
             this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
         }
     }
@@ -236,7 +236,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (err && (
             [500, 503, 504].includes(err?.status) ||
             err?.message?.includes('timeout') ||
-            err.includes('Error occured while trying to proxy to:') || // occurs when wifi on machine turned off
+            err?.includes('Error occured while trying to proxy to:') || // occurs when wifi on machine turned off
             err instanceof ProgressEvent // occurs when virtual machine connection turned off (offline testing)
         )) {
             this.errorDialogProcess = process;
@@ -245,7 +245,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
-        if (this.action === 'restore_password') {
+        // bypass for code or backup code for resetPassword workflow
+        if (this.action === 'restore_password' && [AuthorizeState.auth, AuthorizeState.backup].includes(this.currentState)) {
             this.errorDialog$.value && this.errorDialog$.next(false);
             this.action = undefined;
             this.confirmReset = true;
@@ -353,7 +354,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkAuthCodeProcess = this.processService.createProcess(
             () => {
                 this.authCodeErrorCode = '';
-                return this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
+                return this.action === 'restore_password'
+                    ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.authCode)
+                    : this.cloudService.verifyCode(this.authCode, this.loginCode).toPromise();
             },
             {
                 ignoreUnauthorized: true,
@@ -366,7 +369,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized') {
+                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
                     this.authCodeErrorCode = 'wrongAuthCode';
                 } else {
                     console.error('err from checkAuthCodeProcess', err);
@@ -379,7 +382,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkBackupCodeProcess = this.processService.createProcess(
             async () => {
                 this.backupCodeErrorCode = '';
-                return this.cloudService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
+                return this.action === 'restore_password'
+                    ? this.cloudService.restorePassword(this.loginCode, this.resetPassword, this.backupCode, true)
+                    : this.cloudService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
             },
             { ignoreError: true, timeoutMs },
             res => {
@@ -388,7 +393,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized') {
+                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
                     this.authCodeErrorCode = 'wrongBackupCode';
                 } else {
                     console.error('err from checkBackupCodeProcess', err);
@@ -452,7 +457,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             err => {
                 console.error('err in resetPassword process', err);
-                if (err.errorText === 'unauthorized') {
+                if (err.errorText === '2FA is required') {
                     this.currentState = AuthorizeState.auth;
                 } else {
                     this.handleCloudConnectionError(err, this.resetPasswordProcess);

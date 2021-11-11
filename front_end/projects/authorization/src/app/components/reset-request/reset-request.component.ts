@@ -24,6 +24,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Input() smallView: boolean;
     @Input() resetEmail: string;
     @Output() resetEmailChange = new EventEmitter<string>();
+    @Input() loginEmail: string;
     @Input() confirm: boolean;
     @Input() loginProcess: Process;
     @Input() errorCode: string;
@@ -42,8 +43,11 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     }
 
     ngOnInit(): void {
+        this.resetEmail = this.loginEmail;
         this.sendEmail = () => {
-            this.resetEmailChange.emit(this.resetEmail);
+            if (!this.confirm) {
+                this.resetEmailChange.emit(this.resetEmail);
+            }
         };
     }
 
