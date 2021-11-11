@@ -436,9 +436,14 @@ class Account(object):
             return data
 
     @staticmethod
-    def restore_password(code, new_password, totp):
+    def restore_password(code, new_password, verification_code=None, is_backup=False):
         temp_token, email = Account.extract_temp_credentials(code)
-        return Account.change_password({"access_token": temp_token}, email, temp_token, new_password, totp)
+        if verification_code:
+            if is_backup:
+                Auth.verify_backup_code(temp_token, verification_code)
+            else:
+                Auth.verify_2fa_code(temp_token, verification_code)
+        return Account.change_password({"access_token": temp_token}, email, temp_token, new_password, verification_code)
 
     @staticmethod
     @validate_response

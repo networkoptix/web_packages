@@ -519,8 +519,9 @@ def restore_password(request):
                                       error_data={'new_password': error.detail})
 
         totp = request.data.get('totp')
+        is_backup = request.data.get('isBackup')
         email = Account.extract_temp_credentials(code)[1]
-        Account.restore_password(code, new_password, totp)
+        Account.restore_password(code, new_password, totp, is_backup)
         models.Account.objects.get(email=email).password_changed()
 
         account = models.Account.objects.get(email=email)
