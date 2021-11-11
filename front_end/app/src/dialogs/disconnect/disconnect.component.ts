@@ -9,6 +9,8 @@ import { NxProcessService }                from '@services/process.service';
 import { NxSystemAPI, NxSystemAPIService, NxSystemRestAPI } from '@services/system-api.service';
 import { NxToastService }                  from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
+import { NxSystem } from '@services/system.service';
+import { NxLoginService } from '@services/login.service';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -17,13 +19,14 @@ import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types
 })
 export class DisconnectModalContent {
     @Input() account;
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() disconnect;
     @Input() closable;
 
     isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    needsUpdate: boolean;
     // password: string;
     // wrongPassword: boolean;
     // auth = {
@@ -41,6 +44,7 @@ export class DisconnectModalContent {
         configService: NxConfigService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
+        private loginService: NxLoginService,
         // private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService
@@ -91,7 +95,18 @@ export class DisconnectModalContent {
                 delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
-        }, () => { });
+        }, (err) => {
+            if (err.errorId === 'sessionExpired') {
+                this.loginService.currentSystem = this.system;
+                this.loginService.updateSession()
+                    .then((ready) => {
+                        this.needsUpdate = !ready;
+                        if (ready) {
+                            this.disconnect.run();
+                        }
+                    });
+            }
+        });
     }
 
     close() {

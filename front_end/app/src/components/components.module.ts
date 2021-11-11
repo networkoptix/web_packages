@@ -64,6 +64,7 @@ import { NxStepperComponent }               from './stepper/stepper.component';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { CdkStepperModule }                 from '@angular/cdk/stepper';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { UpdateWebadminSessionComponent } from '@components/update-webadmin-session/update-webadmin-session.component';
 
 @NgModule({
     imports: [
@@ -132,7 +133,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
         NxTextEditableComponent,
-        NxStepperComponent
+        NxStepperComponent,
+        UpdateWebadminSessionComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -167,7 +169,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
         NxTextEditableComponent,
-        NxStepperComponent
+        NxStepperComponent,
+        UpdateWebadminSessionComponent
     ],
     exports: [
         QuicklinkModule,
@@ -221,7 +224,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
         NxStepperComponent,
         SharedComponentsModule,
         CdkStepperModule,
-        TextFieldModule
+        TextFieldModule,
+        UpdateWebadminSessionComponent
     ]
 })
 export class ComponentsModule {

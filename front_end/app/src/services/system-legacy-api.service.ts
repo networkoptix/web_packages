@@ -49,11 +49,12 @@ export class NxSystemAPI {
      * TODO (v 3.2): Support websocket connection to server as well
      * */
     authGet: string;
-     authPost: string;
+    authPost: string;
     protected authPlay: string;
 
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
     protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
+    private readonly notImplementedMsg = 'Not implemented in the legacy api.';
     public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;
@@ -99,6 +100,14 @@ export class NxSystemAPI {
         // console.log('systemService added to window');
         // console.log('to test system system api method just access the systemService from console');
         // console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
+    }
+
+    public get isSessionOauth() {
+        return false;
+    }
+
+    public setAccessTokenAsCookie() {
+        throw (this.notImplementedMsg);
     }
 
     protected cookieLogin(auth, remember = false, maxAge = 365) {
@@ -315,8 +324,8 @@ export class NxSystemAPI {
         return { authGet, authPost, authPlay };
     }
 
-    public ensureFreshSession(): Observable<any> {
-        throw Error('Not implemented in the legacy api');
+    public isSessionFresh(): Observable<any> {
+        throw Error(this.notImplementedMsg);
     }
 
     public getCurrentUser(forceReload?: boolean) {
@@ -426,6 +435,14 @@ export class NxSystemAPI {
                 return of(data.reply);
             })
         );
+    }
+
+    loginToken(username: string, password: string, remember: boolean): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
+    loginOauth(code: string, skipSetting?: boolean): Observable<any> {
+        throw Error(this.notImplementedMsg);
     }
 
     logout() {

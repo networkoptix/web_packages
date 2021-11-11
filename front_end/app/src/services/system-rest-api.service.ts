@@ -3,7 +3,7 @@ import { Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
-import { from, of, throwError } from 'rxjs';
+import { from, Observable, of, throwError } from 'rxjs';
 import {
     catchError,
     map,
@@ -24,9 +24,6 @@ import { NxUriCacheService } from './uri-cache.service';
 import * as t from './system-api.types';
 import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxLoginService } from '@services/login.service';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -79,15 +76,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         this.injector = injector;
     }
 
-    private get dialogService() {
-        return this.injector.get(NxSimpleDialogsService);
-    }
-
     private get storageService() {
         return this.injector.get(NxStorageService);
     }
 
-    private get isSessionOauth() {
+    public get isSessionOauth() {
         return this.accessToken.includes('nxcdb');
     }
 
@@ -112,51 +105,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
-    }
-
-    private handleOldToken(request, allSystems?: boolean) {
-        return request.pipe(
-            mergeMap(
-                (
-                    error: { error: any, status: number; resultCode: string, errorString: string },
-                    attempt: number
-                ) => {
-                    if (attempt === 0) {
-                        if (
-                            (error.status === 401 ||
-                            error.status === 403 ||
-                            error.resultCode === 'forbidden') &&
-                            error.error.errorId.includes(this.oldSessionErrorId)
-                        ) {
-                            return this.reauthenticate(allSystems);
-                        } else if (error.status === 503) {
-                            // Repeat the request once again for 503 error
-                            return of('');
-                        }
-                    }
-                    return throwError(error);
-                }
-            ));
-    }
-
-    private reauthenticate(allSystems?: boolean): any {
-        const LANG = this.injector.get(NxLanguageProviderService).translations;
-        const { action, message, title } = LANG.dialogs?.renewAuth;
-        return from(
-            this.dialogService.confirm(message?.(), title?.(), action?.()).then((res) => {
-                if (!res) {
-                    return Promise.resolve(false);
-                }
-
-                if (this.isSessionOauth) {
-                    return this.logout().then(() => this.redirectOauth(allSystems));
-                }
-
-                const loginService: NxLoginService = this.injector.get(NxLoginService);
-                return this.logout()
-                    .then(() => loginService.login(false, false, false, true));
-            })
-        );
     }
 
     protected proxy(method, protocol, serverAddress, requestUrl, data) {
@@ -185,7 +133,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post('/rest/v1/system/setup', config).toPromise();
     }
 
-    private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string) {
+    private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
         const params: any = {
             grant_type: 'refresh_token',
             response_type: 'token',
@@ -239,7 +187,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     private deleteToken(token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        return this.http.post(`${host}/api/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${token}` } });
+        const { cloudAccessToken } = this.getTokens();
+        return this.http.post(`${host}/api/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${cloudAccessToken}` } });
     }
 
     protected retryHandler(request) {
@@ -417,20 +366,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.userRequest;
     }
 
-    public ensureFreshSession() {
+    public isSessionFresh() {
         if (this.CONFIG.newSystem || !this.accessToken) {
-            return of();
+            return of(false);
         }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap((res) => {
-                if (res.ageS >= this.CONFIG.sessionFreshnessSec) {
-                    return this.reauthenticate();
-                }
-                return of(res);
+                return of(res.ageS < this.CONFIG.sessionFreshnessSec);
             }));
     }
 
-    loginToken(username: string, password: string, remember: boolean) {
+    loginToken(username: string, password: string, remember: boolean): Observable<any> {
         return this.post(
             '/rest/v1/login/sessions',
             { username, password, setCookie: remember }
@@ -478,9 +424,18 @@ export class NxSystemRestAPI extends NxSystemAPI {
         window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 
-    logout() {
-        const { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
+    async logout() {
+        let { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
         if (this.CONFIG.cloudSystemId && refreshToken) {
+            // Generate new tokens if they are missing
+            if (!accessToken) {
+                // eslint-disable-next-line camelcase
+                accessToken = await this.refreshTokens(refreshToken, true).toPromise()?.access_token;
+            }
+            if (!cloudAccessToken) {
+                // eslint-disable-next-line camelcase
+                cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()?.access_token;
+            }
             return this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken }).pipe(
                 tap(() => {
                     this.clearTokens();
@@ -509,15 +464,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     detachFromSystem(currentPassword?: string, serverId?: string) {
-        return this.post(`/rest/v1/servers/${serverId || 'this'}/detach`).pipe(
-            retryWhen((request) => this.handleOldToken(request))
-        );
+        return this.post(`/rest/v1/servers/${serverId || 'this'}/detach`);
     }
 
     disconnectFromCloud() {
-        return this.post('/rest/v1/system/cloudUnbind', { password: '' }).pipe(
-            retryWhen((request) => this.handleOldToken(request))
-        ).toPromise().then(() => this.clearTokens());
+        return this.post('/rest/v1/system/cloudUnbind', { password: '' }).toPromise()
+            .then(() => this.clearTokens());
     }
 
     checkMergeStatus(forceReload = true) {
@@ -570,22 +522,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     ignoreOfflineServerDuplicates: true
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
-            }),
-            retryWhen((request) => this.handleOldToken(request, this.isSessionOauth))
+            })
         );
     }
 
     restartServer(serverId?: string) {
-        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
-            .pipe(retryWhen((request) => this.handleOldToken(request)))
-            .toPromise()
+        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `).toPromise()
             .catch((err) => Promise.reject(err));
     }
 
     restoreFactorySettings(password?: string, serverId?: string) {
-        return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`).pipe(
-            retryWhen((request) => this.handleOldToken(request))
-        );
+        return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
     }
 
     saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {

@@ -1,4 +1,4 @@
-import { IParams } from './system.service';
+import { IParams, NxSystem } from './system.service';
 import { LoginWebadminModalContent } from '../dialogs/login-webadmin/login-webadmin.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IConfig, NxConfigService } from './nx-config';
@@ -7,19 +7,28 @@ import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import type { NxAccountService } from '@services/account.service';
+import { LocalStorageService } from 'ngx-webstorage';
+import { Subject } from 'rxjs';
+import { switchMap, take, takeUntil } from 'rxjs/operators';
+import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxLoginService {
     CONFIG: IConfig;
+
     closeResult: string;
-    private _accountService: NxAccountService
+    done$: Subject<boolean> = new Subject<boolean>();
+
+    private _accountService: NxAccountService;
+    private _currentSystem: NxSystem;
 
     constructor(configService: NxConfigService,
                 private location: Location,
                 private modalService: NgbModal,
                 private router: Router,
+                private storage: LocalStorageService,
                 private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
@@ -29,12 +38,27 @@ export class NxLoginService {
         this._accountService = accountService;
     }
 
+    set currentSystem(system) {
+        this._currentSystem = system;
+    }
+
     private createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any> (
         modal: Modal, options: Options, inputs: Inputs
     ): Promise<Result> {
         const modalRef = this.modalService.open(modal, options);
         Object.assign(modalRef.componentInstance, inputs);
         return modalRef.result;
+    }
+
+    private handleCode(code): Promise<boolean> {
+        // Todo: Add support for cloud portal
+        /*
+            1) Add endpoint for swapping and invalidating session tokens.
+            2) Add logic for getting a new access_token and authKeys.
+         */
+        return this._currentSystem.mediaserver.logout()
+            .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise())
+            .then(() => Promise.resolve(true));
     }
 
     login (
@@ -55,7 +79,7 @@ export class NxLoginService {
 
         const params: IParams = {
             account: this._accountService,
-            login: this._accountService.mediaServerApi.loginToken,
+            login: this._currentSystem.mediaserver.loginToken,
             cancellable: !keepPage || false,
             closable: true,
             location: this.location,
@@ -92,5 +116,26 @@ export class NxLoginService {
                 this.closeResult = 'Dismissed';
                 return reason;
             });
+    }
+
+    cancelCodeSubscription() {
+        this.done$.next(true);
+    }
+
+    async updateSession() {
+        const isFresh = await this._currentSystem.mediaserver.isSessionFresh().toPromise();
+        if (isFresh) {
+            return Promise.resolve(true);
+        }
+        if (this._currentSystem.useRest) {
+            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize`;
+            window.open(authorizeUrl, '_blank').focus();
+            return this.storage.observe('new-code')
+                .pipe(
+                    takeUntil(this.done$),
+                    take(1),
+                    switchMap((code) => this.handleCode(code))).toPromise();
+        }
+        return Promise.resolve(false);
     }
 }

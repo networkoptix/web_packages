@@ -56,7 +56,8 @@ export class OauthService {
             if (params.has('code')) {
                 params.delete('code');
             }
-            return `${baseUrl}?${params.toString()}`;
+            const paramString = params.toString();
+            return `${baseUrl}${paramString.length ? '?' + params.toString() : ''}`;
         };
         const clientTypes = {
             connect: 'connect',
@@ -73,7 +74,7 @@ export class OauthService {
             client_id: this.CONFIG.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
             grant_type: 'password',
-            scope: this.CONFIG.isLocal ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}` : '',
+            scope: this.CONFIG.isLocal ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*` : '',
             state: state
         });
         if (email) {

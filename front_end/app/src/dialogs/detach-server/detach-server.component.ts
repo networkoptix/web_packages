@@ -7,6 +7,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSystem }                  from '@services/system.service';
+import { NxLoginService } from '@services/login.service';
 
 @Component({
     selector: 'nx-modal-detach-server-content',
@@ -22,12 +23,14 @@ export class DetachServerModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     detachServer: Process;
+    needsUpdate: boolean;
     password: string;
 
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
         public activeModal: NgbActiveModal,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
         private toastService: NxToastService
     ) {
@@ -56,7 +59,17 @@ export class DetachServerModalContent {
                     // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
                     // return this.system.update().subscribe()
                 },
-                () => {
+                (err) => {
+                    if (err.errorId === 'sessionExpired') {
+                        this.loginService.currentSystem = this.system;
+                        this.loginService.updateSession()
+                            .then((ready) => {
+                                this.needsUpdate = !ready;
+                                if (ready) {
+                                    this.detachServer.run();
+                                }
+                            });
+                    }
                     this.system.currentServerNotBusy = true;
                     this.toastService.show(this.LANG.servers.detachSystemFailed(), options);
                 }

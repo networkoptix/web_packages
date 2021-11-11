@@ -18,6 +18,7 @@ import {
 }                                     from '@services/system-api.types';
 import { NxAppStateService }          from '@services/nx-app-state.service';
 import { environment }                from '@environments/environment';
+import { NxLoginService } from '@services/login.service';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -32,6 +33,7 @@ export class ResetServerModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    needsUpdate: boolean;
     resetServer: Process;
     password: string;
     hideErrors = true;
@@ -41,6 +43,7 @@ export class ResetServerModalContent {
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         private appState: NxAppStateService,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
@@ -154,6 +157,17 @@ export class ResetServerModalContent {
                             );
                     })
                     .catch(err => handleResetFailError('restartServer', err));
+            }, (err) => {
+                if (err.errorId === 'sessionExpired') {
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession()
+                        .then((ready) => {
+                            this.needsUpdate = !ready;
+                            if (ready) {
+                                this.resetServer.run();
+                            }
+                        });
+                }
             });
     }
 

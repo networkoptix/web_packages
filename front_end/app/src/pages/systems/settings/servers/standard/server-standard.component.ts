@@ -381,10 +381,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    async restartServer() {
-        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('restart').toPromise())) {
-            return;
-        }
+    restartServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
@@ -403,14 +400,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             this.setStatus('');
                         }
                     });
+            }).catch(() => {
+                // Dialog was canceled
             });
     }
 
-    async detachServer() {
-        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('detach').toPromise()) ||
-            !this.system.servers.length) {
-            return;
-        }
+    detachServer() {
         const { id, name } = this.selectedServer;
         const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
         const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
@@ -427,18 +422,20 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
                     this.menuService.detail = nextServerId;
                 }
+            }).catch(() => {
+                // Dialog was canceled
             });
     }
 
-    async resetServer() {
-        if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('reset').toPromise())) {
-            return;
-        }
+    resetServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .resetServer(this.system, id, name)
             // will take some time to reset and then restart the server
-            .then(() => this.setStatus('resetting'));
+            .then(() => this.setStatus('resetting'))
+            .catch(() => {
+                // Dialog was canceled
+            });
     }
 
     onPortChange(port) {

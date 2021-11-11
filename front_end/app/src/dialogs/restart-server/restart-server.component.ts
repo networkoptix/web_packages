@@ -13,6 +13,8 @@ import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxToastService }            from '@dialogs/toast.service';
 import { NxApplyService }            from '@services/apply.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSystem } from '@services/system.service';
+import { NxLoginService } from '@services/login.service';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
@@ -20,13 +22,14 @@ import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
     styleUrls: []
 })
 export class RestartServerModalContent {
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() serverName: string;
     @Input() serverId: string;
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    needsUpdate: boolean;
     restartServer: Process;
     private applyService: NxApplyService
 
@@ -34,6 +37,7 @@ export class RestartServerModalContent {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
@@ -54,7 +58,7 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId);
+                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId).length > 0;
                 if (!haveOnlineServers) {
                     this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
                 }
@@ -145,6 +149,16 @@ export class RestartServerModalContent {
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                     message = this.LANG.servers.serverOffline?.();
                     this.close(this.CONFIG.servers.status.offline);
+                    // @ts-ignore
+                } else if (err.errorId === 'sessionExpired') {
+                    this.loginService.currentSystem = this.system;
+                    this.loginService.updateSession()
+                        .then((ready) => {
+                            this.needsUpdate = !ready;
+                            if (ready) {
+                                this.restartServer.run();
+                            }
+                        });
                 }
                 this.toastService.show(message, options);
             });

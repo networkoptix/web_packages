@@ -50,7 +50,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
 
             // lastErrorStatus$ could be "0" (because of res.type) ...
             if (this.appState.lastErrorStatus$.value !== undefined) {
-                window.location.reload();
+                offlineStatus && window.location.reload();
                 this.appState.lastErrorStatus$.next(undefined);
             }
         }
