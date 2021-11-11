@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { NxLicenseDetailComponent } from './license.component';
-import { nxConfig } from '@services/nx-config/config';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
@@ -11,25 +10,13 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService } from '@services/nx-config';
 import { NxSystem } from '@services/system.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { MockProvider } from 'ng-mocks';
 
 describe('Licenses (Details)', () => {
     let component: NxLicenseDetailComponent;
     let fixture: ComponentFixture<NxLicenseDetailComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            system: {
-                status: {
-                    unavailable: ''
-                }
-            },
-            pageTitles: {
-                // systems: () => "Systems"
-            }
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
     const systemMock = {};
 
     let tile;
@@ -46,8 +33,8 @@ describe('Licenses (Details)', () => {
                 TranslateModule.forRoot()
             ],
             providers: [
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxConfigService, useValue: configMock },
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
                 { provide: NxSystem, useValue: systemMock },
                 { provide: DatePipe, useValue: {} }
             ]
@@ -62,10 +49,6 @@ describe('Licenses (Details)', () => {
 
     it('should create the component', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should call getConfig', () => {
-        expect(configMock.getConfig).toBeTruthy();
     });
 
     it('should call formatLicenseKey and get formatted key', () => {

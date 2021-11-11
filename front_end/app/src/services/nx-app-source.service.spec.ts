@@ -2,13 +2,13 @@ import { waitForAsync, TestBed } from '@angular/core/testing';
 import { NxAppSourceService }    from '@services/nx-app-source.service';
 import { nxConfig }              from '@services/nx-config/config';
 import { NxConfigService }       from '@services/nx-config';
-import { setupTestSystem }       from '@src/_mocks/system.test';
+import { setupTest41System }       from '@src/_mocks/system.test';
 
 describe('AppSource Service', () => {
     let appSourceService: NxAppSourceService;
 
     const configMock = { getConfig: () => nxConfig };
-    const systemMock = setupTestSystem();
+    const systemMock = setupTest41System();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

@@ -4,7 +4,7 @@ import { NxMenusService }       from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { Router, RouterEvent }            from '@angular/router';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { setupTestSystem }                from '@src/_mocks/system.test';
+import { setupTest41System }                from '@src/_mocks/system.test';
 import { headerNodes }                    from '@src/_mocks/nodesMock';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
@@ -74,7 +74,7 @@ describe('Nx Header Service', () => {
     });
 
     it('should set active system)', () => {
-        const systemMock = setupTestSystem();
+        const systemMock = setupTest41System();
         expect(headerService.activeSystem).toBeNull();
         headerService.activeSystem = systemMock;
 

@@ -1,24 +1,25 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
 import 'zone.js/dist/zone-testing';
-import { getTestBed }                from '@angular/core/testing';
+import { getTestBed } from '@angular/core/testing';
 import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
-}                                                    from '@angular/platform-browser-dynamic/testing';
-import { MockInstance, ngMocks }                     from 'ng-mocks';
-import { NxConfigService }                           from '@services/nx-config';
-import { nxConfig }                                  from '@services/nx-config/config';
-import { LocalStorageService }                       from 'ngx-webstorage';
+} from '@angular/platform-browser-dynamic/testing';
+import { MockInstance, ngMocks } from 'ng-mocks';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, EMPTY, of, ReplaySubject } from 'rxjs';
-import { NxLanguageProviderService }                 from '@services/nx-language-provider';
-import staticLang                                    from '@app/language_compiled.json';
-import { NxSessionService }                          from '@services/session.service';
-import { TranslateService }                          from '@ngx-translate/core';
-import { NxAccountService }                          from '@services/account.service';
-import { NxAppStateService }                         from '@services/nx-app-state.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import staticLang from '@app/language_compiled.json';
+import { NxSessionService } from '@services/session.service';
+import { TranslateService } from '@ngx-translate/core';
+import { NxAccountService } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxCloudApiService }                         from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';
@@ -116,6 +117,12 @@ ngMocks.defaultMock(Process, () => ({
 
 ngMocks.defaultMock(NxScrollMechanicsService, () => ({
     windowSizeSubject: new BehaviorSubject({ height: 0, width: 0 })
+}));
+
+ngMocks.defaultMock(NxSettingsService, () => ({
+    footerSubject: new BehaviorSubject(false),
+    systemSubject: new BehaviorSubject<any>(false),
+    selectedSectionSubject: new BehaviorSubject([])
 }));
 
 declare const require: {

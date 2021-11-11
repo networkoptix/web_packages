@@ -562,6 +562,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }
 
+    getLicenseSummaries() {
+        const params = {
+            _keepDefault: true
+        };
+        return this.get('/rest/v1/licenseSummaries', params);
+    }
+
     previewUrl(
         cameraId: string,
         time?: number,

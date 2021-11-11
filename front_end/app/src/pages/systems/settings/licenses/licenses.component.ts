@@ -1,15 +1,17 @@
-import { Component, OnInit }             from '@angular/core';
-import { forkJoin, SubscriptionLike }    from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { forkJoin, SubscriptionLike } from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSettingsService }         from '../settings.service';
-import { NxSystem, NxSystemServer }  from '@services/system.service';
-import { NxMenuService }             from '@src/menu/menu.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxUtilsService }            from '@services/utils.service';
+import { NxSettingsService } from '../settings.service';
+import { NxSystem, NxSystemServer } from '@services/system.service';
+import { NxMenuService } from '@src/menu/menu.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxUtilsService } from '@services/utils.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector: 'nx-system-licenses',
     templateUrl: 'licenses.component.html',
@@ -24,13 +26,13 @@ export class NxSystemLicensesComponent implements OnInit {
     serverSubscription: SubscriptionLike;
     licensesSubscription: SubscriptionLike;
 
-    licenses: any;
-    licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
+    licenses: any = [];
+    licenseSummaries: { type: string, count: number, countAvail: number, inUse: number | string, required: number }[];
 
     // Constructor and class initialization methods
     private setupDefaults() {
         this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
+            .pipe(filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe((system) => {
                 this.system = system;
 
@@ -156,6 +158,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 type,
                 count: parseInt(item.info.count) || 0,
                 countAvail: avail,
+                inUse: 'N/A',
                 required: item.info.required
             });
         }

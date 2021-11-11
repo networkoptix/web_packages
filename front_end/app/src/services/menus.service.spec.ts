@@ -10,7 +10,7 @@ import { WINDOW } from './window-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { getMockTranslations } from '@src/_mocks/helpers.test';
 import { headerNodes } from '@src/_mocks/nodesMock';
-import { setupTestSystem } from '@src/_mocks/system.test';
+import { setupTest41System } from '@src/_mocks/system.test';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('Menus service', () => {
@@ -78,7 +78,7 @@ describe('Menus service', () => {
     });
 
     it('should set active system menu', () => {
-        const systemMock = setupTestSystem();
+        const systemMock = setupTest41System();
         menu.updateActiveSystemMenu(systemMock);
 
         menu.currentSystemNode$.subscribe((activeSystemNode) => {

@@ -455,6 +455,12 @@ export class NxSystem extends System {
             .toPromise();
     }
 
+    getLicenseSummaries() {
+        return (<NxSystemRestAPI> this.mediaserver)
+            .getLicenseSummaries()
+            .toPromise();
+    }
+
     authPromise: Promise<any>;
 
     ensureSystemAuth(force?) {
@@ -1095,7 +1101,7 @@ export class NxSystem extends System {
         return this.serverManager.getLicenses().then(({ licenses, hwids }: any) => {
             const parsedLicenses = licenses.map(this.serverManager.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS, HWID }) => {
-                EXPIRATION = EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
+                EXPIRATION = EXPIRATION && EXPIRATION.replace(' ', 'T') + 'Z'; // for Safari compatibility
                 const activeLicense = hwids.includes(HWID) && !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
