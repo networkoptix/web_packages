@@ -768,7 +768,10 @@ NOTIFICATIONS_CONFIG = {
     },
     'system_shared': {
         'engine': 'email'
-    }
+    },
+    'portal_notification': {
+        'queue': 'portal-notifications'
+    },
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
@@ -801,5 +804,3 @@ if not LOCAL_ENVIRONMENT:
 else:
     MEILISEARCH_ENDPOINT = 'http://localhost:7700'
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
-
-
