@@ -86,7 +86,7 @@
 
                 <ng-container *ngFor="let firmware of firmwares | slice:0:firmwaresToShow">
                     <div class="row" *ngIf="firmware.name">
-                        <div class="col-7 no-linewrap" title="{{ firmware.name }}">{{ firmware.name }}</div>
+                        <div class="col-7" title="{{ firmware.name }}">{{ firmware.name }}</div>
                         <div class="col-5" title="{{ firmware.percentage }}">
                             <div class="icon w-100" role="img" >
                                 <canvas class="icon-canvas" height="4"></canvas>
@@ -125,4 +125,3 @@
         </nx-section>
     </nx-block>
 </div>
-
