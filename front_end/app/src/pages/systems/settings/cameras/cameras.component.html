@@ -127,7 +127,8 @@
                                 <nx-switch
                                     [checked]="recording"
                                     [label]="'Recording' | translate"
-                                    componentId="recording"
+                                    id="recording"
+                                    name="recording"
                                     [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
                                     (onSwitch)="handleRecordingToggle($event)"></nx-switch>
                                 <div *ngIf="!recording && !recordingWatcher.originalValue" class="recording-hint"

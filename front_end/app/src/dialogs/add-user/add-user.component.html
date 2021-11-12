@@ -37,11 +37,12 @@
             <label for="permissionsSelect" translate>Access Level</label>
             <nx-permissions-select
                     id="permissionsSelect"
+                    name="permissionsSelect"
                     [user]="user"
                     [system]="system"
                     [roles]="system.accessRoles"
-                    [selected]="user.role"
-                    (onSelected)="setPermission($event)">
+                    [ngModel]="user.role"
+                    (ngModelChanged)="setPermission($event)">
             </nx-permissions-select>
             <span class="help-block" [innerText]="accessDescription"></span>
         </div>

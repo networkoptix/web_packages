@@ -1,6 +1,5 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NgModel } from '@angular/forms';
 import { NxSwitchComponent } from './switch.component';
 
 describe('NxSwitchComponent', () => {
@@ -24,7 +23,7 @@ describe('NxSwitchComponent', () => {
         component = fixture.componentInstance;
         el = fixture.debugElement;
 
-        component.componentId = 'testId';
+        component.id = 'testId';
         component.label = 'Test label';
 
         fixture.detectChanges();
@@ -42,10 +41,10 @@ describe('NxSwitchComponent', () => {
     });
 
     it('should init component (DEFAULT)', () => {
-        expect(body.id).toBe(component.componentId);
+        expect(body.id).toBe(component.componentId + '-wrapper');
         expect(label.innerText).toBe('Test label');
         expect(input.getAttribute('type')).toBe('checkbox');
-        expect(input.id).toBe(component.componentId + '-switch');
+        expect(input.id).toBe(component.componentId);
         expect(span.classList.contains('slider')).toBeTrue();
         expect(elemBar).toBeDefined();
         expect(elemCircle).toBeDefined();

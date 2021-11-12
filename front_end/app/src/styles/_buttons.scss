@@ -57,6 +57,16 @@ button, .btn {
     background-color : $light4 !important;
     box-shadow       : inset 0 -1px 0 0 $light7 !important;
     font-family      : $font-family-medium;
+    
+    &.has-icon {
+        position     : relative;
+        padding-left : 36px !important;
+    
+        svg-icon {
+            position : absolute;
+            left     : 6px;
+        }
+    }
 
     &:hover:not([disabled]):not(.disabled) {
         background-color : $light5 !important;

@@ -5,7 +5,7 @@
     <button class="btn btn-dropdown-toggle dropdown-toggle"
             [disabled]="disabled"
             (click)="show = !show"
-            type="button" id="permissionsSelect" data-toggle="dropdown">
+            type="button" id="componentId" data-toggle="dropdown">
 
         <span class="ellipsis" [innerText]="selection"></span>
         <div class="arrow-flip">
@@ -14,7 +14,7 @@
     </button>
     <div class="dropdown-menu" [nxArrowNav]="show"
          [style.display]="show ? 'inline-block' : 'none'"
-         aria-labelledby="permissionsSelect">
+         aria-labelledby="componentId">
 
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container" *ngFor="let role of accessRoles">

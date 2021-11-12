@@ -61,7 +61,8 @@
                             <td>{{storage.storageType}}</td>
                             <td>
                                 <nx-switch
-                                        componentId="isUsedForWriting{{ i }}"
+                                        id="isUsedForWriting{{ i }}"
+                                        name="isUsedForWriting{{ i }}"
                                         [(ngModel)]="storage.isUsedForWriting.value">
                                 </nx-switch>
                             </td>

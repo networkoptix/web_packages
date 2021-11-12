@@ -43,26 +43,22 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard]
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard]
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard]
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard]
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'cameras',
@@ -77,13 +73,11 @@ export const cloudSettingsRoutes: Routes = [
             {
                 path: 'cloud-storage',
                 component: NxCloudStorageComponent,
-                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard]
             },
             {
                 path: 'licenses',
-                component: NxSystemLicensesComponent,
-                canActivate: [SystemGuard]
+                component: NxSystemLicensesComponent
             }
         ]
     }

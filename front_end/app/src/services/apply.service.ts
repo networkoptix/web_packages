@@ -1,13 +1,14 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
-import { FormGroupDirective, NgForm }                                           from '@angular/forms';
-import { BehaviorSubject, combineLatest as combineLatestFrom, Subject }         from 'rxjs';
-import { combineLatest, distinctUntilChanged, map, startWith, takeUntil }       from 'rxjs/operators';
-import { NxApplyComponent }                                                     from '@components/apply/apply.component';
-import { NxProcessService, Process }                                            from './process.service';
-import { NxUtilsService }                                                       from './utils.service';
-import { ApplyModalContent }                                                    from '@dialogs/apply/apply.component';
-import { NgbModal }          from '@ng-bootstrap/ng-bootstrap';
+import { FormGroupDirective, NgForm } from '@angular/forms';
+import { BehaviorSubject, combineLatest as combineLatestFrom, Subject } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import { NxApplyComponent } from '@components/apply/apply.component';
+import { NxProcessService, Process } from './process.service';
+import { NxUtilsService } from './utils.service';
+import { ApplyModalContent } from '@dialogs/apply/apply.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { isArray, isObject } from 'rxjs/internal-compatibility';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -162,6 +163,7 @@ export class FormWatcher {
     }
 }
 
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -334,6 +336,8 @@ export class NxApplyService {
      * @param nonSystem
      */
     forms: any = {};
+    resetForms$ = new Subject();
+
     initPageFormsWatcher(
         component: ViewContainerRef,
         nonSystem = false
@@ -369,8 +373,17 @@ export class NxApplyService {
         );
     }
 
+    resetFormWatchers() {
+        this.applyComponentInstance.forms && this.resetForms$.next();
+        for (const id in this.applyComponentInstance.forms) {
+            delete this.applyComponentInstance.forms[id];
+            delete this.forms[id];
+        }
+    }
+
     removeFormWatcher(id: string) {
-        this.applyComponentInstance.forms[id].form.valueChanges.unsubscribe();
+        const watcher = this.applyComponentInstance.forms[id];
+        watcher?.form?.valueChanges && watcher.form.valueChanges.unsubscribe();
         delete this.forms[id];
     }
 
@@ -426,36 +439,40 @@ export class NxApplyService {
             const initialForm = !form.form.controls.fields && Object.keys(form.form.controls).length ? formatInitial() : {};
             const extNgForm: extNgForm = { form: form, originalForm: initialForm, save: saveFunction, hasChange: false };
 
-            extNgForm.form.valueChanges.subscribe((change) => {
-                // Init phase ... in some cases form doesn't provide initial controls
-                // but valueChanges triggers on every control init
-                if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
-                    // if form contain multiselect (array) spread is not enough
-                    extNgForm.originalForm = NxUtilsService.deepCopy(change);
-                    return;
-                } else {
-                    // cover a case with dynamic fields in form represented as array
-                    // filter out ddMultiSelect as selected items are represented as
-                    // an array (same as dynamic form fields)
-                    // I don't want to over complicate the logic -> so if we ever have a need
-                    // to use ddMultiSelect in dynamic form we'll need to refactor this -- TT
-                    Object.keys(change)
-                        .filter(key => key !== 'ddMultiSelect')
-                        .forEach(key => {
-                            if (isArray(change[key])) {
-                                if (change[key].length !== extNgForm.originalForm[key].length) {
-                                    extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+            extNgForm.form.valueChanges
+                .pipe(
+                    takeUntil(this.resetForms$),
+                    untilDestroyed(this))
+                .subscribe((change) => {
+                    // Init phase ... in some cases form doesn't provide initial controls
+                    // but valueChanges triggers on every control init
+                    if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
+                        // if form contain multiselect (array) spread is not enough
+                        extNgForm.originalForm = NxUtilsService.deepCopy(change);
+                        return;
+                    } else {
+                        // cover a case with dynamic fields in form represented as array
+                        // filter out ddMultiSelect as selected items are represented as
+                        // an array (same as dynamic form fields)
+                        // I don't want to over complicate the logic -> so if we ever have a need
+                        // to use ddMultiSelect in dynamic form we'll need to refactor this -- TT
+                        Object.keys(change)
+                            .filter(key => key !== 'ddMultiSelect')
+                            .forEach(key => {
+                                if (isArray(change[key])) {
+                                    if (change[key].length !== extNgForm.originalForm[key].length) {
+                                        extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+                                    }
                                 }
-                            }
-                        });
-                }
+                            });
+                    }
 
-                const hasChange = !NxUtilsService.isEqual(extNgForm.originalForm, change);
-                extNgForm.hasChange = hasChange;
-                if (this.applyComponentRef) {
-                    this.applyComponentInstance.show = hasChange;
-                }
-            });
+                    const hasChange = !NxUtilsService.isEqual(extNgForm.originalForm, change);
+                    extNgForm.hasChange = hasChange;
+                    if (this.applyComponentRef) {
+                        this.applyComponentInstance.show = hasChange;
+                    }
+                });
 
             this.forms[componentId] = extNgForm;
 

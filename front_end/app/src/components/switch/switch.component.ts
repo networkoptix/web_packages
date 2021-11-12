@@ -2,6 +2,7 @@ import {
     Component, EventEmitter, forwardRef,
     Input, OnInit, Output, SimpleChanges
 } from '@angular/core';
+
 import {
     ControlValueAccessor, FormControl,
     NG_VALUE_ACCESSOR, Validator
@@ -20,7 +21,8 @@ import {
     ]
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
-    @Input() componentId: string;
+    @Input() id: string;
+    @Input() name: string;
     @Input() required: boolean;
     @Input() checked: boolean;
     @Input() disabled: any;
@@ -32,6 +34,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
 
     private _invalid: boolean;
     private _touched: boolean;
+    componentId: string;
 
     _value: boolean = false;
 
@@ -63,6 +66,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     }
 
     ngOnInit() {
+        this.componentId = (this.id || this.name) + '-switch';
         this.disabled = (this.disabled !== undefined) ? this.disabled : false; // optional param
         this.required = (this.required !== undefined); // optional param
 

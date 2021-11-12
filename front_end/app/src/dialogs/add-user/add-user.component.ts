@@ -77,7 +77,7 @@ export class AddUserModalContent {
         this.hideErrors = false;
     }
 
-    setPermission(role: NxSystemRole) {
+    setPermission(role) {
         this.selectedPermission = role;
         this.accessDescription = this.getAccessDescription();
     }
