@@ -273,6 +273,34 @@ def index(request):
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": authorization_code__body
+                         },
+                         required=["code"]
+                     ))
+@api_view(['POST'])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def renew_session(request):
+    require_params(request, ("code", ))
+    old_tokens = {
+        "access_token": request.session.pop("access_token"),
+        "refresh_token": request.session.pop("refresh_token")
+    }
+    tokens = Auth.get_access_token(request.data.get("code"), get_ip(request))
+    request.session["access_token"] = tokens["access_token"]
+    request.session["refresh_token"] = tokens["refresh_token"]
+
+    Auth.delete_token(request, old_tokens["access_token"])
+    Auth.delete_token(request, old_tokens["refresh_token"])
+
+    return api_success({
+        "msg": "Session has been renewed."
+    })
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Returns an temporary authkey based on the user's credentials.",
                      responses={"200": "auth_key"})
 @api_view(['POST'])

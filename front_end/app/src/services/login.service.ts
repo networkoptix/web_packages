@@ -1,5 +1,5 @@
 import { IParams, NxSystem } from './system.service';
-import { LoginWebadminModalContent } from '../dialogs/login-webadmin/login-webadmin.component';
+import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IConfig, NxConfigService } from './nx-config';
 import { Location } from '@angular/common';
@@ -11,6 +11,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,7 @@ export class NxLoginService {
     private _currentSystem: NxSystem;
 
     constructor(configService: NxConfigService,
+                private http: HttpClient,
                 private location: Location,
                 private modalService: NgbModal,
                 private router: Router,
@@ -51,14 +53,17 @@ export class NxLoginService {
     }
 
     private handleCode(code): Promise<boolean> {
-        // Todo: Add support for cloud portal
-        /*
-            1) Add endpoint for swapping and invalidating session tokens.
-            2) Add logic for getting a new access_token and authKeys.
-         */
-        return this._currentSystem.mediaserver.logout()
-            .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise())
-            .then(() => Promise.resolve(true));
+        let sessionRenewal;
+
+        if (!environment.isLocal) {
+            sessionRenewal = this.http.post('/api/account/renewSession', { code }).toPromise()
+                .then(() => this._currentSystem.updateToken(true));
+        } else {
+            sessionRenewal = this._currentSystem.mediaserver.logout()
+                .then(() => this._currentSystem.mediaserver.loginOauth(code).toPromise());
+        }
+        return sessionRenewal.then(() => Promise.resolve(true))
+            .catch(() => Promise.resolve(false));
     }
 
     login (
