@@ -1,9 +1,9 @@
 @use 'bootstrap_utils' as bootstrap;
 
-$header-background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-$header-foreground: white;
+$header-background: linear-gradient(to top, rgba(var(--dark1--rgb),  0), rgba(var(--dark1--rgb), 0.3));
+$header-foreground: var(--light1);
 
-$player-background: black;
+$player-background: var(--dark1);
 
 $border-color: var(--light6);
 
@@ -93,7 +93,7 @@ $border-color: var(--light6);
         flex-basis: 100%;
         flex-shrink: 1;
         flex-grow: 1;
-        text-shadow: 0 1px 3px rgba(0,0,0,1);
+        text-shadow: 0 1px 3px var(--dark1);
 
         > .quality {
           text-transform: capitalize;
@@ -149,19 +149,19 @@ $border-color: var(--light6);
         height: 36px;
         padding: 8px;
         margin-right: 5px;
-        text-shadow: 0 1px 3px rgba(0,0,0,1);
+        text-shadow: 0 1px 3px var(--dark1);
         cursor: pointer;
         > svg {
           width: 20px;
           height: 20px;
           > path {
             // transition: fill .2s ease-in-out;
-            fill: #eee;
-            // fill: #2b383f;
+            fill: var(--light3);
+            // fill: var(--dark9);
           }
         }
         &:hover > svg > path {
-          fill: #fff;
+          fill: var(--light1);
         }
       }
 
@@ -171,7 +171,7 @@ $border-color: var(--light6);
         height: 36px;
         padding: 5px;
         cursor: pointer;
-        text-shadow: 0 1px 3px rgba(0,0,0,1);
+        text-shadow: 0 1px 3px var(--dark1);
 
         svg-icon {
           width  : 26px;
@@ -192,12 +192,12 @@ $border-color: var(--light6);
           height: 26px;
           > path {
             // transition: fill .2s ease-in-out;
-            fill: #eee;
-            // fill: #2b383f;
+            fill: var(--light3);
+            // fill: var(--dark9);
           }
         }
         &:hover > svg > path {
-          fill: #fff;
+          fill: var(--light1);
         }
       }
     }
@@ -213,8 +213,8 @@ $border-color: var(--light6);
     opacity: 0;
     // transition: opacity .2s ease-in-out;
     pointer-events: none;
-    background-color: rgba(33, 42, 47, 0.9);
-    color: #698796;
+    background-color: rgba(var(--dark7--rgb), 0.9);
+    color: var(--light16);
     z-index: 2000;
     padding-bottom: 8px;
     &.shown {
@@ -232,7 +232,7 @@ $border-color: var(--light6);
         &:after {
           content: "";
           display: block;
-          background-color: var(--light16); // #698796
+          background-color: var(--light16);
           opacity: .2;
           height: 1px;
           width: 100%;
@@ -241,7 +241,7 @@ $border-color: var(--light6);
       }
       > .options {
         > .option {
-          color: #fff;
+          color: var(--light1);
           background-color: transparent;
           // transition: background-color .2s ease-in-out;
           line-height: 20px;
@@ -266,7 +266,7 @@ $border-color: var(--light6);
         > .divider:after {
           content: "";
           display: block;
-          background-color: var(--light16); // #698796
+          background-color: var(--light16);
           opacity: .2;
           height: 1px;
           width: calc(100% - 16px);
@@ -388,7 +388,7 @@ $border-color: var(--light6);
           height          : 16px;
           background      : var(--additional_light2) url("./img/arrow-down.png") no-repeat center center;
           background-size : 16px 16px;
-          box-shadow      : 0 2px 0 0 rgba(0, 0, 0, 0.1);
+          box-shadow      : 0 2px 0 0 rgba(var(--dark1--rgb), 0.1);
           cursor          : pointer;
           opacity         : 0.8;
 
@@ -439,7 +439,7 @@ $border-color: var(--light6);
         timeline {
           flex-grow        : 1;
           border           : 1px solid $border-color;
-          background-color : white;
+          background-color : var(--light1);
           z-index          : 2;
         }
 
@@ -454,7 +454,7 @@ $border-color: var(--light6);
           font-size        : 200%;
           border-left      : 1px solid $border-color;
           border-right     : 1px solid $border-color;
-          color            : #a5b7c0;
+          color            : var(--light10);
           background-color : var(--additional_light2);
           z-index          : 2;
         }

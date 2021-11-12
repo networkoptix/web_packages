@@ -13,13 +13,13 @@
       margin: .5em 0;
 
       > h2 {
-        color: white !important;
-        background-color: black;
+        color: var(--light1) !important;
+        background-color: var(--dark1);
       }
 
       > .cameras {
         min-height: 2em;
-        border: 1px solid black;
+        border: 1px solid var(--dark1);
 
         > a {
           display: block;

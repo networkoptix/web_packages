@@ -1,7 +1,4 @@
-@use "styles/theme_variables" as *;
-// var(--brand-core): #2fa2db;
-// var(--light1): #fff;
-// $font-family-bold: 'robotobold';
+@use "styles/theme_variables" as theme_vars;
 
 :host {
   display: block;
@@ -50,7 +47,7 @@
         }
 
         &.time {
-          font-family: $font-family-bold;
+          font-family: theme_vars.$font-family-bold;
         }
       }
 
@@ -101,7 +98,7 @@
           content: "";
           position: absolute;
           width: 3px;
-          background: black;
+          background: var(--dark1);
           top: -1px;
           height: 40px; // 64px is the full height
           border-radius: 3px;

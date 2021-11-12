@@ -1,6 +1,7 @@
-$scroll-stripe-color: #6f8694;
-$current-playback-indicator-color: black;
-$current-selection-indicator-color: rgba(47, 162, 219);
+@use "styles/src-variables/pages/timeline-scrollbar" as *;
+
+$current-playback-indicator-color: var(--dark1);
+$current-selection-indicator-color: var(--blue1);
 
 :host {
   display: block;
@@ -53,7 +54,7 @@ $current-selection-indicator-color: rgba(47, 162, 219);
       position: absolute;
       top: 0;
       bottom: 0;
-      background: #95a6b1;
+      background: $tlsb-bar-bg;
       // cursor: grab;
       min-width: 50px;
 
@@ -66,7 +67,7 @@ $current-selection-indicator-color: rgba(47, 162, 219);
         display: block;
         width: 0.5px;
         height: 7px;
-        background-color: $scroll-stripe-color;
+        background-color: $tlsb-bar-stripe-bg;
 
         &:first-child {
           margin-right: 3.5px;
@@ -78,7 +79,7 @@ $current-selection-indicator-color: rgba(47, 162, 219);
       }
 
       &:hover {
-        background: #a8b6bf;
+        background: $tslb-bar-hover-bg;
       }
 
       // &.grabbed {
@@ -108,7 +109,7 @@ $current-selection-indicator-color: rgba(47, 162, 219);
     width: 25px;
     height: 50px;
     cursor: pointer;
-    background: #0002;
+    background: rgba(var(--dark1--rgb), 0.13);
     opacity: 0.0;
     display: none;
     // transition: opacity 0.2s ease-in-out;

@@ -1,5 +1,5 @@
-$usualBackground: rgba(205,215,220, 0.9);
-$textColor: rgb(43, 56, 63);
+$usualBackground: rgba(var(--light6--rgb), 0.9);
+$textColor: var(--dark9);
 $pressedColor: $textColor;
 
 :host {

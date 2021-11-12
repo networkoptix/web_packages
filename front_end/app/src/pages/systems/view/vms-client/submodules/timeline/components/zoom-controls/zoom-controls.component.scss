@@ -12,7 +12,7 @@
   align-items: center;
 
   &.enabled {
-    box-shadow: 2px 0 0 0 #0003;
+    box-shadow: 2px 0 0 0 rgba(var(--dark1--rgb), 0.2);
     z-index: 5;
   }
 
