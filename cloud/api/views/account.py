@@ -382,8 +382,9 @@ def security(request):
     if action == SecurityAction.activate.name:
         return api_success(Account.update_2fa_settings(request, totp, True, password=password))
     else:
-        Account.update_2fa_settings(request, totp, False, password=password)
-        return api_success(Auth.delete_2fa_key(request))
+        res = Account.update_2fa_settings(request, totp, False, password=password)
+        Auth.delete_2fa_key(request)
+        return api_success(res)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
