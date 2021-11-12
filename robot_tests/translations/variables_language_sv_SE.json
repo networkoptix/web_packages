@@ -158,6 +158,7 @@
     "PAGE NOT FOUND TEXT": "Det gick inte att hitta sidan",
     "GO TO MAIN PAGE TEXT": "Gå till huvudsidan",
     "OPEN NX WITNESS BUTTON TEXT": "Öppna %VMS_NAME%",
+    "OPEN IN NX WITNESS BUTTON TEXT": "Öppna i %VMS_NAME%",
     "PASSWORD IS WEAK BADGE TEXT": "SVAG",
     "PASSWORD IS TOO SHORT BADGE TEXT": "FÖR KORT",
     "PASSWORD IS TOO COMMON BADGE TEXT": "FÖR VANLIGT",

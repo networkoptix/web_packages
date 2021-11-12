@@ -407,10 +407,10 @@
             "failedLoginTo": "{systemName} へのログインに失敗しました",
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
-            "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
-            "serversRestart": "Restart server { title }"
+            "removeUser": "ユーザーを削除しますか",
+            "serversDetach": "現在のシステムからサーバー \"{ title }\" を切り離しますか",
+            "serversReset": "サーバー \"{ title }\" をデフォルトにリセットしますか",
+            "serversRestart": "サーバー \"{ title }\" を再起動しますか",
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"

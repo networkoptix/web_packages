@@ -245,7 +245,9 @@ Web Admin Test Teardown
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
 
 5. Restart server as owner
+    [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
     [Tags]    C70968    cloud    webadmin
+    Skip If     '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Click Button    ${RESTART SERVER BUTTON}
@@ -253,9 +255,8 @@ Web Admin Test Teardown
     Click Button    ${RESTART DIALOG RESTART BUTTON}
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
-    Wait Until Elements are Visible
-    ...    ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
+    Wait Until Elements are Visible     ${RESTARTING BANNER}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
        ...    ELSE   Run Keywords
            ...    Sleep    60    AND
            ...    Close Browser    AND
@@ -263,8 +264,10 @@ Web Admin Test Teardown
            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
 
 6. Restart server as administrator
+    [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
     [Tags]    C70968    cloud    webadmin
     [Setup]    Server Settings Test Setup    user=${admin}
+    Skip If    '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Wait Until Element Is Enabled    ${RESTART SERVER BUTTON}
     Click Button    ${RESTART SERVER BUTTON}
@@ -273,7 +276,7 @@ Web Admin Test Teardown
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Element Is Visible    ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=90
+    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
         ...    ELSE    Run Keywords
             ...    Sleep    60    AND
             ...    Close Browser    AND

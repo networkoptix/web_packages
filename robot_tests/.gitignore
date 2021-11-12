@@ -21,3 +21,4 @@ pabot_results
 chromedriver
 *.csv
 DockerQA/*
+server-connect.robot

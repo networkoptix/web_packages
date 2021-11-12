@@ -94,7 +94,6 @@ Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
     Sleep    2
 
 Set Language Anonymous
@@ -936,8 +935,8 @@ Create Docker Server
         Set Local Variable    ${vms}    new
     END
     ${port}=   Get Random Available Port
-    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} ${storage string} ${image}
-                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} ${storage string} ${image}
+    ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
+                  ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
     Set to Dictionary    ${server}    id=${id}
     Set to Dictionary    ${server}    port=${port}
@@ -1044,7 +1043,8 @@ Stop Docker Server
 Restart Docker Servers
     [Arguments]    @{names}
     FOR    ${name}    IN    @{names}
-        Execute Command Remotely    docker restart ${name}
+        ${result} =    Execute Command Remotely    docker restart ${name}
+        Run Keyword and Warn on Failure    Should Be Equal As Strings     ${result}    ${name}
         Sleep    1
     END
     

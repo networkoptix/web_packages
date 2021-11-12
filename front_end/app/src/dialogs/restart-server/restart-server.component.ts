@@ -68,10 +68,33 @@ export class RestartServerModalContent {
             },
             { ignoreError: true },
             () => {
+                /**
+                     * Potential post restart scenarios
+                     * When 1 server:
+                     *  -- goes offline + returns val.status === 502 || 503 (triggered in mergeMap system.getInfo)
+                     *
+                     * When more than 1 server (at least one other server in system online):
+                     *     when there's more than one server, generally another online server will respond
+                     *       potentially, if the "main" server was restarted, system might just go offline and act like above (When 1 server)
+                     *  Normal potential scenarios:
+                     *  -- restarted server goes offline right away (triggers 'still restarting' Error)
+                     *     once the server comes back online, usually within 10-20 seconds
+                     *     then goes to mergeMap system.getinfo to wait for system to come back online
+                     *  -- restarted server stays online & then goes offline at least once
+                     *     triggers !serverHasGoneOfflineOnce while online
+                     *     then waits for server to go offline
+                     *     once server comes back online, goes to checking whether system is back online
+                     *  -- restarted server stays online & never goes offline
+                     *     if server stays online for more than ~24 seconds (serverOnline < 6)
+                     *       then skips to system online check
+                     *  -- there might be an instance where after server comes back online, system shows online, but then system goes offline again
+                     *     --> not sure how we can handle this
+                     */
                 this.system.currentBusyServerIds.add(this.serverId);
                 this.close(this.CONFIG.servers.status.restarting);
                 let systemOfflineShown = false;
                 let serverHasGoneOfflineOnce = false;
+                let serverOnlineChecked = 0;
                 const serverSubscription = this.system.serverManager.getForceServers(false)
                     .pipe(
                         map((res: any) => {
@@ -88,7 +111,8 @@ export class RestartServerModalContent {
                                     serverHasGoneOfflineOnce = true;
                                     throw Error('still restarting');
                                 }
-                                if (!serverHasGoneOfflineOnce) {
+                                if (!serverHasGoneOfflineOnce || serverOnlineChecked < this.CONFIG.maxNumberServerChecked) {
+                                    serverOnlineChecked++;
                                     throw Error('still in the process of restarting');
                                 }
                             } else {
@@ -129,11 +153,11 @@ export class RestartServerModalContent {
                         })
                     )
                     .subscribe(() => {
+                        this.system.isAvailable = true;
                         this.ribbonService.hide();
                         if (this.system.currentBusyServerIds.has(this.serverId)) {
                             this.system.currentServerNotBusy = true;
                             this.system.currentBusyServerIds.delete(this.serverId);
-                            this.system.isAvailable = true;
                         }
                         this.system.systemInfo = this.system;
                         options.classname = this.CONFIG.toast.success;

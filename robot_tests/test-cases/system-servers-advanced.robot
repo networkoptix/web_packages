@@ -243,7 +243,11 @@ Server Advanced Settings Suite Teardown
        ${original} =    Get Text    ${dropdown}/span
        ${original} =    Fetch From Left    ${original}    (
        Test Every Loglevel Option    ${dropdown}    ${id}    https://${QA BURBANK IP}:${server['port']}
-       Set Log Level Option    ${dropdown}    ${id}    ${original}
+       ${current} =    Get Text    ${dropdown}/span
+       ${current} =    Fetch From Left    ${original}    (
+       IF    '''${original}''' != '''${current}'''
+           Set Log Level Option    ${dropdown}    ${id}    ${original}
+       END
        Reload Page
     END
 

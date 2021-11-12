@@ -215,7 +215,8 @@ Health Monitor Suite Teardown
     Reload Page
     Validate Alerts Page
     Page Should Not Contain    ${HM IMPORTED REPORT RIBBON}
-    Wait Until Elements Are Visible    ${HM NO ALERTS}    ${HM SYSTEM DOING WELL}
+    Click Link    ${HM SYSTEM PAGE LINK}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
 
 11. Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
     [Tags]    cloud    webadmin

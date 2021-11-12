@@ -158,6 +158,7 @@
     "PAGE NOT FOUND TEXT": "페이지를 찾을 수 없음",
     "GO TO MAIN PAGE TEXT": "메인 페이지로 이동",
     "OPEN NX WITNESS BUTTON TEXT": "%VMS_NAME% 열기",
+    "OPEN IN NX WITNESS BUTTON TEXT": "Open in %VMS_NAME%",
     "PASSWORD IS WEAK BADGE TEXT": "약한",
     "PASSWORD IS TOO SHORT BADGE TEXT": "너무 짧습니다.",
     "PASSWORD IS TOO COMMON BADGE TEXT": "너무 흔합니다.",

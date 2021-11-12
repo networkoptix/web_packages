@@ -1,4 +1,4 @@
-@import '../../styles/theme_variables';
+@import "../../styles/theme_variables";
 
 @mixin font-source($font-family, $size, $color: false, $weight: false,  $lh: false) {
     font-family : $font-family;
@@ -331,3 +331,8 @@ p {
     @include font-source($font-family-bold, $font-size-base, $dark9);
 }
 // BOLD
+
+// since we use specific fonts <b> and <strong> have no effect on "roboto-regular"
+b, strong {
+    font-family: $font-family-bold !important;
+}
