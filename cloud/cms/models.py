@@ -2752,6 +2752,22 @@ class CustomClient(models.Model):
     created_customization = models.ForeignKey(Customization, null=True, on_delete=models.CASCADE)
 
 
+class MaintenanceScheduling(models.Model):
+    datetime = models.DateTimeField(help_text='Maintenance scheduled datetime')
+    components = models.TextField(help_text='List of affected components')
+    partner_message = models.TextField(help_text='List of affected partner features')
+    user_message = models.TextField(help_text='List of affected end user features')
+    custom = models.TextField(help_text='Custom message text')
+
+
+class MaintenanceCompletion(models.Model):
+    datetime = models.DateTimeField(help_text='Maintenance completed datetime')
+    partner_message = models.TextField(help_text='List of affected partner features')
+    custom = models.TextField(help_text='Custom message text')
+    scheduled_maintenance = models.ForeignKey(
+        MaintenanceScheduling, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related scheduled maintenance')
+
+
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'
 
