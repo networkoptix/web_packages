@@ -3,6 +3,8 @@ import json
 import os
 import re
 import uuid
+from itertools import chain
+from functools import reduce
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from distutils.util import strtobool
@@ -2750,6 +2752,59 @@ class CustomClient(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     created_customization = models.ForeignKey(Customization, null=True, on_delete=models.CASCADE)
+
+
+class PortalNotification(models.Model):
+    title = models.TextField(help_text='Title of notification')
+    body = models.TextField(help_text='Body text of notification')
+    min_ts = models.DateTimeField(null=True, blank=True, help_text='Notification should not be shown before this time')
+    max_ts = models.DateTimeField(null=True, blank=True, help_text='Notification should not be shown after this time')
+    build_raw = models.FloatField(null=True, blank=True, help_text="Stores build as a float, don't use directly, instead use build attribute/kwarg")
+    users_viewed = models.ManyToManyField('api.Account')
+    url = models.URLField(null=True, blank=True, help_text='Where to navigate if notification is clicked')
+
+    def __init__(self, *args, **kwargs):
+        if (build_raw := kwargs.pop('build_raw', None)) and not isinstance(build_raw, float):
+            raise ValueError("Don't use build_raw directly, instead use build kwarg")
+        
+        if build := kwargs.pop('build', None):
+            kwargs['build_raw'] = PortalNotification.calc_build(build)
+        
+        
+        super().__init__(*args, **kwargs)
+
+    @property
+    def build(self):
+        return PortalNotification.parse_build(self.build_raw)
+    
+    @build.setter
+    def build(self, value: str):
+        self.build_raw = PortalNotification.calc_build(value)
+
+    def get_serialized(self):
+        attributes = ['title', 'id', 'body', 'url', 'build']
+        return {attribute: getattr(self, attribute, '') for attribute in attributes}
+    
+    @staticmethod
+    def parse_build(build_version: float) -> str:
+        friendly_version = "{:,}".format(build_version or 0).replace(',', '.')
+    
+        friendly_version = re.sub(".0",  ".", friendly_version)
+        
+        return friendly_version if friendly_version != '0' else '' 
+
+    @staticmethod
+    def calc_build(build_version: str) -> float:
+        build, *segments = [float(segment) for segment in build_version.split('.')[::-1]]
+
+        while build > 1:
+            build /= 10
+        
+        for index, segment in enumerate(segments):
+            position = pow(1000, index) or 1
+            build += segment * position
+        
+        return build
 
 
 class MaintenanceScheduling(models.Model):
