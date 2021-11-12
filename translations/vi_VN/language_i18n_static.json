@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Bạn sẽ đăng nhập bằng một tài khoản khác",
             "noClientDetected": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
-            "removeUser": "Xóa người dùng?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi cổng %CLOUD_NAME% để xóa tài khoản của bạn."

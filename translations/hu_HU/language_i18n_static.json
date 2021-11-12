@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
             "noClientDetected": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
-            "removeUser": "Eltávolítja a felhasználót?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."

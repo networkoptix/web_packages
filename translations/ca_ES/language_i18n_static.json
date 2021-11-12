@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Iniciareu la sessió amb un altre compte",
             "noClientDetected": "Instal·leu %VMS_NAME% per veure el vostre sistema",
-            "removeUser": "Voleu suprimir l'usuari?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."

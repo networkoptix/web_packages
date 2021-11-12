@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Budete přihlášeni pomocí jiného účtu",
             "noClientDetected": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
-            "removeUser": "Odstranit uživatele?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Chcete-li smazat svůj účet, odpojte od systému %CLOUD_NAME% všechny systémy, které vlastníte."

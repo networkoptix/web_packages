@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
-            "removeUser": "Gebruiker verwijderen?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."

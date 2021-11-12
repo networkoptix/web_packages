@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "您將使用其他帳號登入",
             "noClientDetected": "安裝 %VMS_NAME% 來查看您的系統",
-            "removeUser": "是否要移除使用者？",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"

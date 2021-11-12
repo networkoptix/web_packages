@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
-            "removeUser": "사용자를 삭제 하시겠습니까?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."

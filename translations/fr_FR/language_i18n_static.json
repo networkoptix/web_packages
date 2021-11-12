@@ -407,10 +407,10 @@
             "failedLoginTo": "Impossible de se connecter à {systemName}",
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
-            "removeUser": "Supprimer Utilisateur?",
-            "serversDetach": "Détacher le serveur { title } du système actuel ?",
-            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
-            "serversRestart": "Redémarrer le serveur { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."

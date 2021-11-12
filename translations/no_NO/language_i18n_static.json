@@ -407,10 +407,10 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
-            "removeUser": "Vil du fjerne bruker?",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "removeUser": "Remove user",
+            "serversDetach": "Detach server { title } from current system",
+            "serversReset": "Reset server { title } to defaults",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
