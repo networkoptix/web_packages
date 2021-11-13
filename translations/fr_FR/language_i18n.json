@@ -292,7 +292,7 @@
     "Owner": "Propriétaire",
     "Page contains unsaved changes.": "La page contient des modifications non enregistrées.",
     "Password": "Mot de passe",
-    "Password has to be specified when the login is changed": "Le mot de passe doit être spécifié lorsque la connexion est modifiée",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "Mot de passe requis",
     "Password is set!": "Mot de passe défini !",
     "Password reset instructions are sent to the provided email": "Les instructions de réinitialisation du mot de passe sont envoyées à l'email fourni",

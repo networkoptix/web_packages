@@ -292,7 +292,7 @@
     "Owner": "所有者",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "密码",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "密码为必填项",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "密码重置指示已发送至提供的邮件中",

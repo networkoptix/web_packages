@@ -292,7 +292,7 @@
     "Owner": "เจ้าของ",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "รหัสผ่าน",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "จำเป็นต้องใช้รหัสผ่าน",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "คำแนะนำในการรีเซ็ตรหัสผ่านจะถูกส่งไปยังอีเมลที่ให้ไว้",

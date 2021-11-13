@@ -292,7 +292,7 @@
     "Owner": "Vlastník",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "Heslo",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "Heslo je vyžadováno",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "Pokyny pro obnovení hesla jsou zaslány na zadaný e-mail",

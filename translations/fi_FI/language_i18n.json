@@ -292,7 +292,7 @@
     "Owner": "Omistaja",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "Salasana",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "Salasana on pakollinen",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "Password reset instructions are sent to the provided email",

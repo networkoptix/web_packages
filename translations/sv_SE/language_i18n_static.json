@@ -407,10 +407,10 @@
             "failedLoginTo": "Det gick inte att logga in på {systemName}",
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
-            "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
-            "serversRestart": "Restart server { title }"
+            "removeUser": "Ta bort användare",
+            "serversDetach": "Koppla bort server { title } från nuvarande system",
+            "serversReset": "Återställ servern \"{ title }\" till standard",
+            "serversRestart": "Starta om servern \"{ title }"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."

@@ -292,7 +292,7 @@
     "Owner": "Sahip",
     "Page contains unsaved changes.": "Sayfa kaydedilmemiş değişiklikler içeriyor.",
     "Password": "Parola",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "Parola gerekmektedir",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "Şifre sıfırlama talimatları E-posta adresine gönderildi %email%",

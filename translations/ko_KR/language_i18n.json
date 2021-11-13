@@ -292,7 +292,7 @@
     "Owner": "소유자",
     "Page contains unsaved changes.": "Page contains unsaved changes.",
     "Password": "패스워드",
-    "Password has to be specified when the login is changed": "Password has to be specified when the login is changed",
+    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
     "Password is required": "패스워드가 필요합니다.",
     "Password is set!": "Password is set!",
     "Password reset instructions are sent to the provided email": "패스워드 재설정 지침이 이메일 으로 전송되었습니다. %email%",
