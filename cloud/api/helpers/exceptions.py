@@ -314,7 +314,9 @@ def validate_response(func):
 
         if response.status_code in response_errors:
             validate_error(response_data)
-            raise response_errors[response.status_code](response_data['errorText'], error_code=response_data['resultCode'])
+            raise response_errors[response.status_code](response_data['errorText'],
+                                                        error_code=response_data['resultCode'],
+                                                        error_data=response_data["resultCode"])
 
         # Check error_code status - raise APILogicException
         if (result_code := isinstance(response_data, dict) and response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:

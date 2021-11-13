@@ -340,10 +340,15 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def merge(request, master_system_id, slave_system_id, headers=None):
+        refresh_token = request.session.get("refresh_token")
+        masterToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
+        slaveToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
         params = {
-            'systemId': slave_system_id
+            "systemId": slave_system_id,
+            "masterSystemAccessToken": masterToken,
+            "slaveSystemAccessToken": slaveToken
         }
-        return post_wrapper(System.get_request_url('merged_systems/', master_system_id), json=params, headers=headers)
+        return post_wrapper(System.get_request_url("merged_systems/", master_system_id), json=params, headers=headers)
 
     @staticmethod
     @validate_response

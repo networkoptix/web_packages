@@ -239,17 +239,23 @@ def rename(request, system_id):
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def merge(request):
-    require_params(request, ('master_system_id', 'slave_system_id', 'password'))
-    try:
-        with cloud_api.TempLogin(request.user.email, request.data['password']) as credentials:
-            data = cloud_api.System.merge(credentials.tokens,
-                                          request.data['master_system_id'],
-                                          request.data['slave_system_id'])
-    except APINotAuthorisedException:
-        raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
-                                  error_data={'password': ['Not recognized']})
-    except APIInternalException as e:
-        raise APIRequestException(e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
+    require_params(request, ('master_system_id', 'slave_system_id'))
+    master_id = request.data['master_system_id']
+    slave_id = request.data['slave_system_id']
+    if password := request.data.get('password'):
+        try:
+            with cloud_api.TempLogin(request.user.email, password) as credentials:
+                data = cloud_api.System.merge(credentials.tokens, master_id, slave_id)
+        except APINotAuthorisedException:
+            raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
+                                      error_data={'password': ['Not recognized']})
+        except APIInternalException as e:
+            raise APIRequestException(e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
+    else:
+        if not request.session["refresh_token"]:
+            require_params(request, ("refresh_token",))
+            request.session["refresh_token"] = request.data["refresh_token"]
+        data = cloud_api.System.merge(request, master_id, slave_id)
     return api_success(data)
 
 
