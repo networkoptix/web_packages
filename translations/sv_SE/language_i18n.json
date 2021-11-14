@@ -292,7 +292,7 @@
     "Owner": "Ägare",
     "Page contains unsaved changes.": "Sidan innehåller ändringar som inte har sparats.",
     "Password": "Lösenord",
-    "Password has to be changed when the login is changed": "Password has to be changed when the login is changed",
+    "Password has to be changed when the login is changed": "Lösenord måste anges när inloggningen ändras",
     "Password is required": "Lösenord krävs",
     "Password is set!": "Lösenord sparat!",
     "Password reset instructions are sent to the provided email": "Instruktioner för återställning av lösenord skickas till den angivna e-postadressen",
