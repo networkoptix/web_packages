@@ -1,0 +1,13 @@
+@use '../../../../../styles/theme_variables' as *;
+
+div.is-disabled {
+    &:hover {
+        cursor: not-allowed;
+    }
+    nx-select {
+        pointer-events: none;
+    }
+}
+nx-select {
+    width: 50%;
+}

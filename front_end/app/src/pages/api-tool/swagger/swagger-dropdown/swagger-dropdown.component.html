@@ -1,0 +1,7 @@
+<div [class.is-disabled]="isDisabled">
+    <nx-select 
+        [items]="dropdownOptions"
+        (onSelected)="onSelect($event)"
+        [selected]="dropdownOptions[0]"
+    ></nx-select>
+</div>

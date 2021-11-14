@@ -12,6 +12,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.component';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxCopyToClipboardComponent } from './swagger/copy-to-clipboard/copy-to-clipboard.component';
+import { NxSwaggerDropdownComponent } from './swagger/swagger-dropdown/swagger-dropdown.component';
 
 const appRoutes: Routes = [
     {
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
         NxAPIToolComponent,
         NxSwaggerComponent,
         NxSystemDropdownComponent,
+        NxSwaggerDropdownComponent,
         NxCopyToClipboardComponent
     ],
     bootstrap: [],

@@ -10,6 +10,7 @@ import { NxAPIToolService }                     from '../api-tool.service';
 import { MenuNodeWithParent }                   from '@components/developers-menu/developers-menu.component';
 import { DOCUMENT }                             from '@angular/common';
 import { NxCopyToClipboardComponent }           from './copy-to-clipboard/copy-to-clipboard.component';
+import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.component';
 
 @UntilDestroy()
 @Component({
@@ -154,6 +155,7 @@ export class NxSwaggerComponent implements OnChanges {
                             this.addCopyToClipBoardButton(codeBlock);
                         }
                     }
+                    this.insertCustomDropdown();
                 }
                 return  React.createElement(Responses, props);
             }
@@ -166,6 +168,20 @@ export class NxSwaggerComponent implements OnChanges {
         const el = instance.location.nativeElement as HTMLElement;
 
         codeBlock.insertAdjacentElement('afterend', el);
+    }
+
+    private insertCustomDropdown = () => {
+        const selects = this.document.body.querySelectorAll('select:not([multiple]):not(.custom-dropdown):not(.content-type)');
+
+        for (const select of selects as any) {
+            // The original select is hidden and an nx-select is inserted
+            const factory = this.componentFactoryResolver.resolveComponentFactory(NxSwaggerDropdownComponent);
+            const componentRef = this.viewContainerRef.createComponent(factory);
+            componentRef.instance.swaggerSelect = select;
+            const el = componentRef.location.nativeElement as HTMLElement;
+            select.classList.add('custom-dropdown');
+            select.insertAdjacentElement('beforebegin', el);
+        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
