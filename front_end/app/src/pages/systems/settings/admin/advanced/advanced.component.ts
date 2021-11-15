@@ -2,21 +2,21 @@ import {
     Component,
     OnDestroy, Input, ViewChild
 } from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    map, delay, retryWhen, take
-}                                    from 'rxjs/operators';
-import { Subscription }              from 'rxjs';
-import { NgForm }                    from '@angular/forms';
+    map, delay, retryWhen, take, takeUntil
+} from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
 
-import { NxDialogsService }             from '@dialogs/dialogs.service';
-import { NxSettingsService }            from '../../settings.service';
-import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
-import { NxProcessService, Process }    from '@services/process.service';
-import { NxSystem }                     from '@services/system.service';
-import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
-import { FormWatcher, NxApplyService }  from '@services/apply.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSettingsService } from '../../settings.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,17 +30,17 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
-    @ViewChild('systemSettingsForm', { static: true }) systemSettingsForm: NgForm
+    @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm;
 
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
-    private settingsSubscription: Subscription;
 
     systemSettings: any = {};
     changedFields = {};
 
-    formWatcher: FormWatcher;
-    saveSettings: Process;
+    advancedFormWatcher: FormWatcher;
+    saveAdvancedSettings: Process;
+    reset$ = new Subject();
 
     constructor(
         configService: NxConfigService,
@@ -78,7 +78,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 }
             });
 
-        this.saveSettings = this.processService.createProcess(() => {
+        this.saveAdvancedSettings = this.processService.createProcess(() => {
             return this.system
                 .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
@@ -94,9 +94,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                         this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
                             .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
-                            .then(() => {
-                                this.formWatcher.hardReset();
-                            })
                             .catch(error => {
                                 console.error(error);
                             });
@@ -109,28 +106,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                         });
                 });
         });
-
-        this.formWatcher = this.applyService.createFormWatcher(
-            'systemSettingsForm',
-            this.systemSettingsForm,
-            this.saveSettings
-        );
-        this.applyService.addWatchersAndFunctionsFromChild([this.formWatcher], this.saveSettings, () => console.log('discard'));
-        this.applyService.reset();
-
-        this.formWatcher.valueSubject.subscribe((values) => {
-            if (values) {
-                Object.entries(values).forEach(([key, current]) => {
-                    const original = this.systemSettings[key];
-                    const changed = current !== original;
-                    if (changed) {
-                        this.changedFields[key] = current;
-                    } else if (key in this.changedFields) {
-                        delete this.changedFields[key];
-                    }
-                });
-            }
-        });
     }
 
     canSee(key) {
@@ -141,8 +116,38 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {
+                if (this.advancedFormWatcher) {
+                    this.applyService.removeFormWatcher('advancedSystemSettingsForm');
+                    this.reset$.next(true);
+                }
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
+
+                setTimeout(() => {
+                    this.advancedFormWatcher = this.applyService.createFormWatcher(
+                        'advancedSystemSettingsForm',
+                        this.advancedSystemSettingsForm,
+                        this.saveAdvancedSettings
+                    );
+
+                    this.advancedFormWatcher.valueSubject
+                        .pipe(
+                            takeUntil(this.reset$),
+                            untilDestroyed(this))
+                        .subscribe((values) => {
+                            if (values) {
+                                Object.entries(values).forEach(([key, current]) => {
+                                    const original = this.systemSettings[key];
+                                    const changed = current !== original;
+                                    if (changed) {
+                                        this.changedFields[key] = current;
+                                    } else if (key in this.changedFields) {
+                                        delete this.changedFields[key];
+                                    }
+                                });
+                            }
+                        });
+                });
             });
     }
 
