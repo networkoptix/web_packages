@@ -74,7 +74,7 @@ frontend-lint-check:
   script:
     - cd front_end
     - npm install
-    - npx esprint check
+    - npm run lint:ci
 
 django-unit-test:
   extends: .django-python
