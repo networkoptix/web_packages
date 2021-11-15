@@ -82,9 +82,10 @@ export class NxLoginService {
             size: 'sm'
         };
 
+        const system = this._currentSystem || { mediaserver: this._accountService.mediaServerApi };
         const params: IParams = {
             account: this._accountService,
-            login: this._currentSystem.mediaserver.loginToken,
+            login: system.mediaserver.loginToken,
             cancellable: !keepPage || false,
             closable: true,
             location: this.location,
