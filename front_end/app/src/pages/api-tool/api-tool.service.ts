@@ -117,6 +117,10 @@ export class NxAPIToolService {
         return this.system.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
+    isAPIInfoMenuNode = (menuNode: MenuNodeWithParent) => {
+        return !!this.APIInfoNodes[menuNode.name];
+    }
+
     addAPIDescription(apiName: string, responseInfo: APIInfo) {
         if (responseInfo && responseInfo.description) {
             this.APIInfoStore[apiName] = {
@@ -182,9 +186,7 @@ export class NxAPIToolService {
     showError = () => {
         this.loadingFailure$.next(true);
         this.loadingErrorType = this.CONFIG.isLocal || this.systemsDropdown.length === 1 ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
-        if (this.serverSubscription) {
-            this.serverSubscription.unsubscribe();
-        }
+        this.serverSubscription?.unsubscribe();
     }
 
     async tryNextSystem() {

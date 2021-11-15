@@ -57,10 +57,28 @@ TODO: For 21.1 drop TTF, SVG fonts as not needed
 @font-face {
     font-family : 'robotomonoregular';
     src         : local('RobotoMono Regular'), local('RobotoMono-Regular'),
-    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff2') format('woff2');
-    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff') format('woff');
+    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff2') format('woff2'),
+    url('./roboto/roboto_mono_regular/RobotoMono-Regular.woff') format('woff'),
     url('./roboto/roboto_mono_regular/RobotoMono-Regular.ttf') format('truetype');
     font-weight : 400 !important;
     font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomonobold';
+    src         : local('RobotoMono Bold'), local('RobotoMono-Bold'),
+    url('./roboto/roboto_mono_bold/RobotoMono-Bold.woff2') format('woff2');
+    font-weight : 700 !important;
+    font-style  : normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family : 'robotomonomedium';
+    src         : local('RobotoMono Medium'), local('RobotoMono-Medium'),
+    url('./roboto/roboto_mono_medium/RobotoMono-Medium.woff2') format('woff2');
+    font-weight: 500 !important;
+    font-style: normal;
     font-display: swap;
 }

@@ -10,6 +10,7 @@ import { NxAPIToolService }                     from '../api-tool.service';
 import { MenuNodeWithParent }                   from '@components/developers-menu/developers-menu.component';
 import { DOCUMENT }                             from '@angular/common';
 import { NxCopyToClipboardComponent }           from './copy-to-clipboard/copy-to-clipboard.component';
+import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.component';
 
 @UntilDestroy()
@@ -28,6 +29,7 @@ export class NxSwaggerComponent implements OnChanges {
 
     // Misc properties
     RTSPRequestShowing = false;
+    singleAPIRouteShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
     constructor(public APIToolService: NxAPIToolService,
@@ -41,15 +43,33 @@ export class NxSwaggerComponent implements OnChanges {
     /** Check if node is a leaf node.
      *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
      */
-    isAPIPathNode = (node: MenuNodeWithParent) => {
+    isAPIRouteNode = (node: MenuNodeWithParent) => {
         return !node.nodes.length;
     }
 
-    private setSwaggerDescription(selection: string) {
+    private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
+        const selection = expand === 'full' ? node.parentNode?.name || node.name : node.name;
+        // slice(0, -2) to remove the hidden tags that are added
+        const title = selection.slice(0, -2);
+        let description;
+        if (expand === 'list') {
+            description = this.APIToolService.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || '';
+            this.singleAPIRouteShowing = false;
+        }
+        if (expand === 'full') {
+            const info = getPathAndMethodFromNodeName(node.name);
+            const path =  this.APIToolService.selectedServer.apiDocFull.paths[info.path];
+            // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
+            if (info.method) {
+                description = path[info.method?.toLowerCase()]?.description || path[Object.keys(path)[0]].description;
+            } else {
+                description =  path[Object.keys(path)[0]].description;
+            }
+            this.singleAPIRouteShowing = true;
+        }
         this.swaggerMenuDescription = {
-            // slice(0, -2) to remove the hidden tags that are added
-            title: selection.slice(0, -2),
-            description: this.APIToolService.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || ''
+            title: title,
+            description: description
         };
     }
 
@@ -67,7 +87,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
-                plugins: [this.FindCodeBlocksPlugin],
+                plugins: [this.FindCodeBlocksPlugin, this.CustomResponsePlugin],
                 spec: this.APIToolService.selectedServer.apiDocFull,
                 filter: filter,
                 docExpansion: expand,
@@ -96,8 +116,8 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private handlePotentialRTSPRoute = (request) => {
-        const requestWithBaseUrlRemoved = request.url.slice(this.APIToolService.selectedServer.apiDocFull.servers[0].url.length + 1);
-        const isRTSP = this.uuidRegex.test(requestWithBaseUrlRemoved) ||  // The only route that starts with uuid is an RTSP route.
+        const urlPath = new URL(request.url).pathname.slice(1);
+        const isRTSP = this.uuidRegex.test(urlPath) ||  // The only route that starts with uuid is an RTSP route.
                       (!this.APIToolService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 API, and it is RTSP
 
         if (isRTSP) {
@@ -138,6 +158,17 @@ export class NxSwaggerComponent implements OnChanges {
         request.url = Url.toString();
     }
 
+    private CustomResponsePlugin = () => ({
+        wrapComponents: {
+            response: (Response, { React }) => (props) => {
+                const response = React.createElement(Response, props);
+                this.moveExampleResponse();
+                this.addLabelToRequest();
+                return response;
+            }
+        }
+    })
+
     // swagger-ui plugin system
     private FindCodeBlocksPlugin = () => ({
         wrapComponents: {
@@ -162,12 +193,42 @@ export class NxSwaggerComponent implements OnChanges {
         }
     })
 
+    private generateRequestTypeLabel = () => {
+        const label = this.document.createElement('label');
+        label.innerHTML = '<div class="media-type-wrapper"><div class="media-type">application/json</div></div>';
+        return label;
+    }
+
+    /** Moves the example response and schema outside of the response table, also adds a label.  */
+    private moveExampleResponse = () => {
+        const responses = this.document.querySelector('.responses-inner:not(.with-label)');
+        if (responses) {
+            const exampleResponse = responses.querySelector('.model-example');
+            // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
+            responses.classList.add('with-label');
+            if (exampleResponse) {
+                const label = this.generateRequestTypeLabel();
+                exampleResponse.insertBefore(label, exampleResponse.firstChild);
+                responses.appendChild(exampleResponse);
+            }
+        }
+    }
+
     addCopyToClipBoardButton = (codeBlock: HTMLElement) => {
         const factory = this.componentFactoryResolver.resolveComponentFactory(NxCopyToClipboardComponent);
         const instance = this.viewContainerRef.createComponent(factory);
         const el = instance.location.nativeElement as HTMLElement;
 
         codeBlock.insertAdjacentElement('afterend', el);
+    }
+
+    private addLabelToRequest = () => {
+        const requestModelExample = this.document.querySelector('.opblock-description-wrapper .model-example:not(.with-label)');
+        if (requestModelExample) {
+            const label = this.generateRequestTypeLabel();
+            requestModelExample.insertBefore(label, requestModelExample.firstChild);
+            requestModelExample.classList.add('with-label');
+        }
     }
 
     private insertCustomDropdown = () => {
@@ -187,17 +248,11 @@ export class NxSwaggerComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeNode.currentValue) {
             const node = changes.activeNode.currentValue;
-            let expand: 'full' | 'list';
-            let nodeName: string;
-            if (this.isAPIPathNode(node)) {
-                nodeName = node.parentNode?.name || node.name;
-                expand = 'full';
-            } else {
-                nodeName = node.name;
-                expand = 'list';
-            }
+            const expand = this.isAPIRouteNode(node) ? 'full' : 'list';
             this.initSwagger(node.name, expand);
-            this.setSwaggerDescription(nodeName);
+            if (!this.APIToolService.isAPIInfoMenuNode(node)) {
+                this.setSwaggerDescription(node, expand);
+            }
         }
     }
 }

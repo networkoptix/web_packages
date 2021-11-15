@@ -15,6 +15,58 @@
 	display : none;
 }
 
+.single-api-route-showing {
+	.swagger-ui .opblock-body {
+		padding-top     : 7px;
+	}
+	.opblock-body .opblock-description-wrapper:nth-of-type(1) {
+		display: none !important;
+	}
+}
+
+.swagger-ui .opblock-body {
+	padding-top     : 10px;
+	padding-bottom  : 5px;
+}
+
+.swagger-ui .tabitem {
+	@include typography.medium13dark10;
+	height: 100%;
+    border: 1px solid transparent;
+	padding-bottom: 7px !important;
+	border-bottom: 1px solid $light6;
+    cursor: pointer;
+	.tablinks {
+		text-decoration: none;
+		padding-bottom: 7px;
+	}
+
+	&.active {
+		border-bottom-color: $blue1;
+		position: relative;
+		a {
+			color: $blue1;
+			font-family: $font-family-medium !important;
+		}
+	}
+}
+
+.swagger-ui .tab li {
+	@include typography.regular13dark10;
+	a {
+		color: $dark10;
+	}
+}
+
+.swagger-ui .tab li:first-of-type:after {
+	background: none;
+}
+
+.swagger-description p {
+	margin-bottom: 17px;
+	max-width: 645px;
+}
+
 .api-info {
 	.information-container.wrapper {
 		display : block;
@@ -65,14 +117,10 @@
 	font-family : $font-family-regular;
 }
 
-.swagger-ui table tr:nth-child(even){
-	background-color: #fafbfc;
-}
-
 .swagger-ui input {
 	display          : block;
 	height           : 32px;
-	font-size        : 14px;
+	font-size        : rem(13px);
 	line-height      : 1.428571429;
 	color            : $dark9;
 	background-color : $light1;
@@ -83,28 +131,18 @@
 	box-shadow       : none;
 	padding          : 5px 10px;
 	&::placeholder {
-		color: #fff
+		color: #fff;
 	}
-	&:disabled {
-		&::placeholder {
-			color: #fafafa;
-		}
+	&:disabled::placeholder {
+		color: #fafafa;		
 	}
-	&.invalid {
-		&::placeholder{
-			color: #feebeb;
-		}
+	&.invalid::placeholder{
+		color: #feebeb;
 	}
 }
 
 .swagger-ui .courier {
 	padding    : 0 16px;
-}
-
-
-.swagger-ui .code, .swagger-ui code {
-	font-family : $font-family-regular;
-	font-size: 14px;
 }
 
 .swagger-ui .wrapper {
@@ -117,6 +155,7 @@
 
 .swagger-ui .opblock {
 	margin           : 0 0 15px;
+	max-width        : 645px;
 	box-shadow       : none;
 	background-color : $light1 !important;
 	background-clip  : border-box;
@@ -124,22 +163,74 @@
 	border-radius    : 2px;
 }
 
-.swagger-ui .opblock .opblock-section-header {
-	padding     : 16px 16px 0;
-    background: none;
-    box-shadow: none;
+.swagger-ui label .content-type-wrapper {
+	display: none;
 }
 
-.swagger-ui .opblock .opblock-section-header h4 {
-	@include typography.regular18dark9;
-	flex   : initial;
-	margin : initial;
+.swagger-ui label {
+	font-family: robotomonoregular, monospace;
+	font-weight: 400;
+	font-size: rem(13px);
+}
+
+.swagger-ui .media-type-wrapper {
+	position: absolute;
+	padding: 4px 8px;
+	right: 0px;
+	margin-top: 10px;
+	border-radius: 2px;
+	letter-spacing: normal;
+	display: inline-block;
+	line-height: 1;
+	border: solid 1px $additional_light8;
+	background: $additional_light7;
+	.media-type {
+		background: none;
+		font-size: rem(13px);
+		line-height: 16px;
+		font-family: robotomonoregular, monospace !important;
+		color: $additional_dark1 !important
+	}
+}
+
+.swagger-ui .opblock-body .opblock-section-header {
+	box-shadow: none;
+	padding: 8px 16px;
+	&:first-of-type {
+		padding: 0px 16px;
+	}
+}
+
+.swagger-ui .opblock .opblock-section-header {
+	h4 {
+		@include typography.medium18dark1;
+		flex   : initial;
+		margin : initial;
+		&.parameter__name {
+			@include typography.regular16dark10;
+			margin-top: -7px;
+		}
+	}
+}
+
+.swagger-ui .model-example {
+	position: relative;
+}
+
+.swagger-ui .opblock-description-wrapper .model-example {
+	margin-top: -15px;
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-	@include typography.medium13light1;
+	@include typography.medium14light1;
 	padding       : 2px 8px;
 	border-radius : 2px;
+	font-weight: 500 !important;
+}
+
+.swagger-ui .opblock .opblock-summary-path {
+	@include typography.medium14dark1;
+	font-weight: 500 !important;
 }
 
 .swagger-ui b, .swagger-ui strong {
@@ -155,13 +246,8 @@
 	}
 }
 
-.swagger-ui .opblock .opblock-summary-path a{
-	@include typography.medium13dark9;
-	line-height : 16px;
-}
-
 .swagger-ui .opblock .opblock-summary-description {
-	color       : #3b4151;
+	@include typography.regular14light10;
 	padding-right: 20px;
 	@media screen and (max-width: 670px) {
 		max-width: calc(100% - 18rem);
@@ -256,9 +342,14 @@
 	background : $blue9;
 }
 
+.swagger-ui .tab-header .opblock-title {
+	@include typography.medium18dark1;
+}
+
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
 	@include typography.regular13dark9;
-	margin      : 0;
+	margin  : 0;
+	padding : 0px 15px;
 }
 
 .swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-external-docs-wrapper h4, .swagger-ui .opblock-title_normal h4 {
@@ -275,8 +366,37 @@
 }
 
 .swagger-ui .response-col_status {
-	width: 20%;
-    @include typography.regular13dark9;
+	width: 25%;
+}
+
+.swagger-ui .responses-inner {
+	padding: 6px 16px 20px 16px;
+	.model-example {
+		margin-top: 0px;
+	}
+}
+
+.swagger-ui .responses-table:not(.live-responses-table) tr.response {
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+}
+
+.swagger-ui .response-col_status, .swagger-ui .response-col_description {
+	border: none !important;
+	padding: auto auto auto 16px !important;
+	margin: auto !important;
+}
+
+.swagger-ui .response-col_description {
+	border-left         : 1px solid $light4 !important;
+	h5 {
+		padding-bottom: 8px !important;
+		margin-top: 5px;
+	}
+	.renderedMarkdown p {
+		margin: auto;
+	}
 }
 
 .swagger-ui .response-col_links {
@@ -289,12 +409,35 @@
 }
 
 .swagger-ui .opblock-body pre.microlight {
-	font-size       : 14px;
+	font-size       : rem(13px);
 	border-radius   : 2px;
-	background      : $light16 !important;
-	font-family     : $font-family-regular;
-    font-weight     : initial;
+	background      : $dark13 !important;
+	font-family     : robotomonoregular, monospace;
+    font-weight     : 400;
 	color           : $light1;
+}
+
+.swagger-ui .model-box {
+	width: 100%;
+	background: #E1E7EA;
+	font-size: 13px;
+	color: $additional_dark1 !important;
+	.model {
+		font-family: robotomonoregular, monospace;
+		font-weight: 400;
+		.property-row td:nth-child(1) {
+			color:$additional_dark1 !important;
+			font-family: robotomonomedium, robotomonoregular, monospace;
+			font-weight: 500 !important;
+		}
+	}
+	.renderedMarkdown p {
+		font-family: robotomonoregular, monospace;
+	}
+	.prop-type, .property.primitive, .prop-format, .model {
+		color: $additional_dark1 !important;
+		font-size: 13px;
+	}
 }
 
 .swagger-ui .highlight-code > .microlight {
@@ -341,6 +484,9 @@
 	display: none;
 }
 
+.swagger-ui .response-controls {
+	display: none;
+}
 .swagger-ui div.is-disabled .btn.btn-dropdown-toggle {
 	background-color: $light2 !important;
 	svg-icon {
@@ -348,13 +494,24 @@
 	}
 } 
 
+.swagger-ui .execute-wrapper {
+	position: relative;
+	padding: 8px 0px 28px 0px;
+}
+
+.swagger-ui .responses-wrapper {
+	padding-top: 3px;
+}
+
 .swagger-ui .btn {
 	background    : initial;
 	@include button;
 	color            : $dark9 !important;
 	background-color : $light4 !important;
 	box-shadow       : inset 0 -1px 0 0 $light7 !important;
-	font-family      : $font-family-medium;
+	font-family      : $font-family-medium !important;
+	font-weight		 : 500 !important;
+	min-width: 110px;
 
 	&.btn-dropdown-toggle {
 		max-width: initial;
@@ -371,6 +528,14 @@
 		background-color : $light6 !important;
 		box-shadow       : inset 0 1px 0 0 $light8 !important;
 	}
+
+	&.execute {
+		position: absolute;
+		right: 16px;
+		background-color: $blue1 !important;
+		color           : $light1 !important;
+		width: auto;
+	}
 }
 
 .swagger-ui .btn:hover {
@@ -383,12 +548,10 @@
 
 .swagger-ui select {
 	color              : $dark9 !important;
-	background-color   : $light4 !important;
 	box-shadow         : inset 0 -1px 0 0 $light7;
 	font-family        : $font-family-medium;
 	border             : none !important;
 	border-radius      : 2px;
-	height             : 32px;
 	-webkit-appearance : none;
 	-moz-appearance    : none;
 	appearance         : none;
@@ -405,18 +568,19 @@
 }
 
 .swagger-ui textarea {
-	font-size     : 14px;
 	width         : 100%;
 	min-height    : 280px;
 	padding       : 10px;
-	border        : none;
-	border-radius : 2px;
+	border        : none !important;
 	outline       : none;
-	background    : $light16 !important;
-	font-family   : $font-family-regular;
-	font-weight   : 600;
-	color         : $light1;
+	background    : $dark13 !important;
+	font-family   : robotomonoregular, monospace;
+	font-weight   : 400;
+	font-size     : rem(13px);
+	color         : $additional_light1;
+	background: $dark13 !important;
 }
+
 
 .swagger-ui table {
 	width           : 100%;
@@ -425,21 +589,31 @@
 	border          : 1px solid $light4;
 }
 
+.swagger-ui table.parameters thead {
+	background-color: $light3;
+}
+
 .swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	@include typography.medium13dark9;
+	@include typography.medium13dark10;
 	padding       : 4px 16px;
 	text-align    : left;
+	font-weight	  : initial;
 }
 
 .swagger-ui table thead {
 	background-color: $additional_light1;
+	@include typography.medium13dark10;
 }
 
-.swagger-ui table tbody tr td {
-	@include typography.regular14dark9;
+.swagger-ui table:not(.model) tbody tr td {
+	@include typography.regular13dark9;
 	padding        : 8px 16px !important;
 	vertical-align : top;
 	border         : 1px solid $light4;
+	&.response-col_status{
+		text-transform: uppercase;
+		@include typography.medium13dark10;
+	}
 }
 
 .swagger-ui table.headers td {
@@ -448,13 +622,32 @@
 
 
 .swagger-ui .parameters-col_description input[type=text] {
-	width     : 50%;
+	width     : 100%;
+	max-width : 100%;
 }
+
+.swagger-ui .parameters-col_name {
+	white-space: nowrap;
+}
+
+.swagger-ui .parameter__type, .swagger-ui .parameter__in, .swagger-ui .parameter__deprecated {
+	display: inline-block;
+	font-weight: initial;
+}
+
+.swagger-ui .parameter__type {
+	margin-right: 2px;
+}
+
+.swagger-ui .responses-header {
+	display: none;
+}
+
 
 .swagger-ui .parameters-col_description select {
 	border-width : 1px;
 	height       : 100%;
-	width        : 50%;
+	width        : 100%;
 }
 
 .swagger-ui table tbody tr td:first-of-type {
@@ -464,7 +657,6 @@
 .swagger-ui table thead tr td, .swagger-ui table thead tr th {
 	text-align    : initial;
 	border-bottom : initial;
-	@include typography.regular13dark9;
 }
 
 .swagger-ui .parameter__name {
@@ -477,8 +669,8 @@
 }
 
 
-.swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameter__deprecated {
-	@include typography.regular13light8;
+.swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameters-col_name .prop-format, .swagger-ui .parameter__deprecated {
+	@include typography.regular11light8;
 }
 
 .swagger-ui .parameter__name.required:after {
@@ -492,7 +684,11 @@
 }
 
 .swagger-ui .table-container {
-	padding : 16px;
+	padding : 8px 16px;
+}
+
+.swagger-ui table.model tr.description {
+	color: $additional_dark1;
 }
 
 .swagger-ui .responses-table {
@@ -501,9 +697,7 @@
 }
 
 .swagger-ui .response-col_links {
-	min-width   : 6em;
-	width       : 20%;
-    @include typography.regular13dark9;
+	display: none;
 }
 
 .swagger-ui .markdown p, .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown p, .swagger-ui .renderedMarkdown pre {
@@ -512,24 +706,30 @@
 }
 
 .swagger-ui .markdown code {
-	font-size     : 14px;
+	font-size     : rem(14px);
 	padding       : 1px 6px;
 	border-radius : 2px;
 	border        : 1px solid $light10;
-	font-family   : monospace;
+	font-family   : robotomonoregular, monospace;
 	font-weight   : 400;
 	color         : $dark9;
+}
+
+.swagger-ui .code, .swagger-ui code {
+	font-family: robotomonoregular, monospace;
+	font-size: rem(13px);
+	color: $additional_light1;
 }
 
 .swagger-ui .renderedMarkdown code {
 	border-radius: 2px;
 	font-size: rem(13px);
-	font-weight: normal;
+	font-weight: 400;
 	letter-spacing: normal;
 	font-family: robotomonoregular, monospace !important;
 	padding: 2px;
 	display: inline-block;
-	color: var(--additional_dark1);
+	color: $additional_dark1;
 	line-height: 1;
 	border: solid 1px $additional_light8;
 	background: $additional_light7;

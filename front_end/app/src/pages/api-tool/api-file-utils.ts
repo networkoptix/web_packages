@@ -27,6 +27,15 @@ export const getAPIRouteName = (endpoint: string, includeTypeOfRequest: boolean,
     return endpoint;
 };
 
+/**
+ * Add placeholder if description is blank
+*/
+const checkMethodResponseDescription = (method) => {
+    if (method.responses?.default?.description === '') {
+        method.responses.default.description = 'succesful operation';
+    }
+};
+
 export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
     // We have to change the tags on apis
     // so that swagger can properly differentiate tags with the same name coming from multiple different API files
@@ -37,6 +46,7 @@ export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
         const includeTypeOfRequest = endpointObj.length > 1;
         endpointObj.forEach((method: any) => {
             const modifiedTag = api.paths[endpoint][method[0]].tags[0] + tagModifier;
+            checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
             api.paths[endpoint][method[0]].tags.push(getAPIRouteName(endpoint, includeTypeOfRequest, method[0]));
@@ -50,6 +60,26 @@ export const modifyTagNames = (api: APIDoc, type: APIDocVersion) => {
         tag.name = tag.name + getTagModifier(type);
     });
     return api;
+};
+
+/**
+ * Reverse engineers the path and method from an API route node from the developer-menu
+ *
+ * Example: /rest/v1/devices/{deviceId}/bookmarks/{id} - GET
+ *
+ * Becomes: { path: /rest/v1/devices/{deviceId}/bookmarks/{id}, method: GET}
+*/
+export const getPathAndMethodFromNodeName = (name: string) => {
+    const seperatorIndex = name.indexOf(' -');
+    let path;
+    let method;
+    if (seperatorIndex !== -1) {
+        path = name.slice(0, seperatorIndex);
+        method = name.slice(seperatorIndex + 3);
+    } else {
+        path = name;
+    }
+    return { path, method };
 };
 
 export const removeProprietaryEndpoints = (api: APIDoc) => {
@@ -73,14 +103,14 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
 /**
     Creates the developers-menu content from an API File
  */
-export const createMenuContent = (api: APIDoc) => {
+export const createMenuContent = (API: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
-    if (api.info && api.info.description) {
+    if (API.info && API.info.description) {
         menuContent.push(new MenuNode('api_information', '', 'API Information'));
     }
 
-    if (Object.keys(api || {}).length) {
-        api.tags.forEach(tag => {
+    if (Object.keys(API || {}).length) {
+        API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
                 menuContent.push(new MenuNode(tag.name, '', tag.name.slice(0, -2)));
             }
@@ -88,8 +118,8 @@ export const createMenuContent = (api: APIDoc) => {
     }
 
     let tag: MenuNodeWithParent;
-    Object.keys(api.paths).forEach(endpoint => {
-        const endpointObj = Object.entries(api.paths[endpoint]);
+    Object.keys(API.paths).forEach(endpoint => {
+        const endpointObj = Object.entries(API.paths[endpoint]);
         const includeTypeOfRequest = endpointObj.length > 1;
         endpointObj.forEach(method => {
             tag = menuContent.find((node) => {
@@ -105,8 +135,15 @@ export const createMenuContent = (api: APIDoc) => {
     return menuContent;
 };
 
+/**
+    Adds an API file to the main developers-menu content with a seperator
+ */
 export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
     menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
+
+    // Replace RTSPRoute with the custom RTSPRoute to fix an issue with how swagger-ui filters routes
+    const RTSPRoute = '/{deviceId}';
+    const CustomRTSPRoute = '/{deviceId} - RTSP';
 
     if (Object.keys(API || {}).length) {
         API.tags.forEach(tag => {
@@ -120,12 +157,20 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
 
     let tag: MenuNodeWithParent;
     Object.keys(API.paths).forEach(endpoint => {
+        if (endpoint === RTSPRoute) {
+            const ind = API.paths[endpoint].get.tags.indexOf(RTSPRoute);
+            API.paths[endpoint].get.tags[ind] = CustomRTSPRoute;
+        }
         const endpointObj = Object.entries(API.paths[endpoint]);
         const includeTypeOfRequest = endpointObj.length > 1;
         endpointObj.forEach((method: any) => {
             tag = menuNodes.find(node => node.name === method[1].tags[0]);
+            checkMethodResponseDescription(method[1]);
             const methodName = getAPIRouteName(endpoint, includeTypeOfRequest, method[0]);
             const methodNode: MenuNodeWithParent = new MenuNode(methodName, '', method[1].summary || methodName);
+            if (methodNode.name === RTSPRoute) {
+                methodNode.name = CustomRTSPRoute;
+            }
             methodNode.parentNode = tag;
             tag.nodes.push(methodNode);
         });

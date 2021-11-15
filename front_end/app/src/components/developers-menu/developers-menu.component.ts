@@ -176,7 +176,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     }
 
     updateSearchQuery({ query }) {
-        if (query === this.searchQuery$.value) return;
+        if (query !== '' && query === this.searchQuery$.value) return;
         this.queryChanged = true;
         this.searchQuery$.next(query);
     }

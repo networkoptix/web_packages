@@ -30,9 +30,8 @@ export class NxSystemDropdownComponent {
     }
 
     onAPIVersionChange(api: APIDropdownItem) {
-        this.APIToolService.menuNodes = api.menu;
-        this.APIToolService.activeNode = api.menu[0];
         this.APIToolService.selectedAPI = api;
         this.APIToolService.setAPIInfo();
+        this.APIToolService.menuNodes = api.menu;
     }
 }
