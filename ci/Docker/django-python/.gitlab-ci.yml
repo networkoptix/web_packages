@@ -1,6 +1,6 @@
 variables:
   DJANGO_PYTHON_IMAGE: "nx/cloud_portal_django_python"
-  DJANGO_PYTHON_IMAGE_TAG: "1.1"
+  DJANGO_PYTHON_IMAGE_TAG: "1.0"
 
 docker:build-django-python:
   extends: .docker.template
