@@ -20,6 +20,8 @@ variables:
 
 workflow:
   rules:
+    - if: CI_PROJECT_NAMESPACE != "dev"
+      when: never
     # Enable for merge requests.
     - if: $CI_MERGE_REQUEST_ID
     # Enable for protected branch.
