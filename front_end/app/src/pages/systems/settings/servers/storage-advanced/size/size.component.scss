@@ -103,7 +103,7 @@ $stripes : repeating-linear-gradient(
 
             rect.box {
                 fill              : none;
-                stroke            : #2B383F;
+                stroke            : var(--dark9);
                 stroke-linecap    : round;
                 stroke-linejoin   : round;
                 stroke-miterlimit : 10;

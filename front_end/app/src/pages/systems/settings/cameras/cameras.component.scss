@@ -1,6 +1,7 @@
 @use "../../../../styles/typography";
 @use "../../../../styles/mixins";
 @use "../../../../../styles/theme_variables" as *;
+@use "styles/src-variables/pages/cameras" as *;
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins/breakpoints";
@@ -52,17 +53,17 @@
         display: flex;
         flex-direction : column;
         align-items: flex-start;
-        
+
         @include media-breakpoint-up(lg) {
             flex-direction : row;
             align-items    : center;
         }
-        
+
         .camera-button-div {
             display: flex;
             .camera-buttons {
                 @include mixins.details-buttons;
-    
+
                 @include media-breakpoint-down(lg) {
                     &:first-of-type {
                         padding-left : 0 !important;
@@ -138,18 +139,18 @@
     padding: 0;
 }
 
-  .button-wrapper {
+.button-wrapper {
       min-height: 32px;
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
 
       & > .btn, & > .btn-default, & button {
-          font-size: 12px;
-      }
-  }
+        font-size: 12px;
+    }
+}
 
-  .sensitivity-buttons {
+.sensitivity-buttons {
       color: var(--dark9) !important;
       border-radius: 2px;
       font-size: 12px;
@@ -158,114 +159,114 @@
       border: 1px solid transparent !important;
       &:hover, &:active, &.active {
         border: 1px solid transparent !important;
-      }
-  }
+    }
+}
 
-  .button {
-      &-0 {
-        background-color: #FFFFFF4D;
+.button {
+    &-0 {
+        background-color: rgba($cameras-sensitivity-color-0, 0.3);
         border: 1px solid var(--light4) !important;
         &:hover {
             border: 1px solid var(--light6) !important;
-            background-color: #FFFFFF66 !important;
+            background-color: rgba($cameras-sensitivity-color-0, 0.4) !important;
         }
         &:active, &.active{
-            background-color: #FFFFFF80 !important;
+            background-color: rgba($cameras-sensitivity-color-0, 0.5) !important;
             border: 1px solid var(--light13) !important;
         }
 
-      }
-      &-1 {
-        background-color: #627CD64D;
+    }
+    &-1 {
+        background-color: rgba($cameras-sensitivity-color-1, 0.3);
         &:hover {
-            background-color: #627CD666;
+            background-color: rgba($cameras-sensitivity-color-1, 0.4);
         }
-        &:active, &.active{
-            background-color: #627CD680 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-1, 0.5) !important;
         }
 
-      }
-      &-2{
-        background-color: #23A4CB4D;
+    }
+    &-2{
+        background-color: rgba($cameras-sensitivity-color-2, 0.3);
         &:hover {
-            background-color: #23A4CB66;
+            background-color: rgba($cameras-sensitivity-color-2, 0.4);
         }
-        &:active, &.active{
-            background-color: #23A4CB80 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-2, 0.5) !important;
         }
 
-      }
-      &-3 {
-        background-color: #31BAA24D;
+    }
+    &-3 {
+        background-color: rgba($cameras-sensitivity-color-3, 0.3);
         &:hover {
-            background-color: #31BAA266;
+            background-color: rgba($cameras-sensitivity-color-3, 0.4);
         }
-        &:active, &.active{
-            background-color: #31BAA280 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-3, 0.5) !important;
         }
 
-      }
-      &-4 {
-        background-color: #79BC664D;
+    }
+    &-4 {
+        background-color: rgba($cameras-sensitivity-color-4, 0.3);
         &:hover {
-            background-color: #79BC6666;
+            background-color: rgba($cameras-sensitivity-color-4, 0.4);
         }
-        &:active, &.active{
-            background-color: #79BC6680 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-4, 0.5) !important;
         }
 
-      }
-      &-5 {
-        background-color: #B8BC374D;
+    }
+    &-5 {
+        background-color: rgba($cameras-sensitivity-color-5, 0.3);
         &:hover {
-            background-color: #B8BC3766;
+            background-color: rgba($cameras-sensitivity-color-5, 0.4);
         }
-        &:active, &.active{
-            background-color: #B8BC3780 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-5, 0.5) !important;
         }
 
-      }
-      &-6 {
-        background-color: #FBA4054D;
+    }
+    &-6 {
+        background-color: rgba($cameras-sensitivity-color-6, 0.3);
         &:hover {
-            background-color: #FBA40566;
+            background-color: rgba($cameras-sensitivity-color-6, 0.4);
         }
-        &:active, &.active{
-            background-color: #FBA40580 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-6, 0.5) !important;
         }
 
-      }
-      &-7 {
-        background-color: #E971194D;
+    }
+    &-7 {
+        background-color: rgba($cameras-sensitivity-color-7, 0.3);
         &:hover {
-            background-color: #E9711966;
+            background-color: rgba($cameras-sensitivity-color-7, 0.4);
         }
-        &:active, &.active{
-            background-color: #E9711980 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-7, 0.5) !important;
         }
 
-      }
-      &-8 {
-        background-color: #D247294D;
+    }
+    &-8 {
+        background-color: rgba($cameras-sensitivity-color-8, 0.3);
         &:hover {
-            background-color: #D2472966;
+            background-color: rgba($cameras-sensitivity-color-8, 0.4);
         }
-        &:active, &.active{
-            background-color: #D2472980 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-8, 0.5) !important;
         }
 
-      }
-      &-9 {
-        background-color: #C226264D;
+    }
+    &-9 {
+        background-color: rgba($cameras-sensitivity-color-9, 0.3);
         &:hover {
-            background-color: #C2262666;
+            background-color: rgba($cameras-sensitivity-color-9, 0.4);
         }
-        &:active, &.active{
-            background-color: #C2262680 !important;
+        &:active, &.active {
+            background-color: rgba($cameras-sensitivity-color-9, 0.5) !important;
         }
 
-      }
-  }
+    }
+}
 
 .disabled-helper-block, .disabled-audio-label {
     opacity : 0.3;
