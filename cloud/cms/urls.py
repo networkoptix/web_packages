@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from cms.views import integration, article, agreement, asset, documentation, menu, utils
+from cms.views import integration, article, agreement, asset, documentation, menu, utils, portal_notifications
 
 from rest_framework.routers import DefaultRouter
 
@@ -29,7 +29,8 @@ urlpatterns = [
     path('menu_force_sync', menu.menu_force_sync, name='menu_force_sync'),
     path('menu_clean_zd', menu.menu_clean_zd, name='menu_clean_zd'),
     path('menu_cancel_sync', menu.menu_cancel_sync, name='menu_cancel_sync'),
-    path('sanitize_html', utils.sanitize_html, name='sanitize_html')
+    path('sanitize_html', utils.sanitize_html, name='sanitize_html'),
+    path('portal_notifications', portal_notifications.notifications, name='portal_notifications')
 ]
 
 

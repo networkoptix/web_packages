@@ -5,12 +5,12 @@ import time
 import traceback
 import functools
 from enum import Enum
+from typing import Union, List, Tuple, Dict, Callable
 
-import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import QueryDict, HttpResponseRedirect
-from rest_framework.exceptions import UnsupportedMediaType
+from rest_framework.exceptions import UnsupportedMediaType, ValidationError
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
@@ -106,14 +106,37 @@ def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
     return create_response_with_cookies(data, status_code, cookies)
 
 
-def require_params(request, params_list):
+def require_params(request, param_list_or_dict: Union[List[str], Tuple[str], Dict[str, Callable]]):
+    """[summary]
+
+    Args:
+        request (Request): Request to check
+        param_list_or_dict (Union[List[str], Tuple[str], Dict[str, Callable]]): Either a list or tuple or required params or a dict with validator functions.
+
+    Raises:
+        APIRequestException: Raises when a ValidationError is raised by either a missing param or by a validator
+    """
     error_data = {}
     try:
-        for param in params_list:
-            if request.method == "POST" and (not (data := getattr(request, 'data', request.POST)) or not (data.get(param, ''))):
+        for param in param_list_or_dict:
+            if request.method == "POST" and (not (data := getattr(request, 'data', request.POST)) or not (post_data := data.get(param))):
                 error_data[param] = ['This field is required.']
             elif request.method == "GET" and (param not in request.GET):
                 error_data[param] = ['This field is required.']
+            
+            if isinstance(param_list_or_dict, dict) and (validator := param_list_or_dict.get(param)):
+                data_to_validate = post_data if post_data is not None else request.GET.get(param)
+
+                try:
+                    error_message = validator(data_to_validate)
+
+                    if error_message:
+                        # Allows either a validator that raises a ValidatorError or returns an error message
+                        raise ValidationError(error_message)
+
+                except ValidationError as e:
+                    error_data[param] = [e.detail]
+
     # Files with xml content type break when accessing data
     except UnsupportedMediaType as e:
         raise APIRequestException(e.detail, ErrorCodes.unsupported_media_type)

@@ -804,3 +804,5 @@ if not LOCAL_ENVIRONMENT:
 else:
     MEILISEARCH_ENDPOINT = 'http://localhost:7700'
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
+
+VERSION = os.getenv('VERSION', '0')
