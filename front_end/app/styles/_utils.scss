@@ -4,5 +4,5 @@
 
 @mixin generateVarAndRgb($name, $hex) {
   #{$name}: $hex;
-  #{$name}--rbg: _hex2Rgb($hex);
+  #{$name}--rgb: _hex2Rgb($hex);
 }
