@@ -88,6 +88,7 @@
                             (keyup)="handleUserNameChange($event.target['value'])"
                             (blur)="handleUserNameBlur()"
                             name="login" id="login"
+                            [readonly]="selectedUser.isLdap"
                             [disabled]="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited"
                             maxlength="255">
                         <span *ngIf="!localUserName" class="input-error mt-1 ml-2 d-block" translate>Login cannot be empty</span>
@@ -111,6 +112,7 @@
                             [(ngModel)]="email"
                             name="email" id="email" #emailInput="ngModel"
                             pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
+                            [readonly]="selectedUser.isLdap"
                             [disabled]="!(isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
                         <span class="input-error mt-1 ml-2 d-block" *ngIf="emailInput.invalid && emailInput.touched"
@@ -130,7 +132,12 @@
                 </div>
                 <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited || (selectedUser.isLocalOwner && selectedUser.isMe)"
                     class="float-left">
-                    <button class="btn btn-default" (click)="changePassword()" translate>Change Password</button>
+                    <button
+                        class="btn btn-default"
+                        (click)="changePassword()"
+                        [disabled]="selectedUser.isLdap"
+                        translate
+                    >Change Password</button>
                     <span *ngIf="shouldChangePassword" class="input-error password-change-required" translate
                         >Password has to be changed when the login is changed</span>
                 </div>
