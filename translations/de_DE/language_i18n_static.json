@@ -407,10 +407,10 @@
             "failedLoginTo": "Anmeldung bei {systemName} fehlgeschlagen",
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
-            "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
-            "serversRestart": "Restart server { title }"
+            "removeUser": "Nutzer entfernen",
+            "serversDetach": "Server { title } vom aktuellen System trennen",
+            "serversReset": "Server { title } auf Standardwerte zurücksetzen",
+            "serversRestart": "Server { title } neu starten"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "Änderungen können nicht gespeichert werden",
         "cantChangePasswordPrefix": "Passwort kann nicht gespeichert werden",
         "cantDeleteAccountOwningSystems": "Konto, das Systeme besitzt, kann nicht gelöscht werden",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "System kann nicht verbunden werden",
         "cantDisconnectSystemPrefix": "System kann nicht gelöscht werden",
         "cantEditAdmin": "Dieser Benutzer hat Administratorberechtigungen",
         "cantEditYourself": "Eigene Berechtigungen zu ändern ist nicht erlaubt",
@@ -867,7 +867,7 @@
                 "success": "Systemname wurde gespeichert"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Melden Sie sich mit %CLOUD_NAME% an, um als Cloud-Benutzer auf dieses System zuzugreifen"
     },
     "headerLabels": {
         "healthReportForSystem": "Bericht für System {systemName}"
