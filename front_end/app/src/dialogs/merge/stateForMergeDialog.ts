@@ -61,6 +61,7 @@ export const State: {
             serverUrlInputValidationErrorText: ''
         },
         errorText: {
+            differentOwners: '',
             duplicateServers: '',
             noServerFound: '',
             primarySystemOffline: '',

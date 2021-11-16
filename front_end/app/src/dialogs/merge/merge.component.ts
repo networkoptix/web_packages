@@ -405,6 +405,8 @@ export class MergeModalContent {
                                 err.message = this.duplicateServers;
                             } else if (err.errorString.includes('Cannot merge systems bound to the cloud')) {
                                 err.message = 'targetSystemBoundToCloud';
+                            } else if (err.errorString.includes('Cannot merge two Cloud Systems with different owners')) {
+                                err.message = this.differentOwners;
                             }
                         }
                         const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
@@ -440,7 +442,7 @@ export class MergeModalContent {
                         .then(res => {
                             if (!res.error || res.error === '0') {
                                 this.remotePassword = this.machine.state.template.passwordValue;
-                                this.machine.transition('choosePrimary');
+                                this.checkForChoosePrimary();
                                 const { history } = this.machine;
                                 if (history[history.length - 1] === this.serverUrlErrors) {
                                     history.pop();
@@ -577,6 +579,23 @@ export class MergeModalContent {
                 error.resultCode = errorCode;
                 this.handleMergeError(error);
             });
+    }
+
+    checkForChoosePrimary() {
+        const primary = this.system.moduleInfo;
+        const secondary = this.targetSystem.moduleInfo || this.targetSystem;
+        if (!!primary.cloudSystemId !== !!secondary.cloudSystemId) {
+            if (secondary.cloudSystemId) {
+                this.primarySystem = this.targetSystem;
+                this.setSystems();
+            }
+            this.machine.transition(this.confirmMerge);
+        } else if (primary.cloudOwnerId !== secondary.cloudOwnerId) {
+            this.machine.transition(this.serverUrlErrors);
+            this.updateShow(this.serverUrlErrors, { urlErrorText: this.differentOwners });
+        } else {
+            this.machine.transition('choosePrimary');
+        }
     }
 
     handleMergeError(error) {

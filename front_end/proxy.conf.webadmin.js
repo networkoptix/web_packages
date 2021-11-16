@@ -18,7 +18,7 @@ const proxyTargetConfig = {
     },
     sofia: {
         host: 'https://10.1.5.196:7011',
-        cloud: 'https://dev3.cloud.hdw.mx'
+        cloud: defaultCloud
     },
     webpi: {
         host: 'https://10.1.5.111:7001',
