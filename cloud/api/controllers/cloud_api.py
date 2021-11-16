@@ -440,21 +440,19 @@ class Account(object):
         temp_token, email = Account.extract_temp_credentials(code)
         if verification_code:
             if is_backup:
-                Auth.verify_backup_code(temp_token, verification_code)
+                Auth.verify_backup_code(verification_code, temp_token)
             else:
-                Auth.verify_2fa_code(temp_token, verification_code)
-        return Account.change_password({"access_token": temp_token}, email, temp_token, new_password, verification_code)
+                Auth.verify_2fa_code(verification_code, temp_token)
+        return Account.change_password({"access_token": temp_token}, email, temp_token, new_password)
 
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def change_password(request, email, old_password, new_password, totp=None, headers=None):
+    def change_password(request, email, old_password, new_password, headers=None):
         email = email.lower()
         params = {
             'password': new_password
         }
-        if totp:
-            params['totp'] = totp
 
         auth = None
         if not headers:
