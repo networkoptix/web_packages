@@ -75,7 +75,7 @@ class SearchableCache(BaseCache):
                 self.current_settings = self.search_index.get_settings()
                 if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
                     self.search_index.update_settings(self.custom_settings)
-            except TypeError as e:
+            except (TypeError, MeiliSearchCommunicationError) as e:
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
                 logger.info(e)
 
@@ -101,19 +101,23 @@ class SearchableCache(BaseCache):
             return
 
         from_doc = {
-            key_from_doc: doc[key_from_doc]
+            key_from_doc: doc.get(key_from_doc)
             for key_from_doc in self.fields_from_doc
         }
 
         if switch_is_active(SWITCHES.kb_instant_search) and lookup_key.endswith('release'):
-            self.search_index.add_documents(
-                [{
-                    'cacheKey': lookup_key,
-                    'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks'])),
-                    **from_doc
-                }],
-                primary_key='cacheKey'
-            )
+            try:
+                self.search_index.add_documents(
+                    [{
+                        'cacheKey': lookup_key,
+                        'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks'])),
+                        **from_doc
+                    }],
+                    primary_key='cacheKey'
+                )
+            except MeiliSearchCommunicationError as e:
+                # raised when meilisearch service is unavailable
+                logger.warning(e)
 
 
 SEARCH_SETTINGS = {

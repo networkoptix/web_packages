@@ -191,9 +191,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
 
-        cloud_name = asset.read_global_value("%CLOUD_NAME%")
-        vms_name = asset.read_global_value("%VMS_NAME%")
-        seo_description = asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%")\
+        cloud_name = asset.read_global_value("%CLOUD_NAME%") or ''
+        vms_name = asset.read_global_value("%VMS_NAME%") or ''
+        seo_description = (asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%") or '')\
             .replace("%CLOUD_NAME%", cloud_name)\
             .replace("%VMS_NAME%", vms_name)
         landing_description = ''

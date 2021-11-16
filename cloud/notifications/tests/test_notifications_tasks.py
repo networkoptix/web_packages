@@ -2,8 +2,10 @@ import pytest
 from model_bakery import baker
 from uuid import uuid4
 from random import randint
+import base64
 from datetime import datetime
 from unittest.mock import call
+from notifications.models import SystemEmail
 from notifications.tasks import *
 
 
@@ -48,16 +50,73 @@ def test_send_email(mocker, db):
     expected_lang = get_language_for_email(
         message.user_email, message.customization)
 
+    # Test with message
     status = send_email(message.id)
     updated_message = Message.objects.get(id=message.id)
     assert updated_message.send_date
     mock_send.assert_called_once_with(
-        message.user_email, message.type, message.message, expected_lang, message.customization)
+        message.user_email, message.type, message.message, expected_lang, message.customization, '', [])
     assert status == {
         'user_email': message.user_email,
         'type': message.type,
         'message': message.message,
         'customization': message.customization,
+        'language': expected_lang,
+        'queue': '',
+        'attempt': 1
+    }
+
+    # Test with system email
+    message_html, message_text, subject, system_id, domain, *emails = [
+        str(uuid4()) for _ in range(randint(10, 20))]
+    expected_emails = [f'{email}@{domain}.com' for email in emails]
+    mocker.patch.object(System, 'users', return_value={'sharing': [{'accountEmail': target} for target in expected_emails]})
+    attachments = emails
+    expected_attachments = [
+        {'filename': f'{attachment}.txt',
+        'content': attachment,
+        'mimetype': 'text/plain'
+        } for attachment in attachments
+    ]
+    sys_email = baker.make(
+        SystemEmail,
+        message_html=message_html,
+        message_text=message_text,
+        subject=subject,
+        system_id=system_id,
+        targets=expected_emails,
+        attachments=expected_attachments
+    )
+    expected_message = {
+        'html_body': message_html,
+        'text_body': message_text
+    }
+    status = send_email(sys_email.id, email_type=SystemEmail)
+    updated_sys_email = SystemEmail.objects.get(id=sys_email.id)
+    assert updated_sys_email.completed_date
+    assert updated_sys_email.result == RESULT_STATES.success
+
+    cached_attachments = caches['emails'].get(cache_key, []) if (cache_key := sys_email.attachments.get('cache_key', '')) else []
+    expected_calls = [
+        call(
+            email,
+            SystemEmail.MSG_TYPE,
+            expected_message,
+            expected_lang,
+            settings.CUSTOMIZATION,
+            sys_email.subject,
+            [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
+        )
+        for email in expected_emails
+    ]
+    mock_send.assert_has_calls(expected_calls)
+
+
+    assert status == {
+        'user_email': expected_emails,
+        'type': SystemEmail.MSG_TYPE,
+        'message': expected_message,
+        'customization': settings.CUSTOMIZATION,
         'language': expected_lang,
         'queue': '',
         'attempt': 1

@@ -1,3 +1,4 @@
+import base64
 import pytest
 from random import randint
 from unittest.mock import call
@@ -23,8 +24,8 @@ class TestEmailEngine:
         assert version_id == expected_version_id
 
     def test_send(self, mocker):
-        address, domain, msg_type, subject, body, language_code, customization_name = [
-            str(uuid4()) for _ in range(7)]
+        address, domain, msg_type, subject, body, language_code, customization_name, *attachments = [
+            str(uuid4()) for _ in range(randint(15, 20))]
         message = {'subject': subject, 'body': body}
         email = f'{address}@{domain}.com'
         email_subject_template = '{{message.subject}} {{config.portal_url}}'
@@ -56,13 +57,18 @@ class TestEmailEngine:
                         language_code, customization_name)
 
         # Test with correct config
-        customization_cache[portal_url] = str(uuid4())
-        expected_subject = f'{message["subject"]} {customization_cache[portal_url]}'
-        expected_body = f'{message["body"]} {customization_cache[portal_url]}'
+        customization_cache['portal_url'] = str(uuid4())
+        expected_subject = f'{message["subject"]} {customization_cache["portal_url"]}'
+        expected_body = f'{message["body"]} {customization_cache["portal_url"]}'
         expected_email_from = f'{customization_cache["mail_from_name"]} <{customization_cache["mail_from_email"]}>'
-
+        expected_attachments = [
+            {'filename': f'{attachment}.txt',
+            'content': attachment.encode('utf-8'),
+            'mimetype': 'text/plain'
+            } for attachment in attachments
+        ]
         assert send(email, msg_type, message,
-                    language_code, customization_name)
+                    language_code, customization_name, attachments=expected_attachments)
         mock_get_email_title.assert_called_once_with(
             customization_name, language_code, msg_type)
         mock_read_template.assert_has_calls(
@@ -75,7 +81,10 @@ class TestEmailEngine:
         assert mock_msg.content_subtype == 'plain'
         assert mock_msg.mixed_subtype == 'related'
         mock_img.add_header.assert_called_once_with('Content-ID', '<logo>')
-        mock_msg.attach.assert_called_once_with(mock_img)
+        added_attachments = [call(f'{attachment}.txt', attachment.encode(), 'text/plain') for attachment in attachments]
+        mock_msg.attach.assert_has_calls(
+            [call(mock_img), *added_attachments]
+        )
         mock_connection.send_messages.assert_called_once_with([mock_msg])
         mock_connection.close.assert_called_once()
 

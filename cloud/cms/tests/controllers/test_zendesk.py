@@ -1512,7 +1512,19 @@ def test_update_zd_article(mocker, get_exporter_instance, db):
     updated_article = ZendeskArticle.objects.filter(
         id=existing_article.id).first()
     mock_sync_article.assert_called_once_with(
-        updated_article, {'title': '', 'blocks': [], 'external_files': [], 'id': asset.id, 'labels': [], 'shortDescription': '', 'script': ''}, delete=False, sync_log=None)
+        updated_article, {
+            'title': '',
+            'blocks': [],
+            'external_files': [],
+            'id': asset.id,
+            'labels': [],
+            'shortDescription': '',
+            'script': '',
+            'kbMenus': [node.get_parent().name for node in asset.nodes.all()]
+        },
+        delete=False,
+        sync_log=None
+    )
 
 
 def test_check_if_article_can_sync(mocker, db):

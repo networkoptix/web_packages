@@ -430,3 +430,81 @@ class TestPushNotification(BaseModelTest):
         assert mock_send_message.call_count == legacy_notification_devices_count + legacy_data_devices_count
         assert notification_response == [expected_response] * legacy_notification_devices_count
         assert data_response == [expected_response] * legacy_data_devices_count
+
+
+def test_validate_emails():
+    pass
+
+
+def test_validate_system_id():
+    pass
+
+
+def test_validate_attachments():
+    pass
+
+
+def test_clean_content_factory_and_check_urls(mocker):
+    branding_name, branding_value, hidden_name, hidden_value = [
+    str(uuid4()) for _ in range(4)]
+    branding = [({'name': branding_name}, f'http://{branding_value}.com')]
+    hidden = [({'name': hidden_name}, hidden_value)]
+    mocker.patch.object(
+        forms, 'get_branding_shortcuts', return_value=[branding, hidden])
+
+    valid_url = f'http://sub_domain.{branding_value}.com/test?some=query'
+    invalid_url = 'https://sub.do.org/some/sub'
+
+    result = clean_content_factory()(f'www.test.com {invalid_url} {valid_url}')
+
+    assert valid_url in result
+    assert invalid_url not in result
+
+
+def test_sub_system_id_factory():
+    to_sub = str(uuid4())
+    route = '/some/route'
+    result = sub_system_id_factory(to_sub)(to_sub + route)
+    assert result == f'{to_sub}{settings.TRAFFIC_RELAY_HOST.replace("{systemId}", "")}{route}'
+
+
+class TestSystemEmail(BaseModelTest):
+    model_class = SystemEmail
+    expected_meta = {
+        'system_id': {
+            'blank': True,
+        },
+        'targets': {
+            'blank': False,
+        },
+        'subject': {
+            'blank': False
+        },
+        'message_html': {
+            'blank': True
+        },
+        'message_text': {
+            'blank': True
+        },
+        'attachments': {
+            'blank': True,
+        },
+        'customization': {
+            'default': 'default'
+        }
+    }
+
+    def test_message(self, instance):
+        expected = {
+            'html_body': str(uuid4()),
+            'text_body': str(uuid4())
+        }
+        instance.message_html = expected['html_body']
+        instance.message_text = expected['text_body']
+        assert instance.message == expected
+    
+    def test_send(self, instance, mocker):
+        mock_send_email = mocker.patch('notifications.tasks.send_email')
+        session = {'access_token': str(uuid4()), 'refresh_token': str(uuid4())}
+        instance.send(session)
+        mock_send_email.assert_called_once_with(instance.id, email_type=self.model_class, session=session)

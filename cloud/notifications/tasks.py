@@ -2,18 +2,23 @@ from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
 import traceback
 import logging
+import base64
 
 from celery import shared_task
 from celery.exceptions import Ignore
 from django.conf import settings
 from django.utils import timezone
+from django.core.cache import caches
 
+from api.helpers.exceptions import APINotAuthorisedException
 from api.models import Account
+from api.controllers import cloud_api
 from notifications import notifications_api
 from notifications.engines import email_engine
 from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
-from notifications.models import Message, PushNotification
+from notifications.models import RESULT_STATES, Message, PushNotification, SystemEmail
 from util.helpers import get_language_for_email
+from api.controllers.cloud_api import System
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +53,69 @@ def send_email_log(_task):
 
 @shared_task
 @send_email_log
-def send_email(msg_id, queue="", attempt=1):
-    message = Message.objects.get(id=msg_id)
-    lang = get_language_for_email(message.user_email, message.customization)
+def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], session={}):
+    message = email_type.objects.get(id=msg_id)
+    customization = getattr(message, 'customization', settings.CUSTOMIZATION)
+    emails = emails or getattr(message, 'user_email', '') or getattr(message, 'targets')
+    template_type = getattr(message, 'type', '') or getattr(email_type, 'MSG_TYPE')
+    lang = get_language_for_email(emails, customization)
+    email_content = getattr(message, 'message')
+    send_individual = not isinstance(message, Message)
+    subject = ''
+    attachments = []
+
+    if isinstance(message, SystemEmail):
+        message.result = RESULT_STATES.in_progress
+        subject = message.subject
+        cached_attachments = caches['emails'].get(message.attachments.get('cache_key'), [])
+        attachments = [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
+        if message.system_id:
+            try:
+                users = cloud_api.System.basic_users(session['username'], session['password'], session['username'])
+            except:
+                users = []
+
+            try:
+                if not users:
+                    users = System.users(session, message.system_id) if session.get('access_token') else []
+
+            except:
+                message.result = RESULT_STATES.failure
+                message.save()
+                return
+            
+            cloud_users = [user['accountEmail'] for user in users['sharing']]
+            message.targets = [email for email in message.targets if email in cloud_users]
+
+
+        message.save()
+
     try:
-        email_engine.send(message.user_email, message.type,
-                          message.message, lang, message.customization)
+        targets = emails if send_individual else (emails,)
+        errors = []
+        failed_emails = []
+
+        for email in targets:
+            if not isinstance(email_content, dict):
+                pass
+            elif send_individual and (user := Account.objects.filter(email=email).first()):
+                email_content['userFullName'] = user.get_full_name()
+            else:
+                email_content['userFullName'] = email
+            try:
+                email_engine.send(email, template_type, email_content, lang, customization, subject, attachments)
+            except Exception as e:
+                errors.append(e)
+                failed_emails.append(email)
+            
+        if errors:
+            if smtp_data_error := next(filter(lambda error: isinstance(error, SMTPDataError), errors), None):
+                raise smtp_data_error
+            elif smtp_send_error := next(filter(lambda error: isinstance(error, (SMTPException, SSLError)), errors), None):
+                raise smtp_send_error
+            else:
+                raise errors[0]
+
     except Exception as error:
         if isinstance(error, SMTPDataError):
             logger.warning(f'SMTP Error. {settings.CONFIG_ERROR}')
@@ -62,28 +124,33 @@ def send_email(msg_id, queue="", attempt=1):
             and attempt < settings.MAX_RETRIES
         ):
             send_email.apply_async(
-                args=[message.id, queue, attempt + 1], queue=queue)
+                args=[message.id, queue, attempt + 1, email_type, failed_emails], queue=queue)
         elif attempt >= settings.MAX_RETRIES:
             error = MaxResendException()
         log_error(
             error,
-            message.user_email,
-            message.type,
+            failed_emails,
+            template_type,
             message,
             lang,
-            message.customization,
+            customization,
             queue,
             attempt,
         )
+
+        if isinstance(message, SystemEmail):
+            email_content.pop('userFullName')
+            message.result = RESULT_STATES.failure
+            message.save()
 
         send_email.update_state(
             state='FAILURE',
             meta={
                 'error': str(error),
-                'user_email': message.user_email,
-                'type': message.type,
-                'message': message.message,
-                'customization': message.customization,
+                'user_email': failed_emails,
+                'type': template_type,
+                'message': email_content,
+                'customization': customization,
                 'language': lang,
                 'queue': queue,
                 'attempt': attempt,
@@ -92,13 +159,22 @@ def send_email(msg_id, queue="", attempt=1):
 
         raise Ignore()
     else:
-        message.send_date = timezone.now()
+        if isinstance(message, Message):
+            message.send_date = timezone.now()
+        else:
+            email_content.pop('userFullName')
+            message.completed_date = timezone.now()
+            message.result = RESULT_STATES.success
+            if cache_key := message.attachments.get('cache_key'):
+                caches['emails'].delete(cache_key)
+
         message.save()
+
         return {
-            'user_email': message.user_email,
-            'type': message.type,
-            'message': message.message,
-            'customization': message.customization,
+            'user_email': emails,
+            'type': template_type,
+            'message': email_content,
+            'customization': customization,
             'language': lang,
             'queue': queue,
             'attempt': attempt

@@ -109,17 +109,26 @@ class TestAccountViews:
         return self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
 
     def test_index_get(self, mock_cdb_account, active_user):
+        mock_get_2fa_settings = self.mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
         req = self.arf.get('/api/account')
         req.user = active_user
         req.session = {}
 
+        # Test with totp exists
         resp = index(req)
         assert resp.status_code == status.HTTP_200_OK
         expected_data = AccountSerializer(req.user).data
         expected_data['account2faEnabled'] = True
+        expected_data['totpExistsForAccount'] = True
         assert resp.data == expected_data
 
+        # Test with totp doesn't exist
+        mock_get_2fa_settings.return_value = {'totpExistsForAccount': False}
+        resp = index(req)
+        assert not resp.data['totpExistsForAccount']
+
     def test_index_post(self, mock_cdb_account, active_user):
+        mock_get_2fa_settings = self.mocker.patch.object(Account, 'get_2fa_settings', return_value={'totpExistsForAccount': True})
         account_update_mock = self.mocker.patch.object(Account, 'update')
         req = self.arf.post('/api/account', data={'first_name': 'new name', 'last_name': 'new last', 'language': 'en_US'})
         req.user = active_user
@@ -128,6 +137,7 @@ class TestAccountViews:
         resp = index(req)
         expected_data = AccountUpdateSerializer(req.user).data
         expected_data['account2faEnabled'] = True
+        expected_data['totpExistsForAccount'] = True
         assert resp.data == expected_data
         assert resp.status_code == status.HTTP_200_OK
         assert account_update_mock.call_args.args[1] == 'new name'
@@ -217,6 +227,7 @@ class TestAccountViews:
         }
         req = self.request_security(active_user, action="deactivate")
         security_mock = self.mock_update_2fa(two_fa)
+        self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={'account2faEnabled': False})
         resp = security(req)
 
         assert resp.status_code == status.HTTP_200_OK

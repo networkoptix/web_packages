@@ -323,7 +323,14 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/12',
         "KEY_PREFIX": 'agreement'
-    }
+    },
+    "emails": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/14',
+        "KEY_PREFIX": "emails",
+        "TIMEOUT": 60 * 60 # 1 hour
+    },
 }
 
 if DEBUG:
@@ -724,6 +731,10 @@ NOTIFICATIONS_CONFIG = {
     'cloud_notification': {
         'engine': 'email',
         'queue': 'broadcast-notifications'
+    },
+    'system_notification': {
+        'engine': 'email',
+        'queue': 'system-notifications'
     },
     'sales_inquiry': {
         'engine': 'email'

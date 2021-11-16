@@ -158,7 +158,7 @@ def login(request):
     try:
         token = Auth.get_token(email, password, ip=ip)
         validate_token = Auth.validate_token(token['access_token'])
-    except APILogicException as exception:
+    except (APILogicException, APINotAuthorisedException) as exception:
         send_login_failed_signal(__name__, email, password, request)
         raise exception
 

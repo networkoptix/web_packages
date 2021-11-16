@@ -47,7 +47,7 @@ def email_cache(customization_name, cache_type, value=None, force=None):
 EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
 
 
-def send(email, msg_type, message, language_code, customization_name):
+def send(email, msg_type, message, language_code, customization_name, subject='', attachments=[]):
     from email.mime.image import MIMEImage  # python 3
     from cms.models import cloud_portal_customization_cache
     from django.core.mail import EmailMultiAlternatives, get_connection
@@ -68,10 +68,10 @@ def send(email, msg_type, message, language_code, customization_name):
     config = {
         'portal_url': customization_cache["portal_url"]
     }
-
-    subject = get_email_title(customization_name, language_code, msg_type)
-    subject = pystache.render(subject, {"message": message, "config": config})
-    subject = subject.replace("\n", "")
+    if not subject:
+        subject = get_email_title(customization_name, language_code, msg_type)
+        subject = pystache.render(subject, {"message": message, "config": config})
+        subject = subject.replace("\n", "")
 
     message_html_template = read_template(customization_name, msg_type, language_code, True)
     message_txt_template = read_template(customization_name, msg_type, language_code, False)
@@ -104,6 +104,8 @@ def send(email, msg_type, message, language_code, customization_name):
     msg_img = MIMEImage(read_file(customization_name, 'templates/email_logo.png'), _subtype="png")
     msg_img.add_header('Content-ID', '<logo>')
     msg.attach(msg_img)
+    for attachment in attachments:
+        msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 
     mail_obj.send_messages([msg])
     mail_obj.close()
