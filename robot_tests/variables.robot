@@ -34,21 +34,22 @@ ${APPLY CHANGES DISCARD BUTTON}       //ngb-modal-window//button[contains(text()
 ${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
 
 #Log In Elements
-${LOG IN MODAL}                       //form[@name='loginForm']
-${EMAIL INPUT}                        //form[@name='loginForm']//input[@id='login_email']
-${PASSWORD INPUT}                     //form[@name='loginForm']//input[@id='login_password' and @name="login_password" and @type="password"]
-${LOG IN BUTTON}                      //form[@name='loginForm']//nx-process-button//button
+${LOG IN MODAL}                       //nx-authorize-component/div[@class="authorize-main main-w"]
+${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit" and text()="${NEXT TEXT}"]
+${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
+${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
+${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
 
 ${REMEMBER ME CHECKBOX VISIBLE}       //form[@name='loginForm']//input[@id='remember']/following-sibling::span[@class="checkmark"]/..
 ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='remember']
 
-${FORGOT PASSWORD}                    //form[@name='loginForm']//a[@href='/restore_password']
+${FORGOT PASSWORD}                    //nx-authorize-component//button/span[text()='${FORGOT PASSWORD TEXT}']/..
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
-${ACCOUNT NOT FOUND}                  //form[@name='loginForm']//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
-${RESEND ACTIVATION EMAIL LINK}       //form[@name='loginForm']//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
-${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${WRONG PASSWORD}"]
-${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
-${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
+${ACCOUNT NOT FOUND}                  //nx-authorize-component//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
+${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
+${WRONG PASSWORD MESSAGE}             //nx-authorize-component//div[text()="${WRONG PASSWORD}"]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//div[text()="${ACCOUNT DOES NOT EXIST}"]
+${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 

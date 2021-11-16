@@ -119,10 +119,11 @@ Log In Cloud
         Check Language Logged In    ${email}    ${password}
     END
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
-    Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}

@@ -1,7 +1,7 @@
 *** Variables ***
 ${RESET PASSWORD FORM}                //form[@name='restorePasswordWithCode']
 ${RESET PASSWORD OK BUTTON}           ${RESET PASSWORD FORM}//button[contains(@class,'btn btn-primary')]
-${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//nx-email-input/input
+${RESTORE PASSWORD EMAIL INPUT}       //nx-authorize-reset-request-component//input[@type="email" and @id="resetPasswordEmail"]
 ${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[contains(@class,'btn btn-primary')]
 ${RESET PASSWORD INPUT}               ${RESET PASSWORD FORM}//input[@id='newPassword']
 ${SAVE PASSWORD}                      ${RESET PASSWORD FORM}//button[contains(@class,'btn btn-primary')]

@@ -11,6 +11,7 @@
     "CREATE NEW ACCOUNT BUTTON TEXT"       :    "Create New Account",
     "TERMS AND CONDITIONS LINK TEXT"       :    "Terms and Conditions",
     "RESEND ACTIVATION LINK BUTTON TEXT"   :    "Resend activation email",
+    "FORGOT PASSWORD TEXT"                 :    "Forgot Password?",
 
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT" : "All cloud users will be deleted",
     "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT" : "System will be accessible through local network with local administrator account",

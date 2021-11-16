@@ -32,19 +32,16 @@ Restart
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${LOG IN MODAL}
 
-2. Can be closed by clicking on the X
-    [tags]    C24212    
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible
-    ...    ${LOG IN MODAL}
-    ...    ${BACKDROP}
-    ...    ${LOG IN BUTTON}
-    ...    ${EMAIL INPUT}
-    ...    ${PASSWORD INPUT}
-    ...    ${LOG IN CLOSE BUTTON}
-    Click Button    ${LOG IN CLOSE BUTTON}
-    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
+#2. Can be closed by clicking on the X
+#    [tags]    C24212    
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Elements are Visible
+#    ...    ${LOG IN MODAL}
+#    ...    ${LOG IN NEXT BUTTON}
+#    ...    ${EMAIL INPUT}
+#    Click Button    ${LOG IN CLOSE BUTTON}
+#    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
 
 3. Allows to log in with existing credentials and to log out
     [tags]    C24212    C24213    
@@ -66,28 +63,26 @@ Restart
     Log In    ${email uppercase}    ${password}    validate=${False}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
 
-7. Allows log in with 'Remember Me checkmark' switched off
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible
-    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...    ${EMAIL INPUT}
-    ...    ${PASSWORD INPUT}
-    ...    ${LOG IN BUTTON}
-    Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
-    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Log In    ${login user}    ${password}    button=None
+#7. Allows log in with 'Remember Me checkmark' switched off
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Elements are Visible
+#    ...    ${REMEMBER ME CHECKBOX VISIBLE}
+#    ...    ${EMAIL INPUT}
+#    ...    ${PASSWORD INPUT}
+#    ...    ${LOG IN BUTTON}
+#    Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
+#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#    Log In    ${login user}    ${password}    button=None
 
 8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     Log In    ${login user}    'aderhgadehf'    validate=${False}
     Wait Until Elements are Visible
-    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN BUTTON}
     ...    ${FORGOT PASSWORD}
     Sleep    1
-    Click Link    ${FORGOT PASSWORD}
+    Click Button    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
@@ -97,10 +92,9 @@ Restart
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    ${login user}
-# the transition animations causes bad targeting on the link.  This is tentative.
-    sleep    .15
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${FORGOT PASSWORD}
-    Click Link    ${FORGOT PASSWORD}
+    Click Button    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
@@ -113,7 +107,13 @@ Restart
     ...    ${ACCOUNT CREATION SUCCESS}
     ...    ${ACCOUNT CREATION SUCCESS ICON}
     ...    ${ACCOUNT CREATION CONFIRMATION}
-    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
+    Wait Until Element Is Visible    ${REGISTER LOG IN BUTTON}
+    Click Button    ${REGISTER LOG IN BUTTON}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
@@ -123,6 +123,11 @@ Restart
 11. Displays password masked
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${PASSWORD INPUT}
     ${input type}    Get Element Attribute    ${PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
@@ -136,10 +141,15 @@ Restart
 13. Handles more than 255 symbols email and password
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
     Input Text    ${EMAIL INPUT}    ${300CHARS}
-    Input Text    ${PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${EMAIL INPUT}    ${255CHARS}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element is Visible    ${PASSWORD INPUT}
+    Input Text    ${PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${PASSWORD INPUT}    ${255CHARS}
 
 14. Logout refreshes page
