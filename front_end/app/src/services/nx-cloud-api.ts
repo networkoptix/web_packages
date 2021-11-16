@@ -615,17 +615,6 @@ export class NxCloudApiService {
             });
     }
 
-    ensureSessionFreshness(state?: string, email?: string) {
-        return this.getTimeSinceLogin().pipe(
-            switchMap((res) => {
-                if (res.timeSincePassword >= this.CONFIG.sessionFreshnessSec) {
-                    return this.reauthenticate(state, email || this.currentAccountEmail);
-                }
-                return of(true);
-            })
-        );
-    }
-
     getTimeSinceLogin() {
         return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
     }

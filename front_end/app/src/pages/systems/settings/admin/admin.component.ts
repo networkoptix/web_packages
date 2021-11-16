@@ -313,9 +313,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
 
         if (this.system.userManager.isMine) {
-            if (!this.CONFIG.isLocal && !(await this.cloudApiService.ensureSessionFreshness('disconnect').toPromise())) {
-                return;
-            }
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }
