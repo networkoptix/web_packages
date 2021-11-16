@@ -11,6 +11,7 @@ from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
 from cms.feature_flags import SWITCHES
+from meilisearch.errors import MeiliSearchCommunicationError
 
 from meilisearch.errors import MeiliSearchCommunicationError
 from util.base_cache import BaseCache

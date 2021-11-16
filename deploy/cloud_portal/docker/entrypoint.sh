@@ -99,7 +99,8 @@ do
             # On non-prod instances block webcrawlers
             if [ $INSTANCE_NAME != "prod" ]; then
                 sed -i 's$<base href="/">$<base href="/"><meta name="robots" content="noindex,nofollow">$g' static/_source/*/static/index.html
-                sed -i 's/allow/disallow/g' static/_source/*/static/robots.txt
+                # Delete robots.txt for non prod instances to allow nginx to serve from django app instead
+                rm static/_source/*/static/robots.txt
 
                 # Hash needs to be recalculated since index.html was changed
                 for skinDir in static/_source/*/

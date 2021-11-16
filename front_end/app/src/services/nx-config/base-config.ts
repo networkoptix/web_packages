@@ -95,6 +95,7 @@ export interface BaseConfig {
     browserNotSupported: boolean;
     sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
+    metaDefaults: Record<string, Record<string, string>>
 }
 
 export interface Developers {

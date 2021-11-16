@@ -1,10 +1,19 @@
-import { Injectable }               from '@angular/core';
+import { Inject, Injectable }               from '@angular/core';
 import { Title, Meta }              from '@angular/platform-browser';
 import { Router }                   from '@angular/router';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
+import { Subject } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { debounceTime } from 'rxjs/operators';
+import { WINDOW } from './window-provider';
 
+interface MetaLookup {
+    [key: string]: Record<string, string>
+}
+
+@UntilDestroy()
 @Injectable({
     providedIn: 'root'
 })
@@ -12,13 +21,85 @@ export class NxPageService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    updater$ = new Subject();
+    metaLookup: MetaLookup = {}
+
     constructor(
         configService: NxConfigService,
         private title: Title,
         private meta: Meta,
-        private router: Router
+        private router: Router,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
+        this.updater$.pipe(
+            untilDestroyed(this),
+            debounceTime(50)
+        ).subscribe(_ => {
+            const meta = this.metaLookup[this.router.url];
+            Object.entries(meta).forEach(([name, content]) => {
+                const property = `og:${name}`;
+                this.meta.updateTag({ name, property, content });
+                if (name === 'title') {
+                    this.title.setTitle(content);
+                }
+            });
+        });
+    }
+
+    getRoot() {
+        return this.window.location.href.replace(this.router.url, '');
+    }
+
+    mapMeta = (metaProperties: Record<string, any>) => Object.entries(metaProperties || {}).reduce((lookup, [property, val]) => ({ ...lookup, [property]: val() }), {});
+
+    getBaseMeta() {
+        const baseLangMeta = this.mapMeta(this.LANG.metaDefaults.default);
+        const { image, type } = this.CONFIG.metaDefaults.default;
+        return { ...baseLangMeta, type, image: this.getRoot() + image };
+    }
+
+    findMatchingMeta = (url) => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {}
+
+    getPathMeta(url) {
+        const findIn = this.findMatchingMeta(url);
+        return {
+            ...this.mapMeta(findIn(this.LANG.metaDefaults)),
+            ...findIn(this.CONFIG.metaDefaults)
+        };
+    }
+
+    generateDefaultMeta = (url: string): Record<string, string> => ({ ...this.getBaseMeta(), ...this.getPathMeta(url) })
+
+    /**
+     * Use this method to update a pages metadata.
+     *
+     * @param property string
+     * @param value string
+     */
+    updateLookups(property, value) {
+        const { url } = this.router;
+        const urlProperties = this.metaLookup[url] ||= this.generateDefaultMeta(url);
+        if (value) {
+            urlProperties[property] = value;
+        }
+        urlProperties.url = this.getRoot() + url;
+        this.updater$.next('update');
+    }
+
+    /**
+     * Get a pages current metadata
+     */
+    get metaProperties() {
+        const { url } = this.router;
+        return this.metaLookup[url] || this.generateDefaultMeta(url);
+    }
+
+    /**
+     * Updates a pages metadata from an object. If only partial metadata is provided fallbacks are used for the others.
+     */
+    set metaProperties(properties) {
+        Object.entries(properties).forEach(args => this.updateLookups(...args));
     }
 
     // called from app component
@@ -37,10 +118,10 @@ export class NxPageService {
     public set pageTitle(title: any) {
         const txt = (typeof title === 'function') ? title() : title;
         if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.pageTitles.default()) {
-            this.title.setTitle(this.LANG.pageTitles.template({ title: txt }));
+            this.updateLookups('title', this.LANG.pageTitles.template({ title: txt }));
             return;
         }
-        this.title.setTitle(txt);
+        this.updateLookups('title', txt);
     }
 
     public get pageDescription() {
@@ -48,7 +129,7 @@ export class NxPageService {
     }
 
     public set pageDescription(content: any) {
-        this.meta.updateTag({ name: 'description', content: content });
+        this.updateLookups('description', content);
     }
 
     public get pageTitleRemoveHyphen() {
@@ -58,18 +139,18 @@ export class NxPageService {
     public set pageTitleRemoveHyphen(title: any) {
         if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default?.()) {
             const txt = (typeof title === 'function') ? title() : title;
-            this.title.setTitle(this.LANG.pageTitles.template({ title: txt }).replace('- ', ''));
+            this.updateLookups('title', this.LANG.pageTitles.template({ title: txt }).replace('- ', ''));
             return;
         }
-        this.title.setTitle(title());
+        this.updateLookups('title', title());
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.default });
+        this.updateLookups('viewport', this.CONFIG.meta.viewport.default);
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
+        this.updateLookups('viewport', this.CONFIG.meta.viewport.desktopLayout);
     }
 
     public show404 = () => {

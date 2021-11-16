@@ -1,5 +1,6 @@
 import { IConfig } from './config-types';
 import { environment } from '@environments/environment';
+import metaDefaults from '../../../scripts/metaDefaults.json';
 
 import {
     ActionType,
@@ -770,5 +771,6 @@ export const nxConfig: IConfig = {
         maxEventLogRecords: { type: 'number' },
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
-    }
+    },
+    metaDefaults
 };

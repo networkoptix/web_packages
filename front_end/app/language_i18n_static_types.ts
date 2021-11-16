@@ -54,6 +54,7 @@ export interface LanguageI18NStaticTypes {
     additionalSystems:     any;
     security:              Security;
     storage:               Storage;
+    metaDefaults:          MetaDefaults;
 }
 
 export interface AccessRole {
@@ -186,10 +187,10 @@ export interface Common {
 
 export interface CommonAccount {
     created:   NoSettings;
-    activated: Activated;
+    activated: Systems;
 }
 
-export interface Activated {
+export interface Systems {
     title: any;
 }
 
@@ -651,6 +652,25 @@ export interface MenuTitles {
     general:              any;
     licenses:             any;
     users:                any;
+}
+
+export interface MetaDefaults {
+    default:         Default;
+    "/systems":      Systems;
+    "/integrations": Docs;
+    "/docs":         Docs;
+    "/ipvd":         Docs;
+}
+
+export interface Docs {
+    title:       any;
+    description: any;
+}
+
+export interface Default {
+    site_name:   any;
+    title:       any;
+    description: any;
 }
 
 export interface PageDescriptions {
@@ -1150,6 +1170,7 @@ const typeMap: any = {
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
         { json: "security", js: "security", typ: r("Security") },
         { json: "storage", js: "storage", typ: r("Storage") },
+        { json: "metaDefaults", js: "metaDefaults", typ: r("MetaDefaults") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },
@@ -1274,9 +1295,9 @@ const typeMap: any = {
     ], false),
     "CommonAccount": o([
         { json: "created", js: "created", typ: r("NoSettings") },
-        { json: "activated", js: "activated", typ: r("Activated") },
+        { json: "activated", js: "activated", typ: r("Systems") },
     ], false),
-    "Activated": o([
+    "Systems": o([
         { json: "title", js: "title", typ: "any" },
     ], false),
     "NoSettings": o([
@@ -1691,6 +1712,22 @@ const typeMap: any = {
         { json: "general", js: "general", typ: "any" },
         { json: "licenses", js: "licenses", typ: "any" },
         { json: "users", js: "users", typ: "any" },
+    ], false),
+    "MetaDefaults": o([
+        { json: "default", js: "default", typ: r("Default") },
+        { json: "/systems", js: "/systems", typ: r("Systems") },
+        { json: "/integrations", js: "/integrations", typ: r("Docs") },
+        { json: "/docs", js: "/docs", typ: r("Docs") },
+        { json: "/ipvd", js: "/ipvd", typ: r("Docs") },
+    ], false),
+    "Docs": o([
+        { json: "title", js: "title", typ: "any" },
+        { json: "description", js: "description", typ: "any" },
+    ], false),
+    "Default": o([
+        { json: "site_name", js: "site_name", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+        { json: "description", js: "description", typ: "any" },
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },

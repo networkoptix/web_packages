@@ -1,0 +1,201 @@
+import json
+import os
+import re
+from itertools import chain
+from django.conf import settings
+from django.shortcuts import render_to_response
+from django.http import HttpResponse
+from django.views.generic.base import TemplateView
+from waffle import switch_is_active
+
+
+from cms.models import cloud_portal_customization_cache
+from util.helpers import detect_language_by_request
+from cms.models import Menu, Asset, Language
+from cms.controllers.documentation import generate_doc_json
+from cms.controllers.integration import make_integrations_json
+from cms.feature_flags import SWITCHES
+
+
+def get_route_meta(path, *args):
+    root, *segments = path
+
+    handler = next((
+        handler
+        for handler in get_route_meta.handlers
+        if handler.can_handle(root)
+    ), lambda *_: {})
+
+    return handler(segments, *args)
+
+
+def register_meta_handler(root):
+    def _for_route(func):
+        get_route_meta.handlers = [
+            *get_route_meta.handlers, func] if hasattr(get_route_meta, 'handlers') else [func]
+        func.can_handle = lambda route: route == root
+        func.route = f'/{root}'
+        return func
+    return _for_route
+
+
+@register_meta_handler('integrations')
+def get_integrations_meta(path, config, lang, config_meta, lang_meta):
+    integration_slug, context, *_ = chain(path, [''] * 2)
+    base_route_meta = {
+        **config_meta.get(get_integrations_meta.route, {}),
+        **lang_meta.get(get_integrations_meta.route, {})
+    }
+
+    title_segments = base_route_meta['title'].split(' - ')[::-1]
+
+    if integration_id := integration_slug.split('-')[0]:
+        integration = Asset.objects.filter(id=integration_id).first()
+        how_to_setup = context == context
+
+        if integration:
+            base_route_meta['type'] = 'article'
+            integration_content, = make_integrations_json([integration], lang)
+
+            information_content = integration_content.get('information', {})
+            overview_content = integration_content.get('overview', {})
+            instructions_content = integration_content.get('instructions', {})
+
+            if overview_video := overview_content.get('overviewVideo'):
+                base_route_meta['video'] = overview_video
+
+            if how_to_setup and (screenshot := instructions_content.get('instructionScreenshot1')):
+                base_route_meta['image'] = screenshot
+
+            if title := information_content.get('name'):
+                title_segments.append(title)
+            if how_to_setup and (instructions := instructions_content.get('installationInstructions')):
+                base_route_meta['description'] = instructions
+            elif description := information_content.get('shortDescription'):
+                base_route_meta['description'] = description
+
+    base_route_meta['title'] = ' - '.join(
+        title for title in title_segments[::-1][:2] if title)
+
+    return base_route_meta
+
+
+@register_meta_handler('docs')
+def get_doc_meta(path, config, lang, config_meta, lang_meta):
+    menu_base, menu_url, doc_slug, *_ = chain(path, [''] * 3)
+    base_route_meta = {
+        **config_meta.get(get_doc_meta.route, {}),
+        **lang_meta.get(get_doc_meta.route, {})
+    }
+
+    description = ""
+    title_segments = base_route_meta['title'].split(' - ')[::-1]
+
+    if menu := Menu.objects.filter(base_url=menu_base, url=menu_url).first():
+        title_segments.append(menu.title)
+        description = menu.short_description
+
+    if doc_id := doc_slug.split('-')[0]:
+        doc = Asset.objects.filter(id=doc_id).first()
+        if doc:
+            base_route_meta['type'] = 'article'
+            doc_content, = generate_doc_json([doc], lang, trust_cache=True)
+
+            if title := doc_content.get('title'):
+                title_segments.append(title)
+
+            if description := doc_content.get('shortDescription'):
+                description = description
+
+    if description:
+        base_route_meta['description'] = description
+
+    base_route_meta['title'] = ' - '.join(
+        title for title in title_segments[::-1][:2] if title)
+
+    return base_route_meta
+
+# Not sure if we need custom meta for content route
+# @register_meta_handler('content')
+# def get_content_meta(path, config, lang, config_meta, lang_meta):
+#     return {}
+
+
+def get_lang_meta(request):
+    lang = detect_language_by_request(request)
+    lang_path = os.path.join(settings.STATIC_LOCATION, settings.CUSTOMIZATION,
+                             'static', f'lang_{lang}', 'language_compiled.json')
+    with open(lang_path) as file:
+        return json.load(file)['metaDefaults']
+
+
+def get_config_meta(request):
+    config_path = os.path.join(
+        settings.STATIC_LOCATION, settings.CUSTOMIZATION, 'static', 'metaDefaults.json')
+    is_secure = request.is_secure()
+    host = request.get_host()
+    base = f'http{"s" if is_secure else ""}://{host}'
+    with open(config_path) as file:
+        config_meta = json.load(file)
+
+    for route in config_meta:
+        image_path = config_meta[route].get('image')
+        if image_path:
+            config_meta[route]['image'] = base + image_path
+
+    return config_meta
+
+
+def get_meta(request):
+    config = cloud_portal_customization_cache(settings.CUSTOMIZATION)['config']
+    lang = Language(code=detect_language_by_request(request))
+    lang_meta = get_lang_meta(request)
+    config_meta = get_config_meta(request)
+    base_meta = {
+        **lang_meta['default'],
+        **config_meta['default'],
+        'url': request.build_absolute_uri(request.path)
+    }
+
+    generated_meta = {
+        **base_meta,
+        **get_route_meta(
+            request.path.split('/')[1:],
+            config,
+            lang,
+            config_meta,
+            lang_meta
+        )
+    }
+
+    return {
+        'title': generated_meta['title'],
+        'meta': generated_meta.items()
+    }
+
+
+SHARE_CRAWLER_REGEX = r'^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$'
+
+
+def app_view(request):
+    if switch_is_active(SWITCHES.server_side_meta):
+        context = get_meta(request)
+        user_agent = request.META['HTTP_USER_AGENT']
+        open_graph_crawler = re.match(SHARE_CRAWLER_REGEX, user_agent)
+
+        if open_graph_crawler:
+            return render_to_response("cms/sharing_meta.html", context)
+
+        return TemplateView.as_view(
+            template_name="static/index.mustache.html",
+            extra_context=context)(request)
+
+    return render_to_response("static/index.html")
+
+
+def robots_txt(request):
+    user_agent = request.META['HTTP_USER_AGENT']
+    open_graph_crawler = re.match(SHARE_CRAWLER_REGEX, user_agent)
+    allow = switch_is_active(SWITCHES.server_side_meta) and open_graph_crawler
+    lines = ['# robotstxt.org', '', 'User-agent: *', f'{"allow" if allow else "disallow"}: /']
+    return HttpResponse('\n'.join(lines), content_type="text/plain")

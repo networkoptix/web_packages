@@ -728,6 +728,21 @@ export function setupConfig(): IConfig {
             maxEventLogRecords: { type: 'number' },
 
             forceLiveCacheForPrimaryStream: { type: 'text' }
+        },
+        metaDefaults: {
+            default: {
+                image: '/static/images/logo.png',
+                type: 'website'
+            },
+            '/integrations/': {
+                type: 'article'
+            },
+            '/docs/': {
+                type: 'article'
+            },
+            '/content/': {
+                type: 'article'
+            }
         }
     };
 }
