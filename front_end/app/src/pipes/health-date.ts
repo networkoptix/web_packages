@@ -1,8 +1,10 @@
-import {
-    Inject, LOCALE_ID,
-    Pipe, PipeTransform
-}                     from '@angular/core';
 import { formatDate } from '@angular/common';
+import {
+    Inject,
+    LOCALE_ID,
+    Pipe,
+    PipeTransform
+} from '@angular/core';
 
 @Pipe({ name: 'NxHealthDate' })
 export class NxHealthDatePipe implements PipeTransform {
