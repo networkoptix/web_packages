@@ -187,10 +187,10 @@ export interface Common {
 
 export interface CommonAccount {
     created:   NoSettings;
-    activated: Systems;
+    activated: Docs;
 }
 
-export interface Systems {
+export interface Docs {
     title: any;
 }
 
@@ -656,15 +656,10 @@ export interface MenuTitles {
 
 export interface MetaDefaults {
     default:         Default;
-    "/systems":      Systems;
+    "/systems":      Docs;
     "/integrations": Docs;
     "/docs":         Docs;
     "/ipvd":         Docs;
-}
-
-export interface Docs {
-    title:       any;
-    description: any;
 }
 
 export interface Default {
@@ -1295,9 +1290,9 @@ const typeMap: any = {
     ], false),
     "CommonAccount": o([
         { json: "created", js: "created", typ: r("NoSettings") },
-        { json: "activated", js: "activated", typ: r("Systems") },
+        { json: "activated", js: "activated", typ: r("Docs") },
     ], false),
-    "Systems": o([
+    "Docs": o([
         { json: "title", js: "title", typ: "any" },
     ], false),
     "NoSettings": o([
@@ -1715,14 +1710,10 @@ const typeMap: any = {
     ], false),
     "MetaDefaults": o([
         { json: "default", js: "default", typ: r("Default") },
-        { json: "/systems", js: "/systems", typ: r("Systems") },
+        { json: "/systems", js: "/systems", typ: r("Docs") },
         { json: "/integrations", js: "/integrations", typ: r("Docs") },
         { json: "/docs", js: "/docs", typ: r("Docs") },
         { json: "/ipvd", js: "/ipvd", typ: r("Docs") },
-    ], false),
-    "Docs": o([
-        { json: "title", js: "title", typ: "any" },
-        { json: "description", js: "description", typ: "any" },
     ], false),
     "Default": o([
         { json: "site_name", js: "site_name", typ: "any" },
