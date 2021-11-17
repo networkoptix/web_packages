@@ -1,10 +1,10 @@
-import { IConfig } from '@services/nx-config';
-import { environment } from '@environments/environment';
 import {
     ConfigType,
     ConsoleSection,
     ModalType
 } from '@components/console-table/console-table.component.types';
+import { environment } from '@environments/environment';
+import { IConfig } from '@services/nx-config';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 
 export function setupConfig(): IConfig {

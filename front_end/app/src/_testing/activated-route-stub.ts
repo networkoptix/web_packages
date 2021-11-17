@@ -1,6 +1,6 @@
 // export for convenience.
 import { convertToParamMap, ParamMap, Params } from '@angular/router';
-import { ReplaySubject }                       from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 export { ActivatedRoute } from '@angular/router';
 
