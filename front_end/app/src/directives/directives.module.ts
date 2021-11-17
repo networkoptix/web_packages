@@ -1,21 +1,21 @@
-import { NgModule }                   from '@angular/core';
-import { AngularSvgIconModule }       from 'angular-svg-icon';
+import { NgModule } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxArrowNavDirective }        from './nx-arrow-nav';
-import { NxClickElsewhereDirective }  from './nx-click-elsewhere';
-import { NxFocusMeDirective }         from './nx-focus-me';
-import { HighlightPipe }              from './nx-highlight-text';
-import { NxScrollHelperDirective }    from './nx-scroll-helper';
-import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
-import { NxUrlValidatorDirective }    from './nx-url-validator';
-import { NxEditableDirective }        from './nx-editable.directive';
-import { NxResizeObserver }           from './nx-resize.directive';
-import { NxAddSvgSrc }                from './add-data.directive';
-import { NxIntersectionObserver }     from './nx-intersection.directive';
-import { NxProjectedLinkHandler }     from './nx-projected-link-handler.directive';
-import { NxProjectedCodeBlock }       from './nx-projected-code-block.directive';
-import { NxMatchHeightDirective } from './nx-match-height.directive';
+import { NxAddSvgSrc } from './add-data.directive';
 import { FeatureFlagDirective } from './feature.directive';
+import { NxArrowNavDirective } from './nx-arrow-nav';
+import { NxClickElsewhereDirective } from './nx-click-elsewhere';
+import { NxEditableDirective } from './nx-editable.directive';
+import { NxFocusMeDirective } from './nx-focus-me';
+import { HighlightPipe } from './nx-highlight-text';
+import { NxIntersectionObserver } from './nx-intersection.directive';
+import { NxMatchHeightDirective } from './nx-match-height.directive';
+import { NxProjectedCodeBlock } from './nx-projected-code-block.directive';
+import { NxProjectedLinkHandler } from './nx-projected-link-handler.directive';
+import { NxResizeObserver } from './nx-resize.directive';
+import { NxScrollHelperDirective } from './nx-scroll-helper';
+import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
+import { NxUrlValidatorDirective } from './nx-url-validator';
 
 @NgModule({
     imports: [

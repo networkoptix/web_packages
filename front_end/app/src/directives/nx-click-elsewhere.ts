@@ -1,6 +1,9 @@
 import {
-    Directive, EventEmitter, ElementRef,
-    HostListener, Output
+    Directive,
+    EventEmitter,
+    ElementRef,
+    HostListener,
+    Output
 } from '@angular/core';
 
 @Directive({ selector: '[nxClickElsewhere]' })

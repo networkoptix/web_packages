@@ -1,7 +1,9 @@
 import {
-    Directive, ElementRef,
-    OnInit, Renderer2
-}                                   from '@angular/core';
+    Directive,
+    ElementRef,
+    OnInit,
+    Renderer2
+} from '@angular/core';
 
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 

@@ -1,7 +1,13 @@
 import {
-    Directive, ElementRef, EventEmitter, Output, OnDestroy, OnInit, Input
-}                                          from '@angular/core';
-import { Subject, Observable }             from 'rxjs';
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Output,
+    OnDestroy,
+    OnInit,
+    Input
+} from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil, debounceTime, startWith } from 'rxjs/operators';
 
 export enum IntersectionStatus {

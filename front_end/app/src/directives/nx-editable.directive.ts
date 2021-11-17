@@ -1,7 +1,13 @@
 import {
-    Directive, ElementRef, Input,
-    HostListener, HostBinding, OnInit,
-    EventEmitter, Output, SimpleChanges
+    Directive,
+    ElementRef,
+    Input,
+    HostListener,
+    HostBinding,
+    OnInit,
+    EventEmitter,
+    Output,
+    SimpleChanges
 } from '@angular/core';
 
 @Directive({

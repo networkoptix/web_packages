@@ -1,4 +1,10 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+    Directive,
+    Input,
+    TemplateRef,
+    ViewContainerRef
+} from '@angular/core';
+
 import { NxConfigService } from '@services/nx-config';
 import { FeatureFlagType } from '@services/nx-config/base-config';
 
