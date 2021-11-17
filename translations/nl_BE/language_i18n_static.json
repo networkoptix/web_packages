@@ -867,7 +867,7 @@
                 "success": "Systeemnaam opgeslagen"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker"
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"
@@ -1049,5 +1049,24 @@
         "serverOffline": "Kan geen externe opslag toevoegen - server reageert niet",
         "success": "Externe opslag toegevoegd",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Cloud Portal",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systems - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Supported Devices - %CLOUD_NAME%"
+        }
     }
 }

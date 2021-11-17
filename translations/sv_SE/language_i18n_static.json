@@ -1049,5 +1049,24 @@
         "serverOffline": "Det gick inte att lägga till extern lagring - servern svarar inte",
         "success": "Extern lagring har lagts till",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
+    },
+    "metaDefaults": {
+        "default": {
+            "site_name": "%CLOUD_NAME%",
+            "title": "%CLOUD_NAME% - Cloud Portal",
+            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+        },
+        "/systems": {
+            "title": "Systems - %CLOUD_NAME%"
+        },
+        "/integrations": {
+            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+        },
+        "/docs": {
+            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+        },
+        "/ipvd": {
+            "title": "Supported Devices - %CLOUD_NAME%"
+        }
     }
 }
