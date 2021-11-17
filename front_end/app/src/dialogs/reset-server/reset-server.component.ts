@@ -1,23 +1,23 @@
-import { Component, Inject, Input }  from '@angular/core';
-import { Router }                    from '@angular/router';
-import { DOCUMENT }                  from '@angular/common';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { timer }                     from 'rxjs';
+import { Component, Inject, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
-import { LocalStorageService }       from 'ngx-webstorage';
+import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxProcessService, Process } from '@services/process.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxSystem }                  from '@services/system.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
     ModuleInformationReply, NormalResponse
-}                                     from '@services/system-api.types';
-import { NxAppStateService }          from '@services/nx-app-state.service';
-import { environment }                from '@environments/environment';
+} from '@services/system-api.types';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
 
 @Component({
@@ -114,7 +114,7 @@ export class ResetServerModalContent {
                 } catch (err) {
                     if (![503, 504].includes(err.status)) {
                         return handleResetFailError('getModuleInfo', err);
-                    } else if (this.CONFIG.isLocal) {
+                    } else if (environment.isLocal) {
                         // If we failed to get module info the system probably has only one server.
                         this.activeModal.close();
                         this.appState.systemAvailable$.next(false);

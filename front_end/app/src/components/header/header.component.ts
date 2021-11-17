@@ -1,32 +1,37 @@
 import {
     Component, OnDestroy,
     OnInit, Renderer2, Inject
-}                                    from '@angular/core';
+} from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
-}                                       from '@angular/router';
+} from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    Subscription, timer, BehaviorSubject, combineLatest, fromEvent, SubscriptionLike
-}                                       from 'rxjs';
-import { map, startWith }            from 'rxjs/operators';
+    Subscription,
+    timer,
+    BehaviorSubject,
+    combineLatest,
+    fromEvent,
+    SubscriptionLike
+} from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
-import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAppStateService }         from '@services/nx-app-state.service';
-import { NxAccountService }          from '@services/account.service';
-import { NxSessionService }          from '@services/session.service';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxHeaderService }           from '@services/nx-header.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxAccountService } from '@services/account.service';
+import { NxSessionService } from '@services/session.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxMenusService }            from '@services/menus.service';
-import { WINDOW }                    from '@services/window-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { environment }               from '@environments/environment';
-import { NxBootstrapProvider }       from '@services/nx-bootstrap-provider';
-import { NxStorageService }          from '@services/storage.service';
+import { NxMenusService } from '@services/menus.service';
+import { WINDOW } from '@services/window-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxStorageService } from '@services/storage.service';
 
 class CombinedWidths {
     constructor(
@@ -63,6 +68,7 @@ enum breakpoints {
 export class NxHeaderComponent implements OnInit, OnDestroy {
     authorizeUrl = '/authorize'
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     user: any = {};
@@ -206,7 +212,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
             if (windowWidth < breakpoints.LG) {
                 showSmallRightNav = true;
-                const collapsedSize: sizes = this.CONFIG.isLocal ? sizes.XL : sizes.MD;
+                const collapsedSize: sizes = this.environment.isLocal ? sizes.XL : sizes.MD;
                 const widthDifference = rightNav - this.rightNavWidthCollapsed$.value;
                 navWidth = navWidth - widthDifference + collapsedSize;
             }
@@ -360,7 +366,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             this.loginState = true;
                             this.renderer.removeClass(document.body, 'anonymous');
                             this.renderer.addClass(document.body, 'authorized');
-                            if (!this.CONFIG.isLocal) {
+                            if (!this.environment.isLocal) {
                                 this.systemsService.getSystem(account.email);
                                 this.systemsService
                                     .forceUpdateSystems(loginState)
@@ -377,7 +383,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     });
             });
 
-        if (this.CONFIG.isLocal) {
+        if (this.environment.isLocal) {
             this.hideWebAdmin = true;
             this.accountService.get().then(account => {
                 this.hideWebAdmin = !account || this.bootstrapProvider.newSystem;
@@ -455,7 +461,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.systems) {
             return;
         }
-        if (this.singleSystem || this.CONFIG.isLocal) { // Special case for a single system - it always active
+        if (this.singleSystem || this.environment.isLocal) { // Special case for a single system - it always active
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
             this.headerService.activeSystem = this.systems.find((system) => {
@@ -465,7 +471,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.activeSystem = undefined;
         }
 
-        if (!this.CONFIG.isLocal) {
+        if (!this.environment.isLocal) {
             this.accountService
                 .get()
                 .then((account) => {
@@ -507,7 +513,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     get mainUrl() {
         if (!this.user.email) {
-            return this.CONFIG.isLocal ? '/settings' : '/';
+            return this.environment.isLocal ? '/settings' : '/';
         } else if (this.singleSystem) {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         } else {

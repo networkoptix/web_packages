@@ -2,13 +2,14 @@ import { Component, Input }  from '@angular/core';
 import { IConfig, NxConfigService } from '@services/nx-config';
 
 import { NxDialogsService }  from '@dialogs/dialogs.service';
-import { NxUriService }      from '@services/uri.service';
-import { NxMenuService }     from '../menu.service';
+import { NxUriService } from '@services/uri.service';
+import { NxMenuService } from '../menu.service';
+import { environment } from '@environments/environment';
 
 // TODO: Do we really need this? -- TT
 @Component({
     selector: 'nx-menu-button',
-    template: `<button *ngIf="!CONFIG.isLocal || CONFIG.cloudSystemId|| button.id !== 'addUser'"
+    template: `<button *ngIf="!environment.isLocal || CONFIG.cloudSystemId|| button.id !== 'addUser'"
                     class="inset btn btn-menu btn-clear"
                     [disabled]="button.disabled"
                     (click)="action()">{{caption}}</button>`
@@ -19,6 +20,7 @@ export class NxMenuButtonComponent {
 
     caption: string;
     CONFIG: IConfig;
+    environment = environment;
 
     constructor(
         private dialogs: NxDialogsService,

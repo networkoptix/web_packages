@@ -1,18 +1,18 @@
-/* eslint-disable camelcase */
 import {
     Component, Input, SimpleChanges
-}                          from '@angular/core';
-import { UntilDestroy }    from '@ngneat/until-destroy';
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { BaseDropdown }              from '../injDropdown';
+import { BaseDropdown } from '../injDropdown';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
-import { NxUriService }              from '@services/uri.service';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { NxMenusService }  from '@services/menus.service';
+import { NxConfigService } from '@services/nx-config';
+import { NxUriService } from '@services/uri.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { NxAccountService }          from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -53,7 +53,7 @@ export class NxDropMenu extends BaseDropdown {
             this.menusService.getMenu('header', this.systems$.value.length >= 1)
                 .subscribe(header => {
                     const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                    if (this.CONFIG.isLocal) {
+                    if (environment.isLocal) {
                         this.replaceCloudHost(nodes);
                     }
                     this.menuNodes$.next(nodes);
@@ -117,7 +117,7 @@ export class NxDropMenu extends BaseDropdown {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
             // Todo: Fix so that it checks for admin correctly.
             let user: any;
-            if (this.CONFIG.isLocal) {
+            if (environment.isLocal) {
                 user = await this.accountService.mediaServerApi.getCurrentUser(true);
             } else {
                 user = await this.accountService.get(true);

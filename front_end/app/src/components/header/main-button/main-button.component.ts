@@ -1,10 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+    Component, Input, OnChanges, OnInit, SimpleChanges
+} from '@angular/core';
 
-import { environment }              from '@environments/environment';
-import { MenuNode }                 from '@services/menus.service.types';
+import { environment } from '@environments/environment';
+import { MenuNode } from '@services/menus.service.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService }         from '@services/nx-header.service';
+import { NxHeaderService } from '@services/nx-header.service';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 export enum mainButtonState {
@@ -26,6 +28,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() hideArrow = false;
     @Input() maxWidth = 175;
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     systemCounter: number;
@@ -51,7 +54,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     getState() {
         //  TODO: Refine state when adding header mechanics
         let state = mainButtonState.ALL;
-        if (this.CONFIG.isLocal) {
+        if (this.environment.isLocal) {
             state = mainButtonState.SYSTEM;
         } else if (this.node && !this.headerService.currentLocation.isSystem) {
             state = mainButtonState.NODE;

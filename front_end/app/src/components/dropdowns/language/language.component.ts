@@ -4,15 +4,15 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BaseDropdown }              from '../injDropdown';
-import { environment }               from '@environments/environment';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { BaseDropdown } from '../injDropdown';
+import { environment } from '@environments/environment';
+import { NxUtilsService } from '@services/utils.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
-import { ILanguage, ILanguages }     from '@services/nx-cloud-api.types';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { NxSessionService }          from '@services/session.service';
+import { NxConfigService } from '@services/nx-config';
+import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
+import { LocalStorageService } from 'ngx-webstorage';
+import { NxSessionService } from '@services/session.service';
 
 @Directive()
 class BaseLanguageDropdown extends BaseDropdown {
@@ -76,7 +76,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                  we should use this for seamless change of language
                  // this.translate.use(lang.replace('_', '-'));
                  */
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
                     window.location.reload();
                 } else {

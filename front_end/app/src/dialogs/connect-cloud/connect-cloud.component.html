@@ -14,7 +14,7 @@
             </ng-template>
             <p *ngIf="codeExists; else noCode" class="mb-3" translate>Enter password to continue.</p>
 
-            <div class="form-group" *ngIf="isLocal">
+            <div class="form-group" *ngIf="environment.isLocal">
                 <label for="password" translate>Login</label>
                 <input class="form-control"
                        id="login" autocomplete="new-password"

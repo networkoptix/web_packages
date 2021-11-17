@@ -1,28 +1,31 @@
 import {
     Component, HostListener, Inject,
     ViewEncapsulation, ViewChild, ElementRef
-}                                                  from '@angular/core';
+} from '@angular/core';
 import {
     ActivationEnd, ActivatedRoute, ActivationStart, Event,
     GuardsCheckEnd, GuardsCheckStart, NavigationEnd, Router
 } from '@angular/router';
-import { CookieService }                           from 'ngx-cookie-service';
-import { DeviceDetectorService }                   from 'ngx-device-detector';
-import { debounceTime, delay, filter, finalize, map, retryWhen, take, timeout } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import {
+    debounceTime, delay, filter, finalize, map, retryWhen, take, timeout
+} from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
-import { LocalStorageService }                     from 'ngx-webstorage';
-import { NxRibbonService }                         from '@components/ribbon';
-import { WINDOW }                                  from '@services/window-provider';
-import { NxApplyService }                          from '@services/apply.service';
-import { NxAppStateService }                       from '@services/nx-app-state.service';
-import { NxScrollMechanicsService }                from '@services/scroll-mechanics.service';
-import { NxUriService }                            from '@services/uri.service';
-import { NxPageService }                           from '@services/page.service';
-import { NxBootstrapProvider }                     from '@services/nx-bootstrap-provider';
-import { NxDialogsService }                        from '@dialogs/dialogs.service';
-import { NxConfigService, IConfig }                from '@services/nx-config';
-import { NxCloudApiService }                       from '@services/nx-cloud-api';
-import { SystemGuard }                             from '@src/routeGuards';
+import { LocalStorageService } from 'ngx-webstorage';
+import { NxRibbonService } from '@components/ribbon';
+import { WINDOW } from '@services/window-provider';
+import { NxApplyService } from '@services/apply.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUriService } from '@services/uri.service';
+import { NxPageService } from '@services/page.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { SystemGuard } from '@src/routeGuards';
+import { environment } from '@environments/environment';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -31,7 +34,7 @@ require('./scripts/vendor/protocolcheck');
     selector: 'nx-app',
     template: `
         <div *ngIf="!reauthorizing" class="headerContainer">
-            <nx-header *ngIf="(appStateService.ready || CONFIG.isLocal) && !CONFIG.browserNotSupported"></nx-header>
+            <nx-header *ngIf="(appStateService.ready || environment.isLocal) && !CONFIG.browserNotSupported"></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
         <div class="outerContainer"
@@ -45,7 +48,7 @@ require('./scripts/vendor/protocolcheck');
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
-            <nx-overlay-modal *ngIf="appStateService.ready && CONFIG.isLocal"></nx-overlay-modal>
+            <nx-overlay-modal *ngIf="appStateService.ready && environment.isLocal"></nx-overlay-modal>
             <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
             <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
         </ng-container>`,
@@ -62,6 +65,7 @@ export class AppComponent {
     reauthorizing: boolean;
 
     CONFIG: IConfig;
+    environment = environment;
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 
@@ -173,7 +177,7 @@ export class AppComponent {
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
         if (!bootstrapProvider.loaded) {
-            if (!this.CONFIG.isLocal) {
+            if (!this.environment.isLocal) {
                 this.router.navigate(['/503'])
                     .catch((error) => console.error(error))
                     .finally(() => {

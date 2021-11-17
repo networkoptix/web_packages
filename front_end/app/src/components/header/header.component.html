@@ -4,7 +4,7 @@
 <ng-template #navIcon>
     <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
         <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
-            <img [alt]="CONFIG.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
+            <img [alt]="environment.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'" src="{{CONFIG.previewPath}}/static/images/logo.png">
         </a>
     </div>
 </ng-template>
@@ -81,7 +81,7 @@
                 <li>
                     <nx-account-settings-select></nx-account-settings-select>
                     <nx-header-language-select
-                        *ngIf="CONFIG.isLocal"
+                        *ngIf="environment.isLocal"
                         class="auto"
                         short="true" altStyle="true"
                         instantReload="true" instantApply="true"></nx-header-language-select>
@@ -141,7 +141,7 @@
                     <li>
                         <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
                         <nx-header-language-select
-                            *ngIf="CONFIG.isLocal"
+                            *ngIf="environment.isLocal"
                             class="auto"
                             short="true" altStyle="true"
                             instantReload="true" instantApply="true"></nx-header-language-select>

@@ -1,12 +1,14 @@
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import { UntilDestroy }                from '@ngneat/until-destroy';
+import {
+    Component, ElementRef, Input, OnDestroy, ViewChild
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import {
     BehaviorSubject, combineLatest, SubscriptionLike
 } from 'rxjs';
 
-import { BaseDropdown }              from '../injDropdown';
-import { environment }               from '@environments/environment';
-import { NxConfigService }           from '@services/nx-config';
+import { BaseDropdown } from '../injDropdown';
+import { environment } from '@environments/environment';
+import { NxConfigService } from '@services/nx-config';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -26,6 +28,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
 
     accountSubscription: SubscriptionLike;
     widthSubscription: SubscriptionLike;
+
+    environment = environment;
 
     settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser'> = {
         name: '',
@@ -66,7 +70,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                 if (dropdown && button) {
                     const self: any = this?.dropdown.nativeElement;
                     let widthFromRightEdge = 0;
-                    if (this.CONFIG.isLocal && self?.parentNode.nextSibling) {
+                    if (this.environment.isLocal && self?.parentNode.nextSibling) {
                         widthFromRightEdge = -1 * self.parentNode.nextSibling.offsetWidth;
                     }
 

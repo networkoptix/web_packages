@@ -110,17 +110,19 @@ describe('NxHeaderMainButtonComponent', () => {
     });
 
     it('should show system state for webadmin', () => {
-        component.CONFIG.isLocal = true;
+        component.environment.isLocal = true;
         headerMock.currentLocation.isSystem = false;
         headerMock.activeSystem = {
             name: undefined
         };
         fixture.detectChanges();
-        expect(el.nativeElement.querySelector('span').innerText).toBe(node.display_name);
+        const span: HTMLSpanElement = el.nativeElement.querySelector('span');
+        expect(span.classList).toContain('ellipsis');
+        expect(span.innerText).toBe(node.display_name);
     });
 
     it('should show systems state', () => {
-        component.CONFIG.isLocal = false;
+        component.environment.isLocal = false;
         component.systems = [{}, {}, {}];
         headerMock.currentLocation.isSystem = true;
         headerMock.activeSystem = undefined;

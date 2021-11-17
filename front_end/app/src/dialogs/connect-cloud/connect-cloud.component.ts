@@ -12,6 +12,7 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService, Process } from '@services/process.service';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,6 +28,7 @@ export class ConnectCloudModalContent implements OnInit {
 
     readonly isLocal: boolean;
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     cloudTokens: any;
@@ -52,7 +54,6 @@ export class ConnectCloudModalContent implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.isLocal = this.CONFIG.isLocal;
     }
 
     private connect(systemName, email, accessToken) {

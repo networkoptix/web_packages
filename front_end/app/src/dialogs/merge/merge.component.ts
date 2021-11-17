@@ -1,21 +1,22 @@
 import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService }          from '@ngx-translate/core';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxAccountService }          from '@services/account.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystemService }           from '@services/system.service';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxRibbonService }           from '@components/ribbon';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import StateMachine                  from './stateMachine';
-import { State }                     from './stateForMergeDialog';
+import { NxSystemService } from '@services/system.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxRibbonService } from '@components/ribbon';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import StateMachine from './stateMachine';
+import { State } from './stateForMergeDialog';
+import { environment } from '@environments/environment';
 
 @Component({
     selector: 'nx-modal-merge-content',
@@ -31,6 +32,7 @@ export class MergeModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+    environment = environment;
     account: NxAccountService;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;
@@ -308,7 +310,7 @@ export class MergeModalContent {
         return this.system.getPeerSystems().toPromise()
             .then(res => {
                 this.peerSystems = res.reply
-                    .filter(peer => this.CONFIG.isLocal ? this.system.id !== peer.localSystemId : !peer.cloudSystemId)
+                    .filter(peer => this.environment.isLocal ? this.system.id !== peer.localSystemId : !peer.cloudSystemId)
                     .map(peer => {
                         if (peer.remoteAddresses) {
                             peer.remoteAddresses.forEach((addy: string) => {
@@ -423,7 +425,7 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
                 // when trying again, does not have access to previous state template
-                if (!this.CONFIG.isLocal && this.machine.state.template.passwordValue) {
+                if (!this.environment.isLocal && this.machine.state.template.passwordValue) {
                     // for use case when password gets changed
                     if (this.serverUrl.includes('//admin:')) {
                         const startIndex = this.serverUrl.indexOf('//admin') + 2;
@@ -484,15 +486,15 @@ export class MergeModalContent {
             .createProcess(() => {
                 let password = this.machine.state.template.passwordValue;
 
-                if (this.CONFIG.isLocal) {
+                if (this.environment.isLocal) {
                     password = this.remotePassword;
                 }
-                if (!password && !this.CONFIG.isLocal) {
+                if (!password && !this.environment.isLocal) {
                     // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
 
-                if (this.nonCloudMerge || this.CONFIG.isLocal) {
+                if (this.nonCloudMerge || this.environment.isLocal) {
                     const takeRemoteSettings = this.system.id === this.secondarySystem.id;
                     return this.dryRunAvailable
                         ? this.system.mergeSystems(this.serverUrl, this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
@@ -522,7 +524,7 @@ export class MergeModalContent {
             .then(res => {
                 if (res.mergeInProgress || res.error === '0' || res.resultCode === this.LANG.errorCodes.ok?.()) {
                     // handles telling the app which systems are getting merged and the proper messaging
-                    if (this.CONFIG.isLocal) {
+                    if (this.environment.isLocal) {
                         const template =
                         `<div class="my-1">
                             <div class="larger"><strong>${this.secondarySystem.name}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
@@ -757,7 +759,7 @@ export class MergeModalContent {
             if (Object.prototype.hasOwnProperty.call(errorText, error)) {
                 let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
                 if (this.CONFIG.cloudHost) {
-                    downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
                 }
                 const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
                     ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
