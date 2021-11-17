@@ -5,13 +5,18 @@
 
         <nx-block type="mb-3" header-style="extended">
             <header>
-                <div class="header-editable">
-                    <nx-editable-heading
-                            (editModeState)="editMode = $event"
-                            [nameWatcher]="systemNameWatcher"
-                            [editEnabled]="enableEdit"></nx-editable-heading>
-                    <nx-client-button *ngIf="!environment.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
-                </div>
+                <form #systemNameForm="ngForm"
+                      name="systemNameForm"
+                      novalidate>
+                    <div class="header-editable">
+                            <nx-editable-heading
+                                name="systemName" id="systemName"
+                                (editModeState)="editMode = $event"
+                                [(ngModel)]="systemName"
+                                [editEnabled]="enableEdit"></nx-editable-heading>
+                        <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
+                    </div>
+                </form>
 
                 <span class="system-owner" *ngIf="!environment.isLocal">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
@@ -129,3 +134,5 @@
         </nx-system-advanced-admin-component>
     </div>
 </div>
+
+<ng-container #pageApply></ng-container>

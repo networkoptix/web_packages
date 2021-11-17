@@ -42,7 +42,7 @@
                     [system]="system"
                     [roles]="system.accessRoles"
                     [ngModel]="user.role"
-                    (ngModelChanged)="setPermission($event)">
+                    (ngModelChange)="setPermission($event)">
             </nx-permissions-select>
             <span class="help-block" [innerText]="accessDescription"></span>
         </div>

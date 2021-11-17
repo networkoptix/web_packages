@@ -1,26 +1,22 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    ViewChild,
-    ElementRef,
-    OnChanges,
-    SimpleChanges
+    Component, OnInit, Input,
+    ViewChild, ElementRef, OnChanges, SimpleChanges
 } from '@angular/core';
-import {  catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { NxApplyService, Watcher } from '@services/apply.service';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { NxMenuService } from '@src/menu';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { delayInitial } from '@services/utils.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NgForm } from '@angular/forms';
 import { environment } from '@environments/environment';
 
 const HR_MINS = 60;
@@ -80,17 +76,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     is2faDialogActive: Promise<any>;
     system2faEnabled = false;
-
     settingsWatchersSet = false;
-    settingsWatchers = {
-        autoDiscoveryEnabled: new Watcher<boolean>(),
-        statisticsAllowed: new Watcher<boolean>(),
-        cameraSettingsOptimization: new Watcher<boolean>(),
-        auditTrailEnabled: new Watcher<boolean>(),
-        trafficEncryptionForced: new Watcher<boolean>(),
-        videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitMinutes: new Watcher<number>()
+
+    systemAndSecuritySettings = {
+        autoDiscoveryEnabled: false,
+        statisticsAllowed: false,
+        cameraSettingsOptimization: false,
+        auditTrailEnabled: false,
+        trafficEncryptionForced: false,
+        videoTrafficEncryptionForced: false,
+        sessionLimitMinutes: 0
     };
+
+    systemSettingsFormWatcher: FormWatcher;
+    securitySettingsFormWatcher: FormWatcher;
+
+    @ViewChild('systemSettingsForm', { read: NgForm }) systemSettingsForm;
+    @ViewChild('securitySettingsForm', { read: NgForm }) securitySettingsForm;
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
@@ -139,7 +141,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
         this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
         this.limitSessionTimeItems = [...Object.values(this.limitSessionTimeUnits)];
-        this.initApplyService();
+        this.initProcess();
 
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
             delayInitial(this.cloudApi.getCustomAccountProperty(AlexaSettings.CUSTOM_PROPERTY_ENDPOINT)).pipe(
@@ -153,40 +155,25 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             );
         }
 
-        const { system2faEnabled } = this.systemsService.systems
-            .filter((system) => system.id === this.system.id)?.shift();
-        this.system2faEnabled = system2faEnabled;
+        this.system2faEnabled = this.systemsService.systems
+            .filter((system) => system.id === this.system.id)?.shift().system2faEnabled;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.settings) {
             const { previousValue, currentValue, firstChange } = changes.settings;
-            if (previousValue === undefined && currentValue) {
-                this.cleanUpWatchers(currentValue);
-            }
             if ((JSON.stringify(previousValue) !== JSON.stringify(currentValue) || !this.settingsWatchersSet) && !firstChange && !this.applyService.locked) {
-                this.setWatcherValues(currentValue);
+                this.setValues(currentValue);
             }
         }
     }
 
     ngOnDestroy() {
-        this.applyService.removeWatchers();
+        // this.applyService.removeWatchers();
     }
 
-    // removes watcher(s) if setting does not exist
-    cleanUpWatchers(settings) {
-        Object.keys(this.settingsWatchers).forEach(sw => {
-            if (!(sw in settings)) {
-                delete this.settingsWatchers[sw];
-            }
-        });
-    }
-
-    setWatcherValues(settings) {
-        this.applyService.setVisible(false);
-        // this.applyService.reset(true);
-        const sw = this.settingsWatchers;
+    setValues(settings) {
+        const sw = this.systemAndSecuritySettings;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];
             if (curr) {
@@ -196,26 +183,47 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                  * so it needs custom code to handle
                  */
                 if (isNaN(curr)) {
-                    sw[setting].originalValue = curr === 'true';
+                    sw[setting] = curr === 'true';
                 } else if (this.limitSessionTimeUnits) {
                     curr = parseInt(curr);
                     this.sessionLimitToggle = Boolean(curr);
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.updateTimeUnitInput(this.selectedTimeUnit);
-                    sw[setting].originalValue = curr;
+                    sw[setting] = curr;
                     this.timeValue = curr;
                     this.divideTimeValue(this.timeValue);
                 }
             }
         });
         this.settingsWatchersSet = true;
-        this.applyService.reset();
-        this.applyService.setVisible(true);
+
+        setTimeout(() => {
+            this.securitySettingsFormWatcher = this.applyService.createFormWatcher(
+                'securitySettingsForm',
+                this.securitySettingsForm,
+                this.saveSettings,
+                () => {
+                    if (this.systemAndSecuritySettings.sessionLimitMinutes) {
+                        this.sessionLimitToggle = true;
+                        this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+                        this.updateTimeUnitInput(this.selectedTimeUnit);
+                        this.timeValue = this.systemAndSecuritySettings.sessionLimitMinutes;
+                        this.divideTimeValue(this.timeValue);
+                    } else {
+                        this.sessionLimitToggle = false;
+                    }
+                });
+
+            this.systemSettingsFormWatcher = this.applyService.createFormWatcher(
+                'systemSettingsForm',
+                this.systemSettingsForm,
+                this.saveSettings);
+        });
     }
 
-    initApplyService(): void {
+    initProcess(): void {
         this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
+            if (this.systemAndSecuritySettings.videoTrafficEncryptionForced) {
                 this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption?.());
             } else {
                 this.applyService.setWarn('');
@@ -223,43 +231,21 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         };
 
         this.saveSettings = this.processService.createProcess(() => {
-            const sw = this.settingsWatchers;
+            const sw = this.systemAndSecuritySettings;
             // handle sessionLimitMinutes when saving an empty value
             if (this.timeValue === null || this.timeValue === 0) {
                 this.sessionLimitToggle = false;
-                sw.sessionLimitMinutes.value = 0;
+                sw.sessionLimitMinutes = 0;
             } else {
-                this.divideTimeValue(sw.sessionLimitMinutes.value);
+                this.divideTimeValue(sw.sessionLimitMinutes);
             }
             const changes = {};
-            for (const [setting, watcher] of Object.entries(sw)) {
-                if (watcher.value !== watcher.originalValue) {
-                    changes[setting] = watcher.value;
-                    watcher.originalValue = watcher.value;
-                }
-            }
-            return this.system.updateOrGetSystemSettings(changes).toPromise();
-        });
-
-        this.applyService.addWatchersAndFunctionsFromChild(
-            Object.values(this.settingsWatchers),
-            this.saveSettings,
-            // handles the cancel button
-            () => {
-                this.applyService.reset();
-                const { sessionLimitMinutes } = this.settingsWatchers;
-                if (sessionLimitMinutes?.originalValue) {
-                    this.sessionLimitToggle = true;
-                    this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
-                    this.updateTimeUnitInput(this.selectedTimeUnit);
-                    this.timeValue = sessionLimitMinutes.originalValue;
-                    this.divideTimeValue(this.timeValue);
-                } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
-                    this.sessionLimitToggle = false;
-                }
+            Object.keys(sw).forEach(key => {
+                changes[key] = sw[key];
             });
 
-        this.applyService.setVisible(false);
+            return this.system.updateOrGetSystemSettings(changes).toPromise();
+        });
     }
 
     divideTimeValue(minutesValue: number): void {
@@ -282,21 +268,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         }
     }
 
-    // storePreviousValue(e) {
-    //     if (e.key.length === 1 && e.key.match(/[a-zA-Z\W]/)) { // Fix typing non-numerical chars (especially valid for FF)
-    //         e.preventDefault();
-    //     }
-    //     this.previousInputValue = this.timeValue;
-    // }
-
     updateLimitSessionValue(newTimeValue: number) {
-        const sw = this.settingsWatchers;
+        const sw = this.systemAndSecuritySettings;
         if (this.selectedTimeUnit.value === 'days') {
-            sw.sessionLimitMinutes.value = newTimeValue * DAY_MINS;
+            sw.sessionLimitMinutes = newTimeValue * DAY_MINS;
         } else if (this.selectedTimeUnit.value === 'hours') {
-            sw.sessionLimitMinutes.value = newTimeValue * HR_MINS;
+            sw.sessionLimitMinutes = newTimeValue * HR_MINS;
         } else {
-            sw.sessionLimitMinutes.value = newTimeValue;
+            sw.sessionLimitMinutes = newTimeValue;
         }
         this.timeValue = newTimeValue;
     }
@@ -306,11 +285,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         if (this.sessionLimitToggle) {
             this.selectedTimeUnit = this.limitSessionTimeUnits.days;
             this.timeValue = this.selectedTimeUnit.default;
-            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * DAY_MINS;
+            this.systemAndSecuritySettings.sessionLimitMinutes = this.selectedTimeUnit.default * DAY_MINS;
             this.updateTimeUnitInput(this.selectedTimeUnit);
         } else {
             this.timeValue = 0;
-            this.settingsWatchers.sessionLimitMinutes.value = 0;
+            this.systemAndSecuritySettings.sessionLimitMinutes = 0;
         }
     }
 

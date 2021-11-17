@@ -63,25 +63,25 @@
 <nx-block type="mt-3">
     <header><h4 translate>System Settings</h4></header>
     <nx-section-placeholder
-            *ngIf="system && settings === false || !system.isOnline; else systemSettings"
+            *ngIf="system && settings === false || !system.isOnline; else systemSettingsTemplate"
             svgFileName="system_settings_placeholder"
             width="64"
             [translatedMessage]="LANG.system.settings.notAbleToLoadSystem()">
     </nx-section-placeholder>
 
-    <ng-template #systemSettings>
+    <ng-template #systemSettingsTemplate>
         <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
         <nx-section *ngIf="settingsWatchersSet">
             <div class="m-0">
-                <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
-                      novalidate autocomplete="off">
+                <form name="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
+                      novalidate>
                     <div class="form-check pl-0">
-                        <ng-container *ngIf="settingsWatchers.autoDiscoveryEnabled !== undefined">
+                        <div *ngIf="systemAndSecuritySettings.autoDiscoveryEnabled !== undefined">
                             <div class="d-flex checkbox-block align-items-center">
                                 <nx-checkbox
                                         name="autoDiscoveryEnabled"
                                         componentId="autoDiscoveryEnabled"
-                                        [(ngModel)]="settingsWatchers.autoDiscoveryEnabled.value"
+                                        [(ngModel)]="systemAndSecuritySettings.autoDiscoveryEnabled"
                                         #autoDiscoveryEnabled="ngModel"
                                         description="autoDiscoveryEnabledHelpBlock">
                                 </nx-checkbox>
@@ -93,13 +93,13 @@
                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                                    for="autoDiscoveryEnabled"
                                    translate>When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.</label>
-                        </ng-container>
-                        <ng-container *ngIf="settingsWatchers.statisticsAllowed !== undefined">
+                        </div>
+                        <div *ngIf="systemAndSecuritySettings.statisticsAllowed !== undefined">
                             <div class="d-flex checkbox-block align-items-center mt-1">
                                 <nx-checkbox
                                         name="statisticsAllowed"
                                         componentId="statisticsAllowed"
-                                        [(ngModel)]="settingsWatchers.statisticsAllowed.value"
+                                        [(ngModel)]="systemAndSecuritySettings.statisticsAllowed"
                                         #statisticsAllowed="ngModel"
                                         description="statisticsAllowedHelpBlock">
                                 </nx-checkbox>
@@ -112,13 +112,13 @@
                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                                    for="statisticsAllowed"
                                    translate>Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.</label>
-                        </ng-container>
+                        </div>
                         <div class="d-flex checkbox-block align-items-center mt-1"
-                             *ngIf="settingsWatchers.cameraSettingsOptimization !== undefined">
+                             *ngIf="systemAndSecuritySettings.cameraSettingsOptimization !== undefined">
                             <nx-checkbox
                                     name="cameraSettingsOptimization"
                                     componentId="cameraSettingsOptimization"
-                                    [(ngModel)]="settingsWatchers.cameraSettingsOptimization.value"
+                                    [(ngModel)]="systemAndSecuritySettings.cameraSettingsOptimization"
                                     #cameraSettingsOptimization="ngModel">
                             </nx-checkbox>
 
@@ -135,22 +135,22 @@
 <nx-block type="mt-3">
     <header><h4 translate>Security</h4></header>
     <nx-section-placeholder
-            *ngIf="system && settings === false || !system.isOnline; else securitySettings"
+            *ngIf="system && settings === false || !system.isOnline; else securitySettingsTemplate"
             svgFileName="system_settings_placeholder"
             width="64"
             [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity()">
     </nx-section-placeholder>
-    <ng-template #securitySettings>
+    <ng-template #securitySettingsTemplate>
         <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
         <nx-section *ngIf="settingsWatchersSet">
-            <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
+            <form #securitySettingsForm="ngForm" id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
                 <div class="form-check p-0 mr-4">
-                    <ng-container *ngIf="settingsWatchers.auditTrailEnabled !== undefined">
+                    <ng-container *ngIf="systemAndSecuritySettings.auditTrailEnabled !== undefined">
                         <div class="d-flex checkbox-block align-items-center">
                             <nx-checkbox
                                     name="auditTrailEnabled"
                                     componentId="auditTrailEnabled"
-                                    [(ngModel)]="settingsWatchers.auditTrailEnabled.value"
+                                    [(ngModel)]="systemAndSecuritySettings.auditTrailEnabled"
                                     #auditTrailEnabled="ngModel"
                                     description="auditTrailEnabledHelpBlock">
                             </nx-checkbox>
@@ -167,11 +167,11 @@
                         </label>
                     </ng-container>
                     <div class="d-flex checkbox-block align-items-center mt-1"
-                         *ngIf="settingsWatchers.trafficEncryptionForced !== undefined">
+                         *ngIf="systemAndSecuritySettings.trafficEncryptionForced !== undefined">
                         <nx-checkbox
                                 name="trafficEncryptionForced"
                                 componentId="trafficEncryptionForced"
-                                [(ngModel)]="settingsWatchers.trafficEncryptionForced.value"
+                                [(ngModel)]="systemAndSecuritySettings.trafficEncryptionForced"
                                 #trafficEncryptionForced="ngModel">
                         </nx-checkbox>
 
@@ -179,12 +179,12 @@
                             <span translate>Allow only secure connections</span>
                         </label>
                     </div>
-                    <ng-container *ngIf="settingsWatchers.videoTrafficEncryptionForced !== undefined">
+                    <ng-container *ngIf="systemAndSecuritySettings.videoTrafficEncryptionForced !== undefined">
                         <div class="d-flex checkbox-block align-items-center mt-1">
                             <nx-checkbox
                                     name="videoTrafficEncryptionForced"
                                     componentId="videoTrafficEncryptionForced"
-                                    [(ngModel)]="settingsWatchers.videoTrafficEncryptionForced.value"
+                                    [(ngModel)]="systemAndSecuritySettings.videoTrafficEncryptionForced"
                                     (click)="setWarningMessageThroughApplyService()"
                                     #videoTrafficEncryptionForced="ngModel">
                             </nx-checkbox>
@@ -222,18 +222,23 @@
                         </label>
                     </ng-container>
                     <div class="d-flex checkbox-block align-items-center mt-1"
-                            *ngIf="settingsWatchers.sessionLimitMinutes !== undefined"
-                            (click)="handleSessionLimitToggle()">
+                            *ngIf="systemAndSecuritySettings.sessionLimitMinutes !== undefined">
                         <nx-checkbox
-                                name="sessionLimitMinutes"
-                                componentId="sessionLimitMinutes"
+                                name="sessionLimitMinutesToggle"
+                                componentId="sessionLimitMinutesToggle"
                                 [(ngModel)]="sessionLimitToggle"
+                                (ngModelChange)="handleSessionLimitToggle()"
+                                [ngModelOptions]="{standalone: true}"
                                 #sessionLimitMinutes="ngModel">
                         </nx-checkbox>
 
-                        <label class="control-label mb-0" for="sessionLimitMinutes">
+                        <label class="control-label mb-0" for="sessionLimitMinutesToggle">
                             <span translate>Limit session duration to</span>
                         </label>
+
+                        <input type="hidden"
+                               name="sessionLimitMinutes"
+                               [(ngModel)]="systemAndSecuritySettings.sessionLimitMinutes">
                     </div>
                     <div *ngIf="sessionLimitToggle" class="row ml-4 mt-2">
                         <div class="mr-2" style="width: 70px;">
@@ -259,13 +264,11 @@
                         <span translate>Unlimited user session lifetime threatens overall system security</span>
                     </div>
                     <div
-                        *ngIf="settingsWatchers.sessionLimitMinutes.value > (30 * DAY_MINS)"
-                        class="session-alert"
-                    >
+                        *ngIf="systemAndSecuritySettings.sessionLimitMinutes > (30 * DAY_MINS)"
+                        class="session-alert">
                         <svg-icon
                             [src]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
-                            [svgStyle]="{'width.px': '20', 'height.px': '20'}"
-                        ></svg-icon>
+                            [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                         <span translate>It is recommended that user session lifetimes be less than 30 days</span>
                     </div>
                 </div>

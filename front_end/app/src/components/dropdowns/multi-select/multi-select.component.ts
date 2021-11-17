@@ -17,7 +17,7 @@ import { NxConfigService }           from '@services/nx-config';
      description="Roles"
      [items]="[{label: 'a', id: 1}, {label: 'b', id:3}]"
      [ngModel]="[1, 3]"       <- selected items id's
-     (ngModelChanged)="onChange(result)">
+     (ngModelChange)="onChange(result)">
  </nx-multi-select>
  */
 

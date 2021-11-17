@@ -18,6 +18,7 @@ export type extNgForm = {
     form: NgForm,
     originalForm: {},
     save: Process,
+    discard: any,
     hasChange: boolean
 }
 
@@ -261,7 +262,7 @@ export class NxApplyService {
      * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
      */
     runProcesses = () => this.applyFunctions.reduce(
-        async(prevPromise, process, index) => {
+        (prevPromise, process, index) => {
             return prevPromise.then(prevRes => {
                 return new Promise((resolve, reject) => {
                     process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
@@ -353,26 +354,6 @@ export class NxApplyService {
         }, 0);
     }
 
-    runFormProcesses = () => {
-        // run SAVE only for changed forms
-        this.applyFormFunctions = [];
-        for (const frm in this.forms) {
-            if (this.forms[frm].hasChange) {
-                this.applyFormFunctions.push(this.forms[frm].save);
-            }
-        }
-
-        return this.applyFormFunctions.reduce(
-            async(prevPromise, process, index) => {
-                return prevPromise.then(prevRes => {
-                    return new Promise((resolve, reject) => {
-                        process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
-                    }).catch(res => Promise.reject(res));
-                }).catch(res => Promise.reject(res));
-            }, Promise.resolve({ result: 'ok' })
-        );
-    }
-
     resetFormWatchers() {
         this.applyComponentInstance.forms && this.resetForms$.next();
         for (const id in this.applyComponentInstance.forms) {
@@ -391,6 +372,7 @@ export class NxApplyService {
         componentId: string,
         form: NgForm,
         saveFunction: Process,
+        discardFunction?: () => void,
         owner?: any
     ) {
         const updateOriginalForm = () => {
@@ -418,12 +400,36 @@ export class NxApplyService {
             Object.keys(forms)
                 .forEach((key) => {
                     const item = forms[key];
-                    item.hasChange = false;
+                    if (item.hasChange) {
+                        item.hasChange = false;
 
-                    Object.keys(item.originalForm).forEach((key) => {
-                        item.form.form.controls[key].setValue(item.originalForm[key]);
-                    });
+                        Object.keys(item.originalForm).forEach((key) => {
+                            item.form.form.controls[key].setValue(item.originalForm[key]);
+                        });
+
+                        item.discard && item.discard();
+                    }
                 });
+        };
+
+        const runFormProcesses = () => {
+            // run SAVE only for changed forms
+            this.applyFormFunctions = [];
+            for (const frm in this.forms) {
+                if (this.forms[frm].hasChange) {
+                    this.applyFormFunctions.push(this.forms[frm].save);
+                }
+            }
+
+            return this.applyFormFunctions.reduce(
+                (prevPromise, process, index) => {
+                    return prevPromise.then(prevRes => {
+                        return new Promise((resolve, reject) => {
+                            process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                        }).catch(res => Promise.reject(res));
+                    }).catch(res => Promise.reject(res));
+                }, Promise.resolve({ result: 'ok' })
+            );
         };
 
         if (this.applyComponentRef) {
@@ -437,7 +443,13 @@ export class NxApplyService {
             };
 
             const initialForm = !form.form.controls.fields && Object.keys(form.form.controls).length ? formatInitial() : {};
-            const extNgForm: extNgForm = { form: form, originalForm: initialForm, save: saveFunction, hasChange: false };
+            const extNgForm: extNgForm = {
+                form: form,
+                originalForm: initialForm,
+                save: saveFunction,
+                discard: discardFunction,
+                hasChange: false
+            };
 
             extNgForm.form.valueChanges
                 .pipe(
@@ -480,7 +492,7 @@ export class NxApplyService {
             this.applyComponentInstance.applyVisible = true;
 
             this.applyComponentInstance.save = this.processService.createProcess(() => {
-                return this.runFormProcesses();
+                return runFormProcesses();
             }, {}, (result) => {
                 if (result) {
                     updateOriginalForm();

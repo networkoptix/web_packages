@@ -1,11 +1,16 @@
 import {
     Component, Inject, OnDestroy,
-    OnInit, ViewContainerRef
+    OnInit, ViewChild, ViewContainerRef
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import {
+    Router, ActivatedRoute
+} from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
-import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+import {
+    auditTime,
+    distinctUntilChanged
+} from 'rxjs/operators';
 import { NxRibbonService } from '@components/ribbon';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -18,11 +23,12 @@ import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxUriService } from '@services/uri.service';
 import { NxToastService } from '@dialogs/toast.service';
-import { NxApplyService, Watcher } from '@services/apply.service';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSettingsService } from '../settings.service';
+import { NgForm } from '@angular/forms';
 import { environment } from '@environments/environment';
 
 interface Settings {
@@ -45,7 +51,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     system: NxSystem;
     systems;
 
-    systemNameWatcher = new Watcher('');
     emptyName = false;
 
     advanced: boolean;
@@ -65,14 +70,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     connectToCloudProcess: Process
 
     settingsForSystem;
+    systemName: string;
+    systemNameFormWatcher: FormWatcher;
+    systemNameProcess: Process;
 
-    get systemName() {
-        return this.systemNameWatcher.value;
-    }
-
-    set systemName(value) {
-        this.systemNameWatcher.value = value;
-    }
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
+    @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
 
     private setupDefaults() {
         this.advanced = (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced');
@@ -125,9 +128,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setNameAndTitle() {
-        this.systemNameWatcher.originalValue = this.system.info.systemName || this.system.info.name;
-        this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
-        this.pageService.pageTitle = this.systemNameWatcher.originalValue;
+        this.systemName = this.system.info.systemName || this.system.info.name;
+        this.pageService.pageTitle = this.systemName;
+
+        setTimeout(() => {
+            this.systemNameFormWatcher = this.applyService.createFormWatcher(
+                'systemNameForm',
+                this.systemNameForm,
+                this.systemNameProcess);
+        });
     }
 
     private updateSettings(forceMergeState?: boolean) {
@@ -191,7 +200,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 }
                 this.system = system;
                 this.setNameAndTitle();
-                this.applyService.reset();
 
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
@@ -230,39 +238,27 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     });
             });
 
-        this.initWatchers();
+        this.initProcesses();
+        this.applyService.initPageFormsWatcher(this.pageApply);
     }
 
-    initWatchers() {
-        this.applyService.initPageWatcher(this.applyContainerRef);
-        this.applyService.addWatchersAndFunctionsFromChild(
-            [this.systemNameWatcher],
-            this.processService.createProcess(() => {
-                if (this.systemNameWatcher.changed) {
-                    if (/^\s+$/.test(this.systemName) || this.systemName.trim() === this.systemNameWatcher.originalValue) {
-                        this.systemNameWatcher.reset();
-                        return Promise.resolve();
-                    }
-                    return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
-                        .then(() => {
-                            this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
-                            this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
-                            return this.system.update();
-                        }).catch(() => {
-                            this.systemNameWatcher.reset();
-                            const options = {
-                                classname: this.CONFIG.toast.warning,
-                                autohide: true,
-                                delay: this.CONFIG.alertTimeout
-                            };
-                            this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
-                        });
-                } else {
-                    return Promise.resolve();
-                }
-            }),
-            this.systemNameWatcher.reset
-        );
+    initProcesses() {
+        this.systemNameProcess = this.processService.createProcess(() => {
+            if (/^\s+$/.test(this.systemName)) {
+                return Promise.resolve();
+            }
+            return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
+                .then(() => {
+                    return this.system.update();
+                }).catch(() => {
+                    const options = {
+                        classname: this.CONFIG.toast.warning,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show(this.LANG.toastMessage.nameFail().replace('{type}', this.LANG.common.system?.()), options);
+                });
+        });
     }
 
     syncMergeAlerts() {
