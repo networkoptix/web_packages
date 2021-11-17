@@ -101,15 +101,7 @@ http {
         }
 
         location @proxy_to_app {
-            proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
-            proxy_set_header Host ${DOLLAR}http_host;
-            proxy_redirect off;
-
-            proxy_connect_timeout 600s;
-            proxy_read_timeout 600s;
-            proxy_send_timeout 600s;
-            send_timeout 600s;
-
+            include proxy.conf;
             proxy_pass   http://app_server;
         }
 
@@ -120,11 +112,14 @@ http {
             proxy_redirect off;
 
             proxy_pass   http://app_server;
+        }
+
         location / {
+            include proxy.conf;
             index static/index.html;
 
             if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$") {
-                try_files /dev/null @proxy_to_app;
+                proxy_pass http://app_server;
             }
 
 
@@ -135,15 +130,19 @@ http {
             return 404;
         }
 
-        location /api {
+        location /authorize {
+            root /app/app/static/authorization;
+
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ index.html @proxy_to_app;
+        }
+
+        location ~ /(?=api|oauth) {
             try_files /dev/null @proxy_to_app;
         }
 
         location /admin {
             root /app/app/static;
             try_files ${DOLLAR}uri ${DOLLAR}uri/ @proxy_to_app;
-        }
-            return 404;
         }
 
         location /api/cloud_modules {
@@ -187,7 +186,7 @@ http {
 
         location /robots.txt {
             root /app/app/static/$CUSTOMIZATION/static/;
-            try_files $uri @proxy_to_app;
+            try_files ${DOLLAR}uri @proxy_to_app;
         }
 
         location /static {
