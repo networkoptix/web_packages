@@ -1,7 +1,13 @@
-import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Inject, Injectable } from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterStateSnapshot
+} from '@angular/router';
+
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxAppStateService }        from '@services/nx-app-state.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()

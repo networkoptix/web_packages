@@ -1,15 +1,17 @@
+import { Injectable } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate, Router,
-    RouterStateSnapshot, UrlTree
-}                                    from '@angular/router';
-import { Injectable }                from '@angular/core';
-import { Observable, Subject }       from 'rxjs';
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+    UrlTree
+} from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { environment }               from '@environments/environment';
-import { NxAccountService }          from '@services/account.service';
+import { environment } from '@environments/environment';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
+import { NxAccountService } from '@services/account.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxSettingsService }         from '@pages/systems/settings/settings.service';
 
 @Injectable()
 export class SystemGuard implements CanActivate {

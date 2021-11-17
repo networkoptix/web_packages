@@ -9,11 +9,11 @@ import {
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { NxUriService } from '@services/uri.service';
-import { NxAccountService } from '@services/account.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
+import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 
 /**
  * A route guard to stop WebAdmin from getting stuck in an infinite loading
