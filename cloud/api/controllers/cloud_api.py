@@ -453,11 +453,14 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def change_password(request, email, old_password, new_password, headers=None):
+    def change_password(request, email, old_password, new_password, totp=None, headers=None):
         email = email.lower()
         params = {
             'password': new_password
         }
+
+        if totp:
+            params['totp'] = totp
 
         auth = None
         if not headers:
