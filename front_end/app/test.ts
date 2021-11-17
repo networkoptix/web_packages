@@ -5,21 +5,22 @@ import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { MockInstance, ngMocks } from 'ng-mocks';
-import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, EMPTY, of, ReplaySubject } from 'rxjs';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import staticLang from '@app/language_compiled.json';
-import { NxSessionService } from '@services/session.service';
-import { TranslateService } from '@ngx-translate/core';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxProcessService, Process } from '@services/process.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSettingsService } from '@pages/systems/settings/settings.service';
+import { NxSessionService } from '@services/session.service';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';

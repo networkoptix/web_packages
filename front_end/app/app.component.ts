@@ -8,24 +8,32 @@ import {
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import {
-    debounceTime, delay, filter, finalize, map, retryWhen, take, timeout
-} from 'rxjs/operators';
-import { fromEvent } from 'rxjs';
 import { LocalStorageService } from 'ngx-webstorage';
+import { fromEvent } from 'rxjs';
+import {
+    debounceTime,
+    delay,
+    filter,
+    finalize,
+    map,
+    retryWhen,
+    take,
+    timeout
+} from 'rxjs/operators';
+
 import { NxRibbonService } from '@components/ribbon';
-import { WINDOW } from '@services/window-provider';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxPageService } from '@services/page.service';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxCloudApiService } from '@services/nx-cloud-api';
+import { WINDOW } from '@services/window-provider';
 import { SystemGuard } from '@src/routeGuards';
-import { environment } from '@environments/environment';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');

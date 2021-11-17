@@ -1,56 +1,66 @@
-import { APP_INITIALIZER, NgModule }           from '@angular/core';
-import { BrowserModule, Title }                from '@angular/platform-browser';
-import { BrowserAnimationsModule }             from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
 import {
-    Location, PathLocationStrategy,
-    HashLocationStrategy, LocationStrategy,
-    CommonModule, DatePipe
-}                                              from '@angular/common';
+    Location,
+    PathLocationStrategy,
+    HashLocationStrategy,
+    LocationStrategy,
+    CommonModule,
+    DatePipe
+} from '@angular/common';
 import {
-    HttpClientModule, HttpClientXsrfModule,
+    HttpClientModule,
+    HttpClientXsrfModule,
     HTTP_INTERCEPTORS
-}                                              from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule }    from '@angular/forms';
+} from '@angular/common/http';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire';
-import { AngularFireMessagingModule }          from '@angular/fire/messaging';
-import { LayoutModule }                        from '@angular/cdk/layout';
-import { InputTrimModule }                     from 'ng2-trim-directive';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import {
     NgbToast, NgbModal, NgbProgressbar
-}                                              from '@ng-bootstrap/ng-bootstrap';
-import { OrderModule }                         from 'ngx-order-pipe';
-import { DeviceDetectorModule }                from 'ngx-device-detector';
-import { TranslateCompiler, TranslateModule }  from '@ngx-translate/core';
-import { NgxMaskModule, IConfig }              from 'ngx-mask';
+} from '@ng-bootstrap/ng-bootstrap';
+import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { InputTrimModule } from 'ng2-trim-directive';
+import { CookieService } from 'ngx-cookie-service';
+import { DeviceDetectorModule } from 'ngx-device-detector';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { OrderModule } from 'ngx-order-pipe';
 import {
     TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG
-}                                              from 'ngx-translate-messageformat-compiler';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NgxWebstorageModule }                 from 'ngx-webstorage';
-import { environment }                         from '@environments/environment';
-import { AppComponent }                        from './app.component';
-import { ComponentsModule }                    from '@components/components.module';
-import { DialogsModule }                       from '@dialogs/dialogs.module';
-import { DirectivesModule }                    from '@directives/directives.module';
-import { PipesModule }                         from '@src/pipes/pipes.module';
-import { initializeApp }                       from '@pages/push-notifications/push-notifications.module';
+} from 'ngx-translate-messageformat-compiler';
+import { NgxWebstorageModule } from 'ngx-webstorage';
+
+import { ComponentsModule } from '@components/components.module';
+import { DialogsModule } from '@dialogs/dialogs.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { environment } from '@environments/environment';
+import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
+import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
+import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
+import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
+import { PagesModule } from '@pages/pages.module';
+import { initializeApp } from '@pages/push-notifications/push-notifications.module';
+import { WebadminPageModule } from '@pages/webadmin-page.module';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxConfigService } from '@services/nx-config';
+import { ServiceModule } from '@services/services.module';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { WINDOWS_PROVIDERS } from '@services/window-provider';
+import { MenuModule } from '@src/menu';
+import { PipesModule } from '@src/pipes/pipes.module';
 import {
-    AuthGuard, SystemGuard, DevelopersGuard, ManualAccessGuard, BookmarksGuard
-}                                              from '@src/routeGuards';
-import { NxConfigService }                     from '@services/nx-config';
-import { ServiceModule }                       from '@services/services.module';
-import { WINDOWS_PROVIDERS }                   from '@services/window-provider';
-import { MenuModule }                          from '@src/menu';
-import { NxBootstrapProvider }                 from '@services/nx-bootstrap-provider';
-import { WebadminPageModule }                  from '@pages/webadmin-page.module';
-import { PagesModule }                         from '@pages/pages.module';
-import { NxUriCacheService }                   from '@services/uri-cache.service';
-import { NxUriCachingInterceptor }             from '@interceptors/uri-cache-interceptor.service';
-import { LocalSystemStatusInterceptor }        from '@interceptors/local-system-status-interceptor.service';
-import { CloudUnavailableInterceptor }         from '@interceptors/cloud-unavailable-interceptor';
-import { NxSwCacheInterceptor }                from '@interceptors/sw-cache-interceptor.interceptor';
-import { ServiceWorkerModule }                 from '@angular/service-worker';
+    AuthGuard,
+    SystemGuard,
+    DevelopersGuard,
+    ManualAccessGuard,
+    BookmarksGuard
+} from '@src/routeGuards';
+
+import { AppComponent } from './app.component';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
