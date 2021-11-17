@@ -8,7 +8,8 @@ import {
 
 /* Usage
  <nx-numeric
-     componentId="remember"
+     id?="remember"
+     name="remember"
      [class]="'pl-2'"
      [min]="CONFIG.servers.port.min"
      [max]="CONFIG.servers.port.max"
@@ -37,17 +38,19 @@ import {
     ]
 })
 export class NxNumericComponent implements OnInit, ControlValueAccessor, Validator {
+    @Input() id: string;
+    @Input() name: string;
     @Input() class: string;
     @Input() min: number;
     @Input() max: number;
     @Input() step: number;
-    @Input() componentId: string;
     @Input() disabled;
     @Input() required;
     @Input() placeholder: string | number = '- -';
 
     @Output() onChange = new EventEmitter<number>();
 
+    componentId: string;
     _value: number;
     _previousValue: number;
     _invalid: boolean;
@@ -81,6 +84,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     ngOnInit() {
+        this.componentId = (this.id || this.name) + '-numeric';
         this.required = (this.required !== undefined);// optional param
     }
 

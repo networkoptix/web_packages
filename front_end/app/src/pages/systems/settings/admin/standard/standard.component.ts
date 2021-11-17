@@ -160,7 +160,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.settings) {
+        if (changes.settings && this.system.isOnline) {
             const { previousValue, currentValue, firstChange } = changes.settings;
             if ((JSON.stringify(previousValue) !== JSON.stringify(currentValue) || !this.settingsWatchersSet) && !firstChange && !this.applyService.locked) {
                 this.setValues(currentValue);

@@ -43,8 +43,10 @@
                     <header>
                         <div class="header-editable mb-3">
                             <nx-editable-heading
+                                    name="cameraName"
                                     (editModeState)="editMode = $event"
-                                    [nameWatcher]="cameraNameWatcher"
+                                    [nameWatcherValue]="cameraNameWatcher.value"
+                                    (nameWatcherValueChanged)="cameraNameWatcher.value = $event"
                                     [editEnabled]="enableEdit"></nx-editable-heading>
                             <div *ngIf="!editMode" class="camera-button-div">
                                 <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
@@ -167,7 +169,8 @@
                                 <div class="grid-item mb-2 mb-lg-0">
                                     <div style="width: 100%">
                                         <nx-numeric
-                                                [componentId]="'fps'"
+                                                id="fps"
+                                                name="fps"
                                                 [class]="'pl-2'"
                                                 [step]="1"
                                                 [min]="1"

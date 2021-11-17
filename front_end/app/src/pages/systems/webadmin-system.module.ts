@@ -17,7 +17,6 @@ import { NxSystemServersComponent } from './settings/servers/servers.component';
 import {
     ApplyGuard,
     AuthGuard,
-    SystemGuard,
     UsersGuard
 } from '@src/routeGuards';
 import { NxCamerasComponent } from './settings/cameras/cameras.component';
@@ -41,35 +40,32 @@ export const localSettingsRoutes: Routes = [
                 path: 'advanced',
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard, UsersGuard],
+                canActivate: [UsersGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard, UsersGuard],
+                canActivate: [UsersGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [SystemGuard],
                 runGuardsAndResolvers: 'always'
             },
             {
@@ -87,7 +83,6 @@ export const localSettingsRoutes: Routes = [
             {
                 path: 'licenses',
                 component: NxSystemLicensesComponent,
-                canActivate: [SystemGuard],
                 runGuardsAndResolvers: 'always'
             }
         ]

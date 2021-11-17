@@ -2,11 +2,14 @@ import {
     Component, EventEmitter,
     forwardRef,
     HostBinding,
-    Input, OnInit, Output
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges
 } from '@angular/core';
 
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Watcher } from '@services/apply.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Component({
@@ -21,12 +24,18 @@ import { NxConfigService, IConfig } from '@services/nx-config';
         }
     ]
 })
-export class NxEditableHeading implements OnInit {
+export class NxEditableHeading implements OnInit, OnChanges {
     @Input() id: string;
     @Input() name: string;
-    @Input() nameWatcher: Watcher<string>; // TODO: remove it after CAMERAS and SERVERS has implemented FormWatcher
+
+    // TODO: remove it after CAMERAS and SERVERS has implemented FormWatcher
+    // this adds support for watcher usage
+    @Input() nameWatcherValue: string;
+    @Output() nameWatcherValueChanged = new EventEmitter();
+    // *********************************************************************
+
     @Input() editEnabled = true;
-    @Output() editModeState = new EventEmitter()
+    @Output() editModeState = new EventEmitter();
 
     @HostBinding('class') hostClass = 'w-auto';
 
@@ -49,6 +58,12 @@ export class NxEditableHeading implements OnInit {
 
     ngOnInit() {
         this.componentId = (this.id || this.name) + '-editable';
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.nameWatcherValue?.currentValue) {
+            this.value = changes.nameWatcherValue.currentValue;
+        }
     }
 
     /**
@@ -77,6 +92,9 @@ export class NxEditableHeading implements OnInit {
     }
 
     onChange() {
+        if (this.nameWatcherValue) {
+            this.nameWatcherValueChanged.emit(this.value);
+        }
         this.onChangeCallback(this.value);
     }
 
