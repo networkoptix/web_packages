@@ -11,9 +11,7 @@ from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
 from cms.feature_flags import SWITCHES
-from meilisearch.errors import MeiliSearchCommunicationError
-
-from meilisearch.errors import MeiliSearchCommunicationError
+from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
 from util.base_cache import BaseCache
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import DataStructure, AssetType, AssetCustomizationReview, Context, get_cloud_portal_asset, Asset, ExternalFile
@@ -85,7 +83,7 @@ class SearchableCache(BaseCache):
         super().clear_cache()
         try:
             self.search_index.delete_all_documents()
-        except (MeiliSearchCommunicationError, TypeError) as e:
+        except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError) as e:
             # raised when meilisearch service is unavailable
             logger.warning(e)
 
