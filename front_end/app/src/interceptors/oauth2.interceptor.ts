@@ -1,7 +1,13 @@
+import {
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
+    HttpResponse
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
+
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
 @Injectable()

@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import {
     HttpHandler,
     HttpInterceptor,
@@ -6,11 +5,12 @@ import {
     HttpResponse,
     HttpErrorResponse,
     HttpEvent
-}                     from '@angular/common/http';
-import { tap }        from 'rxjs/operators';
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-import { environment }       from '@environments/environment';
+import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 
 @Injectable()

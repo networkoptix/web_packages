@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
 import {
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/do';
-import { Observable, of }         from 'rxjs';
-import { share }      from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { share } from 'rxjs/operators';
 
 import { NxUriCacheService } from '@services/uri-cache.service';
 

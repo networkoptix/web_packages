@@ -1,11 +1,16 @@
+import {
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { throwError, timer } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { catchError, flatMap } from 'rxjs/operators';
-import { throwError, timer } from 'rxjs';
 
-import { NxConfigService } from '@services/nx-config';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Injectable()
