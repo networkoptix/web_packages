@@ -118,7 +118,7 @@ Log In Cloud
     IF    '${validate}' == 'True'
         Check Language Logged In    ${email}    ${password}
     END
-    Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
+    Run Keyword Unless    '''${button}''' == "None"    Click Element    ${button}
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
@@ -314,7 +314,7 @@ Activate
     ...    ${ACTIVATION SUCCESS}
     ...    ${ACTIVATION SUCCESS ICON}
     ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
-    Location Should Be    ${ENV}/activate/success
+    Location Should Contain    ${ENV}/authorize/activate
 
 Validate Activation Success
     ${current url}=   Get Location

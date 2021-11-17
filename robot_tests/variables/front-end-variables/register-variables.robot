@@ -14,7 +14,7 @@ ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
 ${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(),"${TERMS AND CONDITIONS ERROR TEXT}")]
 ${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']
-${RESEND ACTIVATION LINK BUTTON}      nx-authorize-email-component//p[@class="fake-link and text()="${RESEND ACTIVATION LINK BUTTON TEXT}"]
+${RESEND ACTIVATION LINK BUTTON}      //nx-authorize-email-component//p[@class="fake-link" and text()="${RESEND ACTIVATION LINK BUTTON TEXT}"]
 ${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}
 ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
 

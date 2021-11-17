@@ -39,6 +39,7 @@ ${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="su
 ${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
 ${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
+${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//button[@type="button"]/span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
 
 ${REMEMBER ME CHECKBOX VISIBLE}       //form[@name='loginForm']//input[@id='remember']/following-sibling::span[@class="checkmark"]/..
 ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='remember']
@@ -47,9 +48,9 @@ ${FORGOT PASSWORD}                    //nx-authorize-component//button/span[text
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
 ${ACCOUNT NOT FOUND}                  //nx-authorize-component//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
-${WRONG PASSWORD MESSAGE}             //nx-authorize-component//div[text()="${WRONG PASSWORD}"]
-${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//div[text()="${ACCOUNT DOES NOT EXIST}"]
-${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//div[text()="${TOO MANY ATTEMPTS TEXT}"]
+${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST}"]
+${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
@@ -105,9 +106,9 @@ ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invit
 #targets the open nx witness button presented when logging in after activating with from=mobile or client
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
 
-${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
-${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
-${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-app//button[contains(text(), "${LOG IN BUTTON TEXT}")]
+${ACTIVATION SUCCESS}                 //h3[contains(@class,"authorize-header") and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
+${ACTIVATION SUCCESS ICON}            //nx-authorize-activate-account-component//svg-icon
+${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-authorize-activate-account-component//button[contains(text(), "${LOG IN BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings

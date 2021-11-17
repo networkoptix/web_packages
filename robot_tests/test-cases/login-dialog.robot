@@ -107,18 +107,21 @@ Restart
     ...    ${ACCOUNT CREATION SUCCESS}
     ...    ${ACCOUNT CREATION SUCCESS ICON}
     ...    ${ACCOUNT CREATION CONFIRMATION}
-    Wait Until Element Is Visible    ${REGISTER LOG IN BUTTON}
-    Click Button    ${REGISTER LOG IN BUTTON}
+    Wait Until Element Is Visible    ${LOG IN NAV BAR}
+    Click Link    ${LOG IN NAV BAR}
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${random email}
     Sleep    1
     Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
-    Click Link    ${RESEND ACTIVATION LINK BUTTON}
+    Click Element    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
-    Log In    ${random email}    ${password}
+    Click Element    ${LOG IN BUTTON}
+    Input Text    ${PASSWORD INPUT}    ${password}
+    Click Element    ${LOG IN BUTTON}
+    Validate Log In    ${random email}
 
 11. Displays password masked
     Wait Until Element is Visible    ${LOG IN NAV BAR}
@@ -168,19 +171,21 @@ Restart
     Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
-16. Should respond to Esc key and close dialog
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${PASSWORD INPUT}
-    Press Keys    ${PASSWORD INPUT}    ESCAPE
-    Wait Until Element Is Not Visible    ${LOG IN MODAL}
-    Element Should Not Be Visible    ${LOG IN MODAL}
+#16. Should respond to Esc key and close dialog
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Element is Visible    ${PASSWORD INPUT}
+#    Press Keys    ${PASSWORD INPUT}    ESCAPE
+#    Wait Until Element Is Not Visible    ${LOG IN MODAL}
+#    Element Should Not Be Visible    ${LOG IN MODAL}
 
 17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}    
     Input Text    ${EMAIL INPUT}    ${login user}
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element Is Visible    ${PASSWORD INPUT}
     Input Text    ${PASSWORD INPUT}    ${password}
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Press Keys    ${PASSWORD INPUT}    ENTER
@@ -192,17 +197,19 @@ Restart
     Wait Until Element is Visible    ${EMAIL INPUT}
     Set Focus To Element    ${EMAIL INPUT}
     Press Keys    ${EMAIL INPUT}    TAB
-    Element Should Be Focused    ${PASSWORD INPUT}
+    Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}
+    Press Keys    ${LOG IN CREATE ACCOUNT BUTTON}    TAB
+    Element Should Be Focused    ${LOG IN NEXT BUTTON}
 
-19. Should respond to Space key and toggle checkbox
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
-    Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    None    SPACE
-    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    None    SPACE
-    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#19. Should respond to Space key and toggle checkbox
+#    Wait Until Element is Visible    ${LOG IN NAV BAR}
+#    Click Link    ${LOG IN NAV BAR}
+#    Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
+#    Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
+#    Press Keys    None    SPACE
+#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
+#    Press Keys    None    SPACE
+#    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 20. Handles two tabs, updates second tab state if logout is done on first
     Go To    ${url}/register
@@ -247,16 +254,11 @@ Restart
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
+    Click Element    ${LOG IN BUTTON}
     Wait Until Elements are Visible
     ...    ${LOG IN MODAL}
-    ...    ${BACKDROP}
     ...    ${LOG IN BUTTON}
-    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
-    ...    ${LOG IN CLOSE BUTTON}
-    Input Text    ${EMAIL INPUT}    ${email}
     FOR  ${x}  IN RANGE  6
         Sleep    2
         Input Text    ${PASSWORD INPUT}    incorrect

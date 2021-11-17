@@ -10,7 +10,7 @@
     "CREATE ACCOUNT BUTTON TEXT"           :    "Create Account",
     "CREATE NEW ACCOUNT BUTTON TEXT"       :    "Create New Account",
     "TERMS AND CONDITIONS LINK TEXT"       :    "Terms and Conditions",
-    "RESEND ACTIVATION LINK BUTTON TEXT"   :    "Resend activation email",
+    "RESEND ACTIVATION LINK BUTTON TEXT"   :    "Resend activation email.",
     "FORGOT PASSWORD TEXT"                 :    "Forgot Password?",
 
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT" : "All cloud users will be deleted",
@@ -35,7 +35,7 @@
     "EMAIL IS ALREADY REGISTERED TEXT"     :    "This email has already been registered in the %SYSTEM% system",
     "RESET SUCCESS MESSAGE TEXT"           :    "New password saved",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED"   :    "Your account is successfully saved",
-    "ACCOUNT SUCCESSFULLY ACTIVATED TEXT"  :    "Account successfully activated",
+    "ACCOUNT SUCCESSFULLY ACTIVATED TEXT"  :    "Account Activated!",
     "SYSTEM NAME SAVED"                    :    "System name saved",
     "ACCOUNT CREATED TEXT"                 :    "Account Created",
     "CONFIRMATION MESSAGE IS SENT TO"      :    "Confirmation message is sent to %email%",
