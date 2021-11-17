@@ -1,36 +1,44 @@
-import { Injectable }                   from '@angular/core';
-import { Router }                                   from '@angular/router';
-import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
-import { NxSystem, NxSystemService }                from '@services/system.service';
-import { NxSystemWithUserInfo, NxSystemsService }   from '@services/systems.service';
-import { NxSystemRestAPI }                          from '@services/system-rest-api.service';
-import { IConfig, NxConfigService }                 from '@services/nx-config';
-import { NxUtilsService }                           from '@services/utils.service';
-import { NxAccountService }                         from '@services/account.service';
-import { NxHeaderService }                          from '@services/nx-header.service';
-import { APIDocVersion, MenuStructure }                            from '@services/nx-config/base-config';
-import { ClickEvent, MenuNodeWithParent }           from '@components/developers-menu/developers-menu.component';
-import { DropdownItem }                             from '@components/dropdowns/generic/dropdown.component.types';
-import { BehaviorSubject, Subscription }            from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemWithUserInfo, NxSystemsService } from '@services/systems.service';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
+import { NxAccountService } from '@services/account.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { APIDocVersion, MenuStructure } from '@services/nx-config/base-config';
 import {
-    delay, distinctUntilChanged,
+    ClickEvent, MenuNodeWithParent
+} from '@components/developers-menu/developers-menu.component';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+    delay,
+    distinctUntilChanged,
     filter,
-    finalize, map, retryWhen, take
-}                                                   from 'rxjs/operators';
+    finalize,
+    map,
+    retryWhen,
+    take
+} from 'rxjs/operators';
 import {
-    modifyPathTags, modifyTagNames,
+    modifyPathTags,
+    modifyTagNames,
     createMenuContent,
     prepareSwaggerAPIDoc,
     removeProprietaryEndpoints,
     addSeperatedAPI
-}                                                   from './api-file-utils';
+} from './api-file-utils';
 import type {
     APIDoc,
     APIDropdownItem,
     APIInfo,
     APIInfoStore,
     ServerDropdownItem
-}                                                   from './api-tool-types';
+} from './api-tool-types';
+import { environment } from '@environments/environment';
 
 /** Provides the currently selected system and server. Also provides the content for the left menu.   */
 @UntilDestroy()
@@ -159,7 +167,7 @@ export class NxAPIToolService {
         });
 
         const cachedSystem = this.systemService.getCurrentSystem();
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             await this.accountService.get().then((account) => {
                 if (!account) {
                     this.router.navigate(['/']);
@@ -185,7 +193,7 @@ export class NxAPIToolService {
 
     showError = () => {
         this.loadingFailure$.next(true);
-        this.loadingErrorType = this.CONFIG.isLocal || this.systemsDropdown.length === 1 ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
+        this.loadingErrorType = environment.isLocal || this.systemsDropdown.length === 1 ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
         this.serverSubscription?.unsubscribe();
     }
 
@@ -340,7 +348,7 @@ export class NxAPIToolService {
     }
 
     async handleSystemChange() {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             const systemInfo = await this.system.serverManager.getModuleInfo().toPromise();
             const version = parseFloat(systemInfo?.reply?.version);
 

@@ -101,7 +101,7 @@
                         <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             [(ngModel)]="fullName"
                             name="fullName" id="fullName"
-                            [disabled]="!(CONFIG.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
+                            [disabled]="!(environment.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
                     </div>
                     <div class="form-group d-md-table-row d-flex flex-column">
@@ -113,7 +113,7 @@
                             name="email" id="email" #emailInput="ngModel"
                             pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
                             [readonly]="selectedUser.isLdap"
-                            [disabled]="!(isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
+                            [disabled]="!(environment.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
                             maxlength="255">
                         <span class="input-error mt-1 ml-2 d-block" *ngIf="emailInput.invalid && emailInput.touched"
                             translate>Email format incorrect</span>
@@ -121,10 +121,13 @@
                 </form>
             </nx-section>
 
-            <nx-section *ngIf="(!isLocal && selectedUser.isCloud && selectedUser.isMe) ||
-                                (!selectedUser.isCloud && selectedUser.canBeEdited || (selectedUser.isLocalOwner && selectedUser.isMe)) ||
-                                selectedUser.canBeEdited">
-                <div *ngIf="!isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
+            <nx-section *ngIf="
+                (!environment.isLocal && selectedUser.isCloud && selectedUser.isMe) ||
+                (!selectedUser.isCloud && selectedUser.canBeEdited ||
+                (selectedUser.isLocalOwner && selectedUser.isMe)) ||
+                selectedUser.canBeEdited
+            ">
+                <div *ngIf="!environment.isLocal && selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
                         id="accountSettingsButton"
                         (click)="routeToAccountSettings()"

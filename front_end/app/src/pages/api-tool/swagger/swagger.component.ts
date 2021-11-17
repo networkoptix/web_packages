@@ -2,16 +2,22 @@ import {
     Component, ComponentFactoryResolver,
     Inject, Input, OnChanges, SimpleChanges,
     ViewContainerRef, ViewEncapsulation
-}                                               from '@angular/core';
-import { UntilDestroy }                         from '@ngneat/until-destroy';
-import SwaggerUI                                from 'swagger-ui';
-import { IConfig, NxConfigService }             from '@services/nx-config';
-import { NxAPIToolService }                     from '../api-tool.service';
-import { MenuNodeWithParent }                   from '@components/developers-menu/developers-menu.component';
-import { DOCUMENT }                             from '@angular/common';
-import { NxCopyToClipboardComponent }           from './copy-to-clipboard/copy-to-clipboard.component';
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import SwaggerUI from 'swagger-ui';
+import { NxAPIToolService } from '../api-tool.service';
+import {
+    MenuNodeWithParent
+} from '@components/developers-menu/developers-menu.component';
+import { DOCUMENT } from '@angular/common';
+import {
+    NxCopyToClipboardComponent
+} from './copy-to-clipboard/copy-to-clipboard.component';
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
-import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.component';
+import {
+    NxSwaggerDropdownComponent
+} from './swagger-dropdown/swagger-dropdown.component';
+import { environment } from '@environments/environment';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +28,6 @@ import { NxSwaggerDropdownComponent } from './swagger-dropdown/swagger-dropdown.
 })
 export class NxSwaggerComponent implements OnChanges {
     @Input() activeNode: MenuNodeWithParent;
-    CONFIG: IConfig;
 
     swagger: SwaggerUI;
     swaggerMenuDescription = { title: '', description: '' }
@@ -32,13 +37,12 @@ export class NxSwaggerComponent implements OnChanges {
     singleAPIRouteShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
 
-    constructor(public APIToolService: NxAPIToolService,
-                private configService: NxConfigService,
-                private viewContainerRef: ViewContainerRef,
-                private componentFactoryResolver: ComponentFactoryResolver,
-                @Inject(DOCUMENT) private document: Document) {
-        this.CONFIG = this.configService.getConfig();
-    }
+    constructor(
+        public APIToolService: NxAPIToolService,
+        private viewContainerRef: ViewContainerRef,
+        private componentFactoryResolver: ComponentFactoryResolver,
+        @Inject(DOCUMENT) private document: Document
+    ) {}
 
     /** Check if node is a leaf node.
      *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
@@ -95,7 +99,7 @@ export class NxSwaggerComponent implements OnChanges {
                 maxDisplayedTags: expand === 'full' ? 1 : undefined,
                 requestInterceptor: (request) => {
                     this.authenticateRequest(request);
-                    if (this.CONFIG.isLocal) {
+                    if (environment.isLocal) {
                         request.curlOptions = ['--insecure']; // CLOUD-7904
                     }
                     this.handlePotentialRTSPRoute(request);

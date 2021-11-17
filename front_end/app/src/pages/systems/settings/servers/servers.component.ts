@@ -1,21 +1,28 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef, Inject }  from '@angular/core';
-import { ActivatedRoute, Params }        from '@angular/router';
-import { Location }                      from '@angular/common';
-import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
-import { BehaviorSubject, timer }        from 'rxjs';
+import {
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewContainerRef,
+    Inject
+} from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }      from '@services/nx-config';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { NxSettingsService }             from '../settings.service';
-import { NxApplyService }                from '@services/apply.service';
-import { NxMenuService }                 from '@src/menu';
-import { NxSystem }                      from '@services/system.service';
-import { NxUtilsService }                from '@services/utils.service';
-import { NxUriService }                  from '@services/uri.service';
-import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
-import { NxProcessService }              from '@services/process.service';
-import { WINDOW }                        from '@services/window-provider';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSettingsService } from '../settings.service';
+import { NxApplyService } from '@services/apply.service';
+import { NxMenuService } from '@src/menu';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxUriService } from '@services/uri.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxProcessService } from '@services/process.service';
+import { WINDOW } from '@services/window-provider';
+import { environment } from '@environments/environment';
 
 @UntilDestroy()
 @Component({
@@ -26,6 +33,7 @@ import { WINDOW }                        from '@services/window-provider';
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     serverIdFromParams;
@@ -99,7 +107,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 switchMap(async(system: any) => {
                     this.isOffline = !system.isOnline;
                     this.settingsService.footerSubject.next(true);
-                    if (system && (!this.system || !this.CONFIG.isLocal)) {
+                    if (system && (!this.system || !this.environment.isLocal)) {
                         this.system = system;
                     }
                 }),
@@ -167,11 +175,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 });
             }
             if (typeof server === 'undefined') {
-                if (this.system.serverManager.servers.length > 0 || this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
+                if (
+                    this.system.serverManager.servers.length > 0 ||
+                    this.environment.isLocal && this.location.path() === '/settings/servers'
+                ) {
                     server = this.system.serverManager.servers[0];
                     const id = NxUtilsService.cleanId(server.id);
                     let path = this.CONFIG.menus.systemSettings.baseUrl;
-                    path += (this.CONFIG.isLocal) ? '' : `${this.system.id}`;
+                    path += (this.environment.isLocal) ? '' : `${this.system.id}`;
                     path += `/servers/${id}`;
 
                     this.uriService

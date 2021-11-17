@@ -16,6 +16,7 @@ import { NxMenuService } from '@src/menu';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
+import { environment } from '@environments/environment';
 
 @Component({
     selector: 'nx-account-settings-component',
@@ -93,7 +94,7 @@ export class NxAccountSettingsComponent implements OnInit {
             .then((account) => {
                 if (account) {
                     this.account = account;
-                    if (!this.CONFIG.isLocal && !this.systemsService.isPolling) {
+                    if (!environment.isLocal && !this.systemsService.isPolling) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.isUserASystemOwner();

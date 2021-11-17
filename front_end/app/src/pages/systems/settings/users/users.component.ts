@@ -34,8 +34,8 @@ import { NgForm } from '@angular/forms';
 })
 
 export class NxSystemUsersComponent implements OnInit {
-    isLocal = environment.isLocal;
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
     location;
     paramUser;
@@ -132,7 +132,7 @@ export class NxSystemUsersComponent implements OnInit {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                if (!this.isLocal) {
+                if (!this.environment.isLocal) {
                     this.pageService.pageTitle = this.system.info.name;
                 }
                 // Route guard did not work :( ... so doing it the old way

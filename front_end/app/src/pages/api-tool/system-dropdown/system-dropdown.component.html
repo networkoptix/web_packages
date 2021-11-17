@@ -1,5 +1,5 @@
 <div class="mb-3">
-        <ng-container *ngIf="!CONFIG.isLocal">
+        <ng-container *ngIf="!environment.isLocal">
         <nx-select
                [id]="'avail-systems'"
                [stillLoading]="!(APIToolService.serversLoaded$ | async)"
@@ -16,14 +16,14 @@
                (onSelected)="onServerChange($event)"
                [selected]="APIToolService.selectedServer || {}">
        </nx-select>
-        </ng-container> 
-        <nx-select 
+        </ng-container>
+        <nx-select
                 *ngIf="!APIToolService.outDatedSystem"
                 [items]="APIToolService.APIDropdown"
                 (onSelected)="onAPIVersionChange($any($event))"
                 [stillLoading]="!(APIToolService.serversLoaded$ | async) || !APIToolService.APIDropdown.length"
                 [selected]="APIToolService.selectedAPI || {}"
-                [ngClass]="CONFIG.isLocal? 'mb-3' : 'mt-2'">
+                [ngClass]="environment.isLocal? 'mb-3' : 'mt-2'">
         </nx-select>
        <div *ngIf="!APIToolService.outDatedSystem && APIToolService.systemVersion >= 4 && APIToolService.systemVersion < 4.3"
             class="mt-2 system-message-warning"
@@ -32,10 +32,9 @@
                 to the new version in order to get
                 access to new functions.
        </div>
-       <div *ngIf="APIToolService.outDatedSystem" 
+       <div *ngIf="APIToolService.outDatedSystem"
             class="mt-2 system-message-error"
             translate>
                 API is not supported for this version of the system
         </div>
 </div>
-   

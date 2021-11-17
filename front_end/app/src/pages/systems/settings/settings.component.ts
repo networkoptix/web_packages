@@ -1,41 +1,45 @@
 import {
-    Component, Input,
-    OnDestroy, OnInit
-}                                       from '@angular/core';
+    Component,
+    Input,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
 import {
-    ActivatedRoute, Router,
-    NavigationEnd, NavigationStart
-}                                       from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, Subscription }        from 'rxjs';
-import { filter, takeUntil, tap }       from 'rxjs/operators';
-import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
-import { NxProcessService, Process }    from '@services/process.service';
-import { NxDialogsService }             from '@dialogs/dialogs.service';
-import { NxSettingsService }            from './settings.service';
-import { NxMenuService }                from '@src/menu';
+    ActivatedRoute,
+    Router,
+    NavigationEnd,
+    NavigationStart
+} from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject, Subscription } from 'rxjs';
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSettingsService } from './settings.service';
+import { NxMenuService } from '@src/menu';
 import {
-    ICamera, NxSystem,
+    ICamera,
+    NxSystem,
     NxSystemService
-}                                       from '@services/system.service';
-import { NxSystemsService }             from '@services/systems.service';
-import { Account, NxAccountService }    from '@services/account.service';
-import { NxUtilsService }               from '@services/utils.service';
-import { NxUriService }                 from '@services/uri.service';
-import { NxScrollMechanicsService }     from '@services/scroll-mechanics.service';
-import { NxApplyService }               from '@services/apply.service';
-import { NxPageService }                from '@services/page.service';
-import { NxRibbonService }              from '@components/ribbon';
-import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
-import { NxAppStateService }            from '@services/nx-app-state.service';
+} from '@services/system.service';
+import { NxSystemsService } from '@services/systems.service';
+import { Account, NxAccountService } from '@services/account.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxUriService } from '@services/uri.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxApplyService } from '@services/apply.service';
+import { NxPageService } from '@services/page.service';
+import { NxRibbonService } from '@components/ribbon';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    // eslint-disable-next-line no-multi-spaces
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
-    // eslint-disable-next-line no-multi-spaces
     styleUrls: ['settings.component.scss']
 })
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
@@ -152,7 +156,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemId = params.systemId;
                 this.content.base = this.CONFIG.menus.systemSettings.baseUrl + this.systemId;
                 this.content = { ...this.content }; // trigger onChange
-                if (!this.CONFIG.isLocal && this.system) {
+                if (!environment.isLocal && this.system) {
                     this.system.stopPoll();
                     this.system = undefined;
                     this.settingsService.system = undefined;
@@ -282,7 +286,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .then((account) => {
                 if (account) {
                     this.account = account;
-                    if (!this.CONFIG.isLocal) {
+                    if (!environment.isLocal) {
                         // Starts the systems poll if starting on a system.
                         if (!this.systemsService.isPolling) {
                             this.systemsService.getSystems(account.email);
@@ -327,7 +331,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         if (
                                             this.system && this.systemsService.systems &&
                                             !this.systemsService.systems.some(system => system.id === this.system.id) &&
-                                            !this.CONFIG.isLocal) {
+                                            !environment.isLocal) {
                                             this.uriService.updateURI('/systems');
                                         }
                                         if (this.system.isAvailable) {
@@ -383,7 +387,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.checkMergeSubscription = this.system.checkMergeStatus(false)
             .subscribe(res => {
                 const { mergeInProgress } = res?.reply || res;
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     if (!mergeInProgress && this.system.isOnline) {
                         this.ribbonService.hide();
                     }

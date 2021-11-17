@@ -1,42 +1,47 @@
 import {
     Component, OnDestroy, OnInit,
     Inject, ViewContainerRef
-}                                       from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router }       from '@angular/router';
+} from '@angular/core';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subject, Subscription, BehaviorSubject,
     from, throwError, of
-}                                       from 'rxjs';
+} from 'rxjs';
 import {
     filter, map, retryWhen, delay,
     distinctUntilChanged, retry, tap,
     catchError, switchMap
-}                                       from 'rxjs/operators';
-import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
-import { NxProcessService, Process }    from '@services/process.service';
-import { WINDOW }                       from '@services/window-provider';
-import { NxApplyService, Watcher }      from '@services/apply.service';
+} from 'rxjs/operators';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxProcessService, Process } from '@services/process.service';
+import { WINDOW } from '@services/window-provider';
+import { NxApplyService, Watcher } from '@services/apply.service';
 import {
-    ICamera, IRecordingModes,
-    IRecordingSettings, ITask,
-    MotionType, NxSystem,
+    ICamera,
+    IRecordingModes,
+    IRecordingSettings,
+    ITask,
+    MotionType,
+    NxSystem,
     RecordingType,
     StreamQuality
-}                                       from '@services/system.service';
-import { NxDialogsService }             from '@dialogs/dialogs.service';
-import { NxSettingsService }            from '../settings.service';
-import { NxMenuService }                from '@src/menu';
-import { NxUriService, ChildRoutes }    from '@services/uri.service';
-import { NxHealthService }              from '@pages/health/health.service';
+} from '@services/system.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSettingsService } from '../settings.service';
+import { NxMenuService } from '@src/menu';
+import { NxUriService, ChildRoutes } from '@services/uri.service';
+import { NxHealthService } from '@pages/health/health.service';
 import {
-    InfoBlockColumns, InfoBlockSection,
+    InfoBlockColumns,
+    InfoBlockSection,
     InfoBlockLine,
     InfoBlockSize
-}                                       from '@components/info-block/info-block.component';
-import { NxUtilsService }               from '@services/utils.service';
+} from '@components/info-block/info-block.component';
+import { NxUtilsService } from '@services/utils.service';
+import { environment } from '@environments/environment';
 
 @UntilDestroy()
 @Component({
@@ -399,14 +404,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             )
             .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
-                if (system && (!this.system || !this.CONFIG.isLocal)) {
+                if (system && (!this.system || !environment.isLocal)) {
                     this.system = system;
                     if (!this.system.isOnline || !this.system.isAvailable) {
                         this.showPreloader = false;
                     }
 
                     (
-                        this.CONFIG.isLocal
+                        environment.isLocal
                             ? this.system.update()
                             : Promise.resolve()
                     ).then(

@@ -10,10 +10,10 @@
                             (editModeState)="editMode = $event"
                             [nameWatcher]="systemNameWatcher"
                             [editEnabled]="enableEdit"></nx-editable-heading>
-                    <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
+                    <nx-client-button *ngIf="!environment.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>
                 </div>
 
-                <span class="system-owner" *ngIf="!CONFIG.isLocal">
+                <span class="system-owner" *ngIf="!environment.isLocal">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
                         <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
@@ -36,7 +36,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!CONFIG.isLocal && !CONFIG.cloudSystemId">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!environment.isLocal && !CONFIG.cloudSystemId">
                         <div class="float-xl-right">
                             <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
@@ -52,7 +52,7 @@
                     <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
                         <span class="name" [innerText]="updateUserRole()"></span>
                     </span>
-                    <div class="mt-2" *ngIf="!CONFIG.isLocal || user?.isCloud">
+                    <div class="mt-2" *ngIf="!environment.isLocal || user?.isCloud">
                         <button [disabled]="settings.disconnectDisabled"
                                 class="btn btn-default"
                                 (click)="delete()" translate>Disconnect from My Account</button>
@@ -61,7 +61,7 @@
             </ng-template>
         </nx-block>
 
-        <nx-block header-style="extended" *ngIf="CONFIG.isLocal">
+        <nx-block header-style="extended" *ngIf="environment.isLocal">
             <header>
                 <div class="system-cloud-tag float-right">
                     <nx-tag static type="success"

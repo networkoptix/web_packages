@@ -2,20 +2,20 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                 from '@angular/core';
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location }               from '@angular/common';
-import { UntilDestroy }           from '@ngneat/until-destroy';
-import { of, SubscriptionLike }   from 'rxjs';
-import { delay, throttleTime }    from 'rxjs/operators';
+import { Location } from '@angular/common';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { of, SubscriptionLike } from 'rxjs';
+import { delay, throttleTime } from 'rxjs/operators';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxUriService }             from '@services/uri.service';
-import { NxMenuService }            from '@src/menu';
-import { NxHealthService }          from '../health.service';
-import { NxHealthLayoutService }    from '../health-layout.service';
-import { NxUtilsService }           from '@services/utils.service';
+import { NxUriService } from '@services/uri.service';
+import { NxMenuService } from '@src/menu';
+import { NxHealthService } from '../health.service';
+import { NxHealthLayoutService } from '../health-layout.service';
+import { NxUtilsService } from '@services/utils.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { environment } from '@environments/environment';
 
 interface Params {
     [key: string]: any;
@@ -29,8 +29,6 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
-    CONFIG: IConfig;
-
     filterModel;
     params: any = {};
     numFilters: number;
@@ -78,11 +76,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private router: Router,
         private location: Location,
         private menuService: NxMenuService,
-        private configService: NxConfigService,
         private uriService: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = this.configService.getConfig();
         this.filterModel = {
             selects: [],
             query: ''
@@ -121,7 +117,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.reportView = url.includes('/health-report/viewer');
         if (!this.healthService.alertsValues) {
             if (this.reportView) {
-                this.router.navigate([`/health${this.CONFIG.isLocal ? '' : '-report'}/viewer`]);
+                this.router.navigate([`/health${environment.isLocal ? '' : '-report'}/viewer`]);
             }
 
             return;

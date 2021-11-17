@@ -1,5 +1,7 @@
 import { IParams, NxSystem } from './system.service';
-import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
+import {
+    LoginWebadminModalContent
+} from '@dialogs/login-webadmin/login-webadmin.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IConfig, NxConfigService } from './nx-config';
 import { Location } from '@angular/common';
@@ -25,13 +27,14 @@ export class NxLoginService {
     private _accountService: NxAccountService;
     private _currentSystem: NxSystem;
 
-    constructor(configService: NxConfigService,
-                private http: HttpClient,
-                private location: Location,
-                private modalService: NgbModal,
-                private router: Router,
-                private storage: LocalStorageService,
-                private bootstrapProvider: NxBootstrapProvider
+    constructor(
+        configService: NxConfigService,
+        private http: HttpClient,
+        private location: Location,
+        private modalService: NgbModal,
+        private router: Router,
+        private storage: LocalStorageService,
+        private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -95,7 +98,7 @@ export class NxLoginService {
             blockNavigation
         };
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             if (this.bootstrapProvider.newSystem) {
                 return;
             }

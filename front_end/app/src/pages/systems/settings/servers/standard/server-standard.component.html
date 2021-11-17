@@ -1,5 +1,9 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="placeholder-section" type="NO_SETTINGS" *ngIf="(isOffline || !system.isAvailable) && !selectedServer"></nx-page-placeholder>
+    <nx-page-placeholder
+        class="placeholder-section"
+        type="NO_SETTINGS"
+        *ngIf="(isOffline || !system.isAvailable) && !selectedServer"
+    ></nx-page-placeholder>
     <nx-alert-block
             *ngIf="certError"
             class="col-12"
@@ -8,7 +12,13 @@
             [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
             [line1]="'CERTIFICATE ERROR' | translate">
     </nx-alert-block>
-    <div *ngIf="serverOffline || selectedServer?.internalStatus === CONFIG.servers.status.restarting || checking" class="col-12">
+    <div
+        *ngIf="
+            serverOffline ||
+            selectedServer?.internalStatus === CONFIG.servers.status.restarting ||
+            checking"
+        class="col-12"
+    >
         <ng-container *ngIf="!checking">
             <nx-alert-block
                 *ngIf="serverOffline"
@@ -42,9 +52,16 @@
     </div>
     <ng-template #preloader>
         <ng-template #offlinePlaceholder>
-            <nx-page-placeholder *ngIf="system.isAvailable" class="placeholder-section" type="SERVER_OFFLINE"></nx-page-placeholder>
+            <nx-page-placeholder
+                *ngIf="system.isAvailable"
+                class="placeholder-section"
+                type="SERVER_OFFLINE"
+            ></nx-page-placeholder>
         </ng-template>
-        <div *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder" class="col-12 placeholder-section">
+        <div
+            *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder"
+            class="col-12 placeholder-section"
+        >
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>

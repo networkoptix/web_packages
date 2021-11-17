@@ -1,33 +1,29 @@
 import {
     Component, Inject, OnDestroy,
     OnInit, ViewContainerRef
-}                                          from '@angular/core';
-import {
-    Params, Router, ActivatedRoute
-}                                          from '@angular/router';
-import { UntilDestroy }                    from '@ngneat/until-destroy';
-import { Subscription, throwError }        from 'rxjs';
-import {
-    auditTime, catchError,
-    distinctUntilChanged, switchMap
-}                                          from 'rxjs/operators';
-import { NxRibbonService }                 from '@components/ribbon';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxProcessService, Process }       from '@services/process.service';
-import { NxSystem, NxSystemUser }          from '@services/system.service';
-import { NxDialogsService }                from '@dialogs/dialogs.service';
-import { NxPageService }                   from '@services/page.service';
-import { NxSystemsService }                from '@services/systems.service';
-import { NxAccountService }                from '@services/account.service';
-import { NxCloudApiService }               from '@services/nx-cloud-api';
-import { NxUriService }                    from '@services/uri.service';
-import { NxToastService }                  from '@dialogs/toast.service';
-import { NxApplyService, Watcher }         from '@services/apply.service';
-import { WINDOW }                          from '@services/window-provider';
-import { NxMenuService }                   from '@src/menu';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
-import { NxSettingsService }               from '../settings.service';
+} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+import { NxRibbonService } from '@components/ribbon';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem, NxSystemUser } from '@services/system.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxPageService } from '@services/page.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxUriService } from '@services/uri.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { WINDOW } from '@services/window-provider';
+import { NxMenuService } from '@src/menu';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSettingsService } from '../settings.service';
+import { environment } from '@environments/environment';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -42,6 +38,7 @@ interface Settings {
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     user: NxSystemUser;
@@ -100,12 +97,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.route.queryParams.subscribe((params) => {
             this.advanced = (this.router.url.includes('/advanced') || this.route.snapshot.routeConfig.path === 'advanced' || params.advanced !== undefined);
             if (params.advanced !== undefined) {
-                this.CONFIG.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
-                !this.CONFIG.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
+                this.environment.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
+                !this.environment.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
             } else if (params.code && params.state) {
                 // Remove all of this dialog logic w/ state.
                 let loginPromise: Promise<any> = Promise.resolve(true);
-                if (this.CONFIG.isLocal && params.code) {
+                if (this.environment.isLocal && params.code) {
                     loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
                 }
                 loginPromise.then(() => {
@@ -219,7 +216,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.setNameAndTitle();
                         }
 
-                        if (!this.CONFIG.isLocal || (this.CONFIG.isLocal && this.system.userManager.permissions.isAdmin)) {
+                        if (!this.environment.isLocal || (this.environment.isLocal && this.system.userManager.permissions.isAdmin)) {
                             this.settingsSubscription = this.system.updateOrGetSystemSettings()
                                 .subscribe((response: any) => {
                                     if (response.reply) {
@@ -246,7 +243,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.systemNameWatcher.reset();
                         return Promise.resolve();
                     }
-                    return (this.CONFIG.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
+                    return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService).renameSystem(this.system.id, this.systemName.trim())
                         .then(() => {
                             this.systemNameWatcher.originalValue = this.systemNameWatcher.value;
                             this.systemNameWatcher.value = this.systemNameWatcher.originalValue;
@@ -273,7 +270,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
-            if (!this.CONFIG.isLocal) {
+            if (!this.environment.isLocal) {
                 this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
             } else {
                 this.ribbonService.hide();
@@ -303,7 +300,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         const handleDisconnect = () => this.dialogs.disconnect(this.accountService, this.system)
             .then((result) => {
                 if (result) {
-                    if (this.CONFIG.isLocal) {
+                    if (this.environment.isLocal) {
                         // give the user chance to read the toaster
                         setTimeout(() => this.window.location.reload(), 2000);
                     } else {
@@ -361,7 +358,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
-            if (this.CONFIG.isLocal) {
+            if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system)
                     .then((response) => {
                         if (response) {
@@ -427,7 +424,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                 let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
                 if (this.CONFIG.cloudHost) {
-                    downloadHTML = `<a href=\"${this.CONFIG.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
+                    downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
                 }
                 const responseError = NxLanguageProviderService.translate(
                     this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode] || this.LANG.errorCodes.unknownMergeError,
@@ -465,7 +462,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     hideAdvancedSettings() {
         if (this.router.url.includes('/advanced')) {
-            this.CONFIG.isLocal && this.router.navigate(['settings']) || this.router.navigate([`systems/${this.system.id}`]);
+            this.environment.isLocal && this.router.navigate(['settings']) || this.router.navigate([`systems/${this.system.id}`]);
         }
     }
 }

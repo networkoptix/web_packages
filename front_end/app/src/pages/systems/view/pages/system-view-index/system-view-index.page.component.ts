@@ -1,32 +1,33 @@
 import {
-    Component, OnInit, OnDestroy, ElementRef,
+    Component,
+    OnInit,
+    OnDestroy,
+    ElementRef,
     HostListener
-}                                                from '@angular/core';
-import { ActivatedRoute, Router }                from '@angular/router';
-import { Subject, Subscription, timer }          from 'rxjs';
-import {
-    NxSystemService, NxSystem
-}                                                from '@services/system.service';
-import { NxAccountService }                      from '@services/account.service';
-import VideoManagementSystemService              from '../../vms-client/submodules/vms/services/vms.service';
-import VmsState, { VMS_MODE }                    from '../../vms-client/submodules/vms/datatypes/VmsState';
-import MediaServer                               from '../../vms-client/submodules/vms/datatypes/MediaServer';
-import Camera                                    from '../../vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange }        from '../../vms-client/submodules/vms/datatypes/ICamera';
-import { ms, LoggerDecorator }                   from '../../vms-client/utils';
-import TimelineService                           from '../../vms-client/submodules/timeline/services/timeline.service';
-import WebClientUxService, { WebclientUxState }  from '../../services/webclient-ux.service';
-import { NxConfigService, IConfig }              from '@services/nx-config';
-import { NxSystemsService }                      from '@services/systems.service';
-import { UntilDestroy, untilDestroyed }          from '@ngneat/until-destroy';
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, Subscription, timer } from 'rxjs';
+import { NxSystemService, NxSystem } from '@services/system.service';
+import { NxAccountService } from '@services/account.service';
+import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service';
+import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
+import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer';
+import Camera from '../../vms-client/submodules/vms/datatypes/Camera';
+import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera';
+import { ms, LoggerDecorator } from '../../vms-client/utils';
+import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service';
+import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
+import { NxSystemsService } from '@services/systems.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
-import { NxUtilsService }                        from '@services/utils.service';
-import sidebarLayout                             from '../sidebarLayout.cfg';
-import { NxDialogsService }                      from '../../../../../dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }               from '../../../../../../language_i18n_static_types';
-import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
-import { NxRibbonService }                       from '../../../../../components/ribbon';
+import { NxUtilsService } from '@services/utils.service';
+import sidebarLayout from '../sidebarLayout.cfg';
+import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxRibbonService } from '../../../../../components/ribbon';
 import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
+import { environment } from '@environments/environment';
 
 @UntilDestroy()
 @Component({
@@ -49,7 +50,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public system: NxSystem
     public systems: NxSystem[];
 
-    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
@@ -117,7 +117,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private self: ElementRef,
         protected router: Router,
@@ -132,7 +131,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this._onRouteChange = this._onRouteChange.bind(this);
@@ -167,7 +165,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.onResize({ target: { innerWidth: window.innerWidth } });
 
         this.accountService.get().then((account) => {
-            if (account && !this.CONFIG.isLocal && !this.systemsService.isPolling) {
+            if (account && !environment.isLocal && !this.systemsService.isPolling) {
                 this.systemsService.getSystems(account.email);
             }
         });
@@ -245,7 +243,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return Promise.reject();
                 }
 
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                     this._log('local system created', this.system);
                     return Promise.resolve();

@@ -1,29 +1,30 @@
 import {
     Component, SimpleChanges, OnChanges, OnDestroy,
     Input, Output, EventEmitter
-}                                        from '@angular/core';
-import { ActivatedRoute }                from '@angular/router';
-import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of, SubscriptionLike, Subject } from 'rxjs';
 import {
     catchError, filter, skipWhile, takeUntil
-}                                        from 'rxjs/operators';
+} from 'rxjs/operators';
 
 import {
     InfoBlockSection, InfoBlockLine
-}                                    from '@components/info-block/info-block.component';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+} from '@components/info-block/info-block.component';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxApplyService, Watcher }   from '@services/apply.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxMenuService }             from '@src/menu';
-import { NxSystem }                  from '@services/system.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxMenuService } from '@src/menu';
+import { NxSystem } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { NxUtilsService } from '@services/utils.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { environment } from '@environments/environment';
 
 interface DropdownStorage {
     name: string,
@@ -146,7 +147,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
             if (params.state) {
                 let loginPromise: Promise<any> = Promise.resolve(true);
-                if (this.CONFIG.isLocal && params.code) {
+                if (environment.isLocal && params.code) {
                     loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
                 }
                 loginPromise.then(() => {
@@ -309,7 +310,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 return Promise.reject(error);
             }
 
-            if (this.CONFIG.isLocal && newPort) {
+            if (environment.isLocal && newPort) {
                 setTimeout(() => {
                     this.uriService.changePort(newPort);
                 });

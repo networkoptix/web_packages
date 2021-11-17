@@ -1,9 +1,11 @@
-import { Component }                 from '@angular/core';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxSystemService }           from '@services/system.service';
-import { NxAPIToolService }          from '../api-tool.service';
+import { Component } from '@angular/core';
+import {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
+import { NxSystemService } from '@services/system.service';
+import { NxAPIToolService } from '../api-tool.service';
 import { APIDropdownItem } from '../api-tool-types';
+import { environment } from '@environments/environment';
 
 @Component({
     selector: 'nx-system-dropdown',
@@ -11,11 +13,12 @@ import { APIDropdownItem } from '../api-tool-types';
     styleUrls: ['./system-dropdown.component.scss']
 })
 export class NxSystemDropdownComponent {
-    CONFIG: IConfig
+    environment = environment;
 
-    constructor(public APIToolService: NxAPIToolService, private systemService: NxSystemService, private configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
-    }
+    constructor(
+        public APIToolService: NxAPIToolService,
+        private systemService: NxSystemService
+    ) {}
 
     onSystemChange(system: DropdownItem) {
         this.APIToolService.menuNodes = undefined;

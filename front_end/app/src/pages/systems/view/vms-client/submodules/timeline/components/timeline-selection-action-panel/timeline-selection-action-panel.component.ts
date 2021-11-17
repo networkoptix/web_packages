@@ -1,15 +1,24 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { TimelineSelectionService, TimelineSelectionServiceStatus } from '../../services/timeline.selection.service';
-import { interval, Observable, Subject, Subscription } from 'rxjs';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ElementRef,
+    AfterViewInit
+} from '@angular/core';
+import {
+    TimelineSelectionService,
+    TimelineSelectionServiceStatus
+} from '../../services/timeline.selection.service';
+import { interval, Observable, Subscription } from 'rxjs';
 import TimelineService from '../../services/timeline.service';
 import { msDurationToString } from './utils';
-import { throttle, map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { NxAccountService } from '../../../../../../../../services/account.service';
 import { NxSystem, NxSystemService } from '../../../../../../../../services/system.service';
-import { IConfig, NxConfigService } from '../../../../../../../../services/nx-config';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
 import TimeRange from '../../services/TimeRange';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 
 const THROTTLE_MS = 50;
 const EAR_WIDTH = 120;
@@ -26,8 +35,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     protected status: TimelineSelectionServiceStatus
     protected system: NxSystem
 
-    CONFIG: IConfig;
-
     public get duration (): string {
         return msDurationToString(Math.floor(this.selection.range.duration / 1000) * 1000);
     }
@@ -38,7 +45,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     }
 
     constructor(
-        configService: NxConfigService,
         private self: ElementRef,
         protected timeline: TimelineService,
         protected selection: TimelineSelectionService,
@@ -47,7 +53,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected vms: VideoManagementSystemService,
         protected dialogs: NxDialogsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
@@ -72,7 +77,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
             if (!account) {
                 return Promise.reject();
             }
-            if (this.CONFIG.isLocal) {
+            if (environment.isLocal) {
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             } else {
                 this.system = this.systemService.createSystem(account.email, this.vms.systemId, undefined, true);

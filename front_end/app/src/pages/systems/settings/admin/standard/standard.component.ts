@@ -1,21 +1,27 @@
 import {
-    Component, OnInit, Input,
-    ViewChild, ElementRef, OnChanges, SimpleChanges
-}                                           from '@angular/core';
-import {  catchError, map, switchMap, tap }                  from 'rxjs/operators';
-import { UntilDestroy, untilDestroyed }     from '@ngneat/until-destroy';
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    ElementRef,
+    OnChanges,
+    SimpleChanges
+} from '@angular/core';
+import {  catchError, map, switchMap, tap } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem }                  from '@services/system.service';
-import { NxApplyService, Watcher }   from '@services/apply.service';
-import { NxMenuService }             from '@src/menu';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { delayInitial }              from '@services/utils.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxSystemsService }          from '@services/systems.service';
+import { NxSystem } from '@services/system.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxMenuService } from '@src/menu';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { delayInitial } from '@services/utils.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxSystemsService } from '@services/systems.service';
+import { environment } from '@environments/environment';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;
@@ -56,6 +62,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings;
     @Input() system: NxSystem;
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     selectedTimeUnit: LimitSessionTimeItem;

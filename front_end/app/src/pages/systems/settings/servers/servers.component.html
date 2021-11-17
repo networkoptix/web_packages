@@ -26,7 +26,7 @@
 
 <ng-container *ngIf="serverLoaded && system && selectedServer?.id">
     <nx-cloud-storage
-        *ngIf="!CONFIG.isLocal && system?.canUserViewCloudStorage()"
+        *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
         layout="simple"
         type="servers"
     ></nx-cloud-storage>
