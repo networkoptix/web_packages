@@ -91,8 +91,9 @@ Restart
     [Tags]    Threaded    system_offline
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    Click Button    ${LOG IN CLOSE BUTTON}
+    #Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    #Click Button    ${LOG IN CLOSE BUTTON}
+    Go To    ${ENV}
     Wait Until Element Is Visible    ${JUMBOTRON}
     Wait Until Location Contains    ${ENV}
 
@@ -147,7 +148,7 @@ Restart
     Log Out
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]
         Log in to user and system    ${user}    ${system}[cloud id]
-        Wait Until Element is Visible    //h2[contains(text(), "${system}[name]")]
+        Wait Until Element is Visible    //nx-text-editable[contains(text(), "${system}[name]")]
         Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END
