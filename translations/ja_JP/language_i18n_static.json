@@ -1053,20 +1053,20 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - クラウドポータル",
+            "description": "%CLOUD_NAME% は %VMS_NAME% システムへの接続、管理、拡張を簡単にします。"
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "システム - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% インテグレーション - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% ドキュメント - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "対応デバイス - %CLOUD_NAME%"
         }
     }
 }
