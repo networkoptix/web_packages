@@ -152,7 +152,7 @@ Push Notifications To Browsers
         #Bind Users to Browsers    ${device count}    ${locust time}    ${sleep}            
         Sleep    2
     END
-    ${wait} =    Evaluate    ${total browsers}+1
+    ${wait} =    Evaluate    ${total browsers}+0
     #Sleep    ${timeout}   
     Wait Until Keyword Succeeds    2 min    1 sec    Async Check    ${wait}
     #Sleep    120

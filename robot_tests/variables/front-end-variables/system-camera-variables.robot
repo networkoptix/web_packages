@@ -13,7 +13,7 @@ ${EDIT CREDENTIALS PASSWORD INPUT}           ${EDIT CREDENTIALS FORM}//input[@id
 ${EDIT CREDENTIALS X BUTTON}                 ${EDIT CREDENTIALS FORM}//button[contains(@class,"close")]
 ${EDIT CREDENTIALS CANCEL BUTTON}            ${EDIT CREDENTIALS FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${EDIT CREDENTIALS SAVE BUTTON}              ${EDIT CREDENTIALS FORM}//button[contains(text(),"${SAVE BUTTON TEXT}")]
-${RECORDING CHECK BOX}                       //nx-switch/div[@id="recording"]
+${RECORDING CHECK BOX}                       //nx-switch/div[@id="recording-switch-wrapper"]
 ${ENABLED RECORDING SLIDER}                  //span[contains(@class,"slider round")]
 ${RECORD ALWAYS RADIO BUTTON}                //nx-radio//input[@id="always"]
 ${RECORD MOTION RADIO BUTTON}                //nx-radio//input[@id="motion"]

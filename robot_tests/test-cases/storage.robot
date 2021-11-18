@@ -50,7 +50,7 @@ Restart
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     Wait Until Element Is Visible    ${STORAGE INFO BUTTON}
     Click Button    ${STORAGE INFO BUTTON}
-    Location Should Contain    health/storages
+    Wait Until Location Contains    health/storages
     Wait Until Element Is Visible    ${HM STORAGE TABLE}
     ${count} =    Get Element Count    ${HM STORAGE DISK}
     Should Be Equal as Numbers    5    ${count}

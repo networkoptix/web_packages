@@ -73,21 +73,21 @@ ${STORAGE DISABLED NOT IN USE}      ${STORAGE DISK 2}/parent::td[@class="disable
 ${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE RESERVED MODE}
 ${STORAGE ENABLED MAIN}             ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
 ${STORAGE ENABLED BACKUP}           ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
-${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
+${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
+${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
+${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
+${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
 ${STORAGE DISABLED RESERVED ADDRESS}   ${STORAGE DISK 3}
 ${STORAGE DISABLED NOT IN USE ADDRESS}   ${STORAGE DISK 2}
 ${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
 ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
-${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/info.svg"]
+${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/info.svg"]
 ${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
 ${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
-${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup"]
+${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]
 ${ARCHIVE BACKUP SWITCH SLIDER}     //span[@class="slider round"]
 ${ARCHIVE BACKUP SWITCH ENABLED}    //input[@id="archive-backup-switch" and @class="selected"]
 ${ARCHIVE BACKUP STREAMS MSG}       //p[contains(text(), "${ARCHIVE BACKUP STREAMS MSG TEXT}")]
@@ -101,11 +101,11 @@ ${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"
 ${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
 ${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
-${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_local.svg"]
-${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/standard/loading.svg"]
+${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
+${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/loading.svg"]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
 ${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
-${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/storage_smb.svg"]
+${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_smb.svg"]
 ${STORAGE SMB TOOLTIP}              ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${SMB TOOLTIP TEXT}")]
 ${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
