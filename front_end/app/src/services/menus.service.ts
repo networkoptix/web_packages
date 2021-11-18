@@ -1,20 +1,21 @@
-import { Injectable }         from '@angular/core';
-import { TranslateService }              from '@ngx-translate/core';
+import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
     BehaviorSubject,
-    from, combineLatest, Observable
-}                                        from 'rxjs';
-import {
-    map, switchMap
-}                                        from 'rxjs/operators';
-import { IConfig, NxConfigService }      from './nx-config';
+    from,
+    combineLatest,
+    Observable
+} from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { IConfig, NxConfigService } from './nx-config';
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
-import { LanguageI18NStaticTypes }       from '@app/language_i18n_static_types';
-import { NxLanguageProviderService }     from './nx-language-provider';
-import { NxSessionService }              from './session.service';
-import { UntilDestroy, untilDestroyed }  from '@ngneat/until-destroy';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from './nx-language-provider';
+import { NxSessionService } from './session.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -59,7 +60,7 @@ export class NxMenusService {
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
         let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             if (menu?.title === undefined) {
                 menu = {
                     description: undefined,
@@ -73,7 +74,7 @@ export class NxMenusService {
             menu.nodes = (menu?.nodes?.length) ? [this.currentSystemNode$.value, ...menu.nodes] : [this.currentSystemNode$.value];
         }
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             return from([menu]);
         }
 
@@ -86,7 +87,7 @@ export class NxMenusService {
                     : Promise.resolve([login, menu])
                 ),
                 map(([login, menu]) => {
-                    const filteredMenu = this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT);
+                    const filteredMenu = this.filterMenu(menu, login || environment.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT);
                     filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
                     return filteredMenu;
                 })
@@ -162,7 +163,7 @@ export class NxMenusService {
     }
 
     getUrl(systemId: string, endpoint = this.endpoint, home = false) {
-        const url = this.CONFIG.isLocal ? '/settings' : '/systems/' + systemId;
+        const url = environment.isLocal ? '/settings' : '/systems/' + systemId;
         if (home) {
             return url;
         }
@@ -180,11 +181,11 @@ export class NxMenusService {
             segment = '/bookmarks';
         }
 
-        if (endpoint.settings && this.CONFIG.isLocal) {
+        if (endpoint.settings && environment.isLocal) {
             segment = '/settings';
         }
 
-        return (!this.CONFIG.isLocal && systemId) ? url + segment : segment;
+        return (!environment.isLocal && systemId) ? url + segment : segment;
     }
 
     updateActiveSystemMenu(activeSystem, isLocalAdmin?) {
@@ -194,7 +195,7 @@ export class NxMenusService {
         // TODO: unify system's name location once we remove promises
         let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.name;
         if (!name) {
-            name = (this.CONFIG.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
+            name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
         }
         const icon = (activeSystem.isOnline || activeSystem.stateOfHealth === this.CONFIG.system.status.online) ? 'system.svg' : 'system_offline.svg';
         const hasAdminAccess = activeSystem?.accessRole

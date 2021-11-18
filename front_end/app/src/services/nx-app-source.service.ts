@@ -1,12 +1,14 @@
-import { Injectable }               from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { NxSystem }                 from './system.service';
+import { NxSystem } from './system.service';
+import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAppSourceService {
+    environment = environment;
     private CONFIG: IConfig;
 
     constructor(configService: NxConfigService) {
@@ -14,7 +16,7 @@ export class NxAppSourceService {
     }
 
     getMenuBase(system: Partial<NxSystem>) {
-        if (this.CONFIG.isLocal) {
+        if (this.environment.isLocal) {
             return `${this.CONFIG.menus.systemHealth.baseUrl}`;
         } else {
             return `${this.CONFIG.menus.systemSettings.baseUrl}${system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;

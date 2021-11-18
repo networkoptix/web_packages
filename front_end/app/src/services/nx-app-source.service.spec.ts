@@ -32,7 +32,7 @@ describe('AppSource Service', () => {
     });
 
     it('should return baseUrl if local', () => {
-        appSourceService['CONFIG'].isLocal = true;
+        appSourceService['environment'].isLocal = true;
         const base = `${appSourceService['CONFIG'].menus.systemHealth.baseUrl}`;
         const url = appSourceService.getMenuBase(systemMock);
         expect(url).toBe(base);

@@ -1,25 +1,26 @@
 /* eslint-disable camelcase */
-import { Injectable, Injector }                  from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams }   from '@angular/common/http';
-import { Router }                                from '@angular/router';
+import { Injectable, Injector } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
-import { EMPTY, of, from, BehaviorSubject, throwError, Observable } from 'rxjs';
-import { v4 as uuid }                            from 'uuid';
+import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { Account }                  from './account.service/account';
-import * as t                       from './nx-cloud-api.types';
-import { NxUriCacheService }        from './uri-cache.service';
-import { FeatureFlagStrings }            from '@services/nx-config/base-config';
-import { NxSwCacheService }         from '@services/sw-cache.service';
-import { ConsoleSection }           from '@components/console-table/console-table.component.types';
-import { PackageStatus }            from '@dialogs/download-async/download-async.component.types';
-import { NxConsoleService }         from '@pages/developer-console/console/console.service';
+import { Account } from './account.service/account';
+import * as t from './nx-cloud-api.types';
+import { NxUriCacheService } from './uri-cache.service';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { NxSwCacheService } from '@services/sw-cache.service';
+import { ConsoleSection } from '@components/console-table/console-table.component.types';
+import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { OauthService }             from '@services/oauth.service';
+import { OauthService } from '@services/oauth.service';
 import { InstantSearchOptions } from './nx-cloud-api.types';
 import { NxUtilsService } from './utils.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { environment } from '@environments/environment';
 
 export const DOC_TYPES = {
     knowledgebase: 'kb',
@@ -37,7 +38,6 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
                 return this.account(true);
             }),
             switchMap((account: Account) => {
-                // eslint-disable-next-line camelcase
                 if (account?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
@@ -322,7 +322,7 @@ export class NxCloudApiService {
             user_email: userEmail,
             role: this.CONFIG.accessRoles.unshare
         };
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             url = `${this.configService.cloudHost}/api/systems/${systemId}/users`;
             data.email = userEmail;
             data.password = password || '';

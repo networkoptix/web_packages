@@ -1,21 +1,22 @@
 import { Inject, Injectable, Injector } from '@angular/core';
-import { DOCUMENT, Location }           from '@angular/common';
-import { Router }                       from '@angular/router';
+import { DOCUMENT, Location } from '@angular/common';
+import { Router } from '@angular/router';
 
-import { BaseAccount }               from './base';
-import { NxConfigService }           from '../nx-config';
-import { NxCloudApiService }         from '../nx-cloud-api';
+import { BaseAccount } from './base';
+import { NxConfigService } from '../nx-config';
+import { NxCloudApiService } from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';
-import { NxSessionService }          from '../session.service';
-import { WINDOW }                    from '../window-provider';
-import { NxAppStateService }         from '../nx-app-state.service';
-import { NxUriService }              from '../uri.service';
-import { NxPollService }             from '../poll.service';
-import { NxSystemAPIService }        from '../system-api.service';
-import { NxStorageService }          from '../storage.service';
-import { Account }                   from '@services/account.service/account';
-import { OauthService }              from '@services/oauth.service';
+import { NxSessionService } from '../session.service';
+import { WINDOW } from '../window-provider';
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxUriService } from '../uri.service';
+import { NxPollService } from '../poll.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxStorageService } from '../storage.service';
+import { Account } from '@services/account.service/account';
+import { OauthService } from '@services/oauth.service';
 import { NxLoginService } from '@services/login.service';
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class CloudAccount extends BaseAccount {
@@ -97,7 +98,7 @@ export class CloudAccount extends BaseAccount {
     login(email: string, password: string, remember: boolean, navigateHome = false) {
         this.sessionService.email = email;
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             this.requestingLogin = this.mediaServerApi.login(email, password).toPromise();
         } else {
             this.requestingLogin = this.cloudApi.login(email, password, remember);
@@ -105,14 +106,14 @@ export class CloudAccount extends BaseAccount {
 
         return this.requestingLogin.then((result: any) => {
             if (!this.cloudApi.checkResponseHasError(result)) {
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     this.account = result;
                     this.sessionService.loginState = result.email || result.name;
                 }
                 if (this.sessionService.loginState) {
                     // If the user that logged in matches the current session there's no need to show
                     // the logout dialog.
-                    if (!this.CONFIG.isLocal && result.email !== this.sessionService.loginState) {
+                    if (!environment.isLocal && result.email !== this.sessionService.loginState) {
                         return this.logoutAuthorised();
                     }
 

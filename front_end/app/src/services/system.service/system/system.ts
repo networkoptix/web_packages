@@ -1,33 +1,36 @@
 import {
-    BehaviorSubject, of, Subscription,
-    Observable, from
-}                                       from 'rxjs';
-import { filter, flatMap, switchMap, take, tap }   from 'rxjs/operators';
-import { v4 as uuid }                   from 'uuid';
+    BehaviorSubject,
+    of,
+    Subscription,
+    Observable
+} from 'rxjs';
+import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
-import { ServerManager }    from './server-manager/server-manager';
-import { UserManager }      from './user-manager/user-manager';
-import { CameraManager }    from './camera-manager/camera-manager';
-import { StorageManager }   from './storage-manager/storage-manager';
+import { ServerManager } from './server-manager/server-manager';
+import { UserManager } from './user-manager/user-manager';
+import { CameraManager } from './camera-manager/camera-manager';
+import { StorageManager } from './storage-manager/storage-manager';
 
-import { IConfig }                                  from '../../nx-config';
-import { NxCloudApiService }                        from '../../nx-cloud-api';
-import { NxSystemsService, NxSystemWithUserInfo }   from '../../systems.service';
-import { NxSystemAPIService, NxSystemAPI }          from '../../system-api.service';
-import { NxPollService }                            from '../../poll.service';
-import { NxAppStateService }                        from '../../nx-app-state.service';
+import { IConfig } from '../../nx-config';
+import { NxCloudApiService } from '../../nx-cloud-api';
+import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
+import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
+import { NxPollService } from '../../poll.service';
+import { NxAppStateService } from '../../nx-app-state.service';
 import {
     EventRule, EventTypes, RawRule, SystemConfigSettings
-}                                                   from '../../system-api.types';
-import { LanguageI18NStaticTypes }                  from '@app/language_i18n_static_types';
-import { trimIDs as trimIds }                       from '../../../utils/api_response_cleaners';
-import { NxRibbonService }                          from '@components/ribbon';
-import { NxSystemRestAPI }                          from '@services/system-rest-api.service';
+} from '../../system-api.types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { trimIDs as trimIds } from '../../../utils/api_response_cleaners';
+import { NxRibbonService } from '@components/ribbon';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     System, IParams, ServerTimeInfo, ICamera,
     ITask, NxSystemUser, NxSystemRole
-}                                                   from './system-types';
-import { Router }                                   from '@angular/router';
+} from './system-types';
+import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.
@@ -198,7 +201,7 @@ export class NxSystem extends System {
     }
 
     updateSystemAuth(force = true) {
-        if (this.CONFIG.isLocal || !force && this.mediaserver?.authGet) { // no need to update
+        if (environment.isLocal || !force && this.mediaserver?.authGet) { // no need to update
             return Promise.resolve(true);
         }
 
@@ -212,7 +215,7 @@ export class NxSystem extends System {
 
     updateToken(force = true) {
         const accessToken = (<NxSystemRestAPI> this.mediaserver).accessToken;
-        if (this.CONFIG.isLocal || !force && accessToken) {
+        if (environment.isLocal || !force && accessToken) {
             return Promise.resolve(true);
         }
 
@@ -230,7 +233,7 @@ export class NxSystem extends System {
     }
 
     canUserViewCloudStorage() {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             return false;
         }
         return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
@@ -254,7 +257,7 @@ export class NxSystem extends System {
             };
         };
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             return this.mediaserver.getSystemSettings()
                 .then((res: any) => {
                     let parsedSettings: any = {};
@@ -271,7 +274,7 @@ export class NxSystem extends System {
                     } else {
                         this.info = parsedSettings;
                     }
-                    if (this.CONFIG.isLocal && !this.info.name) {
+                    if (environment.isLocal && !this.info.name) {
                         this.info.name = this.CONFIG.system.name;
                     }
                     this.id = parsedSettings?.id || this.CONFIG.localSystemId;
@@ -337,7 +340,7 @@ export class NxSystem extends System {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
-            this.infoPromise = (!this.CONFIG.isLocal && this.mediaserver.unauthorizedCallback(false) || Promise.resolve(true)).then(() => {
+            this.infoPromise = (!environment.isLocal && this.mediaserver.unauthorizedCallback(false) || Promise.resolve(true)).then(() => {
                 return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
                     return res;
                 });
@@ -348,7 +351,7 @@ export class NxSystem extends System {
 
     startPoll(systemId?: string) {
         if (this.subscriberCount === 0) {
-            if (this.CONFIG.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
+            if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
             } else {
@@ -464,7 +467,7 @@ export class NxSystem extends System {
     authPromise: Promise<any>;
 
     ensureSystemAuth(force?) {
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             return Promise.resolve();
         }
 
@@ -902,7 +905,7 @@ export class NxSystem extends System {
             const delPromise = this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
-        const id = this.CONFIG.isLocal ? this.CONFIG.cloudSystemId : this.id;
+        const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;
         return this.cloudApi.unshare(id, email, password);
     }
 

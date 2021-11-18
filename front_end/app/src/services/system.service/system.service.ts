@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { NxConfigService, IConfig }        from '../nx-config';
-import { NxLanguageProviderService }       from '../nx-language-provider';
-import { NxCloudApiService }               from '../nx-cloud-api';
-import { NxSystemsService }                from '../systems.service';
-import { NxSystemAPIService }              from '../system-api.service';
-import { NxPollService }                   from '../poll.service';
-import { NxAppStateService }               from '../nx-app-state.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
-import { NxRibbonService }                 from '@components/ribbon';
-import { NxSystem }                        from './system/system';
-import { NxSystemRestAPI }                 from '@services/system-rest-api.service';
-import { Router }                          from '@angular/router';
+import { NxConfigService, IConfig } from '../nx-config';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxSystemsService } from '../systems.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxPollService } from '../poll.service';
+import { NxAppStateService } from '../nx-app-state.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { NxSystem } from './system/system';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -42,9 +43,16 @@ export class NxSystemService {
         return this.system;
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean, skipSettingSystem?: boolean) {
+    createSystem(
+        currentUserEmail: string,
+        systemId: string,
+        serverId?: string,
+        skipPoll?: boolean,
+        skipSettingSystem?: boolean
+    ) {
         const id = systemId || serverId;
-        const cloudSystemInfo: any = (this.systemsService.systems || []).find((system) => system.id === id);
+        const cloudSystemInfo: any =
+            (this.systemsService.systems || []).find((system) => system.id === id);
         let system;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
@@ -69,16 +77,18 @@ export class NxSystemService {
 
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
-        if (!this.CONFIG.isLocal) {
+        if (!environment.isLocal) {
             system.updateSystemAuth(true).catch(() => {});
         }
 
-        if (this.CONFIG.isLocal || skipSettingSystem) {
+        if (environment.isLocal || skipSettingSystem) {
             return system;
         }
 
         if (cloudSystemInfo?.useRest) {
-            (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().catch(() => {});
+            (system.mediaserver as NxSystemRestAPI)
+                .setAccessTokenAsCookie()
+                .catch(() => {});
         }
 
         this.system = system;

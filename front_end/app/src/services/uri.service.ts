@@ -1,10 +1,11 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, Router, Params }  from '@angular/router';
-import { BehaviorSubject, Observable }     from 'rxjs';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { BehaviorSubject, Observable }  from 'rxjs';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { WINDOW }                   from '@services/window-provider';
-import { NxUtilsService }           from './utils.service';
+import { WINDOW } from '@services/window-provider';
+import { NxUtilsService } from './utils.service';
+import { environment } from '@environments/environment';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -61,7 +62,9 @@ export class NxUriService {
     }
 
     changePort(newPort): void {
-        this.window.location.replace(`${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`);
+        this.window.location.replace(
+            `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`
+        );
     }
 
     getParams(): Observable<Params> {
@@ -69,7 +72,7 @@ export class NxUriService {
     }
 
     navigateSystem(navigateTo, system) {
-        navigateTo = (this.CONFIG.isLocal)
+        navigateTo = (environment.isLocal)
             ? navigateTo.replace('SYSTEM_ID', '')
             : navigateTo.replace('SYSTEM_ID', '/' + system.id);
 
@@ -85,14 +88,22 @@ export class NxUriService {
         });
     }
 
-    updateURI(navigateTo?: string, queryParams: Params = {}, replace?: boolean): Promise<void | boolean> {
+    updateURI(
+        navigateTo?: string,
+        queryParams: Params = {},
+        replace?: boolean
+    ): Promise<void | boolean> {
         if (!navigateTo) {
             navigateTo = this.getURL();
         }
 
         // updating "page" param is called in multiple places for different reasons ...
         // avoid multiple unnecessary URI (and model) updates if we update only "page" and it's same  -- TT
-        if (Object.keys(queryParams).length === 1 && queryParams.page && queryParams.page === this.route.snapshot.queryParams.page) {
+        if (
+            Object.keys(queryParams).length === 1 &&
+            queryParams.page &&
+            queryParams.page === this.route.snapshot.queryParams.page
+        ) {
             return Promise.resolve();
         }
 
@@ -103,7 +114,7 @@ export class NxUriService {
                 return this.router.navigate([navigateTo], {
                     queryParams,
                     relativeTo: this.route,
-                    replaceUrl: replace || this.CONFIG.isLocal,
+                    replaceUrl: replace || environment.isLocal,
                     queryParamsHandling: 'merge'
                 }).then(success => {
                     resolve(success);
@@ -160,7 +171,7 @@ export class NxUriService {
         let base = this.CONFIG.menus.systemSettings.baseUrl;
         let childRoute = '';
 
-        if (!this.CONFIG.isLocal) {
+        if (!environment.isLocal) {
             base += systemId;
         }
 
@@ -170,7 +181,7 @@ export class NxUriService {
             const isChildRoute = param === 'childRoute';
             childRoute = '/' + (isChildRoute ? value : '') + '/';
             if (isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
-                if (this.CONFIG.isLocal) {
+                if (environment.isLocal) {
                     base = '/';
                     childRoute += '/';
                 }

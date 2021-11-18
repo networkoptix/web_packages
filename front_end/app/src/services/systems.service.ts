@@ -1,18 +1,19 @@
-import { Injectable, OnDestroy }                       from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from './nx-config';
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxPollService }             from './poll.service';
-import { NxToastService }            from '@dialogs/toast.service';
-import { NxUtilsService }            from './utils.service';
-import { NxUriService }              from './uri.service';
-import { NxRibbonService }           from '@components/ribbon/ribbon.service';
-import { NxSystem }                  from './system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxStorageService }          from './storage.service';
+import { NxPollService } from './poll.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { NxUtilsService } from './utils.service';
+import { NxUriService } from './uri.service';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxSystem } from './system.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxStorageService } from './storage.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -49,7 +50,7 @@ export class NxSystemsService implements OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
-        if (!this.CONFIG.isLocal) {
+        if (!environment.isLocal) {
             this.systemsPoll = pollService.createPoll(() => this._getSystems(), this.CONFIG.updateInterval);
         } else {
             this.systemsSubject.next([]);
@@ -104,7 +105,7 @@ export class NxSystemsService implements OnDestroy {
             this.currentUser = userEmail;
         }
 
-        if (this.CONFIG.isLocal) {
+        if (environment.isLocal) {
             this.systemsSubject.next([]);
             return of([]);
         }

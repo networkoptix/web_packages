@@ -1,23 +1,23 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Location }                            from '@angular/common';
-import md5                                         from 'md5';
-import { from, of, throwError, Observable, EMPTY } from 'rxjs';
+import { Location } from '@angular/common';
+import md5 from 'md5';
+import { from, of, throwError, Observable } from 'rxjs';
 import {
     flatMap, map, mergeMap, retryWhen, timeout, tap
-}                                                  from 'rxjs/operators';
+} from 'rxjs/operators';
 
-import { NxConfigService, IConfig }            from './nx-config';
-import { ICamera, NxSystemUser }               from './system.service';
-import * as t                                  from './system-api.types';
-import { Account }                             from './account.service';
-import { NxUriCacheService }                   from './uri-cache.service';
-import type { APIDocVersion }                  from './nx-config/base-config';
-import { NxAppStateService }                   from './nx-app-state.service';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '@pages/health/health.service';
-import { IParams, ResourceParam }              from './system-api.service';
-import { User }                                from './system-api.types';
-import { environment }                         from '@environments/environment';
+import { NxConfigService, IConfig } from './nx-config';
+import { ICamera, NxSystemUser } from './system.service';
+import * as t from './system-api.types';
+import { Account } from './account.service';
+import { NxUriCacheService } from './uri-cache.service';
+import type { APIDocVersion } from './nx-config/base-config';
+import { NxAppStateService } from './nx-app-state.service';
+import { CookieService } from 'ngx-cookie-service';
+import { NxHealthService } from '@pages/health/health.service';
+import { IParams, ResourceParam } from './system-api.service';
+import { User } from './system-api.types';
+import { environment } from '@environments/environment';
 
 export class NxSystemAPI {
     /*
@@ -210,7 +210,10 @@ export class NxSystemAPI {
                 timeout(requestTimeout),
                 tap(undefined, (error) => {
                     // 'Gateway Timeout' is added for 'local' testing of webadmin
-                    if (this.CONFIG.isLocal && (error.name === 'TimeoutError' || error.statusText === 'Gateway Timeout')) {
+                    if (
+                        environment.isLocal && (error.name === 'TimeoutError' ||
+                        error.statusText === 'Gateway Timeout')
+                    ) {
                         this.appState.systemAvailable$.next(false);
                     }
                 })
@@ -665,7 +668,12 @@ export class NxSystemAPI {
 
     /* Server settings */
     public getServerTimes() {
-        return this.get<t.SystemTime>('/ec2/getTimeOfServers', '', {}, this.CONFIG.extendedRequestTimeout);
+        return this.get<t.SystemTime>(
+            '/ec2/getTimeOfServers',
+            '',
+            {},
+            this.CONFIG.extendedRequestTimeout
+        );
     }
 
     protected getSystemTime() {
@@ -1265,7 +1273,12 @@ export class NxSystemAPI {
     }
     // End of Health Monitor
 
-    public getPlaybackUrl(cameraId, transport = 'webm', resolution = 'low', position = undefined) {
+    public getPlaybackUrl(
+        cameraId,
+        transport = 'webm',
+        resolution = 'low',
+        position = undefined
+    ) {
         let url;
         function hlsResolutionOrEmpty(res) {
             if (res === 'hi' || res === 'lo') {
@@ -1306,7 +1319,13 @@ export class NxSystemAPI {
         });
     }
 
-    mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
+    mergeSystems(
+        url: string,
+        targetSystemId: string,
+        dryRun: boolean,
+        currentPassword?: string,
+        takeRemoteSettings = false
+    ) {
         const data = {
             url,
             currentPassword,

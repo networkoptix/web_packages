@@ -1,14 +1,15 @@
 import {
     Component, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, OnChanges, ViewChild
-}                       from '@angular/core';
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { Process } from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { AuthorizeStateType } from '../authorize.component';
+import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -18,6 +19,7 @@ import { AuthorizeStateType } from '../authorize.component';
 })
 export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;

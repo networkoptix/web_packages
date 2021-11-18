@@ -1,8 +1,13 @@
-import { IConfig }                                          from '../../../nx-config';
+import { IConfig } from '../../../nx-config';
 import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
-import { NxUtilsService }                                   from '../../../utils.service';
-import { LanguageI18NStaticTypes }                          from '@app/language_i18n_static_types';
-import { NxSystemRole, NxSystemUser, SystemPermissions }    from './user-manager-types';
+import { NxUtilsService } from '../../../utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import {
+    NxSystemRole,
+    NxSystemUser,
+    SystemPermissions
+} from './user-manager-types';
+import { environment } from '@environments/environment';
 
 export class UserManager {
     CONFIG: IConfig;
@@ -19,7 +24,13 @@ export class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI | NxSystemRestAPI, currentUserEmail: string, userId: string) {
+    constructor(
+        config: IConfig,
+        lang: LanguageI18NStaticTypes,
+        mediaserver: NxSystemAPI | NxSystemRestAPI,
+        currentUserEmail: string,
+        userId: string
+    ) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;
@@ -45,11 +56,14 @@ export class UserManager {
     // eslint-disable-next-line accessor-pairs
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine = (email && this.currentUserEmail === email) || this.currentUser?.isLocalOwner;
+        this.isMine =
+            (email && this.currentUserEmail === email) ||
+            this.currentUser?.isLocalOwner;
     }
 
     isAdmin(user: NxSystemRole) {
-        return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
+        return user.permissions &&
+            user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
     }
 
     isEmptyGuid(guid?: string) {
@@ -64,7 +78,8 @@ export class UserManager {
 
     checkPermissions() {
         const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
-        let isAdmin = isMine || this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
+        let isAdmin = isMine ||
+            this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());
         if (!isAdmin && this.currentUser) {
             isAdmin = this.isAdmin(this.currentUser);
         }
@@ -77,9 +92,15 @@ export class UserManager {
         };
 
         if (!isAdmin && this.currentUser) {
-            permissions.editUsers = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editUserPermissionFlag);
-            permissions.editCameras = this.currentUser.permissions.includes(this.CONFIG.accessRoles.editCameraPermissionFlag);
-            permissions.viewArchives = this.currentUser.permissions.includes(this.CONFIG.accessRoles.viewArchivesPermissionFlag);
+            permissions.editUsers = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.editUserPermissionFlag
+            );
+            permissions.editCameras = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.editCameraPermissionFlag
+            );
+            permissions.viewArchives = this.currentUser.permissions.includes(
+                this.CONFIG.accessRoles.viewArchivesPermissionFlag
+            );
         }
 
         this.permissions = permissions;
@@ -182,7 +203,7 @@ export class UserManager {
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
             user.isCloudOwner = this.isOwner(user);
-            user.isMe = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
+            user.isMe = !environment.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             user.isAdmin = this.isAdmin(user);
             // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
@@ -282,7 +303,11 @@ export class UserManager {
             return userRoleA.name < userRoleB.name ? -1 : 1;
         });
 
-        const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
+        const newRoles = Array.from(new Set([
+            ...predefinedRoles,
+            ...userRolesList,
+            this.CONFIG.accessRoles.customPermission
+        ]));
         if (!NxUtilsService.isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }

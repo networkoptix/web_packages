@@ -1,13 +1,14 @@
-import { Injectable, Injector }                from '@angular/core';
-import { HttpClient }                          from '@angular/common/http';
-import { Location }                            from '@angular/common';
-import { NxConfigService, IConfig }            from './nx-config';
-import { NxUriCacheService }                   from './uri-cache.service';
-import { NxAppStateService }                   from './nx-app-state.service';
-import { NxSystemRestAPI }                     from './system-rest-api.service';
-import { NxSystemAPI }                         from './system-legacy-api.service';
-import { CookieService }                       from 'ngx-cookie-service';
-import { NxHealthService }                     from '@pages/health/health.service';
+import { Injectable, Injector } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
+import { NxConfigService, IConfig } from './nx-config';
+import { NxUriCacheService } from './uri-cache.service';
+import { NxAppStateService } from './nx-app-state.service';
+import { NxSystemRestAPI } from './system-rest-api.service';
+import { NxSystemAPI } from './system-legacy-api.service';
+import { CookieService } from 'ngx-cookie-service';
+import { NxHealthService } from '@pages/health/health.service';
+import { environment } from '@environments/environment';
 
 export interface IParams<Value = any> {
     [key: string]: Value;
@@ -52,10 +53,25 @@ export class NxSystemAPIService {
         // } else if (serverId in this.systemConnections) {
         //     return this.systemConnections[serverId];
         // } else {
-        //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+        //     const mediaserverConnection = new NxSystemAPI(
+        //         this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback
+        //     );
         //     this.systemConnections[sysServe]
         // }
-        return new (useRest || this.CONFIG.isLocal ? NxSystemRestAPI : NxSystemAPI)(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState, this.injector);
+        return new (useRest || environment.isLocal ? NxSystemRestAPI : NxSystemAPI)(
+            this.http,
+            this.CONFIG,
+            this.location,
+            user,
+            systemId,
+            serverId,
+            unauthorizedCallback,
+            this.cacheService,
+            this.cookieService,
+            this.healthService,
+            this.appState,
+            this.injector
+        );
     }
 }
 

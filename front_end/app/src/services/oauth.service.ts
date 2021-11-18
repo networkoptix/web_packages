@@ -39,7 +39,10 @@ export class OauthService {
         if (!refreshToken) {
             refreshToken = this.cloudApiRefreshToken;
         }
-        return this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { cloudAccessToken: accessToken, refreshToken })
+        return this.http.post(
+            `${this.CONFIG.cloudHost}/oauth/logout/`,
+            { cloudAccessToken: accessToken, refreshToken }
+        )
             .pipe(
                 tap(() => {
                     this.storage.clear('cloudApiAccessToken');
@@ -71,16 +74,20 @@ export class OauthService {
             client_type: state in clientTypes ? clientTypes[state] : clientTypes.login,
             view_type: 'web',
             redirect_url: cleanRedirect(href),
-            client_id: this.CONFIG.isLocal ? 'webadmin' : 'cloud_portal',
+            client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
             grant_type: 'password',
-            scope: this.CONFIG.isLocal ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*` : '',
+            scope: environment.isLocal
+                ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`
+                : '',
             state: state
         });
         if (email) {
             params.append('email', email);
         }
-        const host = environment.production ? `${this.CONFIG.cloudHost ?? ''}` : environment.cloudHost ? `https://${environment.cloudHost}` : this.CONFIG.cloudHost;
+        const host = environment.production
+            ? `${this.CONFIG.cloudHost ?? ''}`
+            : environment.cloudHost ? `https://${environment.cloudHost}` : this.CONFIG.cloudHost;
         this.window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
     }

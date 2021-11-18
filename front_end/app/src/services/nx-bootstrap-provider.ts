@@ -1,17 +1,19 @@
-import { Injectable }                from '@angular/core';
-import { HttpClient }                from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { IConfig, NxConfigService }  from './nx-config';
+import { IConfig, NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSystemRole }              from './system.service/system/user-manager/user-manager-types';
-import { NxPageService }             from './page.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSystemRole } from './system.service/system/user-manager/user-manager-types';
+import { NxPageService } from './page.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxBootstrapProvider {
     CONFIG: IConfig;
+    environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     private isLoaded: boolean;
@@ -75,7 +77,9 @@ export class NxBootstrapProvider {
 
     setLocalInfo(data) {
         const hostProtocol = data.cloudHost.split('://')[0];
-        this.CONFIG.cloudHost = (hostProtocol === data.cloudHost) ? `https://${data.cloudHost}` : data.cloudHost;
+        this.CONFIG.cloudHost = (hostProtocol === data.cloudHost)
+            ? `https://${data.cloudHost}`
+            : data.cloudHost;
         this.CONFIG.cloudSystemId = data.cloudSystemId;
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
@@ -110,7 +114,7 @@ export class NxBootstrapProvider {
     }
 
     setSettings(data) {
-        if (this.CONFIG.isLocal) {
+        if (this.environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             const { description, webadminConfig, supportedLanguages } = data;
             this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
@@ -145,7 +149,7 @@ export class NxBootstrapProvider {
                 languages = webadminConfig.supportedLanguages;
             }
             this.CONFIG.supportedLanguages = languages;
-        } else if (!this.CONFIG.isLocal && Object.keys(data).length > 0) {
+        } else if (!this.environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once
             this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
@@ -166,7 +170,19 @@ export class NxBootstrapProvider {
                 name: companyName
             };
 
-            const { developersEnabled, feedbackEnabled, integrationStoreEnabled, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, customClientsEnabled, alexaIntegrationEnabled = false, bookmarksEnabled = false, featureFlags = {} } = data;
+            const {
+                developersEnabled,
+                feedbackEnabled,
+                integrationStoreEnabled,
+                publicDownloads,
+                publicReleases,
+                cloudStorageEnabled,
+                cloudStorageSize,
+                customClientsEnabled,
+                alexaIntegrationEnabled = false,
+                bookmarksEnabled = false,
+                featureFlags = {}
+            } = data;
             this.CONFIG.cloudCapabilities = {
                 developersEnabled,
                 feedbackEnabled,
@@ -180,7 +196,14 @@ export class NxBootstrapProvider {
                 bookmarksEnabled: featureFlags.bookmarks && bookmarksEnabled
             };
 
-            const { searchTags, showAnalyticsEvents, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
+            const {
+                searchTags,
+                showAnalyticsEvents,
+                sortSupportedDevicesByPopularity,
+                supportedHardwareTypes,
+                supportedResolutions,
+                vendorsShown
+            } = data;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
                 showAnalyticsEvents,
