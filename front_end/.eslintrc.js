@@ -48,7 +48,6 @@ module.exports = {
         eqeqeq: ['error', 'always', { null: 'ignore' }],
         'func-call-spacing': ['error', 'never'],
         'generator-star-spacing': ['error', { before: true, after: true }],
-        'handle-callback-err': ['error', '^(err|error)$'],
         indent: ['error', 4, {
             SwitchCase: 1,
             VariableDeclarator: 1,
@@ -137,7 +136,6 @@ module.exports = {
         // }],
         'no-multi-str': 'error',
         'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
-        'no-negated-in-lhs': 'error',
         'no-new': 'error',
         'no-new-func': 'error',
         'no-new-object': 'error',
@@ -147,7 +145,6 @@ module.exports = {
         'no-obj-calls': 'error',
         'no-octal': 'error',
         'no-octal-escape': 'error',
-        'no-path-concat': 'error',
         'no-proto': 'error',
         'no-redeclare': ['error', { builtinGlobals: false }],
         'no-regex-spaces': 'error',
@@ -236,7 +233,9 @@ module.exports = {
         'import/no-named-default': 'error',
         'import/no-webpack-loader-syntax': 'error',
 
+        'node/handle-callback-err': ['error', '^(err|error)$'],
         'node/no-deprecated-api': 'error',
+        'node/no-path-concat': 'error',
         'node/process-exit-as-throw': 'error',
 
         'promise/param-names': 'error',
