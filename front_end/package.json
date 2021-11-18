@@ -86,7 +86,6 @@
     "moment": "2.29.1",
     "ng-qrcode": "^4.2.0",
     "ng2-trim-directive": "2.3.4",
-    "ngx-clipboard": "14.0.1",
     "ngx-cookie-service": "3.0.4",
     "ngx-device-detector": "1.4.2",
     "ngx-file-drop": "8.0.8",
@@ -95,7 +94,6 @@
     "ngx-quicklink": "^0.2.6",
     "ngx-translate-messageformat-compiler": "4.7.0",
     "ngx-webstorage": "5.0.0",
-    "ngx-window-token": "3.0.0",
     "popper.js": "1.16.1",
     "rangeslider.js": "2.3.2",
     "resize-observer-polyfill": "^1.5.1",
@@ -107,7 +105,9 @@
     "underscore": "^1.13.1",
     "video.js": "^7.12.1",
     "what-input": "5.2.10",
-    "zone.js": "0.11.3"
+    "zone.js": "0.11.3",
+    "ngx-clipboard": "~14.0.2",
+    "ngx-window-token": "~5.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1002.0",
