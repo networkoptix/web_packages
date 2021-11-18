@@ -124,6 +124,7 @@ Log In Cloud
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
     Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element Is Visible    ${PASSWORD INPUT}
     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}

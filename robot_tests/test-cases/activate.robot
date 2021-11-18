@@ -141,8 +141,12 @@ Open New Browser On Failure
     Register Account   mark    hamill    ${email}    ${password}
     ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
     Should not be equal as strings    ${code}    Does not exist
-    Log In    ${email}    ${password}    validate=${False}
+    Wait Until Element is Visible    ${LOG IN NAV BAR}
+    Click Link    ${LOG IN NAV BAR}
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}    
+    Input Text    ${EMAIL INPUT}    ${email}
+    Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
-    Click Link    ${RESEND ACTIVATION LINK BUTTON}
+    Click Element    ${RESEND ACTIVATION LINK BUTTON}
     ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
     Should not be equal as strings    ${code}    Does not exist

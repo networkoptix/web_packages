@@ -72,8 +72,8 @@ Account Suite Tear Down
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
-    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Verify in account page
+    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
 
 2. Can access the account page from direct link while logged in
     [Tags]
