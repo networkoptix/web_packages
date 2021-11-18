@@ -756,7 +756,8 @@ class Auth(object):
             "expiration_period": session_age,
             "prolongation_period": session_age,
             "username": email,
-            "password": password
+            "password": password,
+            "refresh_token_lifetime": session_age
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
@@ -766,10 +767,14 @@ class Auth(object):
         headers = {
             "X-Forwarded-For": ip
         }
+        session_age = get_authenticated_session_cookie_age()
         params = {
             "grant_type": Auth.GRANT_TYPE.authorization_code,
             "response_type": Auth.RESPONSE_TYPE.token,
-            "code": code
+            "code": code,
+            "expiration_period": session_age,
+            "prolongation_period": session_age,
+            "refresh_token_lifetime": session_age
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
