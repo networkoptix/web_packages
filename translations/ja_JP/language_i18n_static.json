@@ -79,7 +79,7 @@
         "saveChanges": "保存"
     },
     "activeActions": {
-        "resetPassword": "パスワードを再設定する",
+        "resetPassword": "パスワードの再設定",
         "sendConfirm": "アクティベーションリンクを再送信",
         "setNewPassword": "パスワードを保存",
         "setNewPasswordLabel": "新規パスワード"
@@ -111,7 +111,7 @@
         "activatedText": "アカウントが有効になりました！",
         "createdAdditional": "<p class=\"mb-2\">有効化リンクを含む確認メッセージが {accountEmail} 宛に送信されました。</p><p>アカウントを有効化し、ここに戻って登録プロセスを終了してください。</p>",
         "activatedAdditional": "<p>%CLOUD_NAME% へのログインを続けることができます。</p>",
-        "passResetHeader": "パスワードを再設定する",
+        "passResetHeader": "パスワードの再設定",
         "newPassHeader": "新しいパスワードを設定",
         "newPassConfirmText": "パスワードが設定されました。",
         "confirmHeader": "システムは %CLOUD_NAME% に接続されました!",
@@ -147,7 +147,7 @@
         "account": {
             "created": {
                 "title": "アカウントが作成されました",
-                "message": "有効化リンクを含む確認メッセージが {email} に送信されました"
+                "message": "有効化リンクを含む確認メッセージが {email} 宛に送信されました"
             },
             "activated": {
                 "title": "アカウントが有効になりました"
@@ -165,10 +165,10 @@
         "cameraStates": {
             "error": "エラー",
             "errorLoading": "ビデオの読み込み中にエラーが発生しました",
-            "flashOrWebmRequired": "ビデオを再生することはできません <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "flashOrWebmRequired": "Internet Explorer での映像再生には、 <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> をインストールして下さい。",
             "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",
             "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
-            "ieNoWebm": "ビデオを再生することはできません <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "ieNoWebm": "Internet Explorer での再生には <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> をインストールして下さい。",
             "ieWin10": "Microsoft EdgeまたはGoogle Chromeブラウザを使用してください。",
             "noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",
             "noData": "データがありません",
@@ -534,18 +534,18 @@
         "cantSharePrefix": "システムを共有できません",
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
         "emailNotFound": "アカウントが存在しません",
-        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、システムが %CLOUD_NAME%から切断されている場合、このシステムへのアクセスが取り消されている場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
+        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、対象のシステムが %CLOUD_NAME% から切断されている場合、対象のシステムへのアクセスが取り消された場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
         "failedToAccessCamera": "このリンクからアクセスできるカメラはありません。",
         "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{systemName} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{failedSystem}</strong> はオフラインです。",
-        "notAuthorized": "パスワードが間違っています",
+        "notAuthorized": "パスワードが違います",
         "badUsername": "アカウントが見つかりません。",
         "notFound": "見つかりません",
         "ok": "ok",
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
-        "passwordMismatch": "パスワードが間違っています",
+        "passwordMismatch": "パスワードが違います",
         "systemUnavailable": "{failedSystem} は現在アクセスできません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
@@ -645,7 +645,7 @@
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
         "registerSuccess": "ようこそ",
-        "restorePassword": "パスワードリセット",
+        "restorePassword": "パスワードの再設定",
         "restorePasswordSuccess": "パスワードを保存",
         "supportedDevices": "対応デバイス",
         "system": "システム",
@@ -662,19 +662,19 @@
         "integrationDetails": "{PLUGIN_NAME}： {PLUGIN_SHORT_DESCRIPTION}"
     },
     "passwordRequirements": {
-        "common": "あまりにも一般的",
-        "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
-        "fair": "可",
-        "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-        "good": "良い",
-        "minLength": "短すぎます",
+        "common": "一般的",
+        "commonMessage": "このパスワードは世界で最も一般的なパスワードです",
+        "fair": "普通",
+        "fairMessage": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください",
+        "good": "良好",
+        "minLength": "文字数不足",
         "minLengthMessage": "パスワードは8文字以上必要です",
         "missingMessage": "パスワードが必要です",
         "required": "無効",
-        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けてください",
         "strongMessage": "強力なパスワード!",
-        "weak": "弱",
-        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
+        "weak": "脆弱",
+        "weakMessage": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください"
     },
     "placeholderTexts": {
         "noSettings": {
@@ -720,7 +720,7 @@
             "accept": "承諾",
             "reject": "拒否",
             "backToEditText": "編集インターフェースに戻る",
-            "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
+            "previewRibbon": "このページは最新の変更のプレビューであり、公開されているバージョンとは一致しません。",
             "publishedRibbon": "公開されているライブバージョンのページです。"
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",

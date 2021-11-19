@@ -1053,20 +1053,20 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - Cloudportaal",
+            "description": "%CLOUD_NAME%, een eenvoudige manier om verbinding mee te maken, %VMS_NAME% systemen te beheren en uit te breiden."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Systemen - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% integraties - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Documentatie - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Ondersteunde apparaten - %CLOUD_NAME%"
         }
     }
 }
