@@ -19,7 +19,7 @@
     </div>
 </div>
 <div [ngClass]="'button-container-' + cloudShowing" [style.margin-left]="platform.FIREFOX && cloudShowing === 'absolute'?'6px' : null">
-    <button #createButton class="btn btn-primary create-button auth-hidden" type="button" [routerLink]="'/register'" (nxOnIntersect)="changeHeaderButton($event)" translate>
+    <button #createButton class="btn btn-primary create-button auth-hidden" type="button" (click)="routeToCreate()" (nxOnIntersect)="changeHeaderButton($event)" translate>
         Create Account
     </button>
 </div>

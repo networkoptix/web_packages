@@ -12,6 +12,7 @@ import { debounceTime, filter, startWith } from 'rxjs/operators';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxAccountService } from '@services/account.service';
 import { IntersectionStatus } from '@directives/nx-intersection.directive';
+import { environment } from '@environments/environment';
 @UntilDestroy()
 @Component({
     selector: 'nx-intro-text',
@@ -40,6 +41,14 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
       this.LANG = languageService.translations;
       // real-time scroll calculation for less jittery transition of the element from position:fixed to position:absolute
       this.realTimeScroll$ = scrollMechanics.windowScrollSubject.pipe(startWith(0), untilDestroyed(this));
+  }
+
+  routeToCreate() {
+      let url = '/authorize?client_type=create';
+      if (!environment.production) {
+          url = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}&client_type=create`;
+      }
+      this.window.location.href = url;
   }
 
   checkVisible(elm: HTMLElement) {

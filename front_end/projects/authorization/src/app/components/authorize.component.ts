@@ -59,6 +59,7 @@ export enum ClientType {
     passwordReset = 'confirmPasswordResetServer',
     passwordRestart = 'confirmPasswordRestartServer',
     passwordDetach = 'confirmPasswordDetachServer',
+    create = 'createAccount',
     connect = 'connectSystemToCloud',
     setup = 'setupWizard',
     renewDesktop = 'renewSessionDesktop',
@@ -199,7 +200,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.windowSmallEnough = innerWidth <= 355;
             });
 
-            if (this.clientType === ClientType.loginCloud) {
+            if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {
                 this.initialData.client_id = 'cloud';
                 this.initialData.redirect_url ||= '';
                 this.initialData.response_type = 'code';
@@ -223,6 +224,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.loginEmail = email;
                 this.emailLocked = true;
                 this.currentState = AuthorizeState.password;
+            } else if (this.clientType === ClientType.create) {
+                this.currentState = AuthorizeState.create;
             } else {
                 this.currentState = AuthorizeState.email;
             }

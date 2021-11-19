@@ -28,7 +28,7 @@
     <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
         <li>
             <span>
-                <a routerLink="/register" class="btn"
+                <a class="btn" [href]="(authorizeUrl + environment.production ? '?' : '&' + 'client_type=create') | unsafe"
                     [ngClass]="[
                         showSmall?'small-button' : '',
                         true?'btn-' + (headerService.createAccountButtonType$ | async) : ''

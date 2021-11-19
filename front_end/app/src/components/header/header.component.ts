@@ -66,7 +66,7 @@ enum breakpoints {
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
-    authorizeUrl = '/authorize'
+    authorizeUrl = '/authorize';
     CONFIG: IConfig;
     environment = environment;
     LANG: LanguageI18NStaticTypes;
