@@ -1,4 +1,4 @@
-こんにちは
+こんにちは、
 
 %CLOUD_NAME% に登録されました。
 {{#message.message}}
