@@ -11,7 +11,7 @@ import * as uv from './utilConstants';
 export class NxUtilsService {
     public static sortASC = true;
     public static sortDESC = false;
-    public momentWithLocale
+    public momentWithLocale;
 
     constructor(
         private deviceService: DeviceDetectorService,
@@ -23,11 +23,11 @@ export class NxUtilsService {
         });
     }
 
-    static cleanId(id: string | undefined) {
-        return id?.replace(/{|}/g, '');
+    static cleanId(id: unknown): string | undefined {
+        return (id as string)?.replace(/{|}/g, '');
     }
 
-    static cleanIp(ip: string) {
+    static cleanIp(ip: string): string {
         const checkIpv6 = /^(?:(?:(?:[0-9A-Fa-f]{0,4}:){7}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}:[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){5}:(?:[0-9A-Fa-f]{0,4}:)?[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){4}:(?:[0-9A-Fa-f]{0,4}:){0,2}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){3}:(?:[0-9A-Fa-f]{0,4}:){0,3}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){2}:(?:[0-9A-Fa-f]{0,4}:){0,4}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){6}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:(?:[0-9A-Fa-f]{0,4}:){0,5}:(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:::(?:[0-9A-Fa-f]{0,4}:){0,5}(?:(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2}))\.){3}(?:(?:25[0-5])|(?:2[0-4]\d)|(?:1\d{2})|(?:\d{1,2})))|(?:[0-9A-Fa-f]{0,4}::(?:[0-9A-Fa-f]{0,4}:){0,5}[0-9A-Fa-f]{0,4})|(?:::(?:[0-9A-Fa-f]{0,4}:){0,6}[0-9A-Fa-f]{0,4})|(?:(?:[0-9A-Fa-f]{0,4}:){1,7}:))$/;
         return (ip.match(checkIpv6) || ip.split(':'))[0];
     }
@@ -47,9 +47,9 @@ export class NxUtilsService {
         }
         arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
         return arr;
-    };
+    }
 
-    static isEqual<T>(obj1: T, obj2: T) {
+    static isEqual<T>(obj1: T, obj2: T): boolean {
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 
@@ -58,7 +58,7 @@ export class NxUtilsService {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    static deepCopyWithCircularReference(obj, hash = new WeakMap()) {
+    static deepCopyWithCircularReference<T extends Object>(obj: T, hash = new WeakMap()): T {
         if (Object(obj) !== obj || obj instanceof Function) return obj;
         if (hash.has(obj)) return hash.get(obj); // Cyclic reference
         const result = Object.create(Object.getPrototypeOf(obj));
@@ -71,13 +71,16 @@ export class NxUtilsService {
             key => ({ [key]: NxUtilsService.deepCopyWithCircularReference(obj[key], hash) })));
     }
 
-    static escapeRegExp(string) {
+    static escapeRegExp(string: string): string {
         return string.replace(/[.*+?^${}()[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
     // Sort array of objects
-    static byParam<Param extends any>(fn: (params: Param) => string | number, order: boolean) {
-        return (a: Param, b: Param) => {
+    static byParam<Param = unknown>(
+        fn: (params: Param) => string | number,
+        order: boolean
+    ): (a: Param, b: Param) => number {
+        return (a, b) => {
             if (fn(a) < fn(b)) {
                 return (order) ? -1 : 1;
             }
@@ -91,27 +94,27 @@ export class NxUtilsService {
     /**
      * Looks to be unused
      */
-    public keepOriginalOrder = (a, b) => a.key;
+    // public keepOriginalOrder = (a, b) => a.key;
 
     /**
      * Looks to be unused
      */
-    static byResolution(fn: (any) => any, order: boolean) {
-        return (a, b) => {
-            const x = fn(a).map(Number);
-            const y = fn(b).map(Number);
+    // static byResolution(fn: (any) => any, order: boolean) {
+    //     return (a, b) => {
+    //         const x = fn(a).map(Number);
+    //         const y = fn(b).map(Number);
 
-            if (x[0] < y[0] || x[1] < y[1]) {
-                return (order) ? -1 : 1;
-            }
-            if (x[0] > y[0] || x[1] > y[1]) {
-                return (order) ? 1 : -1;
-            }
-            return 0;
-        };
-    }
+    //         if (x[0] < y[0] || x[1] < y[1]) {
+    //             return (order) ? -1 : 1;
+    //         }
+    //         if (x[0] > y[0] || x[1] > y[1]) {
+    //             return (order) ? 1 : -1;
+    //         }
+    //         return 0;
+    //     };
+    // }
 
-    static yesNo<T>(bVal: T): string {
+    static yesNo(bVal: unknown): string {
         if (bVal === undefined || bVal === null) {
             return 'Unknown';
         }
@@ -119,7 +122,7 @@ export class NxUtilsService {
         return bVal ? 'Yes' : 'No';
     }
 
-    static mod(n: number, m: number) {
+    static mod(n: number, m: number): number {
         return ((n % m) + m) % m;
     }
 
@@ -146,9 +149,9 @@ export class NxUtilsService {
         }
     }
 
-    public saveAs(data: BlobPart, filename: string, type: string) {
-        const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
-        let objectUrl;
+    public saveAs(data: BlobPart, filename: string, type: string): boolean | void {
+        const a: HTMLAnchorElement = this.document.createElement('a');
+        let objectUrl: string;
         let blob: Blob;
 
         data = JSON.stringify(data);
@@ -185,27 +188,30 @@ export class NxUtilsService {
         return this.momentWithLocale().subtract(input).fromNow(!suffix);
     }
 
-    public isTablet() {
+    public isTablet(): boolean {
         return this.deviceService.isTablet();
     }
 
-    public isMobile() {
+    public isMobile(): boolean {
         return this.deviceService.isMobile();
     }
 
-    public isChrome() {
+    public isChrome(): boolean {
         return this.deviceService.browser === 'Chrome';
     }
 
-    public isSafari() {
+    public isSafari(): boolean {
         return this.deviceService.browser === 'Safari';
     }
 
     /**
      * Return IPv4 address or IPv6 address if none
      */
-    static formatURL<T extends any>(server: any) {
-        function ipReducer(result: {ipv6: string[], ipv4: string[]}, currentValue: string) {
+    static formatURL(server) {
+        function ipReducer(
+            result: { ipv6: string[], ipv4: string[] },
+            currentValue: string
+        ) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);
             } else if (currentValue) {
@@ -236,7 +242,7 @@ export class NxUtilsService {
         }
 
         return server;
-    };
+    }
 
     /** Storage Utilities */
 
@@ -293,32 +299,37 @@ export class NxUtilsService {
         const unit = UNITS[exponent];
 
         return `${prefix}${numberString} ${unit}`;
-    };
+    }
 
-    static wrapWithPercent = (numerator: number, denominator: number, wrappedValue: string | number, precision = 2) => {
+    static wrapWithPercent(
+        numerator: number,
+        denominator: number,
+        wrappedValue: string | number,
+        precision = 2
+    ): string {
         const percentage = (numerator / denominator) * 100;
         return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
-    };
+    }
 
-    static isNumber(n): boolean {
+    static isNumber(n: any): boolean {
         return !isNaN(parseFloat(n)) && !isNaN(n - 0);
-    };
+    }
 
-    static cleanSmbUrl(url: string) {
+    static cleanSmbUrl(url: string): string {
         return url.split('@').reverse()[0].replace('smb:/', '');
     }
 
-    static htmlWiper(target) {
+    static htmlWiper(target: string[] | string): string {
         // test HTML
         // <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=" onload="$.getScript('evil.js');1<2>3">
         return (isArray(target) ? target[0] : target)?.replace(new RegExp(/(<.*>)|(>.*[\/]?>)/, 'gi'), '');
     }
 
-    static htmlToEntity(target) {
+    static htmlToEntity(target: string[] | string): string {
         return (isArray(target) ? target[0] : target)?.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    static findTouch(e: TouchEvent) {
+    static findTouch(e: TouchEvent): Touch | undefined {
         return e.targetTouches?.[0] || e.changedTouches?.[0] || e.touches?.[0];
     }
 
@@ -332,7 +343,7 @@ export class NxUtilsService {
         return clientX;
     }
 
-    static calcOffsetX(e: MouseEvent|TouchEvent): number {
+    static calcOffsetX(e: MouseEvent | TouchEvent): number {
         let offsetX;
         if (e instanceof MouseEvent || 'offsetX' in e) {
             offsetX = e.offsetX;
@@ -344,7 +355,7 @@ export class NxUtilsService {
         return offsetX;
     }
 
-    static calcOffsetY(e: MouseEvent|TouchEvent): number {
+    static calcOffsetY(e: MouseEvent | TouchEvent): number {
         let offsetY;
         if (e instanceof MouseEvent || 'offsetY' in e) {
             offsetY = e.offsetY;
@@ -366,28 +377,29 @@ export class NxUtilsService {
         return screenX;
     }
 
-    static highlight = (
-        text: string, start, end
-    ) => [0, start || 0, end || 0].map((
-        splitAt, curInd, fullText
-    ) => text.slice(
-        splitAt, fullText[curInd + 1]
-    )).reduce((
-        result, section, curInd
-    ) => `${result}${curInd === 1 ? `<strong class="highlighted">${section}</strong>` : section}`, '');
+    static highlight(text: string, start?: number, end?: number): string {
+        start = start ?? 0;
+        end = end ?? text.length;
+        const head = text.slice(0, start);
+        const highlighted =
+            `<strong class="highlighted">${text.slice(start, end)}</strong>`;
+        const tail = text.slice(end);
+        return `${head}${highlighted}${tail}`;
+    };
 
-    static mapValuesToStrings = (obj) => {
-        Object.keys(obj).forEach(key => {
-            const isObject = typeof obj[key] === 'object';
-            const isArray = Array.isArray(obj[key]);
-            if (isArray) {
-                obj[key] = obj[key].map(val => '' + val);
-            } else if (isObject) {
-                return NxUtilsService.mapValuesToStrings(obj[key]);
+    static mapValuesToStrings(
+        obj: Record<string, unknown>
+    ): Record<string, string | string[]> {
+        Object.values(obj).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                obj[key] = value.map(String);
+            // } else if (typeof value === 'object') {
+            //     return NxUtilsService.mapValuesToStrings(value);
+            // Branch doesn't appear to do anything
             } else {
-                obj[key] = '' + obj[key];
+                obj[key] = String(value);
             }
         });
-        return obj;
-    };
+        return obj as Record<string, string | string[]>;
+    }
 }
