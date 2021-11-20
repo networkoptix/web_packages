@@ -180,9 +180,12 @@ export class NxSystemUsersComponent implements OnInit {
             if (!user.name || this.locked[user.email]) {
                 return Promise.reject();
             }
+
             try {
                 this.locked[user.email] = true;
                 user.name = this.localUserName;
+                user.email = this.email;
+                user.fullName = this.fullName;
                 await this.system.saveUser(user, user.role);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (_) {
