@@ -390,7 +390,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             c.disableDualStreaming,
                             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
                             [],
-                            c.status === 'Online' ? this.system?.getCameraThumbnailUrl(c.id) : '',
+                            c.status !== 'Offline' ? this.system?.getCameraThumbnailUrl(c.id) : '',
                             (transport: string, quality: string, t?: ms) => this.system?.getPlaybackUrl(c.id, transport, quality, t),
                             (t?: ms, width = 128, height = 128) => this.system?.getCameraThumbnailUrl(c.id, width, height, t)
                         );

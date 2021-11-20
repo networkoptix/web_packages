@@ -160,7 +160,7 @@ export class NxSystemAPI {
         url: string,
         params?: any,
         customHttpHeaders: IParams<string> = {},
-        requestTimeout = 8000
+        requestTimeout = 60000
     ) {
         let headers = new HttpHeaders();
         params = params || {};
@@ -205,7 +205,7 @@ export class NxSystemAPI {
         url: string,
         data?: any,
         paramsToAdd = {},
-        customTimeout = 8000
+        customTimeout = 60000
     ) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
