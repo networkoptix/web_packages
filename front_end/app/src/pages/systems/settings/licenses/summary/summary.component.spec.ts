@@ -175,7 +175,6 @@ describe('Licenses (Summary)', () => {
                         component.setLicenses(response);
                     })
                     .finally(() => {
-                        component.showLicenses = true;
                         executeSharedTests();
                     });
             });
@@ -183,6 +182,7 @@ describe('Licenses (Summary)', () => {
     });
 
     function executeSharedTests() {
+        expect(Object.keys(component.licenses).length).toBeTruthy();
         fixture.detectChanges();
 
         expect(el.nativeElement.querySelectorAll('nx-block').length).toBe(1);

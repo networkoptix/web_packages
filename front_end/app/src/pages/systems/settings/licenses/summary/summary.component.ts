@@ -1,30 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSystem } from '@services/system.service';
-import { SubscriptionLike } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-@UntilDestroy()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-license-summary-component',
     templateUrl: 'summary.component.html',
     styleUrls: ['summary.component.scss']
 })
 
-export class NxLicenseSummaryComponent implements OnInit {
+export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     @Input() licensesLegacyInfo: any = [];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     system: NxSystem;
-    systemSubscription: SubscriptionLike;
     licenses: any = [];
-    showLicenses: boolean = false;
 
     constructor(
         configService: NxConfigService,
@@ -36,8 +33,10 @@ export class NxLicenseSummaryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined && data.id !== this.system?.id))
+        this.settingsService.systemSubject
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe((system) => {
                 this.system = system;
 
@@ -51,15 +50,19 @@ export class NxLicenseSummaryComponent implements OnInit {
                         }, () => {
                             // something went wrong - use legacy info
                             this.licenses = this.licensesLegacyInfo;
-                            this.showLicenses = true;
-                        }).finally(() => {
-                            this.showLicenses = true;
                         });
                 } else {
                     this.licenses = this.licensesLegacyInfo;
-                    this.showLicenses = true;
                 }
             });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.licensesLegacyInfo?.currentValue) {
+            if (!this.system.useRest) {
+                this.licenses = this.licensesLegacyInfo;
+            }
+        }
     }
 
     setLicenses (response) {
