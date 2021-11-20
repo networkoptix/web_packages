@@ -1,3 +1,5 @@
+@use "styles/theme_variables" as theme_vars;
+
 nx-motion-detection-overlay {
     position: absolute;
     top: 0;
@@ -13,7 +15,7 @@ nx-motion-detection-overlay {
     backdrop-filter: brightness(125%) contrast(110%);
     top: 0;
     left: 0;
-    color: var(--brand-info);
+    color: theme_vars.$brand-info;
     cursor: crosshair;
     -webkit-user-select: none;
     -ms-user-select: none;

@@ -1,4 +1,5 @@
 @use "../../../../../../styles/typography";
+@use "styles/theme_variables" as theme_vars;
 
 $stripes : repeating-linear-gradient(
                 -45deg,
@@ -58,8 +59,8 @@ $stripes : repeating-linear-gradient(
         }
 
         &.archive {
-            background-color : rgba(var(--green_l2--rgb), 0.3);
-            border           : 1px solid rgba(var(--green_l1--rgb), 0.4);
+            background-color : rgba(theme_vars.$green_l2, 0.3);
+            border           : 1px solid rgba(theme_vars.$green_l1, 0.4);
             margin-left      : -1px;
         }
 
@@ -109,8 +110,8 @@ $stripes : repeating-linear-gradient(
                 stroke-miterlimit : 10;
 
                 &.archive {
-                    fill : rgba(var(--green_l2--rgb), 0.7);
-                    stroke : rgba(var(--green_l1--rgb), 0.6);
+                    fill : rgba(theme_vars.$green_l2, 0.7);
+                    stroke : rgba(theme_vars.$green_l1, 0.6);
                 }
 
                 &.used {

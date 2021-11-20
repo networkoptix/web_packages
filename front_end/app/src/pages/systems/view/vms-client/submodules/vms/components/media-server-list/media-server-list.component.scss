@@ -1,3 +1,5 @@
+@use "styles/theme_variables" as theme_vars;
+
 :host {
     .media-server-list {
         *::-webkit-scrollbar-track {
@@ -204,9 +206,9 @@
                                 top: 4px;
                                 width: 10px;
                                 height: 10px;
-                                background: var(--red_main);
+                                background: theme_vars.$red_main;
                                 border-radius: 5px;
-                                border: 2px solid var(--red_main) !important;
+                                border: 2px solid theme_vars.$red_main !important;
                             }
                         }
 
@@ -244,7 +246,7 @@
                                 width: 10px;
                                 height: 10px;
                                 border-radius: 5px;
-                                border: 2px solid var(--red_main) !important;
+                                border: 2px solid theme_vars.$red_main !important;
                             }
                         }
 

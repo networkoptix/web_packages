@@ -77,12 +77,12 @@ nx-system-health-component {
 
   .error {
     font-family: $font-family-medium;
-    color: var(--red_l2);
+    color: $red_l2;
   }
 
   .warning {
     font-family: $font-family-medium;
-    color: var(--yellow_d1);
+    color: $yellow_d1;
   }
 
   .fixed-sidebar {

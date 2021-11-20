@@ -1,3 +1,5 @@
+@use "styles/theme_variables" as theme_vars;
+
 :host {
   display: flex;
   height: 100%;
@@ -45,8 +47,8 @@
     &.playing {
       > .line {
         > .icon {
-          border: 1px solid var(--green_l3);
-          background-color: var(--green_l4);
+          border: 1px solid theme_vars.$green_l3;
+          background-color: theme_vars.$green_l4;
         }
       }
     }
@@ -54,13 +56,13 @@
     // &.recording {
     //   > .line {
     //     > .icon {
-    //       border-color: var(--red_main);
+    //       border-color: theme_vars.$red_main;
     //     }
     //   }
     //   &.playing {
     //     > .line {
     //       > .icon {
-    //         background: var(--red_main);
+    //         background: theme_vars.$red_main;
     //       }
     //     }
     //   }

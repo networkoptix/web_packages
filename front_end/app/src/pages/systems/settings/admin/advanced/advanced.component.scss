@@ -1,5 +1,6 @@
 @use "~bootstrap/scss/bootstrap";
 @use "../../../../../styles/typography";
+@use "styles/theme_variables" as theme_vars;
 
 :host {
     .server-info {
@@ -37,7 +38,7 @@
                 }
 
                 .offline {
-                    background-color : var(--error);
+                    background-color : theme_vars.$error;
                 }
 
                 .checking {

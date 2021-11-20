@@ -2,38 +2,6 @@
 @use "../_theme_palette.scss" as *;
 
 :root {
-
-	@include generateVarAndRgb(--blue1, $blue1);
-
-	@include generateVarAndRgb(--green3, $green3);
-	@include generateVarAndRgb(--green2, $green2);
-	@include generateVarAndRgb(--green1, $green1);
-	@include generateVarAndRgb(--green_l4, $green_l4);
-	@include generateVarAndRgb(--green_l3, $green_l3);
-	@include generateVarAndRgb(--green_l2, $green_l2);
-	@include generateVarAndRgb(--green_l1, $green_l1);
-	@include generateVarAndRgb(--green_main, $green_main);
-	@include generateVarAndRgb(--green_d1, $green_d1);
-	@include generateVarAndRgb(--green_d2, $green_d2);
-	@include generateVarAndRgb(--green_d3, $green_d3);
-
-	@include generateVarAndRgb(--red1, $red1);
-	@include generateVarAndRgb(--red2, $red2);
-	@include generateVarAndRgb(--red3, $red3);
-
-	@include generateVarAndRgb(--red_l2, $red_l2);
-	@include generateVarAndRgb(--red_l1, $red_l1);
-	@include generateVarAndRgb(--red_main, $red_main);
-	@include generateVarAndRgb(--red_d1, $red_d1);
-	@include generateVarAndRgb(--red_d2, $red_d2);
-	@include generateVarAndRgb(--red_d3, $red_d3);
-	@include generateVarAndRgb(--red_d4, $red_d4);
-	@include generateVarAndRgb(--red_d5, $red_d5);
-	@include generateVarAndRgb(--red_d6, $red_d6);
-	@include generateVarAndRgb(--red_d7, $red_d7);
-
-	@include generateVarAndRgb(--error, $error);
-
 	@include generateVarAndRgb(--dark1, $dark1);
 	@include generateVarAndRgb(--dark2, $dark2);
 	@include generateVarAndRgb(--dark3, $dark3);
@@ -52,9 +20,7 @@
 	@include generateVarAndRgb(--dark16, $dark16);
 	@include generateVarAndRgb(--dark17, $dark17);
 	@include generateVarAndRgb(--dark18, $dark18);
-
 	@include generateVarAndRgb(--additional_dark1, $additional_dark1);
-
 	@include generateVarAndRgb(--light1, $light1);
 	@include generateVarAndRgb(--light2, $light2);
 	@include generateVarAndRgb(--light3, $light3);
@@ -72,7 +38,6 @@
 	@include generateVarAndRgb(--light15, $light15);
 	@include generateVarAndRgb(--light16, $light16);
 	@include generateVarAndRgb(--light17, $light17);
-
 	@include generateVarAndRgb(--additional_light1, $additional_light1);
 	@include generateVarAndRgb(--additional_light2, $additional_light2);
 	@include generateVarAndRgb(--additional_light3, $additional_light3);
