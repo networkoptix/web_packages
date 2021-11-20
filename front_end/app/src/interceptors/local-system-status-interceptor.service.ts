@@ -6,16 +6,20 @@ import {
     HttpErrorResponse,
     HttpEvent
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
+import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
-    constructor(private appState: NxAppStateService) {
+    constructor(
+        private appState: NxAppStateService,
+        @Inject(WINDOW) private window: Window
+    ) {
     }
 
     public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
@@ -43,8 +47,8 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
         } else if (res instanceof HttpErrorResponse && status === 401) {
-            this.appState.lastErrorStatus$.next(status);
-            this.appState.systemAvailable$.next(false);
+            // Session expired
+            this.window.location.reload();
         } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
             this.appState.systemAvailable$.next(true);
 

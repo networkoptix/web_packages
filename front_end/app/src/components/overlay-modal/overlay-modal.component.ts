@@ -68,11 +68,6 @@ export class NxOverlayModalComponent implements OnInit {
             setTimeout(() => window.location.reload(), 2000);
         }
         this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async (state) => {
-            // Servers not offline, but session has expired
-            if (this.appState.lastErrorStatus$.value === 401) {
-                this.timeoutUntilRefresh$.next(0);
-                return;
-            }
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
