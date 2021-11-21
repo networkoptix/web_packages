@@ -95,6 +95,7 @@ export class NxSwaggerComponent implements OnChanges {
                 spec: this.APIToolService.selectedServer.apiDocFull,
                 filter: filter,
                 docExpansion: expand,
+                showExtensions: true,
                 supportedSubmitMethods: this.getSupportedMethods(), // determines which methods can: make requests/show try it out button
                 maxDisplayedTags: expand === 'full' ? 1 : undefined,
                 requestInterceptor: (request) => {

@@ -659,6 +659,18 @@
 	border-bottom : initial;
 }
 
+.swagger-ui .opblock-body {
+	table:last-of-type {
+		thead{ 
+			display: none;
+		}
+		tbody tr td:first-of-type {
+			@include typography.medium13dark10;
+		}
+	}
+
+}
+
 .swagger-ui .parameter__name {
 	margin-right : initial;
 	@include typography.bold13dark9;
