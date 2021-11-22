@@ -276,7 +276,8 @@
 		width      : 20px;
 		height     : 20px;
 		content    : " ";
-		background : transparent url(/static/images/icons/text_buttons/arrow_expand.svg) no-repeat;
+		background      : transparent url("./img/arrow-down.png") no-repeat center center;
+		background-size : 16px 16px;
 		transform  : translateY(-50%);
 	}
 }
