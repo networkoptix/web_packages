@@ -1,6 +1,7 @@
 import pytest
 from collections import Counter
 from random import randint
+from uuid import uuid4
 
 from django.db.models import Count
 from django.core.files.base import ContentFile
@@ -1744,3 +1745,97 @@ class TestDataRecord:
         ds_cast_value_mock = mocker.patch.object(self.dr.data_structure, 'cast_value', return_value='test')
         assert self.dr.cast_value == 'test'
         ds_cast_value_mock.asset_called_with(self.dr.data_structure, self.dr.value)
+
+class TestMaintenanceSchedulingAndCompletion:
+    def test_save_scheduling_with_message(self, db):
+        expected_message = str(uuid4())
+        start_date = datetime.now()
+        ms = baker.make(MaintenanceScheduling, user_message=expected_message, datetime=start_date)
+        assert ms.portal_notification
+        assert ms.portal_notification.body == expected_message
+        assert ms.portal_notification.min_ts == start_date
+        assert ms.portal_notification.max_ts == start_date + timedelta(weeks=1)
+
+    def test_save_scheduling_without_message(self, db):
+        start_date = datetime.now()
+        ms = baker.make(MaintenanceScheduling, user_message='', datetime=start_date)
+        assert not ms.portal_notification
+
+    def test_maintenance_and_notification_relations(self, db):
+        start = datetime.now()
+        end = start + timedelta(weeks=1)
+        completion = start + timedelta(days=3)
+
+        ms = baker.make(MaintenanceScheduling, datetime=start)
+
+        # Maintenance Scheduling should have correct initial max_ts
+        assert ms.portal_notification.max_ts == end
+
+        mc = baker.make(MaintenanceCompletion, scheduled_maintenance=ms, datetime=completion)
+
+        # Assert that correct maintenance to notification relationships
+        assert ms.portal_notification.body == ms.user_message
+        assert ms.portal_notification.title == MaintenanceScheduling.MESSAGE_TITLE
+        assert mc.portal_notification.body == ms.user_message
+        assert mc.portal_notification.title == MaintenanceCompletion.MESSAGE_TITLE
+        assert mc.scheduled_maintenance == ms
+        assert ms.portal_notification.max_ts == mc.portal_notification.min_ts
+        assert  mc.portal_notification.max_ts == (completion + timedelta(weeks=1))
+
+        ms_id = ms.id
+        ms_notification_id = ms.portal_notification.id
+        mc_id = mc.id
+        mc_notification_id = mc.portal_notification.id
+        ms.user_message = ''
+        ms.save()
+
+        # Portal notifications should be cleaned up when no message
+        assert not PortalNotification.objects.filter(id=ms_notification_id).first()
+        assert not PortalNotification.objects.filter(id=mc_notification_id).first()
+        assert not MaintenanceScheduling.objects.filter(id=ms_id).first().portal_notification
+        assert not MaintenanceCompletion.objects.filter(id=mc_id).first().portal_notification
+    
+    class TestPortalNotification:
+        def generate_version(self):
+            as_float = PortalNotification.calc_build(f'{randint(1, 100)}.{randint(1, 100)}.{randint(1, 100)}.{randint(1, 99999)}1')
+            return as_float, PortalNotification.parse_build(as_float)
+    
+        def test_initializes_with_correct_build(self, db):
+            expected_raw_build, build = self.generate_version()
+            portal_notification = baker.make(PortalNotification, build=build)
+            assert portal_notification.build_raw == expected_raw_build
+
+        def test_parse_build(self):
+            raw_build, expected_build = self.generate_version()
+            assert PortalNotification.parse_build(raw_build) == expected_build
+
+        def test_calc_build(self):
+            expected_raw_build, build = self.generate_version()
+            assert PortalNotification.calc_build(build) == expected_raw_build
+
+        def test_get_serialized(self, db):
+            _, build = self.generate_version()
+            portal_notification = baker.make(PortalNotification, build=build)
+            assert portal_notification.get_serialized() == {
+                'title': portal_notification.title,
+                'id': portal_notification.id,
+                'body': portal_notification.body,
+                'url': portal_notification.url,
+                'build': portal_notification.build,
+            }
+        
+        def test_build_property(self, db):
+            initial_raw_build, initial_build = self.generate_version()
+            updated_raw_build, updated_build = self.generate_version()
+
+            portal_notification = baker.make(PortalNotification, build=initial_build)
+
+            # Should have correct build and raw build
+            assert portal_notification.build == initial_build
+            assert portal_notification.build_raw == initial_raw_build
+
+            # Should correctly update raw build when build is updated
+            portal_notification.build = updated_build
+            assert portal_notification.build == updated_build
+            assert portal_notification.build_raw == updated_raw_build
+

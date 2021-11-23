@@ -2789,13 +2789,16 @@ class PortalNotification(models.Model):
     def parse_build(build_version: float) -> str:
         friendly_version = "{:,}".format(build_version or 0).replace(',', '.')
     
-        friendly_version = re.sub(".0",  ".", friendly_version)
+        friendly_version = re.sub("\.0",  ".", friendly_version)
+        if (last_index := friendly_version.rindex('.')) > (expected_last := len(friendly_version) - 6):
+            friendly_version += (last_index - expected_last) * '0'
+
         
         return friendly_version if friendly_version != '0' else '' 
 
     @staticmethod
     def calc_build(build_version: str) -> float:
-        build, *segments = [float(segment) for segment in build_version.split('.')[::-1]]
+        build, *segments = [float(segment or 0) for segment in build_version.split('.')[::-1]]
 
         while build > 1:
             build /= 10
@@ -2813,6 +2816,41 @@ class MaintenanceScheduling(models.Model):
     partner_message = models.TextField(help_text='List of affected partner features')
     user_message = models.TextField(help_text='List of affected end user features')
     custom = models.TextField(help_text='Custom message text')
+    portal_notification = models.ForeignKey(
+        PortalNotification, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related notification')
+    
+    MESSAGE_TITLE = 'Maintenance Scheduled'
+    
+    def get_serialized_notification(self):
+        return {
+            'title': self.MESSAGE_TITLE,
+            'body': self.user_message,
+            'min_ts': self.datetime,
+            'max_ts': completed.datetime if (completed := self.maintenancecompletion_set.first()) else self.datetime + timedelta(weeks=1)
+        }
+
+    def save(self, *args, **kwargs):
+        portal_notification = None
+
+        if not self.user_message:
+            if self.portal_notification:
+                self.portal_notification.delete()
+                self.portal_notification = None
+            if (mc := self.maintenancecompletion_set.first()) and mc.portal_notification:
+                mc.portal_notification.delete()
+
+        else:
+            portal_notification = self.portal_notification or PortalNotification()
+
+            for attr, val in self.get_serialized_notification().items():
+                setattr(portal_notification, attr, val)
+            
+            portal_notification.save()
+
+        super().save(*args, **kwargs)
+
+        if portal_notification:
+            portal_notification.maintenancescheduling_set.add(self)
 
 
 class MaintenanceCompletion(models.Model):
@@ -2821,6 +2859,38 @@ class MaintenanceCompletion(models.Model):
     custom = models.TextField(help_text='Custom message text')
     scheduled_maintenance = models.ForeignKey(
         MaintenanceScheduling, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related scheduled maintenance')
+    portal_notification = models.ForeignKey(
+        PortalNotification, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related notification')
+
+    MESSAGE_TITLE = 'Maintenance Completed'
+
+    def save(self, *args, **kwargs):
+        portal_notification = None
+        if (scheduled := self.scheduled_maintenance) and scheduled.user_message:
+            portal_notification = self.portal_notification or PortalNotification()
+            notification_dict = {
+                'body': scheduled.get_serialized_notification()['body'],
+                'title': self.MESSAGE_TITLE,
+                'min_ts': self.datetime,
+                'max_ts': self.datetime + timedelta(weeks=1)
+            }
+    
+            for attr, val in notification_dict.items():
+                setattr(portal_notification, attr, val)
+            
+            portal_notification.save()
+            
+            if scheduled.portal_notification:
+                scheduled.portal_notification.max_ts = self.datetime
+                scheduled.portal_notification.save()
+
+        elif self.portal_notification:
+            self.portal_notification.delete()
+
+        super().save(*args, **kwargs)
+
+        if portal_notification:
+            portal_notification.maintenancecompletion_set.add(self)
 
 
 class Flag(AbstractUserFlag):
