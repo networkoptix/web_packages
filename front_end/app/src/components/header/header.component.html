@@ -25,10 +25,10 @@
 </ng-template>
 
 <ng-template #rightNav let-showSmall="showSmall">
-    <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
+    <ul *ngIf="!environment.isLocal" class="nav navbar-nav navbar-right auth-hidden mr-3">
         <li>
             <span>
-                <a class="btn" [href]="(authorizeUrl + environment.production ? '?' : '&' + 'client_type=create') | unsafe"
+                <a class="btn" [href]="createUrl | unsafe"
                     [ngClass]="[
                         showSmall?'small-button' : '',
                         true?'btn-' + (headerService.createAccountButtonType$ | async) : ''

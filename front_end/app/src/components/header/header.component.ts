@@ -70,6 +70,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     environment = environment;
     LANG: LanguageI18NStaticTypes;
 
+    createUrl: string;
     userEmail: string;
     canSeeInfo: boolean;
     system: NxSystem;
@@ -246,6 +247,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!environment.production) {
             this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
         }
+        this.createUrl = `${this.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
     }
 
     private isActive(val: string) {
