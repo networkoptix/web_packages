@@ -1,9 +1,8 @@
-@use '../../../../../styles/theme_variables' as theme_vars;
-
+@use "../../../../../styles/theme_variables" as theme_vars;
 
 .icon-additional {
     font-family : theme_vars.$font-family-medium;
-    font-size   : rem(10px);
+    font-size   : theme_vars.$font-size-ssm;
     float       : left;
     margin-left : 2px;
 }
@@ -30,7 +29,7 @@
 
 .icon-unknown {
     line-height     : 1rem;
-    font-size       : rem(13px);
+    font-size       : theme_vars.$font-size-base;
     font-family     : theme_vars.$font-family-medium;
     display         : flex;
     justify-content : center;
