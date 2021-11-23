@@ -92,9 +92,7 @@ export class NxEditableHeading implements OnInit, OnChanges {
     }
 
     onChange() {
-        if (this.nameWatcherValue) {
-            this.nameWatcherValueChanged.emit(this.value);
-        }
+        this.nameWatcherValueChanged.emit(this.value);
         this.onChangeCallback(this.value);
     }
 
