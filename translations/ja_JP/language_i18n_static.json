@@ -68,7 +68,7 @@
     "account": {
         "account": "アカウント",
         "key": "キー",
-        "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
+        "accountSavedSuccess": "アカウントは正常に保存されました",
         "accountSettings": "アカウント設定",
         "activationLinkSent": "アクティベーションリンクが送信されました",
         "agreementAccepted": "契約が承認されました",
