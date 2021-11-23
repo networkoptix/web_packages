@@ -178,7 +178,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.system = system;
-                this.setNameAndTitle();
 
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
