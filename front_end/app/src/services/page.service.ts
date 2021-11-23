@@ -37,7 +37,7 @@ export class NxPageService {
             debounceTime(50)
         ).subscribe(_ => {
             const meta = this.metaLookup[this.router.url];
-            Object.entries(meta).forEach(([name, content]) => {
+            Object.entries(meta || {}).forEach(([name, content]) => {
                 const property = `og:${name}`;
                 this.meta.updateTag({ name, property, content });
                 if (name === 'title') {

@@ -51,7 +51,7 @@ export class OauthService {
             ).toPromise();
     }
 
-    redirectOauth(state?: string, email?: string) {
+    redirectOauth(state?: string, email?: string, code?: string) {
         const { href } = this.window.location;
         const cleanRedirect = (url) => {
             const [baseUrl, query] = url.split('?');
@@ -64,26 +64,32 @@ export class OauthService {
         };
         const clientTypes = {
             connect: 'connect',
-            login: 'loginWebadmin',
+            login: environment.isLocal ? 'loginWebadmin' : 'loginCloud',
             disconnect: 'passwordDisconnect',
             detach: 'passwordDetach',
+            renew: 'renewWeb',
             reset: 'passwordReset',
             restart: 'passwordRestart'
         };
         const params = new URLSearchParams({
-            client_type: state in clientTypes ? clientTypes[state] : clientTypes.login,
+            client_type: clientTypes[state] || clientTypes.login,
             view_type: 'web',
             redirect_url: cleanRedirect(href),
             client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
-            grant_type: 'password',
-            scope: environment.isLocal
-                ? `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`
-                : '',
-            state: state
+            grant_type: 'password'
         });
+        if (environment.isLocal) {
+            params.append('scope', `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`);
+        }
+        if (state) {
+            params.append('state', state);
+        }
         if (email) {
             params.append('email', email);
+        }
+        if (code) {
+            params.append('access_code', code);
         }
         const host = environment.production
             ? `${this.CONFIG.cloudHost ?? ''}`

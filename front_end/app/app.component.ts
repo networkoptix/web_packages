@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
     ActivationEnd, ActivatedRoute, ActivationStart, Event,
-    GuardsCheckEnd, GuardsCheckStart, NavigationEnd, Router
+    GuardsCheckEnd, GuardsCheckStart, Router
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -12,13 +12,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
 import {
     debounceTime,
-    delay,
-    filter,
-    finalize,
-    map,
-    retryWhen,
-    take,
-    timeout
+    filter
 } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon';
@@ -34,6 +28,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { SystemGuard } from '@src/routeGuards';
+import { NxAccountService } from '@services/account.service';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -77,18 +72,6 @@ export class AppComponent {
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 
-    private cleanQueryParams(queryParams) {
-        queryParams = { ...queryParams };
-        if (queryParams.code) {
-            queryParams.code = null;
-        }
-        return queryParams;
-    }
-
-    private extractRoute(link) {
-        return link.replace(this.window.location.origin, '').split('?')[0];
-    }
-
     constructor(
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
@@ -106,44 +89,22 @@ export class AppComponent {
         private pageService: NxPageService,
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
+        private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
 
-        this.router.events
-            .pipe(filter(ev => ev instanceof NavigationEnd))
-            .subscribe(() => {
-                const link = this.window.location.href.replace('/#', '');
-                const parts = link.split('?');
-                const params = parts.length > 1 && new URLSearchParams(
-                    parts[1]
-                );
-                const code = params && params?.get('code');
-                if (code && link.includes('?code') && !this.reauthorizing) {
-                    return this.cloudApiService.loginCode(code)
-                        .then(() => this.cloudApiService.account(true)
-                            .pipe(
-                                map(res => {
-                                    if (!res) {
-                                        throw Error('undefined response from cloud service account');
-                                    }
-                                    return res;
-                                }),
-                                retryWhen(errors => errors.pipe(delay(500), take(10)))
-                            ).subscribe(() => {
-                                const route = this.extractRoute(link);
-                                const queryParams = this.cleanQueryParams(this.route.snapshot.queryParams);
-                                return this.router.navigate([['/', '/new-landing', '/authorize'].includes(route) ? '/systems' : route], { queryParams })
-                                    .then(() => this.window.location.reload());
-                            })
-                        ).catch(() => {
-                            const route = this.extractRoute(link);
-                            const queryParams = this.cleanQueryParams(this.route.snapshot.queryParams);
-                            return this.router.navigate([route], { queryParams });
-                        });
-                }
-            });
+        const url = new URL(this.window.location.href.replace('#/', ''));
+        const auth = url.searchParams.get('auth');
+        const code = url.searchParams.get('code');
+        if (auth) {
+            this.accountService.handleAuthKeyLogin(auth);
+        } else if (code && !url.toString().includes('cloud-authorize')) {
+            this.accountService.handleCodeLogin(code);
+        } else {
+            this.appStateService.ready = true;
+        }
 
         /* No real need to update often unless some browser have major upgrade
          * and we don't want to support previous releases
@@ -211,20 +172,6 @@ export class AppComponent {
         }
         // in case user switches to a different system before setting up reset system again
         this.localStorageService.store('resetServer', false);
-
-        // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
-        // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
-        // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
-        const authUriSub = this.uriService.getParams()
-            .pipe(timeout(3000), finalize(() => authUriSub.unsubscribe()))
-            .subscribe(params => {
-                if (params.auth) {
-                    authUriSub.unsubscribe();
-                }
-                this.appStateService.ready = !params.auth;
-            }, () => {
-            });
-
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 
         // (Smart check) Check if page is displayed inside an iframe
@@ -255,7 +202,9 @@ export class AppComponent {
                     this.CONFIG.allowDebugMode = true;
                 }
                 this.uriService.queryParams = event.snapshot.queryParams;
-                this.mainContainer.nativeElement.scrollTop = 0;
+                if (this.mainContainer?.nativeElement) {
+                    this.mainContainer.nativeElement.scrollTop = 0;
+                }
             });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {

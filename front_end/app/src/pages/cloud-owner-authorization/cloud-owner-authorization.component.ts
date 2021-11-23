@@ -29,11 +29,13 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
     }
 
     ngOnInit() {
-        const code = this.activatedRoute.snapshot.queryParams?.code || '';
+        const params = this.activatedRoute.snapshot.queryParams;
+        const code = params?.code || '';
         if (code) {
             return this.handleCode(code);
         }
 
-        this.oauthService.redirectOauth('reauthorize', this.storageService.retrieve('email'));
+        const state = params?.state || 'renewWeb';
+        this.oauthService.redirectOauth(state, this.storageService.retrieve('email'));
     }
 }

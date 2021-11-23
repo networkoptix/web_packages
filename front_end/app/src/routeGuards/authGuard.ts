@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        if (state.root.queryParams.auth) {
+        if (state.root.queryParams.auth || state.root.queryParams.code) {
             return true;
         }
 

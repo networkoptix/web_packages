@@ -15,11 +15,9 @@ import { NxSwCacheService } from '@services/sw-cache.service';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { InstantSearchOptions } from './nx-cloud-api.types';
 import { NxUtilsService } from './utils.service';
-import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 
 export const DOC_TYPES = {
@@ -394,6 +392,17 @@ export class NxCloudApiService {
     }
 
     @swClear('apiFresh', '/account', true)
+    loginTokens(tokensInfo) {
+        this.currentAccountEmail = tokensInfo.email;
+        const options = {
+            headers: {
+                Authorization: `Bearer ${tokensInfo.access_token}`
+            }
+        };
+        return this.http.post(this.CONFIG.apiBase + '/account/loginTokens', tokensInfo, options).toPromise();
+    }
+
+    @swClear('apiFresh', '/account', true)
     logout() {
         // clearCache();
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
@@ -621,34 +630,21 @@ export class NxCloudApiService {
         return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
     }
 
-    /* Webadmin functions */
     getTokensFromCloud(code: string) {
         const params = {
             code,
             grant_type: 'authorization_code',
             response_type: 'token'
         };
-        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params }).toPromise().then((tokens) => {
-            this.oauthService.setTokens(tokens);
-        });
+        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
     }
 
-    reauthenticate(state?: string, email?: string) {
-        const dialogService = this.injector.get(NxSimpleDialogsService);
-        const LANG = this.injector.get(NxLanguageProviderService).translations;
-        const { action, message, title } = LANG.dialogs?.renewAuth;
-        return from(
-            dialogService.confirm(message?.(), title?.(), action?.()).then((res) => {
-                if (!res) {
-                    return false;
-                }
-                return this.logout().then(() => this.oauthService.redirectOauth(state, email));
-            })
-        );
+    getTokenInfo(token: string) {
+        return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } });
     }
 
-    redirectOauth(state?: string, email?: string) {
-        return this.oauthService.redirectOauth(state, email);
+    logoutTokens(accessToken: string, refreshToken: string) {
+        return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {

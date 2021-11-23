@@ -16,7 +16,6 @@ import { RouterModule, Routes }      from '@angular/router';
 import { QuicklinkStrategy }         from 'ngx-quicklink';
 import { ApplyGuard }                from '@guards/applyGuard';
 import { AuthGuard }                 from '@guards/authGuard';
-import { RedirectGuard }             from '@guards/redirectGuard';
 import { FeatureGuard }              from '@src/routeGuards';
 import { FeatureFlagStrings }        from '@services/nx-config/base-config';
 import { BookmarksGuard }            from '@guards/bookmarksGuard';
@@ -30,8 +29,7 @@ const lazyRoutes: Routes = [
     {
         path: '',
         loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
-        pathMatch: 'full',
-        canActivate: [RedirectGuard]
+        pathMatch: 'full'
     },
     {
         path: 'systems/:systemId/advanced',
@@ -168,8 +166,7 @@ const lazyRoutes: Routes = [
     ],
     providers: [
         ApplyGuard,
-        AuthGuard,
-        RedirectGuard
+        AuthGuard
     ],
     exports: [
         DownloadModule,

@@ -20,6 +20,7 @@ import { Account }                   from './account';
 import { NxStorageService }          from '../storage.service';
 import { CookieService }             from 'ngx-cookie-service';
 import { NxLoginService } from '../login.service';
+import { OauthService } from '../oauth.service';
 
 @Injectable()
 export class LocalAccount extends BaseAccount {
@@ -41,7 +42,8 @@ export class LocalAccount extends BaseAccount {
         protected pollService: NxPollService,
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
-        protected loginService: NxLoginService
+        protected loginService: NxLoginService,
+        protected oauthService: OauthService
     ) {
         super(
             configService,
@@ -58,7 +60,8 @@ export class LocalAccount extends BaseAccount {
             pollService,
             injector,
             nxSystemAPIService,
-            loginService
+            loginService,
+            oauthService
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), true);

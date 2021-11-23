@@ -36,7 +36,7 @@ export class CloudAccount extends BaseAccount {
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
-        private oauthService: OauthService
+        protected oauthService: OauthService
     ) {
         super(
             configService,
@@ -53,12 +53,13 @@ export class CloudAccount extends BaseAccount {
             pollService,
             injector,
             nxSystemAPIService,
-            loginService
+            loginService,
+            oauthService
         );
     }
 
     get(forceUpdate = false): Promise<Account> {
-        if (this.requestingLogin) {
+        if (!forceUpdate && this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
                 .then(() => {
@@ -97,23 +98,14 @@ export class CloudAccount extends BaseAccount {
 
     login(email: string, password: string, remember: boolean, navigateHome = false) {
         this.sessionService.email = email;
-
-        if (environment.isLocal) {
-            this.requestingLogin = this.mediaServerApi.login(email, password).toPromise();
-        } else {
-            this.requestingLogin = this.cloudApi.login(email, password, remember);
-        }
+        this.requestingLogin = this.cloudApi.login(email, password, remember);
 
         return this.requestingLogin.then((result: any) => {
             if (!this.cloudApi.checkResponseHasError(result)) {
-                if (environment.isLocal) {
-                    this.account = result;
-                    this.sessionService.loginState = result.email || result.name;
-                }
                 if (this.sessionService.loginState) {
                     // If the user that logged in matches the current session there's no need to show
                     // the logout dialog.
-                    if (!environment.isLocal && result.email !== this.sessionService.loginState) {
+                    if (result.email !== this.sessionService.loginState) {
                         return this.logoutAuthorised();
                     }
 
@@ -201,7 +193,7 @@ export class CloudAccount extends BaseAccount {
     }
 
     requireLogin(): Promise<void | Account> {
-        return this.get()
+        return this.get(true)
             .then(account => {
                 if (!account || !account.is_authenticated) {
                     this.oauthService.redirectOauth();

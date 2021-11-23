@@ -1,20 +1,14 @@
 import {
     Component, OnDestroy, OnInit
 }                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { Subscription }              from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService }          from '@services/account.service';
-import { NxUriService }              from '@services/uri.service';
-import { NxProcessService }          from '@services/process.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { NxMenuService }             from '@src/menu';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSessionService } from '@services/session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,55 +23,35 @@ export class NxAccountComponent implements OnInit, OnDestroy {
 
     content: any = {};
     menuReady = false;
-
-    account: any = {};
-    pass: any = {};
-
-    save;
-    changePassword;
+    userEmail: string;
+    private loginStateSubscription: Subscription;
     private menuDetailSubscription: Subscription;
-
-    private setupDefaults() {
-        this.pass = {
-            password: '',
-            newPassword: ''
-        };
-    }
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private route: ActivatedRoute,
-        private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService,
-        private systemsService: NxSystemsService,
-        private accountService: NxAccountService,
-        private dialogs: NxDialogsService,
-        private uriService: NxUriService,
+        private sessionService: NxSessionService,
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe(translation => {
             this.LANG = translation as LanguageI18NStaticTypes;
-            this.init();
         });
-
-        this.setupDefaults();
     }
 
     ngOnDestroy() {}
 
     ngOnInit(): void {
-        this.accountService.get()
-            .then((account) => {
-                this.account = account;
+        this.loginStateSubscription = this.sessionService.loginStateSubject
+            .subscribe((loginState: string) => {
+                this.userEmail = loginState;
                 this.init();
             });
     }
 
     init(): void {
         const accountMenu = this.CONFIG.menus.account;
-        if (this.account === undefined) {
+        if (!this.userEmail) {
             return;
         }
         this.content = {
@@ -86,8 +60,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             level1: [
                 {
                     id: accountMenu.settings.id,
-                    icon: accountMenu.icon,
-                    label: this.account.email || this.account.first_name,
+                    svg: accountMenu.icon,
+                    label: this.userEmail,
                     path: accountMenu.settings.path,
                     level3: [
                         {

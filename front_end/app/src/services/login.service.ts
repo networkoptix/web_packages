@@ -131,13 +131,13 @@ export class NxLoginService {
         this.done$.next(true);
     }
 
-    async updateSession() {
+    async updateSession(state?: string) {
         const isFresh = await this._currentSystem.mediaserver.isSessionFresh().toPromise();
         if (isFresh) {
             return Promise.resolve(true);
         }
         if (this._currentSystem.useRest) {
-            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize`;
+            const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
             window.open(authorizeUrl, '_blank').focus();
             return this.storage.observe('new-code')
                 .pipe(

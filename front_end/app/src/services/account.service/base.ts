@@ -21,10 +21,7 @@ import { NxStorageService } from '../storage.service';
 import { NxLoginService } from '@services/login.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
-
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
+import { OauthService } from '@services/oauth.service';
 
 /**
  * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.
@@ -80,7 +77,8 @@ export abstract class BaseAccount implements OnDestroy {
         protected pollService: NxPollService,
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
-        protected loginService: NxLoginService
+        protected loginService: NxLoginService,
+        protected oauthService: OauthService
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
@@ -105,14 +103,6 @@ export abstract class BaseAccount implements OnDestroy {
                                 this.clearLoginState();
                             }
                         });
-                }
-            });
-
-        // Handles login with auth param everywhere.
-        this.queryParamSubscription = this.uriService.queryParamsSubject
-            .subscribe((params: IParams) => {
-                if (params.auth) {
-                    this.handleAuthKeyLogin(params.auth);
                 }
             });
 
@@ -144,6 +134,10 @@ export abstract class BaseAccount implements OnDestroy {
     set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
+            const loginState = this.sessionService.loginState;
+            if (!loginState || account?.email && loginState !== account?.email) {
+                this.sessionService.loginState = account.email;
+            }
         }
     }
 
@@ -322,14 +316,86 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    protected async handleAuthKeyLogin(auth: string) {
+    private clearCodeFromUri() {
+        const url = new URL(this.window.location.href);
+        url.searchParams.delete('code');
+        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+    }
+
+    private sleep(time) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => resolve(true), time);
+        });
+    }
+
+    private handleCodeError = async (e, code: string) => {
+        if (e.error.errorText.includes('2FA')) {
+            return this.oauthService.redirectOauth('renew', '', code);
+        } else {
+            this.clearCodeFromUri();
+            this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+            await this.sleep(3000);
+            return Promise.resolve(true);
+        }
+    };
+
+    public async handleCodeLogin(code: string) {
+        const account = await this.get();
+        if (!account || !account.is_authenticated) {
+            return this.cloudApi.loginCode(code)
+                .then((res) => {
+                    this.sessionService.loginState = res.email;
+                    this.clearCodeFromUri();
+                    this.window.location.reload();
+                })
+                .catch((e) => this.handleCodeError(e, code)
+                    .then((reload) => reload && this.window.location.reload())
+                ).finally(() => {
+                    this.appStateService.ready = true;
+                });
+        }
+
+        try {
+            const tokens: any = await this.cloudApi.getTokensFromCloud(code).toPromise();
+            const tokenInfo: any = await this.cloudApi.getTokenInfo(tokens.access_token).toPromise();
+            this.appStateService.ready = true;
+            if (tokenInfo.username === account.email) {
+                return false;
+            }
+            const res = await this.dialogs.confirm('',
+                this.LANG.dialogs.titles.loggedFromOtherAccount(),
+                this.LANG.dialogs.buttons.ok(),
+                undefined,
+                NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
+                'long-cancel-button');
+            if (res === true) {
+                this.stopAccountPoll();
+                return this.cloudApi.loginTokens(tokens).then((res: any) => {
+                    this.sessionService.loginState = res.email;
+                    this.clearCodeFromUri();
+                    this.account = undefined;
+                    this.storageService.clear(); // Clear session
+                    this.window.location.reload();
+                });
+            }
+            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
+                this.clearCodeFromUri();
+                this.window.location.reload();
+            });
+        } catch (e) {
+            return this.handleCodeError(e, code).then(() => this.requireLogin());
+        } finally {
+            this.appStateService.ready = true;
+        }
+    }
+
+    public async handleAuthKeyLogin(auth: string) {
         const account: Account = await this.get();
         try {
             const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
-            if (!account) {
+            if (!account || !account.is_authenticated) {
                 return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
             }
-            this.appStateService.ready = true;
             if (result.email === account.email) {
                 return;
             }
@@ -357,9 +423,10 @@ export abstract class BaseAccount implements OnDestroy {
                     .then(() => this.document.location.reload());
             }
         } catch (e) {
-            this.appStateService.ready = true;
             this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
             return this.requireLogin();
+        } finally {
+            this.appStateService.ready = true;
         }
     }
 

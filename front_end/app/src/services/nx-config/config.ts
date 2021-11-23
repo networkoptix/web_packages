@@ -427,7 +427,7 @@ export const nxConfig: IConfig = {
     menus: {
         account: {
             baseUrl: '/account',
-            icon: 'glyphicon-user',
+            icon: 'user',
             settings: {
                 id: 'settings',
                 path: ''

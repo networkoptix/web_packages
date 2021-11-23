@@ -122,6 +122,15 @@ def set_params_for_redirect(code, state):
     return params
 
 
+def build_redirect_url(url, code, state):
+    parsed_redirect = urllib.parse.urlparse(url)
+    redirect_params = urllib.parse.parse_qs(parsed_redirect.query)
+    redirect_params.update(set_params_for_redirect(code, state))
+
+    updated_redirect_params = urllib.parse.urlencode(redirect_params, doseq=True)
+    return f"{parsed_redirect.geturl()}?{updated_redirect_params}"
+
+
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Request an authorization code using email and password",
                      request_body=openapi.Schema(
@@ -163,7 +172,7 @@ def authenticate(request):
 
     data = {
         "access_code": res.get('access_code'),
-        "link": f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(res.get('access_code'), state))}"
+        "link": build_redirect_url(redirect_uri, res.get('access_code'), state)
     }
 
     error = res.get("error")
@@ -317,7 +326,7 @@ def token(request):
 
         if response_type == Auth.RESPONSE_TYPE.code:
             res = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri, scope=scope)
-            return redirect(f"{redirect_uri}?{urllib.parse.urlencode(set_params_for_redirect(res.get('access_code'), state))}")
+            return redirect(build_redirect_url(redirect_uri, res.get('access_code'), state))
 
     elif response_type == Auth.RESPONSE_TYPE.token:
         if grant_type == Auth.GRANT_TYPE.authorization_code:

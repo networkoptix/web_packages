@@ -207,6 +207,25 @@ def login_with_code(request):
     return login_helper(request, token, user)
 
 
+@api_view(["POST"])
+@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+def login_with_tokens(request):
+    require_params(request, ["access_token", "refresh_token"])
+    tokens = {
+        "access_token": request.data["access_token"],
+        "refresh_token": request.data["refresh_token"]
+    }
+    validate_token = Auth.validate_token(tokens["access_token"])
+    try:
+        user = models.Account.objects.get(email=validate_token['username'])
+    except models.Account.DoesNotExist:
+        raise APINotFoundException("User not in cloud")
+    kill_tokens(request)
+    kill_session(request)
+    request.session.set_expiry(get_authenticated_session_cookie_age())
+    return login_helper(request, tokens, user)
+
+
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))

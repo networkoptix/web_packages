@@ -90,9 +90,9 @@ export class NxAccountSettingsComponent implements OnInit {
         }, () => {});
 
         this.accountService
-            .get()
+            .get(true)
             .then((account) => {
-                if (account) {
+                if (account?.email) {
                     this.account = account;
                     if (!environment.isLocal && !this.systemsService.isPolling) {
                         this.systemsService.getSystems(account.email);

@@ -102,27 +102,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             if (params.advanced !== undefined) {
                 this.environment.isLocal && this.router.navigate(['settings/advanced'], { replaceUrl: true });
                 !this.environment.isLocal && this.router.navigate([`systems/${this.route.snapshot.params.systemId}/advanced`], { replaceUrl: true });
-            } else if (params.code && params.state) {
-                // Remove all of this dialog logic w/ state.
-                let loginPromise: Promise<any> = Promise.resolve(true);
-                if (this.environment.isLocal && params.code) {
-                    loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
-                }
-                loginPromise.then(() => {
-                    const params = { ...this.uriService.queryParams };
-                    const state = params.state;
-                    params.code = undefined;
-                    params.state = undefined;
-                    this.uriService.updateURI(undefined, params, true)
-                        .finally(() => {
-                            switch (state) {
-                                case 'disconnect':
-                                    return this.disconnectFromCloud();
-                                default:
-                                    break;
-                            }
-                        });
-                });
             }
         });
     }

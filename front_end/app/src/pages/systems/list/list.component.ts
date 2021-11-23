@@ -76,7 +76,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
         this.accountService.get()
             .then((account) => {
-                if (account) {
+                if (account?.email) {
                     this.account = account;
                     this.userEmail = account.email;
                     this.systemsService.getSystems(account.email);

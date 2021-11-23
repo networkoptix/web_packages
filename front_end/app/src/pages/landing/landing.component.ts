@@ -23,6 +23,8 @@ export class NxLandingComponent implements OnInit {
     login;
 
     loaded: boolean;
+    startParams;
+    startUrl;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -37,6 +39,8 @@ export class NxLandingComponent implements OnInit {
                 private router: Router
     ) {
         this.setupDefaults(this.configService);
+        this.startUrl = this.router.url;
+        this.startParams = this.router.parseUrl(this.router.url).queryParams;
         if (this.configService.flagsEnabled('landingPage')) {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
@@ -45,21 +49,23 @@ export class NxLandingComponent implements OnInit {
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.default?.();
         this.pageService.pageDescription = this.CONFIG.landing.description;
-        if (this.router.url === '/logout') {
+        if (this.startUrl === '/logout') {
             this.accountService.logout();
-        } else if (this.router.url.includes('/content/about')) {
+        } else if (this.startUrl.includes('/content/about')) {
             this.loaded = true;
             this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about?.();
         } else {
             this.accountService
                 .get(/* forceUpdate */true)
                 .then(account => {
-                    if (account) {
+                    if (account && !this.startParams.next) {
                         this.accountService.redirectAuthorised();
                         this.userEmail = this.accountService.email;
                     } else {
-                        if (this.router.url.includes('/login')) {
+                        if (this.startUrl.includes('/login') && !this.startParams.code) {
                             this.accountService.showLogin(false, false);
+                        } else if (this.startParams.next) {
+                            return this.router.navigate([this.startParams.next]);
                         } else {
                             this.loaded = true;
                         }

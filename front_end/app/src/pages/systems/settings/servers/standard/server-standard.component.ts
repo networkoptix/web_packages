@@ -143,34 +143,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.LANG = language.translations;
 
         this.setupDefaults();
-
-        this.route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
-            if (params.state) {
-                let loginPromise: Promise<any> = Promise.resolve(true);
-                if (environment.isLocal && params.code) {
-                    loginPromise = this.cloudApiService.getTokensFromCloud(params.code);
-                }
-                loginPromise.then(() => {
-                    const params = { ...this.uriService.queryParams };
-                    const state = params.state;
-                    params.code = undefined;
-                    params.state = undefined;
-                    this.uriService.updateURI(undefined, params, true)
-                        .finally(() => {
-                            switch (state) {
-                                case 'detach':
-                                    return this.detachServer();
-                                case 'reset':
-                                    return this.resetServer();
-                                case 'restart':
-                                    return this.restartServer();
-                                default:
-                                    break;
-                            }
-                        });
-                });
-            }
-        });
     }
 
     ngOnChanges(changes: SimpleChanges) {

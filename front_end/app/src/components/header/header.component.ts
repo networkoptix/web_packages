@@ -9,7 +9,6 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     Subscription,
-    timer,
     BehaviorSubject,
     combineLatest,
     fromEvent,
@@ -71,7 +70,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     environment = environment;
     LANG: LanguageI18NStaticTypes;
 
-    user: any = {};
+    userEmail: string;
     canSeeInfo: boolean;
     system: NxSystem;
     systems: any;
@@ -111,7 +110,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private loginSubscription: Subscription;
     private routerSubscription: Subscription;
     private systemSubscription: Subscription;
-    private systemIdSubscription: Subscription;
     private menuSubscription: SubscriptionLike;
     private resizeSubscription: SubscriptionLike;
     private widthSubscription: SubscriptionLike;
@@ -254,38 +252,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         return this.router.url.includes(val);
     }
 
-    private systemIdUpdate(id) {
-        this.systemId = id;
-        this.storageService.systemId = this.systemId;
-        if (this.systemId && !this.systems) {
-            this.systemsService
-                .forceUpdateSystems()
-                .toPromise().then(() => {
-                    this.updateActiveSystem();
-                    this.updateActive();
-                });
-        } else {
-            this.updateActiveSystem();
-            this.updateActive();
-        }
-    }
-
-    private startTimerSystemIdUpdate() {
-        this.untilHaveID = timer(200, 200);
-        this.getUrlSystemId = this.untilHaveID.subscribe(() => {
-            if (this.router.url.indexOf('/systems/') === 0) {
-                const uriSystemId = this.router.url.split('/')[2];
-
-                if (uriSystemId === this.systemId) {
-                    this.getUrlSystemId.unsubscribe();
-                    return;
-                }
-
-                this.systemIdUpdate(uriSystemId);
-            }
-        });
-    }
-
     private stopActiveSubscription() {
         if (this.system) {
             this.system.stopPoll();
@@ -338,7 +304,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.updateActive();
                 }
 
-                if (event instanceof NavigationEnd) {
+                if (this.userEmail && event instanceof NavigationEnd) {
                     // You only receive NavigationEnd events
                     if (this.systemId && !this.systems) {
                         this.systemsService
@@ -358,29 +324,26 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         this.loginSubscription = this.sessionService.loginStateSubject
             .subscribe((loginState: string) => {
-                this.accountService
-                    .get()
-                    .then(account => {
-                        if (account) {
-                            this.dropdownsVisible = true;
-                            this.loginState = true;
-                            this.renderer.removeClass(document.body, 'anonymous');
-                            this.renderer.addClass(document.body, 'authorized');
-                            if (!this.environment.isLocal) {
-                                this.systemsService.getSystem(account.email);
-                                this.systemsService
-                                    .forceUpdateSystems(loginState)
-                                    .toPromise()
-                                    .then(() => this.updateActive());
-                            }
-                        } else {
-                            this.loginState = false;
-                            this.renderer.removeClass(document.body, 'authorized');
-                            this.renderer.addClass(document.body, 'anonymous');
-                        }
-                    }).finally(() => {
-                        this.renderer.removeClass(document.body, 'loading');
-                    });
+                if (loginState) {
+                    this.userEmail = loginState;
+                    this.dropdownsVisible = true;
+                    this.loginState = true;
+                    this.renderer.removeClass(document.body, 'anonymous');
+                    this.renderer.addClass(document.body, 'authorized');
+                    if (!this.environment.isLocal) {
+                        setTimeout(() => {
+                            this.systemsService
+                                .forceUpdateSystems(this.userEmail)
+                                .toPromise()
+                                .then(() => this.updateActive());
+                        });
+                    }
+                } else {
+                    this.loginState = false;
+                    this.renderer.removeClass(document.body, 'authorized');
+                    this.renderer.addClass(document.body, 'anonymous');
+                }
+                setTimeout(() => this.renderer.removeClass(document.body, 'loading'));
             });
 
         if (this.environment.isLocal) {
@@ -472,27 +435,20 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
 
         if (!this.environment.isLocal) {
-            this.accountService
-                .get()
-                .then((account) => {
-                    if (account) {
-                        this.user = account;
-                        if (this.headerService.activeSystem) {
-                            if (!this.system || this.system.id !== this.systemId) {
-                                this.stopActiveSubscription();
-                                this.system = this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
+            if (this.headerService.activeSystem) {
+                if (!this.system || this.system.id !== this.systemId) {
+                    this.stopActiveSubscription();
+                    this.system = this.systemService.createSystem(this.userEmail, this.headerService.activeSystem.id);
 
-                                this.system.getInfoAndPermissions(false)
-                                    .then(system => {
-                                        this.canSeeInfo = system?.canViewInfo() || false;
-                                    })
-                                    .catch(_ => {});
-                            }
-                        } else {
-                            this.stopActiveSubscription();
-                        }
-                    }
-                });
+                    this.system.getInfoAndPermissions(false)
+                        .then(system => {
+                            this.canSeeInfo = system?.canViewInfo() || false;
+                        })
+                        .catch(_ => {});
+                }
+            } else {
+                this.stopActiveSubscription();
+            }
         }
     }
 
@@ -512,10 +468,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     get mainUrl() {
-        if (!this.user.email) {
+        const activeSystem = this.headerService.activeSystem;
+        if (!this.userEmail) {
             return this.environment.isLocal ? '/settings' : '/';
-        } else if (this.singleSystem) {
-            return `/systems/${this.headerService.activeSystem.id}/view`;
+        } else if (this.singleSystem && activeSystem?.id) {
+            return `/systems/${activeSystem.id}/view`;
         } else {
             return '/systems';
         }

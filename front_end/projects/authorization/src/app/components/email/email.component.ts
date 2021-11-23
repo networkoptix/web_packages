@@ -50,6 +50,16 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
+    private handleErrors (changes) {
+        const { email } = this.emailForm?.controls;
+        if (!email) {
+            return;
+        }
+        email.setErrors({ [changes.errorCode.currentValue]: true });
+        email.markAsTouched();
+        email.markAsDirty();
+    }
+
     ngOnInit(): void {
         this.setupText();
         this.setText();
@@ -60,7 +70,14 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode?.currentValue) {
-            this.emailForm?.controls.email.setErrors({ [changes.errorCode.currentValue]: true });
+            // Handles when form isn't ready yet.
+            if (!this.emailForm?.controls?.email) {
+                setTimeout(() => {
+                    this.handleErrors(changes);
+                });
+            } else {
+                this.handleErrors(changes);
+            }
         }
 
         if (!changes.clientType?.firstChange) {

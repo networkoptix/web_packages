@@ -176,7 +176,7 @@ export class RestartServerModalContent {
                     // @ts-ignore
                 } else if (err.errorId === 'sessionExpired') {
                     this.loginService.currentSystem = this.system;
-                    this.loginService.updateSession()
+                    this.loginService.updateSession('passwordRestart')
                         .then((ready) => {
                             this.needsUpdate = !ready;
                             if (ready) {

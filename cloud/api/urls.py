@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^account/activate$',           account.activate),
     url(r'^account/login$',              account.login),
     url(r'^account/loginCode$',          account.login_with_code),
+    url(r'^account/loginTokens$',        account.login_with_tokens),
     url(r'^account/logout$',             account.logout),
     url(r'^account/register$',           account.register),
     url(r'^account/restorePassword$',    account.restore_password),

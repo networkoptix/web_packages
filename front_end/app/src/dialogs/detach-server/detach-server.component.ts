@@ -62,7 +62,7 @@ export class DetachServerModalContent {
                 (err) => {
                     if (err.errorId === 'sessionExpired') {
                         this.loginService.currentSystem = this.system;
-                        this.loginService.updateSession()
+                        this.loginService.updateSession('passwordDetach')
                             .then((ready) => {
                                 this.needsUpdate = !ready;
                                 if (ready) {
