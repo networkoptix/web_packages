@@ -251,6 +251,7 @@ Evaluate Session Limit
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
     ${multiplier}=   Set Variable If    "${interval}"=="${HOURS TEXT}"    60
     ...    "${interval}"=="${MINUTES TEXT}"    1
+    ...    "${interval}"=="${DAYS TEXT}"     1440
     ${number}=   Evaluate    ${multiplier}*${value}
     Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes      ${number}
 

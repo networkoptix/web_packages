@@ -111,7 +111,7 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ${ENABLE AUDIT TRAIL CHECKBOX}        //*[@id='auditTrailEnabled']
 ${ALLOW ONLY SECURE CHECKBOX}         //*[@id='trafficEncryptionForced']
 ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     //*[@id='videoTrafficEncryptionForced']
-${LIMIT SESSION DURATION CHECKBOX}    //*[@id='sessionLimitMinutes']
+${LIMIT SESSION DURATION CHECKBOX}    //*[@id='sessionLimitMinutesToggle']
 ${TIME NUMBER INPUT}                       //*[@type='number']
 ${TIME DURATION INTERVAL BUTTON}           //*[@id="genericSelect"]
 ${TIME DURATION INTERVAL TEXT}            ${TIME DURATION INTERVAL BUTTON}/span

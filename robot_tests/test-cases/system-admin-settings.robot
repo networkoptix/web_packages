@@ -23,7 +23,7 @@ Force Tags        system
     Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
     Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
     Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
-    Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
+    Element Text Should Be    //label[@for="sessionLimitMinutesToggle"]//span    ${LIMIT SESSION DURATION TEXT}
 
     Settings on page should match settings on server
 
@@ -94,7 +94,7 @@ Force Tags        system
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]
         Log in to system    ${system}    ${user}
         Wait Until Elements Are Visible
-        ...    //h2[contains(text(), "${system}[name]")]
+        ...    //nx-text-editable[contains(text(), "${system}[name]")]
         ...    ${DISCONNECT FROM MY ACCOUNT}
         Wait until elements are not visible
         ...    ${SYSTEM SETTINGS FORM}
@@ -193,9 +193,10 @@ Force Tags        system
     Log    Step 8
     Reload Page
     Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    Wait Until Element Is Visible    ${SECURITY FORM}
     FOR    ${setting}    IN    @{tested settings}
-        Checkbox Is Selected     ${setting}    ${True}
+        Checkbox Should Be Selected     ${setting}
     END
 
 11. Changing All Checkboxes Works
@@ -514,7 +515,7 @@ Force Tags        system
     Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 30    Fail    Interval not 30 minutes as expected
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
@@ -537,7 +538,7 @@ Force Tags        system
     Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
@@ -547,7 +548,7 @@ Force Tags        system
     Input Text    ${TIME NUMBER INPUT}    hjkl
     Sleep    1 
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Click Button    ${TIME DURATION INTERVAL BUTTON}
     # Wait Until Elements Are Visible
     # ...    ${TIME DURATION SELECTION HOURS} 
@@ -568,14 +569,14 @@ Force Tags        system
     # Click Element    ${TIME DURATION SELECTION MINUTES}
     Sleep    1 
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Run Keyword If    ${value} != 1    Fail    Interval not 1 minute as expected
     # Page Should Not Contain Element     ${SAVE BUTTON}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    0
     
     Log    Step 5
     Clear Element Text    ${TIME NUMBER INPUT}
-    Input Text    ${TIME NUMBER INPUT}    654
+    Input Text    ${TIME NUMBER INPUT}    87840
     Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
@@ -585,10 +586,12 @@ Force Tags        system
     Wait Until Elements Are Visible	 ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Reload Page
+    Wait Until Element Is Visible    ${SECURITY FORM}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
+    Run Keyword If    ${value} != 61    Fail    Interval not 61 days as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    65
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    87840
         
     Log    Step 6
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -629,9 +632,9 @@ Force Tags        system
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
+    Run Keyword If    ${value} != 25    Fail    Interval not 25 days as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    600
+    Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    25  #default value is in days
     
     Log    Step 8
     Clear Element Text    ${TIME NUMBER INPUT}
