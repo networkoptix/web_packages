@@ -285,10 +285,12 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle() {
         if (this.sessionLimitToggle) {
-            this.selectedTimeUnit = this.limitSessionTimeUnits.days;
-            this.timeValue = this.selectedTimeUnit.default;
-            this.systemAndSecuritySettings.sessionLimitMinutes = this.selectedTimeUnit.default * DAY_MINS;
-            this.updateTimeUnitInput(this.selectedTimeUnit);
+            if (!this.timeValue) { // prevent overwriting current value with default (in case of late init of the checkbox)
+                this.selectedTimeUnit = this.limitSessionTimeUnits.days;
+                this.timeValue = this.selectedTimeUnit.default;
+                this.systemAndSecuritySettings.sessionLimitMinutes = this.selectedTimeUnit.default * DAY_MINS;
+                this.updateTimeUnitInput(this.selectedTimeUnit);
+            }
         } else {
             this.timeValue = 0;
             this.systemAndSecuritySettings.sessionLimitMinutes = 0;
