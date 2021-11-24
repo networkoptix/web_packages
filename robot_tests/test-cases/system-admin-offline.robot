@@ -102,7 +102,7 @@ Restart
     Log Out
     Go To    ${ENV}/systems/${system}[cloud id]
     Log In    ${system}[owner]    ${base password}    button=None
-    Wait until element is visible    //h2[contains(text(), "${system}[name]")]
+    Wait until element is visible    //nx-text-editable[contains(text(), "${system}[name]")]
 
 9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded    system_offline

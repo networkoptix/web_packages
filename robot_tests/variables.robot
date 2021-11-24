@@ -154,7 +154,7 @@ ${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(t
 ${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 ${DISCONNECT MODAL BUTTON}               ${MODAL DIALOG}//button/span[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
-${JUMBOTRON}                          //div[@class='jumbotron']
+${JUMBOTRON}                          //div[@class='mainContainer']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
