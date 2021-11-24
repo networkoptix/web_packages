@@ -52,6 +52,7 @@ export class NxAPIToolService {
     system: NxSystem;
     systemVersion: Number = 5.0;
     mediaServerUpdating = false;
+    mediaServerErrorCount = 0;
     validSystems: NxSystemWithUserInfo[] = []
 
     serversDropdown: ServerDropdownItem[] = [];
@@ -198,9 +199,11 @@ export class NxAPIToolService {
     }
 
     async tryNextSystem() {
-        const invalidSystemItem = this.systemsDropdown.find(item => item.value === this.system.id);
-        invalidSystemItem.name = invalidSystemItem.name + ' - Error';
-        invalidSystemItem.disabled = true;
+        if (!this.CONFIG.isLocal) {
+            const invalidSystemItem = this.systemsDropdown.find(item => item.value === this.system.id);
+            invalidSystemItem.name = invalidSystemItem.name + ' - Error';
+            invalidSystemItem.disabled = true;
+        }
         this.validSystems = this.validSystems.filter(system => system.id !== this.system.id);
 
         if (this.validSystems.length) {
@@ -214,7 +217,6 @@ export class NxAPIToolService {
 
     getServersInfo() {
         this.serversLoaded$.next(false);
-        let mediaServerRetryCount = 0;
         if (this.serverSubscription) {
             this.serverSubscription.unsubscribe();
         }
@@ -241,11 +243,11 @@ export class NxAPIToolService {
             )
             .subscribe(_system => {
                 if (!this.mediaServerUpdating) {
-                    if (mediaServerRetryCount === 4) {
+                    if (this.mediaServerErrorCount === 4) {
+                        this.mediaServerErrorCount = 0;
                         this.tryNextSystem();
                     }
                     this.updateMediaServers();
-                    mediaServerRetryCount++;
                 }
             });
     }
@@ -324,6 +326,7 @@ export class NxAPIToolService {
                                             if (this.serverSubscription) {
                                                 this.serverSubscription.unsubscribe();
                                             }
+                                            this.mediaServerErrorCount = 0;
                                         }
                                     });
                             } else {
@@ -339,6 +342,7 @@ export class NxAPIToolService {
                     })
                     .catch(error => {
                         this.mediaServerUpdating = false;
+                        this.mediaServerErrorCount++;
                         console.error(error);
                     });
             } else {

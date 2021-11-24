@@ -113,7 +113,7 @@
 	font-size : $h1-font-size;
 }
 
-.swagger-ui button, .swagger-ui input, .swagger-ui optgroup, .swagger-ui select, .swagger-ui textarea {
+.swagger-ui button, .swagger-ui input, .swagger-ui optgroup, .swagger-ui select {
 	font-family : $font-family-regular;
 }
 
@@ -143,6 +143,13 @@
 
 .swagger-ui .courier {
 	padding    : 0 16px;
+}
+
+
+.swagger-ui .code, .swagger-ui code {
+	font-family: robotomonoregular, monospace !important;
+	font-size: rem(13px);
+	line-height: 1.23;
 }
 
 .swagger-ui .wrapper {
@@ -181,7 +188,7 @@
 	border-radius: 2px;
 	letter-spacing: normal;
 	display: inline-block;
-	line-height: 1;
+	line-height: 1.23;
 	border: solid 1px $additional_light8;
 	background: $additional_light7;
 	.media-type {
@@ -415,6 +422,7 @@
 	font-family     : robotomonoregular, monospace;
     font-weight     : 400;
 	color           : $light1;
+	width           : 100%;
 }
 
 .swagger-ui .model-box {
@@ -437,6 +445,18 @@
 	.prop-type, .property.primitive, .prop-format, .model {
 		color: $additional_dark1 !important;
 		font-size: 13px;
+
+	}
+}
+
+.swagger-ui .highlight-code {
+	width: 100% !important;
+}
+
+.swagger-ui .response-col_description .highlight-code {
+	display: block !important;
+	h5 {
+		margin-top: 10px;
 	}
 }
 
@@ -446,6 +466,7 @@
 
 .swagger-ui .highlight-code > .microlight code span {
 	color : $light1 !important;
+	line-height   : 1.23;
 }
 
 .RTSP-request{
@@ -568,17 +589,7 @@
 }
 
 .swagger-ui textarea {
-	width         : 100%;
-	min-height    : 280px;
-	padding       : 10px;
-	border        : none !important;
-	outline       : none;
-	background    : $dark13 !important;
-	font-family   : robotomonoregular, monospace;
-	font-weight   : 400;
-	font-size     : rem(13px);
-	color         : $additional_light1;
-	background: $dark13 !important;
+	display: none !important;
 }
 
 
@@ -598,6 +609,7 @@
 	padding       : 4px 16px;
 	text-align    : left;
 	font-weight	  : initial;
+	max-width	  : 451px;
 }
 
 .swagger-ui table thead {
@@ -620,7 +632,6 @@
 	font-weight    : initial;
 }
 
-
 .swagger-ui .parameters-col_description input[type=text] {
 	width     : 100%;
 	max-width : 100%;
@@ -637,6 +648,7 @@
 
 .swagger-ui .parameter__type {
 	margin-right: 2px;
+	padding-top: 2px;
 }
 
 .swagger-ui .responses-header {
@@ -718,11 +730,12 @@
 }
 
 .swagger-ui .markdown code {
-	font-size     : rem(14px);
+	font-size     : rem(13px);
 	padding       : 1px 6px;
 	border-radius : 2px;
+	line-height   : 1.23;
 	border        : 1px solid $light10;
-	font-family   : robotomonoregular, monospace;
+	font-family   : robotomonoregular, monospace !important;
 	font-weight   : 400;
 	color         : $dark9;
 }
@@ -731,18 +744,58 @@
 	font-family: robotomonoregular, monospace;
 	font-size: rem(13px);
 	color: $additional_light1;
+	line-height: 1.23;
 }
 
 .swagger-ui .renderedMarkdown code {
 	border-radius: 2px;
-	font-size: rem(13px);
-	font-weight: 400;
-	letter-spacing: normal;
-	font-family: robotomonoregular, monospace !important;
 	padding: 2px;
 	display: inline-block;
 	color: $additional_dark1;
-	line-height: 1;
+	line-height: 1.23;
 	border: solid 1px $additional_light8;
 	background: $additional_light7;
+}
+
+
+.code-block-common {
+	border-radius: 2px;
+	font-size: rem(13px);
+	font-weight: 400;
+	line-height: 1.23 !important;
+	letter-spacing: normal;
+	font-family: robotomonoregular, monospace !important;
+}
+
+pre, .text-area {
+	@extend .code-block-common;
+	margin: 16px 0 24px 0;
+	padding: 12px 8px;
+	counter-reset: line;
+	& > * {
+		position: relative;
+		padding-left: 22px;
+		margin-bottom: -14px;
+		&:before {
+			line-height: 18px;
+			text-align: right;
+			counter-increment: line;
+			content: counter(line);
+			font-size: rem(10px);
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			color: $light12;
+			font-weight: 400 !important;
+		}
+	}
+}
+.text-area {
+	background-color: $dark13;
+	color: $additional_light1;
+	& > * {
+		padding-left: 20px !important;
+		margin-bottom: auto;
+	}
 }

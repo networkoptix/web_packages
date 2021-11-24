@@ -1,9 +1,10 @@
 import {
     Component, ComponentFactoryResolver,
-    Inject, Input, OnChanges, SimpleChanges,
+    ComponentRef,
+    Inject, Input, OnChanges, Renderer2, SimpleChanges,
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import SwaggerUI from 'swagger-ui';
 import { NxAPIToolService } from '../api-tool.service';
 import {
@@ -13,7 +14,9 @@ import { DOCUMENT } from '@angular/common';
 import {
     NxCopyToClipboardComponent
 } from './copy-to-clipboard/copy-to-clipboard.component';
+import { fromEvent } from 'rxjs';
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
+import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
@@ -36,13 +39,14 @@ export class NxSwaggerComponent implements OnChanges {
     RTSPRequestShowing = false;
     singleAPIRouteShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
+    customComponentsRendering = false;
 
-    constructor(
-        public APIToolService: NxAPIToolService,
-        private viewContainerRef: ViewContainerRef,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        @Inject(DOCUMENT) private document: Document
-    ) {}
+    constructor(public APIToolService: NxAPIToolService,
+                private viewContainerRef: ViewContainerRef,
+                private renderer2: Renderer2,
+                private componentFactoryResolver: ComponentFactoryResolver,
+                @Inject(DOCUMENT) private document: Document) {
+    }
 
     /** Check if node is a leaf node.
      *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
@@ -91,7 +95,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
-                plugins: [this.FindCodeBlocksPlugin, this.CustomResponsePlugin],
+                plugins: [this.OnOperationRenderPlugin],
                 spec: this.APIToolService.selectedServer.apiDocFull,
                 filter: filter,
                 docExpansion: expand,
@@ -163,40 +167,56 @@ export class NxSwaggerComponent implements OnChanges {
         request.url = Url.toString();
     }
 
-    private CustomResponsePlugin = () => ({
-        wrapComponents: {
-            response: (Response, { React }) => (props) => {
-                const response = React.createElement(Response, props);
-                this.moveExampleResponse();
-                this.addLabelToRequest();
-                return response;
-            }
-        }
-    })
-
     // swagger-ui plugin system
-    private FindCodeBlocksPlugin = () => ({
+    private OnOperationRenderPlugin = () => ({
         wrapComponents: {
             operation: (Responses, { React }) => (props) => {
-                // If operation is open
-                if (props.isShown) {
-                    const codeBlocks = this.document.getElementsByClassName('microlight');
-                    // Get all code blocks rendered
-                    for (const codeBlock of codeBlocks as any) {
-                        if (!codeBlock.parentElement.getElementsByClassName('copy-button').length) {
-                            // Add clipboard button to codeblocks that dont have a clipboard button
-                            const container = codeBlock.closest('div') as HTMLElement;
-                            container.classList.add('highlight-code');
-
-                            this.addCopyToClipBoardButton(codeBlock);
-                        }
+                const operation = React.createElement(Responses, props);
+                if (props.isShown) { // If operation is open
+                    if (!this.customComponentsRendering) {
+                        this.customComponentsRendering = true;
+                        setTimeout(() => {
+                            this.addCustomTextareas();
+                            this.modifyCodeBlocksAndTextareas();
+                            this.addTabItemEventListener();
+                            this.insertCustomDropdown();
+                            this.moveExampleResponse();
+                            this.addLabelToRequest();
+                            this.customComponentsRendering = false;
+                        }, 0);
                     }
-                    this.insertCustomDropdown();
                 }
-                return  React.createElement(Responses, props);
+                return  operation;
             }
         }
     })
+
+    private modifyCodeBlocksAndTextareas = () => {
+        const elements = this.document.querySelectorAll('.microlight, .text-area');
+        for (const element of elements as any) {
+            if (!element.parentElement.getElementsByClassName('copy-button').length) {
+                // Add clipboard buttons and line counters to elements that dont have them
+                const container = element.closest('div') as HTMLElement;
+                container?.classList.add('highlight-code');
+                this.addCopyToClipBoardButton(element);
+                this.addLineCounter(element);
+            }
+        }
+    }
+
+    private addCustomTextareas() {
+        const textareas = this.document.body.querySelectorAll('textarea:not(.custom-textarea):not([readonly])');
+        for (const textarea of textareas as any) {
+            const sibling: Element = textarea.previousElementSibling;
+            if (sibling?.tagName === 'NX-SWAGGER-TEXTAREA') {
+                this.renderer2.removeChild(sibling.parentElement, sibling);
+            }
+            const { componentRef, element } = this.generateComponent(NxSwaggerTextareaComponent);
+            componentRef.instance.textarea = textarea;
+            textarea.classList.add('custom-textarea');
+            textarea.insertAdjacentElement('beforebegin', element);
+        }
+    }
 
     private generateRequestTypeLabel = () => {
         const label = this.document.createElement('label');
@@ -204,27 +224,49 @@ export class NxSwaggerComponent implements OnChanges {
         return label;
     }
 
-    /** Moves the example response and schema outside of the response table, also adds a label.  */
-    private moveExampleResponse = () => {
-        const responses = this.document.querySelector('.responses-inner:not(.with-label)');
-        if (responses) {
-            const exampleResponse = responses.querySelector('.model-example');
-            // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
-            responses.classList.add('with-label');
-            if (exampleResponse) {
-                const label = this.generateRequestTypeLabel();
-                exampleResponse.insertBefore(label, exampleResponse.firstChild);
-                responses.appendChild(exampleResponse);
-            }
+     /** Moves the example response and schema outside of the response table, also adds a label.  */
+     private moveExampleResponse = () => {
+         const responses = this.document.querySelector('.responses-inner:not(.with-label)');
+         if (responses) {
+             const exampleResponse = responses.querySelector('.model-example');
+             // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
+             responses.classList.add('with-label');
+             if (exampleResponse) {
+                 const label = this.generateRequestTypeLabel();
+                 exampleResponse.insertBefore(label, exampleResponse.firstChild);
+                 responses.appendChild(exampleResponse);
+             }
+         }
+     }
+
+    private addTabItemEventListener = () => {
+        const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
+        for (const tabItem of tabItems as any) {
+            tabItem.classList.add('tagged-tabitem');
+            fromEvent(tabItem, 'click').pipe(untilDestroyed(this)).subscribe(() => {
+                setTimeout(() => {
+                    this.modifyCodeBlocksAndTextareas();
+                }, 0);
+            });
         }
     }
 
-    addCopyToClipBoardButton = (codeBlock: HTMLElement) => {
-        const factory = this.componentFactoryResolver.resolveComponentFactory(NxCopyToClipboardComponent);
-        const instance = this.viewContainerRef.createComponent(factory);
-        const el = instance.location.nativeElement as HTMLElement;
+    generateComponent(componentClass: any) {
+        const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
+        const componentRef: ComponentRef<any> = this.viewContainerRef.createComponent(factory);
+        const element = componentRef.location.nativeElement as HTMLElement;
 
-        codeBlock.insertAdjacentElement('afterend', el);
+        return { componentRef, element };
+    }
+
+    addCopyToClipBoardButton = (parent: HTMLElement) => {
+        const clipboardElement = this.generateComponent(NxCopyToClipboardComponent).element;
+
+        parent.insertAdjacentElement('afterend', clipboardElement);
+    }
+
+    addLineCounter = (parent: HTMLElement) => {
+        parent.innerHTML = parent.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
     }
 
     private addLabelToRequest = () => {
@@ -238,15 +280,12 @@ export class NxSwaggerComponent implements OnChanges {
 
     private insertCustomDropdown = () => {
         const selects = this.document.body.querySelectorAll('select:not([multiple]):not(.custom-dropdown):not(.content-type)');
-
         for (const select of selects as any) {
             // The original select is hidden and an nx-select is inserted
-            const factory = this.componentFactoryResolver.resolveComponentFactory(NxSwaggerDropdownComponent);
-            const componentRef = this.viewContainerRef.createComponent(factory);
+            const { componentRef, element } = this.generateComponent(NxSwaggerDropdownComponent);
             componentRef.instance.swaggerSelect = select;
-            const el = componentRef.location.nativeElement as HTMLElement;
             select.classList.add('custom-dropdown');
-            select.insertAdjacentElement('beforebegin', el);
+            select.insertAdjacentElement('beforebegin', element);
         }
     }
 

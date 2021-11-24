@@ -13,6 +13,7 @@ import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.com
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxCopyToClipboardComponent } from './swagger/copy-to-clipboard/copy-to-clipboard.component';
 import { NxSwaggerDropdownComponent } from './swagger/swagger-dropdown/swagger-dropdown.component';
+import { NxSwaggerTextareaComponent } from './swagger/swagger-textarea/swagger-textarea.component';
 
 const appRoutes: Routes = [
     {
@@ -38,8 +39,9 @@ const appRoutes: Routes = [
         NxAPIToolComponent,
         NxSwaggerComponent,
         NxSystemDropdownComponent,
+        NxCopyToClipboardComponent,
         NxSwaggerDropdownComponent,
-        NxCopyToClipboardComponent
+        NxSwaggerTextareaComponent
     ],
     bootstrap: [],
     entryComponents: [

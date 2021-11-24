@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -12,7 +12,7 @@ import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
     templateUrl: './copy-to-clipboard.component.html',
     styleUrls: ['./copy-to-clipboard.component.scss']
 })
-export class NxCopyToClipboardComponent implements OnInit {
+export class NxCopyToClipboardComponent {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -37,12 +37,10 @@ export class NxCopyToClipboardComponent implements OnInit {
             });
     }
 
-    ngOnInit(): void {
-    }
-
     copyToClipboard = (event: PointerEvent) => {
         const el = event.target as Element;
-        const code = el.closest('.highlight-code').querySelector('.microlight');
+        const parent = el.closest('.highlight-code, nx-swagger-textarea');
+        const code = parent.querySelector('.microlight, .text-area');
         this.clipboardService.copy(code.textContent);
     }
 }
