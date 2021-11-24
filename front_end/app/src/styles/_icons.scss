@@ -101,17 +101,17 @@
 //    @include kill-glyphicon;
 //    background-position : -32px 0;
 //}
-//
-//.close-icon {
-//    @include icon;
-//    background-position : -32px 0;
-//}
-//
-//.tag-close-icon {
-//    @include icon;
-//    background-position : -96px 0;
-//}
-//
+
+.close-icon {
+    @include icon;
+    background-position : -32px 0;
+}
+
+.tag-close-icon {
+    @include icon;
+    background-position : -96px 0;
+}
+
 @mixin web-icon {
    display          : inline-block;
    background-size  : 192px 408px;
