@@ -456,7 +456,8 @@ class Account(object):
     def change_password(request, email, old_password, new_password, totp=None, headers=None):
         email = email.lower()
         params = {
-            'password': new_password
+            'password': new_password,
+            'currentPassword': old_password
         }
 
         if totp:
