@@ -132,11 +132,7 @@ export class NxLoginService {
     }
 
     async updateSession(state?: string) {
-        const isFresh = await this._currentSystem.mediaserver.isSessionFresh().toPromise();
-        if (isFresh) {
-            return Promise.resolve(true);
-        }
-        if (this._currentSystem.useRest) {
+        if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
             window.open(authorizeUrl, '_blank').focus();
             return this.storage.observe('new-code')

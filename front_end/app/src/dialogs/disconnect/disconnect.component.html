@@ -20,6 +20,7 @@
             <nx-process-button [process]="disconnect"
                                [form]="disconnectForm"
                                [actionType]="'danger'"
+                               [buttonDisabled]="needsUpdate"
                                buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>

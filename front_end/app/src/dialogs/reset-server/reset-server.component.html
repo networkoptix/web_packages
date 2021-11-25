@@ -38,6 +38,7 @@
             <nx-process-button [process]="resetServer"
                                [form]="resetServerForm"
                                [actionType]="'danger'"
+                               [buttonDisabled]="needsUpdate"
                                buttonText="{{ 'Reset' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="resetServer" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>

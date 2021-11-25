@@ -128,7 +128,7 @@ def build_redirect_url(url, code, state):
     redirect_params.update(set_params_for_redirect(code, state))
 
     updated_redirect_params = urllib.parse.urlencode(redirect_params, doseq=True)
-    return f"{parsed_redirect.geturl()}?{updated_redirect_params}"
+    return f"{parsed_redirect.geturl().split('?')[0]}?{updated_redirect_params}"
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

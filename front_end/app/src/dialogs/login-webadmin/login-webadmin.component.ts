@@ -101,13 +101,16 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit() {
-        const url = new URL(this.document.location.href.replace('#/', ''));
-        const params = new URLSearchParams(url.search);
+        const url = new URL(this.document.location.href);
+        const [hash, query] = url.hash.split('?');
+        const params = new URLSearchParams(query || '');
         const code = params.get('code');
         if (code) {
-            this.oauthLogin(code);
-            this.activeModal.close(); // don't show login dialog after oauth login
-            return;
+            params.delete('code');
+            const paramString = params.toString();
+            url.hash = hash + (paramString ? '?' + paramString : '');
+            this.window.location.href = url.toString();
+            return this.oauthLogin(code);
         }
 
         // remove any leftovers  *****************************
@@ -208,7 +211,6 @@ export class LoginWebadminModalContent implements OnInit {
         this.account.mediaServerApi
             .loginOauth(code)
             .subscribe(() => {
-                this.window.location.href = this.window.location.href.split('?')[0];
                 this.window.location.reload();
             });
     }

@@ -124,7 +124,7 @@ export class ConnectCloudModalContent implements OnInit {
 
         this.codeSubscription = this.storage.observe('new-code').subscribe((code) => this.handleCode(code));
 
-        window.open('/#/cloud-authorize', '_blank').focus();
+        window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
 
     cancel = () => {

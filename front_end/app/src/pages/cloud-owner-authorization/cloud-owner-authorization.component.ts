@@ -35,7 +35,8 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
             return this.handleCode(code);
         }
 
-        const state = params?.state || 'renewWeb';
-        this.oauthService.redirectOauth(state, this.storageService.retrieve('email'));
+        const state = params?.state || 'renew';
+        const email = this.storageService.retrieve('loginState');
+        this.oauthService.redirectOauth(state, email.includes('@') ? email : '');
     }
 }

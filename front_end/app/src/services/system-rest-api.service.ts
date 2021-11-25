@@ -81,7 +81,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public get isSessionOauth() {
-        return this.accessToken.includes('nxcdb');
+        return this.currentUser?.type === 'cloud';
     }
 
     private createSignature(message) {
@@ -97,11 +97,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public set accessToken(token) {
-        if (this.isSessionOauth) {
-            this.deleteToken(this.accessToken).toPromise()
-                .then(() => {
-                    this.accessToken = '';
-                }, () => {});
+        if (this.isSessionOauth && this.accessToken) {
+            this.deleteToken(this.accessToken).toPromise();
         }
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
@@ -211,7 +208,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                         } else if (error.status === 503) {
                             // Repeat the request once again for 503 error
                             return of('');
-                        } else if (refreshToken) {
+                        } else if (refreshToken && error.status < 500) {
                             return this.refreshTokens(refreshToken, true).pipe(
                                 catchError((error) => {
                                     this.clearTokens();

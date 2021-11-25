@@ -159,8 +159,9 @@ export class ResetServerModalContent {
                     .catch(err => handleResetFailError('restartServer', err));
             }, (err) => {
                 if (err.errorId === 'sessionExpired') {
+                    this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
-                    this.loginService.updateSession('passwordReset')
+                    this.loginService.updateSession('reset')
                         .then((ready) => {
                             this.needsUpdate = !ready;
                             if (ready) {

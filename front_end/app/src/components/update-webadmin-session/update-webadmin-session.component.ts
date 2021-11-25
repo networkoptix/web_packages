@@ -21,6 +21,8 @@ export class UpdateWebadminSessionComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     login: Process;
 
+    isCloud: boolean;
+
     auth = {
         login: '',
         password: ''
@@ -45,8 +47,8 @@ export class UpdateWebadminSessionComponent implements OnInit {
     ngOnInit() {
         this.system.mediaserver.getCurrentUser()
             .then((account) => {
-                console.log(account);
                 this.auth.login = account.name;
+                this.isCloud = this.system.mediaserver.isSessionOauth;
             });
         const showWrongCredentialsError = () => {
             this.flags.wrongCredentials = true;

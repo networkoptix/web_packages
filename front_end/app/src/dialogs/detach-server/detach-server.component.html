@@ -34,6 +34,7 @@
             <nx-process-button [process]="detachServer"
                                [form]="detachServerForm"
                                [actionType]="'danger'"
+                               [buttonDisabled]="needsUpdate"
                                buttonText="{{ 'Detach' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="detachServer" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>

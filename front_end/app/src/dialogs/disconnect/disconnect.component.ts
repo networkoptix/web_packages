@@ -97,8 +97,9 @@ export class DisconnectModalContent {
             this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
         }, (err) => {
             if (err.errorId === 'sessionExpired') {
+                this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
-                this.loginService.updateSession('passwordDisconnect')
+                this.loginService.updateSession('disconnect')
                     .then((ready) => {
                         this.needsUpdate = !ready;
                         if (ready) {

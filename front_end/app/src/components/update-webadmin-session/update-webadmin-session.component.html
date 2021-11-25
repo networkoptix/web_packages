@@ -2,18 +2,22 @@
       [ngClass]="{'hide-errors': flags.hideErrors}"
       (submit)="flags.hideErrors = false">
     <div class="modal-body">
-        <p translate>Enter your account password to continue</p>
-        <div class="form-group">
-            <label for="login_email" translate>Login</label>
-            <input type="email" class="form-control"
-                   id="login_email" name="login_email" #login_email="ngModel"
-                   [ngModel]="auth.login"
-                   (ngModelChange)="setLogin($event); resetForm()"
-                   maxlength="255"
-                   disabled
-                   required nxFocusMe>
-        </div>
-        <div class="form-group">
+        <ng-container *ngIf="isCloud; else local">
+            <p translate>Please login using %CLOUD_NAME% in the tab that popped up.</p>
+        </ng-container>
+        <ng-template #local>
+            <p translate>Enter your account password to continue</p>
+            <div class="form-group">
+                <label for="login_email" translate>Login</label>
+                <input type="email" class="form-control"
+                       id="login_email" name="login_email" #login_email="ngModel"
+                       [ngModel]="auth.login"
+                       (ngModelChange)="setLogin($event); resetForm()"
+                       maxlength="255"
+                       disabled
+                       required nxFocusMe>
+            </div>
+            <div class="form-group">
             <label for="login_password" translate>Password</label>
             <input type="password" class="form-control"
                    name="login_password" id="login_password" #login_password="ngModel"
@@ -24,11 +28,13 @@
             <div class="input-error" *ngIf="flags.wrongCredentials" translate>Wrong login or password</div>
             <div class="input-error" *ngIf="flags.accountBlocked" translate>Too many attempts. Try again in a minute.</div>
         </div>
+        </ng-template>
     </div>
     <div class="modal-footer">
         <nx-process-button buttonText="{{ 'Continue' | translate }}"
             [form]="loginForm"
-            [process]="login">
+            [process]="login"
+            [buttonDisabled]="isCloud">
         </nx-process-button>
         <nx-cancel-button [process]="login" [discardFn]="close"></nx-cancel-button>
     </div>

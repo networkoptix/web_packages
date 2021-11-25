@@ -98,9 +98,9 @@ export class AppComponent {
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
         const code = url.searchParams.get('code');
-        if (auth) {
+        if (!this.environment.isLocal && auth) {
             this.accountService.handleAuthKeyLogin(auth);
-        } else if (code && !url.toString().includes('cloud-authorize')) {
+        } else if (!this.environment.isLocal && code && !url.toString().includes('cloud-authorize')) {
             this.accountService.handleCodeLogin(code);
         } else {
             this.appStateService.ready = true;
