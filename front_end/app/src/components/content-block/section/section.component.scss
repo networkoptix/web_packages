@@ -16,6 +16,13 @@
             }
         }
 
+        &-content {
+            h2, h3, h4 {
+                margin-top: $line-height-computed;
+                margin-bottom: $line-height-computed;
+            }
+        }
+
         &-logo {
             float               : left;
             display             : flex;
