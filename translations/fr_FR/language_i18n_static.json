@@ -125,9 +125,9 @@
         "termsAndConditionsHelpText": "La case à cocher accepte les conditions générales et la politique de confidentialité",
         "copiedToClipboard": "Copié dans le presse-papiers",
         "authCode": {
-            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
-            "login": "log in"
+            "message": "Entrez un code de votre application d'authentification pour confirmer que c'est vraiment vous essayez de {suffix}",
+            "newPass": "définir un nouveau mot de passe",
+            "login": "se connecter"
         }
     },
     "cameraFilters": {
@@ -252,8 +252,8 @@
             "createAccount": "Créer nouveau compte",
             "delete": "Supprimer",
             "deleteAccount": "Supprimer le compte",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Désactiver",
+            "enable": "Activer",
             "download": "Télécharger %VMS_NAME%",
             "logoutAuthorised": "Déconnecter",
             "ok": "OK",
@@ -357,8 +357,8 @@
             "warning": "Il y aura plus de <strong>{maxServers}</strong> serveurs dans le système fusionné."
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faEnabled": "L'authentification à deux facteurs sera maintenant forcée pour ce système.",
+            "system2faDisabled": "L'authentification à deux facteurs n'est pas nécessaire pour ce système.",
             "storageSettingsSaved": "Paramètres de stockage enregistrés.",
             "storageSettingsNotSaved": "Impossible d'enregistrer les paramètres de stockage.",
             "settingsSaved": "Paramètres enregistrés.",
@@ -407,10 +407,10 @@
             "failedLoginTo": "Impossible de se connecter à {systemName}",
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
-            "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
-            "serversRestart": "Restart server { title }"
+            "removeUser": "Supprimer l'utilisateur",
+            "serversDetach": "Détacher le serveur { title } du système actuel",
+            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut",
+            "serversRestart": "Redémarrer le serveur { title }"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -520,7 +520,7 @@
         "cantChangeAccountPrefix": "Impossible d'enregistrer les changements",
         "cantChangePasswordPrefix": "Ne peut pas enregistrer le mot de passe",
         "cantDeleteAccountOwningSystems": "Impossible de supprimer le compte qui possède des systèmes",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Impossible de connecter le système",
         "cantDisconnectSystemPrefix": "Impossible de supprimer le système",
         "cantEditAdmin": "Cet utilisateur dispose d’autorisations administrateur",
         "cantEditYourself": "Modification des propres autorisations n’est pas autorisée",
@@ -867,7 +867,7 @@
                 "success": "Nom du système sauvegardé"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud"
     },
     "headerLabels": {
         "healthReportForSystem": "Rapport de santé pour le système {systemName}"
@@ -1017,7 +1017,7 @@
             "v5Warning_a4": "Client %VMS_NAME%",
             "v5Warning_a5": "car les versions précédentes du client %VMS_NAME% ne prennent pas en charge l'authentification à deux facteurs, vous ne serez donc pas en mesure d'entrer un code de vérification pour votre compte %CLOUD_NAME%.",
             "v5Warning_b": "{count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} {count, plural, =0{seront} one{sera} other{seront}} entièrement accessible dès qu'{count, plural, =0{ils seront} one{il sera} other{ils seront}} mis à niveau vers la version 5.0.",
-            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}} after disabling two-factor authentication."
+            "disableWarning": "Vous avez {count, plural, one{# système} other{# systèmes}}, ça {count, plural, one{requiert} other{requiert}} l'authentification à deux facteurs. Vous ne pourrez pas vous connecter à {count, plural, one{Ce système} other{Ces systèmes}} après avoir désactivé l'authentification à deux facteurs."
         }
     },
     "storage": {
@@ -1053,20 +1053,20 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - Portail Nuage",
+            "description": "%CLOUD_NAME%, un moyen simple de se connecter, de gérer et d'étendre les systèmes %VMS_NAME%."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Systèmes - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "Intégrations de %VMS_NAME% - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "Documentation de %VMS_NAME% - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Appareils pris en charge - %CLOUD_NAME%"
         }
     }
 }
