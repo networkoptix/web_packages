@@ -5,8 +5,8 @@
             <header>
                 <div class="tfauth-status-switch-wrapper">
                     <nx-switch
-                        [checked]="tfauth.on"
-                        (onSwitch)="toggle2FA($event)"
+                        [checked]="account2faEnabled || totpExistsForAccount"
+                        (onSwitch)="switchToggle($event)"
                         id="2fa-active-status"
                         name="2fa-active-status">
                     </nx-switch>
@@ -17,7 +17,10 @@
             <nx-section>
                 <!-- Can't have a <div> inside a <p> -->
                 <div>
-                    <span *ngIf="!tfauth.enabled; else enabledText" translate>Better protect your account from unauthorized access by requiring a verification code generated in a mobile authentication app (such as Google Authenticator, Microsoft Authenticator or Duo Mobile) in addition to your %CLOUD_NAME% password.</span>
+                    <span
+                        *ngIf="!(account2faEnabled || totpExistsForAccount); else enabledText"
+                        translate
+                    >Better protect your account from unauthorized access by requiring a verification code generated in a mobile authentication app (such as Google Authenticator, Microsoft Authenticator or Duo Mobile) in addition to your %CLOUD_NAME% password.</span>
                 </div>
 
                 <ng-template #enabledText>
@@ -47,7 +50,7 @@
                         {{ LANG.security.twoFa.systemsRemainder({count: twoFaSystems.length - 4})}}
                     </div>
                 </ng-template>
-                <ng-container *ngIf="tfauth.enabled">
+                <ng-container *ngIf="account2faEnabled || totpExistsForAccount">
                     <!-- Need a manual line break -->
                     <br/>
 
@@ -100,7 +103,7 @@
             </nx-section>
         </nx-block>
 
-        <nx-block class="d-block mt-3" *ngIf="tfauth.enabled">
+        <nx-block class="d-block mt-3" *ngIf="account2faEnabled || totpExistsForAccount">
             <header>
                 <div class="tfauth-status-switch-wrapper">
                     <h4 translate>Backup codes</h4>

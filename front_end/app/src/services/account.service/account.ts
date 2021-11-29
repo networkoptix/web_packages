@@ -21,6 +21,7 @@ export class Account {
     is_authenticated: boolean;
     cookie_reviewed: boolean;
     account2faEnabled: boolean;
+    totpExistsForAccount: boolean;
 
     constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
         this.email = email;
@@ -49,7 +50,8 @@ const DUMMY_ACCOUNT: Account = {
     can_publish_integration: true,
     is_authenticated: true,
     cookie_reviewed: true,
-    account2faEnabled: true
+    account2faEnabled: true,
+    totpExistsForAccount: true
 };
 
 // .requiresLogin() in account service doesn't return an actual Account object

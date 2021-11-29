@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 import {
     Component,
     OnInit,
@@ -8,22 +9,23 @@ import {
     AfterViewInit
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxProcessService, Process } from '@services/process.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { Account, NxAccountService } from '@services/account.service';
 import {
     InfoBlockLine,
     InfoBlockSection,
     InfoBlockSize
 } from '@components/info-block/info-block.component';
 import { NxToastService } from '@dialogs/toast.service';
-import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Account, NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 
 export enum T_FA_STEPS {
     ChangePassword,
@@ -154,7 +156,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             this.accountBlocked = false;
 
             if (this.password === '') {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
@@ -219,35 +220,40 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
         this.codeProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'missingParam' });
             }
-            // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-            return this.accountService.get2FaBackupCode().then((response: any) => {
-                if (response.errorText !== undefined) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    return Promise.reject({ resultCode: 'noBackupCodes' });
-                }
-                this.newCodes = response.map(code => code.backup_code);
 
-                return this.refreshSession()
-                    .then((result) => {
-                        if (result.resultCode === 'ok') {
-                            return this.accountService.update2fa(
-                                this.password,
-                                this.tfaCode,
-                                this.account.account2faEnabled
-                                    ? 'deactivate'
-                                    : 'activate'
-                            );
-                        }
-                        // eslint-disable-next-line prefer-promise-reject-errors
-                        return Promise.reject({ resultCode: result.errorText });
-                    }, (error) => {
-                        // eslint-disable-next-line prefer-promise-reject-errors
-                        return Promise.reject({ resultCode: error });
-                    });
-            });
+            // Don't need to get backup codes or refresh session when disabling
+            if (this.type === 'off') {
+                return this.accountService.update2fa(
+                    this.password,
+                    this.tfaCode,
+                    'deactivate'
+                );
+            } else {
+                // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
+                return this.accountService.get2FaBackupCode().then((response: any) => {
+                    if (response.errorText !== undefined) {
+                        return Promise.reject({ resultCode: 'noBackupCodes' });
+                    }
+                    this.newCodes = response.map(code => code.backup_code);
+
+                    return this.refreshSession()
+                        .then((result) => {
+                            if (result.resultCode === 'ok') {
+                                return this.accountService.update2fa(
+                                    this.password,
+                                    this.tfaCode,
+                                    'activate'
+                                );
+                            }
+
+                            return Promise.reject({ resultCode: result.errorText });
+                        }, (error) => {
+                            return Promise.reject({ resultCode: error });
+                        });
+                });
+            }
         }, {
             ignoreUnauthorized: true,
             ignoreError: true,
@@ -286,33 +292,36 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         // TODO: Replace with digest auth toggle
         this.verificationProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'missingParam' });
             }
-            // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-            return this.accountService.get2FaBackupCode().then((response: any) => {
-                if (response.errorText !== undefined) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    return Promise.reject({ resultCode: 'noBackupCodes' });
-                }
-                this.newCodes = response.map(code => code.backup_code);
 
-                return this.refreshSession()
-                    .then((result) => {
-                        if (result.resultCode === 'ok') {
-                            return this.accountService.update2fa(
-                                '',
-                                this.tfaCode,
-                                'toggle'
-                            );
-                        }
-                        // eslint-disable-next-line prefer-promise-reject-errors
-                        return Promise.reject({ resultCode: result.errorText });
-                    }, (error) => {
-                        // eslint-disable-next-line prefer-promise-reject-errors
-                        return Promise.reject({ resultCode: error });
-                    });
-            });
+            // Don't need to get backup codes or refresh session when disabling
+            if (this.type === 'verification-disable') {
+                return this.accountService.update2fa('', this.tfaCode, 'toggle');
+            } else {
+                // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
+                return this.accountService.get2FaBackupCode().then((response: any) => {
+                    if (response.errorText !== undefined) {
+                        return Promise.reject({ resultCode: 'noBackupCodes' });
+                    }
+                    this.newCodes = response.map(code => code.backup_code);
+
+                    return this.refreshSession()
+                        .then((result) => {
+                            if (result.resultCode === 'ok') {
+                                return this.accountService.update2fa(
+                                    '',
+                                    this.tfaCode,
+                                    'toggle'
+                                );
+                            }
+
+                            return Promise.reject({ resultCode: result.errorText });
+                        }, (error) => {
+                            return Promise.reject({ resultCode: error });
+                        });
+                });
+            }
         }, {
             ignoreUnauthorized: true,
             ignoreError: true,

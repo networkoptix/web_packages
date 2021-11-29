@@ -123,7 +123,8 @@ describe('NxAccountSecurityComponent', () => {
                     email: 'test@test.com',
                     is_authenticated: false,
                     cookie_reviewed: true,
-                    account2faEnabled: false
+                    account2faEnabled: false,
+                    totpExistsForAccount: false
                 };
                 fixture.detectChanges();
             }));
@@ -155,21 +156,21 @@ describe('NxAccountSecurityComponent', () => {
             expect(warning).toBeNull();
         });
 
-        it('should call toggle2FA on click', fakeAsync(() => {
-            const spy = spyOn(component, 'toggle2FA');
+        it('should call switchToggle on click', fakeAsync(() => {
+            const spy = spyOn(component, 'switchToggle');
             const tfaSwitch = fixture.debugElement.nativeElement.querySelector('nx-block header div nx-switch');
             const nxSwitch = tfaSwitch.querySelector('div'); // id="2fa-active-status"
             nxSwitch.click();
             fixture.detectChanges();
             tick();
-            expect(spy.calls.count()).toBe(1, 'toggle2FA method should be called once');
+            expect(spy.calls.count()).toBe(1, 'switchToggle method should be called once');
         }));
     });
 
     describe('when ON', () => {
         beforeEach(() => {
-            component.tfauth.on = true;
-            component.tfauth.enabled = true;
+            component.account2faEnabled = true;
+            component.totpExistsForAccount = true;
             fixture.detectChanges();
         });
 

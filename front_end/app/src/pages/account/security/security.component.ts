@@ -1,22 +1,17 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-
-import { NxApplyService, Watcher } from '@services/apply.service';
-import { NxProcessService } from '@services/process.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxAccountService, Account } from '@services/account.service';
-import { NxPageService } from '@services/page.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxMenuService } from '@src/menu';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 
-export type TFAUTH = {
-    on: boolean,
-    enabled: boolean
-}
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService } from '@services/process.service';
+import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxMenuService } from '@src/menu';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,7 +25,8 @@ export class NxAccountSecurityComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     account: Account;
-    tfauth : TFAUTH;
+    account2faEnabled: boolean;
+    totpExistsForAccount: boolean;
 
     twoFaSystems: NxSystemWithUserInfo[] = [];
     subV5Systems: NxSystemWithUserInfo[] = [];
@@ -63,11 +59,9 @@ export class NxAccountSecurityComponent implements OnInit {
         this.pageService.pageTitle = this.LANG.pageTitles.security;
         this.account = this.accountService.account;
 
-        this.tfauth = {
-            on: !!this.account.account2faEnabled,
-            enabled: !!this.account.account2faEnabled
-        };
-        this.verificationWatcher.value = !!this.account.account2faEnabled;
+        this.account2faEnabled = this.account.account2faEnabled;
+        this.totpExistsForAccount = this.account.totpExistsForAccount;
+        this.verificationWatcher.value = this.account2faEnabled;
 
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
@@ -98,8 +92,7 @@ export class NxAccountSecurityComponent implements OnInit {
                                 return Promise.reject('dialogCancel');
                             } else {
                                 const newState = (action === 'enabled');
-                                this.tfauth.on = newState;
-                                this.tfauth.enabled = newState;
+                                this.account2faEnabled = newState;
                                 this.updateVerificationOriginal();
                             }
                         });
@@ -122,25 +115,28 @@ export class NxAccountSecurityComponent implements OnInit {
         this.verificationWatcher.originalValue = this.verificationWatcher.value;
     }
 
-    toggle2FA(enabled) {
-        this.tfauth.on = enabled;
+    switchToggle(targetState: boolean) {
+        this.account2faEnabled = targetState;
+        this.totpExistsForAccount = targetState;
 
-        if (enabled) {
+        if (targetState) {
             this.dialogs
                 .wizard2FA()
                 .then((action) => {
-                    this.tfauth.on = (action !== 'canceled');
-                    this.tfauth.enabled = (action === 'enabled');
-                    this.updateVerificationOriginal(action === 'enabled');
+                    const newState = (action === 'enabled');
+                    this.account2faEnabled = newState;
+                    this.totpExistsForAccount = newState;
+                    this.updateVerificationOriginal(newState);
                     this.applyService.reset();
                 });
         } else {
             this.dialogs
                 .off2FA(this.twoFaSystems.length)
                 .then((action) => {
-                    this.tfauth.on = (action === 'canceled');
-                    this.tfauth.enabled = (action !== 'disabled');
-                    this.updateVerificationOriginal(action !== 'disabled');
+                    const newState = !(action === 'disabled');
+                    this.account2faEnabled = newState;
+                    this.totpExistsForAccount = newState;
+                    this.updateVerificationOriginal(newState);
                     this.applyService.reset();
                 });
         }
