@@ -39,7 +39,7 @@
     "lint:ci": "eslint app --ext .ts --ignore-pattern *.spec.ts",
     "lint:tests": "eslint app --ext .spec.ts --fix",
     "lint:all": "eslint app --ext .ts --fix",
-    "esprint": "esprint check --fix",
+    "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",
     "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
