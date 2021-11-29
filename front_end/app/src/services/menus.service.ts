@@ -195,7 +195,7 @@ export class NxMenusService {
         // TODO: unify system's name location once we remove promises
         let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.systemName;
         if (!name) {
-            name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo.id;
+            name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
         }
         const icon = (environment.isLocal || activeSystem.isOnline || activeSystem.stateOfHealth === this.CONFIG.system.status.online) ? 'system.svg' : 'system_offline.svg';
         const hasAdminAccess = activeSystem?.accessRole

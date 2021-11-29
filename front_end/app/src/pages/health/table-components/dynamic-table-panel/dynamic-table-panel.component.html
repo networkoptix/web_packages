@@ -2,9 +2,9 @@
      *ngIf="healthLayoutService.activeEntity && healthLayoutService.layoutReady" #nxPanelView>
     <nx-block type='gray' header-class="sticky1rem">
         <header>
-            <div class="panel-title">
+            <h4 class="panel-title">
                 <span [innerText]="name"></span>
-            </div>
+            </h4>
             <span class="glyphicon close-icon detailsClose"
                   (click)="closeView()">
             </span>
