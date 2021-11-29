@@ -1,10 +1,19 @@
 import {
-    Component, OnInit, Input,
+    Component,
+    OnInit,
+    Input,
     ViewEncapsulation
-}                                   from '@angular/core';
+} from '@angular/core';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { Process }                  from '@services/process.service';
+import { Process } from '@services/process.service';
+
+interface SvgData {
+    src: string;
+    color?: string;
+    height?: string;
+    width?: string;
+}
 
 @Component({
     selector: 'nx-process-button',
@@ -14,14 +23,14 @@ import { Process }                  from '@services/process.service';
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;
-    @Input() clickFn;
+    @Input() clickFn: () => void;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
-    @Input() actionType;
+    @Input() actionType: string;
     @Input() form;
-    @Input() customClass: any = '';
-    @Input() customButtonClass: any = '';
-    @Input() svg;
+    @Input() customClass: unknown = '';
+    @Input() customButtonClass = '';
+    @Input() svg: SvgData;
     @Input() textOnly: boolean = false;
     @Input() reverseButton = false;
     @Input() removeMinWidth = false;

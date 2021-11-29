@@ -1,7 +1,4 @@
-import {
-    Component, Input,
-    ViewEncapsulation
-}                  from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 
 import { Process } from '@services/process.service';
 
@@ -13,8 +10,7 @@ import { Process } from '@services/process.service';
 })
 export class NxProcessCancelButtonComponent {
     @Input() process: Process;
-    @Input() discardFn;
-    @Input() cancelFn;
+    @Input() discardFn: () => void;
     @Input() buttonText: string;
     @Input() customClass = ''
     @Input() showDiscard = false;
@@ -22,9 +18,8 @@ export class NxProcessCancelButtonComponent {
     handleClick() {
         if (this.process?.processing) {
             this.process.cancel();
-            return this.cancelFn?.();
         } else {
-            return this.discardFn?.();
+            this.discardFn();
         }
     }
 }

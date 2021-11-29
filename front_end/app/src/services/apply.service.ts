@@ -1,14 +1,31 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
-import { FormGroupDirective, NgForm } from '@angular/forms';
-import { BehaviorSubject, combineLatest as combineLatestFrom, Subject } from 'rxjs';
-import { combineLatest, distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import {
+    ComponentFactoryResolver,
+    ComponentRef,
+    Injectable,
+    ViewContainerRef
+} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+    BehaviorSubject,
+    combineLatest as combineLatestFrom,
+    Subject
+} from 'rxjs';
+import { isArray, isObject } from 'rxjs/internal-compatibility';
+import {
+    combineLatest,
+    distinctUntilChanged,
+    map,
+    startWith,
+    takeUntil
+} from 'rxjs/operators';
+
 import { NxApplyComponent } from '@components/apply/apply.component';
+import { ApplyModalContent } from '@dialogs/apply/apply.component';
+
 import { NxProcessService, Process } from './process.service';
 import { NxUtilsService } from './utils.service';
-import { ApplyModalContent } from '@dialogs/apply/apply.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { isArray, isObject } from 'rxjs/internal-compatibility';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -18,7 +35,7 @@ export type extNgForm = {
     form: NgForm,
     originalForm: {},
     save: Process,
-    discard: any,
+    discard: () => void,
     hasChange: boolean
 }
 
@@ -45,7 +62,7 @@ export class Watcher<T extends any, Owner = any> {
         this.identity = Symbol(identifier);
     }
 
-    get value() {
+    get value(): T {
         return this.valueSubject.getValue();
     }
 
@@ -58,7 +75,7 @@ export class Watcher<T extends any, Owner = any> {
         }
     }
 
-    get changed() {
+    get changed(): boolean {
         return this.originalValue !== this.value;
     }
 
@@ -84,7 +101,11 @@ export class SectionWatcher {
     valueSubject = new BehaviorSubject(undefined);
     identity: Symbol
 
-    constructor(public watchers: Watcher<any>[], public owner: any = null, identifier = 'Section Watcher') {
+    constructor(
+        public watchers: Watcher<any>[],
+        public owner: any = null,
+        identifier = 'Section Watcher'
+    ) {
         this.watchers.forEach(watcher => {
             watcher.valueSubject.subscribe(_ => {
                 this.updateHash();
@@ -93,7 +114,7 @@ export class SectionWatcher {
         this.identity = Symbol(identifier);
     }
 
-    get value() {
+    get value(): string {
         return this.watchers.reduce((acc, cur) => acc.concat(cur.value), '');
     }
 
@@ -109,7 +130,7 @@ export class SectionWatcher {
         });
     }
 
-    get changed() {
+    get changed(): boolean {
         return this.watchers.some(watcher => watcher.changed);
     }
 
@@ -132,9 +153,16 @@ export class FormWatcher {
         return this.valueSubject.value;
     }
 
-    constructor(private form: NgForm, public owner: any = null, identifier = 'Form Watcher') {
+    constructor(
+        private form: NgForm,
+        public owner: any = null,
+        identifier = 'Form Watcher'
+    ) {
         form.valueChanges.subscribe((change) => {
-            if (!this.originalValue || Object.keys(this.originalValue).length < Object.keys(change).length) {
+            if (
+                !this.originalValue ||
+                Object.keys(this.originalValue).length < Object.keys(change).length
+            ) {
                 this.originalValue = change;
                 this.changed = false;
                 this.valueSubject.next(change);
@@ -197,8 +225,8 @@ export class NxApplyService {
     private applyFormFunctions: Process[] = [];
     private applyFunction: Process;
     private component: ViewContainerRef;
-    private submitFunctions = [];
-    private discardFunctions = [];
+    private submitFunctions: (() => void)[] = [];
+    private discardFunctions: (() => void)[] = [];
     private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
     private nonSystem$ = new BehaviorSubject(true);
     private popupActive = false;
@@ -316,16 +344,17 @@ export class NxApplyService {
         }
         this.watchers = [];
         this.addWatchers(watchers);
-        this.applyComponentInstance = (<NxApplyComponent> this.applyComponentRef.instance);
+        this.applyComponentInstance = this.applyComponentRef.instance;
         setTimeout(() => {
-            (<NxApplyComponent> this.applyComponentRef.instance).ready = true;
+            this.applyComponentRef.instance.ready = true;
         }, 0);
         if (submitFn) {
             this.submitFunctions = [submitFn];
         }
-        (<NxApplyComponent> this.applyComponentRef.instance).submitFn = () => this.submitFunctions.forEach(submitFn => submitFn());
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = this.discardFunction;
-        (<NxApplyComponent> this.applyComponentRef.instance).save = this.applyFunction;
+        this.applyComponentRef.instance.submitFn =
+            () => this.submitFunctions.forEach(submitFn => submitFn());
+        this.applyComponentRef.instance.discard = this.discardFunction;
+        this.applyComponentRef.instance.save = this.applyFunction;
     }
 
     // *************************************************************************
@@ -348,9 +377,9 @@ export class NxApplyService {
         this.forms = {};
 
         this.createComponent();
-        this.applyComponentInstance = (<NxApplyComponent> this.applyComponentRef.instance);
+        this.applyComponentInstance = this.applyComponentRef.instance;
         setTimeout(() => {
-            (<NxApplyComponent> this.applyComponentRef.instance).ready = true;
+            this.applyComponentRef.instance.ready = true;
         }, 0);
     }
 
@@ -425,7 +454,10 @@ export class NxApplyService {
                 (prevPromise, process, index) => {
                     return prevPromise.then(prevRes => {
                         return new Promise((resolve, reject) => {
-                            process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                            process.run(
+                                (res) => resolve(res || prevRes),
+                                (res) => reject(res || prevRes)
+                            );
                         }).catch(res => Promise.reject(res));
                     }).catch(res => Promise.reject(res));
                 }, Promise.resolve({ result: 'ok' })
@@ -442,7 +474,10 @@ export class NxApplyService {
                 return formatted;
             };
 
-            const initialForm = !form.form.controls.fields && Object.keys(form.form.controls).length ? formatInitial() : {};
+            const initialForm =
+                !form.form.controls.fields && Object.keys(form.form.controls).length
+                    ? formatInitial()
+                    : {};
             const extNgForm: extNgForm = {
                 form: form,
                 originalForm: initialForm,
@@ -536,7 +571,7 @@ export class NxApplyService {
         discardFunction: () => void,
         watchers: Watcher<any>[],
         form?: NgForm,
-        submitFn?: () => any
+        submitFn?: () => void
     ) => {
         const sectionWatcher = new SectionWatcher(watchers);
         if (!component) {
@@ -584,7 +619,7 @@ export class NxApplyService {
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
-    showDialog() {
+    showDialog(): Promise<boolean> {
         // If the apply dialog is active block all other attempts to open it.
         if (this.popupActive) {
             return Promise.resolve(false);
@@ -610,8 +645,8 @@ export class NxApplyService {
             .finally(() => { this.popupActive = false; });
     }
 
-    canMove() {
-        return new Promise<boolean>((resolve) => {
+    canMove(): Promise<boolean> {
+        return new Promise((resolve) => {
             if (this.locked) {
                 this.showDialog().then((state) => {
                     resolve(state);
@@ -632,44 +667,44 @@ export class NxApplyService {
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
         if (onlyShowSectionWatchers) {
-            (<NxApplyComponent> this.applyComponentRef.instance).showSectionWarning = onlyShowSectionWatchers;
+            this.applyComponentRef.instance.showSectionWarning = onlyShowSectionWatchers;
         }
-        (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
+        this.applyComponentRef.instance.applyVisible = false;
         this.nonSystem$.pipe(combineLatest(this.isOnline$, (nonSystem, isOnline) => nonSystem || isOnline)
         ).subscribe(isOnline => {
-            (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
+            this.applyComponentRef.instance.isOnline = isOnline;
         });
     }
 
     public setForm(form: NgForm) {
         this.form = form;
-        (<NxApplyComponent> this.applyComponentRef.instance).form = form;
+        this.applyComponentRef.instance.form = form;
     }
 
     public setVisible(state?: boolean) {
         state = (state === undefined) ? true : state;
         if (this.applyComponentRef) {
             setTimeout(() => {
-                (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
+                this.applyComponentRef.instance.applyVisible = state;
             }, 0);
         }
     }
 
     public setWarn(message: string) {
         if (this.applyComponentRef) {
-            (<NxApplyComponent> this.applyComponentRef.instance).warn = message;
+            this.applyComponentRef.instance.warn = message;
         }
     }
 
-    public setInvalidField(name) {
+    public setInvalidField(name: string) {
         if (this.applyComponentRef) {
-            (<NxApplyComponent> this.applyComponentRef.instance).setInvalidField(name);
+            this.applyComponentRef.instance.setInvalidField(name);
         }
     }
 
-    public unsetInvalidField(name) {
+    public unsetInvalidField(name: string) {
         if (this.applyComponentRef) {
-            (<NxApplyComponent> this.applyComponentRef.instance).unsetInvalidField(name);
+            this.applyComponentRef.instance.unsetInvalidField(name);
         }
     }
 
@@ -686,15 +721,20 @@ export class NxApplyService {
      */
     public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
         this.updatedWatchers$.next('update');
-        const watchersFilterOutCurrentOwner = (owner ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner) : this.watchers) || [];
+        const watchersFilterOutCurrentOwner = (
+            owner
+                ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner)
+                : this.watchers
+        ) || [];
         const symbols = new Set<Symbol>();
-        const existingUniqueWatchers = [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
-            if (symbols.has(identity)) {
-                return false;
-            }
-            symbols.add(identity);
-            return true;
-        });
+        const existingUniqueWatchers =
+            [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
+                if (symbols.has(identity)) {
+                    return false;
+                }
+                symbols.add(identity);
+                return true;
+            });
         this.watchers = existingUniqueWatchers;
         const changedWatchers$ = Object.values(
             this.watchers
