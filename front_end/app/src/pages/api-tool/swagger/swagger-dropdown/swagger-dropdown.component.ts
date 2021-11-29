@@ -9,7 +9,10 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     @Input() swaggerSelect
     dropdownOptions = [];
     isDisabled = true;
-    disabledMutationObserver: MutationObserver
+    disabledMutationObserver: MutationObserver;
+
+    isMultiSelect = false;
+    selectedOptions = []; // For multiselect only
 
     constructor() { }
 
@@ -18,14 +21,46 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
+    onMultiSelect = (e: any) => {
+        this.selectedOptions = [...e];
+        for (const option of this.swaggerSelect.options) {
+            if (this.selectedOptions.includes(option.value)) {
+                option.selected = true;
+            } else {
+                option.selected = false;
+            }
+        }
+
+        this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
     ngOnInit() {
         const options = this.swaggerSelect.querySelectorAll('option');
         for (const option of options as any) {
-            this.dropdownOptions.push({
-                name: option.innerText,
-                value: option.value
-            });
+            if (this.isMultiSelect) {
+                if (option.innerText !== '--') {
+                    this.dropdownOptions.push({
+                        name: option.innerText,
+                        value: option.value,
+                        label: option.innerText,
+                        id: option.value
+                    });
+                }
+            } else {
+                this.dropdownOptions.push({
+                    name: option.innerText,
+                    value: option.value
+                });
+            }
         }
+
+        if (this.isMultiSelect) {
+            if (this.swaggerSelect?.options[1]?.selected) {
+                this.swaggerSelect.options[1].selected = false;
+            }
+            this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
         // Initially set isDisabled
         this.isDisabled = this.swaggerSelect.getAttribute('disabled') === '';
 

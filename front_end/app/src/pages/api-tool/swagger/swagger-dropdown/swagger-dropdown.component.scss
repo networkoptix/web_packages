@@ -4,10 +4,10 @@ div.is-disabled {
     &:hover {
         cursor: not-allowed;
     }
-    nx-select {
+    nx-select, nx-multi-select {
         pointer-events: none;
     }
 }
-nx-select {
+nx-select, nx-multi-select {
     width: 100%;
 }

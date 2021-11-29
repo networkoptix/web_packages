@@ -279,11 +279,14 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private insertCustomDropdown = () => {
-        const selects = this.document.body.querySelectorAll('select:not([multiple]):not(.custom-dropdown):not(.content-type)');
+        const selects = this.document.body.querySelectorAll('select:not(.custom-dropdown):not(.content-type)');
+
         for (const select of selects as any) {
             // The original select is hidden and an nx-select is inserted
             const { componentRef, element } = this.generateComponent(NxSwaggerDropdownComponent);
             componentRef.instance.swaggerSelect = select;
+            componentRef.instance.isMultiSelect = !!select.attributes.multiple;
+            const el = componentRef.location.nativeElement as HTMLElement;
             select.classList.add('custom-dropdown');
             select.insertAdjacentElement('beforebegin', element);
         }

@@ -118,7 +118,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
                 this.textSelected = this.items.find((item: any) => {
-                    return (item.label.name || item.id) === this.innerValue[0];
+                    return (item.label?.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list
                 this.textSelected = this.textSelected.label.name || this.textSelected.label;
