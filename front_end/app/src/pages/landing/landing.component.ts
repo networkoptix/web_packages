@@ -1,4 +1,4 @@
-import { Component, OnInit }         from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router }                    from '@angular/router';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -7,6 +7,8 @@ import { NxAccountService }          from '@services/account.service';
 import { NxPageService }             from '@services/page.service';
 import { NxDialogsService }          from '@dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'landing-component',
@@ -21,6 +23,7 @@ export class NxLandingComponent implements OnInit {
     params;
     userEmail;
     login;
+    createUrl: string;
 
     loaded: boolean;
     startParams;
@@ -36,6 +39,7 @@ export class NxLandingComponent implements OnInit {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
                 private language: NxLanguageProviderService,
+                @Inject(WINDOW) private window: Window,
                 private router: Router
     ) {
         this.setupDefaults(this.configService);
@@ -44,6 +48,9 @@ export class NxLandingComponent implements OnInit {
         if (this.configService.flagsEnabled('landingPage')) {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
+
+        this.createUrl = environment.production ? '/authorize?client_type=create'
+            : `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}&client_type=create`;
     }
 
     ngOnInit(): void {
