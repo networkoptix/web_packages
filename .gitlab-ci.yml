@@ -46,10 +46,28 @@ stages:
     MYSQL_DATABASE: 'cloudportal'
     MYSQL_ROOT_PASSWORD: ''
     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    MYSQL_USER: 'cloud'
     MYSQL_PASSWORD: ''
   before_script:
     - cd cloud
+    - echo "Waiting for mysql server to be ready"
+    - >
+      for i in {1..60}; do
+        if ! mysql --host=mysql -u root -e ";"
+        then
+          if [ $i == 60 ]
+          then
+            echo "Could not connect to mysql server after 60 attempts"
+            exit 1
+          else
+            echo "Attempt $i to connect to mysql server failed"
+          fi
+        else
+          echo "Attempt $i Successfully connected to mysql server"
+          break
+        fi
+
+        sleep 2
+      done
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
