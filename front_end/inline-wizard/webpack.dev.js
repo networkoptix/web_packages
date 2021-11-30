@@ -12,7 +12,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
     devtool: 'inline-source-map',
-    devServer:{
+    devServer: {
         contentBase: './dist',
         hot: true,
         host: host,
@@ -23,33 +23,33 @@ module.exports = merge(common, {
                 // target: 'https://fb7a19a3-2b0c-4feb-be48-539231e50113.relay.vmsproxy.hdw.mx/',
                 target: server_address,
                 changeOrigin: true,
-                secure      : false
+                secure: false
             },
             {
-                context     : '/lang_en_US/',
-                target      : localStatic,
-                pathRewrite : { '^/lang_en_US/': '' },
+                context: '/lang_en_US/',
+                target: localStatic,
+                pathRewrite: { '^/lang_en_US/': '' },
                 changeOrigin: true,
-                secure      : false
+                secure: false
             },
             {
                 context: '/static/',
                 target: localStatic,
-                pathRewrite: { '^/static' : '' },
+                pathRewrite: { '^/static': '' },
                 changeOrigin: true,
                 secure: false
             },
             {
                 context: '/index.html',
                 target: localStatic,
-                pathRewrite: { '^/index.html' : 'inline.html' },
+                pathRewrite: { '^/index.html': 'inline.html' },
                 changeOrigin: true,
                 secure: false
             },
             {
                 context: '/',
                 target: localStatic,
-                pathRewrite: { '^/' : 'inline.html' },
+                pathRewrite: { '^/': 'inline.html' },
                 changeOrigin: true,
                 secure: false
             }
@@ -58,14 +58,14 @@ module.exports = merge(common, {
             spdy: {
                 protocols: ['http/1.1']
             },
-            key : fs.readFileSync('../ssl_keys/server.key').toString(),
+            key: fs.readFileSync('../ssl_keys/server.key').toString(),
             cert: fs.readFileSync('../ssl_keys/server.crt').toString()
         },
         historyApiFallback: {
             index: '/'
         }
     },
-    plugins:[
+    plugins: [
         new webpack.HotModuleReplacementPlugin(),
         // new BundleAnalyzerPlugin({analyzerHost:'0.0.0.0', analyzerPort:9001})
 
