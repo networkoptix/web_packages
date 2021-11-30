@@ -174,12 +174,12 @@ ${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/stati
 # ADVANCED
 # Storage Locations Block
 ${STORAGE LOCATIONS TITLE}          //div[@class="card mt-3"]//h4[text()="${STORAGE LOCATIONS TEXT}"]
-${RESERVED SPACE INPUT}             //input[@id="reservedSpace0"]   
+${RESERVED SPACE INPUT}             //input[@id="reservedSpace0-numeric"]
 ${RESERVED SPACE DROPDOWN}          //select[@id="reservedSpaceUnit0"]
 ${RESERVED DROPDOWN SELECTED}       ${RESERVED SPACE DROPDOWN}//option[@selected]
 ${RESERVED DROPDOWN OPTION GB}      ${RESERVED SPACE DROPDOWN}//option[@value='GB']
 ${RESERVED DROPDOWN OPTION TB}      ${RESERVED SPACE DROPDOWN}//option[@value='TB']
-${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0']
+${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0-switch-wrapper']
 @{STORAGE LOCATIONS BLOCK ITEMS}
 ...    ${STORAGE LOCATIONS TITLE}
 ...    ${RESERVED SPACE INPUT}

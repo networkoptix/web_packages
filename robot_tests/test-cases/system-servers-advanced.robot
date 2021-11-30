@@ -75,7 +75,7 @@ Server Advanced Settings Suite Teardown
     ...    ELSE    Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
     Wait Until Element is Visible    ${SERVERS LINK}
     Sleep    1
-    Click Link    ${SERVERS LINK}
+    Click Element    ${SERVERS LINK}
     Verify on Servers Page
     Elements Should Not Be Visible
     ...    @{ADVANCED SETTINGS ALERT BAR}
