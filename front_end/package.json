@@ -37,6 +37,7 @@
     "e2e": "ng e2e",
     "lint": "eslint app --ext .ts --ignore-pattern *.spec.ts --fix",
     "lint:ci": "eslint app --ext .ts --ignore-pattern *.spec.ts",
+    "lint:ci:tests": "eslint app --ext .spec.ts",
     "lint:tests": "eslint app --ext .spec.ts --fix",
     "lint:all": "eslint app --ext .ts --fix",
     "esprint": "node esprintLimiter.js",

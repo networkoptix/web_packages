@@ -96,6 +96,14 @@ frontend-lint-check:
     - npm install
     - npm run lint:ci
 
+fe-lint-tests-check:
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npm run lint:ci:tests
+
 django-unit-test:
   extends: .django-python
   stage: test
