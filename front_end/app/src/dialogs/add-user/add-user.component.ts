@@ -92,14 +92,14 @@ export class AddUserModalContent {
 
     ngOnInit() {
         this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists().replace('%systemName%', this.system.info.systemName || this.system.info.name);
+
+        const defaultRole = this.system.accessRoles.find((role) => role.name === this.CONFIG.accessRoles.default);
+
         this.user = {
             email: '',
             isEnabled: true,
             isCloud: true,
-            role: {
-                name: this.CONFIG.accessRoles.default,
-                permissions: ''
-            }
+            role: defaultRole
         };
         this.accessDescription = this.getRoleDescription();
 

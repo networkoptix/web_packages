@@ -951,6 +951,7 @@ export interface SystemStatuses {
 export interface ToastMessage {
     cloudUnavailable:             any;
     nameFail:                     any;
+    userChangesFail:              any;
     reviewAccepted:               any;
     system:                       ToastMessageSystem;
     webAdminCloudCredentialError: any;
@@ -1973,6 +1974,7 @@ const typeMap: any = {
     "ToastMessage": o([
         { json: "cloudUnavailable", js: "cloudUnavailable", typ: "any" },
         { json: "nameFail", js: "nameFail", typ: "any" },
+        { json: "userChangesFail", js: "userChangesFail", typ: "any" },
         { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
         { json: "webAdminCloudCredentialError", js: "webAdminCloudCredentialError", typ: "any" },

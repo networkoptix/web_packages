@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxSettingsService } from '../settings.service';
 import { NxMenuService } from '@src/menu';
@@ -196,8 +195,7 @@ export class NxSystemUsersComponent implements OnInit {
                 };
                 this.toastService.show(
                     NxLanguageProviderService.translate(
-                        this.LANG.toastMessage.nameFail,
-                        { type: this.LANG.common.login?.() }
+                        this.LANG.toastMessage.userChangesFail
                     ), options);
             } finally {
                 this.locked[user.email] = false;
