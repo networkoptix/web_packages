@@ -1,6 +1,6 @@
 *** Variables ***
 ${CAMERAS LINK}                              //nx-menu//a[@id="cameras"]
-${EDITABLE TITLE}                            //h2[@id="editable-title"]
+${EDITABLE TITLE}                            //nx-text-editable
 ${CAMERAS VIEW BUTTON}                       //nx-block//header//button[@id="view-camera"]
 ${CAMERAS DETAILED INFO BUTTON}              //nx-block//header//button[@id="detailed-info"]
 ${ASPECT RATIO DROPDOWN}                     //button[@id="aspect-ratios"]
@@ -18,7 +18,7 @@ ${ENABLED RECORDING SLIDER}                  //span[contains(@class,"slider roun
 ${RECORD ALWAYS RADIO BUTTON}                //nx-radio//input[@id="always"]
 ${RECORD MOTION RADIO BUTTON}                //nx-radio//input[@id="motion"]
 ${RECORD MOTION LOW QUALITY RADIO BUTTON}    //nx-radio//input[@id="motionLowRes"]
-${FPS INPUT}                                 //input[@id="fps"]
+${FPS INPUT}                                 //input[@id="fps-numeric"]
 ${QUALITY DROPDOWN}                          //button[@id="recording-quality"]
 ${DOT-MENU}                                  //button[@class="dot-menu"]
 ${ENABLE MOTION DETECTION BUTTON}            //button[@id="enable-motion-detection"]

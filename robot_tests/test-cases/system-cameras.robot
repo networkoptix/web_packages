@@ -246,7 +246,7 @@ Set Radio Value
     Should Be Equal As Strings    ${value}    Offline
 
 7. Warning dialog appears when changes are made on navigating away and works correctly
-    [Tags]    C76416
+    [Tags]    C76416    
     Log    Step 1
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -325,15 +325,14 @@ Set Radio Value
     Should Be Equal    ${status}    ${False}
     
 8. Rename Camera
-    [Tags]    C76259 
+    [Tags]    C76259    CLOUD-8269
     Verify on Cameras Page
     Select Camera by Name    good cam
-    
     Rename System or Hardware    good cam name changed 1
     Wait Until Elements are Visible    
     ...    ${SYSTEM SAVE}
     ...    ${SYSTEM CANCEL}
-    Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
     Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
@@ -377,7 +376,7 @@ Set Radio Value
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
 9. Name change in client changes in cloud
-    [Tags]    C76261
+    [Tags]    C76261    
     Verify on Cameras Page
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
@@ -389,7 +388,7 @@ Set Radio Value
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
 10. View button
-    [Tags]    C76262
+    [Tags]    C76262     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     Verify on Cameras Page
     Select Camera by Name    good cam
@@ -434,7 +433,7 @@ Set Radio Value
     Log Out
 
 12. Aspect Ratio
-    [Tags]
+    [Tags]      
     Verify on Cameras Page
     Select Camera By Name    good cam
     Change Aspect Ratio    1:1
@@ -452,7 +451,7 @@ Set Radio Value
 
 
 13. Rotation
-    [Tags]
+    [Tags]      
     Select Camera By Name    good cam
     Verify on Cameras Page
     Change Rotation    90˚
@@ -469,7 +468,7 @@ Set Radio Value
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
 
 14. Audio enable Disabled
-    [Tags]    C76378
+    [Tags]    C76378        
     Verify on Cameras Page
     Select Camera by Name    good cam
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOX}//input    True
@@ -529,7 +528,7 @@ Set Radio Value
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 18. Changes made in Image settings in thick client appear correctly on cloud portal
-    [Tags]    C76374    Theaded    
+    [Tags]    C76374
     Select Camera by Name    good cam
     Verify on Cameras Page
     Capture Page Screenshot
@@ -546,7 +545,7 @@ Set Radio Value
     Element Should Contain    ${ROTATION DROPDOWN}    90˚
 
 19. Recording toggle shows correct options
-    [Tags]    C76401
+    [Tags]    C76401    
     Verify on Cameras Page
     Select Camera by Name    offline cam
     Verify on Cameras Page
@@ -776,7 +775,7 @@ Set Radio Value
     [Tags]
     Verify on Cameras Page
     Select Camera By Name    good cam
-    #Temp removed for debuggins
+    #Temp removed for uggins
     #Toggle Recording
     Toggle Recording
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
@@ -801,7 +800,7 @@ Set Radio Value
     Skip    Skipped until we learn if - Current should have been removed
     Verify on Cameras Page
     Select Camera By Name    good cam
-    #Temp removed for debuggins
+    #Temp removed for uggins
     #Toggle Recording
     Toggle Recording
     Wait Until Elements are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}

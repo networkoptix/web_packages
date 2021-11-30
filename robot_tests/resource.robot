@@ -1137,9 +1137,18 @@ Verify Element Does Not Scroll
 
 Delete All Text
     [Arguments]    ${input}
+    ${text}=   Get Text    ${input}
     ${value}=   Get Element Attribute    ${input}    value
     ${innertext}=    Get Element Attribute    ${input}    innertext
-    ${text}=   Set Variable If    '${value}'=='${None}'    ${innertext}    ${value}
+    IF    '${text}' == '${None}'
+        IF    '${value}' == '${None}'
+            ${text} =   Set Variable    ${innertext}
+        ELSE
+            ${text} =   Set Variable    ${value}
+        END
+    ELSE
+        ${text} =    Set Variable   ${text}
+    END
     ${length}=   Get Length    ${text}
     ${length}=   Evaluate    ${length} + 1
     Click Element    ${input}
