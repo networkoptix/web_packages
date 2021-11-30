@@ -686,6 +686,7 @@ export interface PageTitles {
     default:                any;
     download:               any;
     downloadPlatform:       any;
+    failedToAccess2FA:      any;
     failedToAccessSystem:   any;
     failedToAccessCamera:   any;
     integrations:           any;
@@ -1738,6 +1739,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: "any" },
         { json: "download", js: "download", typ: "any" },
         { json: "downloadPlatform", js: "downloadPlatform", typ: "any" },
+        { json: "failedToAccess2FA", js: "failedToAccess2FA", typ: "any" },
         { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "any" },
         { json: "failedToAccessCamera", js: "failedToAccessCamera", typ: "any" },
         { json: "integrations", js: "integrations", typ: "any" },

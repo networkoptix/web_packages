@@ -41,6 +41,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     endpoint: any = {};
     userEmail: string;
     searchChanged = new Subject();
+    chosenSystemName: string;
+    show2faRequired = false;
     private searchSubscription: Subscription;
     private systemSubscription: Subscription;
 
@@ -168,11 +170,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     openSystem(system) {
         if (this.needToConfigureTwoFactor(system)) {
-            const { dialogs: { message: { twoFactor }, titles: { failedLoginTo } } } = this.LANG;
-            this.genericModal.openConfirm(
-                `<p class="mb-0">${twoFactor.required()}</p><p>${twoFactor.configure()}&nbsp;<a href="/account/security">${twoFactor.accountLink()}</a>.</p>`,
-                NxLanguageProviderService.translate(failedLoginTo, { systemName: system.name }),
-                'OK');
+            this.chosenSystemName = system.name;
+            this.show2faRequired = true;
         } else {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;

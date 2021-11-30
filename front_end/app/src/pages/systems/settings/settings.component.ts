@@ -70,6 +70,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     headerHeight: number;
     secondaryMerge = false;
+    systemName: string;
+    show2faRequired = false;
 
     private cancelPrevious$ = new Subject();
 
@@ -300,6 +302,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             .subscribe((systems) => {
                                 if (!systems.filter(s => s.id === this.systemId).length) {
                                     this.systemNoAccess = true;
+                                    return;
+                                }
+                                const system = systems.filter((system) => system.id === this.systemId)?.shift();
+                                if (system?.system2faEnabled && !this.account.account2faEnabled) {
+                                    this.systemName = system.name;
+                                    this.show2faRequired = true;
                                     return;
                                 }
                                 if (this.systemId === this.system?.id) {
