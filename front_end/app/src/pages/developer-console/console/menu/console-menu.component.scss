@@ -7,8 +7,9 @@
 
 a {
     @include typography.medium15dark9;
-    display: block;
+    display: flex;
     text-decoration: none;
+    align-items: center;
 }
 
 ul {

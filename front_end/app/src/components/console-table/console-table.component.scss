@@ -3,7 +3,7 @@
 
 :host {
     grid-area: content;
-    padding: 16px;
+    padding: 16px 16px 16px 0;
     max-width: 1188px;
 }
 
@@ -23,7 +23,7 @@ th, .search-header {
     @include typography.bold13dark9;
     height: 28px;
     background: $light3;
-    padding-left: 16px;
+    padding-left: 12px !important;
 }
 
 td {
@@ -54,7 +54,7 @@ tr.data-row {
 
 .type-default {
     @include typography.medium13dark9;
-    padding-left: 16px;
+    padding-left: 12px !important;
 }
 .type-async_handler {
     .async-wrapper, .in-progress-wrapper, .async-error-wrapper {
@@ -193,12 +193,13 @@ tr.data-row {
 }
 
 .cdk-header-cell {
-    @include typography.medium13dark9;
+    @include typography.bold13dark9;
     background: $additional_light1;
     border: 1px solid $light3;
     line-height: 16px;
     padding: 8px 8px 8px 16px;
     white-space: nowrap;
+    border-top: none;
 }
 
 .cdk-cell {
@@ -208,8 +209,14 @@ tr.data-row {
     white-space: nowrap;
 }
 
-.cdk-row:nth-child(even) {
-    background: $additional_light1;
+.cdk-row {
+    &:nth-child(even) {
+        background: $additional_light1;
+    }
+
+    &:last-of-type {
+        border-bottom: 1px solid $light3;
+    }
 }
 
 nx-paginator {
@@ -241,6 +248,7 @@ nx-paginator {
     & > div {
         @include typography.regular14dark9;
         padding-left: 8px;
+        align-self: center;
     }
 }
 
@@ -279,7 +287,6 @@ button.reset-search {
 .console-table-wrapper {
     overflow-x: auto;
     border: none;
-    border-bottom: 1px solid $light4;
 }
 
 table {
