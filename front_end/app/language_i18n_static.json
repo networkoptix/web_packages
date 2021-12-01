@@ -504,6 +504,7 @@
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
         "This user does not exist.": "This user does not exist.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
+        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
         "fail": "{failedSystem} is inaccessible.",
