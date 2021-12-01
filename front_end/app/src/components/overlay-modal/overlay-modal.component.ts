@@ -81,7 +81,7 @@ export class NxOverlayModalComponent implements OnInit {
         });
 
         this.checkingSubscription = this.checking$.subscribe((state) => {
-            this.refreshMessage = this.LANG.servers[state ? 'refreshing' : 'refresh']();
+            this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 
         this.accountService.get().then(account => {
@@ -130,6 +130,7 @@ export class NxOverlayModalComponent implements OnInit {
 
                             if (res.reply) {
                                 this.appState.systemAvailable$.next(true);
+                                this.system.startPoll(); // poll subscription is lost when server goes offline
                             }
                         }
                     })
@@ -176,8 +177,8 @@ export class NxOverlayModalComponent implements OnInit {
 
     manualRefresh() {
         this.oneCheckAtATime = false;
-        this.checking$.next(false);
-        this.timeoutUntilRefresh$.next(5);
+        this.checking$.next(true);
+        this.timeoutUntilRefresh$.next(0);
         this.nextInterval = 10;
         this.refresh$.next('refresh');
     }
