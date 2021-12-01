@@ -376,7 +376,7 @@ Set Radio Value
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
 9. Name change in client changes in cloud
-    [Tags]    C76261    
+    [Tags]    C76261
     Verify on Cameras Page
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
@@ -384,7 +384,7 @@ Set Radio Value
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name
     Reload Page
     Wait Until Element Is Visible    ${EDITABLE TITLE}
-    Element Attribute Value Should Be    ${EDITABLE TITLE}    innertext    api name
+    Element Text Should Be  ${EDITABLE TITLE}   api name
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
 
 10. View button
@@ -579,7 +579,7 @@ Set Radio Value
     Should Be Equal    ${checked}    2
 
 20. Recording Status
-    [Tags]    C76391
+    [Tags]    C76391    deb
     [Setup]    Camera Test Setup    user=${system2}[owner]    system=${system2}[cloud id] 
     Select Camera by Name    no license cam
     Verify on Cameras Page
