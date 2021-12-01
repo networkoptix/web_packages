@@ -2,12 +2,12 @@ import {
     Component, Input, OnChanges, OnInit, SimpleChanges
 } from '@angular/core';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxHeaderService } from '@services/nx-header.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 export enum mainButtonState {
     ALL='all',
@@ -28,7 +28,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() hideArrow = false;
     @Input() maxWidth = 175;
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     systemCounter: number;

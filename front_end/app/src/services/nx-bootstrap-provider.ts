@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 
 import { IConfig, NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSystemRole } from './system.service/system/user-manager/user-manager-types';
 import { NxPageService } from './page.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { environment } from '@environments/environment';
+import {
+    NxSystemRole
+} from './system.service/system/user-manager/user-manager-types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxBootstrapProvider {
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     private isLoaded: boolean;

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+
 import {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
-import { NxSystemService } from '@services/system.service';
-import { NxAPIToolService } from '../api-tool.service';
-import { APIDropdownItem } from '../api-tool-types';
 import { environment } from '@environments/environment';
+import { NxSystemService } from '@services/system.service';
+
+import { APIDropdownItem } from '../api-tool-types';
+import { NxAPIToolService } from '../api-tool.service';
 
 @Component({
     selector: 'nx-system-dropdown',
@@ -13,7 +15,7 @@ import { environment } from '@environments/environment';
     styleUrls: ['./system-dropdown.component.scss']
 })
 export class NxSystemDropdownComponent {
-    environment = environment;
+    readonly environment = environment;
 
     constructor(
         public APIToolService: NxAPIToolService,

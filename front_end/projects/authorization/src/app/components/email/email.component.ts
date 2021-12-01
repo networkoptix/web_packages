@@ -4,12 +4,13 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+
 import { AuthorizeStateType } from '../authorize.component';
-import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,7 +20,7 @@ import { environment } from '@environments/environment';
 })
 export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     @Input() clientType: string;

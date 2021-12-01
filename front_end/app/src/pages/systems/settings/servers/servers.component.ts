@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import {
     Component,
     OnDestroy,
@@ -6,23 +7,23 @@ import {
     Inject
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Location } from '@angular/common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+import { NxApplyService } from '@services/apply.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSettingsService } from '../settings.service';
-import { NxApplyService } from '@services/apply.service';
-import { NxMenuService } from '@src/menu';
-import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
-import { NxUriService } from '@services/uri.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxProcessService } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
-import { environment } from '@environments/environment';
+import { NxMenuService } from '@src/menu';
+
+import { NxSettingsService } from '../settings.service';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +34,7 @@ import { environment } from '@environments/environment';
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     serverIdFromParams;

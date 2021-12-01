@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -7,12 +7,12 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 import * as t from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { environment } from '@environments/environment';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -28,7 +28,7 @@ export class ConnectCloudModalContent implements OnInit {
 
     readonly isLocal: boolean;
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     cloudTokens: any;

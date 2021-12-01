@@ -2,34 +2,31 @@ import {
     Component, Inject, OnDestroy,
     OnInit, ViewChild, ViewContainerRef
 } from '@angular/core';
-import {
-    Router, ActivatedRoute
-} from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
-import {
-    auditTime,
-    distinctUntilChanged
-} from 'rxjs/operators';
+import { auditTime, distinctUntilChanged } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemUser } from '@services/system.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxPageService } from '@services/page.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxAccountService } from '@services/account.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxUriService } from '@services/uri.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+
 import { NxSettingsService } from '../settings.service';
-import { NgForm } from '@angular/forms';
-import { environment } from '@environments/environment';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -44,7 +41,7 @@ interface Settings {
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     user: NxSystemUser;

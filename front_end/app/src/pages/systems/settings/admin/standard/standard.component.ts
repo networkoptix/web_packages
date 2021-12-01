@@ -2,22 +2,22 @@ import {
     Component, OnInit, Input,
     ViewChild, ElementRef, OnChanges, SimpleChanges
 } from '@angular/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
-import { NxMenuService } from '@src/menu';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { delayInitial } from '@services/utils.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NgForm } from '@angular/forms';
-import { environment } from '@environments/environment';
+import { delayInitial } from '@services/utils.service';
+import { NxMenuService } from '@src/menu';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;
@@ -58,7 +58,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings;
     @Input() system: NxSystem;
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
     selectedTimeUnit: LimitSessionTimeItem;

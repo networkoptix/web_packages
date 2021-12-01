@@ -1,10 +1,11 @@
 import { Component, Input }  from '@angular/core';
-import { IConfig, NxConfigService } from '@services/nx-config';
 
 import { NxDialogsService }  from '@dialogs/dialogs.service';
-import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '../menu.service';
 import { environment } from '@environments/environment';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxUriService } from '@services/uri.service';
+
+import { NxMenuService } from '../menu.service';
 
 // TODO: Do we really need this? -- TT
 @Component({
@@ -20,7 +21,7 @@ export class NxMenuButtonComponent {
 
     caption: string;
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
 
     constructor(
         private dialogs: NxDialogsService,

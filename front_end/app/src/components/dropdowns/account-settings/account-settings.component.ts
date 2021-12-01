@@ -6,11 +6,12 @@ import {
     BehaviorSubject, combineLatest, SubscriptionLike
 } from 'rxjs';
 
-import { BaseDropdown } from '../injDropdown';
 import { environment } from '@environments/environment';
-import { NxConfigService } from '@services/nx-config';
 import { Account, NxAccountService } from '@services/account.service';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,7 +30,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     accountSubscription: SubscriptionLike;
     widthSubscription: SubscriptionLike;
 
-    environment = environment;
+    readonly environment = environment;
 
     settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser'> = {
         name: '',

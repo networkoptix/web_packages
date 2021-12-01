@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from '@environments/environment';
+
 import { NxConfigService, IConfig } from './nx-config';
 import { NxSystem } from './system.service';
-import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAppSourceService {
-    environment = environment;
+    readonly environment = environment;
     private CONFIG: IConfig;
 
     constructor(configService: NxConfigService) {

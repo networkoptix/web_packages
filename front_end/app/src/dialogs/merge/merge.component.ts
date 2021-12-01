@@ -4,19 +4,21 @@ import {
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxRibbonService } from '@components/ribbon';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import StateMachine from './stateMachine';
+
 import { State } from './stateForMergeDialog';
-import { environment } from '@environments/environment';
+import StateMachine from './stateMachine';
 
 @Component({
     selector: 'nx-modal-merge-content',
@@ -32,7 +34,7 @@ export class MergeModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     account: NxAccountService;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;

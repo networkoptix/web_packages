@@ -18,6 +18,7 @@ import {
 import { NxRibbonService } from '@components/ribbon';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -28,7 +29,6 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { SystemGuard } from '@src/routeGuards';
-import { NxAccountService } from '@services/account.service';
 
 require('what-input');
 require('./scripts/vendor/protocolcheck');
@@ -68,7 +68,7 @@ export class AppComponent {
     reauthorizing: boolean;
 
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
 

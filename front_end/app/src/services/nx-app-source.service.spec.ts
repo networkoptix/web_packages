@@ -1,8 +1,9 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
-import { NxAppSourceService }    from '@services/nx-app-source.service';
-import { nxConfig }              from '@services/nx-config/config';
-import { NxConfigService }       from '@services/nx-config';
-import { setupTest41System }       from '@src/_mocks/system.test';
+
+import { NxAppSourceService } from '@services/nx-app-source.service';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { setupTest41System } from '@src/_mocks/system.test';
 
 describe('AppSource Service', () => {
     let appSourceService: NxAppSourceService;
@@ -32,7 +33,11 @@ describe('AppSource Service', () => {
     });
 
     it('should return baseUrl if local', () => {
-        appSourceService['environment'].isLocal = true;
+        Object.defineProperty(
+            appSourceService,
+            'environment',
+            { value: { ...appSourceService.environment, isLocal: true } }
+        );
         const base = `${appSourceService['CONFIG'].menus.systemHealth.baseUrl}`;
         const url = appSourceService.getMenuBase(systemMock);
         expect(url).toBe(base);

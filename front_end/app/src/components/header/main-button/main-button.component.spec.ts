@@ -1,25 +1,25 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService } from '@services/nx-header.service';
-import { NxHeaderMainButtonComponent } from './main-button.component';
-
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
-import { NxUriService } from '@services/uri.service';
-import { NxMenusService } from '@services/menus.service';
-import { NxAccountService } from '@services/account.service';
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
-import { MockProvider } from 'ng-mocks';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUriService } from '@services/uri.service';
+
+import { NxHeaderMainButtonComponent } from './main-button.component';
 
 describe('NxHeaderMainButtonComponent', () => {
     let component: NxHeaderMainButtonComponent;
@@ -110,7 +110,11 @@ describe('NxHeaderMainButtonComponent', () => {
     });
 
     it('should show system state for webadmin', () => {
-        component.environment.isLocal = true;
+        Object.defineProperty(
+            component,
+            'environment',
+            { value: { ...component.environment, isLocal: true } }
+        );
         headerMock.currentLocation.isSystem = false;
         headerMock.activeSystem = {
             name: undefined
@@ -122,7 +126,11 @@ describe('NxHeaderMainButtonComponent', () => {
     });
 
     it('should show systems state', () => {
-        component.environment.isLocal = false;
+        Object.defineProperty(
+            component,
+            'environment',
+            { value: { ...component.environment, isLocal: false } }
+        );
         component.systems = [{}, {}, {}];
         headerMock.currentLocation.isSystem = true;
         headerMock.activeSystem = undefined;

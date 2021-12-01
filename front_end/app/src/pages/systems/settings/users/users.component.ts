@@ -1,29 +1,31 @@
+import { Location } from '@angular/common';
 import {
     Component,
     OnInit,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { Location } from '@angular/common';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxSettingsService } from '../settings.service';
-import { NxMenuService } from '@src/menu';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxPageService } from '@services/page.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxUtilsService } from '@services/utils.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxUriService } from '@services/uri.service';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
-import { NxToastService } from '@dialogs/toast.service';
+import { filter } from 'rxjs/operators';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
-import { NgForm } from '@angular/forms';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxMenuService } from '@src/menu';
+
+import { NxSettingsService } from '../settings.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -34,7 +36,7 @@ import { NgForm } from '@angular/forms';
 
 export class NxSystemUsersComponent implements OnInit {
     CONFIG: IConfig;
-    environment = environment;
+    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     location;
     paramUser;

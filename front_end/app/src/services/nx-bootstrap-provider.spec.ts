@@ -1,14 +1,16 @@
-import { waitForAsync, TestBed } from '@angular/core/testing';
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { HttpClient } from '@angular/common/http';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import {
-    getCloudSettings, getLocalSettings,
+    getCloudSettings,
+    getLocalSettings,
     getModuleInformation
 } from '@src/_mocks/getSettings.mock';
-import { NxPageService } from '@services/page.service';
 
 describe('Bootstrap Provider', () => {
     let bootstrapService: NxBootstrapProvider;
@@ -56,7 +58,11 @@ describe('Bootstrap Provider', () => {
         const resultSettings = getLocalSettings();
         const CONFIG = configMock.getConfig();
 
-        bootstrapService.environment.isLocal = true;
+        Object.defineProperty(
+            bootstrapService,
+            'environment',
+            { value: { ...bootstrapService.environment, isLocal: true } }
+        );
         bootstrapService.setSettings(resultSettings);
 
         expect(CONFIG.company.copyrightYear).toBe(resultSettings.description.copyrightYear);
@@ -74,7 +80,11 @@ describe('Bootstrap Provider', () => {
         const resultSettings = getModuleInformation();
         const CONFIG = configMock.getConfig();
 
-        bootstrapService.environment.isLocal = true;
+        Object.defineProperty(
+            bootstrapService,
+            'environment',
+            { value: { ...bootstrapService.environment, isLocal: true } }
+        );
         bootstrapService.setLocalInfo(resultSettings);
 
         const hostProtocol = resultSettings.cloudHost.split('://')[0];
@@ -90,7 +100,11 @@ describe('Bootstrap Provider', () => {
         const resultSettings = getCloudSettings();
         const CONFIG = configMock.getConfig();
 
-        bootstrapService.environment.isLocal = false;
+        Object.defineProperty(
+            bootstrapService,
+            'environment',
+            { value: { ...bootstrapService.environment, isLocal: false } }
+        );
         bootstrapService.setSettings(resultSettings);
 
         expect(CONFIG.company.name).toBe(resultSettings.companyName);
