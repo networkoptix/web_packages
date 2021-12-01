@@ -98,8 +98,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public set accessToken(token) {
-        if (this.isSessionOauth && this.accessToken) {
-            this.deleteToken(this.accessToken).toPromise();
+        const { accessToken, cloudAccessToken } = this.getTokens();
+        if (this.isSessionOauth && accessToken && cloudAccessToken) {
+            this.deleteToken(cloudAccessToken, accessToken).toPromise();
         }
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.set(this.cloudAccessTokenName, token, undefined, '/');
@@ -194,9 +195,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         this.accessToken = '';
     }
 
-    private deleteToken(token) {
+    private deleteToken(cloudAccessToken, token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        const { cloudAccessToken } = this.getTokens();
         return this.http.post(
             `${host}/api/systems/revokeToken`,
             { token },
