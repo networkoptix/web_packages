@@ -475,7 +475,8 @@ class AssetType(models.Model):
                           (3, "other", "Other"),
                           (4, "article", "Article"),
                           (5, "agreement", "Agreement"),
-                          (6, "documentation", "Documentation Page"))
+                          (6, "documentation", "Documentation Page"),
+                          (7, 'release_notes', "Release Notes"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -627,6 +628,10 @@ class Asset(models.Model):
     @property
     def is_vms(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.vms)
+
+    @property
+    def is_release_notes(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.release_notes)
 
     @property
     def is_single_customization(self):
