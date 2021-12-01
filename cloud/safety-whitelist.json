@@ -61,5 +61,13 @@
   "41288": {
     "name": "sqlparse",
     "note": "sqlparse is a non-validating SQL parser module for Python. In sqlparse versions 0.4.0 and 0.4.1 there is a regular Expression Denial of Service in sqlparse vulnerability. The regular expression may cause exponential backtracking on strings containing many repetitions of '\\r\\n' in SQL comments. Only the formatting feature that removes comments from SQL statements is affected by this regular expression. As a workaround don't use the sqlformat.format function with keyword strip_comments=True or the --strip-comments command line flag when using the sqlformat command line tool. The issues has been fixed in sqlparse 0.4.2."
+  },
+  "42497": {
+    "name": "kombu",
+    "note": "Kombu 5.2.1 updates dependencies to include security fixes. https://github.com/celery/kombu/commit/f3b04558fa0df4ecc383c93e0b3b300d95e17 c47                                                     "
+  },
+  "42498": {
+    "name": "celery",
+    "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
   }
 }
