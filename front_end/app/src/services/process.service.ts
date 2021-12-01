@@ -1,14 +1,19 @@
-import { Injectable }                from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-    Observable, Subject, defer, race, timer
-}                                    from 'rxjs';
-import { map, takeUntil }            from 'rxjs/operators';
+    Observable,
+    Subject,
+    defer,
+    race,
+    timer
+} from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxToastService }            from '@dialogs/toast.service';
-import { NxConfigService, IConfig }  from './nx-config';
-import { NxSessionService }          from './session.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSessionService } from './session.service';
 
 type Handler = (...args: any[]) => any
 
@@ -185,7 +190,9 @@ export class Process {
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
             // @ts-ignore
-            const message = `${this.settings.errorPrefix ? this.settings.errorPrefix + ': ' : ''}${this.settings.errorMessage}`;
+            const message = `${this.settings.errorPrefix
+                ? this.settings.errorPrefix + ': '
+                : ''}${this.settings.errorMessage}`;
 
             const options = {
                 autohide: !this.settings.holdAlerts,
@@ -262,7 +269,11 @@ export interface ProcessSettings {
     timeoutMs: number;
 }
 
-export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
+export const formatError = (
+    error,
+    errorCodes,
+    lang: LanguageI18NStaticTypes
+): string | false => {
     if (error.error && typeof error.error === 'object') {
         error = error.error;
         // Unpack nested error
@@ -278,7 +289,10 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
         return lang.errorCodes.unknownError();
     }
 
-    if (error.errorText === 'second_factor_required' && lang.dialogs?.message?.twoFactor) {
+    if (
+        error.errorText === 'second_factor_required' &&
+        lang.dialogs?.message?.twoFactor
+    ) {
         return lang.dialogs.message.twoFactor.required();
     }
 
@@ -292,6 +306,8 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
             return errorCodes[errorCode];
         }
     }
-    const errorText = typeof lang.errorCodes[errorCode] === 'function' ? lang.errorCodes[errorCode]() : lang.errorCodes[errorCode];
+    const errorText = typeof lang.errorCodes[errorCode] === 'function'
+        ? lang.errorCodes[errorCode]()
+        : lang.errorCodes[errorCode];
     return errorText || lang.errorCodes.unknownError();
 };

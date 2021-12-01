@@ -1,6 +1,7 @@
-import { waitForAsync, TestBed }    from '@angular/core/testing';
-import { WINDOW }                   from '@services/window-provider';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { WINDOW } from '@services/window-provider';
 
 describe('Scroll mechanics service', () => {
     let scroll: NxScrollMechanicsService;

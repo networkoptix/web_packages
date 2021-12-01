@@ -5,12 +5,13 @@ import {
     fakeAsync,
     tick
 } from '@angular/core/testing';
-import { NxProcessService } from '@services/process.service';
+
+import { NxToastService } from '@dialogs/toast.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService }          from '@services/session.service';
-import { NxToastService }            from '@dialogs/toast.service';
+import { NxProcessService } from '@services/process.service';
+import { NxSessionService } from '@services/session.service';
 
 describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;

@@ -1,12 +1,13 @@
-import { Inject, Injectable }               from '@angular/core';
-import { Title, Meta }              from '@angular/platform-browser';
-import { Router }                   from '@angular/router';
+import { Inject, Injectable } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
-import { Subject } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { debounceTime } from 'rxjs/operators';
 import { WINDOW } from './window-provider';
 
 interface MetaLookup {

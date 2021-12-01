@@ -1,9 +1,9 @@
-import { Inject, Injectable }  from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { ReplaySubject }       from 'rxjs';
-import { NxSwCacheService }    from './sw-cache.service';
+import { ReplaySubject } from 'rxjs';
 
-import { WINDOW }        from './window-provider';
+import { NxSwCacheService } from './sw-cache.service';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'

@@ -1,4 +1,5 @@
-import { waitForAsync, TestBed }            from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 
 describe('Search service', () => {

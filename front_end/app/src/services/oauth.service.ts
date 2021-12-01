@@ -3,10 +3,11 @@ import { Inject, Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+
 import { IConfig, NxConfigService } from './nx-config';
 import { NxStorageService } from './storage.service';
 import { WINDOW } from './window-provider';
-import { environment } from '@environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -80,7 +81,10 @@ export class OauthService {
             grant_type: 'password'
         });
         if (environment.isLocal) {
-            params.append('scope', `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`);
+            params.append(
+                'scope',
+                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`
+            );
         }
         if (state) {
             params.append('state', state);

@@ -1,5 +1,5 @@
-import { Injectable }               from '@angular/core';
-import { UntilDestroy }             from '@ngneat/until-destroy';
+import { Injectable } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 export enum ButtonArrowType {
@@ -41,11 +41,16 @@ export class NxSearchService {
         }
 
         if (model.queryEndsWith) {
-            return (_searchFor.indexOf(model.queryEndsWith) === _searchFor.length - model.queryEndsWith[0].length); // queryEndsWith have only one item
+            return (
+                _searchFor.indexOf(model.queryEndsWith) ===
+                _searchFor.length - model.queryEndsWith[0].length
+                // queryEndsWith have only one item
+            );
         }
 
         if (model.queryStartsWith) {
-            return (_searchFor.indexOf(model.queryStartsWith) === 0); // queryStartsWith have only one item
+            return (_searchFor.indexOf(model.queryStartsWith) === 0);
+            // queryStartsWith have only one item
         }
 
         if (model.queryOrMatch) {

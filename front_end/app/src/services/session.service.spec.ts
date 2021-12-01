@@ -1,7 +1,9 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
-import { LocalStorageService }   from 'ngx-webstorage';
-import { NxSessionService }      from './session.service';
-import { WINDOW }                from '@services/window-provider';
+import { LocalStorageService } from 'ngx-webstorage';
+
+import { WINDOW } from '@services/window-provider';
+
+import { NxSessionService } from './session.service';
 
 describe('Session service', () => {
     let session: NxSessionService;

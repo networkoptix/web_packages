@@ -1,6 +1,7 @@
 import { waitForAsync, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { NxPollService }         from '@services/poll.service';
-import { Observable, of }                    from 'rxjs';
+import { of } from 'rxjs';
+
+import { NxPollService } from '@services/poll.service';
 
 describe('Poll service', () => {
     let poll: NxPollService;
@@ -23,7 +24,8 @@ describe('Poll service', () => {
             count++;
         };
 
-        const pollTest = poll.createPoll(() => of(test), 1000); // interval delay is irrelevant- just sync with ticks -- TT
+        const pollTest = poll.createPoll(() => of(test), 1000);
+        // interval delay is irrelevant- just sync with ticks -- TT
         const subscr = pollTest.subscribe((call) => {
             call();
         });
