@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "Avtal har accepterats",
         "system": {
             "deleted": {

@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "レビューが承認されました。",
         "system": {
             "deleted": {

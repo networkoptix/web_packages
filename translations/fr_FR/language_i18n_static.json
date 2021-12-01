@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "La révision a été acceptée",
         "system": {
             "deleted": {

@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
         "nameFail": "Nie udało się zmienić {type}",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "Opinia została przyjęta",
         "system": {
             "deleted": {

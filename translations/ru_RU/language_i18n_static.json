@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",
         "nameFail": "Failed to change {type} name",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {

@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "De review is verwijderd",
         "system": {
             "deleted": {

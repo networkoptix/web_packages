@@ -847,6 +847,7 @@
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "nameFail": "Fehler beim Ändern des {type} Namens",
+        "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "Die Bewertung wurde akzeptiert",
         "system": {
             "deleted": {
