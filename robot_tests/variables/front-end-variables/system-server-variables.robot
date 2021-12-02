@@ -85,7 +85,7 @@ ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibli
 ${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
 ${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
-${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0"]
+${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
 ${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]
 ${ARCHIVE BACKUP SWITCH SLIDER}     //span[@class="slider round"]

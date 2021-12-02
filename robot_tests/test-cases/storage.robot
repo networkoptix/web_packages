@@ -270,7 +270,7 @@ Restart
     Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}
 
 10. Changing of reserved space is shown in the table
-    [Tags]    C81569
+    [Tags]    C81569   
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
@@ -606,12 +606,13 @@ Restart
     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
 24. Detailed Info button works (system has one storage)
+    [Tags]      
     Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
     Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click Button     ${STORAGE INFO BUTTON}
-    Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header/span[contains(text(), ${STATE TEXT})]
+    Wait Until Element is Visible      //nx-system-metrics-component//nx-single-entity//header//span[contains(text(), "${STATE TEXT}")]
 
 25. Add external storage: Close dialog and Cancel
     [Tags]    C81583    external
@@ -807,7 +808,7 @@ Restart
     ...    ${SMB STORAGE DELETE BUTTON}
 
 31. Add external storage: successful scenario with password
-    [Tags]    C81599    C81587    C81595    C81596    External    deb
+    [Tags]    C81599    C81587    C81595    C81596    External    
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
