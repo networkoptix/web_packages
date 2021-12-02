@@ -3,7 +3,7 @@
        (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
        [id]="componentId" [name]="componentId"
-       [ngClass]="{'hide-errors': hideErrors, 'form-control': web}"
+       [ngClass]="{'hide-errors': hideErrors, 'form-control': !authorize}"
        type="email"
        [readonly]="readonly"
        required

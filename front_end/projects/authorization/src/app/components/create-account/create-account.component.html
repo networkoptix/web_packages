@@ -31,7 +31,7 @@
                     [lockEmail]="false"
                     [readonly]="createAccountProcess?.processing"
                     [form]="createAccountForm"
-                    [web]="viewType === 'web'"
+                    [authorize]="true"
                     [setFocus]="true"
                     #createAccountEmail="ngModel"
                 ></nx-email-input>
@@ -86,7 +86,7 @@
                     [readonly]="createAccountProcess?.processing"
                     [form]="createAccountForm"
                     [component]="createAccountPassword"
-                    [web]="viewType === 'web'"
+                    [authorize]="true"
                     #createAccountPassword="ngModel">
                 </nx-password-input>
                 <div class="mt-2">

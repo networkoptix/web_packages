@@ -58,10 +58,10 @@ describe('NxEmailComponent email input Unit Test', () => {
         expect(input.className).toContain('hide-errors form-control');
     });
 
-    it('should show non-web email input', () => {
+    it('should show non-authorize email input', () => {
         component.componentId = 'exampleId';
         component.hideErrors = false;
-        component.web = false;
+        component.authorize = true;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
         expect(input.className).not.toContain('form-control');
@@ -69,7 +69,7 @@ describe('NxEmailComponent email input Unit Test', () => {
 
     it('should show locked email input', () => {
         component.lockEmail = true;
-        component.web = true;
+        component.authorize = false;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
         expect(input.attributes.getNamedItem('ng-reflect-name')?.value).toBe('registerEmailLocked');
