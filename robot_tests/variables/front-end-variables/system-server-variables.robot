@@ -169,7 +169,7 @@ ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") an
 ${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
 ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
 ${OUTDATED BANNER}                   //div[@class="warning-margin"]/span[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
-${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/static/images/icons/reload.svg"]
+${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/reload.svg"]
 
 # ADVANCED
 # Storage Locations Block
