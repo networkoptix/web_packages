@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NxAPIToolService } from '@pages/api-tool/api-tool.service';
 
 @Component({
     selector: 'nx-swagger-dropdown',
@@ -14,14 +15,16 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     isMultiSelect = false;
     selectedOptions = []; // For multiselect only
 
-    constructor() { }
+    constructor(private APIToolService: NxAPIToolService) { }
 
     onSelect = (e: any) => {
+        this.APIToolService.preventNextChangeDetection = true;
         this.swaggerSelect.value = e.value;
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     onMultiSelect = (e: any) => {
+        this.APIToolService.preventNextChangeDetection = true;
         this.selectedOptions = [...e];
         for (const option of this.swaggerSelect.options) {
             if (this.selectedOptions.includes(option.value)) {

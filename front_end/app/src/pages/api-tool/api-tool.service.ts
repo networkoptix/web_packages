@@ -53,6 +53,7 @@ export class NxAPIToolService {
     systemVersion: Number = 5.0;
     mediaServerUpdating = false;
     mediaServerErrorCount = 0;
+    mediaServerErrorCountLimit = 4;
     validSystems: NxSystemWithUserInfo[] = []
 
     serversDropdown: ServerDropdownItem[] = [];
@@ -62,6 +63,7 @@ export class NxAPIToolService {
 
     APIDropdown: APIDropdownItem[] = [];
     selectedAPI: APIDropdownItem;
+    preventNextChangeDetection = false;
 
     // developers-menu properties
     menuSubject = new BehaviorSubject<MenuStructure>({
@@ -243,7 +245,7 @@ export class NxAPIToolService {
             )
             .subscribe(_system => {
                 if (!this.mediaServerUpdating) {
-                    if (this.mediaServerErrorCount === 4) {
+                    if (this.mediaServerErrorCount >= this.mediaServerErrorCountLimit) {
                         this.mediaServerErrorCount = 0;
                         this.tryNextSystem();
                     }

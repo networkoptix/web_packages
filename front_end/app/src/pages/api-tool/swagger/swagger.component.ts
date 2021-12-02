@@ -2,6 +2,7 @@ import {
     Component, ComponentFactoryResolver,
     ComponentRef,
     Inject, Input, OnChanges, Renderer2, SimpleChanges,
+    ViewChild,
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -21,6 +22,12 @@ import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
 import { environment } from '@environments/environment';
+import { v4 as uuid } from 'uuid';
+import { take } from 'rxjs/operators';
+
+interface componentMap {
+    [uuid: string]: ComponentRef<any>
+}
 
 @UntilDestroy()
 @Component({
@@ -30,6 +37,7 @@ import { environment } from '@environments/environment';
     encapsulation: ViewEncapsulation.None
 })
 export class NxSwaggerComponent implements OnChanges {
+    @ViewChild('viewContainerRef', { read: ViewContainerRef }) VCR: ViewContainerRef;
     @Input() activeNode: MenuNodeWithParent;
 
     swagger: SwaggerUI;
@@ -40,9 +48,9 @@ export class NxSwaggerComponent implements OnChanges {
     singleAPIRouteShowing = false;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     customComponentsRendering = false;
+    componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
 
     constructor(public APIToolService: NxAPIToolService,
-                private viewContainerRef: ViewContainerRef,
                 private renderer2: Renderer2,
                 private componentFactoryResolver: ComponentFactoryResolver,
                 @Inject(DOCUMENT) private document: Document) {
@@ -85,7 +93,6 @@ export class NxSwaggerComponent implements OnChanges {
         if (filter === '' || filter?.length === 0) {
             return;
         }
-
         // wait for the DOM element
         setTimeout(() => {
             this.swagger = new SwaggerUI({
@@ -95,7 +102,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.presets.apis,
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
-                plugins: [this.OnOperationRenderPlugin],
+                plugins: [this.OnResponsesRenderPlugin],
                 spec: this.APIToolService.selectedServer.apiDocFull,
                 filter: filter,
                 docExpansion: expand,
@@ -168,28 +175,46 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     // swagger-ui plugin system
-    private OnOperationRenderPlugin = () => ({
+    private OnResponsesRenderPlugin = () => ({
         wrapComponents: {
-            operation: (Responses, { React }) => (props) => {
-                const operation = React.createElement(Responses, props);
-                if (props.isShown) { // If operation is open
-                    if (!this.customComponentsRendering) {
-                        this.customComponentsRendering = true;
-                        setTimeout(() => {
-                            this.addCustomTextareas();
-                            this.modifyCodeBlocksAndTextareas();
-                            this.addTabItemEventListener();
-                            this.insertCustomDropdown();
-                            this.moveExampleResponse();
-                            this.addLabelToRequest();
-                            this.customComponentsRendering = false;
-                        }, 0);
-                    }
+            responses: (Responses, { React }) => (props) => {
+                const responses = React.createElement(Responses, props);
+                if (this.APIToolService.preventNextChangeDetection) {
+                    this.APIToolService.preventNextChangeDetection = false;
+                } else if (!this.customComponentsRendering) {
+                    this.addCustomChanges();
                 }
-                return  operation;
+
+                return responses;
             }
         }
     })
+
+    private addCustomChanges = () => {
+        this.customComponentsRendering = true;
+        setTimeout(() => {
+            this.addCustomTextareas();
+            this.modifyCodeBlocksAndTextareas();
+            this.addTabItemEventListener();
+            this.addButtonEventListeners();
+            this.insertCustomDropdown();
+            this.moveExampleResponse();
+            this.addLabelToRequest();
+            this.customComponentsRendering = false;
+        }, 0);
+    }
+
+    private addButtonEventListeners = () => {
+        // Clicking on execute or try-it-out/cancel button triggers a rerender
+        const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
+        for (const button of buttons as any) {
+            fromEvent(button, 'click').pipe(take(1), untilDestroyed(this)).subscribe(() => {
+                if (!this.customComponentsRendering) {
+                    this.addCustomChanges();
+                }
+            });
+        }
+    }
 
     private modifyCodeBlocksAndTextareas = () => {
         const elements = this.document.querySelectorAll('.microlight, .text-area');
@@ -209,9 +234,12 @@ export class NxSwaggerComponent implements OnChanges {
         for (const textarea of textareas as any) {
             const sibling: Element = textarea.previousElementSibling;
             if (sibling?.tagName === 'NX-SWAGGER-TEXTAREA') {
+                // Swagger destroys and recreates the text area, so angular does that as well to rebind the custom component to the new textarea
+                this.triggerComponentDestroyFromElement(sibling);
                 this.renderer2.removeChild(sibling.parentElement, sibling);
             }
             const { componentRef, element } = this.generateComponent(NxSwaggerTextareaComponent);
+            this.addComponentToComponentMap(componentRef, element);
             componentRef.instance.textarea = textarea;
             textarea.classList.add('custom-textarea');
             textarea.insertAdjacentElement('beforebegin', element);
@@ -253,11 +281,22 @@ export class NxSwaggerComponent implements OnChanges {
 
     generateComponent(componentClass: any) {
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
-        const componentRef: ComponentRef<any> = this.viewContainerRef.createComponent(factory);
+        const componentRef: ComponentRef<any> = this.VCR.createComponent(factory);
         const element = componentRef.location.nativeElement as HTMLElement;
-
         return { componentRef, element };
     }
+
+    addComponentToComponentMap(componentRef: ComponentRef<any>, element: HTMLElement) {
+        const id = uuid.v4();
+        element.setAttribute('uuid', id);
+        this.componentMap[id] = componentRef;
+    }
+
+    triggerComponentDestroyFromElement = (element: Element) => {
+        const uuid = element.getAttribute('uuid');
+        this.componentMap[uuid].destroy();
+        delete this.componentMap[uuid];
+    };
 
     addCopyToClipBoardButton = (parent: HTMLElement) => {
         const clipboardElement = this.generateComponent(NxCopyToClipboardComponent).element;
@@ -296,6 +335,10 @@ export class NxSwaggerComponent implements OnChanges {
         if (changes.activeNode.currentValue) {
             const node = changes.activeNode.currentValue;
             const expand = this.isAPIRouteNode(node) ? 'full' : 'list';
+            if (this.VCR) {
+                // Destroys custom components
+                this.VCR.clear();
+            }
             this.initSwagger(node.name, expand);
             if (!this.APIToolService.isAPIInfoMenuNode(node)) {
                 this.setSwaggerDescription(node, expand);

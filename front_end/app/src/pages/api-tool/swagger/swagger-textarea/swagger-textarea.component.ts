@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NxAPIToolService } from '@pages/api-tool/api-tool.service';
 import { WINDOW } from '@services/window-provider';
 import { fromEvent } from 'rxjs';
 
@@ -17,7 +18,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDest
     isInvalid = false;
     attributeMutationObserver: MutationObserver;
 
-    constructor(@Inject(WINDOW) private window: any, @Inject(DOCUMENT) private document: Document) { }
+    constructor(@Inject(WINDOW) private window: any, @Inject(DOCUMENT) private document: Document, private APIToolService: NxAPIToolService) { }
 
     ngOnInit() {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';
@@ -31,6 +32,8 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDest
         const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
 
         fromEvent(element, 'input').pipe(untilDestroyed(this)).subscribe(event => {
+            this.APIToolService.preventNextChangeDetection = true;
+
             if (!element.textContent.length) {
                 if (element.childNodes.length > 0) {
                     for (const child of element.childNodes) {
@@ -48,6 +51,8 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDest
         });
 
         fromEvent(element, 'paste').pipe(untilDestroyed(this)).subscribe((event: any) => {
+            this.APIToolService.preventNextChangeDetection = true;
+
             event.preventDefault();
             this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
         });
