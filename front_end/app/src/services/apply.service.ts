@@ -518,6 +518,8 @@ export class NxApplyService {
                     extNgForm.hasChange = hasChange;
                     if (this.applyComponentRef) {
                         this.applyComponentInstance.show = hasChange;
+                        const hasInvalid = Object.keys(this.applyComponentInstance.forms).some(key => this.applyComponentInstance.forms[key].form.invalid);
+                        this.applyComponentInstance.setInvalid(hasInvalid);
                     }
                 });
 
@@ -705,6 +707,12 @@ export class NxApplyService {
     public unsetInvalidField(name: string) {
         if (this.applyComponentRef) {
             this.applyComponentRef.instance.unsetInvalidField(name);
+        }
+    }
+
+    public setInvalid(flag: boolean) {
+        if (this.applyComponentRef) {
+            this.applyComponentRef.instance.setInvalid(flag);
         }
     }
 

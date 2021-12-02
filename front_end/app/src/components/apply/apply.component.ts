@@ -70,4 +70,8 @@ export class NxApplyComponent {
             }
         });
     }
+
+    setInvalid(flag: boolean) {
+        this._disabled = flag;
+    }
 }
