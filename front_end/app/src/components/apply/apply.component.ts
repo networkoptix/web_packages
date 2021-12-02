@@ -47,7 +47,8 @@ export class NxApplyComponent {
         if (
             event.key === 'Enter' &&
             document.activeElement.tagName === 'INPUT' &&
-            this.processButton
+            this.processButton &&
+            !document.querySelector('.modal') // Modal is active
         ) {
             this.processButton.checkForm();
         }
