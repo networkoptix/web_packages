@@ -2,8 +2,8 @@
     "language": "en_US",
     "About %CLOUD_NAME%": "О %CLOUD_NAME%",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "Разработчикам",
+    "Integrations (β)": "Интеграции (β)",
     "Privacy": "Политика конфиденциальности",
     "Support": "Техническая поддержка",
     "Terms": "Условия использования",
@@ -131,7 +131,7 @@
         "chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
         "login": "login",
         "recordingSettingsWarning": "Пожалуйста, обновите недостающие настройки записи.",
-        "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
+        "disableMotionWarning": "Режим записи будет изменен на \"Запись всегда\"",
         "recordingModes": {
             "always": "Всегда записывать",
             "motion": "Записывать только движение",
@@ -187,7 +187,7 @@
     },
     "dialogs": {
         "addUser": {
-            "alreadyExists": "This email has already been registered in the %systemName% system"
+            "alreadyExists": "Этот адрес уже зарегистрирован в системе %systemName%"
         },
         "buttons": {
             "cancel": "Отмена",
@@ -559,7 +559,7 @@
         "downloadPlatform": "Скачать %VMS_NAME% для ",
         "failedToAccessSystem": "Не удалось получить доступ к системе",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "Интеграции с %VMS_NAME%",
         "login": "Войти",
         "pageNotFound": "Страница не найдена",
         "register": "Зарегистрироваться в",
@@ -575,7 +575,7 @@
         "apiTool": "API testing tool"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "Интеграции Marketplace представляет собой централизованную экосистему продуктов, которые интегрируются с продуктами %VMS_NAME%, и доступны в %CLOUD_NAME%, так что вы можете найти решения для построения и настройки системы IP Video.",
         "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
@@ -753,7 +753,7 @@
         "unavailable": "недоступен"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",
         "nameFail": "Failed to change {type} name",
         "reviewAccepted": "The review has been accepted",
         "system": {
@@ -806,8 +806,8 @@
             "error": "Ошибка",
             "expired": "Срок закончен",
             "ok": "OK",
-            "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "nvrError": "Ошибка NVR",
+            "serverNotFound": "Сервер не найден"
         },
         "messages": {
             "required": "{number} more required",
@@ -927,7 +927,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Отключен"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

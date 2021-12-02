@@ -297,7 +297,7 @@
         },
         "message": {
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
-            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
+            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
             "settingsSaved": "Ustawienia zostały zapisane.",
             "settingsNotSaved": "Nie można zapisać ustawień.",
             "logLevelsSaved": "Zapisano poziom(y) logowania.",
@@ -716,7 +716,7 @@
             },
             "error": {
                 "text": "Błąd",
-                "help": "(rejestruj tylko błędy)"
+                "help": "(rejestruj tylko błędy)"
             },
             "warning": {
                 "text": "Ostrzeżenie",
