@@ -13,13 +13,22 @@ import { tap } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { WINDOW } from '@services/window-provider';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
+    LANG: LanguageI18NStaticTypes;
+    isDialogActive = false;
+
     constructor(
+        languageProvider: NxLanguageProviderService,
         private appState: NxAppStateService,
+        private dialogService: NxSimpleDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        languageProvider.translateSubject.subscribe((lang) => { this.LANG = lang; });
     }
 
     public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
@@ -48,7 +57,16 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.appState.systemAvailable$.next(false);
         } else if (res instanceof HttpErrorResponse && status === 401) {
             // Session expired
-            this.window.location.reload();
+            let dialogPromise = Promise.resolve();
+            if (!this.isDialogActive) {
+                this.isDialogActive = true;
+                dialogPromise = this.dialogService.confirm(
+                    this.LANG.dialogs.renewAuth.message(),
+                    this.LANG.dialogs.renewAuth.title(),
+                    this.LANG.dialogs.buttons.ok()
+                );
+            }
+            return dialogPromise.then(() => this.window.location.reload());
         } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
             this.appState.systemAvailable$.next(true);
 

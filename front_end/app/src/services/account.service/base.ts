@@ -94,7 +94,11 @@ export abstract class BaseAccount implements OnDestroy {
             .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe((loginState) => {
                 if (loginState === null) {
-                    this.logout();
+                    return this.dialogs.confirm(
+                        this.LANG.dialogs.renewAuth.message(),
+                        this.LANG.dialogs.renewAuth.title(),
+                        this.LANG.dialogs.buttons.ok()
+                    ).then((res) => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
                     this.get()
                         .then((account) => {
@@ -137,8 +141,9 @@ export abstract class BaseAccount implements OnDestroy {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
             const loginState = this.sessionService.loginState;
-            if (!loginState || account?.email && loginState !== account?.email) {
-                this.sessionService.loginState = account.email;
+            const login = account?.email || account?.name;
+            if (!loginState || loginState !== login) {
+                this.sessionService.loginState = login || null;
             }
         }
     }

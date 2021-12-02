@@ -395,8 +395,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Session is too old. Please login and try again",
-            "title": "Renew login session"
+            "message": "Your session has expired. Please log in again.",
+            "title": "Expired session"
         },
         "titles": {
             "error": "Error",
