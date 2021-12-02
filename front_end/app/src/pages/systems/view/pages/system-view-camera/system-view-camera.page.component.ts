@@ -273,12 +273,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     set selectedQuality (initialQuality: PlaybackQuality) {
+        if (!this.selectedTransport) {
+            return;
+        }
         let quality = (initialQuality || '').toLowerCase();
         if (quality === '') {
+            const qualities = this.visibleQualities$.getValue();
             if (this.selectedTransport === 'hls') {
-                quality = 'high';
+                quality = qualities[0].toLowerCase();
             } else {
-                const qualities = this.visibleQualities$.getValue();
                 if (this.qualities.low) {
                     quality = 'low';
                 } else if (this.qualities.high) {
