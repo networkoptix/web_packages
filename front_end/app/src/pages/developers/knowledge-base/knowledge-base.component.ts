@@ -132,7 +132,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             catchError(err => {
                 console.error(err.message === 'Instant search feature not enabled' ? err : new Error('Error using instance search fallback to legacy search'));
                 return this.cloudApi.getDocumentation(
-                    this.kbService.kbName, DOC_TYPES.knowledgebase, { query, page }
+                    this.kbService.menuNameSubject.value, DOC_TYPES.knowledgebase, { query, page }
                 ).pipe(
                     delay(this.CONFIG.search.debounceTime)
                 );

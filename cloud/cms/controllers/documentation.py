@@ -115,8 +115,9 @@ class SearchableCache(BaseCache):
                     }],
                     primary_key='cacheKey'
                 )
-            except MeiliSearchCommunicationError as e:
-                # raised when meilisearch service is unavailable
+            except (MeiliSearchCommunicationError, TypeError) as e:
+                # MeiliSearchCommunicationError is raised when meilisearch service is unavailable
+                # TypeError is raised when switch is enabled but no master key provided
                 logger.warning(e)
 
 
