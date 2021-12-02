@@ -1,6 +1,6 @@
-import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
-import { shareReplay }     from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { shareReplay } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 

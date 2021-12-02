@@ -1,4 +1,4 @@
-import { GetStorages }                              from '@services/system-api.types';
+import { GetStorages } from '@services/system-api.types';
 import { ServerManager } from '@services/system.service/system/server-manager/server-manager';
 import { NxUtilsService } from '@services/utils.service';
 

@@ -1,7 +1,12 @@
-import { NxUtilsService }   from '@services/utils.service';
-import { ServerManager }    from '../server-manager/server-manager';
+import { NxUtilsService } from '@services/utils.service';
+
+import { ServerManager } from '../server-manager/server-manager';
+
 import {
-    StorageResponses, StorageDataStructure, Storage, CurrentStorageState
+    StorageResponses,
+    StorageDataStructure,
+    Storage,
+    CurrentStorageState
 } from './storage';
 
 /**
@@ -14,14 +19,16 @@ export const currentStorageStateFactory = (
     storageServerId: string,
     serverManager: ServerManager
 ) => {
-    const vmsSpace = metrics && Object.entries(metrics?.reply?.storages || {}).reduce((storages, [storageId, value]: [string, any]) => {
-        return {
-            ...storages,
-            [NxUtilsService.cleanId(storageId)]: {
-                vmsSpace: value?.space?.mediaSpaceB || 0
-            }
-        };
-    }, {});
+    const vmsSpace = metrics &&
+        Object.entries(metrics?.reply?.storages || {})
+            .reduce((storages, [storageId, value]: [string, any]) => {
+                return {
+                    ...storages,
+                    [NxUtilsService.cleanId(storageId)]: {
+                        vmsSpace: value?.space?.mediaSpaceB || 0
+                    }
+                };
+            }, {});
 
     const storageInfo = info && info.reduce((
         allInfo,
@@ -52,7 +59,10 @@ export const currentStorageStateFactory = (
             ...storageStats
         }) => ({
         ...storagesStats,
-        [storageId !== '{00000000-0000-0000-0000-000000000000}' ? NxUtilsService.cleanId(storageId) : storageStats.url]: {
+        [storageId !== '{00000000-0000-0000-0000-000000000000}'
+            ? NxUtilsService.cleanId(storageId)
+            : storageStats.url
+        ]: {
             ...storageStats
         }
     }), {});

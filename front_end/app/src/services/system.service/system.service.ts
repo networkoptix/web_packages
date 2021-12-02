@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { NxConfigService, IConfig } from '../nx-config';
-import { NxLanguageProviderService } from '../nx-language-provider';
-import { NxCloudApiService } from '../nx-cloud-api';
-import { NxSystemsService } from '../systems.service';
-import { NxSystemAPIService } from '../system-api.service';
-import { NxPollService } from '../poll.service';
-import { NxAppStateService } from '../nx-app-state.service';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
-import { NxSystem } from './system/system';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService, IConfig } from '../nx-config';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxPollService } from '../poll.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxSystemsService } from '../systems.service';
+
+import { NxSystem } from './system/system';
 
 @Injectable({
     providedIn: 'root'

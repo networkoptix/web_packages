@@ -1,13 +1,15 @@
 import { tap } from 'rxjs/operators';
 
-import { environment }                                      from '@environments/environment';
-import { NxCloudApiService }                                from '../../../nx-cloud-api';
-import { NxSystemAPIService, NxSystemAPI, ResourceParam }   from '../../../system-api.service';
-import { NxUtilsService }                                   from '../../../utils.service';
-import { NxSystemServer, ModuleInfo, IParams }              from '../system-types';
-import { NxSystemRestAPI }                                  from '@services/system-rest-api.service';
-import type { APIDocVersion }                               from '@services/nx-config/base-config';
-import { NxSystem }                                         from '../system';
+import { environment } from '@environments/environment';
+import type { APIDocVersion } from '@services/nx-config/base-config';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+
+import { NxCloudApiService } from '../../../nx-cloud-api';
+import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../../system-api.service';
+import { NxUtilsService } from '../../../utils.service';
+import { NxSystem } from '../system';
+import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
+
 export class ServerManager {
     mediaserverConnections: {
         [serverId: string]: NxSystemAPI | NxSystemRestAPI;

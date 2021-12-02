@@ -1,13 +1,15 @@
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
+
 import { IConfig } from '../../../nx-config';
 import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
 import { NxUtilsService } from '../../../utils.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+
 import {
     NxSystemRole,
     NxSystemUser,
     SystemPermissions
 } from './user-manager-types';
-import { environment } from '@environments/environment';
 
 export class UserManager {
     CONFIG: IConfig;

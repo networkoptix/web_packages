@@ -2,10 +2,11 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { BehaviorSubject, Observable }  from 'rxjs';
 
-import { NxConfigService, IConfig } from './nx-config';
-import { WINDOW } from '@services/window-provider';
-import { NxUtilsService } from './utils.service';
 import { environment } from '@environments/environment';
+import { WINDOW } from '@services/window-provider';
+
+import { NxConfigService, IConfig } from './nx-config';
+import { NxUtilsService } from './utils.service';
 
 export enum ChildRoutes {
     CAMERAS='cameras',

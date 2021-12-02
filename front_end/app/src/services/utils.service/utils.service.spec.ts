@@ -1,7 +1,7 @@
-import { waitForAsync, TestBed }             from '@angular/core/testing';
-import { LOCALE_ID }                         from '@angular/core';
-import { DOCUMENT }                          from '@angular/common';
-import { DeviceDetectorService }             from 'ngx-device-detector';
+import { DOCUMENT } from '@angular/common';
+import { LOCALE_ID } from '@angular/core';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { NxUtilsService } from './utils.service';
 

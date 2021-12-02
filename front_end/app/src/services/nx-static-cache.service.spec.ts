@@ -1,11 +1,12 @@
-import { waitForAsync, TestBed }   from '@angular/core/testing';
-import { NxStaticCacheService }    from '@services/nx-static-cache';
-import { nxConfig }                from '@services/nx-config/config';
-import { NxConfigService }         from '@services/nx-config';
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClient }              from '@angular/common/http';
-import { of }                      from 'rxjs';
-import { shareReplay }             from 'rxjs/operators';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
+
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxStaticCacheService } from '@services/nx-static-cache';
 
 describe('Static cache service', () => {
     let cacheService: NxStaticCacheService;

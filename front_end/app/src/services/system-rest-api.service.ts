@@ -1,7 +1,6 @@
-import { environment } from '@environments/environment';
-import { Injector } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { from, Observable, of, throwError } from 'rxjs';
 import {
@@ -14,16 +13,18 @@ import {
     timeout
 } from 'rxjs/operators';
 
+import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
+import { NxStorageService } from '@services/storage.service';
+import { WINDOW } from '@services/window-provider';
+
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config';
 import type { APIDocVersion } from './nx-config/base-config';
+import * as t from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { IParams } from './system.service';
 import { NxUriCacheService } from './uri-cache.service';
-import * as t from './system-api.types';
-import { NxStorageService } from '@services/storage.service';
-import { WINDOW } from '@services/window-provider';
 
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
@@ -114,7 +115,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         throwError(new Error('Invalid http method type was passed.'));
     }
 
-    private setupSystem(systemName: string, systemSettings: t.SystemConfigSettings, cloudSystemID = '', cloudAuthKey = '', owner = '', password = '') {
+    private setupSystem(
+        systemName: string,
+        systemSettings: t.SystemConfigSettings,
+        cloudSystemID = '',
+        cloudAuthKey = '',
+        owner = '',
+        password = ''
+    ) {
         const config = {
             name: systemName,
             settings: Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
@@ -156,7 +164,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (this.CONFIG.newSystem || !this.accessToken) {
             return Promise.resolve();
         }
-        return this.get(`/rest/v1/login/sessions/${this.accessToken}?setCookie=true`, {}, { withCredentials: 'true' }).toPromise();
+        return this.get(
+            `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
+            {},
+            { withCredentials: 'true' }
+        ).toPromise();
     }
 
     public setTokens(tokens, isSystem) {
@@ -185,7 +197,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private deleteToken(token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
         const { cloudAccessToken } = this.getTokens();
-        return this.http.post(`${host}/api/systems/revokeToken`, { token }, { headers: { Authorization: `Bearer ${cloudAccessToken}` } });
+        return this.http.post(
+            `${host}/api/systems/revokeToken`,
+            { token },
+            { headers: { Authorization: `Bearer ${cloudAccessToken}` } }
+        );
     }
 
     protected retryHandler(request) {
@@ -240,7 +256,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return headers;
     }
 
-    protected delete<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
+    protected delete<ResponseType = any>(
+        url: string,
+        params?: any,
+        customHttpHeaders: IParams<string> = {},
+        requestTimeout = 8000
+    ) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -265,7 +286,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    protected get<ResponseType = any>(url: string, params?: any, customHttpHeaders: IParams<string> = {}, requestTimeout = 8000) {
+    protected get<ResponseType = any>(
+        url: string,
+        params?: any,
+        customHttpHeaders: IParams<string> = {},
+        requestTimeout = 8000
+    ) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -290,7 +316,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    protected post<ResponseType = any>(url: string, data?: any, paramsToAdd = {}, customTimeout = 8000) {
+    protected post<ResponseType = any>(
+        url: string,
+        data?: any,
+        paramsToAdd = {},
+        customTimeout = 8000
+    ) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
@@ -477,9 +508,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    mergeSystems(remoteEndpoint: string, remoteServerId: string, dryRun: boolean, password = '', takeRemoteSettings = true) {
+    mergeSystems(
+        remoteEndpoint: string,
+        remoteServerId: string,
+        dryRun: boolean,
+        password = '',
+        takeRemoteSettings = true
+    ) {
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
-        const request = remoteServerId ? of({ id: remoteServerId, cloudId: '' }) : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
+        const request = remoteServerId
+            ? of({ id: remoteServerId, cloudId: '' })
+            : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
         return request.pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
             switchMap((data : any) => {
@@ -524,7 +563,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     restartServer(serverId?: string) {
-        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `).toPromise()
+        return this.post<t.RestartServer>(
+            `/rest/v1/servers/${serverId || 'this'}/restart `
+        ).toPromise()
             .catch((err) => Promise.reject(err));
     }
 
@@ -532,7 +573,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
     }
 
-    saveCloudSystemCredentials(cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string) {
+    saveCloudSystemCredentials(
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string
+    ) {
         return this.post('/rest/v1/system/cloudBind',
             {
                 systemId: cloudSystemID,
@@ -541,12 +586,35 @@ export class NxSystemRestAPI extends NxSystemAPI {
             });
     }
 
-    setupCloudSystem(systemName: string, cloudSystemID: string, cloudAuthKey: string, cloudAccountName: string, systemSettings: t.SystemConfigSettings) {
-        return this.setupSystem(systemName, systemSettings, cloudSystemID, cloudAuthKey, cloudAccountName);
+    setupCloudSystem(
+        systemName: string,
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string,
+        systemSettings: t.SystemConfigSettings
+    ) {
+        return this.setupSystem(
+            systemName,
+            systemSettings,
+            cloudSystemID,
+            cloudAuthKey,
+            cloudAccountName
+        );
     }
 
-    setupLocalSystem(systemName: string, password: string, systemSettings: t.SystemConfigSettings) {
-        return this.setupSystem(systemName, systemSettings, undefined, undefined, undefined, password);
+    setupLocalSystem(
+        systemName: string,
+        password: string,
+        systemSettings: t.SystemConfigSettings
+    ) {
+        return this.setupSystem(
+            systemName,
+            systemSettings,
+            undefined,
+            undefined,
+            undefined,
+            password
+        );
     }
 
     getBookmarks(params = {

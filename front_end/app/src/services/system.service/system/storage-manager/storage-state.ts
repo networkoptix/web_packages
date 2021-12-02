@@ -1,11 +1,20 @@
-import { filter, map, retry, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable, Subject }       from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import {
+    filter,
+    map,
+    retry,
+    startWith,
+    switchMap,
+    takeUntil
+} from 'rxjs/operators';
 
-import { ServerManager }                                    from '../server-manager/server-manager';
-import { StateManager }                                     from '@src/utils';
-import { BaseManager }                                      from '../base/base-manager';
-import { currentStorageStateFactory }  from './current-storage-state';
-import { NxLogger, fallback }                               from '@services/utils.service';
+import { NxLogger, fallback } from '@services/utils.service';
+import { StateManager } from '@src/utils';
+
+import { BaseManager } from '../base/base-manager';
+import { ServerManager } from '../server-manager/server-manager';
+
+import { currentStorageStateFactory } from './current-storage-state';
 import { CurrentStorageState } from './storage';
 
 export enum UpdateTriggers {

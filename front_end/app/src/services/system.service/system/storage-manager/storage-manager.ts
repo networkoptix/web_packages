@@ -1,4 +1,5 @@
-import { NxSystem }     from '../system';
+import { NxSystem } from '../system';
+
 import { StorageState } from './storage-state';
 
 /**

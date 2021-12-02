@@ -1,11 +1,12 @@
-import { Inject, Injectable }        from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
-import { NxConfigService, IConfig }  from './nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+
+import { NxAccountService } from './account.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxAccountService }          from './account.service';
-import { WINDOW }                    from './window-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -73,8 +74,10 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol?.() : this.window.location.protocol;
-        const host     = this.window.location.host;
+        const protocol = settings.native && this.LANG.clientProtocol
+            ? this.LANG.clientProtocol?.()
+            : this.window.location.protocol;
+        const host = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
 
@@ -111,8 +114,14 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    // eslint-disable-next-line camelcase
-    getLink(linkSettings: linkSettings): Promise<{link: string, authKey?: string | undefined, access_code?: string}> {
+    getLink(
+        linkSettings: linkSettings
+    ): Promise<{
+        link: string,
+        authKey?: string | undefined,
+        // eslint-disable-next-line camelcase
+        access_code?: string
+    }> {
         const auth = linkSettings.useOauth
             ? this.cloudApiService.getAccessCode('*').toPromise()
             : this.accountService.authKey();
@@ -182,8 +191,10 @@ export class NxUrlProtocolService {
 
                 // Check on before unload
                 // @ts-ignore
-                // eslint-disable-next-line prefer-promise-reject-errors
-                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout,
+                this.window.protocolCheck(
+                    link,
+                    this.CONFIG.openClientTimeout,
+                    this.CONFIG.openMobileClientTimeout,
                     () => {
                         this.accountService
                             .checkVisitedKey(authKey)

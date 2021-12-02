@@ -1,14 +1,16 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { NxConfigService, IConfig } from './nx-config';
-import { NxUriCacheService } from './uri-cache.service';
-import { NxAppStateService } from './nx-app-state.service';
-import { NxSystemRestAPI } from './system-rest-api.service';
-import { NxSystemAPI } from './system-legacy-api.service';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { NxHealthService } from '@pages/health/health.service';
+
 import { environment } from '@environments/environment';
+import { NxHealthService } from '@pages/health/health.service';
+
+import { NxAppStateService } from './nx-app-state.service';
+import { NxConfigService, IConfig } from './nx-config';
+import { NxSystemAPI } from './system-legacy-api.service';
+import { NxSystemRestAPI } from './system-rest-api.service';
+import { NxUriCacheService } from './uri-cache.service';
 
 export interface IParams<Value = any> {
     [key: string]: Value;

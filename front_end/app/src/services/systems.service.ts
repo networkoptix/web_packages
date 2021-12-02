@@ -1,19 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+
 import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPollService } from './poll.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { NxUtilsService } from './utils.service';
-import { NxUriService } from './uri.service';
-import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { NxSystem } from './system.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxStorageService } from './storage.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@environments/environment';
+import { NxSystem } from './system.service';
+import { NxUriService } from './uri.service';
+import { NxUtilsService } from './utils.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;

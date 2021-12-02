@@ -1,4 +1,4 @@
-import { Injectable }          from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 @Injectable({

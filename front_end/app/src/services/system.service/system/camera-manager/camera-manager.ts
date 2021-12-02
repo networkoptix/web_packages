@@ -1,11 +1,17 @@
-import { NxSystemRestAPI }                              from '@services/system-rest-api.service';
-import { NxUtilsService }                               from '@services/utils.service';
-import { ServerManager }                                from '../server-manager/server-manager';
-import { NxSystemServer, ModuleInfo }                   from '../system-types';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { ServerManager } from '../server-manager/server-manager';
+import { NxSystemServer, ModuleInfo } from '../system-types';
+
 import {
-    ICamera, MotionType, IRecordingSettings, ITask,
-    StreamQuality, RecordingType
-}                                                       from  './camera-manager-types';
+    ICamera,
+    MotionType,
+    IRecordingSettings,
+    ITask,
+    StreamQuality,
+    RecordingType
+} from  './camera-manager-types';
 
 export class CameraManager {
     servers: NxSystemServer[];

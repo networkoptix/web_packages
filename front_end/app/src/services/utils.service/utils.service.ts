@@ -1,11 +1,9 @@
-import {
-    Inject, Injectable, LOCALE_ID
-}                                   from '@angular/core';
-import { DOCUMENT }                 from '@angular/common';
-import { DeviceDetectorService }    from 'ngx-device-detector';
-
-import * as uv     from './utilConstants';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { isArray } from 'rxjs/internal-compatibility';
+
+import * as uv from './utilConstants';
 
 @Injectable({
     providedIn: 'root'

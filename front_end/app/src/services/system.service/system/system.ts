@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import {
     BehaviorSubject,
     of,
@@ -7,30 +8,38 @@ import {
 import { flatMap, switchMap, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { ServerManager } from './server-manager/server-manager';
-import { UserManager } from './user-manager/user-manager';
-import { CameraManager } from './camera-manager/camera-manager';
-import { StorageManager } from './storage-manager/storage-manager';
-
-import { IConfig } from '../../nx-config';
-import { NxCloudApiService } from '../../nx-cloud-api';
-import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
-import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
-import { NxPollService } from '../../poll.service';
-import { NxAppStateService } from '../../nx-app-state.service';
-import {
-    EventRule, EventTypes, RawRule, SystemConfigSettings
-} from '../../system-api.types';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { trimIDs as trimIds } from '../../../utils/api_response_cleaners';
 import { NxRibbonService } from '@components/ribbon';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import {
-    System, IParams, ServerTimeInfo, ICamera,
-    ITask, NxSystemUser, NxSystemRole
-} from './system-types';
-import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+
+import { trimIDs as trimIds } from '../../../utils/api_response_cleaners';
+import { NxAppStateService } from '../../nx-app-state.service';
+import { NxCloudApiService } from '../../nx-cloud-api';
+import { IConfig } from '../../nx-config';
+import { NxPollService } from '../../poll.service';
+import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
+import {
+    EventRule,
+    EventTypes,
+    RawRule,
+    SystemConfigSettings
+} from '../../system-api.types';
+import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
+
+import { CameraManager } from './camera-manager/camera-manager';
+import { ServerManager } from './server-manager/server-manager';
+import { StorageManager } from './storage-manager/storage-manager';
+import {
+    System,
+    IParams,
+    ServerTimeInfo,
+    ICamera,
+    ITask,
+    NxSystemUser,
+    NxSystemRole
+} from './system-types';
+import { UserManager } from './user-manager/user-manager';
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.

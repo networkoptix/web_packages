@@ -1,5 +1,6 @@
-import { waitForAsync, TestBed }  from '@angular/core/testing';
-import { NxUriCacheService }      from '@services/uri-cache.service';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+
+import { NxUriCacheService } from '@services/uri-cache.service';
 
 describe('Uri cache Service', () => {
     let uriCacheService: NxUriCacheService;

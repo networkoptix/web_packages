@@ -1,5 +1,5 @@
 import { combineLatest, Observable, timer } from 'rxjs';
-import { catchError, map }                  from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 const BYTE_UNITS: Byte[] = [
     'B',

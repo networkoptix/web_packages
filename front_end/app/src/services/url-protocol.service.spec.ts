@@ -1,13 +1,14 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
-import { of }                    from 'rxjs';
+import { of } from 'rxjs';
 
-import { NxUrlProtocolService }      from './url-protocol.service';
-import { NxConfigService }           from '@services/nx-config';
-import { nxConfig }                  from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { WINDOW }                    from './window-provider';
-import { NxAccountService }          from './account.service';
-import { NxCloudApiService }         from './nx-cloud-api';
+
+import { NxAccountService } from './account.service';
+import { NxCloudApiService } from './nx-cloud-api';
+import { NxUrlProtocolService } from './url-protocol.service';
+import { WINDOW } from './window-provider';
 
 describe('Url Protocol Service', () => {
     let urlService: NxUrlProtocolService;

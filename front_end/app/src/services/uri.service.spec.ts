@@ -1,11 +1,11 @@
-import { waitForAsync, TestBed }  from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of }                     from 'rxjs';
+import { of } from 'rxjs';
 
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
-import { nxConfig }                  from '@services/nx-config/config';
-import { NxConfigService }           from '@services/nx-config';
-import { WINDOW }                    from '@services/window-provider';
+import { WINDOW } from '@services/window-provider';
 
 describe('Uri Service', () => {
     let uriService: NxUriService;
@@ -78,7 +78,8 @@ describe('Uri Service', () => {
     });
 
     it('should return base system settings with systemId', () => {
-        expect(uriService.getSystemSettingsRoute({ systemId: 'systemId' })).toBe('/systems/systemId');
+        expect(uriService.getSystemSettingsRoute({ systemId: 'systemId' }))
+            .toBe('/systems/systemId');
     });
 
     it('should return system settings with childRoutes', () => {
