@@ -107,6 +107,7 @@ fe-lint-tests-check:
 django-unit-test:
   extends: .django-python
   stage: test
+  needs: ["django-checks"]
   script:
     - pytest -m "not integration" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
   coverage: /^TOTAL.+?(\d+\%)$/
@@ -120,6 +121,7 @@ django-unit-test:
 
 frontend-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  needs: ["frontend-lint-check"]
   stage: test
   variables:
     CHROME_BIN: /usr/bin/google-chrome
@@ -136,6 +138,7 @@ frontend-unit-test:
 authorization-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
   stage: test
+  needs: ["frontend-lint-check"]
   variables:
     CHROME_BIN: /usr/bin/google-chrome
   script:
@@ -150,7 +153,7 @@ authorization-unit-test:
   # Until all tests are passing reliably
   allow_failure: true
 
-build-webadmin:
+webadmin:
   stage: build
   image: nx/ci
   script:
@@ -162,6 +165,24 @@ build-webadmin:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
+      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+
+frontend:
+  stage: build
+  image: nx/ci
+  script:
+  - runJenkinsJob.sh gitlab.cloud.frontend.review
+    "PUSH_TO_ARTIFACTORY=true"
+    "BRANCH=$CI_COMMIT_SHORT_SHA"
+    "BUILD_IDENTITY=$CI_PIPELINE_ID"
+    "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+    "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+    "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+    "GITLAB_JOB_ID=$CI_JOB_ID"
+    "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+    "GITLAB_JOB_URL=$CI_JOB_URL"
   rules:
   - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
       ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
