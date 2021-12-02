@@ -47,7 +47,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     constructor(
         private self: ElementRef,
         protected timeline: TimelineService,
-        protected selection: TimelineSelectionService,
+        public selection: TimelineSelectionService,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
         protected vms: VideoManagementSystemService,

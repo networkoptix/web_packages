@@ -1,4 +1,5 @@
 <div class="duration-selected"
+  *ngIf="selection.range.duration > 0"
   (click)="handleDurationClick($event)"
   (dblclick)="handleDurationDoubleClick($event, true)"
 >

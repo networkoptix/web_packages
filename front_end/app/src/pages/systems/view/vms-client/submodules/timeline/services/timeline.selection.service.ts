@@ -92,6 +92,13 @@ export class TimelineSelectionService {
         return this._selectedRange.clone();
     }
 
+    public get rangeText (): String {
+        const r = this.range;
+        const s = new Date(r.start);
+        const e = new Date(r.end);
+        return `(${s.toLocaleString()} - ${e.toLocaleString()})`;
+    }
+
     public set range (r: TimeRange) {
         this._selectedRange.start = r.start;
         this._selectedRange.end = r.end;
@@ -344,16 +351,20 @@ export class TimelineSelectionService {
     }
 
     public handleMouseUp (e: MouseEvent) {
+        // console.log('hmu', this.rangeText, this.range)
+        this._sanitizeRange();
+        // console.log('hmuSan', this.rangeText, this.range)
         if (
             this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&
             this.timeline.durationToDomWidth(this._selectedRange.duration) <= MIN_SELECTION_WIDTH_PX
         ) {
             this.reset();
+            // console.log('hmuRes', this.rangeText, this.range)
         } else {
-            if (this._snapRangeEdgesToPlayback()) {
-                this._emit();
-            }
+            this._snapRangeEdgesToPlayback();
+            this._emit();
         }
+        // console.log('hmuAfter', this.range)
         this._dragMode = SELECTION_DRAG_MODE.NO_DRAGGING;
     }
 
