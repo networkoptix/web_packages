@@ -504,6 +504,7 @@
         "INCOMPATIBLE": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers le {downloadHTML}.",
         "This user does not exist.": "Cet utilisateur n'existe pas.",
         "The user is disabled. Please contact your system administrator.": "L'utilisateur est désactivé. Veuillez contacter votre administrateur système.",
+        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
         "cloud_systems_have_different_owners": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
         "fail": "{failedSystem} est inaccessible.",
@@ -534,6 +535,7 @@
         "cantSharePrefix": "Impossible de partager le système",
         "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
         "emailNotFound": "Compte n’existe pas.",
+        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
         "failedToAccessSystem": "Aucun système ne peut être accédé par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, ou si vous êtes connecté au compte incorrect.",
         "failedToAccessCamera": "Aucune caméra ne peut être accédée par ce lien.",
         "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
@@ -638,6 +640,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Télécharger %VMS_NAME%",
         "downloadPlatform": "Télécharger %VMS_NAME% pour ",
+        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Impossible d'accéder au système",
         "failedToAccessCamera": "Impossible d'accéder à la caméra",
         "integrations": "Intégrations de %VMS_NAME%",
@@ -847,7 +850,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Impossible d'appliquer les modifications",
         "reviewAccepted": "La révision a été acceptée",
         "system": {
             "deleted": {
