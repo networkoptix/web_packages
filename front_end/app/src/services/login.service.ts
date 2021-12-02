@@ -1,19 +1,21 @@
-import { IParams, NxSystem } from './system.service';
-import {
-    LoginWebadminModalContent
-} from '@dialogs/login-webadmin/login-webadmin.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { IConfig, NxConfigService } from './nx-config';
 import { Location } from '@angular/common';
-import { NxBootstrapProvider } from './nx-bootstrap-provider';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { NxAccountService } from '@services/account.service';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
+
+import {
+    LoginWebadminModalContent
+} from '@dialogs/login-webadmin/login-webadmin.component';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import type { NxAccountService } from '@services/account.service';
+
+import { NxBootstrapProvider } from './nx-bootstrap-provider';
+import { IConfig, NxConfigService } from './nx-config';
+import { IParams, NxSystem } from './system.service';
 
 @Injectable({
     providedIn: 'root'

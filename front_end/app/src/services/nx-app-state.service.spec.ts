@@ -1,5 +1,6 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
-import { NxAppStateService }     from '@services/nx-app-state.service';
+
+import { NxAppStateService } from '@services/nx-app-state.service';
 
 describe('AppState Service', () => {
     let appStateService: NxAppStateService;

@@ -1,5 +1,6 @@
-import { LocalAccount } from './local';
 import { Injectable }   from '@angular/core';
+
+import { LocalAccount } from './local';
 export { Account, isAccount } from './account';
 
 /**

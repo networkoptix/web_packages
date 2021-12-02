@@ -8,8 +8,12 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import { ConsoleManifest, ConsoleSection } from '@components/console-table/console-table.component.types';
-import { MenuNode }                        from '../menus.service.types';
+import {
+    ConsoleManifest,
+    ConsoleSection
+} from '@components/console-table/console-table.component.types';
+
+import { MenuNode } from '../menus.service.types';
 
 export interface BaseConfig {
     commonPasswordsList?: { [key: string]: number; };

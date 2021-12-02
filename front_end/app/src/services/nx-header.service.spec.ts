@@ -1,11 +1,12 @@
-import { waitForAsync, TestBed }          from '@angular/core/testing';
-import { NxHeaderService }                from '@services/nx-header.service';
-import { NxMenusService }       from '@services/menus.service';
-import { MenuNode } from '@services/menus.service.types';
-import { Router, RouterEvent }            from '@angular/router';
+import { waitForAsync, TestBed } from '@angular/core/testing';
+import { Router, RouterEvent } from '@angular/router';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { setupTest41System }                from '@src/_mocks/system.test';
-import { headerNodes }                    from '@src/_mocks/nodesMock';
+
+import { NxMenusService } from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
+import { NxHeaderService } from '@services/nx-header.service';
+import { headerNodes } from '@src/_mocks/nodesMock';
+import { setupTest41System } from '@src/_mocks/system.test';
 
 const eventSubject = new ReplaySubject<RouterEvent>(1);
 const routerMock = {
@@ -91,7 +92,8 @@ describe('Nx Header Service', () => {
 
     it('should set location (/systems)', () => {
         headerService.setLocation('/systems');
-        expect(headerService.currentLocation).toEqual({ isSystem: true, parentNode: undefined, path: '/systems' });
+        expect(headerService.currentLocation)
+            .toEqual({ isSystem: true, parentNode: undefined, path: '/systems' });
     });
 
     it('should set location (/download)', () => {

@@ -1,26 +1,25 @@
-import {
-    Inject, Injectable, Injector
-}                                    from '@angular/core';
-import { DOCUMENT, Location }        from '@angular/common';
-import { Router }                    from '@angular/router';
-import { of }                        from 'rxjs';
-import { tap, catchError }           from 'rxjs/operators';
+import { DOCUMENT, Location } from '@angular/common';
+import { Inject, Injectable, Injector } from '@angular/core';
+import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { of } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
-import { NxConfigService }           from '../nx-config';
-import { NxCloudApiService }         from '../nx-cloud-api';
-import { NxLanguageProviderService } from '../nx-language-provider';
-import { NxSessionService }          from '../session.service';
-import { WINDOW }                    from '../window-provider';
-import { NxAppStateService }         from '../nx-app-state.service';
-import { NxUriService }              from '../uri.service';
-import { NxPollService }             from '../poll.service';
-import { NxSystemAPIService }        from '../system-api.service';
-import { BaseAccount }               from './base';
-import { Account }                   from './account';
-import { NxStorageService }          from '../storage.service';
-import { CookieService }             from 'ngx-cookie-service';
 import { NxLoginService } from '../login.service';
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService } from '../nx-config';
+import { NxLanguageProviderService } from '../nx-language-provider';
 import { OauthService } from '../oauth.service';
+import { NxPollService } from '../poll.service';
+import { NxSessionService } from '../session.service';
+import { NxStorageService } from '../storage.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxUriService } from '../uri.service';
+import { WINDOW } from '../window-provider';
+
+import { Account } from './account';
+import { BaseAccount } from './base';
 
 @Injectable()
 export class LocalAccount extends BaseAccount {

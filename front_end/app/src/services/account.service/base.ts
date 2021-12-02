@@ -1,27 +1,29 @@
-import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
+import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { NxConfigService, IConfig } from '../nx-config';
-import { NxCloudApiService } from '../nx-cloud-api';
-import { NxLanguageProviderService } from '../nx-language-provider';
-import { NxSessionService } from '../session.service';
-import { NxApplyService } from '../apply.service';
-import { WINDOW } from '../window-provider';
-import { NxAppStateService } from '../nx-app-state.service';
-import { NxUriService } from '../uri.service';
-import { NxPollService } from '../poll.service';
-import { NxUtilsService } from '../utils.service';
-import { NxSystemAPIService } from '../system-api.service';
-import { Account } from './account';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxStorageService } from '../storage.service';
-import { NxLoginService } from '@services/login.service';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
+import { NxLoginService } from '@services/login.service';
 import { OauthService } from '@services/oauth.service';
+
+import { NxApplyService } from '../apply.service';
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService, IConfig } from '../nx-config';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxPollService } from '../poll.service';
+import { NxSessionService } from '../session.service';
+import { NxStorageService } from '../storage.service';
+import { NxSystemAPIService } from '../system-api.service';
+import { NxUriService } from '../uri.service';
+import { NxUtilsService } from '../utils.service';
+import { WINDOW } from '../window-provider';
+
+import { Account } from './account';
 
 /**
  * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.

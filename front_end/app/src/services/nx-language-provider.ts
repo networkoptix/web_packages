@@ -1,15 +1,17 @@
-import { Inject, Injectable }      from '@angular/core';
-import { HttpClient }              from '@angular/common/http';
-import { BehaviorSubject }         from 'rxjs';
-import { TranslateService }        from '@ngx-translate/core';
-import { environment }             from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from 'ngx-webstorage';
+import { BehaviorSubject } from 'rxjs';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxSessionService }        from './session.service';
-import { LocalStorageService }     from 'ngx-webstorage';
-import { WINDOW }                  from './window-provider';
-import { NxUriCacheService }       from '@services/uri-cache.service';
-import { Router }                  from '@angular/router';
-import { NxSwCacheService }        from '@services/sw-cache.service';
+import { environment } from '@environments/environment';
+import { NxSwCacheService } from '@services/sw-cache.service';
+import { NxUriCacheService } from '@services/uri-cache.service';
+
+import { NxSessionService } from './session.service';
+import { WINDOW } from './window-provider';
 
 interface IParams<Value = any> {
     [key: string]: Value;

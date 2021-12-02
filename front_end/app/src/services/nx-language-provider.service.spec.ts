@@ -1,18 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import {
-    waitForAsync, TestBed,
-    fakeAsync, tick
-}                                    from '@angular/core/testing';
-import { NxConfigService }           from '@services/nx-config';
+    waitForAsync,
+    TestBed,
+    fakeAsync,
+    tick
+} from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
+import { LocalStorageService } from 'ngx-webstorage';
+import { of } from 'rxjs';
+
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService }          from '@services/session.service';
-import { TranslateModule }           from '@ngx-translate/core';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { NxUriCacheService }         from '@services/uri-cache.service';
-import { Router }                    from '@angular/router';
-import { WINDOW }                    from '@services/window-provider';
-import { of }                        from 'rxjs';
-import { MockProvider }              from 'ng-mocks';
-import { HttpClient }                from '@angular/common/http';
+import { NxSessionService } from '@services/session.service';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { WINDOW } from '@services/window-provider';
 
 describe('Language provider service', () => {
     let langProvider: NxLanguageProviderService;
@@ -52,7 +55,8 @@ describe('Language provider service', () => {
     });
 
     it('should have setter and getter (currentLang)', fakeAsync(() => {
-        spyOn(langProvider, 'loadLanguage').and.returnValue(of({ Cancel: 'Cancel' }).toPromise());
+        spyOn(langProvider, 'loadLanguage')
+            .and.returnValue(of({ Cancel: 'Cancel' }).toPromise());
 
         langProvider.currentLang = 'en_US';
         tick(); // making sure loadLanguage sets translations

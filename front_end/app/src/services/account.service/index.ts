@@ -1,5 +1,6 @@
-import { CloudAccount } from './cloud';
 import { Injectable } from '@angular/core';
+
+import { CloudAccount } from './cloud';
 export { Account, isAccount } from './account';
 
 /**

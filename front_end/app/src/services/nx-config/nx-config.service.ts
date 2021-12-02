@@ -1,11 +1,12 @@
-import { Injectable }        from '@angular/core';
-import { HttpClient }        from '@angular/common/http';
+import { coerceArray } from '@angular/cdk/coercion';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
-import { IConfig }           from './config-types';
-import { nxConfig }          from './config';
-import { environment }       from '@environments/environment';
-import { FeatureFlagType }   from '@services/nx-config/base-config';
-import { coerceArray }       from '@angular/cdk/coercion';
+import { environment } from '@environments/environment';
+import { FeatureFlagType } from '@services/nx-config/base-config';
+
+import { nxConfig } from './config';
+import { IConfig } from './config-types';
 
 @Injectable({
     providedIn: 'root'
@@ -31,11 +32,18 @@ export class NxConfigService {
 
     getSettings() {
         if (environment.isLocal) {
-            const webadminConfigRequest = this.http.get('/static/customization/webadmin_config.json').toPromise();
-            const descriptionRequest = this.http.get('/static/customization/description.json').toPromise();
-            const supportedLanguagesRequest = this.http.get('/static/languages.json').toPromise();
+            const webadminConfigRequest =
+                this.http.get('/static/customization/webadmin_config.json').toPromise();
+            const descriptionRequest =
+                this.http.get('/static/customization/description.json').toPromise();
+            const supportedLanguagesRequest =
+                this.http.get('/static/languages.json').toPromise();
             return Promise.all([webadminConfigRequest, descriptionRequest, supportedLanguagesRequest])
-                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, Object[]]) => ({ supportedLanguages: supportedLanguages.map((lang: any) => lang.language), webadminConfig, description }));
+                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, Object[]]) => ({
+                    supportedLanguages: supportedLanguages.map((lang: any) => lang.language),
+                    webadminConfig,
+                    description
+                }));
         } else {
             return this.http.get('/api/utils/settings').toPromise();
         }

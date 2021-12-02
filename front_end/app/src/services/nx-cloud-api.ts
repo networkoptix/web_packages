@@ -1,24 +1,25 @@
 /* eslint-disable camelcase */
-import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import { NxConfigService, IConfig } from './nx-config';
-import { Account } from './account.service/account';
-import * as t from './nx-cloud-api.types';
-import { NxUriCacheService } from './uri-cache.service';
-import { FeatureFlagStrings } from '@services/nx-config/base-config';
-import { NxSwCacheService } from '@services/sw-cache.service';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
-import { NxConsoleService } from '@pages/developer-console/console/console.service';
-import { OauthService } from '@services/oauth.service';
-import { InstantSearchOptions } from './nx-cloud-api.types';
-import { NxUtilsService } from './utils.service';
 import { environment } from '@environments/environment';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { OauthService } from '@services/oauth.service';
+import { NxSwCacheService } from '@services/sw-cache.service';
+
+import { Account } from './account.service/account';
+import * as t from './nx-cloud-api.types';
+import { InstantSearchOptions } from './nx-cloud-api.types';
+import { NxConfigService, IConfig } from './nx-config';
+import { NxUriCacheService } from './uri-cache.service';
+import { NxUtilsService } from './utils.service';
 
 export const DOC_TYPES = {
     knowledgebase: 'kb',
@@ -596,7 +597,8 @@ export class NxCloudApiService {
 
     getDocAsset(assetId) {
         const route = `${this.CONFIG.apiBase}/documentation/${assetId}`;
-        return this.http.get<t.DocAsset>(route).pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
+        return this.http.get<t.DocAsset>(route)
+            .pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
     }
 
     findArticleKB(assetId) {

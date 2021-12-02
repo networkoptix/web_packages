@@ -1,17 +1,19 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { waitForAsync, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { ReplaySubject } from 'rxjs';
+
 import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService } from './session.service';
-import { WINDOW } from './window-provider';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { getMockTranslations } from '@src/_mocks/helpers.test';
 import { headerNodes } from '@src/_mocks/nodesMock';
 import { setupTest41System } from '@src/_mocks/system.test';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { NxSessionService } from './session.service';
+import { WINDOW } from './window-provider';
 
 describe('Menus service', () => {
     let menu: NxMenusService;

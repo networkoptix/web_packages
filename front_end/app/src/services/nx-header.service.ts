@@ -1,11 +1,13 @@
-import { Injectable }                   from '@angular/core';
-import { BehaviorSubject }              from 'rxjs';
-import { Router, NavigationStart }      from '@angular/router';
-import { environment }                  from '@environments/environment';
-import { NxMenusService }     from './menus.service';
-import { MenuNode } from './menus.service.types';
-import { ContextManifest }              from './nx-cloud-api.types';
+import { Injectable } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
+
+import { environment } from '@environments/environment';
+
+import { NxMenusService } from './menus.service';
+import { MenuNode } from './menus.service.types';
+import { ContextManifest } from './nx-cloud-api.types';
 
 type createButtonType = 'default' | 'primary'
 interface MenuNodeNavProps {
@@ -102,7 +104,12 @@ export class NxHeaderService {
         }
     }
 
-    addDynamicDevConsoleNode<Asset extends Record<any, any>>(asset: Asset, editBaseUrl, contexts: ContextManifest[], url?) {
+    addDynamicDevConsoleNode<Asset extends Record<any, any>>(
+        asset: Asset,
+        editBaseUrl,
+        contexts: ContextManifest[],
+        url?
+    ) {
         const { id, name } = asset;
         const editUrl = `${editBaseUrl}/${id}`;
         for (const { name: contextName } of contexts) {
@@ -125,7 +132,9 @@ export class NxHeaderService {
                 };
 
                 dynamicNode.parentNode.nodes = [{ ...baseNode, url: matchedRoute }];
-                const matchedRoutes = this.getDynamicRoute(editUrl) ? [matchedRoute] : [matchedRoute, editUrl];
+                const matchedRoutes = this.getDynamicRoute(editUrl)
+                    ? [matchedRoute]
+                    : [matchedRoute, editUrl];
                 this.setDynamicRoute(matchedRoutes, dynamicNode, url);
             }
         }
@@ -178,7 +187,11 @@ export class NxHeaderService {
         this.currentLocation = bestMatch;
     }
 
-    static findMatchFactory(url: any, target: Record<any, any> = {}, removeFirstBreadcrumb = true) {
+    static findMatchFactory(
+        url: any,
+        target: Record<any, any> = {},
+        removeFirstBreadcrumb = true
+    ) {
         return (startingNodes) => {
             const nodes = [...startingNodes];
             for (let i = 0; i < nodes.length; i++) {
@@ -187,8 +200,16 @@ export class NxHeaderService {
                     const node = parentNode.nodes[j];
                     nodes.push(node);
                     if (node.url) {
-                        const nodeUrl = node.url.startsWith('/') ? node.url : `/${node.url}`;
-                        if (nodeUrl === url || url.startsWith(nodeUrl) && (!target.path || target.path.length < nodeUrl.length)) {
+                        const nodeUrl = node.url.startsWith('/')
+                            ? node.url
+                            : `/${node.url}`;
+                        if (
+                            nodeUrl === url ||
+                            (
+                                url.startsWith(nodeUrl) &&
+                                (!target.path || target.path.length < nodeUrl.length)
+                            )
+                        ) {
                             target.path = node.url;
                             target.assetId = node.asset_id;
                             target.parentNode = parentNode;
