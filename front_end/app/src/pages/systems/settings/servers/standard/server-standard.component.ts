@@ -90,8 +90,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     checkIfOnlineSubscription: SubscriptionLike;
     storageSubscription: SubscriptionLike;
     analyticsSubscription: SubscriptionLike;
-    unsub$ = new Subject<string>();
     destroyRestartTake$ = new Subject<boolean>();
+
+    readonly environment = environment;
 
     set serverLoaded(value) {
         this._serverLoaded = value;
@@ -282,7 +283,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 return Promise.reject(error);
             }
 
-            if (environment.isLocal && newPort) {
+            if (this.environment.isLocal && newPort) {
                 setTimeout(() => {
                     this.uriService.changePort(newPort);
                 });
