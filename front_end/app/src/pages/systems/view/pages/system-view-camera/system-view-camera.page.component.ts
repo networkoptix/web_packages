@@ -417,7 +417,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const firstRecordStartTimeMs = parseInt(records[0].startTimeMs);
                         const lastRecordStartTimeMs = parseInt(records[records.length - 1].startTimeMs);
                         const lastRecordDuration = parseInt(records[records.length - 1].durationMs);
-                        const showToLive = this.camera.isLive || this.camera.isScheduleEnabled || this.camera.hasArchive;
+                        const showToLive = !this.camera.isVirtual &&
+                            (this.camera.isLive || this.camera.isScheduleEnabled || this.camera.hasArchive);
                         const now = Date.now();
                         const range = new SimpleTimeRange(firstRecordStartTimeMs, showToLive ? now : (lastRecordStartTimeMs + lastRecordDuration));
                         const archive = records.map(r => new SimpleTimeRange(parseInt(r.startTimeMs), parseInt(r.startTimeMs) + parseInt(r.durationMs)));
@@ -637,6 +638,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.playback.state.mode === PLAYBACK_MODE.LIVE) {
             this.playback.stop();
             setTimeout(() => this.playback.playLive());
+        } else if (this.camera.isVirtual && this.playback.state.mode === PLAYBACK_MODE.STOPPED) {
+            this.playback.playArchive(this.camera.archiveRange.start);
         }
     }
 
@@ -644,7 +647,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('toggleFullScreen');
         $event?.stopPropagation();
 
-        if (fullscreen.getElement() == null) { // if browser is currently not in full screen
+        if (fullscreen.getElement() === null) { // if browser is currently not in full screen
             fullscreen.request().call(this.$self.parentElement);
             setTimeout(() => {
                 this.$self.classList.add('is-full-screen');

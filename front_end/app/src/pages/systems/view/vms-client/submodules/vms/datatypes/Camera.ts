@@ -1,5 +1,5 @@
 import { ms, int } from '../../../utils/type-aliases';
-import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
+import { ICamera, ISimpleTimeRange, SimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
 import BirdViewTree from './BirdViewTree';
 import { PlaybackTransport } from '@pages/systems/view/view.types';
 
@@ -30,6 +30,7 @@ export class Camera implements ICamera {
         public readonly parentServerId: string,
         public readonly preferredServerId: string,
         public readonly name: string,
+        public readonly model: string,
         public readonly url: string,
         public readonly status: CAMERA_STATUS,
         public readonly isScheduleEnabled: boolean,
@@ -142,8 +143,15 @@ export class Camera implements ICamera {
         }, Infinity) < 1000;
     }
 
+    public get isVirtual () {
+        return !this.model;
+    }
+
     public get isLive () {
-        return this.status === 'Online' || this.status === 'Live' || this.status === 'Recording';
+        return (
+            !this.isVirtual &&
+            (this.status === 'Online' || this.status === 'Live' || this.status === 'Recording')
+        );
     }
 
     public get isOnline () {
@@ -155,7 +163,7 @@ export class Camera implements ICamera {
     }
 
     public get isRecording () {
-        return this.status === 'Recording';
+        return !this.isVirtual && this.status === 'Recording';
     }
 
     public get isAuthorized () {

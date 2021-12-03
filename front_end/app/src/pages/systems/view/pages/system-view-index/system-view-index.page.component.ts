@@ -382,6 +382,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             c.parentId,
                             c.preferredServerId,
                             c.name,
+                            c.model,
                             c.url,
                             ms.status === 'Offline' ? 'Offline' : (c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS,
                             c.scheduleEnabled,

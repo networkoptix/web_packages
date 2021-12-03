@@ -8,6 +8,8 @@ export class TestCamera implements ICamera {
 
     public readonly rotation: int = 0
 
+    public readonly isVirtual: boolean = false
+
     public get archiveRange () {
         return this._archiveRange;
     }
