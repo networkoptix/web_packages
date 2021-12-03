@@ -494,6 +494,8 @@
                 const file = blobInfo.blob()
                 uploadImage(imageUploadUrl, file, {}, success)
             },
+            {% if admin_uploads %} image_list: {{admin_uploads|safe}}, {% endif %}
+            {% if admin_files %} link_list: {{admin_files|safe}}, {% endif %}
             toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code | sanitize | removeformat paste pastetext preview image table ',
             menubar: false,
             resize: 'both',

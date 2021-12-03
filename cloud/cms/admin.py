@@ -569,6 +569,17 @@ class AssetAdmin(CMSAdmin):
         context['preview_url_list'] = json.dumps(list(filter(lambda item: item[1], generate_preview_links(context=target_context, asset=asset, state="draft"))))
         context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
         context['order_options'] = order_options
+        image_extensions = ['jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'apng', 'avif' 'svg', 'gif', 'webp', 'bmp', 'ico', 'tif', 'tiff']
+        admin_files = [
+            {'title': upload.file.url.split('/')[-1],  'value': upload.file.url}
+            for upload in ExternalFile.objects.exclude(admin_upload=None)
+        ]
+        admin_uploads = [
+            upload for upload in admin_files
+            if upload['title'].split('.')[-1] in image_extensions
+        ]
+        context['admin_files'] = json.dumps(admin_files)
+        context['admin_uploads'] = json.dumps(admin_uploads)
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id}, order=order)
         form.add_fields(asset, target_context, Language.objects.get(code=context['language_code']), request.user)
@@ -915,16 +926,46 @@ class UserGroupsToAssetTypeAdmin(admin.ModelAdmin):
 admin.site.register(UserGroupsToAssetType, UserGroupsToAssetTypeAdmin)
 
 
+class AdminUploadedFilter(SimpleListFilter):
+    title = 'Admin Uploaded'
+    parameter_name = 'admin_uploaded'
+
+    def lookups(self, request, model_admin):
+        return (('Yes', 'Only admin uploads'), ('Mine', 'Only my uploads'), ('No', 'Exclude admin uploaded'))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'Yes':
+            return queryset.exclude(admin_upload=None)
+        elif value == 'Mine':
+            return queryset.filter(admin_upload=request.user)
+        elif value == 'No':
+            return queryset.filter(admin_upload=None)
+
+        return queryset
+
+
 @admin.register(ExternalFile)
 class ExternalFileAdmin(CMSAdmin):
-    list_display = ('id', 'file', 'asset_ds_pair_count', 'size', 'md5')
-    readonly_fields = ('asset_ds_pair_count', 'asset_ds_pair', 'size', 'md5')
+    list_display = 'id', 'file', 'admin_uploaded', 'asset_ds_pair_count', 'size', 'md5'
+    fields = 'file',
+    list_filter = AdminUploadedFilter,
 
     def asset_ds_pair_count(self, obj):
         return obj.asset_ds_pair.count()
+    
+    def admin_uploaded(self, obj):
+        return obj.admin_upload or 'No'
 
     def has_add_permission(self, request):
-        return False
+        return request.user.is_superuser
+    
+    def has_change_permission(self, request, obj=None):
+        return obj and obj.admin_upload == request.user
+
+    def save_model(self, request, obj, form, change):
+        obj = ExternalFile.objects.create(obj.file, user=request.user)
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(ContributorAgreement)

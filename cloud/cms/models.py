@@ -333,6 +333,8 @@ def slugify(name, lowercase=False):
 
 
 def rename_file(instance, filename):
+    if instance.admin_upload:
+        return os.path.join('admin-upload', filename)
     asset_ds_pair = instance.asset_ds_pair.first() if hasattr(instance, 'asset_ds_pair') else instance
     asset_name = slugify(asset_ds_pair.asset.name, True)
     structure_name = slugify(asset_ds_pair.data_structure.name, True)
@@ -1584,7 +1586,7 @@ def unblock_child_reviews(sender, instance, **kwargs):
     instance.update_children_reviews()
 
 class ExternalFileManager(models.Manager):
-    def create(self, asset, data_structure, file):
+    def create(self, file, asset=None, data_structure=None, user=None):
         '''
         Adds to asset_ds_pair if file already exist else creates new file.
         '''
@@ -1596,18 +1598,25 @@ class ExternalFileManager(models.Manager):
                 raw_bytes += chunk
         md5 = md5.hexdigest()
         asset_ds_pair = None
-        try:
-            asset_ds_pair = AssetDsPair.objects.get(
-                asset=asset, data_structure=data_structure)
-        except ObjectDoesNotExist:
-            asset_ds_pair = AssetDsPair(
-                asset=asset, data_structure=data_structure)
-            asset_ds_pair.save()
+        if asset and data_structure:
+            try:
+                asset_ds_pair = AssetDsPair.objects.get(
+                    asset=asset, data_structure=data_structure)
+            except ObjectDoesNotExist:
+                asset_ds_pair = AssetDsPair(
+                    asset=asset, data_structure=data_structure)
+                asset_ds_pair.save()
+
         external_file_obj = None
+
         try:
             external_file_obj = ExternalFile.objects.get(md5=md5)
-        except:
-            external_file_obj = ExternalFile(md5=md5, size=file.size)
+            
+            if not external_file_obj.admin_upload and user:
+                external_file_obj.admin_upload = user
+
+        except ExternalFile.DoesNotExist:
+            external_file_obj = ExternalFile(md5=md5, size=file.size, admin_upload=user)
             external_file_obj.save()
             external_file_obj.file=file
         else:
@@ -1622,9 +1631,13 @@ class ExternalFileManager(models.Manager):
                     raise ValueError('md5 Hash Collision')
             else:
                 external_file_obj.file=file
-        external_file_obj.assest_ds_pair_last_added = datetime.now()
-        external_file_obj.asset_ds_pair.add(asset_ds_pair)
+
+        if asset_ds_pair:
+            external_file_obj.assest_ds_pair_last_added = datetime.now()
+            external_file_obj.asset_ds_pair.add(asset_ds_pair)
+
         external_file_obj.save()
+
         return external_file_obj
 
 
@@ -1645,6 +1658,7 @@ class ExternalFile(models.Model):
     size = models.FloatField(default=0.0)
     asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
     assest_ds_pair_last_added = models.DateTimeField(default=datetime.now)
+    admin_upload = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,default=None, blank=True, null=True)
 
     objects = ExternalFileManager()
 
