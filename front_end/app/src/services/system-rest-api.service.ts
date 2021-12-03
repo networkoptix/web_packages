@@ -514,6 +514,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         password = '',
         takeRemoteSettings = true
     ) {
+        const [basicCredentials, _] = remoteEndpoint.split('@');
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
@@ -535,7 +536,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
                         // Request for a cloud token that has the targetSystem scope.
                         return this.refreshTokens(refreshToken, true, info.cloudSystemId)
                             .pipe(map((res: any) => ({ token: res.access_token })));
-                    } else if (password) {
+                    } else if (password || basicCredentials) {
+                        if (!password && basicCredentials) {
+                            const [_, basicPassword] = basicCredentials.replace(/https?:\/\//, '').split(':');
+                            if (basicPassword) {
+                                password = basicPassword;
+                            }
+                        }
                         const data = { username: 'admin', password, remember: false };
                         return this.proxy('post', 'https', remoteEndpoint, 'rest/v1/login/sessions', data);
                     }
