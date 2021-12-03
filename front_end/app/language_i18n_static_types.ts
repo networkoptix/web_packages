@@ -464,6 +464,8 @@ export interface Tooltips {
 export interface DialogsTwoFa {
     wizardWarning:      any;
     wizardWarningDescr: any;
+    installAuthApp:     any;
+    nowEnabled:         any;
 }
 
 export interface Downloads {
@@ -1540,6 +1542,8 @@ const typeMap: any = {
     "DialogsTwoFa": o([
         { json: "wizardWarning", js: "wizardWarning", typ: "any" },
         { json: "wizardWarningDescr", js: "wizardWarningDescr", typ: "any" },
+        { json: "installAuthApp", js: "installAuthApp", typ: "any" },
+        { json: "nowEnabled", js: "nowEnabled", typ: "any" },
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },
