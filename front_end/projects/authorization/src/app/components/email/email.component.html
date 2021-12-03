@@ -13,6 +13,7 @@
     <form #emailForm="ngForm" name="emailForm" class="form">
         <ng-container *ngIf="!environment.isLocal; else webadmin">
             <label for="authorizeEmail" class="mb-2" translate>Email</label>
+            <!-- TODO: Look into using the NxEmailComponent; may have some issues with css or error messages -->
             <input
                 type="email"
                 id="authorizeEmail"
@@ -21,12 +22,13 @@
                 [(ngModel)]="loginEmail"
                 #email="ngModel"
                 required
+                [pattern]="CONFIG.credentialsValidation.emailRegex"
                 [readonly]="emailProcess.processing"
                 email
                 nxFocusMe>
             <div *ngIf="email.invalid && (email.dirty && email.touched)" class="mt-2">
                 <p *ngIf="email.errors.required" class="error-label" translate>Enter email</p>
-                <p *ngIf="email.errors.email" class="error-label" translate>Invalid email</p>
+                <p *ngIf="email.errors.email || email.errors.pattern" class="error-label" translate>Invalid email</p>
                 <ng-container *ngIf="email.errors.accountNotActivated">
                     <p class="mb-2 error-label" translate>Account not activated.</p>
                     <p class="fake-link" (click)="reactivate()" translate>Resend activation email.</p>
