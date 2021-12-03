@@ -32,11 +32,17 @@ class TestModifyDB:
         mock_send = mocker.patch('notifications.notifications_api.send')
         mock_cloud_portal_customization_cache(
             reviews_enabled=True, integration_store_enabled=True)
-        users = [account_factory(email=f'{uuid4()}@test.com')
-                 for _ in range(7)]
+        users = [
+            add_permission(
+                account_factory(email=f'{uuid4()}@test.com'),
+                'publish_version'
+            ) for _ in range(randint(5, 15))]
 
-        for user in users:
-            add_permission(user, 'publish_version')
+        receive_all_users = [
+            add_permission(
+                account_factory(email=f'{uuid4()}@test.com'),
+                'get_all_review_emails'
+            ) for _ in range(randint(5, 15))]
 
         user, *other_users = users
 
@@ -46,7 +52,7 @@ class TestModifyDB:
             version__asset=asset).last()
         notify_version_ready(asset, review.version, user)
 
-        assert len(mock_send.mock_calls) == len(other_users)
+        assert len(mock_send.mock_calls) == len(other_users + receive_all_users)
         mock_send.assert_has_calls(
             call(user.email,
                  'review_version',

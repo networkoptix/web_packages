@@ -339,6 +339,7 @@ def add_permission(db, cloud_portal_type):
             raise Exception('Permission not found')
         group.permissions.add(permission)
         user.groups.add(group)
+        return user
     return _add_permission
 
 

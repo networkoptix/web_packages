@@ -51,29 +51,36 @@ def update_draft_state(review_id, target_state, user):
 def notify_version_ready(asset, version, exclude_user):
     from cms.models import cloud_portal_customization_cache
     from notifications.notifications_api import send
-    perm = Permission.objects.filter(codename='publish_version')
+    perm = Permission.objects.filter(codename__in=['publish_version', 'get_all_review_emails'])
     users = Account.objects.filter(groups__permissions__in=perm).exclude(pk=exclude_user.pk).distinct()
 
     asset_name = asset.name
     asset_type = AssetType.ASSET_TYPES[asset.asset_type.type]
     asset_customizations_set = set()
+    customization_not_enabled = set()
     for customization in asset.customizations.values_list('name', flat=True):
         cloud_capabilities = cloud_portal_customization_cache(customization, 'cloud_capabilities')
         # Ignore integrations if the integration store is disabled.
-        if cloud_capabilities.get('reviews_enabled', False) and \
+        if (reviews_enabled := cloud_capabilities.get('reviews_enabled', False)) and \
                 (not asset.is_integration or cloud_capabilities.get('integration_store_enabled', False)):
             asset_customizations_set.add(customization)
+        
+        if not reviews_enabled:
+            customization_not_enabled.add(customization)
 
-    if not asset_customizations_set:
+    if not asset_customizations_set and not users.filter(groups__permissions__in=perm.filter(codename='get_all_review_emails')):
         return
 
     for user in users:
         # If the user has a customization in common with asset send them a notification
-        intersection_user_customizations_to_assets = set(user.customizations) & asset_customizations_set
-        if intersection_user_customizations_to_assets:
+        user_customizations = set(user.customizations)
+        intersection_user_customizations_to_assets = user_customizations & asset_customizations_set
+        intersection_user_customizations_to_customization_not_enabled = user_customizations & customization_not_enabled if 'get_all_review_emails' in user.global_permissions else set()
+
+        if customizations := intersection_user_customizations_to_assets or intersection_user_customizations_to_customization_not_enabled:
             # There should never be two customizations with the same name but this is a safety check
             review_id = version.assetcustomizationreview_set.\
-                filter(customization__name=intersection_user_customizations_to_assets.pop()).first().id
+                filter(customization__name=customizations.pop()).first().id
             send(user.email, "review_version",
                  {
                      'id': review_id,
