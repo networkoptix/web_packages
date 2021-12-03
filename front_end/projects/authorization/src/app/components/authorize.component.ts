@@ -17,6 +17,7 @@ import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { WINDOW }                    from '@services/window-provider';
+require('what-input');
 
 export interface AuthorizeParams {
     response_type: string,
@@ -398,7 +399,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             err => {
                 if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
-                    this.authCodeErrorCode = 'wrongBackupCode';
+                    this.backupCodeErrorCode = 'wrongBackupCode';
                 } else {
                     console.error('err from checkBackupCodeProcess', err);
                     this.handleCloudConnectionError(err, this.checkBackupCodeProcess);
