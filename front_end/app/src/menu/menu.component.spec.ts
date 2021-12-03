@@ -1,19 +1,4 @@
-import {
-    ComponentFixture,
-    inject,
-    TestBed,
-    waitForAsync
-} from '@angular/core/testing';
-import { nxConfig } from '@services/nx-config/config';
-import { NxConfigService } from '@services/nx-config';
-import { NxMenuComponent }                         from './menu.component';
-import { getMockTranslations, HelperMockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService }               from '@services/nx-language-provider';
-import { ActivatedRoute } from '@angular/router';
-import { NxApplyService } from '@services/apply.service';
-import { NxSearchService } from '@services/search.service';
-import { NxMenuService } from '@src/menu/menu.service';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
     DebugElement,
     Component,
@@ -21,13 +6,33 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
-import { NxLevel1ItemComponent } from '@src/menu/level-1/level-1-item.component';
-import { NxLevel3ItemComponent } from '@src/menu/level-3/level-3-item.component';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NxSafePipe } from '@src/pipes/nx-safe';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+    ComponentFixture,
+    inject,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { BehaviorSubject } from 'rxjs';
+
+import { NxApplyService } from '@services/apply.service';
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSearchService } from '@services/search.service';
+import {
+    getMockTranslations,
+    HelperMockProvider
+} from '@src/_mocks/helpers.test';
+import { NxLevel1ItemComponent } from '@src/menu/level-1/level-1-item.component';
+import { NxLevel3ItemComponent } from '@src/menu/level-3/level-3-item.component';
+import { NxMenuService } from '@src/menu/menu.service';
+import { NxSafePipe } from '@src/pipes/nx-safe';
+
+import { NxMenuComponent } from './menu.component';
 
 @Component({
     selector: 'nx-search',
@@ -405,7 +410,8 @@ describe('NxMenuComponent', () => {
                         expect(component.menuContent.length).toBe(1);
                         expect(component.menuContent[0].id).toBe('cameras');
                         expect(component.menuContent[0].level3.length).toBe(1);
-                        expect(component.menuContent[0].level3[0].additionalText).toBe('<span class="highlighted">192.168.5.10</span>0');
+                        expect(component.menuContent[0].level3[0].additionalText)
+                            .toBe('<span class="highlighted">192.168.5.10</span>0');
                     }));
             });
         });

@@ -1,9 +1,7 @@
-import {
-    inject,
-    TestBed, waitForAsync
-}                          from '@angular/core/testing';
-import { NxMenuService }   from '@src/menu/menu.service';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
+
 import { NxSearchService } from '@services/search.service';
+import { NxMenuService } from '@src/menu/menu.service';
 
 describe('NxMenuService', () => {
     const menuContent = [{
@@ -247,11 +245,13 @@ describe('NxMenuService', () => {
             expect(filtered.length).toBe(1);
             expect(filtered[0].id).toBe('cameras');
             expect(filtered[0].level3.length).toBe(1);
-            expect(filtered[0].level3[0].additionalText).toBe('<span class="highlighted">192.168.5.10</span>0');
+            expect(filtered[0].level3[0].additionalText)
+                .toBe('<span class="highlighted">192.168.5.10</span>0');
         }));
 
     it('should sanitize content', () => {
         const clean = menuService.sanitizeContent(menuContent);
-        expect(clean[0].level3[0].label).toBe('&lt;b&gt;General&lt;/b&gt;');  // <b>General</b>
+        expect(clean[0].level3[0].label).toBe('&lt;b&gt;General&lt;/b&gt;');
+        // <b>General</b>
     });
 });

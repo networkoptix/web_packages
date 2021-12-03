@@ -242,6 +242,47 @@ module.exports = {
             rules: {
                 'dot-notation': 'off'
             }
+        },
+        {
+            files: [
+                // Progress so far
+                'app/*.ts',
+                'app/src/_mocks/**/*.ts',
+                'app/src/_testing/**/*.ts',
+                // TODO 'app/src/components/**/*.ts',
+                // TODO 'app/src/dialogs/**/*.ts',
+                'app/src/directives/**/*.ts',
+                'app/src/interceptors/**/*.ts',
+                'app/src/menu/**/*.ts',
+                // TODO 'app/src/pages/**/*.ts',
+                'app/src/pipes/**/*.ts',
+                'app/src/routeGuards/**/*.ts',
+                'app/src/services/**/*.ts',
+            ],
+            rules: {
+                'import/order': ['error', {
+                    groups: [
+                        'builtin',
+                        'external',
+                        'internal',
+                        'parent',
+                        'sibling',
+                        'index'
+                    ],
+                    pathGroups: Object.keys(
+                        require('./tsconfig.json').compilerOptions.paths
+                    ).map(path => ({
+                        pattern: `${path}*`,
+                        // Assuming that tsconfig paths end with single
+                        // asterisk so that the pattern here will end with
+                        // double asterisk
+                        group: 'internal'
+                    })),
+                    pathGroupsExcludedImportTypes: ['internal'],
+                    'newlines-between': 'always',
+                    alphabetize: { order: 'asc' }
+                }],
+            }
         }
     ]
 };

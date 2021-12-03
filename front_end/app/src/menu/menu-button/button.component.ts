@@ -33,7 +33,9 @@ export class NxMenuButtonComponent {
     }
 
     ngOnInit() {
-        this.caption = (typeof this.button.label === 'function') ? this.button.label() : this.button.label;
+        this.caption = (typeof this.button.label === 'function')
+            ? this.button.label()
+            : this.button.label;
     }
 
     action() {
@@ -46,7 +48,10 @@ export class NxMenuButtonComponent {
                         userId = this.system.mediaserver.cleanId(userId);
                         this.menuService.detail = userId;
                         this.uriService
-                            .updateURI(this.uriService.getSystemSettingsRoute({ systemId, userId }))
+                            .updateURI(this.uriService.getSystemSettingsRoute({
+                                systemId,
+                                userId
+                            }))
                             .catch(error => console.error(error));
                     }
                 })

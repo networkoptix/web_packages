@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { isArray }               from 'rxjs/internal-compatibility';
-import { BehaviorSubject }       from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { isArray } from 'rxjs/internal-compatibility';
 
-import { NxUtilsService }  from '@services/utils.service';
 import { NxSearchService } from '@services/search.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Injectable({
     providedIn: 'root'
@@ -141,17 +141,25 @@ export class NxMenuService implements OnDestroy {
                 if (searchSubMenus && node.level2?.length) {
                     node.level2.forEach(subNode => {
                         if (subNode.level3?.length) {
-                            const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node, subNode);
+                            const haveNode = this.filterNodesIntoHaveNode(
+                                model, filteredContent, node, subNode
+                            );
                             if (haveNode?.level3?.length) {
-                                this.addHaveNodeToFilteredContent(haveNode, filteredContent);
+                                this.addHaveNodeToFilteredContent(
+                                    haveNode, filteredContent
+                                );
                             }
                         }
                     });
                 }
                 if (node.level3?.length) {
-                    const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node);
+                    const haveNode = this.filterNodesIntoHaveNode(
+                        model, filteredContent, node
+                    );
                     if (haveNode?.level3?.length) {
-                        this.addHaveNodeToFilteredContent(haveNode, filteredContent);
+                        this.addHaveNodeToFilteredContent(
+                            haveNode, filteredContent
+                        );
                     }
                 }
             });
@@ -208,13 +216,16 @@ export class NxMenuService implements OnDestroy {
                 node.level3.forEach(item => {
                     if (item.label) {
                         item.label = NxUtilsService.htmlToEntity(item.label);
-                        // item.label = item.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     }
                     if (item.additionalLabel) {
-                        item.additionalLabel = NxUtilsService.htmlToEntity(item.additionalLabel);
+                        item.additionalLabel = NxUtilsService.htmlToEntity(
+                            item.additionalLabel
+                        );
                     }
                     if (item.additionalText) {
-                        item.additionalText = NxUtilsService.htmlToEntity(item.additionalText);
+                        item.additionalText = NxUtilsService.htmlToEntity(
+                            item.additionalText
+                        );
                     }
                 });
             }
@@ -245,11 +256,17 @@ export class NxMenuService implements OnDestroy {
 
     private highlighted(item) {
         if (item.label) {
-            item.label = item.label.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+            item.label = item.label.replace(
+                this.regex,
+                (match) => `<span class="highlighted">${match}</span>`
+            );
         }
 
         if (item.additionalText) {
-            item.additionalText = item.additionalText.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+            item.additionalText = item.additionalText.replace(
+                this.regex,
+                (match) => `<span class="highlighted">${match}</span>`
+            );
         }
 
         return item;

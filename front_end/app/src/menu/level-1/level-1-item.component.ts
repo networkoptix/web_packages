@@ -1,11 +1,16 @@
 import {
-    Component, EventEmitter, Input, OnChanges,
-    OnInit, Output, SimpleChanges
-}                                   from '@angular/core';
-import { Router }                   from '@angular/router';
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges
+} from '@angular/core';
+import { Router } from '@angular/router';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxMenuService }            from '@src/menu/menu.service';
+import { NxMenuService } from '@src/menu/menu.service';
 
 /* Usage
  */
@@ -30,32 +35,40 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     CONFIG: IConfig;
 
-    constructor(configService: NxConfigService,
-                private router: Router,
-                private menuService: NxMenuService
+    constructor(
+        configService: NxConfigService,
+        private router: Router,
+        private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
         this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        this.itemPath += (this.item.path !== '')
+            ? '/' + this.item.path
+            : '';
         this._toggle = this.item.toggle || false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.base?.currentValue) {
             this.itemPath = changes.base.currentValue;
-            this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+            this.itemPath += (this.item.path !== '')
+                ? '/' + this.item.path
+                : '';
         }
 
         if (changes.searchMode?.currentValue) {
-            this._type = changes.searchMode?.currentValue ? 'arrow_collapse' : 'arrow_expand';
+            this._type = changes.searchMode?.currentValue
+                ? 'arrow_collapse'
+                : 'arrow_expand';
         }
 
         if (changes.item?.currentValue) {
             if (this.searchMode) {
-                this._searchableItemsLength = changes.item.currentValue.level3.filter((itm) => !itm.horizontal).length;
+                this._searchableItemsLength =
+                    changes.item.currentValue.level3.filter((itm) => !itm.horizontal).length;
                 this._toggle = changes.item.currentValue.toggle;
             }
         }

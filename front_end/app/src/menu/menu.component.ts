@@ -2,19 +2,20 @@ import {
     Component, ElementRef, HostListener, Input, OnChanges, OnInit,
     SimpleChanges, ViewChild, ViewEncapsulation, EventEmitter, Output
 } from '@angular/core';
-import { ActivatedRoute, Router }      from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent, SubscriptionLike } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }         from '@services/nx-config';
-import { NxMenuService }                    from './menu.service';
-import { NxLanguageProviderService }        from '@services/nx-language-provider';
-import { NxUtilsService }                   from '@services/utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxApplyService } from '@services/apply.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
-import { NxSystem }                         from '@services/system.service';
-import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
-import { UntilDestroy }                     from '@ngneat/until-destroy';
-import { map, startWith }                   from 'rxjs/operators';
-import { NxApplyService }                   from '@services/apply.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
+
+import { NxMenuService } from './menu.service';
 
 /* Usage
  <nx-menu>
@@ -326,7 +327,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.menuHeightFit = '100%';
                 this.scrollHeightFit = '100%';
                 this.menuOverflow = 'auto';
-                this.navItems = Array.from(this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3'));
+                this.navItems = Array.from(
+                    this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3')
+                );
             });
         } else {
             this.menuHeightFit = '';
