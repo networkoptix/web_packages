@@ -1,3 +1,4 @@
+import { NxConfigService } from '@services/nx-config';
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
@@ -31,6 +32,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     private unsub$ = new Subject();
 
     constructor(
+        protected configService: NxConfigService,
         public timeline: TimelineService,
         protected playback: PlaybackService,
         protected canvasRenderer: TimelineCanvasRendererService,
@@ -39,7 +41,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected selection: TimelineSelectionService
     ) {
         this._onTimelineStatusChange = this._onTimelineStatusChange.bind(this);
+        this.archiveSelectionEnabled = this.configService.flagsEnabled('archiveSelection');
     }
+
+    public readonly archiveSelectionEnabled: boolean = false
 
     protected _onTimelineStatusChange (s: TimelineServiceStatus) {
         if (s.canvasGeometryUpdateRequested) {
@@ -141,13 +146,19 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         e.stopPropagation();
         e.preventDefault();
-        const offsetY = NxUtilsService.calcOffsetY(e);
-        if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
-            offsetY <= CANVAS_SELECTION_OFFSET_END
-        ) {
-            this.selection.handleBackgroundMouseDown(e as MouseEvent);
+        if (this.archiveSelectionEnabled) {
+            const offsetY = NxUtilsService.calcOffsetY(e);
+            if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
+                offsetY <= CANVAS_SELECTION_OFFSET_END
+            ) {
+                this.selection.handleBackgroundMouseDown(e as MouseEvent);
+            } else {
+                this.selection.reset();
+                this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+                this._mouseNotReleasedYet = true;
+                this.timeUnderMouse.handleMouseDown();
+            }
         } else {
-            this.selection.reset();
             this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
             this._mouseNotReleasedYet = true;
             this.timeUnderMouse.handleMouseDown();
@@ -155,7 +166,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
-        this.selection.handleMouseUp(e as MouseEvent);
+        if (this.archiveSelectionEnabled) {
+            this.selection.handleMouseUp(e as MouseEvent);
+        }
         const screenX = NxUtilsService.calcScreenX(e);
         const offsetX = NxUtilsService.calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
@@ -188,7 +201,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public documentMouseUpHandler (e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
-        this.selection.handleMouseUp(e as MouseEvent);
+        if (this.archiveSelectionEnabled) {
+            this.selection.handleMouseUp(e as MouseEvent);
+        }
     }
 }
 

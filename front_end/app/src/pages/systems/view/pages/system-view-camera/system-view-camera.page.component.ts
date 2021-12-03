@@ -91,7 +91,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unsub$ = new Subject();
 
     constructor(
-        configService: NxConfigService,
+        private configService: NxConfigService,
         languageService: NxLanguageProviderService,
         utilsService: NxUtilsService,
         protected location: Location,
@@ -120,7 +120,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.isMobileSafari = utilsService.isSafari() && utilsService.isMobile();
 
         this.onPlaybackChange = this.onPlaybackChange.bind(this);
+
+        this.archiveSelectionEnabled = this.configService.flagsEnabled('archiveSelection');
     }
+
+    public readonly archiveSelectionEnabled: boolean
 
     protected onPlaybackChange (s: PlaybackState) {
         let time = '';
