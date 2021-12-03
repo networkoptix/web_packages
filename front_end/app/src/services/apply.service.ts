@@ -445,6 +445,9 @@ export class NxApplyService {
             // run SAVE only for changed forms
             this.applyFormFunctions = [];
             for (const frm in this.forms) {
+                if (this.forms[frm].form.invalid) {
+                    return Promise.resolve(); // abort running SAVE processes!
+                }
                 if (this.forms[frm].hasChange) {
                     this.applyFormFunctions.push(this.forms[frm].save);
                 }
