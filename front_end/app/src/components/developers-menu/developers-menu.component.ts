@@ -238,9 +238,9 @@ export class NxDevelopersMenuComponent implements OnInit {
 
         this.service.activeAssetIdSubject?.pipe(
             untilDestroyed(this)
-            ).subscribe(id => {
-                this.updateActive(id, this.service.activeAssetState);
-            });
+        ).subscribe(id => {
+            this.updateActive(id, this.service.activeAssetState);
+        });
 
         this.searchQuery$.pipe(untilDestroyed(this)).subscribe((query) => {
             if (query !== '') {

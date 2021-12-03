@@ -168,7 +168,7 @@ module.exports = {
             allowTaggedTemplates: true
         }],
         'no-unused-vars': 'off', // ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
-        'no-use-before-define': ['error', { functions: false, classes: false, variables: false }],
+        // 'no-use-before-define': ['error', { functions: false, classes: false, variables: false }],
         'no-useless-call': 'error',
         'no-useless-computed-key': 'error',
         // "no-useless-constructor"       : "error",

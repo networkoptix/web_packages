@@ -1,11 +1,9 @@
-interface StateMachine {
+class StateMachine {
     currentState: string;
     state;
     store;
     history: string[];
-}
 
-class StateMachine {
     constructor(initialState, store) {
         this.store = store;
         this.currentState = initialState;
