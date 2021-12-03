@@ -1,8 +1,12 @@
 import {
-    ComponentFixture, fakeAsync, TestBed,
-    tick, waitForAsync
-}                              from '@angular/core/testing';
+    ComponentFixture,
+    fakeAsync,
+    TestBed,
+    tick,
+    waitForAsync
+} from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+
 import { NxTextEditableComponent } from './editable.component';
 
 describe('NxTextEditableComponent', () => {

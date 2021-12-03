@@ -1,17 +1,18 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MockProvider } from 'ng-mocks';
+
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxEmailComponent } from './email.component';
 
-import { FormsModule } from '@angular/forms';
-import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import { MockProvider } from 'ng-mocks';
+import { NxEmailComponent } from './email.component';
 
 describe('NxEmailComponent email input Unit Test', () => {
     let component: NxEmailComponent;
@@ -72,7 +73,8 @@ describe('NxEmailComponent email input Unit Test', () => {
         component.authorize = false;
         fixture.detectChanges();
         const input = el.nativeElement.querySelector('input');
-        expect(input.attributes.getNamedItem('ng-reflect-name')?.value).toBe('registerEmailLocked');
+        expect(input.attributes.getNamedItem('ng-reflect-name')?.value)
+            .toBe('registerEmailLocked');
         expect(input.type).toBe('text');
         expect(input.className).toContain('form-control');
     });

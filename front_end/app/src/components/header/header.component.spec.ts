@@ -1,32 +1,32 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement, Renderer2, Input, Component } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement, Renderer2, Input, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, of } from 'rxjs';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxAccountService } from '@services/account.service';
-import { NxSessionService } from '@services/session.service';
-import { NxSystemsService } from '@services/systems.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxSystemService } from '@services/system.service';
-import { NxMenusService } from '@services/menus.service';
-import { WINDOW } from '@services/window-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSessionService } from '@services/session.service';
 import { NxStorageService } from '@services/storage.service';
-import { NxHeaderComponent } from './header.component';
-
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { NxSystemService } from '@services/system.service';
+import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 import { NxUnsafePipe } from '@src/pipes/nx-unsafe';
+
+import { NxHeaderComponent } from './header.component';
 
 @Component({
     selector: 'nx-nav-dropdown',

@@ -1,14 +1,17 @@
-import {
-    waitForAsync, ComponentFixture, TestBed
-}                                  from '@angular/core/testing';
-import { DebugElement }            from '@angular/core';
-import { CommonModule }            from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-import { NxConfigService }          from '@services/nx-config';
-import { nxConfig }                 from '@services/nx-config/config';
-import { NxExternalVideoComponent } from './external-video.component';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
+import { nxConfig } from '@services/nx-config/config';
+
+import { NxExternalVideoComponent } from './external-video.component';
 
 describe('NxExternalVideoComponent', () => {
     let component: NxExternalVideoComponent;

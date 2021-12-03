@@ -1,5 +1,9 @@
 import {
-    Component, Input, OnChanges, OnInit, SimpleChanges
+    Component,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges
 } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -56,11 +60,20 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
         let state = mainButtonState.ALL;
         if (this.environment.isLocal) {
             state = mainButtonState.SYSTEM;
-        } else if (this.node && !this.headerService.currentLocation.isSystem) {
+        } else if (
+            this.node &&
+            !this.headerService.currentLocation.isSystem
+        ) {
             state = mainButtonState.NODE;
-        } else if (this.headerService.currentLocation.isSystem && this.headerService.activeSystem) {
+        } else if (
+            this.headerService.currentLocation.isSystem &&
+            this.headerService.activeSystem
+        ) {
             state = mainButtonState.SYSTEM;
-        } else if (this.headerService.currentLocation.isSystem && this.systems) {
+        } else if (
+            this.headerService.currentLocation.isSystem &&
+            this.systems
+        ) {
             state = mainButtonState.SYSTEMS;
         }
         return state;

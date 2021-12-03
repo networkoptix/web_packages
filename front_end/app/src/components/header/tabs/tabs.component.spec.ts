@@ -1,13 +1,14 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
-}                       from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { NxHeaderService } from '@services/nx-header.service';
+
 import { NxTabsComponent } from './tabs.component';
 
 describe('NxTabsComponent', () => {

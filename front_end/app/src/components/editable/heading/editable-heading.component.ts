@@ -1,5 +1,6 @@
 import {
-    Component, EventEmitter,
+    Component,
+    EventEmitter,
     forwardRef,
     HostBinding,
     Input,
@@ -8,8 +9,8 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Component({

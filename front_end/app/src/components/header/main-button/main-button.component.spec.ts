@@ -62,8 +62,16 @@ describe('NxHeaderMainButtonComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [NxHeaderMainButtonComponent, NxDropMenu, NxArrowNavDirective],
-            imports: [CommonModule, AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            declarations: [
+                NxHeaderMainButtonComponent,
+                NxDropMenu,
+                NxArrowNavDirective
+            ],
+            imports: [
+                CommonModule,
+                AngularSvgIconModule.forRoot(),
+                HttpClientTestingModule
+            ],
             providers: [
                 MockProvider(NxLanguageProviderService),
                 MockProvider(NxConfigService),

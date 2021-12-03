@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DomSanitizer }             from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 

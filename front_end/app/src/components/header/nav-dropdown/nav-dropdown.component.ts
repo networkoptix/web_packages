@@ -1,11 +1,12 @@
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 
-import { BaseDropdown }              from '../../dropdowns/injDropdown';
-import { environment }               from '@environments/environment';
-import { NxConfigService }           from '@services/nx-config';
+import { environment } from '@environments/environment';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { WINDOW }                    from '@services/window-provider';
+import { WINDOW } from '@services/window-provider';
+
+import { BaseDropdown } from '../../dropdowns/injDropdown';
 
 @Component({
     selector: 'nx-nav-dropdown',
@@ -26,7 +27,9 @@ export class NxNavDropdownComponent extends BaseDropdown {
     }
 
     get nodes() {
-        const nodes = this.dropdownNode?.nodes || this.nodeLocation?.parentNode?.nodes || this.nodeLocation?.nodes;
+        const nodes = this.dropdownNode?.nodes ||
+            this.nodeLocation?.parentNode?.nodes ||
+            this.nodeLocation?.nodes;
         if (!nodes) {
             return [];
         }
@@ -54,7 +57,9 @@ export class NxNavDropdownComponent extends BaseDropdown {
     }
 
     updateOffset() {
-        this.offset = this.window.innerWidth > 420 ? 0 : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
+        this.offset = this.window.innerWidth > 420
+            ? 0
+            : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
     }
 
     get hideDropdown() {

@@ -1,17 +1,20 @@
 import {
-    Component, Input,
-    forwardRef, ViewEncapsulation
-}                                    from '@angular/core';
+    Component,
+    Input,
+    forwardRef,
+    ViewEncapsulation
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator, FormControl
-}                                    from '@angular/forms';
+    Validator,
+    FormControl
+} from '@angular/forms';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector: 'nx-email-input',

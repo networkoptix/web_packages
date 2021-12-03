@@ -1,10 +1,16 @@
 import {
-    Component, OnDestroy,
-    OnInit, Renderer2, Inject
+    Component,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    Inject
 } from '@angular/core';
 import {
-    ActivatedRoute, NavigationEnd,
-    Event, Router, RoutesRecognized
+    ActivatedRoute,
+    NavigationEnd,
+    Event,
+    Router,
+    RoutesRecognized
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -17,7 +23,6 @@ import {
 import { map, startWith } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
@@ -124,7 +129,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
-        private dialogs: NxDialogsService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
         private storageService: NxStorageService,
@@ -355,7 +359,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (!account || this.bootstrapProvider.newSystem) {
                     return;
                 }
-                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account?.id, account?.email);
+                this.system = this.systemService.createLocalSystem(
+                    this.accountService.mediaServerApi,
+                    account?.id,
+                    account?.email
+                );
                 this.system.update().then(() => {
                     this.singleSystem = true;
                     this.systemCounter = 1;
@@ -380,7 +388,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.systemId = this.router.url.split('/')[2].split('?')[0];
                 }
 
-                if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
+                if (
+                    !this.systemId &&
+                    this.route.firstChild &&
+                    this.route.firstChild.snapshot.params.systemId
+                ) {
                     this.systemId = this.route.firstChild.snapshot.params.systemId;
                 }
                 this.systems = systems;
@@ -394,7 +406,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     onClick(event) {
-        if (this.systemId && this.isActive(event.target.id) && !this.isActive('view') && !this.isActive('health')) {
+        if (
+            this.systemId &&
+            this.isActive(event.target.id) &&
+            !this.isActive('view') && !this.isActive('health')
+        ) {
             event.stopPropagation();
             return false;
         } else if (event.target.id === 'systems') {
@@ -418,7 +434,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
         this.active.bookmarks = this.isActive('/bookmarks');
-        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health') && !this.isActive('/bookmarks');
+        this.active.settings = this.systemId &&
+            this.isActive('/systems') &&
+            !this.isActive('/view') &&
+            !this.isActive('/health') &&
+            !this.isActive('/bookmarks');
         this.navVisible = true;
     }
 
@@ -440,7 +460,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             if (this.headerService.activeSystem) {
                 if (!this.system || this.system.id !== this.systemId) {
                     this.stopActiveSubscription();
-                    this.system = this.systemService.createSystem(this.userEmail, this.headerService.activeSystem.id);
+                    this.system = this.systemService.createSystem(
+                        this.userEmail,
+                        this.headerService.activeSystem.id
+                    );
 
                     this.system.getInfoAndPermissions(false)
                         .then(system => {
@@ -481,6 +504,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     get mainNode() {
-        return this.headerService.currentLocation.parentNode?.breadcrumbs?.[0] || this.headerService.currentLocation.parentNode;
+        return this.headerService.currentLocation.parentNode?.breadcrumbs?.[0] ||
+            this.headerService.currentLocation.parentNode;
     }
 }

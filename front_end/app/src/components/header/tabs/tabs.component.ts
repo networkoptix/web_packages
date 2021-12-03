@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { environment }      from '@environments/environment';
-import { MenuNode }         from '@services/menus.service.types';
-import { NxHeaderService }  from '@services/nx-header.service';
+
+import { environment } from '@environments/environment';
+import { MenuNode } from '@services/menus.service.types';
+import { NxHeaderService } from '@services/nx-header.service';
 
 @Component({
     selector: 'nx-header-tabs',

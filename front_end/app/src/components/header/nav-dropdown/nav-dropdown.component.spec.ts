@@ -1,22 +1,22 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxHeaderService } from '@services/nx-header.service';
-import { WINDOW } from '@services/window-provider';
-import { NxNavDropdownComponent } from './nav-dropdown.component';
-
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
+
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
+
+import { NxNavDropdownComponent } from './nav-dropdown.component';
 
 describe('NxNavDropdownComponent', () => {
     let component: NxNavDropdownComponent;

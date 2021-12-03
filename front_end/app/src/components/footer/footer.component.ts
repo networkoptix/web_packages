@@ -4,15 +4,14 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxAppStateService } from '@services/nx-app-state.service';
+import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { environment } from '@environments/environment';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -35,7 +34,6 @@ export class NxFooterComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private sanitizer: DomSanitizer,
         private appState: NxAppStateService,
         private menusService: NxMenusService
     ) {
@@ -53,14 +51,19 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             if (environment.isLocal) {
                 this.footerItems.forEach(footerItem => {
                     footerItem.new_window = true;
-                    footerItem.url = footerItem.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
+                    footerItem.url = footerItem.url.replace(
+                        '{{CLOUD_HOST}}',
+                        this.CONFIG.cloudHost
+                    );
                 });
             }
         });
 
-        this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
-            this.viewFooter = visible;
-        });
+        this.footerSubscription =
+            this.appState.footerVisibleSubject
+                .subscribe((visible) => {
+                    this.viewFooter = visible;
+                });
     }
 
     trackItem(index, item) {

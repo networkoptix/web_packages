@@ -1,21 +1,21 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
-import { NxConfigService } from '@services/nx-config';
-import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxMenusService } from '@services/menus.service';
-import { NxFooterComponent } from './footer.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockProvider } from 'ng-mocks';
+import { NxMenusService } from '@services/menus.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService } from '@services/nx-config';
+
+import { NxFooterComponent } from './footer.component';
 
 describe('NxFooterComponent', () => {
     let component: NxFooterComponent;

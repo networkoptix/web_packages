@@ -1,10 +1,19 @@
 import {
-    Component, ElementRef, HostListener,
-    forwardRef, Input, EventEmitter, Output, ViewEncapsulation, OnInit
-}                         from '@angular/core';
+    Component,
+    ElementRef,
+    HostListener,
+    forwardRef,
+    Input,
+    EventEmitter,
+    Output,
+    ViewEncapsulation,
+    OnInit
+} from '@angular/core';
 import {
-    ControlValueAccessor, NG_VALUE_ACCESSOR
-}                         from '@angular/forms';
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR
+} from '@angular/forms';
+
 import { NxUtilsService } from '@services/utils.service';
 
 @Component({
@@ -54,7 +63,9 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
             this.el.nativeElement.classList.remove(this.errorClass);
             this.onChangeCallback(this.el.nativeElement.textContent);
         }
-        this.el.nativeElement.innerHTML = NxUtilsService.htmlToEntity(this.el.nativeElement.textContent);
+        this.el.nativeElement.innerHTML = NxUtilsService.htmlToEntity(
+            this.el.nativeElement.textContent
+        );
         this.el.nativeElement.classList.remove(this.editClass);
         this.el.nativeElement.classList.add(this.initialClass);
         this.onEditModeChanged.emit(false);
