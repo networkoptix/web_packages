@@ -48,6 +48,7 @@ for lang_path in target_json_paths:
 
     traverse_and_replace(language_compiled['pageTitles'], replacements=page_title_replacements)
     traverse_and_replace(language_compiled, replacements=main_replacements)
+    traverse_and_replace(config, replacements=main_replacements)
 
     with open(lang_path, 'w') as updated_lang_file:
         json.dump(language_compiled, updated_lang_file, indent=4,
