@@ -1,12 +1,11 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject }             from 'rxjs';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject } from 'rxjs';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxSystemRole }              from '@services/system.service';
 
 @Component({
     selector: 'nx-modal-add-user-content',
@@ -45,21 +44,6 @@ export class AddUserModalContent {
     set selectedPermission(role) {
         this.user.role = role;
         this.selectedPermissionSubject.next(role);
-    }
-
-    private getRoleDescription() {
-        let description;
-        if (this.selectedPermission.description) {
-            description = this.selectedPermission.description;
-        } else if (this.selectedPermission.userRoleId) {
-            description = this.LANG.accessRoles.customRole.description?.();
-        } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            description = this.LANG.accessRoles[this.selectedPermission.name].description?.();
-        } else {
-            description = this.LANG.accessRoles.customRole.description?.();
-        }
-
-        return (typeof description === 'function') ? description() : description;
     }
 
     private getAccessDescription() {
@@ -101,7 +85,7 @@ export class AddUserModalContent {
             isCloud: true,
             role: defaultRole
         };
-        this.accessDescription = this.getRoleDescription();
+        this.setPermission(defaultRole);
 
         this.addUser = this.processService.createProcess(() => {
             this.hideErrors = false;
