@@ -93,10 +93,23 @@ http {
 
         access_log /dev/stdout combined if=${DOLLAR}logging;
 
-        location ~ /static/(?=scripts|styles).*\.css$|.*\.js$ {
+        location /authorize {
+            try_files /static/authorization/index.html =404;
+        }
+
+        location ~* /(?=ngsw\.json|apple-app-site-association|\.well-known) {
+            root /app/app/static/$CUSTOMIZATION/static;
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ =404;
+        }
+
+        location ~* /ngsw-worker\.js$ {
+            try_files /static/scripts/ngsw-worker.js =404;
+        }
+
+        location ~* /static/(?=scripts|styles|admin_tools).*\.css$|.*\.js$ {
             root /app/app/static;
             add_header Cache-Control 'max-age=31449600'; # one year
-            try_files /$CUSTOMIZATION/${DOLLAR}uri /$CUSTOMIZATION/static/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            try_files /$CUSTOMIZATION/${DOLLAR}uri /$CUSTOMIZATION/static/${DOLLAR}uri /common/${DOLLAR}uri /$CUSTOMIZATION/static/scripts/vendor/${DOLLAR}uri /$CUSTOMIZATION/static/vendor/${DOLLAR}uri =404;
             error_page 404 /common/static/index.html;
         }
 
@@ -114,30 +127,13 @@ http {
             proxy_pass   http://app_server;
         }
 
-        location / {
-            include proxy.conf;
-            index static/index.html;
-
-            if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$") {
-                proxy_pass http://app_server;
-            }
-
-
-            try_files ${DOLLAR}uri ${DOLLAR}uri/ /static/index.html;
-        }
-
         location ~* .php$ {
             return 404;
         }
 
-        location /authorize {
-            root /app/app/static/authorization;
-
-            try_files ${DOLLAR}uri ${DOLLAR}uri/ index.html @proxy_to_app;
-        }
-
-        location ~ /(?=api|oauth) {
-            try_files /dev/null @proxy_to_app;
+        location ~* ^/(?=api|oauth|swagger|health|zapier|admin_tools) {
+            include proxy.conf;
+            proxy_pass http://app_server;
         }
 
         location /admin {
@@ -191,6 +187,18 @@ http {
 
         location /static {
             error_page 404 /static/index.html;
+        }
+
+        location / {
+            include proxy.conf;
+            index static/index.html;
+
+            if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$") {
+                proxy_pass http://app_server;
+            }
+
+
+            try_files ${DOLLAR}uri ${DOLLAR}uri/ /static/index.html;
         }
 
         # Add HTTP Strict Transport Security for good measure.
