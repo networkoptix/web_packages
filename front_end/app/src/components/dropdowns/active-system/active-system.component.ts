@@ -1,11 +1,14 @@
 import {
-    Component, Input, SimpleChanges
-}                                    from '@angular/core';
-import { Router }                    from '@angular/router';
+    Component,
+    Input,
+    SimpleChanges
+} from '@angular/core';
+import { Router } from '@angular/router';
 
-import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
 
 @Component({
     selector: 'nx-active-system',

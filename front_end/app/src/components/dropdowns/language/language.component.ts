@@ -1,18 +1,22 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef, Directive
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    Directive
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LocalStorageService } from 'ngx-webstorage';
+
+import { environment } from '@environments/environment';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSessionService } from '@services/session.service';
+import { NxUtilsService } from '@services/utils.service';
 
 import { BaseDropdown } from '../injDropdown';
-import { environment } from '@environments/environment';
-import { NxUtilsService } from '@services/utils.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService } from '@services/nx-config';
-import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
-import { LocalStorageService } from 'ngx-webstorage';
-import { NxSessionService } from '@services/session.service';
 
 @Directive()
 class BaseLanguageDropdown extends BaseDropdown {
@@ -99,7 +103,8 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.cloudApi.getLanguages().then((data) => {
             this.languages = this.CONFIG?.supportedLanguages?.length === 0
                 ? data
-                : data.filter((language) => this.CONFIG.supportedLanguages?.includes(language.language));
+                : data.filter((language) =>
+                    this.CONFIG.supportedLanguages?.includes(language.language));
             this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
                 return lang.language;
             }, NxUtilsService.sortASC));

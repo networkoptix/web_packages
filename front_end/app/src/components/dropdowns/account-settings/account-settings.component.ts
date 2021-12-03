@@ -1,9 +1,15 @@
 import {
-    Component, ElementRef, Input, OnDestroy, ViewChild
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    ViewChild
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import {
-    BehaviorSubject, combineLatest, SubscriptionLike
+    BehaviorSubject,
+    combineLatest,
+    SubscriptionLike
 } from 'rxjs';
 
 import { environment } from '@environments/environment';
@@ -17,7 +23,11 @@ import { BaseDropdown } from '../injDropdown';
 @Component({
     selector: 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',
-    styleUrls: [environment.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
+    styleUrls: [
+        environment.isLocal
+            ? 'account-settings-webadmin.component.scss'
+            : 'account-settings.component.scss'
+    ]
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
@@ -75,7 +85,9 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                         widthFromRightEdge = -1 * self.parentNode.nextSibling.offsetWidth;
                     }
 
-                    this.rightOffset$.next(Math.max(button - dropdown + 18, widthFromRightEdge) | 0);
+                    this.rightOffset$.next(
+                        Math.max(button - dropdown + 18, widthFromRightEdge) | 0
+                    );
                 }
             });
     }

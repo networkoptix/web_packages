@@ -1,14 +1,21 @@
-import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AngularSvgIconModule }               from 'angular-svg-icon';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    tick,
+    fakeAsync
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { describe, expect, jest, beforeEach, it } from '@jest/globals';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxGenericDropdown } from './dropdown.component';
-import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService } from '@services/nx-config';
 
 describe('NxGenericDropdown', () => {
     let component: NxGenericDropdown;

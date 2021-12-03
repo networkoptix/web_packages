@@ -1,13 +1,12 @@
 /* eslint-disable camelcase */
 import { Component, Input } from '@angular/core';
-import { Router }           from '@angular/router';
-import { UntilDestroy }     from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
+import { Auth, MenuNode } from '@services/menus.service.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxSessionService }         from '@services/session.service';
-import { NxHeaderService }          from '@services/nx-header.service';
-import { Auth, MenuNode }           from '@services/menus.service.types';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxSessionService } from '@services/session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -25,7 +24,6 @@ export class NxNavigationTileComponent {
 
     constructor(
         configService: NxConfigService,
-        private router: Router,
         private sessionService: NxSessionService,
         public headerService: NxHeaderService
     ) {
@@ -34,9 +32,12 @@ export class NxNavigationTileComponent {
     }
 
     ngOnInit() {
-        this.loginStateSubscription = this.sessionService.loginStateSubject.subscribe(_ => {
-            this.authState = this.sessionService.email ? Auth.LOGGED_IN : Auth.LOGGED_OUT;
-        });
+        this.loginStateSubscription =
+            this.sessionService.loginStateSubject.subscribe(_ => {
+                this.authState = this.sessionService.email
+                    ? Auth.LOGGED_IN
+                    : Auth.LOGGED_OUT;
+            });
     }
 
     ngOnDestroy() {}
@@ -44,7 +45,9 @@ export class NxNavigationTileComponent {
     checkActive(node) {
         const { childNode } = this.headerService.currentLocation;
         const { url } = node;
-        const breadcrumbUrls = (childNode?.breadcrumbs || []).map(({ url }) => url).filter(url => url);
+        const breadcrumbUrls =
+            (childNode?.breadcrumbs || [])
+                .map(({ url }) => url).filter(url => url);
         return breadcrumbUrls.includes(url);
     }
 }

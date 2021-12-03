@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { NxConfigService, IConfig } from '@services/nx-config';
+
 import { System } from '@services/nx-cloud-api.types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 
 @Component({
     selector: 'nx-system-tile',
@@ -18,7 +19,10 @@ export class NxSystemTileComponent {
     }
 
     get icon() {
-        const icon = this.system.stateOfHealth === this.CONFIG.system.status.online ? 'system.svg' : 'system_offline.svg';
+        const icon =
+            this.system.stateOfHealth === this.CONFIG.system.status.online
+                ? 'system.svg'
+                : 'system_offline.svg';
         return this.CONFIG.icons.dir + icon;
     }
 }

@@ -1,12 +1,15 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef
-}                                    from '@angular/core';
-import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { BaseDropdown } from '../injDropdown';
 
 /* Usage
  <nx-select

@@ -1,18 +1,21 @@
 import {
-    Component, Input, SimpleChanges
+    Component,
+    Input,
+    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { BaseDropdown } from '../injDropdown';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService } from '@services/nx-config';
-import { NxUriService } from '@services/uri.service';
-import { NxHeaderService } from '@services/nx-header.service';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { NxAccountService } from '@services/account.service';
-import { environment } from '@environments/environment';
+import { NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUriService } from '@services/uri.service';
+
+import { BaseDropdown } from '../injDropdown';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -108,7 +111,9 @@ export class NxDropMenu extends BaseDropdown {
     updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false) {
         this.headerService.show$ = false;
         this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
-            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            const activeSystem = this.headerService.activeSystem ||
+                this.headerService.lastActive$.value ||
+                this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem);
         });
     }
@@ -124,7 +129,9 @@ export class NxDropMenu extends BaseDropdown {
             }
             const isAdmin = user?.permissions.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
-            const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+            const activeSystem = this.headerService.activeSystem ||
+                this.headerService.lastActive$.value ||
+                this.systems[0];
             this.menusService.updateActiveSystemMenu(activeSystem, isAdmin);
         }
         this.systemCounter = this.systems && this.systems.length;

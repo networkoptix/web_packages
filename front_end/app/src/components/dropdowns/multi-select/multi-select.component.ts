@@ -1,12 +1,16 @@
 import {
-    Component, ViewEncapsulation,
-    Input, forwardRef, SimpleChanges
-}                            from '@angular/core';
+    Component,
+    ViewEncapsulation,
+    Input,
+    forwardRef,
+    SimpleChanges
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
+
+import { BaseDropdown } from '../injDropdown';
 
 /* Usage
  <nx-multi-select
@@ -107,7 +111,9 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
 
     updateItems() {
         this.items.forEach((item: any) => {
-            item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
+            item.selected = (this.innerValue !== undefined)
+                ? (this.innerValue.indexOf(item.id) > -1)
+                : false;
         });
 
         // ensure 'change' will be triggered
@@ -121,7 +127,8 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
                     return (item.label?.name || item.id) === this.innerValue[0];
                 });
                 // Aggregated MSelect items vs. simple list
-                this.textSelected = this.textSelected.label.name || this.textSelected.label;
+                this.textSelected =
+                    this.textSelected.label.name || this.textSelected.label;
                 break;
             }
             case 0:
@@ -130,7 +137,9 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
                 break;
             }
             default: {
-                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
+                this.textSelected = this.LANG.search.selected({
+                    count: this.innerValue.length
+                });
                 break;
             }
         }
