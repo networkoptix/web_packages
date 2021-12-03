@@ -504,7 +504,7 @@
         "INCOMPATIBLE": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
         "This user does not exist.": "Deze gebruiker bestaat niet.",
         "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "Deze gebruiker is uitgeschakeld door een systeembeheerder.",
         "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
         "fail": "{failedSystem} is niet toegankelijk.",
@@ -535,7 +535,7 @@
         "cantSharePrefix": "Kan het systeem niet delen",
         "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
         "emailNotFound": "Account bestaat niet.",
-        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccess2FA": "<p class=\"mb-0\">Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem.</p><p>U kunt twee-factorauthenticatie inschakelen in uw <a href=\"/account/security\">accountinstellingen</a>.</p>",
         "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
         "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
@@ -640,7 +640,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% voor ",
-        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
+        "failedToAccess2FA": "Kan geen toegang krijgen tot het \"{systemName}\"-systeem",
         "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
         "failedToAccessCamera": "Geen toegang tot de camera",
         "integrations": "%VMS_NAME% Integraties",
@@ -850,7 +850,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Wijzigingen toepassen is mislukt",
         "reviewAccepted": "De review is verwijderd",
         "system": {
             "deleted": {
