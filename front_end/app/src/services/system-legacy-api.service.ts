@@ -961,7 +961,7 @@ export class NxSystemAPI {
         if (!cleanedUser.userRoleId) {
             cleanedUser.userRoleId = this.emptyId;
         }
-        cleanedUser.email = cleanedUser.email.toLowerCase();
+
         return cleanedUser;
     }
 
