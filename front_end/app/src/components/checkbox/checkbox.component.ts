@@ -1,10 +1,17 @@
 import {
-    Component, Input, Output,
-    EventEmitter, forwardRef,
-    OnInit, ViewEncapsulation, SimpleChanges, OnChanges
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    forwardRef,
+    OnInit,
+    ViewEncapsulation,
+    SimpleChanges,
+    OnChanges
 } from '@angular/core';
 import {
-    NG_VALUE_ACCESSOR, ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    ControlValueAccessor,
     NG_VALIDATORS,
     FormControl, Validator
 } from '@angular/forms';

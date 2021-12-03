@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LocalStorageService } from 'ngx-webstorage';
+import { first } from 'rxjs/operators';
+
 import { NxAccountService } from '@services/account.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { first } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -15,13 +16,20 @@ export class NxCookieBannerComponent implements OnInit {
     CONFIG: IConfig
     cookieBannerReviewed: boolean
 
-    constructor(private config: NxConfigService, private localStorage: LocalStorageService, private accountService: NxAccountService) {
+    constructor(
+        private config: NxConfigService,
+        private localStorage: LocalStorageService,
+        private accountService: NxAccountService
+    ) {
         this.CONFIG = config.getConfig();
     }
 
     ngOnInit() {
-        this.cookieBannerReviewed = this.localStorage.retrieve('cookiereviewed') === true;
-        this.accountService.accountSubject.pipe(first(value => value !== undefined), untilDestroyed(this))
+        this.cookieBannerReviewed =
+            this.localStorage.retrieve('cookiereviewed') === true;
+
+        this.accountService.accountSubject
+            .pipe(first(value => value !== undefined), untilDestroyed(this))
             .subscribe((account) => {
                 if (account) {
                     if (account.cookie_reviewed) {

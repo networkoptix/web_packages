@@ -1,9 +1,11 @@
+import { SimpleChange } from '@angular/core';
 import {
-    ComponentFixture, TestBed,
+    ComponentFixture,
+    TestBed,
     waitForAsync
-}                              from '@angular/core/testing';
+} from '@angular/core/testing';
+
 import { NxCheckboxComponent } from './checkbox.component';
-import { SimpleChange }        from '@angular/core';
 
 describe('NxCheckboxComponent', () => {
     let component: NxCheckboxComponent;

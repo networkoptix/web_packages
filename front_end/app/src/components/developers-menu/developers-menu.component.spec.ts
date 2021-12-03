@@ -1,23 +1,26 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NxDevelopersMenuComponent } from './developers-menu.component';
-import { NxConfigService } from '@services/nx-config';
 import { CommonModule } from '@angular/common';
-import { PipesModule } from '@src/pipes/pipes.module';
-import { BehaviorSubject } from 'rxjs';
-import { WINDOW } from '@services/window-provider';
-import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
-import { DirectivesModule } from '@directives/directives.module';
-import { DebugElement } from '@angular/core';
-import { RouterLinkDirectiveStub } from '@src/_testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NxUriService } from '@services/uri.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockProvider, MockComponent, MockDirective }  from 'ng-mocks';
-import { NxRibbonService } from '@components/ribbon';
-import { HelperMockProvider } from '@src/_mocks/helpers.test';
-import { NxSearchComponent } from '@components/search/search.component';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgModel } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider, MockComponent, MockDirective } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
+
+import { NxRibbonService } from '@components/ribbon';
+import { NxSearchComponent } from '@components/search/search.component';
+import { DirectivesModule } from '@directives/directives.module';
+import { NxConfigService } from '@services/nx-config';
+import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
+import { HelperMockProvider } from '@src/_mocks/helpers.test';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
+
+import { NxDevelopersMenuComponent } from './developers-menu.component';
 
 describe('Test NxDevelopersMenuComponent', () => {
     let component: NxDevelopersMenuComponent;

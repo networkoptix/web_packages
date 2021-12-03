@@ -1,38 +1,48 @@
-import { DataSource }                                 from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/collections';
 import {
-    Component, EventEmitter, Inject, Input, Output, SimpleChanges
-}                                                     from '@angular/core';
-import { ActivatedRoute, Router }                     from '@angular/router';
-import { NxDialogsService }                           from '@dialogs/dialogs.service';
-import { UntilDestroy, untilDestroyed }               from '@ngneat/until-destroy';
-import { TranslateService }                           from '@ngx-translate/core';
-import { map, switchMap }                             from 'rxjs/operators';
+    Component,
+    EventEmitter,
+    Inject, Input,
+    Output,
+    SimpleChanges
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
-import { CustomClientAPI, NxCloudApiService }                from '@services/nx-cloud-api';
 import {
-    ContentManifest, ContextManifest, DocAsset
-}                                                            from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService }                          from '@services/nx-config';
-import { BehaviorSubject, combineLatest, from, Observable } from 'rxjs';
-import { NxHeaderService }                                   from '@services/nx-header.service';
-import { NxMenusService }                                    from '@services/menus.service';
-import { PackageHandler } from '@dialogs/download-async/download-async.component';
-import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
-import { WINDOW }                                            from '@services/window-provider';
-import { NxToastService }                                    from '@dialogs/toast.service';
-import { NxUriService }                                      from '@services/uri.service';
-import { NxConsoleService }                                  from '@pages/developer-console/console/console.service';
-import { FilterState, FilterUpdatePayload }                  from '@components/advanced-filter/advanced-filter.component';
-import { DropdownItem }                                      from '@components/dropdowns/generic/dropdown.component.types';
-import { ConsoleMode }                                       from '@pages/developer-console/console/console.component.types';
+    FilterState,
+    FilterUpdatePayload
+} from '@components/advanced-filter/advanced-filter.component';
 import {
     AdditionalFilter,
-    ConfigType, ConsoleManifest,
+    ConfigType,
+    ConsoleManifest,
     ConsoleSection,
     ListSerializer,
     ModalType,
     OptionalFeatures
 } from '@components/console-table/console-table.component.types';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { PackageHandler } from '@dialogs/download-async/download-async.component';
+import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
+import { NxToastService } from '@dialogs/toast.service';
+import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxMenusService } from '@services/menus.service';
+import { CustomClientAPI, NxCloudApiService } from '@services/nx-cloud-api';
+import {
+    ContentManifest,
+    ContextManifest,
+    DocAsset
+} from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy()
 @Component({

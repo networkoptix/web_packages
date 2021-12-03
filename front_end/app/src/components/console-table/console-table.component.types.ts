@@ -1,8 +1,14 @@
-import md5                                            from 'md5';
+import md5 from 'md5';
 
-import { DataStructureMeta } from '../../pages/developer-console/console/edit/console-edit.component.types';
-import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
-import { ContentSettings } from '../../services/nx-cloud-api.types';
+import {
+    DataStructureMeta
+} from '../../pages/developer-console/console/edit/console-edit.component.types';
+import {
+    ContentSettings
+} from '../../services/nx-cloud-api.types';
+import {
+    DropdownItem
+} from '../dropdowns/generic/dropdown.component.types';
 
 export enum ConfigType {
     TEXT='text',
@@ -125,7 +131,13 @@ export class ListSerializer<Initial, Serialized> {
     }
 
     #customClientsSerializer = (data) => {
-        const createHash = (values: Record<any, any>) => md5(JSON.stringify(Object.entries(values).sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)));
+        const createHash = (values: Record<any, any>) =>
+            md5(
+                JSON.stringify(
+                    Object.entries(values)
+                        .sort(([aKey], [bKey]) => aKey < bKey ? 1 : -1)
+                )
+            );
         const createDownloadAsyncValues = ({ values: _, ...values }) => ({
             modal: ModalType.CLIENT_DOWNLOAD,
             heading: this.downloadManifest.label,

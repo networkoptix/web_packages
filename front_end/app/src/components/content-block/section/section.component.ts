@@ -1,5 +1,10 @@
 import {
-    Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation
+    Component,
+    ElementRef,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 /* Usage
@@ -36,6 +41,7 @@ export class NxContentBlockSectionComponent implements OnInit {
     ngOnInit() {
         this.type = this.type || '';
         this.nonPadded = (this.nonPadded !== undefined);
-        this.haveSubheader = (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
+        this.haveSubheader =
+            (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
     }
 }

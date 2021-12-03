@@ -1,11 +1,15 @@
 import {
-    ComponentFixture, TestBed, waitForAsync
-}                                    from '@angular/core/testing';
-import { BrowserAnimationsModule }   from '@angular/platform-browser/animations';
-import { NxConfigService }           from '@services/nx-config';
-import { NxCarouselComponent }       from './carousel.component';
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { MockProvider }              from 'ng-mocks';
+
+import { NxCarouselComponent } from './carousel.component';
 
 describe('NxCarouselComponent', () => {
     let component: NxCarouselComponent;

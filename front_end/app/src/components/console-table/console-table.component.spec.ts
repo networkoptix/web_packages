@@ -1,25 +1,26 @@
-import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { NxMenusService } from '@services/menus.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxMenusService } from '@services/menus.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOW } from '@services/window-provider';
-import { PipesModule } from '@src/pipes/pipes.module';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+import { PipesModule } from '@src/pipes/pipes.module';
+
 import {
     forUnitTest,
     NxConsoleTableComponent

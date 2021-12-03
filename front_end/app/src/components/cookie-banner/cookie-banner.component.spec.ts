@@ -1,3 +1,5 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
@@ -6,17 +8,19 @@ import {
     fakeAsync,
     inject
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { LocalStorageService } from 'ngx-webstorage';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { LocalStorageService } from 'ngx-webstorage';
+import { of } from 'rxjs';
 
-import { NxCookieBannerComponent } from './cookie-banner.component';
+import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxAccountService } from '@services/account.service';
-import { RouterLinkDirectiveStub } from '../../_testing/router-link-directive-stub';
-import { of } from 'rxjs';
+
+import {
+    RouterLinkDirectiveStub
+} from '../../_testing/router-link-directive-stub';
+
+import { NxCookieBannerComponent } from './cookie-banner.component';
 
 // test skipped until feature is reimplemented
 xdescribe('NxCookieBannerComponent', () => {

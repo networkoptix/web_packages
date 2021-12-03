@@ -1,15 +1,22 @@
-import { Component, Output, EventEmitter, Inject, OnInit, Input }  from '@angular/core';
-import { Location }                                         from '@angular/common';
-import { takeUntil }                                        from 'rxjs/operators';
-import { timer, Subject, BehaviorSubject }                                   from 'rxjs';
-import { UntilDestroy, untilDestroyed }                     from '@ngneat/until-destroy';
+import { Location } from '@angular/common';
+import {
+    Component,
+    Output,
+    EventEmitter,
+    Inject,
+    OnInit,
+    Input
+} from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { timer, Subject, BehaviorSubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { WINDOW }                                   from '@services/window-provider';
-import { MenuNode }                                 from '@services/menus.service.types';
-import { IConfig, NxConfigService }                 from '@services/nx-config';
-import { NxUtilsService }  from '@services/utils.service';
-import { NxUriService } from '@services/uri.service';
 import { NxRibbonService } from '@components/ribbon';
+import { MenuNode } from '@services/menus.service.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 export interface RelatedLinks {
     type: string,
@@ -29,7 +36,11 @@ export interface ClickEvent {
 })
 export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();
-    @Output() handlePrefetch = new EventEmitter<{assetId: number, state?: 'pending' | 'draft'}>();
+    @Output() handlePrefetch = new EventEmitter<{
+        assetId: number,
+        state?: 'pending' | 'draft'
+    }>();
+    // eslint-disable-next-line lines-between-class-members
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
     @Input()  searchEnabled = true;
     @Input()  service;

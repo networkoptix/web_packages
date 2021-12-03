@@ -1,7 +1,19 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+    SimpleChanges
+} from '@angular/core';
 
-import { DataStructureFilter, GroupingOptions, SortOptions } from '@pages/developer-console/console/edit/console-edit.component.types';
-import { AdditionalFilter }                                  from '@components/console-table/console-table.component.types';
+import {
+    AdditionalFilter
+} from '@components/console-table/console-table.component.types';
+import {
+    DataStructureFilter,
+    GroupingOptions,
+    SortOptions
+} from '@pages/developer-console/console/edit/console-edit.component.types';
 
 export enum FilterSort {
     ASC='asc',
@@ -160,16 +172,28 @@ export class NxAdvancedFilterComponent {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.initialState && changes.initialState.previousValue === undefined && changes.initialState.currentValue) {
+        if (
+            changes.initialState &&
+            changes.initialState.previousValue === undefined &&
+            changes.initialState.currentValue
+        ) {
             this.currentState = { ...this.currentState, ...this.initialState };
         }
-        if (changes.data && changes.data.previousValue?.length !== changes.data.currentValue.length) {
+        if (
+            changes.data &&
+            changes.data.previousValue?.length !== changes.data.currentValue.length
+        ) {
             this.currentState.selections = this.data.reduce((
                 selections, values
             ) =>  {
                 const name = values[this.field];
-                const previousSelection = selections.find(({ name: existingName }) => this.groupCompare(existingName, name));
-                const value = previousSelection ? previousSelection.value : !!this.filter.multiSelect;
+                const previousSelection = selections.find(
+                    ({ name: existingName }) =>
+                        this.groupCompare(existingName, name)
+                );
+                const value = previousSelection
+                    ? previousSelection.value
+                    : !!this.filter.multiSelect;
 
                 if (!previousSelection) {
                     selections.push({ name, value });
@@ -181,7 +205,10 @@ export class NxAdvancedFilterComponent {
             );
         }
 
-        if (changes.activeFilter && changes.activeFilter.previousValue !== changes.activeFilter.currentValue) {
+        if (
+            changes.activeFilter &&
+            changes.activeFilter.previousValue !== changes.activeFilter.currentValue
+        ) {
             this.initialized = false;
             this.show = this.activeFilter === this.field;
         }

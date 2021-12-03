@@ -1,6 +1,12 @@
 import {
-    Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges,
-    ViewChild, ViewEncapsulation
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 
 /* Usage
