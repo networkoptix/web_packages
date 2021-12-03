@@ -96,7 +96,7 @@ export class DisconnectModalContent {
             };
             this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
         }, (err) => {
-            if (err.errorId === 'sessionExpired') {
+            if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
                 this.loginService.updateSession('disconnect')

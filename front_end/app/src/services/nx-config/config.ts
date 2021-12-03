@@ -529,6 +529,9 @@ export const nxConfig: IConfig = {
             resetting: 'resetting',
             checking: 'checking',
             certError: 'mismatchedCertificate'
+        },
+        errors: {
+            oldSessionErrorId: 'sessionExpired'
         }
     },
     sessionFreshnessSec: 600, // s or 10 minutes

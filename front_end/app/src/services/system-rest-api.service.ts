@@ -44,7 +44,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
-    private readonly oldSessionErrorId = 'sessionExpired';
     private injector: Injector;
 
     constructor(
@@ -517,7 +516,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     ) {
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
         const request = remoteServerId
-            ? of({ id: remoteServerId, cloudId: '' })
+            ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
         return request.pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
@@ -525,16 +524,16 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 if (!remoteServerId) {
                     remoteServerId = data.id.replace(/{|}/g, '');
                 }
-                return of({ token: '', cloudId: data.cloudId ?? '' });
+                return of({ token: '', cloudSystemId: data.cloudSystemId || '' });
             }),
             // Adds the remoteToken to the merge request.
             switchMap((info: any) => {
                 if (!dryRun || (password && !this.isSessionOauth)) {
                     const refreshToken = this.storageService.refreshToken;
                     // Using oauth and target system is connected to cloud.
-                    if (info.cloudId && refreshToken) {
+                    if (info.cloudSystemId && refreshToken) {
                         // Request for a cloud token that has the targetSystem scope.
-                        return this.refreshTokens(refreshToken, true, info.cloudId)
+                        return this.refreshTokens(refreshToken, true, info.cloudSystemId)
                             .pipe(map((res: any) => ({ token: res.access_token })));
                     } else if (password) {
                         const data = { username: 'admin', password, remember: false };

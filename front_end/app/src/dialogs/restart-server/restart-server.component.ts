@@ -174,7 +174,7 @@ export class RestartServerModalContent {
                     message = this.LANG.servers.serverOffline?.();
                     this.close(this.CONFIG.servers.status.offline);
                     // @ts-ignore
-                } else if (err.errorId === 'sessionExpired') {
+                } else if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('restart')

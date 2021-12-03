@@ -60,7 +60,7 @@ export class DetachServerModalContent {
                     // return this.system.update().subscribe()
                 },
                 (err) => {
-                    if (err.errorId === 'sessionExpired') {
+                    if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         this.needsUpdate = true;
                         this.loginService.currentSystem = this.system;
                         this.loginService.updateSession('detach')

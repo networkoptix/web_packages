@@ -158,7 +158,7 @@ export class ResetServerModalContent {
                     })
                     .catch(err => handleResetFailError('restartServer', err));
             }, (err) => {
-                if (err.errorId === 'sessionExpired') {
+                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('reset')

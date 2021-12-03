@@ -588,12 +588,17 @@ export interface Servers {
     minLoaderTime: number;
     port: Port;
     status: ServersStatus;
+    errors: ServerError;
 }
 
 export interface Port {
     max: number;
     min: number;
     restrictedMax: number;
+}
+
+export interface ServerError {
+    oldSessionErrorId: string;
 }
 
 export interface ServersStatus {

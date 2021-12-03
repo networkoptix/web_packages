@@ -486,6 +486,9 @@ export function setupConfig(): IConfig {
                 resetting: 'resetting',
                 checking: 'checking',
                 certError: 'mismatchedCertificate'
+            },
+            errors: {
+                oldSessionErrorId: 'sessionExpired'
             }
         },
         supportedLanguages: [],

@@ -9,6 +9,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import { NxLoginService } from '@services/login.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -60,6 +61,7 @@ export class MergeModalContent {
     primaryName: string;
     secondaryName: string;
     systemUrls = {};
+    updateSession = false;
     private remotePassword: string;
 
     // static variables
@@ -101,6 +103,7 @@ export class MergeModalContent {
         public activeModal: NgbActiveModal,
         private cloudApi: NxCloudApiService,
         private cdRef: ChangeDetectorRef,
+        private loginService: NxLoginService,
         private processService: NxProcessService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
@@ -361,6 +364,18 @@ export class MergeModalContent {
         }
     }
 
+    private handleOldSession(process) {
+        this.updateSession = true;
+        this.loginService.currentSystem = this.system;
+        this.loginService.updateSession('passwordMerge')
+            .then((ready) => {
+                this.updateSession = !ready;
+                if (ready) {
+                    process.run();
+                }
+            });
+    }
+
     initProcesses() {
         this.checkMergeabilityFunction = () => {
             this.checkIfExistingSystem(this.machine.state.template.serverUrlInputValue);
@@ -398,6 +413,9 @@ export class MergeModalContent {
                     }
                 },
                 err => {
+                    if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                        return this.handleOldSession(this.checkMergeabilityProcess);
+                    }
                     if (err !== 'canceled') {
                         this.checking = false;
                         if (err.message === 'Timeout has occurred') {
@@ -441,48 +459,59 @@ export class MergeModalContent {
                     this.checkMergeabilityProcess.processing = false;
                     this.checkMergeabilityProcess.finished = true;
                     this.machine.transition(this.confirmMerge);
+                    return Promise.resolve();
                 } else {
-                    return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true, this.machine.state.template.passwordValue).toPromise()
-                        .then(res => {
-                            if (!res.error || res.error === '0') {
-                                this.remotePassword = this.machine.state.template.passwordValue;
-                                this.checkForChoosePrimary();
-                                const { history } = this.machine;
-                                if (history[history.length - 1] === this.serverUrlErrors) {
-                                    history.pop();
-                                }
-                            } else if (res.errorString === 'UNAUTHORIZED') {
-                                this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
-                                this.updateShow(this.confirmPasswordError, {
-                                    passwordErrorText: this.passwordWrong,
-                                    passwordValue: ''
-                                });
-                                this.adminPasswordInput.nativeElement.focus();
-                            } else if (res.errorString) {
-                                if (this.machine.currentState !== this.serverUrlErrors) {
-                                    this.machine.transition(this.serverUrlErrors);
-                                }
-                                const newCheckMergeErrors = {
-                                    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: this.differentOwners,
-                                    DUPLICATE_MEDIASERVER_FOUND: this.duplicateServers,
-                                    FAIL: this.systemOfflineUrl
-                                };
-                                this.updateShow(this.serverUrlErrors, {
-                                    urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
-                                });
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            if (this.machine.currentState !== this.serverUrlErrors) {
-                                this.machine.transition(this.serverUrlErrors);
-                            }
-                            const urlErrorText = err.message === 'Timeout has occurred'
-                                ? this.systemOfflineUrl : this.unknownError;
-                            this.updateShow(this.serverUrlErrors, { urlErrorText });
-                        });
+                    return this.system.mergeSystems(
+                        this.serverUrl,
+                        this.targetSystem.id,
+                        true,
+                        this.machine.state.template.passwordValue
+                    ).toPromise();
                 }
-            }, { ignoreError: true });
+            }, { ignoreError: true },
+            (res) => {
+                if (!res) {
+                    return;
+                }
+                if (!res.error || res.error === '0') {
+                    this.remotePassword = this.machine.state.template.passwordValue;
+                    this.checkForChoosePrimary();
+                    const { history } = this.machine;
+                    if (history[history.length - 1] === this.serverUrlErrors) {
+                        history.pop();
+                    }
+                } else if (res.errorString === 'UNAUTHORIZED') {
+                    this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
+                    this.updateShow(this.confirmPasswordError, {
+                        passwordErrorText: this.passwordWrong,
+                        passwordValue: ''
+                    });
+                    this.adminPasswordInput.nativeElement.focus();
+                } else if (res.errorString) {
+                    if (this.machine.currentState !== this.serverUrlErrors) {
+                        this.machine.transition(this.serverUrlErrors);
+                    }
+                    const newCheckMergeErrors = {
+                        CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: this.differentOwners,
+                        DUPLICATE_MEDIASERVER_FOUND: this.duplicateServers,
+                        FAIL: this.systemOfflineUrl
+                    };
+                    this.updateShow(this.serverUrlErrors, {
+                        urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
+                    });
+                }
+            }, (err) => {
+                if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    return this.handleOldSession(this.checkPasswordProcess);
+                }
+                console.error(err);
+                if (this.machine.currentState !== this.serverUrlErrors) {
+                    this.machine.transition(this.serverUrlErrors);
+                }
+                const urlErrorText = err.message === 'Timeout has occurred'
+                    ? this.systemOfflineUrl : this.unknownError;
+                this.updateShow(this.serverUrlErrors, { urlErrorText });
+            });
 
         this.mergingProcess = this.processService
             .createProcess(() => {
@@ -498,8 +527,10 @@ export class MergeModalContent {
 
                 if (this.nonCloudMerge || this.environment.isLocal) {
                     const takeRemoteSettings = this.system.id === this.secondarySystem.id;
+                    const bothAreCloud = this.primarySystem?.mediaserver?.isSessionOauth && !!this.secondarySystem?.cloudSystemId ||
+                        this.secondarySystem?.mediaserver?.isSessionOauth && !!this.primarySystem?.cloudSystemId;
                     return this.dryRunAvailable
-                        ? this.system.mergeSystems(this.serverUrl, this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
+                        ? this.system.mergeSystems(this.serverUrl, bothAreCloud ? '' : this.targetSystem.id, false, password, takeRemoteSettings).toPromise()
                         : this.deprecatedMergeSystems(password, takeRemoteSettings);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
@@ -566,6 +597,9 @@ export class MergeModalContent {
                     this.handleMergeError(res);
                 }
             }, (error) => {
+                if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                    return this.handleOldSession(this.mergingProcess);
+                }
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data?.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
