@@ -242,7 +242,9 @@
     "dialogs": {
         "twoFa": {
             "wizardWarning": "Après avoir activé l'authentification à deux facteurs, vous ne pourrez plus vous connecter à {count, plural, =0{# systèmes} one{# système} other{# systèmes}} à partir de %VMS_NAME% clients et Web Admin :",
-            "wizardWarningDescr": "Les anciennes versions du client %VMS_NAME% et de l'administrateur Web ne prennent pas en charge l'authentification à deux facteurs."
+            "wizardWarningDescr": "Les anciennes versions du client %VMS_NAME% et de l'administrateur Web ne prennent pas en charge l'authentification à deux facteurs.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
             "alreadyExists": "Cet e-mail a déjà été enregistré dans le système %systemName%"
@@ -395,8 +397,8 @@
         },
         "renewAuth": {
             "action": "Se connecter",
-            "message": "La session est trop ancienne. Veuillez vous connecter et réessayer",
-            "title": "Renouveler la session de connexion"
+            "message": "Your session has expired. Please log in again.",
+            "title": "Expired session"
         },
         "titles": {
             "error": "Erreur",

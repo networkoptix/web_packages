@@ -242,7 +242,9 @@
     "dialogs": {
         "twoFa": {
             "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
-            "wizardWarningDescr": "De oudere versies van %VMS_NAME% client en Web Admin ondersteunen geen tweefactorauthenticatie."
+            "wizardWarningDescr": "De oudere versies van %VMS_NAME% client en Web Admin ondersteunen geen tweefactorauthenticatie.",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
             "alreadyExists": "Deze e-mail is al geregistreerd in het %systemName% systeem"
@@ -395,8 +397,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Sessie is te oud. Gelieve in te loggen en opnieuw te proberen",
-            "title": "Inlogsessie vernieuwen"
+            "message": "Your session has expired. Please log in again.",
+            "title": "Expired session"
         },
         "titles": {
             "error": "Fout",

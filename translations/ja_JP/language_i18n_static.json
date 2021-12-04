@@ -242,7 +242,9 @@
     "dialogs": {
         "twoFa": {
             "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}  にログインできなくなります:",
-            "wizardWarningDescr": "古いバージョンの %VMS_NAME% クライアントおよび Web Adminは、二要素認証をサポートしていません。"
+            "wizardWarningDescr": "古いバージョンの %VMS_NAME% クライアントおよび Web Adminは、二要素認証をサポートしていません。",
+            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
         },
         "addUser": {
             "alreadyExists": "このメールアドレスは %systemName% システムに既に登録されています"
@@ -395,8 +397,8 @@
         },
         "renewAuth": {
             "action": "ログイン",
-            "message": "セッションが古すぎます。ログイン後再試行してください",
-            "title": "ログインセッションを更新"
+            "message": "Your session has expired. Please log in again.",
+            "title": "Expired session"
         },
         "titles": {
             "error": "エラー",
