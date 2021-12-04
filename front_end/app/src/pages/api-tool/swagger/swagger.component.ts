@@ -118,6 +118,9 @@ export class NxSwaggerComponent implements OnChanges {
                     return request;
                 }
             });
+            if (this.APIToolService.isAPIInfoMenuNode(this.APIToolService.activeNode)) {
+                this.modifyCodeBlocksAndTextareas();
+            }
         });
     }
 
@@ -217,9 +220,9 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private modifyCodeBlocksAndTextareas = () => {
-        const elements = this.document.querySelectorAll('.microlight, .text-area');
+        const elements = this.document.querySelectorAll('pre, .text-area');
         for (const element of elements as any) {
-            if (!element.parentElement.getElementsByClassName('copy-button').length) {
+            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD') {
                 // Add clipboard buttons and line counters to elements that dont have them
                 const container = element.closest('div') as HTMLElement;
                 container?.classList.add('highlight-code');
@@ -306,6 +309,15 @@ export class NxSwaggerComponent implements OnChanges {
 
     addLineCounter = (parent: HTMLElement) => {
         parent.innerHTML = parent.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
+        for (const child of parent.childNodes as any) {
+            if (!child.textContent.length && !child.childElementCount) {
+                child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
+            }
+        }
+        if (parent.childElementCount > 1) {
+            // the code above adds one extra line, should be removed
+            parent.lastElementChild.remove();
+        }
     }
 
     private addLabelToRequest = () => {

@@ -15,6 +15,10 @@
 	display : none;
 }
 
+.hidden {
+	display: none;
+}
+
 .single-api-route-showing {
 	.swagger-ui .opblock-body {
 		padding-top     : 7px;
@@ -69,6 +73,9 @@
 
 .api-info {
 	.information-container.wrapper {
+		li {
+			position: relative;
+		}
 		display : block;
 		.info .title span{
 			display: none;
@@ -416,14 +423,21 @@
     @include typography.regular13dark9;
 }
 
-.swagger-ui .opblock-body pre.microlight {
-	font-size       : rem(13px);
-	border-radius   : 2px;
+.swagger-ui .info.highlight-code pre {
+	display: block;
+	position: relative;
+	box-sizing: border-box;
+	height: 100%;
+}
+
+.swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre  {
+	@extend .code-block-common;
 	background      : $dark13 !important;
 	font-family     : robotomonoregular, monospace;
-    font-weight     : 400;
 	color           : $light1;
 	width           : 100%;
+	margin-top	    : 10px;
+	padding	        : 1em 0.5em 1.4em 1em !important;
 }
 
 .swagger-ui .model-box {
@@ -730,14 +744,20 @@
 	word-break : break-word;
 }
 
+.code-block-common {
+	border-radius: 2px;
+	font-size: rem(13px) !important;
+	font-weight: 400 !important;
+	line-height: 1.23 !important;
+	letter-spacing: normal;
+	font-family: robotomonoregular, monospace !important;
+}
+
 .swagger-ui .markdown code {
-	font-size     : rem(13px);
+	@extend .code-block-common;
 	padding       : 1px 6px;
-	border-radius : 2px;
-	line-height   : 1.23;
 	border        : 1px solid $light10;
 	font-family   : robotomonoregular, monospace !important;
-	font-weight   : 400;
 	color         : $dark9;
 }
 
@@ -749,29 +769,18 @@
 }
 
 .swagger-ui .renderedMarkdown code {
-	border-radius: 2px;
+	@extend .code-block-common;
 	padding: 2px;
 	display: inline-block;
 	color: $additional_dark1;
-	line-height: 1.23;
 	border: solid 1px $additional_light8;
 	background: $additional_light7;
 }
 
-
-.code-block-common {
-	border-radius: 2px;
-	font-size: rem(13px);
-	font-weight: 400;
-	line-height: 1.23 !important;
-	letter-spacing: normal;
-	font-family: robotomonoregular, monospace !important;
-}
-
 pre, .text-area {
 	@extend .code-block-common;
-	margin: 16px 0 24px 0;
-	padding: 12px 8px;
+	margin: 10px 0 24px 0;
+	padding: 1em 0.5em 1.4em 1em !important;
 	counter-reset: line;
 	& > * {
 		position: relative;

@@ -11,7 +11,7 @@ import { fromEvent } from 'rxjs';
     templateUrl: './swagger-textarea.component.html',
     styleUrls: ['./swagger-textarea.component.scss']
 })
-export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     @ViewChild('customTextarea') customTextareaRef : ElementRef;
     @Input() textarea: HTMLTextAreaElement;
     isDisabled = true;
@@ -27,8 +27,13 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDest
 
     ngAfterViewInit() {
         const element = this.customTextareaRef.nativeElement;
-        element.innerText = this.textarea.innerText;
-        element.innerHTML = element.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
+        const text = this.textarea.innerText.split(' ').join('&nbsp;');
+        element.innerText = text;
+        if (element.textContent.length) {
+            element.innerHTML = element.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
+        } else {
+            element.innerHTML = '<div><br></div>';
+        }
         const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
 
         fromEvent(element, 'input').pipe(untilDestroyed(this)).subscribe(event => {
@@ -56,8 +61,6 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit, OnDest
             event.preventDefault();
             this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
         });
-
-        this.isDisabled = this.textarea.getAttribute('disabled') === '';
 
         this.attributeMutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
