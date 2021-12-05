@@ -243,8 +243,8 @@
         "twoFa": {
             "wizardWarning": "När du har aktiverat tvåfaktorsautentisering kommer du inte att kunna logga in på {count, plural, =0{# system} one{# systemet} other{# system}} från %VMS_NAME% klienter och webbadmin:",
             "wizardWarningDescr": "De äldre versionerna av %VMS_NAME% klient och webbadministratör stöder inte tvåfaktorsautentisering.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "Installera en autentiseringsapp på din mobila enhet om du inte redan har en. %CLOUD_NAME% stöder <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> eller <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Tvåfaktorsautentisering är nu <strong>aktiverad</strong> för ditt %CLOUD_NAME% konto!"
         },
         "addUser": {
             "alreadyExists": "Denna e-post har redan registrerats i %systemName% -systemet"
@@ -397,8 +397,8 @@
         },
         "renewAuth": {
             "action": "Logga in",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Din session har gått ut. Vänligen logga in på nytt.",
+            "title": "Utgången session"
         },
         "titles": {
             "error": "Fel",
