@@ -1,5 +1,10 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+
 import { NxSwitchComponent } from './switch.component';
 
 describe('NxSwitchComponent', () => {

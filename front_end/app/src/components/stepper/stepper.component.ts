@@ -1,5 +1,5 @@
-import { Component, Input, TemplateRef } from '@angular/core';
 import { CdkStepper } from '@angular/cdk/stepper';
+import { Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
     selector: 'nx-stepper',

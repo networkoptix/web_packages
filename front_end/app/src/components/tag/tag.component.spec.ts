@@ -1,5 +1,9 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
 
 import { NxTagComponent } from './tag.component';
 

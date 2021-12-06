@@ -1,25 +1,29 @@
-import { waitForAsync, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { CommonModule, Location } from '@angular/common';
-
-import { NxConfigService } from '@services/nx-config';
-import { MockProvider } from 'ng-mocks';
-import { HelperMockProvider } from '@src/_mocks/helpers.test';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
-import { TranslateModule } from '@ngx-translate/core';
-
-import { NxSearchComponent } from './search.component';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed,
+    fakeAsync
+} from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+import { BehaviorSubject } from 'rxjs';
+
+import { DirectivesModule } from '@directives/directives.module';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
-import { BehaviorSubject } from 'rxjs';
-import { DebugElement } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { HelperMockProvider } from '@src/_mocks/helpers.test';
+import { PipesModule } from '@src/pipes/pipes.module';
 
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NxSearchComponent } from './search.component';
 
 describe('NxSearchComponent', () => {
     let component: NxSearchComponent;
@@ -46,7 +50,10 @@ describe('NxSearchComponent', () => {
 
     beforeEach(
         waitForAsync(() => {
-            const spyCreateSearch = jasmine.createSpyObj('NxSearchService', ['getMatchPatterns']);
+            const spyCreateSearch = jasmine.createSpyObj(
+                'NxSearchService',
+                ['getMatchPatterns']
+            );
             TestBed.configureTestingModule({
                 declarations: [NxSearchComponent],
                 imports: [

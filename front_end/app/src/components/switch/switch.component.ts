@@ -1,11 +1,17 @@
 import {
-    Component, EventEmitter, forwardRef,
-    Input, OnInit, Output, SimpleChanges
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    OnInit,
+    Output,
+    SimpleChanges
 } from '@angular/core';
-
 import {
-    ControlValueAccessor, FormControl,
-    NG_VALUE_ACCESSOR, Validator
+    ControlValueAccessor,
+    FormControl,
+    NG_VALUE_ACCESSOR,
+    Validator
 } from '@angular/forms';
 
 @Component({

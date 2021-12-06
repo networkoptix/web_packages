@@ -1,19 +1,25 @@
 import {
-    Component, forwardRef, Input,
-    OnChanges, OnDestroy, OnInit, Renderer2,
-    SimpleChanges, ViewEncapsulation
-}                                                from '@angular/core';
-import { NG_VALUE_ACCESSOR }                     from '@angular/forms';
+    Component,
+    forwardRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    SimpleChanges,
+    ViewEncapsulation
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { UntilDestroy }                          from '@ngneat/until-destroy';
-import { Subscription }                          from 'rxjs';
-import { filter }                                from 'rxjs/operators';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxUriService }              from '@services/uri.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 
 /* USAGE
  <nx-vendor-list
@@ -184,7 +190,11 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     toggleVendorsShown(element) {
         if (this.vendors.length !== this.allVendors.length) {
             this.vendors = this.allVendors;
-            this.renderer.setProperty(element, 'innerText', 'Show Top ' + this.CONFIG.ipvd.vendorsShown);
+            this.renderer.setProperty(
+                element,
+                'innerText',
+                'Show Top ' + this.CONFIG.ipvd.vendorsShown
+            );
         } else {
             this.setVendorsShown(this.allVendors);
             this.renderer.setProperty(element, 'innerText', 'Show All');
@@ -240,7 +250,11 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         if (filter.multiselect) {
             this.filter.multiselects.find((select) => {
                 if (select.id === filter.multiselect.id) {
-                    select.selected.push(select.items.find(item => item.id === filter.multiselect.value).id);
+                    select.selected.push(
+                        select.items.find(item =>
+                            item.id === filter.multiselect.value
+                        ).id
+                    );
                     queryParams.hardwareTypes = select.selected;
                 }
             });
