@@ -243,8 +243,8 @@
         "twoFa": {
             "wizardWarning": "Après avoir activé l'authentification à deux facteurs, vous ne pourrez plus vous connecter à {count, plural, =0{# systèmes} one{# système} other{# systèmes}} à partir de %VMS_NAME% clients et Web Admin :",
             "wizardWarningDescr": "Les anciennes versions du client %VMS_NAME% et de l'administrateur Web ne prennent pas en charge l'authentification à deux facteurs.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "Installez une application d'authentification sur votre appareil mobile si vous n'en avez pas déjà. %CLOUD_NAME% prend en charge <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> ou <strong>Duo Mobile</strong>.",
+            "nowEnabled": "L'authentification à deux facteurs est maintenant <strong>activée</strong> pour votre compte %CLOUD_NAME%!"
         },
         "addUser": {
             "alreadyExists": "Cet e-mail a déjà été enregistré dans le système %systemName%"
@@ -397,8 +397,8 @@
         },
         "renewAuth": {
             "action": "Se connecter",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Votre session a expiré. Veuillez vous reconnecter.",
+            "title": "Session expirée"
         },
         "titles": {
             "error": "Erreur",
@@ -506,7 +506,7 @@
         "INCOMPATIBLE": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers le {downloadHTML}.",
         "This user does not exist.": "Cet utilisateur n'existe pas.",
         "The user is disabled. Please contact your system administrator.": "L'utilisateur est désactivé. Veuillez contacter votre administrateur système.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "Cet utilisateur a été désactivé par un administrateur système.",
         "cloud_systems_have_different_owners": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
         "fail": "{failedSystem} est inaccessible.",
@@ -537,7 +537,7 @@
         "cantSharePrefix": "Impossible de partager le système",
         "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
         "emailNotFound": "Compte n’existe pas.",
-        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccess2FA": "<p class=\"mb-0\">L'authentification à deux facteurs est requise pour accéder à ce système.</p><p>Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"/account/security\">paramètres de compte</a>.</p>",
         "failedToAccessSystem": "Aucun système ne peut être accédé par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, ou si vous êtes connecté au compte incorrect.",
         "failedToAccessCamera": "Aucune caméra ne peut être accédée par ce lien.",
         "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
@@ -642,7 +642,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Télécharger %VMS_NAME%",
         "downloadPlatform": "Télécharger %VMS_NAME% pour ",
-        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
+        "failedToAccess2FA": "Impossible d'accéder au système \"{systemName}\"",
         "failedToAccessSystem": "Impossible d'accéder au système",
         "failedToAccessCamera": "Impossible d'accéder à la caméra",
         "integrations": "Intégrations de %VMS_NAME%",
