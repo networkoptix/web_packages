@@ -1,15 +1,21 @@
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
-import { NxRibbonComponent, RibbonAction } from './ribbon.component';
-import { NxRibbonService } from './ribbon.service';
+import {
+    ComponentFixture,
+    inject,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
+
 import { NxConfigService } from '@services/nx-config';
 import { NxHeaderService } from '@services/nx-header.service';
-import { RouterLinkDirectiveStub } from '@src/_testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { setupConfig } from '@src/_mocks/config.test';
-import { CommonModule } from '@angular/common';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+
+import { NxRibbonComponent, RibbonAction } from './ribbon.component';
+import { NxRibbonService } from './ribbon.service';
 
 describe('NxRibbonComponent', () => {
     let component: NxRibbonComponent;
@@ -48,7 +54,8 @@ describe('NxRibbonComponent', () => {
     it('should be initialized', () => {
         component.ngOnInit();
 
-        spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+        spyOnProperty(component, 'showRibbon')
+            .and.returnValue(component.visibility && true);
         expect(component.showRibbon).toBeFalsy();
         expect(component.visibility).toBe(false);
         expect(component.type).toBe('');
@@ -73,14 +80,20 @@ describe('NxRibbonComponent', () => {
                 updateFunction: ''
             };
 
-            service.show(context.message, context.actions, context.type, context.updateFunction);
+            service.show(
+                context.message,
+                context.actions,
+                context.type,
+                context.updateFunction
+            );
             fixture.detectChanges();
 
             service.contextSubject.subscribe((serviceContext) => {
                 expect(serviceContext).toEqual(context);
             });
 
-            spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+            spyOnProperty(component, 'showRibbon')
+                .and.returnValue(component.visibility && true);
             expect(component.showRibbon).toBeTruthy();
             expect(component.message).toBe(context.message);
             expect(component.actions).toEqual(context.actions);
@@ -105,7 +118,8 @@ describe('NxRibbonComponent', () => {
                 expect(serviceContext).toEqual(context);
             });
 
-            spyOnProperty(component, 'showRibbon').and.returnValue(component.visibility && true);
+            spyOnProperty(component, 'showRibbon')
+                .and.returnValue(component.visibility && true);
             expect(component.showRibbon).toBeFalsy();
             expect(component.message).toBe('');
             expect(component.actions).toEqual([]);

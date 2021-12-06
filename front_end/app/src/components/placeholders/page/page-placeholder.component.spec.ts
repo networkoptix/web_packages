@@ -1,14 +1,16 @@
 import {
-    ComponentFixture, inject, TestBed,
+    ComponentFixture,
+    inject,
+    TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { BehaviorSubject } from 'rxjs';
 import { MockProvider } from 'ng-mocks';
+
 import { NxConfigService } from '@services/nx-config';
-import { NxPagePlaceholderComponent } from './page-placeholder.component';
-import { HelperMockProvider } from '@src/_mocks/helpers.test';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+
+import { NxPagePlaceholderComponent } from './page-placeholder.component';
 
 describe('NxPagePlaceholderComponent', () => {
     let component: NxPagePlaceholderComponent;

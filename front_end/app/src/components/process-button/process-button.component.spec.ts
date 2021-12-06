@@ -1,14 +1,18 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
-    ComponentFixture, fakeAsync, TestBed,
+    ComponentFixture,
+    fakeAsync,
+    TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { NxProcessButtonComponent } from './process-button.component';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { MockProvider } from 'ng-mocks';
 import { Process } from '@services/process.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxProcessButtonComponent } from './process-button.component';
 
 describe('NxProcessButtonComponent', () => {
     let component: NxProcessButtonComponent;
@@ -19,8 +23,13 @@ describe('NxProcessButtonComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
-                declarations: [NxProcessButtonComponent],
+                imports: [
+                    AngularSvgIconModule.forRoot(),
+                    HttpClientTestingModule
+                ],
+                declarations: [
+                    NxProcessButtonComponent
+                ],
                 providers: [
                     MockProvider(NxLanguageProviderService),
                     MockProvider(NxConfigService),
@@ -88,7 +97,9 @@ describe('NxProcessButtonComponent', () => {
         const svgButton = el.querySelector('span.header-button-span svg-icon');
         expect(svgButton).toBeDefined();
 
-        const textButton: HTMLElement = el.querySelector('span.header-button-span span');
+        const textButton = el.querySelector<HTMLSpanElement>(
+            'span.header-button-span span'
+        );
         expect(textButton.innerHTML).toBe('Open in %VMS_NAME%');
         textButton.click();
         expect(spy.calls.count()).toBe(1);

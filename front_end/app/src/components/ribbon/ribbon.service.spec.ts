@@ -1,10 +1,12 @@
+import { HttpClient } from '@angular/common/http';
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { NxRibbonService, RibbonActionInput } from './ribbon.service';
 import { BehaviorSubject } from 'rxjs';
+
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { HttpClient } from '@angular/common/http';
+
+import { NxRibbonService, RibbonActionInput } from './ribbon.service';
 
 describe('NxRibbonService', () => {
     const translateMock = {
@@ -12,8 +14,14 @@ describe('NxRibbonService', () => {
     };
 
     beforeEach(waitForAsync(() => {
-        const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
-        const spyAppState = jasmine.createSpyObj('NxDialogsService', ['ribbonVisibility']);
+        const spyHeader = jasmine.createSpyObj(
+            'NxHeaderService',
+            ['currentLocation']
+        );
+        const spyAppState = jasmine.createSpyObj(
+            'NxDialogsService',
+            ['ribbonVisibility']
+        );
 
         TestBed.configureTestingModule({
             imports: [],

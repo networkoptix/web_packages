@@ -1,16 +1,19 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import {
-    waitForAsync, ComponentFixture,
+    waitForAsync,
+    ComponentFixture,
     TestBed,
     tick,
     fakeAsync
-}                                        from '@angular/core/testing';
-import { HttpClientTestingModule }       from '@angular/common/http/testing';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
+} from '@angular/core/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';
-import { DebugElement }                  from '@angular/core';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { NxConfigService }               from '@services/nx-config';
-import { MockProvider }                  from 'ng-mocks';
 
 describe('NxSectionPlaceholderComponent', () => {
     let component: NxSectionPlaceholderComponent;

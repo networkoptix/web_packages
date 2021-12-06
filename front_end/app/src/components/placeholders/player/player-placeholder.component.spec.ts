@@ -1,11 +1,13 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule }                 from '@angular/common/http/testing';
-import { AngularSvgIconModule }                    from 'angular-svg-icon';
-import { DebugElement }              from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
+
+import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService }           from '@services/nx-config';
-import { MockProvider }              from 'ng-mocks';
-import { NxPlayerPlaceholderComponent }            from './player-placeholder.component';
+
+import { NxPlayerPlaceholderComponent } from './player-placeholder.component';
 
 describe('NxPlayerPlaceholderComponent', () => {
     let component: NxPlayerPlaceholderComponent;
