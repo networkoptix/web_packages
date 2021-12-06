@@ -249,7 +249,7 @@ module.exports = {
                 'app/*.ts',
                 'app/src/_mocks/**/*.ts',
                 'app/src/_testing/**/*.ts',
-                // TODO 'app/src/components/**/*.ts',
+                'app/src/components/**/*.ts',
                 // TODO 'app/src/dialogs/**/*.ts',
                 'app/src/directives/**/*.ts',
                 'app/src/interceptors/**/*.ts',
