@@ -61,8 +61,11 @@ def get_languages_list():
 def get_branding_shortcuts(customization = settings.CUSTOMIZATION):
     cloud_portal = Asset.objects.get(customizations__name=customization,
                                      asset_type=get_cloud_portal_asset().asset_type)
-    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
-    brand_structures = [ds for ds in branding_context.datastructure_set.all() if 'shortcut' in ds.meta_settings]
+    branding_context_structures = branding_context.datastructure_set.all() if (
+        branding_context := Context.objects.filter(
+            name='branding', asset_type=get_cloud_portal_asset().asset_type).first()
+    ) else []
+    brand_structures = [ds for ds in branding_context_structures if 'shortcut' in ds.meta_settings]
     hidden_branding_structures = [ds for ds in DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
         context__hidden=False, context__is_global=True, name__startswith='%', context__name__in=['settings', 'branding'],

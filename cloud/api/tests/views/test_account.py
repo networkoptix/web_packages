@@ -391,7 +391,7 @@ class TestAccountViews:
         self.user.refresh_from_db()
         assert self.user.activated_date == self.timezone_now
         assert not PushDevice.objects.filter(user=self.user).exists()
-        self.restore_mock.assert_called_with(self.code, 'new_pass', 'totp')
+        self.restore_mock.assert_called_with(self.code, 'new_pass', 'totp', None)
 
         # Check that date is only updated if none exists
         old_time = self.timezone_now

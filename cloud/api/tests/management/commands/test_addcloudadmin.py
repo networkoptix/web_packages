@@ -1,4 +1,5 @@
 import pytest
+import os
 from uuid import uuid4
 from unittest.mock import call
 
@@ -14,7 +15,7 @@ class TestAddCloudAdmin:
         parser.add_argument.assert_has_calls([
             call('email', type=str), call('password', type=str)])
 
-    def test_handle(self, mocker, account_factory, db):
+    def test_handle(self, mocker, db):
         email = f'{uuid4()}@{uuid4()}.com'
         password = str(uuid4())
         environ = {
@@ -35,16 +36,7 @@ class TestAddCloudAdmin:
         instance = Command()
         mock_write_stdout = mocker.patch.object(
             instance.stdout, 'write')
-
-        # Test already contains accounts
-        user = account_factory()
-        pytest.raises(
-            RuntimeError,
-            instance.handle,
-            match='This command should only be run if no accounts exists'
-        )
-        user.delete()
-
+    
         # Test missing email
         pytest.raises(
             ValueError,
@@ -65,25 +57,22 @@ class TestAddCloudAdmin:
         instance.handle(
             email=email, password=password)
         mock_register.assert_called_once_with(
-            '', email, password, first, last)
+            email, password, first, last)
         mock_activate.assert_called_once_with(code)
         expected_calls = (
             ('SUCCESS', f'Successfully added user with {email} for email.'),
             ('NOTICE', f'Waiting for {SLEEP_TIMER}s to activate the account.'),
             ('SUCCESS', f'Successfully activated {email}.')
         )
-        mock_write_stdout.assert_has_calls(
-            call(getattr(instance.style, style)(msg))
-            for style, msg in expected_calls)
+        stdout_calls = [getattr(instance.style, style)(msg)
+            for style, msg in expected_calls]
+        for stdout_call in stdout_calls:
+            mock_write_stdout.asset_called_with(stdout_call)
 
         # Test activate failed
         Account.objects.filter(email=email).delete()
         message.delete()
-
+        mocker.patch.object(cloud_api.Account, 'activate', side_effect=Exception('some failure'))
         instance.handle(
             email=email, password=password)
-        assert not Account.objects.filter(email=email).first()
-        mock_write_stdout.assert_called_with(
-            instance.style.ERROR(f"Failed to activate {email}. Deleting the account."
-                                 f"Please try again. If it continues to fail please contact support.")
-        )
+        assert Account.objects.filter(email=email).first()

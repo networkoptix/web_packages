@@ -51,13 +51,15 @@ def test_email_notification(arf, account_factory, db, mocker):
     res = email_notification(request)
 
     assert res.status_code == status.HTTP_400_BAD_REQUEST
-    assert res.rendered_content == b'{"targets":["Target email addresses are required"]}'
+    assert res.rendered_content == b'{"targets":["This list may not be empty."]}'
 
     # Test invalid targets
-    request = arf.post(url, {**data, 'targets': [*data['targets'], 'invalid_email.com']}, format='json')
+    targets_with_invalid = [*data['targets'], 'invalid_email.com']
+    request = arf.post(url, {**data, 'targets': targets_with_invalid}, format='json')
     request.session = {}
     force_authenticate(request, user=user)
     res = email_notification(request)
 
     assert res.status_code == status.HTTP_400_BAD_REQUEST
-    assert res.rendered_content == b'{"targets":["Enter a valid email address.: invalid_email.com"]}'
+    assert res.rendered_content.decode() == f'{{"targets":{{"{len(targets_with_invalid) - 1}":["Enter a valid email address."]}}}}'
+

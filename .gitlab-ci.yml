@@ -117,7 +117,7 @@ django-unit-test:
       junit: cloud/report.xml
       cobertura: cloud/coverage.xml
   # Until all tests are passing reliably
-  allow_failure: true
+  allow_failure: false
 
 frontend-unit-test:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}

@@ -69,7 +69,8 @@ class TestOauthViews:
                 'email': self.email,
                 'password': password,
                 'response_type': response_type,
-                'client_id': 'cloud_portal'
+                'client_id': 'cloud_portal',
+                'redirect_uri': f'https://{uuid4()}.com'
             }
         else:
             data = request_data
@@ -84,9 +85,17 @@ class TestOauthViews:
         mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'access_code': str(uuid4())})
         mocked_check_signature = mocker.patch('oauth.views.check_signature', return_value='')
         test_signature = str(uuid4())
-        response = self.authenticate(self.password, Auth.RESPONSE_TYPE.code, signature=test_signature)
+        redirect_uri = f'https://{uuid4()}.com'
+        request_data = {
+                'email': self.email,
+                'password': self.password,
+                'response_type': Auth.RESPONSE_TYPE.code,
+                'client_id': 'cloud_portal',
+                'redirect_uri': redirect_uri
+            }
+        response = self.authenticate(self.password, Auth.RESPONSE_TYPE.code, request_data, test_signature)
 
-        mocked_check_signature.assert_called_with(test_signature, None, None)
+        mocked_check_signature.assert_called_with(test_signature, None, redirect_uri)
         assert response.status_code == 200
 
     def test_authenticate_raises_wrong_code(self):

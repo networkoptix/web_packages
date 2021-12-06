@@ -50,13 +50,13 @@ def test_get_notifications(mocker, account_factory, db):
         f'{version}.{version + offset}.{version}.{version}'
         for offset in [-1, 0, 1]]
 
-    viewed_notifications = generate_notifications()
+    viewed_notifications = generate_notifications(build=current_build)
     user.portalnotification_set.add(
         *[notification.id for notification in viewed_notifications])
     old_notifications = generate_notifications(
-        build=old_build) + generate_notifications(max_ts=datetime.now() - timedelta(weeks=3))
+        build=old_build) + generate_notifications(max_ts=datetime.now() - timedelta(weeks=3), build=old_build)
     future_notifications = generate_notifications(
-        min_ts=datetime.now() + timedelta(weeks=1))
+        min_ts=datetime.now() + timedelta(weeks=1), build=future_build)
 
     mocker.patch.object(settings, 'VERSION', current_build)
 
@@ -80,7 +80,7 @@ def test_mark_read(mocker, account_factory, db):
     version = randint(1, 20)
     current_build = f'{version}.{version}.{version}.{version}'
     mocker.patch.object(settings, 'VERSION', current_build)
-    to_be_marked_read, *expected_unread = generate_notifications()
+    to_be_marked_read, *expected_unread = generate_notifications(build=current_build)
     mock_request = mocker.MagicMock(
         spec=Request, user=user, data={'notificationIds': [to_be_marked_read.id]}, method='POST')
 

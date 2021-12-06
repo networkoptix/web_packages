@@ -69,7 +69,8 @@ class TestExceptions:
 
     def test_require_params(self, mocker):
         mock_request = mocker.MagicMock()
-        required_params = {str(uuid4()): True for _ in range(7)}
+        required_params = [str(uuid4()) for _ in range(7)]
+        required_params_values = {param: True for param in required_params}
         other_params = {str(uuid4()): '' for _ in range(7)}
         expected_error = {param: ['This field is required.']
                           for param in required_params}
@@ -92,12 +93,12 @@ class TestExceptions:
 
         # Test has all params POST
         mock_request.method = 'POST'
-        mock_request.data = required_params
+        mock_request.data = required_params_values
         require_params(mock_request, required_params)
 
         # Test has all params GET
         mock_request.method = 'GET'
-        mock_request.GET = required_params
+        mock_request.GET = required_params_values
         require_params(mock_request, required_params)
 
     def api_exception_test_with(self, api_exception=None, error_text=str(uuid4()), error_code=str(uuid4()), error_data=str(uuid4()), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR):

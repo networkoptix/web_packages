@@ -77,7 +77,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
 
             try:
                 if not users:
-                    users = System.users(session, message.system_id) if session.get('access_token') else []
+                    users = System.users(session, message.system_id) if session.get('access_token') else {'sharing': []}
 
             except:
                 message.result = RESULT_STATES.failure

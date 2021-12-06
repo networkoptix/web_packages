@@ -198,11 +198,35 @@ class TestSystemAPI:
         )
         assert bind.json() == self.sample_data
 
-    def test_merge(self, cloud_api_post_mock):
-        merge = unwrap(System.merge)(self.request, self.system_id, self.slave_system_id, headers=self.headers)
+    def test_merge(self, cloud_api_post_mock, mocker):
+        mock_access_token, mock_refresh_token, master_token, slave_token = generate_args(4)
+
+        request = mocker.MagicMock()
+        request.session = {
+                'access_token': mock_access_token,
+                'refresh_token': mock_refresh_token
+            }
+
+        mock_token_lookup = {
+            f"cloudSystemId={self.system_id}": master_token,
+            f"cloudSystemId={self.slave_system_id}": slave_token
+        }
+
+        def mock_get_refresh_token(refresh_token, scope):
+            nonlocal mock_refresh_token
+            assert refresh_token == mock_refresh_token
+            return {'access_token': mock_token_lookup[scope]}
+            
+
+        mocker.patch('api.controllers.cloud_api.Auth.get_refresh_token', mock_get_refresh_token)
+        merge = unwrap(System.merge)(request, self.system_id, self.slave_system_id, headers=self.headers)
         cloud_api_post_mock.assert_called_with(
             System.get_request_url('merged_systems/', self.system_id),
-            json={'systemId': self.slave_system_id},
+            json={
+                'systemId': self.slave_system_id,
+                'masterSystemAccessToken': master_token,
+                'slaveSystemAccessToken': slave_token
+            },
             headers=self.headers
         )
         assert merge.json() == self.sample_data

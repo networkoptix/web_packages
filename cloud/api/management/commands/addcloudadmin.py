@@ -41,20 +41,21 @@ class Command(BaseCommand):
         for _ in range(CHECK_N_TIMES):  # SLEEP_TIMER * CHECK_N_TIMES = time waiting for email (Currently 300s)
             message = Message.objects.filter(user_email__iexact=email).last()
             if message:
+                self.stdout.write(self.style.NOTICE(
+                    f"Waiting for {SLEEP_TIMER}s to activate the account."))
                 try:
                     cloud_api.Account.activate(message.message.get("code").replace("%3D", "=", 3))
                     account.activated_date = timezone.now()
                     account.save()
                     self.stdout.write(self.style.SUCCESS(
                         f"Successfully activated {email}."))
-                except APINotAuthorisedException:
-                    self.stdout.write(self.style.WARNING(
-                        f"{email} was already activated ."))
-                break
-
-            self.stdout.write(self.style.NOTICE(
-                f"Waiting for {SLEEP_TIMER}s to activate the account."))
+                    break
+                except Exception as e:
+                    if isinstance(e, APINotAuthorisedException):
+                        self.stdout.write(self.style.WARNING(
+                            f"{email} was already activated ."))
             time.sleep(SLEEP_TIMER)
+
         else:
             self.stdout.write(
                 self.style.ERROR(f"Failed to activate {email}. Please check your inbox for {email} or try again. "
