@@ -279,7 +279,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     queryParams: { code, client_id, client_type, view_type: this.viewType }
                 });
             }
-        } else if (['connectSystemToCloud', 'setupWizard'].includes(this.clientType)) {
+        } else if (this.clientType === 'setupWizard') {
             this.initialData.redirect_url = link;
             this.currentState = AuthorizeState.confirm;
         } else {
