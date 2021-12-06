@@ -1,16 +1,17 @@
+import { DebugElement } from '@angular/core';
 import {
     ComponentFixture,
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
-import { DebugElement } from '@angular/core';
-import { MockProvider } from 'ng-mocks';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService } from '@services/nx-config';
-import { NxTagComponent } from '@components/tag/tag.component';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MockProvider } from 'ng-mocks';
+
+import { NxTagComponent } from '@components/tag/tag.component';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { NxPasswordTagValidationComponent } from './password-tag-validation.component';
 
 describe('NxPasswordTagValidationComponent', () => {
     let component: NxPasswordTagValidationComponent;
@@ -21,7 +22,10 @@ describe('NxPasswordTagValidationComponent', () => {
         TestBed
             .configureTestingModule({
                 imports: [NgbModule],
-                declarations: [NxPasswordTagValidationComponent, NxTagComponent],
+                declarations: [
+                    NxPasswordTagValidationComponent,
+                    NxTagComponent
+                ],
                 providers: [
                     MockProvider(NxLanguageProviderService),
                     MockProvider(NxConfigService)

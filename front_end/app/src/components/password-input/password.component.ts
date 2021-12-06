@@ -1,19 +1,27 @@
 import {
-    Component, OnInit, Input,
-    forwardRef, ViewEncapsulation,
-    OnDestroy, ViewChild, ElementRef
-}                                   from '@angular/core';
+    Component,
+    OnInit,
+    Input,
+    forwardRef,
+    ViewEncapsulation,
+    OnDestroy,
+    ViewChild,
+    ElementRef
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator, FormControl, NgModel
-}                                   from '@angular/forms';
-import { UntilDestroy }             from '@ngneat/until-destroy';
-import { Subscription }             from 'rxjs';
+    Validator,
+    FormControl,
+    NgModel
+} from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxCloudApiService }        from '@services/nx-cloud-api';
-import { LanguageI18NStaticTypes }  from '@app/language_i18n_static_types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

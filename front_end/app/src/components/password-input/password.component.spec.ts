@@ -1,19 +1,22 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
-    ComponentFixture, fakeAsync, TestBed, waitForAsync
+    ComponentFixture,
+    fakeAsync,
+    TestBed,
+    waitForAsync
 } from '@angular/core/testing';
 import { FormsModule, NgModel } from '@angular/forms';
-import { NxPasswordComponent } from '@components/password-input/password.component';
-import { NxConfigService } from '@services/nx-config';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { CommonModule } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
     NxPasswordTagValidationComponent
 } from '@components/password-input-tag-validation/password-tag-validation.component';
+import { NxPasswordComponent } from '@components/password-input/password.component';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -35,7 +38,10 @@ describe('NxPasswordComponent', () => {
                 AngularSvgIconModule.forRoot(),
                 HttpClientTestingModule
             ],
-            declarations: [NxPasswordComponent, NxPasswordTagValidationComponent],
+            declarations: [
+                NxPasswordComponent,
+                NxPasswordTagValidationComponent
+            ],
             providers: [
                 MockProvider(NxLanguageProviderService),
                 MockProvider(NxConfigService),
@@ -61,14 +67,18 @@ describe('NxPasswordComponent', () => {
     it('should have default properties', () => {
         expect(el.autocomplete).toBe('new-password');
         expect(el.className).toContain('form-control');
-        expect(el.pattern).toBe(component.CONFIG.credentialsValidation.passwordRequirements.requiredRegex);
+        expect(el.pattern).toBe(
+            component.CONFIG.credentialsValidation.passwordRequirements.requiredRegex
+        );
     });
 
     it('should be in "password" mode', () => {
         component.passwordToggle = true;
         fixture.detectChanges();
 
-        const toggle = fixture.debugElement.nativeElement.querySelectorAll('span.input-group-addon svg-icon');
+        const toggle = fixture.debugElement.nativeElement.querySelectorAll(
+            'span.input-group-addon svg-icon'
+        );
         expect(toggle.length).toBe(1);
         expect(el.type).toBe('password');
     });
@@ -77,7 +87,9 @@ describe('NxPasswordComponent', () => {
         component.passwordToggle = false;
         fixture.detectChanges(); // apply changes
 
-        const toggle = fixture.debugElement.nativeElement.querySelectorAll('span.input-group-addon svg-icon');
+        const toggle = fixture.debugElement.nativeElement.querySelectorAll(
+            'span.input-group-addon svg-icon'
+        );
         expect(toggle.length).toBe(1);
         expect(el.type).toBe('text');
     });

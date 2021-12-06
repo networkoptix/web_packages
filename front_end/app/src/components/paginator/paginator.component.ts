@@ -1,9 +1,10 @@
-import { Component, Input, SimpleChanges }    from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IConfig, NxConfigService } from '@services/nx-config';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, pairwise, startWith } from 'rxjs/operators';
+
+import { IConfig, NxConfigService } from '@services/nx-config';
 
 @UntilDestroy()
 @Component({
@@ -59,7 +60,11 @@ export class NxPaginatorComponent {
             }),
             startWith(<unknown>[] as [number,  number[]]),
             pairwise(),
-            map(([[_, prevPages], [page, pages]]) => prevPages?.slice(1, prevPages.length - 1).includes(page) ? prevPages : pages)
+            map(([[_, prevPages], [page, pages]]) =>
+                prevPages?.slice(1, prevPages.length - 1).includes(page)
+                    ? prevPages
+                    : pages
+            )
         );
     }
 

@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input }             from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR }  from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DEFAULT_EDITOR_CONFIG } from './editor-config';
 
@@ -24,7 +24,10 @@ export class NxHTMLComponent implements ControlValueAccessor {
     #value = '';
 
     ngOnInit() {
-        this.editorSettings = { ...DEFAULT_EDITOR_CONFIG, ...(this.editorOverrides || {}) };
+        this.editorSettings = {
+            ...DEFAULT_EDITOR_CONFIG,
+            ...(this.editorOverrides || {})
+        };
     }
 
     #onChangeCallback

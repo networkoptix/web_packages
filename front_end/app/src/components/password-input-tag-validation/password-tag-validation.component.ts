@@ -1,10 +1,12 @@
 import {
-    Component, Input,
+    Component,
+    Input,
     ViewEncapsulation
-}                                    from '@angular/core';
+} from '@angular/core';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 @Component({
     selector: 'nx-password-input-tag-validation',

@@ -1,9 +1,14 @@
-import {
-    ComponentFixture, TestBed, waitForAsync
-}                             from '@angular/core/testing';
-import { FormsModule }        from '@angular/forms';
-import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { CommonModule } from '@angular/common';
+import {
+    ComponentFixture,
+    TestBed,
+    waitForAsync
+} from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+
+import {
+    NxNumericComponent
+} from '@components/numeric-input/numeric.component';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {

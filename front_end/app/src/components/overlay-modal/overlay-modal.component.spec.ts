@@ -1,22 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { LocalStorageService } from 'ngx-webstorage';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
+import { LocalStorageService } from 'ngx-webstorage';
+import { BehaviorSubject, of } from 'rxjs';
 
+import { NxAccountService } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSystemService } from '@services/system.service';
-import { NxAccountService } from '@services/account.service';
+
 import { NxOverlayModalComponent } from './overlay-modal.component';
-import { BehaviorSubject, of } from 'rxjs';
-import { MockProvider } from 'ng-mocks';
 
 describe('NxOverlayModalComponent', () => {
     let component: NxOverlayModalComponent;
@@ -98,7 +99,8 @@ describe('NxOverlayModalComponent', () => {
         fixture.detectChanges();
         const otherServerTitle = el.nativeElement.querySelectorAll('p');
         expect(otherServerTitle.length).toBe(2);
-        expect(otherServerTitle[1].innerText).toBe('You can try to connect to other servers in this system:');
+        expect(otherServerTitle[1].innerText)
+            .toBe('You can try to connect to other servers in this system:');
         const serverNames = el.nativeElement.querySelectorAll('span.server-name');
         expect(serverNames.length).toBe(servers.length);
         expect(serverNames[0].innerText).toBe(servers[0].name);

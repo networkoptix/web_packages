@@ -1,13 +1,17 @@
+import { DebugElement } from '@angular/core';
 import {
-    ComponentFixture, inject, TestBed,
+    ComponentFixture,
+    inject,
+    TestBed,
     waitForAsync
-}                                        from '@angular/core/testing';
+} from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
+
+import { NxTagComponent } from '@components/tag/tag.component';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
 import { NxPasswordValidationComponent } from './password-validation.component';
-import { DebugElement }                  from '@angular/core';
-import { NxLanguageProviderService }     from '@services/nx-language-provider';
-import { NxConfigService }               from '@services/nx-config';
-import { NxTagComponent }                from '@components/tag/tag.component';
-import { MockProvider }                  from 'ng-mocks';
 
 describe('NxPasswordValidationComponent', () => {
     let component: NxPasswordValidationComponent;

@@ -84,7 +84,11 @@ export class InfoBlockLine <Name = string, Value = string> {
 }
 
 export class InfoBlockSection<Heading = string> {
-    constructor(public lines: InfoBlockLine[], public heading?: Heading, public maxParamWidth?: number) {}
+    constructor(
+        public lines: InfoBlockLine[],
+        public heading?: Heading,
+        public maxParamWidth?: number
+    ) {}
 }
 
 export type InfoBlockSections = InfoBlockSection[];

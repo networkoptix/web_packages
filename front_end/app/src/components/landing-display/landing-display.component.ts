@@ -1,7 +1,7 @@
-import { Component, OnInit }      from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import { NxCloudApiService }      from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 
 @Component({
     selector: 'landing-display-component',

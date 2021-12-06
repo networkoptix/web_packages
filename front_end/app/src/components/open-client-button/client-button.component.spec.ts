@@ -1,12 +1,10 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
-import { NxProcessService } from '@services/process.service';
-import { NxClientButtonComponent } from './client-button.component';
+import { DebugElement } from '@angular/core';
+import {
+    waitForAsync,
+    ComponentFixture,
+    TestBed
+} from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
@@ -14,6 +12,13 @@ import { MockProvider } from 'ng-mocks';
 import {
     NxProcessButtonComponent
 } from '@components/process-button/process-button.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxUrlProtocolService } from '@services/url-protocol.service';
+
+import { NxClientButtonComponent } from './client-button.component';
 
 describe('NxClientButtonComponent', () => {
     let component: NxClientButtonComponent;
