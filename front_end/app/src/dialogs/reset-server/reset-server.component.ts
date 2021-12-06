@@ -90,7 +90,7 @@ export class ResetServerModalContent {
                 ignoreUnauthorized: true,
                 successMessage: this.LANG.servers.beginReset?.(),
                 errorCodes: {
-                    'Wrong password.': wrongPasswordHandler,
+                    invalidParameter: wrongPasswordHandler,
                     wrongPassword: wrongPasswordHandler
                 }
             }, async() => {

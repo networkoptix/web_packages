@@ -58,7 +58,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
         const settings = {
             ignoreUnauthorized: true,
             errorCodes: {
-                'Wrong password.': showWrongCredentialsError,
+                invalidParameter: showWrongCredentialsError,
                 notAuthorized: showWrongCredentialsError,
                 accountBlocked: () => {
                     this.loginForm.controls.login_password.markAsPristine();

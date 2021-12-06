@@ -106,7 +106,7 @@ export class ConnectCloudModalContent implements OnInit {
             ignoreError: true,
             ignoreUnauthorized: true,
             errorCodes: {
-                'Wrong password.': passwordError,
+                invalidParameter: passwordError,
                 wrongPassword: passwordError
             },
             errorPrefix: this.LANG.errorCodes.cantConnectSystemPrefix()

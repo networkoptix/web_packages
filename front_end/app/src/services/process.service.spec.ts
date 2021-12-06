@@ -171,9 +171,9 @@ describe('Process service', () => {
         expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', toastOptions);
     }));
 
-    it('should create process and fail w/ error.errorString ', fakeAsync(() => {
+    it('should create process and fail w/ error.errorId ', fakeAsync(() => {
         process.createProcess(() => {
-            return Promise.reject({ error: { errorString: 'boom' } });
+            return Promise.reject({ error: { errorId: 'boom' } });
         }, {
             errorCodes: {
                 boom: 'Boom!'
@@ -182,7 +182,7 @@ describe('Process service', () => {
         }).then((response) => {
             expect(response).toBe('success');
         }, (error) => {
-            expect(error).toEqual({ errorString: 'boom' });
+            expect(error).toEqual({ errorId: 'boom' });
         }).run();
 
         tick();

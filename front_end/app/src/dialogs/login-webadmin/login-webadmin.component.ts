@@ -143,8 +143,8 @@ export class LoginWebadminModalContent implements OnInit {
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
-                'This user does not exist.': showWrongCredentialsError,
-                'Wrong password.': showWrongCredentialsError,
+                notFound: showWrongCredentialsError,
+                invalidParameter: showWrongCredentialsError,
                 notAuthorized: showWrongCredentialsError,
                 accountBlocked: () => {
                     this.loginForm.controls.login_password.markAsPristine();
