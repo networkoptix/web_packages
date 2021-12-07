@@ -3,7 +3,6 @@
 DOCKER_COMPOSE='etc/docker-compose.yml'
 SQL='./etc/*.sql'
 
-
 function build_frontend(){
     ./build_scripts/build.sh
 }

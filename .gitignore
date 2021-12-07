@@ -39,6 +39,7 @@ subinclude:robot_tests/.hgignore
 *.deb
 
 env
+nenv
 venv
 cloud/.idea
 cloud/static

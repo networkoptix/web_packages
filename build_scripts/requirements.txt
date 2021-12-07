@@ -3,3 +3,4 @@ htmlmin==0.1.12
 inlinestyler==0.2.1
 PyYAML==5.1
 pystache==0.5.4
+nodeenv==1.6.0

@@ -1,6 +1,8 @@
 #!/bin/bash
-
 set -e
+
+NODE_VERSION="12.20.1"
+NPM_VERSION="6.14.10"
 
 WEBADMIN_PACKAGE="webadmin.zip"
 EXTERNAL_PACKAGE="external.dat"
@@ -31,6 +33,13 @@ then
     [ ! -d "env" ] && virtualenv env -p python3
     . ./env/bin/activate
     pip install -r build_scripts/requirements.txt
+
+    echo "running nodeenv..."
+    [ -e nenv ] && rm -rf nenv
+    nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
+    . ./nenv/bin/activate
+    echo "Active Node.js: " && node -v
+    echo "Active npm: " && npm -v
 fi
 
 pushd front_end

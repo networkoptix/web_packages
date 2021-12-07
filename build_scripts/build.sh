@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+NODE_VERSION="12.20.1"
+NPM_VERSION="6.14.10"
+
 function build_frontend () {
     echo "Building front_end"
     echo "Build statics"
@@ -54,6 +57,12 @@ pip install setuptools==56.0.0
 pip install wheel==0.37.0
 pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
+echo "running nodeenv..."
+[ -e nenv ] && rm -rf nenv
+nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
+. ./nenv/bin/activate
+echo "Active Node.js: " && node -v
+echo "Active npm: " && npm -v
 
 cd $PORTAL_REPOSITORY
 
