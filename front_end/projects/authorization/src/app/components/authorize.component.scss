@@ -335,6 +335,10 @@
                     color: $light10 !important;
                 }
 
+                .ng-untouched input.ng-valid {
+                    color: $light4 !important;
+                }
+
                 .authorize-header {
                     color: $light4 !important;
                 }
