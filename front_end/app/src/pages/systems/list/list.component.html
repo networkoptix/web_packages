@@ -13,6 +13,9 @@
         </nx-page-placeholder>
         <ng-template #listOfSystems>
             <div class="search-block row border-bottom" *ngIf="showSearch">
+                <div>
+                    <button class="btn btn-default" (click)="addGroup()">Add group</button>
+                </div>
                 <div class="col-sm-9 col-md-8 col-lg-6 input-overlay">
                     <nx-search
                         [ngModel]="search.value"
@@ -26,10 +29,13 @@
             <div *ngIf="systems.length">
                 <h1 class="old-h12 p-0 mb-3 mt-3"><span>{{search.value && filteredSystems.length}}&nbsp;</span>
                     <span translate>Systems</span>&nbsp;{{search.value && 'found'}}</h1>
-                <div class="row">
-                    <div *ngFor="let system of filteredSystems; trackBy: trackItem"
+                <div class="row" cdkDropListGroup>
+                    <div *ngFor="let system of filteredSystems;  trackBy: trackItem" cdkDropList [cdkDropListData]="system" (cdkDropListDropped)="drop($event)"
                         class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 mb-lg-0 system-button">
+                        <div cdkDrag [cdkDragData]="system" >
+                        <div *cdkDragPlaceholder></div>
                         <div class="card card-condensed hoverable">
+                            <ng-template #isSystem>
                             <div class="card-body" (click)="openSystem(system)">
                                 <h2 class="old-h12 d-block" [innerHTML]="(system.name | unsafe | highlight:search.value)"></h2>
                                 <span class="user-name"
@@ -49,6 +55,19 @@
                                         [svgStyle]="{'height.px': '20'}" [applyClass]="true"></svg-icon>
                                 </div>
                             </div>
+                            </ng-template>
+                            <div *ngIf="system.type === 'group'; else isSystem" class="card-body">
+                                    <h2 class="old-h12 d-block" [innerHTML]="(system.name | unsafe | highlight:search.value)"></h2>
+                                    <span class="user-name">Groups: {{system.groups.length}} - Systems: {{system.systems.length}}</span>
+                                    <div class="system-list-bottom-bar">
+                                        <nx-tag style="display: block; margin-top: 24px;"
+                                                disabled="true"
+                                                type="{{CONFIG.system.status.default.style}}">
+                                            <ng-container>Offline</ng-container>
+                                        </nx-tag>
+                                    </div>
+                                </div>
+                        </div>
                         </div>
                     </div>
                 </div>

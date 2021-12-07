@@ -44,6 +44,7 @@ import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
+import { CreateSystemGroupModalContent } from '@dialogs/create-system-group/create-system-group.component';
 
 @NgModule({
     imports: [
@@ -90,7 +91,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         ConnectCloudModalContent,
         SelectTimeRangeModalContent,
-        TransferOwnershipModalContent
+        TransferOwnershipModalContent,
+        CreateSystemGroupModalContent
     ],
     providers: [
         NxDialogsService,

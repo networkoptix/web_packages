@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -27,7 +28,8 @@ const appRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         RouterModule.forChild(appRoutes),
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        DragDropModule
     ],
     providers: [
     ],

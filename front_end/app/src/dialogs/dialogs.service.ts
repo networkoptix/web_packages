@@ -60,6 +60,7 @@ import {
 } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
 import '@dialogs/dialogs.scss';
+import { CreateSystemGroupModalContent } from '@dialogs/create-system-group/create-system-group.component';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -626,5 +627,17 @@ export class NxDialogsService {
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(TransferOwnershipModalContent, dialogConfig)
             .afterClosed();
+    }
+
+    public createSystemGroup() {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {
+            closable: true
+        };
+        return this.createModal(CreateSystemGroupModalContent, options, params);
     }
 }

@@ -59,6 +59,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AppComponent } from './app.component';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
@@ -74,6 +76,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         FormsModule,
         ReactiveFormsModule,
         LayoutModule,
+        DragDropModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
