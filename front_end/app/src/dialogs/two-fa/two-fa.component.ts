@@ -50,7 +50,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @Input() closable: boolean;
     @Input() newPassword: string;
     @Input() oldPassword: string;
-    @Input() num2FaSytems: number;
+    @Input() num2FaSystems: number;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -74,6 +74,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     public wrongPassword: boolean;
     public accountBlocked: boolean;
+    public notAuthorized: boolean;
     public credentials: InfoBlockSection;
 
     public showQR = true;
@@ -249,8 +250,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                             }
 
                             return Promise.reject({ resultCode: result.errorText });
-                        }, (error) => {
-                            return Promise.reject({ resultCode: error });
+                        }, (err) => {
+                            return Promise.reject({ resultCode: err.error.resultCode });
                         });
                 });
             }
@@ -275,6 +276,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                         delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
+                },
+                notAuthorized: () => {
+                    this.notAuthorized = true;
+                    this.codeForm.controls.tfaCodeInput.markAsTouched();
+                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+                    this.renderer.selectRootElement('#tfaCodeInput').focus();
                 }
             }
         }, (response) => {
@@ -317,8 +324,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                             }
 
                             return Promise.reject({ resultCode: result.errorText });
-                        }, (error) => {
-                            return Promise.reject({ resultCode: error });
+                        }, (err) => {
+                            return Promise.reject({ resultCode: err.error.resultCode });
                         });
                 });
             }
@@ -343,6 +350,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                         delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
+                },
+                notAuthorized: () => {
+                    this.notAuthorized = true;
+                    this.codeForm.controls.tfaCodeInput.markAsTouched();
+                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+                    this.renderer.selectRootElement('#tfaCodeInput').focus();
                 }
             }
         }, (response) => {

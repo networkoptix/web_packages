@@ -118,7 +118,7 @@
     </div>
 
     <div class="modal-body">
-        <form #loginForm="ngForm" name="loginForm" novalidate>
+        <form #loginForm="ngForm" name="login_form" novalidate>
             <div class="form-group">
                 <label for="login_password" translate>Enter your password to verify your identity</label>
                 <input type="password" class="form-control"
@@ -207,19 +207,27 @@
 
     <div class="modal-body">
         <form #codeForm="ngForm" name="loginForm" novalidate>
-            <div id="codeText" translate>Get a code from the authentication app and enter it below to complete the verification process.</div>
-            <p *ngIf="num2FaSytems" class="danger">
+            <div id="codeText" translate>From authentication app, get a code and enter it below to complete the verification process.</div>
+            <p *ngIf="num2FaSystems" class="danger"
+               [innerText]="'security.twoFa.disableWarning' | translate: { count: num2FaSystems}">
                 <!-- TODO: Move to dedicated disable dialog -->
-                {{ LANG.security.twoFa.disableWarning({ count: num2FaSytems}) }}
             </p>
             <div class="form-group mt-3">
-                <label for="tfaCodeInput" translate>Enter verification code</label>
-                <input type="text" class="form-control"
+                <label for="tfaCodeInput" translate>Enter authentication code</label>
+                <input type="text" class="form-control" #tfaCodeInputWizardCode="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
                        autocomplete="off"
                        maxlength="255"
-                       required autofocus>
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputWizardCode.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error"
+                         *ngIf="tfaCodeInputWizardCode.touched && tfaCodeInputWizardCode.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
             </div>
         </form>
     </div>
@@ -287,7 +295,7 @@
     </div>
 
     <div class="modal-body">
-        <form #codeForm="ngForm" name="loginForm" novalidate>
+        <form #codeForm="ngForm" name="code_form" novalidate>
             <p translate *ngIf="type === 'verification-enable' else disableText">
                 Verification code from the authentication app will be requested on every login with %CLOUD_NAME% account.
             </p>
@@ -298,12 +306,20 @@
             </ng-template>
             <div class="form-group mt-3">
                 <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
-                <input type="text" class="form-control"
+                <input type="text" class="form-control" #tfaCodeInputCodeForm="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
                        autocomplete="off"
                        maxlength="255"
-                       required autofocus>
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputCodeForm.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error"
+                         *ngIf="tfaCodeInputCodeForm.touched && tfaCodeInputCodeForm.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
             </div>
         </form>
     </div>

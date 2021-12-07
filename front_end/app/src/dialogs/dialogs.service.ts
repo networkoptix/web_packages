@@ -520,7 +520,7 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
-    public off2FA (num2FaSytems: number) {
+    public off2FA (num2FaSystems: number) {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static',
@@ -528,7 +528,7 @@ export class NxDialogsService {
         };
 
         const params: IParams = {
-            num2FaSytems,
+            num2FaSystems,
             type: 'off',
             closable: true
         };

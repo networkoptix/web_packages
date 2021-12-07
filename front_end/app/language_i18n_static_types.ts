@@ -430,9 +430,10 @@ export interface Title {
 }
 
 export interface TwoFactor {
-    required:    any;
-    configure:   any;
-    accountLink: any;
+    required:     any;
+    configure:    any;
+    accountLink:  any;
+    codeRequired: any;
 }
 
 export interface RemoveSystem {
@@ -1515,6 +1516,7 @@ const typeMap: any = {
         { json: "required", js: "required", typ: "any" },
         { json: "configure", js: "configure", typ: "any" },
         { json: "accountLink", js: "accountLink", typ: "any" },
+        { json: "codeRequired", js: "codeRequired", typ: "any" },
     ], false),
     "RemoveSystem": o([
         { json: "action", js: "action", typ: "any" },
