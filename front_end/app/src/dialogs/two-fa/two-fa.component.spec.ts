@@ -50,8 +50,8 @@ describe('TwoFAModalContent', () => {
             'Cannot scan QR code?': 'Cannot scan QR code?',
             'Show QR code': 'Show QR code',
             paramsText: 'Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.',
-            codeText: 'Get a code from the authentication app and enter it below to complete the verification process.',
-            enterVerification: 'Enter verification code',
+            codeText: 'From authentication app, get a code and enter it below to complete the verification process.',
+            enterAuthentication: 'Enter authentication code',
             finishLine1: 'Two-factor authentication is now enabled for your %CLOUD_NAME% account!',
             saveBackupCodes: 'Save these single-use backup codes in a safe place.',
             Ok: 'Ok',
@@ -268,7 +268,7 @@ describe('TwoFAModalContent', () => {
             );
 
             expect(codeText.innerText).toBe(LANG['codeText']);
-            expect(codeLabel.innerText).toBe(LANG['enterVerification']);
+            expect(codeLabel.innerText).toBe(LANG['enterAuthentication']);
             expect(codeInput).toBeDefined();
         });
 
