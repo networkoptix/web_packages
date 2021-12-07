@@ -243,8 +243,8 @@
         "twoFa": {
             "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}  にログインできなくなります:",
             "wizardWarningDescr": "古いバージョンの %VMS_NAME% クライアントおよび Web Adminは、二要素認証をサポートしていません。",
-            "installAuthApp": "認証アプリをまだお持ちでない場合は、モバイル端末に認証アプリをインストールしてください。 %CLOUD_NAME% は <strong>Google Authenticator</strong>、 <strong>Microsoft Authenticator</strong> または <strong>Duo Mobile</strong> に対応しています。",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "認証アプリをまだお持ちでない場合は、モバイル端末に認証アプリをインストールしてください。 %CLOUD_NAME% は <strong>Google Authenticator</strong>、 <strong>Microsoft Authenticator</strong> および <strong>Duo Mobile</strong> に対応しています。",
+            "nowEnabled": "二要素認証が %CLOUD_NAME% アカウントで <strong>有効</strong> になりました！"
         },
         "addUser": {
             "alreadyExists": "このメールアドレスは %systemName% システムに既に登録されています"
@@ -387,7 +387,8 @@
             "twoFactor": {
                 "required": "二段階認証が必要です。",
                 "configure": "設定はこちらから: ",
-                "accountLink": "アカウント設定"
+                "accountLink": "アカウント設定",
+                "codeRequired": "Verification code is required"
             }
         },
         "removeSystem": {
@@ -397,8 +398,8 @@
         },
         "renewAuth": {
             "action": "ログイン",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "セッションの有効期限が切れました。再度ログインしてください。",
+            "title": "セッション期限切れ"
         },
         "titles": {
             "error": "エラー",

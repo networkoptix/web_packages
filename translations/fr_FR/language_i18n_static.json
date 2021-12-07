@@ -387,7 +387,8 @@
             "twoFactor": {
                 "required": "Une authentification à deux facteurs est requise.",
                 "configure": "Vous pouvez le configurer dans votre",
-                "accountLink": "paramètres du compte"
+                "accountLink": "paramètres du compte",
+                "codeRequired": "Verification code is required"
             }
         },
         "removeSystem": {

@@ -387,7 +387,8 @@
             "twoFactor": {
                 "required": "Tvåfaktorsautentisering krävs.",
                 "configure": "Du kan konfigurera det i din",
-                "accountLink": "kontoinställningar"
+                "accountLink": "kontoinställningar",
+                "codeRequired": "Verification code is required"
             }
         },
         "removeSystem": {

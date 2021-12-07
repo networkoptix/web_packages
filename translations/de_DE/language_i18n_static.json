@@ -243,8 +243,8 @@
         "twoFa": {
             "wizardWarning": "Nachdem Sie die Zwei-Faktor-Authentifizierung aktiviert haben, können Sie sich von %VMS_NAME%-Client und Web Admin aus nicht mehr bei {count, plural, =0{# Systemen} one{# System} other{# Systemen}} anmelden:",
             "wizardWarningDescr": "Die älteren Versionen von %VMS_NAME%-Client und Web Admin unterstützen keine Zwei-Faktor-Authentifizierung.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "Installieren Sie eine Authentifizierungs-App auf Ihrem mobilen Gerät, falls Sie noch keine haben. %CLOUD_NAME% unterstützt <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> oder <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Die Zwei-Faktor-Authentifizierung ist jetzt für Ihr %CLOUD_NAME%-Konto <strong>aktiviert</strong>!"
         },
         "addUser": {
             "alreadyExists": "Diese Email wurde bereits im %systemName% System registriert"
@@ -387,7 +387,8 @@
             "twoFactor": {
                 "required": "Eine Zwei-Faktor-Authentifizierung ist erforderlich.",
                 "configure": "Konfiguration in Ihrer",
-                "accountLink": "Accounteinstellungen"
+                "accountLink": "Accounteinstellungen",
+                "codeRequired": "Verification code is required"
             }
         },
         "removeSystem": {
@@ -397,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+            "title": "Abgelaufene Sitzung"
         },
         "titles": {
             "error": "Fehler",

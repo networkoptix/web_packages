@@ -243,8 +243,8 @@
         "twoFa": {
             "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
             "wizardWarningDescr": "De oudere versies van %VMS_NAME% client en Web Admin ondersteunen geen tweefactorauthenticatie.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "Installeer een authenticatie-app op uw mobiele apparaat als u er nog geen heeft. %CLOUD_NAME% ondersteunt <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> of <strong>Duo Mobile</strong>.",
+            "nowEnabled": "Twee-factor-authenticatie is nu <strong>ingeschakeld</strong> voor uw %CLOUD_NAME% account!"
         },
         "addUser": {
             "alreadyExists": "Deze e-mail is al geregistreerd in het %systemName% systeem"
@@ -387,7 +387,8 @@
             "twoFactor": {
                 "required": "Tweestapsverificatie is vereist.",
                 "configure": "U kunt het configureren in uw",
-                "accountLink": "account instellingen"
+                "accountLink": "account instellingen",
+                "codeRequired": "Verification code is required"
             }
         },
         "removeSystem": {
@@ -397,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "De sessie is verlopen, log opnieuw in.",
+            "title": "Verlopen sessie"
         },
         "titles": {
             "error": "Fout",
