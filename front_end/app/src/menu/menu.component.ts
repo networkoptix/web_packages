@@ -3,12 +3,13 @@ import {
     SimpleChanges, ViewChild, ViewEncapsulation, EventEmitter, Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { fromEvent, SubscriptionLike } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, Subject } from 'rxjs';
+import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxApplyService } from '@services/apply.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
@@ -63,17 +64,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
     scrollHeightFit: string;
     permHeight: number;
     menuInit: boolean;
+    ribbonShown: boolean = false;
 
-    private routeParamsSubscription: SubscriptionLike;
-    private navDirectionSubscription: SubscriptionLike;
-    private navSelectionSubscription: SubscriptionLike;
-    private resizeSubscription: SubscriptionLike;
-    private applyOnNavSubscription: SubscriptionLike;
-
+    private unsub$: Subject<boolean> = new Subject();
     private origLevel1: string;
     private origLevel2: string;
     private origLevel3: string;
-
     private menuOverflowCalc;
 
     CONFIG: IConfig;
@@ -89,7 +85,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private route: ActivatedRoute,
         public menuService: NxMenuService,
         private searchService: NxSearchService,
-        private applyService: NxApplyService
+        private applyService: NxApplyService,
+        private appStateService: NxAppStateService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -106,8 +103,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
         this.isSearchable = this.searchable || false;
 
-        this.routeParamsSubscription = this.route
+        this.route
             .queryParams
+            .pipe(untilDestroyed(this))
             .subscribe(params => {
                 if (this.isSearchable) {
                     this.transition = true;
@@ -118,7 +116,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        this.navDirectionSubscription = this.searchService.navDirectionSubject
+        this.searchService.navDirectionSubject
+            .pipe(untilDestroyed(this))
             .subscribe(() => {
                 if (this.navItems.length) {
                     this.menuService.navItemId = this.assignItemId();
@@ -129,7 +128,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        this.navSelectionSubscription = this.searchService.navSelectionSubject
+        this.searchService.navSelectionSubject
+            .pipe(untilDestroyed(this))
             .subscribe(() => {
                 const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
                 if (item) {
@@ -143,13 +143,33 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        this.resizeSubscription = fromEvent(window, 'resize').pipe(
-            map((event: any) => event.target.innerHeight as number),
-            startWith(window.innerHeight)
-        ).subscribe(height => {
-            this.windowHeight = height - 64; // 48px header and 1rem padding
-            this.resizeMenu();
-        });
+        fromEvent(window, 'resize')
+            .pipe(
+                untilDestroyed(this),
+                map((event: any) => event.target.innerHeight as number),
+                startWith(window.innerHeight)
+            ).subscribe(height => {
+                this.windowHeight = height - 64; // 48px header and 1rem padding
+                if (this.ribbonShown) {
+                    this.windowHeight = this.windowHeight - 33;
+                }
+                this.resizeMenu();
+            });
+
+        this.appStateService.ribbonSubject
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged())
+            .subscribe(state => {
+                if (!this.ribbonShown && state) {
+                    this.windowHeight = this.windowHeight - 33;
+                }
+                if (this.ribbonShown && !state) {
+                    this.windowHeight = this.windowHeight + 33;
+                }
+                this.ribbonShown = state;
+                this.resizeMenu();
+            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -176,17 +196,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
                     this.origLevel2 = this.selectedLevel2;
                     this.origLevel3 = this.selectedLevel3;
 
-                    if (this.applyOnNavSubscription) {
-                        this.applyOnNavSubscription.unsubscribe();
-                    }
-
-                    this.applyOnNavSubscription = this.applyService.applyOnNavSubject.subscribe(status => {
-                        if (status === 'canceled') {
-                            this.selectedLevel1 = this.origLevel1;
-                            this.selectedLevel2 = this.origLevel2;
-                            this.selectedLevel3 = this.origLevel3;
-                        }
-                    });
+                    this.unsub$.next(true);
+                    this.applyService.applyOnNavSubject
+                        .pipe(takeUntil(this.unsub$))
+                        .subscribe(status => {
+                            if (status === 'canceled') {
+                                this.selectedLevel1 = this.origLevel1;
+                                this.selectedLevel2 = this.origLevel2;
+                                this.selectedLevel3 = this.origLevel3;
+                            }
+                        });
                 }
             }
 
@@ -307,7 +326,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.transition = false;
 
         // clear toggled items and update menu content
-        // setNav(igation) have same model so we have to preserve the layout
+        // setNav() have same model so we have to preserve the layout
         // and avoid unnecessary content update
         if (resetLayout) {
             this.menuContent.forEach((node, index, arr) => {
