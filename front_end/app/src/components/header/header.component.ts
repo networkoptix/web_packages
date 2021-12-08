@@ -430,7 +430,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     updateActive() {
         this.active.ipvd = this.isActive('/ipvd');
         this.active.integrations = this.isActive('/integrations');
-        this.active.register = this.isActive('/register');
+        this.active.register = this.isActive('/authorize/register');
         this.active.view = this.isActive('/view');
         this.active.information = this.isActive('/health');
         this.active.bookmarks = this.isActive('/bookmarks');

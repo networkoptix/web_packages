@@ -27,6 +27,7 @@ import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.compon
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
     { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
+    { path: 'register/:code', component: NxAuthorizeComponent, data: { action: 'register' } },
     { path: '**', component: NxAuthorizeComponent }
 ];
 

@@ -113,7 +113,7 @@ export class NxRestoreComponent implements OnInit {
                     if (!registered) {
                         // send to registration form with the code
                         this.router
-                            .navigate(['/register/' + code])
+                            .navigate(['/authorize/register/' + code])
                             .catch(error => {
                                 console.error(error);
                             });

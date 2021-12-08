@@ -162,7 +162,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     updateEndpoint(id: string) {
         this.endpoint.ipvd = this.isActive('/ipvd');
         this.endpoint.integrations = this.isActive('/integrations');
-        this.endpoint.register = this.isActive('/register');
+        this.endpoint.register = this.isActive('/authorize/register');
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
         this.endpoint.settings = id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');

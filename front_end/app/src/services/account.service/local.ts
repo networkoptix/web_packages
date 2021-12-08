@@ -151,7 +151,7 @@ export class LocalAccount extends BaseAccount {
         return this.loginService.login(true, true).then((result: string) => {
             this.storageService.loginRegister = true;
             if (result === 'register') {
-                return this.router.navigate(['/register']).then(() => result);
+                return this.router.navigate(['/authorize/register']).then(() => result);
             }
             return this.get();
         })
