@@ -3,11 +3,10 @@ import os
 import re
 from itertools import chain
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from waffle import switch_is_active
-
 
 from cms.models import cloud_portal_customization_cache
 from util.helpers import detect_language_by_request
@@ -99,7 +98,12 @@ def get_doc_meta(path, config, lang, config_meta, lang_meta):
         doc = Asset.objects.filter(id=doc_id).first()
         if doc:
             base_route_meta['type'] = 'article'
-            doc_content, = generate_doc_json([doc], lang, trust_cache=True)
+            doc_json = generate_doc_json([doc], lang, trust_cache=True)
+
+            if not doc_json:
+                return base_route_meta
+
+            doc_content = doc_json[0]
 
             if title := doc_content.get('title'):
                 title_segments.append(title)
@@ -174,10 +178,48 @@ def get_meta(request):
     }
 
 
+def check_redirect(request):
+    if request.path == '/index.html':
+        return
+
+    doc_slug, url, _base_url, _base, *_ = chain(
+        [segment for segment in request.path.split('/')[::-1] if segment],
+        [''] * 4
+    )
+
+    base = _base or _base_url
+
+    doc_id = doc_slug.split('-')[0]
+
+    if base != 'docs' or not doc_id or not (doc := Asset.objects.filter(id=doc_id).first()):
+        return
+
+    slug = doc.urlify()
+    redirect_url = ''
+
+    for node in doc.nodes.all():
+        node_enabled = node.enabled_customizations.filter(name=settings.CUSTOMIZATION).exists()
+        parent_menu = node.get_parent()
+
+        if node_enabled and parent_menu and parent_menu.enabled:
+            segments = ['docs', parent_menu.base_url, parent_menu.url, slug]
+            current_menu_path = '/' + '/'.join(segment for segment in segments if segment)
+
+            if current_menu_path == request.path:
+                return
+            elif not redirect_url:
+                redirect_url = current_menu_path
+    
+    return redirect_url or doc.last_modified and f'/docs/content/{slug}'
+
+
 SHARE_CRAWLER_REGEX = r'^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$'
 
 
 def app_view(request):
+    if redirect_path := check_redirect(request):
+        return redirect(redirect_path, permanent=True)
+
     if switch_is_active(SWITCHES.server_side_meta):
         context = get_meta(request)
         user_agent = request.META['HTTP_USER_AGENT']

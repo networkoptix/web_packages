@@ -193,7 +193,7 @@ http {
             include proxy.conf;
             index static/index.html;
 
-            if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot)$") {
+            if (${DOLLAR}http_user_agent ~* "^(facebookexternalhit\/(.*)|Facebot|Twitter(.*)|Pinterest|LinkedIn(.*)|LinkedInBot|(.*)AOLBuild(.*)|Baidu(.*)|(.*)bingbot(.*)|(.*)BingPreview(.*)|msnbot(.*)|DuckDuckBot(.*)|AdsBot-Google(.*)|(.*)Googlebot(.*)|(.*)Mediapartners-Google(.*)|(.*)Teoma(.*)|(.*)Slurp(.*)|(.*)Yandex(.*))$") {
                 proxy_pass http://app_server;
             }
 
