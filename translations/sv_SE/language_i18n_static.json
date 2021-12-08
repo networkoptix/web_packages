@@ -388,7 +388,7 @@
                 "required": "Tvåfaktorsautentisering krävs.",
                 "configure": "Du kan konfigurera det i din",
                 "accountLink": "kontoinställningar",
-                "codeRequired": "Verification code is required"
+                "codeRequired": "Verifieringskod krävs"
             }
         },
         "removeSystem": {

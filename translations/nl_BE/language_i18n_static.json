@@ -388,7 +388,7 @@
                 "required": "Tweestapsverificatie is vereist.",
                 "configure": "U kunt het configureren in uw",
                 "accountLink": "account instellingen",
-                "codeRequired": "Verification code is required"
+                "codeRequired": "Verificatiecode is vereist"
             }
         },
         "removeSystem": {

@@ -388,7 +388,7 @@
                 "required": "Eine Zwei-Faktor-Authentifizierung ist erforderlich.",
                 "configure": "Konfiguration in Ihrer",
                 "accountLink": "Accounteinstellungen",
-                "codeRequired": "Verification code is required"
+                "codeRequired": "Verifizierungscode ist erforderlich"
             }
         },
         "removeSystem": {
