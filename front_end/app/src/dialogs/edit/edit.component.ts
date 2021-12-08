@@ -1,23 +1,33 @@
 import { Component, Input } from '@angular/core';
-import { NgbActiveModal }   from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }     from '@ngneat/until-destroy';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 
-import { NxConfigService, IConfig }         from '@services/nx-config';
-import { NxLanguageProviderService }        from '@services/nx-language-provider';
-import { NxProcessService, Process }        from '@services/process.service';
-import { NxToastService }                   from '../toast.service';
-import { LanguageI18NStaticTypes }          from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
-    ConfigType, ModalContent, ModalManifest, ModalType
-}                                           from '@components/console-table/console-table.component.types';
-import { NxCloudApiService }                from '@services/nx-cloud-api';
-import { DropdownItem }                     from '@components/dropdowns/generic/dropdown.component.types';
+    ConfigType,
+    ModalContent,
+    ModalManifest,
+    ModalType
+} from '@components/console-table/console-table.component.types';
+import {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
+import {
+    ConsoleMode
+} from '@pages/developer-console/console/console.component.types';
+import {
+    NxConsoleService
+} from '@pages/developer-console/console/console.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
-import { NxHeaderService }                  from '@services/nx-header.service';
-import { NxConsoleService }                 from '@pages/developer-console/console/console.service';
-import { Router }                           from '@angular/router';
-import { ConsoleMode }                      from '@pages/developer-console/console/console.component.types';
-import { TranslateService }                 from '@ngx-translate/core';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+
+import { NxToastService } from '../toast.service';
 
 export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     const manifestKeyLookup = {
@@ -102,12 +112,15 @@ export class EditModalContent implements ModalContent {
             if (type === ConfigType.DROPDOWN) {
                 const { options = [], hidden = false } = this.settings?.[name] || {};
                 const currentValue = this.values[name];
-                const selected = options.find(({ value }) => value === currentValue) || options[0];
+                const selected = options.find(({ value }) =>
+                    value === currentValue
+                ) || options[0];
                 this.dropdownLookup[name] = {
                     selected,
                     options
                 };
-                const field = this.manifest.fields.find(({ name: fieldName }) => fieldName === name);
+                const field = this.manifest.fields
+                    .find(({ name: fieldName }) => fieldName === name);
                 if (field) {
                     field.hidden = hidden || !options.length;
                 }
@@ -126,7 +139,10 @@ export class EditModalContent implements ModalContent {
                 const missingValue = required && !this.values[name];
                 if (missingValue) {
                     const existingErrors = this.errors[name] || [];
-                    this.errors[name] = [...existingErrors, this.translate.instant('This field is required')];
+                    this.errors[name] = [
+                        ...existingErrors,
+                        this.translate.instant('This field is required')
+                    ];
                 }
             }
         };
@@ -183,7 +199,8 @@ export class EditModalContent implements ModalContent {
                 this.processDisabled = true;
             });
 
-        this.deleteContext = this.processService.createProcess(() => getMethod('delete')(this.values.id),
+        this.deleteContext = this.processService.createProcess(
+            () => getMethod('delete')(this.values.id),
             {},
             _ => {
                 // Need spec for saving deleting message

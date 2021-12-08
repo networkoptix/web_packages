@@ -1,16 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { NgbActiveModal }   from '@ng-bootstrap/ng-bootstrap';
-import { of }               from 'rxjs';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { of } from 'rxjs';
 
-import { environment }                     from '@environments/environment';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { NxProcessService }                from '@services/process.service';
-import { NxSystemAPI, NxSystemAPIService, NxSystemRestAPI } from '@services/system-api.service';
-import { NxToastService }                  from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
-import { NxSystem } from '@services/system.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import {
+    NxSystemAPI,
+    NxSystemAPIService,
+    NxSystemRestAPI
+} from '@services/system-api.service';
+import { NxSystem } from '@services/system.service';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -94,7 +98,10 @@ export class DisconnectModalContent {
                 autohide: true,
                 delay: this.CONFIG.alertTimeout
             };
-            this.toastService.show(this.LANG.toastMessage.system.disconnected.success(), options);
+            this.toastService.show(
+                this.LANG.toastMessage.system.disconnected.success(),
+                options
+            );
         }, (err) => {
             if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;

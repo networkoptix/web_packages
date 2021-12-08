@@ -1,6 +1,10 @@
-import { NgModule } from '@angular/core';
-import { GenericModalContent, NxModalGenericComponent } from './generic.component';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+
+import {
+    GenericModalContent,
+    NxModalGenericComponent
+} from './generic.component';
 
 @NgModule({
     imports: [

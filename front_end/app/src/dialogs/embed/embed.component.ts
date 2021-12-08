@@ -1,14 +1,18 @@
 import {
-    Component, OnInit, Input,
-    ViewChild, OnDestroy, AfterViewInit
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+    Component,
+    OnInit,
+    Input,
+    ViewChild,
+    OnDestroy,
+    AfterViewInit
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -63,9 +67,10 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.formChangesSubscription = this.embedForm.form.valueChanges.subscribe((changes) => {
-            this.createEmbedUrl(changes);
-        });
+        this.formChangesSubscription = this.embedForm.form.valueChanges
+            .subscribe((changes) => {
+                this.createEmbedUrl(changes);
+            });
     }
 
     createEmbedUrl(params): void {
@@ -79,7 +84,9 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
                 // filter checkboxes in form
                 if (this.params[paramsKey] !== undefined && !params[paramsKey]) {
                     uri += (uri === '') ? '?' : '&';
-                    uri += (typeof params[paramsKey] === 'boolean') ? paramsKey : params[paramsKey];
+                    uri += (typeof params[paramsKey] === 'boolean')
+                        ? paramsKey
+                        : params[paramsKey];
                 }
             }
         }

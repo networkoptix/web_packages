@@ -1,20 +1,28 @@
-import { Component, Inject, Input }                       from '@angular/core';
-import { NgbActiveModal }                                 from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }                                   from '@ngneat/until-destroy';
+import { Component, Inject, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
-import { filter, startWith, switchMap, takeUntil, tap }   from 'rxjs/operators';
-import { WINDOW }                                         from '@services/window-provider';
+import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import {
+    ConsoleSection,
+    ModalContent,
+    ModalManifest,
+    ModalType
+} from '@components/console-table/console-table.component.types';
+import {
+    PackageProgress,
+    PackageState,
+    PackageStatus
+} from '@dialogs/download-async/download-async.component.types';
+import {
+    CustomClientAPI,
+    NxCloudApiService
+} from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import {
-    ConsoleSection, ModalContent, ModalManifest, ModalType
-}                                    from '@components/console-table/console-table.component.types';
-import {
-    CustomClientAPI, NxCloudApiService
-}                                    from '@services/nx-cloud-api';
-import { PackageProgress, PackageState, PackageStatus } from '@dialogs/download-async/download-async.component.types';
+import { WINDOW } from '@services/window-provider';
 
 type DownloadId = string;
 
@@ -48,7 +56,9 @@ export class PackageHandler {
         checkPackageHandler: CheckPackageHandler,
         packageDownloadHandler: PackageDownloadHandler,
         private window: Window,
-        notifyDownload = (downloadPath) => console.info(`Download ready: ${downloadPath}`),
+        notifyDownload = (downloadPath) => console.info(
+            `Download ready: ${downloadPath}`
+        ),
         notifyError = (errors) => console.error(errors)
     ) {
         generatePackage(
@@ -68,7 +78,12 @@ export class PackageHandler {
             }),
             filter(iteration => iteration % 20 === 0 && iteration > 20),
             switchMap(_ => checkPackageHandler(this.id, this.downloadId)),
-            startWith({ state: PackageState.PENDING, total: 100, current: 0, errors: [] }),
+            startWith({
+                state: PackageState.PENDING,
+                total: 100,
+                current: 0,
+                errors: []
+            }),
             takeUntil(this.#done$)
         ).subscribe((
             { state, total, current, errors }: PackageStatus
@@ -77,7 +92,10 @@ export class PackageHandler {
                 case PackageState.READY:
                     this.packageState = PackageProgress.DOWNLOAD_READY;
                     this.current = this.total = this.total || 100;
-                    this.downloadUrl = packageDownloadHandler(this.id, this.downloadId);
+                    this.downloadUrl = packageDownloadHandler(
+                        this.id,
+                        this.downloadId
+                    );
                     notifyDownload(this.downloadUrl);
                     this.window.location.assign(this.downloadUrl);
                     this.#done$.next('done');

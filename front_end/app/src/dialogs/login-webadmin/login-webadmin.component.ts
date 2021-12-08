@@ -1,21 +1,24 @@
+import { DOCUMENT, Location } from '@angular/common';
 import {
-    Component, Inject, OnInit, Input, ViewChild
-}                                    from '@angular/core';
-import { DOCUMENT, Location }        from '@angular/common';
-import { Router }                    from '@angular/router';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+    Component,
+    Inject,
+    OnInit,
+    Input,
+    ViewChild
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxProcessService }          from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxStorageService }          from '@services/storage.service';
-import { WINDOW }                    from '@services/window-provider';
-import { CookieService }             from 'ngx-cookie-service';
-import { NxAppStateService }         from '@services/nx-app-state.service';
-
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { NxAccountService } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxStorageService } from '@services/storage.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-login-webadmin-modal',
@@ -191,8 +194,10 @@ export class LoginWebadminModalContent implements OnInit {
             } else {
                 setTimeout(() => {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
-                        .then(() => {
+                        .navigate(
+                            [this.CONFIG.redirect.authorised],
+                            { replaceUrl: isRootPath }
+                        ).then(() => {
                             // ensure language reload as translations are loaded on page load
                             this.window.location.reload();
                         });
