@@ -93,7 +93,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe((loginState) => {
-                if (loginState === null) {
+                if (!this.loggingOut && loginState === null) {
                     return this.dialogs.confirm(
                         this.LANG.dialogs.renewAuth.message(),
                         this.LANG.dialogs.renewAuth.title(),
