@@ -347,7 +347,7 @@
                 {{ LANG.security.twoFa.disableWarning({count: num2FaSystems}) }}
             </p>
             <div class="form-group">
-                <label for="tfaCodeInput" translate>Enter authentication code from your authentication app to continue</label>
+                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
                 <input type="text" class="form-control" #tfaCodeInputDisable="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
@@ -356,10 +356,8 @@
                        maxlength="255"
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputDisable.invalid">
-                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
-                        minute.
-                    </div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong authentication code</div>
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
                     <div class="input-error"
                          *ngIf="!tfaCodeInputDisable.pristine && tfaCodeInputDisable.errors?.required">
                         {{LANG.dialogs.message.twoFactor.codeRequired()}}</div>
