@@ -234,7 +234,6 @@ class TestAccountViews:
         assert resp.data == {'account2faEnabled': False}
         assert security_mock.call_args.args[1] == '456723'
         assert security_mock.call_args.args[2] is False
-        assert security_mock.call_args.kwargs['password'] == 'pass'
 
     def test_security_toggle(self, active_user):
         two_fa = {
