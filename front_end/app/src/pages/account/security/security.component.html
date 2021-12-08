@@ -27,12 +27,13 @@
                     <span translate>Verification code from the authentication app allows you to log in to systems that require two-factor authentication.</span>
                     <span class="float-left" *ngIf="!twoFaSystems.length" translate>Currently you don’t have such systems.</span>
                     <div class="float-left" *ngIf="twoFaSystems.length">
-                        {{LANG.security.twoFa.twoFADescription_a1()}}
+                        <span [innerText]="'security.twoFa.twoFADescription_a1' | translate"></span>
                         <div class="float-right ml-1 pseudo-anchor"
                              [ngbPopover]="popLegend2fa"
                              popoverClass="systems-popover"
                              triggers="click"
-                             placement="right">{{LANG.security.twoFa.twoFADescription_a2({count: twoFaSystems.length})}}.</div>
+                             placement="right"
+                             [innerText]="'security.twoFa.twoFADescription_a2' | translate: { count: twoFaSystems.length }"></div>
                     </div>
                     <span class="ml-1 float-left" translate>System owner can change this setting at any time.</span>
                 </ng-template>
@@ -46,9 +47,8 @@
                                   [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>
                     </div>
-                    <div class="reminder" *ngIf="twoFaSystems.length > 4">
-                        {{ LANG.security.twoFa.systemsRemainder({count: twoFaSystems.length - 4})}}
-                    </div>
+                    <div class="reminder" *ngIf="twoFaSystems.length > 4"
+                         [innerText]="'security.twoFa.systemsRemainder' | translate: { count: twoFaSystems.length - 4 }"></div>
                 </ng-template>
                 <ng-container *ngIf="account2faEnabled || totpExistsForAccount">
                     <!-- Need a manual line break -->
@@ -65,23 +65,22 @@
                     </div>
 
                     <div class="tfauth-v5-warning" *ngIf="subV5Systems.length">
-                        <h4 translate>WARNING</h4>
+                        <h4 class="mt-0" translate>WARNING</h4>
                         <div class="float-left">
-                            {{ LANG.security.twoFa.v5Warning_a1({ count: subV5Systems.length }) }}
+                            <span [innerText]="'security.twoFa.v5Warning_a1' | translate: { count: subV5Systems.length }"></span>
                             <span
                                 class="ml-1 mr-1 pseudo-anchor"
                                 [ngbPopover]="popLegendSubV5"
                                 popoverClass="systems-popover"
                                 triggers="click"
                                 placement="right"
-                            >
-                                {{ LANG.security.twoFa.v5Warning_a2({ count: subV5Systems.length }) }}
-                            </span>
-                            {{ LANG.security.twoFa.v5Warning_a3({ count: subV5Systems.length }) }}
-                            <strong>{{ LANG.security.twoFa.v5Warning_a4() }}</strong>
-                            {{ LANG.security.twoFa.v5Warning_a5() }}
+                                [innerText]="'security.twoFa.v5Warning_a2' | translate: { count: subV5Systems.length }"
+                            ></span>
+                            <span [innerText]="'security.twoFa.v5Warning_a3' | translate: { count: subV5Systems.length }"></span>
+                            <strong [innerText]="'security.twoFa.v5Warning_a4' | translate"></strong>
+                            <span [innerText]="'security.twoFa.v5Warning_a5' | translate"></span>
                         </div>
-                        <p>{{ LANG.security.twoFa.v5Warning_b({ count: subV5Systems.length }) }}</p>
+                        <p class="mb-0" [innerText]="'security.twoFa.v5Warning_b' | translate: { count: subV5Systems.length }"></p>
                     </div>
                 </ng-container>
 
@@ -95,9 +94,8 @@
                             [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>
                     </div>
-                    <div class="reminder" *ngIf="subV5Systems.length > 4">
-                        {{ LANG.security.twoFa.systemsRemainder({count: subV5Systems.length - 4})}}
-                    </div>
+                    <div class="reminder" *ngIf="subV5Systems.length > 4"
+                        [innerText]="'security.twoFa.systemsRemainder' | translate: {count: subV5Systems.length - 4}"></div>
                 </ng-template>
 
             </nx-section>

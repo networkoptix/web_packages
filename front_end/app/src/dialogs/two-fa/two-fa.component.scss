@@ -1,7 +1,7 @@
 @use "../../../styles/theme_variables" as *;
 
 :host {
-    .modal-footer{
+    .modal-footer:not(.normal-layout){ // normal-layout => buttons left aligned
         &.justify-end {
             // hard overwrite
             justify-content: flex-end !important;

@@ -529,7 +529,7 @@ export class NxDialogsService {
 
         const params: IParams = {
             num2FaSystems,
-            type: 'off',
+            type: '2fa-off',
             closable: true
         };
 

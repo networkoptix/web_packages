@@ -35,7 +35,8 @@ export enum T_FA_STEPS {
     WizardQR,
     WizardCode,
     WizardFinish,
-    VerificationToggle
+    VerificationToggle,
+    Disable2FaCode
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -96,6 +97,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('wizardFinish', { static: true }) wizardFinishTemplate: TemplateRef<any>;
 
     @ViewChild('verificationToggle', { static: true }) verificationToggleTemplate: TemplateRef<any>;
+
+    @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<any>;
 
     private resetDefaults() {
         this.newCodes = [];
@@ -160,10 +163,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
-            // try first to authenticate API -> TBD
-            if (this.type === 'off') {
-                return Promise.resolve();
-            }
             return this.accountService
                 .verify(this.password)
                 .then((result: any) => {
@@ -202,9 +201,6 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     new InfoBlockLine(this.LANG.account.account(), this.account.email),
                     new InfoBlockLine(this.LANG.account.key(), this.accessCode)
                 ]);
-            } else {
-                // type "off" go to totp
-                this.setTemplate(T_FA_STEPS.WizardCode);
             }
         });
 
@@ -225,9 +221,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
 
             // Don't need to get backup codes or refresh session when disabling
-            if (this.type === 'off') {
+            if (this.type === '2fa-off') {
                 return this.accountService.update2fa(
-                    this.password,
+                    '',
                     this.tfaCode,
                     'deactivate'
                 );
@@ -302,7 +298,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
-            // Don't need to get backup codes or refresh session when disabling
+            // Don't need to get backup codes or refresh session when toggle verification
             if (this.type === 'verification-disable') {
                 return this.accountService.update2fa('', this.tfaCode, 'toggle');
             } else {
@@ -364,6 +360,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
 
             if (response.account2faEnabled === false) {
+                this.account.account2faEnabled = false;
+                this.account.totpExistsForAccount = false;
                 this.resetDefaults();
                 this.activeModal.close('disabled');
             }
@@ -406,16 +404,18 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             case T_FA_STEPS.WizardFinish:
                 this.templateType = this.wizardFinishTemplate;
                 break;
-
             case T_FA_STEPS.VerificationToggle:
                 this.templateType = this.verificationToggleTemplate;
+                break;
+            case T_FA_STEPS.Disable2FaCode:
+                this.templateType = this.disable2FaCodeTemplate;
                 break;
         }
     }
 
     ngAfterViewInit() {
-        if (this.type === 'off') {
-            this.setTemplate(T_FA_STEPS.WizardLogin);
+        if (this.type === '2fa-off') {
+            this.setTemplate(T_FA_STEPS.Disable2FaCode);
         } else if (this.type === 'changePassword') {
             this.setTemplate(T_FA_STEPS.ChangePassword);
         } else if (this.type.startsWith('verification')) {
@@ -477,6 +477,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 break;
             case T_FA_STEPS.VerificationToggle:
                 this.verificationProcess.run();
+                break;
+            case T_FA_STEPS.Disable2FaCode:
+                this.codeProcess.run();
         }
     }
 

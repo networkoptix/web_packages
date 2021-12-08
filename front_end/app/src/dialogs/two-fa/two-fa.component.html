@@ -20,7 +20,7 @@
                        [(ngModel)]="tfaCode"
                        autocomplete="off"
                        maxlength="255"
-                       required autofocus>
+                       required nxFocusMe>
             </div>
         </form>
     </div>
@@ -127,7 +127,7 @@
                        #loginPassword="ngModel"
                        maxlength="255"
                        [pattern]="CONFIG.credentialsValidation.passwordRequirements.requiredRegex"
-                       required autofocus>
+                       required nxFocusMe>
                 <ng-container *ngIf="loginPassword.invalid">
                     <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
@@ -206,12 +206,8 @@
     </div>
 
     <div class="modal-body">
-        <form #codeForm="ngForm" name="loginForm" novalidate>
+        <form #codeForm="ngForm" name="code_form" novalidate>
             <div id="codeText" translate>From authentication app, get a code and enter it below to complete the verification process.</div>
-            <p *ngIf="num2FaSystems" class="danger"
-               [innerText]="'security.twoFa.disableWarning' | translate: { count: num2FaSystems}">
-                <!-- TODO: Move to dedicated disable dialog -->
-            </p>
             <div class="form-group mt-3">
                 <label for="tfaCodeInput" translate>Enter authentication code</label>
                 <input type="text" class="form-control" #tfaCodeInputWizardCode="ngModel"
@@ -223,9 +219,8 @@
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputWizardCode.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
-                    <div class="input-error"
-                         *ngIf="tfaCodeInputWizardCode.touched && tfaCodeInputWizardCode.errors?.required"
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong authentication code</div>
+                    <div class="input-error" *ngIf="!tfaCodeInputWizardCode.pristine && tfaCodeInputWizardCode.errors?.required">
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
                 </ng-container>
             </div>
@@ -305,7 +300,7 @@
                 </p>
             </ng-template>
             <div class="form-group mt-3">
-                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
+                <label for="tfaCodeInput" translate>Enter authentication code from your authentication app to continue</label>
                 <input type="text" class="form-control" #tfaCodeInputCodeForm="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
@@ -315,7 +310,7 @@
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputCodeForm.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong authentication code</div>
                     <div class="input-error"
                          *ngIf="tfaCodeInputCodeForm.touched && tfaCodeInputCodeForm.errors?.required"
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
@@ -331,6 +326,53 @@
         <div class="m-2"></div>
         <!-- Margins on footer buttons are 0 !important -->
         <button class="btn btn-default" (click)="closeWizard()">
+            <span translate>Cancel</span>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #disable2FaCode>
+    <div class="modal-header">
+        <h1 class="modal-title" translate>Disable two-factor authentication</h1>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeWizard()" *ngIf="closable">
+            <span class="close-content"><span class="close-icon"></span></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form #codeForm="ngForm" name="code_form" novalidate>
+            <p *ngIf="num2FaSystems" class="danger mb-3">
+                {{ LANG.security.twoFa.disableWarning({count: num2FaSystems}) }}
+            </p>
+            <div class="form-group">
+                <label for="tfaCodeInput" translate>Enter authentication code from your authentication app to continue</label>
+                <input type="text" class="form-control" #tfaCodeInputDisable="ngModel"
+                       name="tfaCodeInput" id="tfaCodeInput"
+                       [(ngModel)]="tfaCode"
+                       (ngModelChange)="notAuthorized = false"
+                       autocomplete="off"
+                       maxlength="255"
+                       required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputDisable.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
+                        minute.
+                    </div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong authentication code</div>
+                    <div class="input-error"
+                         *ngIf="!tfaCodeInputDisable.pristine && tfaCodeInputDisable.errors?.required">
+                        {{LANG.dialogs.message.twoFactor.codeRequired()}}</div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer normal-layout">
+        <button id="disableFinish" class="btn btn-danger" (click)="next()">
+            <span translate>Disable</span>
+        </button>
+        <button id="disableCancel" class="btn btn-default mr-2" (click)="closeWizard()">
             <span translate>Cancel</span>
         </button>
     </div>

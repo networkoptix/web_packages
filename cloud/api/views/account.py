@@ -395,13 +395,12 @@ def security(request):
         account = Account.get(request)
         return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
 
-    require_params(request, ("password", ))
-    password = request.data.get("password")
-
     if action == SecurityAction.activate.name:
+        require_params(request, ("password",))
+        password = request.data.get("password")
         return api_success(Account.update_2fa_settings(request, totp, True, password=password))
     else:
-        res = Account.update_2fa_settings(request, totp, False, password=password)
+        res = Account.update_2fa_settings(request, totp, False)
         Auth.delete_2fa_key(request)
         return api_success(res)
 
