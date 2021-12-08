@@ -445,9 +445,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close() {
+    close(action?) {
         this.resetDefaults();
-        this.activeModal.close('changed');
+        this.activeModal.close(action || 'changed');
     }
 
     closeWizard() {
