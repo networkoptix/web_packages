@@ -10,6 +10,7 @@ import { Subject, Subscription } from 'rxjs';
 import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { onPinch } from './onPinch';
 
 const CANVAS_SELECTION_OFFSET_START = 60;
 const CANVAS_SELECTION_OFFSET_END = 85;
@@ -54,6 +55,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _animationFrameRequestHandler: number
 
+    protected _pinchDestructor: Function
+
     public ngOnInit (): void {
         this._stateSubscription = this.timeline.subject.subscribe(this._onTimelineStatusChange);
         this._animationFrameRequestHandler =
@@ -77,6 +80,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unsub$.next();
         this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
+        this._pinchDestructor && this._pinchDestructor();
     }
 
     public ngAfterViewInit (): void {
@@ -90,6 +94,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             debounceTime(50),
             takeUntil(this.unsub$)
         ).subscribe(() => this._updateCanvasGeometry());
+
+        this._pinchDestructor = onPinch(this.canvasView.nativeElement, ({ newScale, scaleChange, offset }) => {
+            const durationDelta = (scaleChange - 1) * this.timeline.fullRange.duration;
+            this.timeline.zoom(durationDelta, offset);
+        });
     }
 
     protected _updateCanvasGeometry (): void {
