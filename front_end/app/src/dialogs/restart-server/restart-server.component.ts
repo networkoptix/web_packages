@@ -1,20 +1,23 @@
 import { Component, Input, Injector } from '@angular/core';
-import { NgbActiveModal }             from '@ng-bootstrap/ng-bootstrap';
-import { timer }                      from 'rxjs';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { timer } from 'rxjs';
 import {
-    delayWhen, retryWhen, map,
-    tap, mergeMap
-}                                     from 'rxjs/operators';
+    delayWhen,
+    retryWhen,
+    map,
+    tap,
+    mergeMap
+} from 'rxjs/operators';
 
-import { NxRibbonService }           from '@components/ribbon';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxToastService }            from '@dialogs/toast.service';
-import { NxApplyService }            from '@services/apply.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxSystem } from '@services/system.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
+import { NxToastService } from '@dialogs/toast.service';
+import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
@@ -58,9 +61,18 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                const haveOnlineServers = this.system.servers.filter(({ status, id }) => status === 'Online' && id !== this.serverId).length > 0;
+                const haveOnlineServers = this.system.servers
+                    .some(({ status, id }) =>
+                        status === 'Online' && id !== this.serverId
+                    );
                 if (!haveOnlineServers) {
-                    this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                    this.ribbonService.show(
+                        this.LANG.ribbon.systemOffline?.(),
+                        [],
+                        'alert',
+                        undefined,
+                        true
+                    );
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
                 this.system.isAvailable = false;
@@ -101,7 +113,10 @@ export class RestartServerModalContent {
                             if (res) {
                                 // maps server status into serverObj
                                 const serverObj: { id?: string } = {};
-                                Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
+                                Object.entries(res).forEach((server: [
+                                    string,
+                                    { id: string, status: string}
+                                ]) => {
                                     serverObj[server[1].id] = server[1].status;
                                 });
                                 if (!serverObj[this.serverId]) {
@@ -111,7 +126,10 @@ export class RestartServerModalContent {
                                     serverHasGoneOfflineOnce = true;
                                     throw Error('still restarting');
                                 }
-                                if (!serverHasGoneOfflineOnce || serverOnlineChecked < this.CONFIG.maxNumberServerChecked) {
+                                if (
+                                    !serverHasGoneOfflineOnce ||
+                                    serverOnlineChecked < this.CONFIG.maxNumberServerChecked
+                                ) {
                                     serverOnlineChecked++;
                                     throw Error('still in the process of restarting');
                                 }
@@ -130,7 +148,13 @@ export class RestartServerModalContent {
                             return this.system.getInfo(true, false)
                                 .then(() => {
                                     if (!this.system.isOnline) {
-                                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                                        this.ribbonService.show(
+                                            this.LANG.ribbon.systemOffline?.(),
+                                            [],
+                                            'alert',
+                                            undefined,
+                                            true
+                                        );
                                         throw Error('system is offline still');
                                     }
                                 })
@@ -142,10 +166,19 @@ export class RestartServerModalContent {
                              * Otherwise, catches all other errors and retries every 4 seconds */
                             return errors.pipe(
                                 tap(val => {
-                                    if (!systemOfflineShown && [502, 503].includes(val.status)) {
+                                    if (
+                                        !systemOfflineShown &&
+                                        [502, 503].includes(val.status)
+                                    ) {
                                         systemOfflineShown = true;
                                         serverHasGoneOfflineOnce = true;
-                                        this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
+                                        this.ribbonService.show(
+                                            this.LANG.ribbon.systemOffline?.(),
+                                            [],
+                                            'alert',
+                                            undefined,
+                                            true
+                                        );
                                     }
                                 }),
                                 delayWhen(() => timer(4000))
@@ -161,7 +194,10 @@ export class RestartServerModalContent {
                         }
                         this.system.systemInfo = this.system;
                         options.classname = this.CONFIG.toast.success;
-                        this.toastService.show(this.LANG.servers.restartSuccessful?.(), options);
+                        this.toastService.show(
+                            this.LANG.servers.restartSuccessful?.(),
+                            options
+                        );
                         serverSubscription.unsubscribe();
                     });
             },
@@ -174,7 +210,10 @@ export class RestartServerModalContent {
                     message = this.LANG.servers.serverOffline?.();
                     this.close(this.CONFIG.servers.status.offline);
                     // @ts-ignore
-                } else if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                } else if (
+                    err.errorId ===
+                    this.CONFIG.servers.errors.oldSessionErrorId
+                ) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('restart')

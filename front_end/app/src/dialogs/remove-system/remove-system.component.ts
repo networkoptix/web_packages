@@ -1,16 +1,18 @@
 import {
-    Component, Input,
-    Renderer2, ViewChild
-}                         from '@angular/core';
+    Component,
+    Input,
+    Renderer2,
+    ViewChild
+} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { environment }                     from '@environments/environment';
-import { NxLanguageProviderService }       from '@services/nx-language-provider';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { NxProcessService }                from '@services/process.service';
-import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
-import { NxToastService }                  from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { NxSystemAPI } from '@services/system-api.service';
 
 @Component({
     selector: 'nx-modal-remove-model-content',
@@ -43,7 +45,6 @@ export class RemoveSystemModalContent {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private renderer: Renderer2,
-        private systemApiService: NxSystemAPIService,
         private toastService: NxToastService
     ) {
         this.LANG = language.translations;
@@ -81,7 +82,9 @@ export class RemoveSystemModalContent {
                 autohide: true,
                 delay: this.CONFIG.alertTimeout
             };
-            const msg = this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName || this.system.info.name });
+            const msg = this.LANG.toastMessage.system.deleted.success({
+                systemName: this.system.info.systemName || this.system.info.name
+            });
             this.toastService.show(msg, options);
         }, err => console.error(err));
     }

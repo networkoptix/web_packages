@@ -1,12 +1,15 @@
 import {
-    Component, Input, OnInit, ViewChild
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+    Component,
+    Input,
+    OnInit,
+    ViewChild
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem, ICamera }         from '@services/system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSystem, ICamera } from '@services/system.service';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -41,18 +44,24 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     }
 
     ngOnInit() {
-        const [loginName, password] = (this.camera.parsedAddParams && this.camera.parsedAddParams.credentials || ':').split(':');
+        const [loginName, password] = (
+            this.camera.parsedAddParams && this.camera.parsedAddParams.credentials ||
+            ':'
+        ).split(':');
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
         this.cameraPasswordCredentials = loginName && password;
         this.update = this.processService.createProcess(() => {
-            if (this.cameraLoginCredentials === this.currentCredentials.loginName &&
+            if (
+                this.cameraLoginCredentials === this.currentCredentials.loginName &&
                 this.cameraPasswordCredentials === this.currentCredentials.password
             ) {
                 return Promise.resolve();
             }
-            return this.system.updateResource(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
-                .then(this.updateCallback);
+            return this.system.updateResource(
+                this.camera.id,
+                { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` }
+            ).then(this.updateCallback);
         }).then(() => {
             this.activeModal.close();
         });

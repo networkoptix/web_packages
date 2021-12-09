@@ -1,24 +1,25 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
-import { LocalStorageService } from 'ngx-webstorage';
 
-import { NxProcessService, Process } from '@services/process.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
-import { NxToastService } from '@dialogs/toast.service';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import {
-    ModuleInformationReply, NormalResponse
-} from '@services/system-api.types';
-import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import {
+    ModuleInformationReply,
+    NormalResponse
+} from '@services/system-api.types';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -70,7 +71,8 @@ export class ResetServerModalContent {
             return false;
         };
         const isResetingCurrentServer = (): boolean => {
-            const currentServer = this.system.serverManager.servers.find(server => server.id === this.serverId);
+            const currentServer = this.system.serverManager.servers
+                .find(server => server.id === this.serverId);
             return currentServer.networkAddresses.includes(this.document.location.host) ||
                 this.system.info.name === currentServer.name;
         };
@@ -84,7 +86,10 @@ export class ResetServerModalContent {
 
         this.resetServer = this.processService
             .createProcess(() => {
-                return this.system.serverManager.restoreFactorySettings(this.serverId, this.password).toPromise();
+                return this.system.serverManager.restoreFactorySettings(
+                    this.serverId,
+                    this.password
+                ).toPromise();
             }, {
                 ignoreError: true,
                 ignoreUnauthorized: true,
@@ -144,7 +149,10 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     this.activeModal.close();
-                                    const successMessage = NxLanguageProviderService.translate(this.LANG.servers.resetSuccessful?.(), { serverName: this.serverName });
+                                    const successMessage = NxLanguageProviderService.translate(
+                                        this.LANG.servers.resetSuccessful?.(),
+                                        { serverName: this.serverName }
+                                    );
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();

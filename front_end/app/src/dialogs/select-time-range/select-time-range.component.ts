@@ -1,9 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { TimelineSelectionService } from '../../pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import {
+    TimelineSelectionService
+} from '../../pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
 
 @Component({
     selector: 'nx-modal-select-time-range',

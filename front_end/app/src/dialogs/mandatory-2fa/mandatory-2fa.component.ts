@@ -1,14 +1,15 @@
-import { Component, Input }          from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { NxProcessService, Process } from '@services/process.service';
-import { NxToastService }            from '../toast.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxSystem }                  from '@services/system.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxAccountService }          from '@services/account.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+
+import { NxToastService } from '../toast.service';
 
 @Component({
     selector: 'mandatory-2fa',
@@ -53,7 +54,10 @@ export class Mandatory2faModalContent {
         };
         this.mandatory2fa = this.processService
             .createProcess(
-                () => this.cloudApiService.toggle2faForSystem(this.system.id, this.verificationCode).toPromise(),
+                () => this.cloudApiService.toggle2faForSystem(
+                    this.system.id,
+                    this.verificationCode
+                ).toPromise(),
                 { ignoreError: true },
                 () => {
                     this.system.currentServerNotBusy = true;
