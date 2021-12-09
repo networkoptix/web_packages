@@ -461,7 +461,7 @@ export function setupConfig(): IConfig {
             authorised: environment.isLocal ? '/settings' : '/systems', // Page for redirecting all authorised users
             unauthorised: '/', // Page for redirecting all unauthorised users by default
             page404: '/404',
-            paths: ['/', '/register', '/restore_password', '/activate', '/404']
+            paths: ['/', '/restore_password', '/activate', '/404']
         },
         showHeaderAndFooter: true,
         headerHeight: 48,
