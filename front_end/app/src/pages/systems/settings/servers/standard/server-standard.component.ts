@@ -297,8 +297,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status]?.() : '';
-        this.certError = (this.CONFIG.servers.status.certError === this.selectedServer.internalStatus);
-        this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
+        this.certError = (this.CONFIG.servers.status.mismatchedcertificate === this.selectedServer.internalStatus);
+        this.serverOffline = [this.CONFIG.servers.status.mismatchedcertificate, this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
             (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
@@ -317,8 +317,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         return this.system.serverManager.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
             if (res) {
                 const servers: any[] = Object.entries(res).map(server => server[1]);
-                this.setStatus(servers.find(server => NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)).status === 'Online'
-                    ? '' : this.CONFIG.servers.status.offline);
+                this.setStatus(servers.find(server => {
+                    if (NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)) {
+                        return server;
+                    }
+                }).status.toLowerCase());
                 this.applyService.setVisible(true);
             }
         }, err => {

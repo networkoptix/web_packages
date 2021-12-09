@@ -7,10 +7,10 @@
     <nx-alert-block
             *ngIf="certError"
             class="col-12"
-            type="warning"
+            type="error"
             id="certificate-error"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
-            [line1]="'CERTIFICATE ERROR' | translate">
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            [line1]="'Server is offline due to certificate error' | translate">
     </nx-alert-block>
     <div
         *ngIf="
@@ -21,7 +21,7 @@
     >
         <ng-container *ngIf="!checking">
             <nx-alert-block
-                *ngIf="serverOffline"
+                *ngIf="serverOffline && !certError"
                 type="error"
                 id="server-offline"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"

@@ -608,7 +608,7 @@ export interface ServersStatus {
     restarting: string;
     resetting: string;
     checking: string;
-    certError: string
+    mismatchedcertificate: string
 }
 
 export interface System {
