@@ -5,9 +5,7 @@ import { DirectivesModule }          from '@directives/directives.module';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { NxActivateModule }          from './activate/activate.module';
 import { NxAccountModule }           from './account/account.module';
-import { NxRestoreModule }           from './restore/restore.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
@@ -145,8 +143,6 @@ const lazyRoutes: Routes = [
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        NxActivateModule,
-        NxRestoreModule,
         Angular2CsvModule,
         NxAccountModule,
         NxDebugModule,
@@ -170,8 +166,6 @@ const lazyRoutes: Routes = [
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        NxActivateModule,
-        NxRestoreModule,
         Angular2CsvModule,
         NxDebugModule,
         Nx500Module,
