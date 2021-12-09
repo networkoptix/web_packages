@@ -112,7 +112,7 @@ ${ACTIVATION SUCCESS LOG IN BUTTON}   //nx-authorize-activate-account-component/
 ${SYSTEM NAME OFFLINE}                //nx-ribbon//div[contains(text(),'${SYSTEM IS OFFLINE TEXT}')]
 
 #In system settings
-${SYSTEM NAME}                        //div/nx-editable-settings-heading//h2
+${SYSTEM NAME}                        //div/nx-editable-heading//nx-text-editable
 ${SYSTEM OFFLINE}                     //div[contains(text(),"${SYSTEM IS OFFLINE TEXT}")]
 ${SYSTEM OFFLINE HEADER}              //h2[@name="OFFLINE" and contains(text(),"${SYSTEM OFFLINE TEXT}")]
 ${THIS SYSTEM IS OFFLINE}             //div[@name="OFFLINE" and contains(text(),"${THIS SYSTEM IS OFFLINE TEXT}")]
@@ -133,7 +133,7 @@ ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button
 ${ACCESS LEVEL DROPDOWN MENU}         ${SYSTEM USER DETAILS}//nx-section//ul[contains(@class, "dropdown-menu")]
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='user-active-status']
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-active-status-switch']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
@@ -162,7 +162,7 @@ ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") an
 ${ADD USER BUTTON SYSTEMS}            //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${ADD USER MODAL}                     //form[@name='addUserForm']
 ${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
-${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='componentId']
 ${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
 ${ADD USER CANCEL}                    ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
 ${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-dismiss='modal']

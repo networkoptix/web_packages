@@ -218,7 +218,7 @@ Verify In Local Users UI
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
 	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
-	    ...    ${DISABLE USER SWITCH}
+	    ...    ${DISABLE USER SWITCH}/..
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
 	    Run Keyword If    '${status}' == '${TRUE}'    Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
@@ -229,14 +229,14 @@ Verify In Local Users UI
         log    ${user}
         # log    ${users['cloudAdmin']}
 	    Run Keyword If    '${email}' == '${server 1['owner']}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
+	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
 	    ...    ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
+	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
         ...    ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
+	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
         ...    ELSE IF    '${email}' == 'admin'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
+	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+		...    ELSE    Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..
     END
 
 Modify Local Users via Cloud UI
@@ -491,8 +491,8 @@ Change All Local User Info
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
 	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
         ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${server 1}[cloud users][cloudAdmin]
-        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
-        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
+        Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}/..    ${LOCAL USER DELETE BUTTON}
+        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}/..     ${LOCAL USER DELETE BUTTON}
     END
 
 Get Local User Id By Name

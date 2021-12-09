@@ -1157,7 +1157,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Input Text    ${LOCAL USER NAME}    ${EMPTY}
+        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1185,7 +1185,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
+        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1461,7 +1461,7 @@ Reset
         Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+newApiUser
         Wait Until Textfield Contains    ${LOCAL USER NAME}    New Api
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
-        Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]    
+        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[advancedViewer]
         
         Log    Clean up
         ${id}    Get Local User Id By Name    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    Local+newApiUser

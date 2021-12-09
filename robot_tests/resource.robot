@@ -468,15 +468,15 @@ Check For Alert Dismissable
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
-    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[@id="editable-title" and contains(text(), '${system name}')]
-    ...    ELSE    Wait Until Element Is Visible    //nx-editable-settings-heading//h2[contains(text(), '${system name}')]
+    Run Keyword If    '''${editable}'''=='''${True}'''    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[@id="systemName-editable" and contains(text(), '${system name}')]
+    ...    ELSE    Wait Until Element Is Visible    //nx-editable-heading//nx-text-editable[contains(text(), '${system name}')]
 
 Disconnect from cloud
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
-    Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
+    Wait Until Element Is Visible    ${DISCONNECT FORM DISCONNECT BUTTON}
+    #Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
 #    Sleep    5
@@ -674,7 +674,13 @@ Get Checkbox Value
     ${id}    Get Element Attribute    ${CHECKBOX ELEMENT}    id
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Get Checkbox Value Keyword.'
     Sleep    2    #Wait for form to load & dynamic control values to populate
-    ${checked}    Execute Javascript    return window.document.getElementById('${id}').checked;
+    ${user enabeled checkbox}=    Run Keyword And Return Status    Element Should Be Visible    //nx-system-settings-component//nx-block//span[contains(text(),'User disabled')]
+    # Special case for user enabled checkbox that returns true even when not checked
+    IF    "${user enabeled checkbox}" == "True"
+        ${checked}=    Set Variable    False
+    ELSE
+        ${checked}    Execute Javascript    return window.document.getElementById('${id}').checked;
+    END
     [return]    ${checked}
 
 Set Checkbox Value
@@ -683,7 +689,11 @@ Set Checkbox Value
     ${id}    Get Element Attribute    ${CHECKBOX ELEMENT}    id
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Set Checkbox Value Keyword.'
     ${checked}    Get Checkbox Value    ${CHECKBOX ELEMENT}
-    Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
+    #Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
+    IF    ${checked} != ${Desired Bool Value}
+        Click Element    ${CHECKBOX ELEMENT}/..
+        Scroll Element Into View    ${CHECKBOX ELEMENT}
+    END
 
 Get Child WebElements
     [arguments]    ${locator}
