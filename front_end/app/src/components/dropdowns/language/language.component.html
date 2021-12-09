@@ -20,7 +20,7 @@
             <a class="dropdown-item inset"
                href
                (click)="show = false; change(lang.language);"
-               [ngClass]="{'active': lang.language === activeLanguage.language}">
+               [ngClass]="{'selected': lang.language === activeLanguage.language}">
 
                 <span>
                     <span class="lang-sm" lang="{{lang.language}}"></span>
