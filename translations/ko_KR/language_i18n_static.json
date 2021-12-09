@@ -1024,7 +1024,7 @@
             "v5Warning_a4": "%VMS_NAME% Client",
             "v5Warning_a5": "as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
             "v5Warning_b": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
-            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}} after disabling two-factor authentication."
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
     },
     "storage": {

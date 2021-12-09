@@ -1024,7 +1024,7 @@
             "v5Warning_a4": "%VMS_NAME% client",
             "v5Warning_a5": "als eerdere versies van %VMS_NAME% Client ondersteunen geen tweestapsverificatie, dus u kunt geen verificatiecode invoeren voor uw account %CLOUD_NAME%.",
             "v5Warning_b": "{count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} zal volledig toegankelijk zijn zodra {count, plural, =0{zij zijn} one{het is} other{zij zijn}} geüpgraded naar de 5.0-versie.",
-            "disableWarning": "Je hebt {count, plural, one{# systeem} other{# systemen}} die {count, plural, one{vereist} other{vereist}} authenticatie in twee stappen. Je kunt niet inloggen op {count, plural, one{dit systeem} other{deze systemen}} na het uitschakelen van tweestapsverificatie."
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
     },
     "storage": {

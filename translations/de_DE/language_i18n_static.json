@@ -1024,7 +1024,7 @@
             "v5Warning_a4": "%VMS_NAME%-Client",
             "v5Warning_a5": "da frühere Versionen von %VMS_NAME%-Client keine Zwei-Faktor-Authentifizierung unterstützen, können Sie keinen Verifizierungscode für Ihr %CLOUD_NAME%-Konto eingeben.",
             "v5Warning_b": "{count, plural, =0{Diese Systeme werden} one{Dieses System wird} other{Diese Systeme werden}} vollständig zugänglich sein, sobald {count, plural, =0{sie} one{es} other{sie}} auf die Version 5.0 aktualisiert {count, plural, =0{werden} one{wird} other{werden}}.",
-            "disableWarning": "Sie haben {count, plural, one{# System} other{# Systeme}}, {count, plural, one{das} other{die}} Zwei-Faktor-Authentifizierung {count, plural, one{erfordert} other{erfordern}}. Nach der Deaktivierung der Zwei-Faktor-Authentifizierung können Sie sich nicht mehr bei {count, plural, one{diesem System} other{diesen Systemen}} anmelden."
+            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
     },
     "storage": {
