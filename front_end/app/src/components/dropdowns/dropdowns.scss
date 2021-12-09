@@ -288,6 +288,22 @@ header {
         margin     : 4px 12px;
         border-top : 1px solid $light6;
     }
+
+    &-api-tool {
+        background-color: $light4;
+        .btn.btn-dropdown-toggle {
+            font-size: rem(14px) !important;
+        }
+        .dropdown-menu {
+            background-color: $light4;
+            .dropdown-item-container .dropdown-item {
+                font-size: rem(14px) !important;
+                &:hover {
+                    background-color : $light5 !important;
+                }
+            }
+        }
+    }
 }
 
 nx-select.ng-invalid:not(.ng-untouched) {

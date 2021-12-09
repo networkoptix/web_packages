@@ -104,4 +104,10 @@ nx-select {
         box-shadow: none !important;
         background: transparent !important;
     }
+
+    .item-icon {
+        .storage-cloud {
+            fill: $brand-core !important;
+        }
+    }
 }

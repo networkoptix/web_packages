@@ -15,21 +15,54 @@
 	display : none;
 }
 
-.hidden {
+.swagger-ui {
+	margin-bottom: 200px;
+}
+
+.swagger-ui .hidden {
 	display: none;
 }
 
 .single-api-route-showing {
-	.swagger-ui .opblock-body {
-		padding-top     : 7px;
+	.swagger-ui {
+
+		max-width: 920px;
+		.opblock-body {
+			padding-top: 0px;
+		}
+		.opblock {
+			.opblock-description-wrapper, .table-container, .opblock-section-header, .responses-inner.with-label {
+				padding-right: 0px !important;
+			}
+			border: none !important;
+			max-width: 920px;
+		}
+
+		.opblock-summary {
+			display: none !important;
+		}
+
+		.opblock-summary {
+			display: none !important;
+		}
+
+		.wrapper {
+			padding-left: 0px !important;
+		}
 	}
-	.opblock-body .opblock-description-wrapper:nth-of-type(1) {
-		display: none !important;
+	.swagger-description {
+		padding-bottom: 0px !important;
+		padding-right: 0px !important;
+		max-width: 900px;
 	}
 }
 
+.opblock-body .opblock-description-wrapper:nth-of-type(1) {
+	display: none !important;
+}
+
 .swagger-ui .opblock-body {
-	padding-top     : 10px;
+	padding-top     : 2px;
 	padding-bottom  : 5px;
 }
 
@@ -66,9 +99,14 @@
 	background: none;
 }
 
-.swagger-description p {
-	margin-bottom: 17px;
-	max-width: 645px;
+.swagger-description {
+	.description-path {
+		@include typography.medium14light16;
+	}
+ 	p {
+		margin-bottom: 17px;
+		max-width: 890px;
+	}
 }
 
 .api-info {
@@ -140,8 +178,11 @@
 	&::placeholder {
 		color: #fff;
 	}
-	&:disabled::placeholder {
-		color: #fafafa;		
+	&:disabled{
+		background-color: $light2;
+		&::placeholder {
+			color: $light2;
+		}
 	}
 	&.invalid::placeholder{
 		color: #feebeb;
@@ -160,7 +201,7 @@
 }
 
 .swagger-ui .wrapper {
-	padding    : 0 16px;
+	padding    : 0 16px 0 16px;
 }
 
 .swagger-ui .opblock-tag {
@@ -169,11 +210,11 @@
 
 .swagger-ui .opblock {
 	margin           : 0 0 15px;
-	max-width        : 645px;
+	max-width        : 890px;
 	box-shadow       : none;
 	background-color : $light1 !important;
 	background-clip  : border-box;
-	border           : 1px solid $light4 !important;
+	border           : 1px solid $light3 !important;
 	border-radius    : 2px;
 }
 
@@ -217,11 +258,10 @@
 
 .swagger-ui .opblock .opblock-section-header {
 	h4 {
-		@include typography.medium18dark1;
+		@include typography.medium20dark9;
 		flex   : initial;
 		margin : initial;
 		&.parameter__name {
-			@include typography.regular16dark10;
 			margin-top: -7px;
 		}
 	}
@@ -231,11 +271,14 @@
 	position: relative;
 }
 
-.swagger-ui .opblock-description-wrapper .model-example {
-	margin-top: -15px;
+.swagger-ui .opblock-description-wrapper {
+	margin-bottom: -16px;
+	.model-example {
+		margin-top: -15px;
+	}
 }
 
-.swagger-ui .opblock .opblock-summary-method {
+.swagger-ui .opblock .opblock-summary-method, .swagger-description .opblock-method {
 	@include typography.medium14light1;
 	padding       : 2px 8px;
 	border-radius : 2px;
@@ -243,8 +286,9 @@
 }
 
 .swagger-ui .opblock .opblock-summary-path {
-	@include typography.medium14dark1;
+	@include typography.medium14light16;
 	font-weight: 500 !important;
+	padding-left: 12px;
 }
 
 .swagger-ui b, .swagger-ui strong {
@@ -261,7 +305,7 @@
 }
 
 .swagger-ui .opblock .opblock-summary-description {
-	@include typography.regular14light10;
+	@include typography.medium14dark9;
 	padding-right: 20px;
 	@media screen and (max-width: 670px) {
 		max-width: calc(100% - 18rem);
@@ -337,23 +381,34 @@
 	background: none;
 }
 
-.swagger-ui .opblock.opblock-post .opblock-summary-method {
+.swagger-description .opblock-method {
+	text-align: center;
+	position: absolute;
+	right: 32px;
+	top: 6px;
+}
+
+.swagger-ui .opblock-summary-method, .swagger-description .opblock-method {
+	width: 90px;
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method, .swagger-description .opblock-method.POST {
 	background : $green_l1;
 }
 
-.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+.swagger-ui .opblock.opblock-patch .opblock-summary-method, .swagger-description .opblock-method.PATCH {
 	background : $cyan400;
 }
 
-.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+.swagger-ui .opblock.opblock-delete .opblock-summary-method, .swagger-description .opblock-method.DELETE {
 	background : $red_l1;
 }
 
-.swagger-ui .opblock.opblock-put .opblock-summary-method {
+.swagger-ui .opblock.opblock-put .opblock-summary-method, .swagger-description .opblock-method.PUT {
 	background : #FF7D20;
 }
 
-.swagger-ui .opblock.opblock-get .opblock-summary-method {
+.swagger-ui .opblock.opblock-get .opblock-summary-method, .swagger-description .opblock-method.GET {
 	background : $blue9;
 }
 
@@ -385,10 +440,23 @@
 }
 
 .swagger-ui .responses-inner {
-	padding: 6px 16px 20px 16px;
-	.model-example {
-		margin-top: 0px;
+	padding: 0px 16px 20px 16px;
+	h4 {
+		@include typography.medium14dark9;
+		margin-top: 16px;
+		&.example-response {
+			@include typography.medium20dark9;
+			margin-top: 32px;
+			margin-bottom: 20px;
+		}
 	}
+	.model-example {
+		margin-top: 5px;
+	}
+}
+
+.swagger-ui .responses-table.live-responses-table {
+	margin-top: 32px;
 }
 
 .swagger-ui .responses-table:not(.live-responses-table) tr.response {
@@ -404,7 +472,7 @@
 }
 
 .swagger-ui .response-col_description {
-	border-left         : 1px solid $light4 !important;
+	border-left: 1px solid $light3 !important;
 	h5 {
 		padding-bottom: 8px !important;
 		margin-top: 5px;
@@ -432,9 +500,10 @@
 
 .swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre  {
 	@extend .code-block-common;
-	background      : $dark13 !important;
+	background      : $light2 !important;
+	border	        : 1px solid $light4;
 	font-family     : robotomonoregular, monospace;
-	color           : $light1;
+	color           : $dark9;
 	width           : 100%;
 	margin-top	    : 10px;
 	padding	        : 1em 0.5em 1.4em 1em !important;
@@ -507,6 +576,7 @@
 }
 
 .swagger-ui .download-contents {
+	display: none !important;
 	bottom: 6px;
 	right: 40px;
 	background: none;
@@ -532,11 +602,16 @@
 
 .swagger-ui .execute-wrapper {
 	position: relative;
-	padding: 8px 0px 28px 0px;
+	padding: 4px 0;
 }
 
 .swagger-ui .responses-wrapper {
 	padding-top: 3px;
+}
+
+.swagger-ui .btn-group {
+	padding: 0px;
+	display: block;
 }
 
 .swagger-ui .btn {
@@ -566,11 +641,14 @@
 	}
 
 	&.execute {
-		position: absolute;
-		right: 16px;
+		margin: 12px 0 11px 16px;
+		width: 215px;
 		background-color: $blue1 !important;
 		color           : $light1 !important;
-		width: auto;
+	}
+
+	&.btn-clear {
+		display: none !important;
 	}
 }
 
@@ -612,7 +690,9 @@
 	width           : 100%;
 	padding         : 0 10px;
 	border-collapse : collapse;
-	border          : 1px solid $light4;
+	&:not(.model) {
+		border          : 1px solid $light3;
+	}
 }
 
 .swagger-ui table.parameters thead {
@@ -620,10 +700,10 @@
 }
 
 .swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	@include typography.medium13dark10;
+	@include typography.medium14dark10;
 	padding       : 4px 16px;
 	text-align    : left;
-	font-weight	  : initial;
+	font-weight	  : 500;
 	max-width	  : 451px;
 }
 
@@ -633,10 +713,10 @@
 }
 
 .swagger-ui table:not(.model) tbody tr td {
-	@include typography.regular13dark9;
+	@include typography.regular14dark9;
 	padding        : 8px 16px !important;
 	vertical-align : top;
-	border         : 1px solid $light4;
+	border         : 1px solid $light3;
 	&.response-col_status{
 		text-transform: uppercase;
 		@include typography.medium13dark10;
@@ -687,7 +767,7 @@
 }
 
 .swagger-ui .opblock-body {
-	table:last-of-type {
+	table {
 		thead{ 
 			display: none;
 		}
@@ -695,12 +775,38 @@
 			@include typography.medium13dark10;
 		}
 	}
+}
 
+.swagger-ui .bracket, .value-text {
+	color: $dark9;
+}
+.swagger-ui span.key-text {
+   color: $purple500;
+}
+.swagger-ui span.value-number {
+   color: $green_main;
+}
+
+.swagger-ui .opblock-body table.parameters {
+	thead{ 
+		display: table-header-group !important;
+		background-color: $additional_light1;
+		tr th:first-of-type {
+			border-right: 1px solid $light3;
+		}
+	}
+	tbody tr:nth-child(even) {
+		background-color: $additional_light1;
+	}
 }
 
 .swagger-ui .parameter__name {
 	margin-right : initial;
-	@include typography.bold13dark9;
+	@include typography.bold16dark9;
+}
+
+.swagger-ui .opblock-section.opblock-section-request-body {
+	margin-top: 15px;
 }
 
 .swagger-ui .parameter__name.required {
@@ -709,7 +815,7 @@
 
 
 .swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameters-col_name .prop-format, .swagger-ui .parameter__deprecated {
-	@include typography.regular11light8;
+	@include typography.regular14light10;
 }
 
 .swagger-ui .parameter__name.required:after {
@@ -746,7 +852,7 @@
 
 .code-block-common {
 	border-radius: 2px;
-	font-size: rem(13px) !important;
+	font-size: rem(12px) !important;
 	font-weight: 400 !important;
 	line-height: 1.23 !important;
 	letter-spacing: normal;
@@ -756,9 +862,8 @@
 .swagger-ui .markdown code {
 	@extend .code-block-common;
 	padding       : 1px 6px;
-	border        : 1px solid $light10;
+	border		  : 1px solid $light4;
 	font-family   : robotomonoregular, monospace !important;
-	color         : $dark9;
 }
 
 .swagger-ui .code, .swagger-ui code {
@@ -779,9 +884,10 @@
 
 pre, .text-area {
 	@extend .code-block-common;
-	margin: 10px 0 24px 0;
+	margin: 10px 0 8px 0;
 	padding: 1em 0.5em 1.4em 1em !important;
 	counter-reset: line;
+	color         : $dark9 !important;
 	& > * {
 		position: relative;
 		padding-left: 22px;
@@ -802,8 +908,9 @@ pre, .text-area {
 	}
 }
 .text-area {
-	background-color: $dark13;
-	color: $additional_light1;
+	background-color: $light1;
+	border: 1px solid $light4;
+	color: $dark9 !important;
 	& > * {
 		padding-left: 20px !important;
 		margin-bottom: auto;

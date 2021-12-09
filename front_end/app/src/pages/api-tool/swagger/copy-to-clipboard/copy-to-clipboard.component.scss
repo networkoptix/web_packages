@@ -1,3 +1,5 @@
+@use '../../../../../styles/theme_variables' as *;
+
 .copy-button {
 	background-color: none !important;
 	box-shadow: none !important;
@@ -10,6 +12,6 @@
         cursor: pointer;
     }
 	svg .st7 {
-		fill: #fff !important;
+		fill: $light16 !important;
 	}
 }

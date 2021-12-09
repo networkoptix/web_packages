@@ -157,12 +157,17 @@ export class NxAPIToolService {
         return system.stateOfHealth === 'online';
     }
 
+    makeSystemName = (system) => {
+        const version = system.info?.version ? ' (' + system.info.version + ')' : '';
+        return system.info?.name + version || 'System';
+    }
+
     async getSystem() {
         this.systems.forEach(system => {
             if (system.name !== undefined) {
                 const onlineSystem = this.systemIsOnline(system);
                 const sysName = onlineSystem ? system.name : system.name + ' - Offline';
-                this.systemsDropdown.push({ value: system.id, name: sysName, disabled: !onlineSystem });
+                this.systemsDropdown.push({ value: system.id, name: sysName, disabled: !onlineSystem, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' });
                 if (onlineSystem) {
                     this.validSystems.push(system);
                 }
@@ -179,7 +184,7 @@ export class NxAPIToolService {
             });
         }  else if (cachedSystem) {
             this.system = cachedSystem;
-            this.selectedSystem = { value: this.system.id, name: this.system.info.name, disabled: false };
+            this.selectedSystem = { value: this.system.id, name: this.makeSystemName(this.system), disabled: false, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' };
         } else {
             const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
                 ? this.headerService.lastActive : this.systems.find(system => this.systemIsOnline(system));
@@ -227,7 +232,7 @@ export class NxAPIToolService {
                 untilDestroyed(this),
                 map(system => {
                     if (system) {
-                        this.selectedSystem = { value: system.id, name: system.info.name, disabled: false };
+                        this.selectedSystem = { value: system.id, name: this.makeSystemName(system), disabled: false, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' };
                         return system;
                     }
                     if (!system || !system.serverManager.servers || system.serverManager.servers.length === 0) {

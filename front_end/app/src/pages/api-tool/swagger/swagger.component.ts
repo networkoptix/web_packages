@@ -1,6 +1,7 @@
 import {
     Component, ComponentFactoryResolver,
     ComponentRef,
+    ElementRef,
     Inject, Input, OnChanges, Renderer2, SimpleChanges,
     ViewChild,
     ViewContainerRef, ViewEncapsulation
@@ -24,6 +25,7 @@ import {
 import { environment } from '@environments/environment';
 import { v4 as uuid } from 'uuid';
 import { take } from 'rxjs/operators';
+import { highlightAllCode } from '../api-tool-utils';
 
 interface componentMap {
     [uuid: string]: ComponentRef<any>
@@ -38,6 +40,7 @@ interface componentMap {
 })
 export class NxSwaggerComponent implements OnChanges {
     @ViewChild('viewContainerRef', { read: ViewContainerRef }) VCR: ViewContainerRef;
+    @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
 
     swagger: SwaggerUI;
@@ -46,6 +49,8 @@ export class NxSwaggerComponent implements OnChanges {
     // Misc properties
     RTSPRequestShowing = false;
     singleAPIRouteShowing = false;
+    singleRoutePath: string;
+    singleRouteMethod: string;
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     customComponentsRendering = false;
     componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
@@ -60,7 +65,7 @@ export class NxSwaggerComponent implements OnChanges {
      *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
      */
     isAPIRouteNode = (node: MenuNodeWithParent) => {
-        return !node.nodes.length;
+        return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length;
     }
 
     private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
@@ -70,7 +75,6 @@ export class NxSwaggerComponent implements OnChanges {
         let description;
         if (expand === 'list') {
             description = this.APIToolService.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || '';
-            this.singleAPIRouteShowing = false;
         }
         if (expand === 'full') {
             const info = getPathAndMethodFromNodeName(node.name);
@@ -81,7 +85,6 @@ export class NxSwaggerComponent implements OnChanges {
             } else {
                 description =  path[Object.keys(path)[0]].description;
             }
-            this.singleAPIRouteShowing = true;
         }
         this.swaggerMenuDescription = {
             title: title,
@@ -187,11 +190,10 @@ export class NxSwaggerComponent implements OnChanges {
                 } else if (!this.customComponentsRendering) {
                     this.addCustomChanges();
                 }
-
                 return responses;
             }
         }
-    })
+    });
 
     private addCustomChanges = () => {
         this.customComponentsRendering = true;
@@ -199,9 +201,11 @@ export class NxSwaggerComponent implements OnChanges {
             this.addCustomTextareas();
             this.modifyCodeBlocksAndTextareas();
             this.addTabItemEventListener();
+            this.changeRequestBodyText();
             this.addButtonEventListeners();
             this.insertCustomDropdown();
             this.moveExampleResponse();
+            this.modifyTitlesInResponse();
             this.addLabelToRequest();
             this.customComponentsRendering = false;
         }, 0);
@@ -219,15 +223,43 @@ export class NxSwaggerComponent implements OnChanges {
         }
     }
 
+    private changeRequestBodyText = () => {
+        const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
+        if (requestBody) {
+            requestBody.innerText = 'Body';
+        }
+    }
+
     private modifyCodeBlocksAndTextareas = () => {
         const elements = this.document.querySelectorAll('pre, .text-area');
         for (const element of elements as any) {
-            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD') {
-                // Add clipboard buttons and line counters to elements that dont have them
+            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.nodeName === 'DIV' && element.classList.contains('highlight-code'))) {
                 const container = element.closest('div') as HTMLElement;
                 container?.classList.add('highlight-code');
-                this.addCopyToClipBoardButton(element);
+                if (element.tagName === 'PRE') {
+                    this.addCopyToClipBoardButton(element);
+                }
                 this.addLineCounter(element);
+                // Ignore code blocks that come from the markdown from the json
+                highlightAllCode(element);
+            }
+        }
+    }
+
+    private modifyTitlesInResponse = () => {
+        const visibleResponseSections = this.document.querySelectorAll('.btn-group');
+        for (const visibleResponseSection of visibleResponseSections as any) {
+            const responsesWrapper: HTMLElement = visibleResponseSection.nextElementSibling;
+            const titles = responsesWrapper.querySelectorAll('h4');
+            if (titles[0]) {
+                titles[0].innerText = 'Server Response';
+            }
+            if (titles[3]) {
+                titles[3].remove();
+            }
+            if (titles[4]) {
+                titles[4].innerText = 'Example Response';
+                titles[4].classList.add('example-response');
             }
         }
     }
@@ -346,7 +378,14 @@ export class NxSwaggerComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeNode.currentValue) {
             const node = changes.activeNode.currentValue;
-            const expand = this.isAPIRouteNode(node) ? 'full' : 'list';
+            const isSingleView = this.isAPIRouteNode(node);
+            if (isSingleView) {
+                const { path, method } = getPathAndMethodFromNodeName(node.name);
+                this.singleRoutePath = path;
+                this.singleRouteMethod = method;
+            }
+            const expand = isSingleView ? 'full' : 'list';
+            this.singleAPIRouteShowing = isSingleView;
             if (this.VCR) {
                 // Destroys custom components
                 this.VCR.clear();

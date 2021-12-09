@@ -4,6 +4,7 @@ export class DropdownItem<Value = any> {
         public help?: string,
         public value?: Value,
         public state?: string,
-        public disabled?: boolean
+        public disabled?: boolean,
+        public icon?: string
     ) {}
 }

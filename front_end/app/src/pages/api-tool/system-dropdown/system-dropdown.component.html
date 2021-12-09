@@ -2,6 +2,8 @@
         <ng-container *ngIf="!environment.isLocal">
         <nx-select
                [id]="'avail-systems'"
+               [type]="'api-tool'"
+               [hideSelectedItem] = 'true'
                [stillLoading]="!(APIToolService.serversLoaded$ | async)"
                [items]="APIToolService.systemsDropdown"
                (onSelected)="onSystemChange($event)"
@@ -9,6 +11,7 @@
        </nx-select>
        <nx-select
                *ngIf="APIToolService.serversDropdown.length"
+               [type]="'api-tool'"
                class="mt-2"
                [id]="'avail-systems'"
                [stillLoading]="!(APIToolService.serversLoaded$ | async)"
@@ -19,6 +22,7 @@
         </ng-container>
         <nx-select
                 *ngIf="!APIToolService.outDatedSystem"
+                [type]="'api-tool'"
                 [items]="APIToolService.APIDropdown"
                 (onSelected)="onAPIVersionChange($any($event))"
                 [stillLoading]="!(APIToolService.serversLoaded$ | async) || !APIToolService.APIDropdown.length"

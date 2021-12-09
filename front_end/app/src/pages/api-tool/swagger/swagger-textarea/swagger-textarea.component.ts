@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxAPIToolService } from '@pages/api-tool/api-tool.service';
 import { WINDOW } from '@services/window-provider';
@@ -9,7 +9,8 @@ import { fromEvent } from 'rxjs';
 @Component({
     selector: 'nx-swagger-textarea',
     templateUrl: './swagger-textarea.component.html',
-    styleUrls: ['./swagger-textarea.component.scss']
+    styleUrls: ['./swagger-textarea.component.scss'],
+    // encapsulation: ViewEncapsulation.None
 })
 export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     @ViewChild('customTextarea') customTextareaRef : ElementRef;
@@ -36,6 +37,8 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         }
         const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
 
+        // highlightAllCode(element);
+
         fromEvent(element, 'input').pipe(untilDestroyed(this)).subscribe(event => {
             this.APIToolService.preventNextChangeDetection = true;
 
@@ -60,6 +63,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
             event.preventDefault();
             this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
+            // highlightAllCode(element);
         });
 
         this.attributeMutationObserver = new MutationObserver((mutations) => {

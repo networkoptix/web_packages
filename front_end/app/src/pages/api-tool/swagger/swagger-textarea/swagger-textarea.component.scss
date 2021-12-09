@@ -1,7 +1,7 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as *;
 
-div {
+:host div {
     position: relative;
 }
 
@@ -11,6 +11,7 @@ div {
     }
     .text-area {
         pointer-events: none;
+        background-color: $light2;
     }
 }
 
@@ -29,4 +30,5 @@ div {
    &:focus {
        outline: none;
    }
+   
 }

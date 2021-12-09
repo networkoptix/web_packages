@@ -55,6 +55,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() hrMargin: boolean;
     @Input() stillLoading: boolean;
     @Input() type: string;
+    @Input() hideSelectedItem = false;
     @Input() forcePosition: {
         left?: number,
         top?: number,
@@ -120,7 +121,6 @@ export class NxGenericDropdown extends BaseDropdown {
                 changes.selected.currentValue.name +=
                     `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }
-
             this._selectedItem = changes.selected.currentValue;
         } else if (!this.selected && !changes.selected.firstChange) {
             this._selectedItem = { name: this.message, value: '0' };
