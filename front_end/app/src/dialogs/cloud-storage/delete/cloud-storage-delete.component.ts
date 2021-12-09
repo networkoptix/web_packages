@@ -1,17 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import {
-    Component, Input,
-    Renderer2, ViewChild, OnInit
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject }           from 'rxjs';
+    Component,
+    Input,
+    Renderer2,
+    ViewChild,
+    OnInit
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import * as t from '@services/nx-cloud-api.types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem }                  from '@services/system.service';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import * as t from '@services/nx-cloud-api.types';
-import { HttpClient } from '@angular/common/http';
+import { NxSystem } from '@services/system.service';
 
 @Component({
     selector: 'nx-modal-cloud-storage-delete-content',
@@ -48,10 +51,10 @@ export class CloudStorageDeleteModalContent implements OnInit {
     }
 
     private deleteCloudStorage(systemId: string, password: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/delete', {
-            systemId,
-            password
-        }).toPromise();
+        return this.http.post<t.CloudResponse>(
+            this.CONFIG.apiBase + '/storage/delete',
+            { systemId, password }
+        ).toPromise();
     }
 
     ngOnInit() {

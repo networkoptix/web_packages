@@ -59,24 +59,41 @@ export class ConnectCloudModalContent implements OnInit {
     private connect(systemName, email, accessToken) {
         let headers = new HttpHeaders();
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
-        return this.http.post<t.CloudResponse>(this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
-            name: systemName,
-            email: email
-        }, { headers });
+        return this.http.post<t.CloudResponse>(
+            this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect',
+            { name: systemName, email: email },
+            { headers }
+        );
     }
 
     private handleCode(code) {
-        return this.system.mediaserver.loginOauth(code, true).toPromise().then((res) => {
-            this.codeExists = !!code;
-            this.cloudTokens = res;
-        });
+        return this.system.mediaserver.loginOauth(code, true).toPromise()
+            .then((res) => {
+                this.codeExists = !!code;
+                this.cloudTokens = res;
+            });
     }
 
     private handleConnectLocalToCloud(tokens) {
         const token = tokens.access_token;
-        return this.http.get(this.CONFIG.cloudHost + '/oauth/introspect/', { params: { token } }).pipe(
-            switchMap((tokenInfo: any) => this.connect(this.system.info.systemName, tokenInfo.username, token)),
-            switchMap((res: any) => this.system.mediaserver.saveCloudSystemCredentials(res.id, res.authKey, res.ownerAccountEmail))
+        return this.http.get(
+            this.CONFIG.cloudHost + '/oauth/introspect/',
+            { params: { token } }
+        ).pipe(
+            switchMap((tokenInfo: any) =>
+                this.connect(
+                    this.system.info.systemName,
+                    tokenInfo.username,
+                    token
+                )
+            ),
+            switchMap((res: any) =>
+                this.system.mediaserver.saveCloudSystemCredentials(
+                    res.id,
+                    res.authKey,
+                    res.ownerAccountEmail
+                )
+            )
         ).toPromise();
     }
 
@@ -98,8 +115,10 @@ export class ConnectCloudModalContent implements OnInit {
             return true;
         };
         const successHandler = () => {
-            return this.oauthService.logoutTokens(this.cloudTokens.access_token, this.cloudTokens.refresh_token)
-                .then(() => this.activeModal.close(false));
+            return this.oauthService.logoutTokens(
+                this.cloudTokens.access_token,
+                this.cloudTokens.refresh_token
+            ).then(() => this.activeModal.close(false));
         };
         const errorHandler = () => {};
         const settings = {
@@ -113,7 +132,11 @@ export class ConnectCloudModalContent implements OnInit {
         };
         this.connectProcess = this.processService.createProcess(() => {
             this.connectForm.controls.password.setErrors(undefined);
-            return this.system.mediaserver.loginToken(this.auth.username, this.auth.password, true).toPromise()
+            return this.system.mediaserver.loginToken(
+                this.auth.username,
+                this.auth.password,
+                true
+            ).toPromise()
                 .then(() => this.handleConnectLocalToCloud(this.cloudTokens));
         }, settings, successHandler, errorHandler);
     }
@@ -122,7 +145,8 @@ export class ConnectCloudModalContent implements OnInit {
         this.setupProcess();
         this.setupAuth();
 
-        this.codeSubscription = this.storage.observe('new-code').subscribe((code) => this.handleCode(code));
+        this.codeSubscription = this.storage.observe('new-code')
+            .subscribe((code) => this.handleCode(code));
 
         window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
@@ -130,7 +154,10 @@ export class ConnectCloudModalContent implements OnInit {
     cancel = () => {
         let close = Promise.resolve({});
         if (this.cloudTokens) {
-            close = this.oauthService.logoutTokens(this.cloudTokens.access_token, this.cloudTokens.refresh_token);
+            close = this.oauthService.logoutTokens(
+                this.cloudTokens.access_token,
+                this.cloudTokens.refresh_token
+            );
         }
 
         close.finally(() => this.activeModal.dismiss(true));

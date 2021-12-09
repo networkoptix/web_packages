@@ -1,12 +1,12 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }                from '@ngneat/until-destroy';
+import { Component, Input } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem }                  from '@services/system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxSystem } from '@services/system.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -59,9 +59,13 @@ export class ChangeStorageModalContent {
 
     async deleteAnalyticsDataProcess() {
         try {
-            const { reply: { settings: { metadataStorageChangePolicy } } }  = await this.system.updateOrGetSystemSettings().toPromise();
+            const {
+                reply: { settings: { metadataStorageChangePolicy } }
+            }  = await this.system.updateOrGetSystemSettings().toPromise();
             if (metadataStorageChangePolicy !== 'remove') {
-                await this.system.updateOrGetSystemSettings({ metadataStorageChangePolicy: 'remove' }).toPromise();
+                await this.system.updateOrGetSystemSettings({
+                    metadataStorageChangePolicy: 'remove'
+                }).toPromise();
             }
             return Promise.resolve();
         } catch (error) {
@@ -71,9 +75,13 @@ export class ChangeStorageModalContent {
 
     async keepAnalyticsDataProcess() {
         try {
-            const { reply: { settings: { metadataStorageChangePolicy } } } = await this.system.updateOrGetSystemSettings().toPromise();
+            const {
+                reply: { settings: { metadataStorageChangePolicy } }
+            } = await this.system.updateOrGetSystemSettings().toPromise();
             if (metadataStorageChangePolicy !== 'keep') {
-                await this.system.updateOrGetSystemSettings({ metadataStorageChangePolicy: 'keep' }).toPromise();
+                await this.system.updateOrGetSystemSettings({
+                    metadataStorageChangePolicy: 'keep'
+                }).toPromise();
             }
             return Promise.resolve();
         } catch (error) {

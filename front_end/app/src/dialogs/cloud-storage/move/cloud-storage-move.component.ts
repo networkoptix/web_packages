@@ -1,20 +1,24 @@
-import {
-    Component, Renderer2, ViewChild,
-    Input, OnInit, Injector
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject }           from 'rxjs';
-
-import { DropdownItem }              from '@components/dropdowns/generic/dropdown.component.types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxSystem }                  from '@services/system.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxModalGenericComponent }   from '../../generic/generic.component';
-import * as t from '@services/nx-cloud-api.types';
 import { HttpClient } from '@angular/common/http';
+import {
+    Component,
+    Renderer2,
+    ViewChild,
+    Input,
+    OnInit
+} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject } from 'rxjs';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import * as t from '@services/nx-cloud-api.types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxSystemsService } from '@services/systems.service';
+
+import { NxModalGenericComponent } from '../../generic/generic.component';
 
 @Component({
     selector: 'nx-cloud-storage-move-content',
@@ -57,56 +61,74 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.errorText = '';
     }
 
-    private moveCloudStorage(sourceSystemId: string, destinationSystemId: string) {
-        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/move', {
-            sourceSystemId,
-            destinationSystemId
-        }).toPromise();
+    private moveCloudStorage(
+        sourceSystemId: string,
+        destinationSystemId: string
+    ) {
+        return this.http.post<t.CloudResponse>(
+            this.CONFIG.apiBase + '/storage/move',
+            { sourceSystemId, destinationSystemId }
+        ).toPromise();
     }
 
     ngOnInit() {
         this.system$.subscribe(system => {
-            if (!system || !system.id) return;
+            if (!system || !system.id) {
+                return;
+            }
             this.systemId = system.id;
             this.userEmail = system.currentUserEmail;
             this.systemsService.getMySystems(this.userEmail, this.systemId);
             this.systemsService.systemsSubject.subscribe((systems: any[]) => {
                 // Generate dropdown items
-                this.targetSystems = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth: state }) => ({
-                    value,
-                    state,
-                    name: `<span>${name}</span><span class="${state === 'offline' ? 'text-muted' : ''}"> – ${state}</span>`
-                }));
+                this.targetSystems = systems
+                    .filter(({ id }) => id !== this.systemId)
+                    .map(({ id: value, name, stateOfHealth: state }) => ({
+                        value,
+                        state,
+                        name: `<span>${name}</span><span class="${state === 'offline' ? 'text-muted' : ''}"> – ${state}</span>`
+                    }));
 
                 this.setTargetSystem(this.targetSystems[0]);
                 if (systems && this.targetSystems.length < 2) {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
-                    const { dialogs: { cloudStorage: { noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
+                    const {
+                        dialogs: {
+                            cloudStorage: {
+                                noOtherSystemsError: { message },
+                                moveCloudStorage: { title }
+                            },
+                            buttons: { ok }
+                        }
+                    } = this.LANG;
                     this.genericModal.openConfirm(message?.(), title?.(), ok?.());
                 }
             });
         });
 
         // Move Process
-        this.move = this.processService.createProcess(() => this.moveCloudStorage(this.systemId, this.currentTarget), {
-            errorCodes: {
-                500: () => {
-                    return this.LANG.common.systemServerError?.();
+        this.move = this.processService.createProcess(
+            () => this.moveCloudStorage(this.systemId, this.currentTarget),
+            {
+                errorCodes: {
+                    500: () => {
+                        return this.LANG.common.systemServerError?.();
+                    },
+                    notFound: () => {
+                        return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound?.();
+                    },
+                    cloudInvalidResponse: () => {
+                        return this.LANG.errorCodes.notAuthorized?.();
+                    },
+                    networkConnection: () => {
+                        return this.LANG.errorCodes.networkConnection();
+                    }
                 },
-                notFound: () => {
-                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound?.();
-                },
-                cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized?.();
-                },
-                networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection();
-                }
-            },
-            successMessage: this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
-            errorPrefix: this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
-        }).then(() => {
+                successMessage: this.LANG.dialogs.cloudStorage.moveCloudStorage.success?.(),
+                errorPrefix: this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix?.()
+            }
+        ).then(() => {
             this.updateCallback();
             this.close();
         });
