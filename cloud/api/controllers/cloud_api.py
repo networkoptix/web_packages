@@ -340,7 +340,10 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def merge(request, master_system_id, slave_system_id, headers=None):
-        refresh_token = request.session.get("refresh_token")
+        if hasattr(request, "session"):
+            refresh_token = request.session.get("refresh_token")
+        else:
+            refresh_token = request.get("refresh_token")
         masterToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
         slaveToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
         params = {
