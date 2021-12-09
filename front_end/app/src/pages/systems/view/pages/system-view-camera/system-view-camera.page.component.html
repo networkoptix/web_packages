@@ -17,7 +17,7 @@
     <span class="name">
       {{ camera.name }}
       (<span *ngIf="CONFIG.allowDebugMode" class="transport">{{ selectedTransport$ | async | uppercase }},&nbsp;</span>
-      <span class="quality">{{ (selectedQuality$ | async) || 'Auto' }}</span>)
+      <span class="quality">{{ (LANG.common.resolution[(selectedQuality$ | async)] || LANG.common.resolution.auto)()}}</span>)
     </span>
 
     <div class="buttons">
@@ -46,7 +46,7 @@
 
   <div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
     <div *ngIf="CONFIG.allowDebugMode" class="section transportSelection">
-      <div class="caption">Transport</div>
+      <div class="caption" translate>Transport</div>
       <div class="options" *ngIf="(transports$ | async)?.length else noTransportsAvailable">
         <div *ngFor="let st of transports$ | async" class="option" [ngClass]="{ selected: (selectedTransport$ | async) === st }"
              (click)="selectedTransport = st"><div>{{ st }}</div></div>
@@ -58,11 +58,11 @@
       </ng-template>
     </div>
     <div class="section qualitySelection">
-      <div class="caption">Quality</div>
+      <div class="caption" translate>Quality</div>
       <div class="options" *ngIf="(visibleQualities$ | async)?.length else noQualitiesAvailable">
         <div *ngFor="let q of visibleQualities$ | async" class="option"
              [ngClass]="{ selected: (selectedQuality$ | async) === q.toLowerCase(), divider: (drawQualityDivider$ | async) === q.toLowerCase() }"
-             (click)="selectedQuality = q; settingsShown = false"><div>{{ q }}</div></div>
+             (click)="selectedQuality = q; settingsShown = false"><div>{{ (LANG.common.resolution[q.toLowerCase()])() }}</div></div>
       </div>
       <ng-template #noQualitiesAvailable>
         <div class="options">

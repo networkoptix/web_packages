@@ -11,6 +11,7 @@ import TimelineModule from './submodules/timeline/timeline.module';
 
 import VmsClientRoutingModule from './vms-client-routing.module';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import { CommonModule } from '@angular/common';
     ],
     imports: [
         CommonModule,
+        TranslateModule,
         VmsModule,
         PlaybackModule,
         TimelineModule,

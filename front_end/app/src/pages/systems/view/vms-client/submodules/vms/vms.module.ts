@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
     imports: [
         CommonModule,
         RouterModule,
+        TranslateModule,
         ComponentsModule,
         FormsModule,
         DirectivesModule,
