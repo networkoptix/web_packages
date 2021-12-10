@@ -5,7 +5,7 @@ ${visible}                 /ancestor::nx-checkbox
 ${ADMIN LINK}              //a[@id="admin"]
 ${GENERAL LINK}            //a[@id="general"]
 ${USERS LINK}              //a[@id="users"]
-${SYSTEM SETTINGS FORM}    //form[@id="systemSettingsForm"]
+${SYSTEM SETTINGS FORM}    //form[@name="systemSettingsForm"]
 ${SECURITY FORM}           //form[@id="securitySettingsForm"]
 
 ${ENABLE AUTO DISCOVERY CHECKBOX}     //*[@id="autoDiscoveryEnabled"]
@@ -617,7 +617,7 @@ ${SEARCH CLOSE BUTTON}     ${SEARCH INPUT}/following-sibling::button[contains(@c
 ${SEARCH NOTHING FOUND}    ${NX SEARCH}/following-sibling::div/div[contains(@class, "nx-menu-placeholder") and contains(text(), "${NOTHING FOUND TEXT}")]
 ${MENU SECTION}            //nx-menu//div[contains(@class, "nx-menu-section")]
 ${SEARCHABLE MENU}         ${NX SEARCH}/following-sibling::div[contains(@class, "searchable")]
-${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-results")]//svg-icon
+${SEARCH RESULT ARROW}     ${SEARCHABLE MENU}//div[contains(@class, "search-results")]
 
 ${VIEW SEARCH BOX}                //div[contains(@class, "search-box")]
 ${VIEW SEARCH INPUT}              ${VIEW SEARCH BOX}//input[@placeholder="Search"]

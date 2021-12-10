@@ -74,8 +74,9 @@ Validate Disconnect Form
         ...    ${DISCONNECT FORM CLOSE BUTTON}
         ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
         ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
-        ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
-        ...    ${DISCONNECT PASSWORD INPUT}
+      #    Below web elements commented out since Disconnect form no longer contains password field
+      # ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
+      # ...    ${DISCONNECT PASSWORD INPUT}
         ...    ${DISCONNECT FORM CANCEL BUTTON}
         ...    ${DISCONNECT FORM DISCONNECT BUTTON}
 
@@ -90,7 +91,7 @@ Validate Success Dialog
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
     Click Element    ${SYSTEM NAME}
-    Execute JavaScript    document.getElementById("editable-title").innerHTML = "${new name}";
+    Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
     Press Keys    ${SYSTEM NAME}    ENTER
     Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     Run Keyword If    ${save}    Run Keywords
