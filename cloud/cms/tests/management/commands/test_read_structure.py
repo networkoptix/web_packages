@@ -115,7 +115,7 @@ def test_find_or_add_context_template(db):
     assert context_template.skin == skin
 
 
-class TestFile:
+class FileTest:
     base_dir = 'test_dir/'
 
     def __init__(self, filename=str(uuid4()), content=str(uuid4())):
@@ -144,7 +144,7 @@ def test_read_cms_strings():
         f'{{{cms_string}}}'
         for cms_string in cms_strings)
 
-    with TestFile(content=data) as filename:
+    with FileTest(content=data) as filename:
         read_data, matches = read_cms_strings(filename)
         assert read_data == data
         assert matches == cms_strings
@@ -250,7 +250,7 @@ def test_find_or_add_language(mocker, db):
     language_code = code[:8]
     json_content = json.dumps({'language_name': language_name})
 
-    with TestFile(content=json_content) as json_path:
+    with FileTest(content=json_content) as json_path:
         mock_join = mocker.patch.object(
             os.path, 'join', return_value=json_path)
 
