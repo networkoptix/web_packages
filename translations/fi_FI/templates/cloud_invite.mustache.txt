@@ -9,4 +9,4 @@ Sinut on kutsuttu järjestelmään %CLOUD_NAME%.
 Luo tili osoitteessa %CLOUD_NAME%
 käytä nykyistä sähköpostiosoitettasi ja noudata muita ohjeita.
 
-Rekisteröi tili käyttämällä tätä linkkiä: {{ config.portal_url }}/ register /{{ message.code }}
+Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}

@@ -9,4 +9,4 @@ Du har blitt invitert til %CLOUD_NAME%.
 Vennligst opprett konto på %CLOUD_NAME%
 bruker din nåværende e-postadresse og følg ytterligere instruksjoner.
 
-Registrer din konto ved hjelp av denne lenken: {{ config.portal_url }}/register/{{ message.code }}
+Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}

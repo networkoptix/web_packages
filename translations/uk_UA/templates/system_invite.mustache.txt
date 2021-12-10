@@ -9,5 +9,5 @@
 Вам надано доступ до {{message.system_name}}.
 {{/message.sharer_name}}
 
-Зареєстрація та перегляд системи: {{config.portal_url}}/ register /{{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 

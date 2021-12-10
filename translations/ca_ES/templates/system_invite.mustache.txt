@@ -9,5 +9,5 @@ Us han convidat a unir-vos a %CLOUD_NAME%.
 Us han concedit accés a {{message.system_name}}.
 {{/message.sharer_name}}
 
-Registreu-vos i visualitzeu el sistema: {{config.portal_url}}/register/{{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 

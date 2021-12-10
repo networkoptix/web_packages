@@ -9,4 +9,4 @@ Meghívást kapott a %CLOUD_NAME%-hoz.
 Kérjük, hozzon létre fiókot a %CLOUD_NAME%on
 használja az aktuális e-mail címét, és kövesse a további utasításokat.
 
-Regisztrálja fiókját az alábbi linken: {{ config.portal_url }}/ register /{{ message.code }}
+Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}

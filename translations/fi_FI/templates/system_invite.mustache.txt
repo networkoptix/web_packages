@@ -9,5 +9,5 @@ Sinua pyydetään liittymään %CLOUD_NAME%.
 Sinulle on myönnetty pääsy kohteeseen {{message.system_name}}.
 {{/message.sharer_name}}
 
-Rekisteröi ja tarkastele järjestelmää: {{config.portal_url}}/Register/{{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 

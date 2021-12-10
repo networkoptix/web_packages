@@ -9,5 +9,5 @@ Du är inbjuden att delta i %CLOUD_NAME%.
 Du har fått tillgång till {{message.system_name}}.
 {{/message.sharer_name}}
 
-Registrera och visa systemet: {{config.portal_url}}/ register /{{message.code}}
+Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
 
