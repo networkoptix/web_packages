@@ -22,10 +22,11 @@
                         </div>
                     </div>
                 </form>
-                <!-- <div *ngIf="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">
+                <!-- *ngIf="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle" -->
+                <div>
                     <span *ngIf="selectedUser.isCloud" class="user-name">{{ selectedUser.fullName }}</span>
                 </div>
-                <ng-template #editableTitle>
+                <!-- <ng-template #editableTitle>
                     <div class="d-flex align-items-center">
                         <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
