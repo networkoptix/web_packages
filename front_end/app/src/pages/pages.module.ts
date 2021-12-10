@@ -21,7 +21,8 @@ import { PipesModule }               from '@src/pipes/pipes.module';
 const lazyRoutes: Routes = [
     {
         path: 'doc/developers/api-tool',
-        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
+        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule),
+        canActivate: [AuthGuard]
     },
     {
         path: '',

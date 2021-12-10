@@ -17,9 +17,13 @@ import { NxSwaggerTextareaComponent } from './swagger/swagger-textarea/swagger-t
 
 const appRoutes: Routes = [
     {
+        path: ':route',
+        component: NxAPIToolComponent
+    },
+    {
         path: '',
-        component: NxAPIToolComponent,
-        canActivate: [AuthGuard]
+        redirectTo: 'main',
+        pathMatch: 'full'
     }
 ];
 

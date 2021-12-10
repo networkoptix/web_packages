@@ -3,6 +3,8 @@ import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { isArray } from 'rxjs/internal-compatibility';
 
+import { MenuNode } from '@services/menus.service.types';
+
 import * as uv from './utilConstants';
 
 @Injectable({
@@ -89,6 +91,29 @@ export class NxUtilsService {
             }
             return 0;
         };
+    }
+
+    /**
+     * Pass a function that evaluates a menu node to fulfill a specific condition,
+     * findMenuNode will traverse an array of menuNodes and try to find a node that fulfills the conditionalFunction
+     */
+    static findMenuNode(nodes: MenuNode[], conditionalFunction: (node: MenuNode) => boolean) {
+        let foundNode = null;
+        const findNode = (node: MenuNode) => {
+            if (conditionalFunction(node)) {
+                foundNode = node;
+                return;
+            }
+            for (const childNode of node.nodes) {
+                findNode(childNode);
+            }
+        };
+        for (const rootNode of nodes) {
+            if (!foundNode) {
+                findNode(rootNode);
+            }
+        }
+        return foundNode;
     }
 
     /**

@@ -7,6 +7,7 @@ import {
     OnInit,
     Input
 } from '@angular/core';
+import { QueryParamsHandling } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer, Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,6 +43,7 @@ export class NxDevelopersMenuComponent implements OnInit {
     }>();
     // eslint-disable-next-line lines-between-class-members
     @Output() relatedLinks = new EventEmitter<RelatedLinks>()
+    @Input()  queryParamsOnInternalRoute: QueryParamsHandling = undefined;
     @Input()  searchEnabled = true;
     @Input()  service;
     @Input()  offsetHeight = 0;
@@ -125,7 +127,6 @@ export class NxDevelopersMenuComponent implements OnInit {
     }
 
     toggleOpen(node: MenuNode) {
-        this.handleClick(node, false);
         const getRootNode = (name, nodesToCheck = this.displayedMenuNodes, rootNode: MenuNodeWithParent[] = []) => {
             const checkNode = (currentNode: MenuNodeWithParent) => {
                 const currentNodeName = currentNode.name || currentNode.display_name;
@@ -172,7 +173,8 @@ export class NxDevelopersMenuComponent implements OnInit {
         }
     }
 
-    handleClick(node: MenuNodeWithParent, clearSearch: boolean) {
+    handleClick(node: MenuNodeWithParent, clearSearch = false, toggleOpen = true) {
+        if (toggleOpen) this.toggleOpen(node);
         this.onClick.emit({ node, clearSearch });
     }
 
@@ -241,6 +243,9 @@ export class NxDevelopersMenuComponent implements OnInit {
                 this.menuNodes = this.displayedMenuNodes = menu.nodes;
                 if (this.searchEnabled && this.uriService.queryParams.search && !this.queryChanged) {
                     this.filterMenuItems(this.uriService.queryParams.search);
+                }
+                if (this.service.activeNode) {
+                    this.openNodeAndParents(this.service.activeNode);
                 }
             } else {
                 this.menuNodes = this.displayedMenuNodes =  [];

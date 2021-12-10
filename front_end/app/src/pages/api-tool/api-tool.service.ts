@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, ViewContainerRef } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemWithUserInfo, NxSystemsService } from '@services/systems.service';
@@ -10,7 +10,7 @@ import { NxAccountService } from '@services/account.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { APIDocVersion, MenuStructure } from '@services/nx-config/base-config';
 import {
-    ClickEvent, MenuNodeWithParent
+    ClickEvent, MenuNodeWithParent, NxDevelopersMenuComponent
 } from '@components/developers-menu/developers-menu.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -39,6 +39,8 @@ import type {
     ServerDropdownItem
 } from './api-tool-types';
 import { environment } from '@environments/environment';
+import { NxUriService } from '@services/uri.service';
+import { MenuNode } from '@services/menus.service.types';
 
 /** Provides the currently selected system and server. Also provides the content for the left menu.   */
 @UntilDestroy()
@@ -48,7 +50,7 @@ export class NxAPIToolService {
 
     systems: NxSystemWithUserInfo[];
     systemsDropdown: DropdownItem[] = [];
-    selectedSystem: DropdownItem;
+    _selectedSystem: DropdownItem;
     system: NxSystem;
     systemVersion: Number = 5.0;
     mediaServerUpdating = false;
@@ -62,7 +64,8 @@ export class NxAPIToolService {
     private serverSubscription: Subscription;
 
     APIDropdown: APIDropdownItem[] = [];
-    selectedAPI: APIDropdownItem;
+    _selectedAPI: APIDropdownItem;
+    queryParams: any;
     preventNextChangeDetection = false;
 
     // developers-menu properties
@@ -93,9 +96,15 @@ export class NxAPIToolService {
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private headerService: NxHeaderService,
-        private router: Router) {
+        private _route: ActivatedRoute,
+        private router: Router,
+        private uri: NxUriService) {
         this.CONFIG = configService.getConfig();
         this.systems = this.systemsService.systems || [];
+
+        this._route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
+            this.queryParams = params;
+        });
 
         if (!this.systems.length) {
             this.systemsService.systemsSubject
@@ -121,6 +130,39 @@ export class NxAPIToolService {
 
     get menuNodes() {
         return this.menuSubject.value.nodes;
+    }
+
+    set selectedAPI(version: APIDropdownItem) {
+        const queryParams = this.getQueryParams();
+        queryParams.version = version.name.toLowerCase();
+        this.uri.updateURI(this.uri.getURL(), queryParams);
+        this._selectedAPI = version;
+    }
+
+    get selectedAPI() {
+        return this._selectedAPI;
+    }
+
+    set selectedSystem(system: DropdownItem) {
+        if (!environment.isLocal) {
+            const queryParams = this.getQueryParams();
+            queryParams.system = system.name.toLowerCase();
+            this.uri.updateURI(this.uri.getURL(), queryParams);
+        }
+        this._selectedSystem = system;
+    }
+
+    get selectedSystem() {
+        return this._selectedSystem;
+    }
+
+    getQueryParams = () => {
+        // original queryparams object is not modifiable
+        const queryParams: Params = {};
+        for (const key in this.queryParams) {
+            queryParams[key] = this.queryParams[key];
+        }
+        return queryParams;
     }
 
     isRestAPI(serverID = this.selectedServer.value) {
@@ -182,12 +224,18 @@ export class NxAPIToolService {
                 }
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             });
-        }  else if (cachedSystem) {
+        } else if (cachedSystem) {
             this.system = cachedSystem;
             this.selectedSystem = { value: this.system.id, name: this.makeSystemName(this.system), disabled: false, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' };
         } else {
-            const validSystem: NxSystemWithUserInfo = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
-                ? this.headerService.lastActive : this.systems.find(system => this.systemIsOnline(system));
+            let validSystem: NxSystemWithUserInfo;
+            if (this.queryParams.system) {
+                validSystem = this.systems.find(system => this.systemIsOnline(system) && system.name === this.queryParams.system);
+            }
+            if (!validSystem) {
+                validSystem = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
+                    ? this.headerService.lastActive : this.systems.find(system => this.systemIsOnline(system));
+            }
 
             if (validSystem) {
                 this.system = await this.systemService.createSystem('', validSystem.id);
@@ -259,6 +307,18 @@ export class NxAPIToolService {
             });
     }
 
+    navigateToNodeBasedOnURLPath = () => {
+        const url = decodeURIComponent(decodeURIComponent(this.router.url.split('?')[0]));
+        const urlIsEqual = (node: MenuNode) => {
+            return node.url === url;
+        };
+        const activeNode = NxUtilsService.findMenuNode(this.menuNodes, urlIsEqual);
+        if (activeNode) {
+            this.activeNode = activeNode;
+            this.menuNodes = this.menuSubject.value.nodes; // trigger change detection;
+        }
+    }
+
     private updateMediaServers() {
         this.mediaServerUpdating = true;
         if (this.system.currentServerNotBusy) {
@@ -322,11 +382,20 @@ export class NxAPIToolService {
                                                     disabled: false
                                                 });
                                                 this.addAPIDescription('api_information', this.selectedServer.apiDocFull.info);
-                                                this.selectedAPI = this.APIDropdown[0];
-                                                this.setAPIInfo();
                                                 await this.getLegacyAPIDocs(server.id, mainAPIContent, this.selectedServer.apiDocFull);
-                                                this.menuNodes = mainAPIContent;
-                                                this.activeNode = mainAPIContent[0];
+                                                if (this.queryParams?.version) {
+                                                    const queryVersion = this.APIDropdown.find(item => item.name.toLowerCase() === this.queryParams.version);
+                                                    if (queryVersion) {
+                                                        this.selectedAPI = queryVersion;
+                                                    }
+                                                }
+                                                if (!this.selectedAPI)  this.selectedAPI = this.APIDropdown[0];
+                                                this.setAPIInfo();
+                                                this.menuNodes = this.selectedAPI.menu;
+                                                this.navigateToNodeBasedOnURLPath();
+                                                if (!this.activeNode) {
+                                                    this.activeNode = this.menuNodes[0];
+                                                }
                                             }
                                             this.mediaServerUpdating = false;
                                             this.serversLoaded$.next(true);

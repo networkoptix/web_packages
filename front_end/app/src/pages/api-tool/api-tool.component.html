@@ -16,6 +16,7 @@
                     *ngIf="!APIToolService.outDatedSystem" 
                     [service]="APIToolService" 
                     [offsetHeight]="menuOffset"
+                    [queryParamsOnInternalRoute]="'merge'"
                     (onClick)="APIToolService.handleMenuClick($event)" 
                     #developersMenu> 
                 </nx-developers-menu>

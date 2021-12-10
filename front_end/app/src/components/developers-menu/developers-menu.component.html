@@ -12,6 +12,7 @@
                             'has-state'           : node.indented}"
                 (click)="handleClick(node, true)"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
+                [queryParamsHandling]="queryParamsOnInternalRoute"
                 [queryParams]="{'state': node.state}">
                 <ng-template #linkContent>
                     <span [innerHTML]="(node.display_name || node.name) | safe:'html'"></span>
@@ -22,13 +23,16 @@
                         <ng-container *ngTemplateOutlet="linkContent"></ng-container>
                     </a>
                 </ng-template>
-                <a *ngIf="node.url.startsWith('/'); externalLink" [routerLink]="node.url" [queryParams]="{'state': node.state}">
-                    <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+                <a *ngIf="node.url.startsWith('/'); externalLink"
+                    [routerLink]="node.url" 
+                    [queryParamsHandling]="queryParamsOnInternalRoute"
+                    [queryParams]="{'state': node.state}">
+                        <ng-container *ngTemplateOutlet="linkContent"></ng-container>
                 </a>
             </div>
             <ng-template #noLink>
                 <div class="menu-link"
-                    (click)="toggleOpen(node)"
+                    (click)="handleClick(node)"
                     [ngClass]="{'arrow-padding': node.nodes.length, 
                                 'activated-highlight': highlightedTopNode === (node.name || node.display_name) ||
                                                        service.activeNode && service.activeNode.name === node.name &&

@@ -1,4 +1,5 @@
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
+import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 import type { APIDocVersion } from '../../services/nx-config/base-config';
 import type { APIDoc } from './api-tool-types';
@@ -18,6 +19,29 @@ export const getTagModifier = (type: APIDocVersion) => {
 
 export const addRequestTypeToAPIRoute = (endpoint: string, requestType: string) => {
     return endpoint + ' - ' + requestType.toUpperCase();
+};
+
+const appendBaseAPIToolRoute = (endpoint: string) => {
+    if (environment.isLocal) {
+        return '/api-tool/' + endpoint;
+    }
+    return '/doc/developers/api-tool/' + endpoint;
+};
+
+const URLSAFEREGEX = new RegExp('[^a-zA-Z0-9/_-]');
+
+/**
+ * Example: rest/v1/users becomes rest-v1-users-get
+*/
+export const generateNodeURL = (endpoint :string, requestType: string) => {
+    // Remove chraracters that aren't valid in URL, replace / with -, add request type to the end
+    const modifiedEndpoint = endpoint.slice(1).toLowerCase().split(URLSAFEREGEX).join('').split('/').join('-') + '-' + requestType.toLowerCase();
+    return appendBaseAPIToolRoute(modifiedEndpoint);
+};
+
+export const generateSubMenuNodeURL = (tagName: string) => {
+    const cleanedTagName = tagName.toLowerCase().split(' ').join('-');
+    return appendBaseAPIToolRoute(cleanedTagName);
 };
 
 /**
@@ -99,13 +123,14 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
 export const createMenuContent = (API: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
     if (API.info && API.info.description) {
-        menuContent.push(new MenuNode('api_information', '', 'API Information'));
+        menuContent.push(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
     }
 
     if (Object.keys(API || {}).length) {
         API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
-                menuContent.push(new MenuNode(tag.name, '', tag.name.slice(0, -2)));
+                const url = generateSubMenuNodeURL(tag.name);
+                menuContent.push(new MenuNode(tag.name, url, tag.name.slice(0, -2)));
             }
         });
     }
@@ -118,8 +143,9 @@ export const createMenuContent = (API: APIDoc) => {
                 return node.name === method[1].tags[0];
             });
 
+            const url = generateNodeURL(endpoint, method[0]);
             const apiRouteName = addRequestTypeToAPIRoute(endpoint, method[0]);
-            const methodNode: MenuNodeWithParent = new MenuNode(apiRouteName, '', method[1].summary || apiRouteName);
+            const methodNode: MenuNodeWithParent = new MenuNode(apiRouteName, url, method[1].summary || apiRouteName);
             methodNode.parentNode = tag;
             tag.nodes.push(methodNode);
         });
@@ -140,7 +166,8 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
     if (Object.keys(API || {}).length) {
         API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
-                const tagNode: MenuNodeWithParent = new MenuNode(tag.name, '', tag.name.slice(0, -2));
+                const url = generateSubMenuNodeURL(tag.name);
+                const tagNode: MenuNodeWithParent = new MenuNode(tag.name, url, tag.name.slice(0, -2));
                 // tagNode.parentNode = menuNodes;
                 menuNodes.push(tagNode);
             }
@@ -158,7 +185,8 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
             tag = menuNodes.find(node => node.name === method[1].tags[0]);
             checkMethodResponseDescription(method[1]);
             const methodName = addRequestTypeToAPIRoute(endpoint, method[0]);
-            const methodNode: MenuNodeWithParent = new MenuNode(methodName, '', method[1].summary || methodName);
+            const url = generateNodeURL(endpoint, method[0]);
+            const methodNode: MenuNodeWithParent = new MenuNode(methodName, url, method[1].summary || methodName);
             if (methodNode.name === RTSPRoute) {
                 methodNode.name = CustomRTSPRoute;
             }
