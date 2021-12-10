@@ -83,6 +83,7 @@ Account Suite Tear Down
 
 3. Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page
     [Tags]
+    Skip    No more close button. Login has changed.
     Go To    ${url}/account
     Wait Until Element is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
@@ -157,32 +158,41 @@ Account Suite Tear Down
     Verify in Account Page
     Delete All Text    ${ACCOUNT FIRST NAME}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
-    Click Button    ${ACCOUNT SAVE}  
-    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}  
-    Element Should Be Visible    ${ACCOUNT SAVE}
-    Element Should Be Visible    ${ACCOUNT CANCEL}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+#    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
 
 9. Last name is required
     [Tags]    C41573
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
-    Delete All Text   ${ACCOUNT LAST NAME}
+    Delete All Text    ${ACCOUNT LAST NAME}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
-    Click Button    ${ACCOUNT SAVE}  
-    Wait Until Element Is Visible    ${LAST NAME IS REQUIRED}
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${ACCOUNT SAVE}
-    Element Should Be Visible    ${ACCOUNT CANCEL}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+#    Wait Until Element Is Visible    ${FIRST NAME IS REQUIRED}
 
 10. Change first and last name shows in system
-    [Tags]    C41573    C30655    
+    [Tags]    C41573    C30655
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][liveViewer]    ${password}    button=None
     Verify in Account Page
@@ -224,7 +234,9 @@ Account Suite Tear Down
     Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+#    Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 12. SPACE for last name is not valid
     [Tags]    C41573
@@ -236,7 +248,9 @@ Account Suite Tear Down
     Click Element    ${ACCOUNT SAVE}
     Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
-    Element Should Be Visible    ${LAST NAME IS REQUIRED}
+    Element Should Be Disabled       ${ACCOUNT SAVE}
+    Element Should Be Enabled       ${ACCOUNT CANCEL}
+#    Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 13. Email field is un-editable
     [Tags]    C41573
@@ -396,8 +410,8 @@ Account Suite Tear Down
     Check Language Logged In    ${no perm}    ${password}
 
 18. Should open account page in anonymous state
-    [tags]    anonymous    
-    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
+    [tags]    anonymous    deb
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    Authorization
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
@@ -491,7 +505,7 @@ Account Suite Tear Down
     Validate Log In    ${random email}
 
 25. User can delete their own account
-    [Tags]    C69861        delete_account
+    [Tags]    C69861   delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -501,11 +515,11 @@ Account Suite Tear Down
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
-    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}     exists=${False}
+
 
 26. After account deletion user is deleted from all systems that were shared with this user
-    [Tags]    C69862        delete_account
+    [Tags]    C69862    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}
     Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}
@@ -518,8 +532,7 @@ Account Suite Tear Down
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${password}   validate=${False}
-    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${random email}    ${password}   validate=${False}    exists=${False}
     Log In    ${server 1}[owner]    ${password}    button=None
     Go To   ${url}/systems/${server 1}[cloud id]
     Go to Users List
@@ -537,7 +550,7 @@ Account Suite Tear Down
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
 27. After account deletion user can create account with the same email again
-    [Tags]    C69864        delete_account
+    [Tags]    C69864    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -547,8 +560,7 @@ Account Suite Tear Down
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out
-    Log In    ${random email}    ${password}    validate=${False}
-    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${random email}    ${password}    validate=${False}   exists=${False}
     
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    

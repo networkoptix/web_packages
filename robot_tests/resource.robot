@@ -107,12 +107,12 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}
     ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
 
 Log In Cloud
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     IF    '${validate}' == 'True'
@@ -124,11 +124,16 @@ Log In Cloud
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
     Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element Is Visible    ${PASSWORD INPUT}
-    Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
-    Sleep    1
-    Wait Until Element Is Visible    ${LOG IN BUTTON}
-    Click Button    ${LOG IN BUTTON}
+    IF    ${exists}
+        Wait Until Element Is Visible    ${PASSWORD INPUT}
+        Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
+        Sleep    1
+        Wait Until Element Is Visible    ${LOG IN BUTTON}
+        Click Button    ${LOG IN BUTTON}
+    ELSE
+        Wait Until Elements Are Visible    ${ACCOUNT DOES NOT EXIST}    ${YOU CAN CREATE AN ACCOUNT}
+    END
+
     IF    ${validate} == ${True}
         Validate Log In    ${email}    password=${password}
     END
@@ -189,8 +194,7 @@ Validate Log In
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}      validate=False     button=${button}
-    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
@@ -1150,7 +1154,7 @@ Delete All Text
     ${text}=   Get Text    ${input}
     ${value}=   Get Element Attribute    ${input}    value
     ${innertext}=    Get Element Attribute    ${input}    innertext
-    IF    '${text}' == '${None}'
+    IF    '${text}' == '${None}' or '${text}' == '${Empty}'
         IF    '${value}' == '${None}'
             ${text} =   Set Variable    ${innertext}
         ELSE

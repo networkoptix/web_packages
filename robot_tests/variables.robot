@@ -47,6 +47,8 @@ ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='reme
 ${FORGOT PASSWORD}                    //nx-authorize-component//button/span[text()='${FORGOT PASSWORD TEXT}']/..
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
 ${ACCOUNT NOT FOUND}                  //nx-authorize-component//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
+${ACCOUNT DOES NOT EXIST}             //nx-authorize-component//p[contains(text(),'${ACCOUNT DOES NOT EXIST TEXT}')]
+${YOU CAN CREATE AN ACCOUNT}          //nx-authorize-component//p[contains(text(),'${YOU CAN CREATE ACCOUNT TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
 ${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
 ${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST}"]
