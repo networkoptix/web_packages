@@ -170,6 +170,8 @@ export class NxOverlayModalComponent implements OnInit {
                 ) {
                     this.system.stopPoll();
                 }
+
+                this.timeoutUntilRefresh$.next(5);
                 this.refresh$.next('refresh');
             });
     }
