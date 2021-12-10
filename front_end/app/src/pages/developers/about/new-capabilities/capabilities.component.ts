@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { ErrorStateManager } from '../error-state/error-state-manager';
-import { AboutNode } from '../about.component';
 import { WINDOW } from '@services/window-provider';
+
+import { AboutNode } from '../about.component';
+import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @Component({
     selector: 'nx-new-capabilities',
@@ -19,7 +21,10 @@ export class NxNewCapabilitiesComponent implements OnInit {
         height: '76'
     }
 
-    constructor(configService: NxConfigService,  @Inject(WINDOW) private window: Window) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window
+    ) {
         this.CONFIG = configService.config;
         this.errorManager = new ErrorStateManager(this.window);
     }

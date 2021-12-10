@@ -1,20 +1,22 @@
-import { NgModule }                      from '@angular/core';
-import { CommonModule }                  from '@angular/common';
-import { RouterModule, Routes }          from '@angular/router';
-import { FormsModule }                   from '@angular/forms';
-import { TranslateModule }               from '@ngx-translate/core';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsModule }         from '@components/components.module';
-import { DirectivesModule }         from '@directives/directives.module';
-import { PipesModule }              from '@src/pipes/pipes.module';
-import { NxAboutModule }            from './about/about.module';
-import { MenuModule }               from '@src/menu';
-import { NxAboutComponent }         from './about/about.component';
-import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { MenuModule } from '@src/menu';
+import { PipesModule } from '@src/pipes/pipes.module';
+import { DevelopersGuard } from '@src/routeGuards';
+
+import { Nx404Component } from '../404/404.component';
+
+import { NxAboutComponent } from './about/about.component';
+import { NxAboutModule } from './about/about.module';
 import { NxDevToolsComponent } from './dev-tools/dev-tools.component';
-import { DevelopersGuard }          from '@src/routeGuards';
-import { Nx404Component }           from '../404/404.component';
+import { NxKnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 
 const appRoutes: Routes = [
     {

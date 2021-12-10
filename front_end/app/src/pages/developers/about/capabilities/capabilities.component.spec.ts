@@ -1,18 +1,20 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxCapabilitiesComponent } from './capabilities.component';
 import { WINDOW } from '@services/window-provider';
-import { capabilitiesNode }   from '../../../../_mocks/knowledge_base_landing.mock';
-import { HelperMockProvider } from '../../../../_mocks/helpers.test';
-import { CommonModule }       from '@angular/common';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 import { NxSafePipe } from '@src/pipes/nx-safe';
-import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { HelperMockProvider } from '../../../../_mocks/helpers.test';
+import { capabilitiesNode } from '../../../../_mocks/knowledge_base_landing.mock';
+
+import { NxCapabilitiesComponent } from './capabilities.component';
 
 // Disable for now until slowdown can be fixed
 xdescribe('NxCapabilitiesComponent', () => {

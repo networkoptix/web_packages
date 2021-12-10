@@ -1,18 +1,20 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxGetStartedComponent } from './get-started.component';
 import { WINDOW } from '@services/window-provider';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+
+import { HelperMockProvider } from '../../../../_mocks/helpers.test';
 import {
     routeLandingMock,
     getStartedNode
-}                             from '../../../../_mocks/knowledge_base_landing.mock';
-import { HelperMockProvider } from '../../../../_mocks/helpers.test';
-import { Router }             from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { RouterLinkDirectiveStub } from '@src/_testing';
+} from '../../../../_mocks/knowledge_base_landing.mock';
+
+import { NxGetStartedComponent } from './get-started.component';
 
 describe('NxGetStartedComponent', () => {
     const stepToTest = 1;

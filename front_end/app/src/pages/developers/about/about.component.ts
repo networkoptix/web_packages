@@ -1,19 +1,18 @@
-/* eslint-disable camelcase */
-import { Component }                                from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router }    from '@angular/router';
-import { BehaviorSubject, SubscriptionLike }        from 'rxjs';
-import { filter, tap }                              from 'rxjs/operators';
-import { UntilDestroy, untilDestroyed }             from '@ngneat/until-destroy';
+import { Component } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 
-import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
-import { NxHeaderService }                      from '@services/nx-header.service';
-import { IConfig, NxConfigService }             from '@services/nx-config';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxMenusService }                       from '@services/menus.service';
-import { NxPageService }                        from '@services/page.service';
-import { NxAccountService, Account }            from '@services/account.service';
-import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';
-import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 
 export enum AboutTemplates {
     INTRO='intro',
@@ -217,7 +216,9 @@ export class NxAboutComponent {
             }
         ];
         this.ribbonService.show(
-            state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon(),
+            state
+                ? this.LANG.ribbon.integration.previewRibbon()
+                : this.LANG.ribbon.integration.publishedRibbon(),
             ribbonActions
         );
     }

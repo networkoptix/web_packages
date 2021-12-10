@@ -1,11 +1,12 @@
-import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
-import { UntilDestroy }     from '@ngneat/until-destroy';
+import { Component, Input, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { AboutNode } from '../about.component';
 import { WINDOW } from '@services/window-provider';
+
+import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
-import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

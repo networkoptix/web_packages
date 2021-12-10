@@ -1,27 +1,29 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxIntegrationsComponent } from './integrations.component';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
-import {
-    integrationsNode
-} from '../../../../_mocks/knowledge_base_landing.mock';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+import { PipesModule } from '@src/pipes/pipes.module';
+
 import {
     getMockTranslations,
     HelperMockProvider,
     sanitizerMock
 } from '../../../../_mocks/helpers.test';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { DomSanitizer } from '@angular/platform-browser';
-import { BehaviorSubject } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { PipesModule } from '@src/pipes/pipes.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterLinkDirectiveStub } from '@src/_testing';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+    integrationsNode
+} from '../../../../_mocks/knowledge_base_landing.mock';
+
+import { NxIntegrationsComponent } from './integrations.component';
 
 describe('NxIntegrationsComponent', () => {
     let component: NxIntegrationsComponent;

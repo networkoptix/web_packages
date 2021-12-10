@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
 import { NxAccountService } from '@services/account.service';
+
 import { ErrorStateStructure } from '../error-state/error-state-manager';
 
 @Component({

@@ -1,15 +1,18 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
+import { DirectivesModule } from '@directives/directives.module';
+import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxSupportComponent } from './support.component';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import {
     getMockTranslations,
@@ -17,13 +20,12 @@ import {
     sanitizerMock
 } from '@src/_mocks/helpers.test';
 import { supportNode } from '@src/_mocks/knowledge_base_landing.mock';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { DirectivesModule } from '@directives/directives.module';
 import { RouterLinkDirectiveStub } from '@src/_testing';
+
 import { ErrorStateManager } from '../error-state/error-state-manager';
 import { NxErrorStateComponent } from '../error-state/error-state.component';
-import { NxAccountService } from '@services/account.service';
-import { RouterTestingModule } from '@angular/router/testing';
+
+import { NxSupportComponent } from './support.component';
 
 describe('NxSupportComponent', () => {
     let component: NxSupportComponent;

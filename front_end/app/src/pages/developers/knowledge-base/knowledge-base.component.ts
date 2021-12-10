@@ -1,30 +1,52 @@
 /* eslint-disable camelcase */
 import {
-    Component, OnInit, Renderer2, ViewChild, ElementRef, Inject, OnDestroy
-}                                                                   from '@angular/core';
+    Component,
+    OnInit,
+    Renderer2,
+    ViewChild,
+    ElementRef,
+    Inject,
+    OnDestroy
+} from '@angular/core';
 import {
-    ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router
-}                                                                   from '@angular/router';
-import { WINDOW }                                                   from '@services/window-provider';
-import { UntilDestroy, untilDestroyed }                             from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest, EMPTY, Observable, of }    from 'rxjs';
-import { switchMap, tap, delay, map, filter, startWith, catchError }            from 'rxjs/operators';
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    NavigationEnd,
+    Router
+} from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import {
+    switchMap,
+    tap,
+    delay,
+    map,
+    filter,
+    startWith,
+    catchError
+} from 'rxjs/operators';
 
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxCloudApiService, DOC_TYPES }         from '@services/nx-cloud-api';
-import { NxHeaderService }                      from '@services/nx-header.service';
-import { MenuNode }                             from '@services/menus.service.types';
-import { ClickEvent, MenuNodeWithParent, RelatedLinks }     from '@components/developers-menu/developers-menu.component';
-import { SearchFilter }                         from '@components/search/search.component';
-import { NxRibbonService, RibbonActionInput }   from '@components/ribbon';
-import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { NxProcessService, Process }            from '@services/process.service';
-import { NxUriService }                         from '@services/uri.service';
-import { NxPageService }                        from '@services/page.service';
-import { NxAppStateService }                    from '@services/nx-app-state.service';
-import { NxKnowledgebaseService }               from './knowledge-base.service';
-import { NxUtilsService }                       from '@services/utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import {
+    ClickEvent,
+    MenuNodeWithParent,
+    RelatedLinks
+} from '@components/developers-menu/developers-menu.component';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { SearchFilter } from '@components/search/search.component';
+import { MenuNode } from '@services/menus.service.types';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
+
+import { NxKnowledgebaseService } from './knowledge-base.service';
 
 export enum CardClasses {
     NORMAL='text',
@@ -62,7 +84,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     filterRelatedLinks([assetId, relatedLinks]: [string, RelatedLinks]) {
         if (this.kbService.menuName) {
             if (relatedLinks.type === 'next') {
-                const currentIndex = relatedLinks.nodes.findIndex(({ asset_id: id }) => id === assetId);
+                const currentIndex = relatedLinks.nodes
+                    .findIndex(({ asset_id: id }) => id === assetId);
                 if (currentIndex === (relatedLinks.nodes.length - 1)) {
                     return [];
                 } else {
@@ -111,7 +134,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     private updateSearchResults = (results) => {
-        this.searchResults$.next([...this.searchResults$.value, ...this.parseResults(results)]);
+        this.searchResults$.next([
+            ...this.searchResults$.value,
+            ...this.parseResults(results)
+        ]);
         this.loadingNext = false;
     }
 
@@ -126,13 +152,21 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     fetchSearchHandler({ query, page }) {
-        return this.cloudApi.documentationInstantSearch(this.route.snapshot.paramMap.get(
-            'kb-name'),  query, { page }
+        return this.cloudApi.documentationInstantSearch(
+            this.route.snapshot.paramMap.get('kb-name'),  query, { page }
         ).pipe(
             catchError(err => {
-                console.error(err.message === 'Instant search feature not enabled' ? err : new Error('Error using instance search fallback to legacy search'));
+                console.error(
+                    err.message === 'Instant search feature not enabled'
+                        ? err
+                        : new Error(
+                            'Error using instance search fallback to legacy search'
+                        )
+                );
                 return this.cloudApi.getDocumentation(
-                    this.kbService.menuNameSubject.value, DOC_TYPES.knowledgebase, { query, page }
+                    this.kbService.menuNameSubject.value,
+                    DOC_TYPES.knowledgebase,
+                    { query, page }
                 ).pipe(
                     delay(this.CONFIG.search.debounceTime)
                 );
@@ -164,21 +198,46 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         if (this.kbService.contentAssetId) {
             return;
         }
-        this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, assetId, state).pipe(untilDestroyed(this)).subscribe();
+        this.cloudApi.getDocumentation(
+            this.kbService.menuName,
+            DOC_TYPES.knowledgebase,
+            assetId,
+            state
+        ).pipe(untilDestroyed(this)).subscribe();
     }
 
     parseResults({ docs }) {
-        const processLegacySearch = ({ snippets, title, titleMatchStart, titleMatchEnd, doc_id: docId, shortDescription }) => {
-            const { content = '', matchStart = 0, matchEnd = 0 } = snippets?.length ? snippets[0] : {};
+        const processLegacySearch = ({
+            snippets,
+            title,
+            titleMatchStart,
+            titleMatchEnd,
+            doc_id: docId,
+            shortDescription
+        }) => {
+            const {
+                content = '',
+                matchStart = 0,
+                matchEnd = 0
+            } = snippets?.length ? snippets[0] : {};
             return {
                 docId,
-                snippet: content ? NxUtilsService.highlight(content, matchStart, matchEnd) : shortDescription,
-                title: NxUtilsService.highlight(title, titleMatchStart, titleMatchEnd)
+                snippet: content
+                    ? NxUtilsService.highlight(content, matchStart, matchEnd)
+                    : shortDescription,
+                title: NxUtilsService.highlight(
+                    title,
+                    titleMatchStart,
+                    titleMatchEnd
+                )
             };
         };
 
-        const processInstantSearch = ({ id: docId, title, body: snippet }) => ({ docId, title, snippet });
-        return (docs || []).map(doc => (doc.snippets ? processLegacySearch : processInstantSearch)(doc));
+        const processInstantSearch =
+            ({ id: docId, title, body: snippet }) => ({ docId, title, snippet });
+        return (docs || []).map(doc =>
+            (doc.snippets ? processLegacySearch : processInstantSearch)(doc)
+        );
     }
 
     showRibbon(id, state, reviewId?) {
@@ -186,12 +245,18 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             {
                 type: 'link',
                 text: this.LANG.ribbon.integration.backToEditText,
-                value: this.CONFIG.integration.adminLink.replace('%ID%', id) + this.router.url.split('?')[0] + encodeURIComponent('?state=draft'),
+                value: this.CONFIG.integration.adminLink.replace('%ID%', id) +
+                    this.router.url.split('?')[0] +
+                    encodeURIComponent('?state=draft'),
                 external: true
             }
         ];
-        const message = state ? this.LANG.ribbon.integration.previewRibbon() : this.LANG.ribbon.integration.publishedRibbon();
-        const ribbonActions = reviewId ? this.addReviewActions(reviewId, draftActions) : draftActions;
+        const message = state
+            ? this.LANG.ribbon.integration.previewRibbon()
+            : this.LANG.ribbon.integration.publishedRibbon();
+        const ribbonActions = reviewId
+            ? this.addReviewActions(reviewId, draftActions)
+            : draftActions;
         this.ribbonService.show(
             message,
             ribbonActions
@@ -266,22 +331,43 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             if (!this.kbService.menuName && !this.kbService.activeAssetId) {
                 this.pageService.show404();
             }
-            return this.cloudApi.getDocumentation(this.kbService.menuName, DOC_TYPES.knowledgebase, this.kbService.activeAssetId, state)
-                .pipe(
-                    tap(this.renderDoc(state))
-                );
+            return this.cloudApi.getDocumentation(
+                this.kbService.menuName,
+                DOC_TYPES.knowledgebase,
+                this.kbService.activeAssetId,
+                state
+            ).pipe(
+                tap(this.renderDoc(state))
+            );
         }
     }
 
-    private renderDoc = (state) => ({ title: originalTitle, blocks, contentHTML, script, shortDescription, reviewId }) => {
-        const title = originalTitle ? `<h2>${originalTitle}</h2>` : originalTitle;
-        if (state || this.kbService.account?.is_superuser) {
-            this.showRibbon(this.kbService.activeAssetId, state, reviewId);
+    private renderDoc = (state) =>
+        ({
+            title: originalTitle,
+            blocks,
+            contentHTML,
+            script,
+            shortDescription,
+            reviewId
+        }) => {
+            const title = originalTitle
+                ? `<h2>${originalTitle}</h2>`
+                : originalTitle;
+            if (state || this.kbService.account?.is_superuser) {
+                this.showRibbon(this.kbService.activeAssetId, state, reviewId);
+            }
+            this.updatePageNode(
+                originalTitle,
+                shortDescription,
+                title,
+                contentHTML,
+                blocks,
+                script
+            );
+            this.loading = false;
+            setTimeout(this.addCustomScripts);
         }
-        this.updatePageNode(originalTitle, shortDescription, title, contentHTML, blocks, script);
-        this.loading = false;
-        setTimeout(this.addCustomScripts);
-    }
 
     private addCustomScripts = () => {
         Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
@@ -305,7 +391,14 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return this.getFirstDoc();
     }
 
-    private updatePageNode(originalTitle: any, shortDescription: any, title: any, contentHTML: any, blocks: any, script: any) {
+    private updatePageNode(
+        originalTitle: any,
+        shortDescription: any,
+        title: any,
+        contentHTML: any,
+        blocks: any,
+        script: any
+    ) {
         this.search = { ...this.search };
         this.pageService.pageTitle = originalTitle;
         this.pageService.pageDescription = shortDescription;
@@ -314,14 +407,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.kbService.activeAssetId,
             contentHTML,
             CardClasses.NORMAL,
-            (blocks || []).map(({ contentHTML, title, type }) => {
-                return KnowledgeNode.normalHeader(
-                    title,
-                    '',
-                    contentHTML,
-                    type
-                );
-            }),
+            (blocks || []).map(({ contentHTML, title, type }) =>
+                KnowledgeNode.normalHeader(title, '', contentHTML, type)
+            ),
             script
         );
     }
@@ -330,14 +418,29 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const assetParam = this.route.snapshot.paramMap.get('level1');
         const assetId = assetParam && parseInt(assetParam.split('-')[0]);
 
-        const newAssetId = assetId || this.headerService.currentLocation.assetId || firstNode?.asset_id || this.kbService.contentAssetId;
+        const newAssetId = assetId ||
+            this.headerService.currentLocation.assetId ||
+            firstNode?.asset_id ||
+            this.kbService.contentAssetId;
         this.searchQuery$.next({ query: this.route.snapshot.queryParams.search });
         let state = this.route.snapshot.queryParamMap.get('state');
-        if (!this.kbService.contentAssetId && !state && newAssetId === firstNode.asset_id && !assetId) {
+        if (
+            !this.kbService.contentAssetId &&
+            !state &&
+            newAssetId === firstNode.asset_id &&
+            !assetId
+        ) {
             state = firstNode.state;
         }
-        if (newAssetId && !this.route.snapshot.paramMap.get('level1') && !this.kbService.contentAssetId) {
-            this.router.navigate(['docs', this.kbService.basePath, this.kbService.kbName, newAssetId], { replaceUrl: true, queryParams: { state: state } });
+        if (
+            newAssetId &&
+            !this.route.snapshot.paramMap.get('level1') &&
+            !this.kbService.contentAssetId
+        ) {
+            this.router.navigate(
+                ['docs', this.kbService.basePath, this.kbService.kbName, newAssetId],
+                { replaceUrl: true, queryParams: { state: state } }
+            );
         }
 
         this.kbService.activeAssetState = state;
@@ -350,7 +453,8 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         while (!snapshot.paramMap.get('kb-name')) {
             snapshot = snapshot.parent;
         }
-        this.kbService.kbName = snapshot.paramMap.get('kb-name') || this.kbService.kbName;
+        this.kbService.kbName =
+            snapshot.paramMap.get('kb-name') || this.kbService.kbName;
         while (!snapshot.paramMap.get('name')) {
             snapshot = snapshot.parent;
         }
@@ -359,13 +463,20 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return <[ActivatedRouteSnapshot, boolean]>[snapshot, isContentType];
     }
 
-    private updateSelectedMenu(snapshot: ActivatedRouteSnapshot, isContentType: boolean) {
-        const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
+    private updateSelectedMenu(
+        snapshot: ActivatedRouteSnapshot,
+        isContentType: boolean
+    ) {
+        const menuName = this.CONFIG
+            .docMenuMap[this.kbService.basePath]
+            ?.[this.kbService.kbName];
         if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
             this.kbService.menuName = menuName;
         }
         if (!this.kbService.menuName) {
-            const assetParam = !isContentType ? snapshot.paramMap.get('level1') : snapshot.paramMap.get('kb-name');
+            const assetParam = !isContentType
+                ? snapshot.paramMap.get('level1')
+                : snapshot.paramMap.get('kb-name');
             if (assetParam) {
                 const assetId = parseInt(assetParam.split('-')[0]);
                 if (Number.isInteger(assetId)) {
@@ -402,7 +513,13 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     private getFirstDoc = () => {
         const traverseToFirst = (
             [first, ...remaining]: MenuNode[] = []
-        ): MenuNode => !first ? undefined : ((first.asset_id && first) || traverseToFirst([...remaining, ...first.nodes]));
+        ): MenuNode =>
+            !first
+                ? undefined
+                : (
+                    (first.asset_id && first) ||
+                    traverseToFirst([...remaining, ...first.nodes])
+                );
 
         if (this.kbService.contentAssetId) {
             return of(undefined);
@@ -416,10 +533,11 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     ngOnInit() {
-        this.relatedLinksFiltered$ = combineLatest([this.kbService.activeAssetIdSubject, this.relatedLinks$]).pipe(
-            map(latest => {
-                return this.filterRelatedLinks(latest);
-            })
+        this.relatedLinksFiltered$ = combineLatest([
+            this.kbService.activeAssetIdSubject,
+            this.relatedLinks$
+        ]).pipe(
+            map(latest =>  this.filterRelatedLinks(latest))
         );
 
         this.setupRouteSubscription();
@@ -429,7 +547,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 this.searchMode = !!query;
                 this.searchLoading = this.searchMode;
                 this.currentSearchResultPage = 1;
-                return this.fetchSearchHandler({ query, page: this.currentSearchResultPage });
+                return this.fetchSearchHandler({
+                    query,
+                    page: this.currentSearchResultPage
+                });
             }),
             untilDestroyed(this)
         ).subscribe((results) => {

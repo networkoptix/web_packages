@@ -1,29 +1,31 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { of } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { CommonModule } from '@angular/common';
 
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxDevToolsComponent } from './dev-tools.component';
+import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
+import { RouterLinkDirectiveStub } from '@src/_testing';
+
+import { HelperMockProvider } from '../../../_mocks/helpers.test';
 import {
     devToolsNode,
     docMenuMap
-}                             from '../../../_mocks/knowledge_base_landing.mock';
-import { HelperMockProvider } from '../../../_mocks/helpers.test';
-import { ActivatedRoute }     from '@angular/router';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxHeaderService } from '@services/nx-header.service';
-import { NxAccountService } from '@services/account.service';
-import { RouterLinkDirectiveStub } from '@src/_testing';
-import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
+} from '../../../_mocks/knowledge_base_landing.mock';
+
+import { NxDevToolsComponent } from './dev-tools.component';
 
 describe('NxDevToolsComponent', () => {
     let component: NxDevToolsComponent;

@@ -1,6 +1,8 @@
 import { Component, Inject, Input } from '@angular/core';
-import { WINDOW } from '@services/window-provider';
+
 import { IConfig, NxConfigService } from '@services/nx-config';
+import { WINDOW } from '@services/window-provider';
+
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
@@ -26,9 +28,12 @@ export class NxCapabilitiesComponent {
     ngOnInit() {
         this.capabilitiesNode = {
             ...this.capabilitiesNode,
-            nodes: this.capabilitiesNode.nodes.map(({
-                url, assetId, ...capability
-            }) => ({ ...capability, assetId, url: url || (assetId ? `/docs/content/${assetId}` : '') }))
+            nodes: this.capabilitiesNode.nodes
+                .map(({ url, assetId, ...capability }) => ({
+                    ...capability,
+                    assetId,
+                    url: url || (assetId ? `/docs/content/${assetId}` : '')
+                }))
         };
         const capabilitiesConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title', 'nodes'],
