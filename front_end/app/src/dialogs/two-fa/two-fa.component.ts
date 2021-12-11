@@ -370,11 +370,26 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             return this.cloudApiService.changePassword(this.newPassword, this.oldPassword, this.tfaCode);
         }, {
             ignoreUnauthorized: true,
-            ignoreError: true
+            ignoreError: true,
+            errorCodes: {
+                accountBlocked: () => {
+                    this.accountBlocked = true;
+                    this.codeForm.controls.tfaCodeInput.setErrors({ nx_account_blocked: true });
+                },
+                missingParam: () => {
+                    this.codeForm.controls.tfaCodeInput.markAsTouched();
+                    this.codeForm.controls.tfaCodeInput.setErrors({ required: true });
+                    this.renderer.selectRootElement('#tfaCodeInput').focus();
+                },
+                notAuthorized: () => {
+                    this.notAuthorized = true;
+                    this.codeForm.controls.tfaCodeInput.markAsTouched();
+                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+                    this.renderer.selectRootElement('#tfaCodeInput').focus();
+                }
+            }
         }, (res) => {
             this.activeModal.close(res);
-        }, (err) => {
-            this.activeModal.close(err);
         });
     }
 

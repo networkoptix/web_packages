@@ -12,14 +12,21 @@
 
     <div class="modal-body">
         <form #codeForm="ngForm" name="loginForm" novalidate>
-            <div class="form-group mt-3">
+            <div class="form-group">
                 <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
-                <input type="text" class="form-control"
+                <input type="text" class="form-control" #tfaCodeInputChangePassword="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
                        autocomplete="off"
                        maxlength="255"
                        required nxFocusMe>
+                <ng-container *ngIf="tfaCodeInputChangePassword.invalid">
+                    <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                    <div class="input-error"
+                         *ngIf="!tfaCodeInputChangePassword.pristine && tfaCodeInputChangePassword.errors?.required"
+                         [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+                </ng-container>
             </div>
         </form>
     </div>
@@ -136,10 +143,7 @@
                         {{LANG.passwordRequirements.requiredMessage()}}</div>
                 </ng-container>
             </div>
-
         </form>
-
-
     </div>
 
     <div class="modal-footer justify-end">
@@ -218,7 +222,7 @@
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputWizardCode.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
                     <div class="input-error" *ngIf="!tfaCodeInputWizardCode.pristine && tfaCodeInputWizardCode.errors?.required"
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
                 </ng-container>
@@ -309,7 +313,7 @@
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputCodeForm.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
                     <div class="input-error"
                          *ngIf="tfaCodeInputCodeForm.touched && tfaCodeInputCodeForm.errors?.required"
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
@@ -356,7 +360,7 @@
                        required nxFocusMe>
                 <ng-container *ngIf="tfaCodeInputDisable.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-                    <div class="input-error" *ngIf="notAuthorized" translate>Wrong verification code</div>
+                    <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
                     <div class="input-error" *ngIf="!tfaCodeInputDisable.pristine && tfaCodeInputDisable.errors?.required"
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
                 </ng-container>
