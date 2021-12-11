@@ -118,7 +118,6 @@ export class NxSystemUsersComponent implements OnInit {
             .params
             .subscribe(params => {
                 if (params.userId) {
-                    this.applyService.resetFormWatchers();
                     this.paramUser = params.userId;
                     const qmi = this.paramUser.indexOf('?'); // qmi stands for "question mark index"
                     if (qmi > -1) {
@@ -274,6 +273,8 @@ export class NxSystemUsersComponent implements OnInit {
                     });
                 return;
             }
+
+            this.applyService.resetFormWatchers();
 
             this.passwordChanged = false;
 
