@@ -150,8 +150,6 @@ authorization-unit-test:
     reports:
       junit: front_end/reports/*.xml
       cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
-  # Until all tests are passing reliably
-  allow_failure: true
 
 webadmin:
   stage: build
