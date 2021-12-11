@@ -1,10 +1,17 @@
 import {
-    Component, Input, OnChanges,
+    Component,
+    Input,
+    OnChanges,
     ViewEncapsulation
-}                                          from '@angular/core';
-import { NxHealthService }                 from '../../health.service';
-import { NxConfigService, IConfig }        from '@services/nx-config';
-import { InfoBlockLine, InfoBlockSection } from '@src/components/info-block/info-block.component';
+} from '@angular/core';
+
+import { NxConfigService, IConfig } from '@services/nx-config';
+import {
+    InfoBlockLine,
+    InfoBlockSection
+} from '@src/components/info-block/info-block.component';
+
+import { NxHealthService } from '../../health.service';
 
 @Component({
     selector: 'nx-single-entity',
@@ -23,7 +30,7 @@ export class NxSingleEntityComponent implements OnChanges {
 
     constructor(
         private configService: NxConfigService,
-            private healthService: NxHealthService
+        private healthService: NxHealthService
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -39,11 +46,15 @@ export class NxSingleEntityComponent implements OnChanges {
             this.sections = paramGroups
                 .reduce((reduced: SectionLookup, { id: paramGroupId, values }) => {
                     if (!this.entity[paramGroupId]) {
-                        this.copyParams.values = this.copyParams.values.filter(params => params.id !== paramGroupId);
+                        this.copyParams.values = this.copyParams.values
+                            .filter(params => params.id !== paramGroupId);
                         return reduced;
                     }
                     const lines = values.map(({ id, name }) => {
-                        const param = this.entity[paramGroupId][id] && this.entity[paramGroupId][id] || {};
+                        const param = (
+                            this.entity[paramGroupId][id] &&
+                            this.entity[paramGroupId][id]
+                        ) || {};
                         return new InfoBlockLine(
                             name || id,
                             param.text || '_',
@@ -52,7 +63,11 @@ export class NxSingleEntityComponent implements OnChanges {
                         );
                     });
                     const maxParamWidthPercentage = 42;
-                    reduced[paramGroupId] = [new InfoBlockSection(lines, undefined, maxParamWidthPercentage)];
+                    reduced[paramGroupId] = [new InfoBlockSection(
+                        lines,
+                        undefined,
+                        maxParamWidthPercentage
+                    )];
                     return reduced;
                 }, {});
         }

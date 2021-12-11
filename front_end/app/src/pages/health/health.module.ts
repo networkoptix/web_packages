@@ -1,25 +1,32 @@
-import { NgModule }               from '@angular/core';
-import { CommonModule }           from '@angular/common';
-import { RouterModule, Routes }   from '@angular/router';
-import { FormsModule }            from '@angular/forms';
-import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }        from '@ngx-translate/core';
-import { AngularSvgIconModule }   from 'angular-svg-icon';
-import { NgxFileDropModule }      from 'ngx-file-drop';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
-import { MenuModule }             from '@src/menu';
-import { ComponentsModule }       from '@components/components.module';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { MenuModule } from '@src/menu';
+import { PipesModule } from '@src/pipes/pipes.module';
 import { AuthGuard, SystemGuard } from '@src/routeGuards';
-import { PipesModule }            from '@src/pipes/pipes.module';
+
+import { NxHealthLayoutService } from './health-layout.service';
 
 import {
-    NxHealthComponent, NxReportViewerComponent, NxSystemAlertsComponent,
-    NxSystemMetricsComponent, NxDynamicTableComponent,
-    NxDynamicTablePanelComponent, NxSingleEntityComponent,
-    NxImageSectionComponent, NxSystemAlertCardComponent, NxUpdateInfoComponent
-}                                  from './';
-import { DirectivesModule }        from '@directives/directives.module';
-import { NxHealthLayoutService }   from './health-layout.service';
+    NxHealthComponent,
+    NxReportViewerComponent,
+    NxSystemAlertsComponent,
+    NxSystemMetricsComponent,
+    NxDynamicTableComponent,
+    NxDynamicTablePanelComponent,
+    NxSingleEntityComponent,
+    NxImageSectionComponent,
+    NxSystemAlertCardComponent,
+    NxUpdateInfoComponent
+} from './';
 
 const appRoutes: Routes = [
     {

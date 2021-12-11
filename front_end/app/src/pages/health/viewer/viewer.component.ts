@@ -1,31 +1,34 @@
+import { DOCUMENT } from '@angular/common';
 import {
-    Component, Inject, OnInit,
-    OnDestroy, ViewEncapsulation, ViewChild, ElementRef, AfterViewInit
+    Component,
+    Inject,
+    OnInit,
+    OnDestroy,
+    ViewEncapsulation,
+    ViewChild,
+    ElementRef,
 } from '@angular/core';
-import { ActivatedRoute, Router }                from '@angular/router';
-import { BreakpointObserver }                    from '@angular/cdk/layout';
-import { DOCUMENT }                              from '@angular/common';
-import { DeviceDetectorService }                 from 'ngx-device-detector';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { NxLanguageProviderService }             from '@services/nx-language-provider';
-import { NxConfigService, IConfig }              from '@services/nx-config';
-import { NxAccountService, Account }             from '@services/account.service';
-import { NxUriService }                          from '@services/uri.service';
-import { NxMenuService }                         from '@src/menu';
-import { NxRibbonService }                       from '@components/ribbon';
-import { NxHealthService }                 from '../health.service';
-import { LanguageI18NStaticTypes }         from '@app/language_i18n_static_types';
-import { of, Subscription, throwError }    from 'rxjs';
-import { flatMap }                         from 'rxjs/operators';
-import { UntilDestroy }                    from '@ngneat/until-destroy';
-import { NxSystem, NxSystemService }       from '@services/system.service';
-import { NxUtilsService }                  from '@services/utils.service';
-import { NxAppStateService }               from '@services/nx-app-state.service';
-import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
-import { NxScrollMechanicsService }        from '@services/scroll-mechanics.service';
-import { WINDOW }                          from '@services/window-provider';
-import { NxAppSourceService }              from '@services/nx-app-source.service';
-import { NxHeaderService }                 from '@services/nx-header.service';
+import { of, Subscription, throwError } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { Account } from '@services/account.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSystemAPI } from '@services/system-api.service';
+import { NxSystem } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
+import { NxMenuService } from '@src/menu';
+
+import { NxHealthService } from '../health.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -62,21 +65,12 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
-        private accountService: NxAccountService,
+        languageService: NxLanguageProviderService,
         private appStateService: NxAppStateService,
-        private systemService: NxSystemService,
-        private serverApi: NxSystemAPIService,
-        private route: ActivatedRoute,
         private router: Router,
         private uriService: NxUriService,
         private menuService: NxMenuService,
-        private utilsService: NxUtilsService,
-        private ribbonService: NxRibbonService,
         private scrollMechanicsService: NxScrollMechanicsService,
-        private breakpointObserver: BreakpointObserver,
-        private deviceService: DeviceDetectorService,
-        private sourceService: NxAppSourceService,
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
         @Inject(WINDOW) private window: any,
@@ -113,12 +107,13 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
-            if (this.menu.selectedSection !== selection) {
-                this.menu.selectedSection = selection;
-                this.menu = { ...this.menu }; // trigger onChang
-            }
-        });
+        this.selectedSubscription = this.menuService.selectedSectionSubject
+            .subscribe(selection => {
+                if (this.menu.selectedSection !== selection) {
+                    this.menu.selectedSection = selection;
+                    this.menu = { ...this.menu }; // trigger onChang
+                }
+            });
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {
@@ -130,23 +125,36 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         }
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            if (width >= 768 && this.appStateService.headerVisibleSubject.getValue()) {
-                this.setHeaderHeight();
-            }
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
+            .subscribe(({ width }) => {
+                if (
+                    width >= 768 &&
+                    this.appStateService.headerVisibleSubject.getValue()
+                ) {
+                    this.setHeaderHeight();
+                }
 
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mediaLayoutClass = 'mobileLayout';
-            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xl)) {
-                this.mediaLayoutClass = 'wideLayout';
-            } else {
-                this.mediaLayoutClass = '';
-            }
-        });
+                if (
+                    this.scrollMechanicsService.mediaQueryMax(
+                        NxScrollMechanicsService.MEDIA.lg
+                    )
+                ) {
+                    this.mediaLayoutClass = 'mobileLayout';
+                } else if (
+                    this.scrollMechanicsService.mediaQueryMin(
+                        NxScrollMechanicsService.MEDIA.xl
+                    )
+                ) {
+                    this.mediaLayoutClass = 'wideLayout';
+                } else {
+                    this.mediaLayoutClass = '';
+                }
+            });
     }
 
     setHeaderHeight() {
-        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight =
+            document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {
@@ -175,7 +183,10 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         const menu = { ...this.menu };
         Object.keys(this.healthService.manifest).forEach((asset) => {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
-            if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
+            if (
+                this.healthService.values[asset] &&
+                Object.keys(this.healthService.values[asset]).length
+            ) {
                 menu.level1.push({
                     id: asset,
                     label: this.healthService.manifest[asset].name,
@@ -358,7 +369,9 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     getAlertText(metric, entity, message) {
         const resourceName = this.healthService.manifest[metric].resource;
-        const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+        const entityName = this.healthService.findEntityName(
+            this.healthService.values[metric][entity]
+        );
         if (resourceName && entityName !== '−') {
             return `${resourceName} ${entityName} ${message}`;
         } else {
@@ -543,13 +556,17 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             flatMap((result: any) => this.setupReport(result))
         ).subscribe(() => {}, () => {
             if (!this.system.id) {
-                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
+                !this.window.parent
+                    ? this.window.location.reload()
+                    : this.window.parent.location.reload();
             }
             this.hasServerError = this.system.isOnline;
         });
     }
 
     canShowOffline() {
-        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
+        return !this.healthService.ready &&
+            !this.hasServerError &&
+            !this.outdatedVersion;
     }
 }

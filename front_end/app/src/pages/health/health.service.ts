@@ -1,5 +1,6 @@
-import { Injectable }               from '@angular/core';
-import { BehaviorSubject }          from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
@@ -86,7 +87,11 @@ export class NxHealthService {
 
     getPanelWidth() {
         // values are set from CSS values in $grid-panel-width and $grid-super-wide-panel-width
-        if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxxxl)) {
+        if (
+            this.scrollMechanicsService.mediaQueryMin(
+                NxScrollMechanicsService.MEDIA.xxxxl
+            )
+        ) {
             return 450;
         }
 
@@ -211,31 +216,49 @@ export class NxHealthService {
         let types;
         let servers;
 
-        const typeAlert = filter.selects?.find(x => x.id === NxHealthService.ALERTS);
+        const typeAlert = filter.selects?.find(x =>
+            x.id === NxHealthService.ALERTS
+        );
         if (typeAlert !== undefined) {
             alarms = typeAlert.selected;
         }
 
-        const typeTypes = filter.selects?.find(x => x.id === NxHealthService.TYPES);
+        const typeTypes = filter.selects?.find(x =>
+            x.id === NxHealthService.TYPES
+        );
         if (typeTypes !== undefined) {
             types = typeTypes.selected;
         }
 
-        const typeServers = filter.selects?.find(x => x.id === NxHealthService.SERVERS);
+        const typeServers = filter.selects?.find(x =>
+            x.id === NxHealthService.SERVERS
+        );
         if (typeServers !== undefined) {
             servers = typeServers.selected;
         }
 
         return values.filter(alert => {
-            if (servers && servers.value !== '0' && alert._.server.id !== servers.value) {
+            if (
+                servers &&
+                servers.value !== '0' &&
+                alert._.server.id !== servers.value
+            ) {
                 return false;
             }
 
-            if (types && types.value !== '0' && alert._.type.text !== types.value) {
+            if (
+                types &&
+                types.value !== '0' &&
+                alert._.type.text !== types.value
+            ) {
                 return false;
             }
 
-            return !(alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value);
+            return !(
+                alarms &&
+                alarms.value !== '0' &&
+                alert._.alarm.icon !== alarms.value
+            );
         });
     }
 

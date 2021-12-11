@@ -1,9 +1,13 @@
 import {
-    Component, EventEmitter,
-    Input, OnChanges, Output,
-    OnDestroy, SimpleChanges
-}                          from '@angular/core';
-import { UntilDestroy }    from '@ngneat/until-destroy';
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+    OnDestroy,
+    SimpleChanges
+} from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -49,12 +53,23 @@ export class NxImageComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (!(Object.keys(changes).length === 1 && changes.state)) {
-            const firstChange = Object.values(changes).reduce((noChanges, { firstChange }) => noChanges && firstChange, true);
+            const firstChange = Object.values(changes)
+                .reduce(
+                    (noChanges, { firstChange }) => noChanges && firstChange,
+                    true
+                );
             if (!firstChange) {
                 this.show = false;
             }
         }
-        if (this.state === 'Unauthorized' || changes.state && !['Online', 'Recording', 'Scheduled'].includes(changes.state.currentValue)) {
+        if (
+            this.state === 'Unauthorized' ||
+            changes.state && ![
+                'Online',
+                'Recording',
+                'Scheduled'
+            ].includes(changes.state.currentValue)
+        ) {
             this.url = '';
             this.loaded.emit(true);
         }

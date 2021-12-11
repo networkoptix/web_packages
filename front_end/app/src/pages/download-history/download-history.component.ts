@@ -1,25 +1,30 @@
+import { isPlatformBrowser, TitleCasePipe } from '@angular/common';
 import {
-    Component, OnInit, OnDestroy,
-    ViewChild, Inject, PLATFORM_ID
-}                                    from '@angular/core';
+    Component,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+    Inject,
+    PLATFORM_ID
+} from '@angular/core';
 import {
-    ActivatedRoute, ActivationEnd, Router
-}                                    from '@angular/router';
-import {
-    isPlatformBrowser, TitleCasePipe
-}                                    from '@angular/common';
+    ActivatedRoute,
+    ActivationEnd,
+    Router
+} from '@angular/router';
 import { NgbNav, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
-import * as isArray                  from 'core-js/features/array/is-array';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import * as isArray from 'core-js/features/array/is-array';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAccountService, isAccount } from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxUriService }              from '@services/uri.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxUriService } from '@services/uri.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -110,7 +115,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.downloadsData[data.type] = this.activeBuilds;
                 }
 
-                this.pageService.pageTitle = new TitleCasePipe().transform(this.noteTypes[0]); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+                this.pageService.pageTitle =
+                    new TitleCasePipe().transform(this.noteTypes[0]);
+                // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
 
                 setTimeout(() => {
                     this.tabsVisible = true;

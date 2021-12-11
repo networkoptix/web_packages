@@ -1,29 +1,33 @@
 import {
-    Component, Inject, OnInit,
-    OnDestroy, ViewEncapsulation
+    Component,
+    Inject,
+    OnInit,
+    OnDestroy,
+    ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxAccountService, Account } from '@services/account.service';
-import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@src/menu';
-import { NxRibbonService } from '@components/ribbon';
-import { NxHealthService } from '../health.service';
-import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
-import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
-import { NxAppSourceService } from '@services/nx-app-source.service';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService } from '@components/ribbon';
 import { environment } from '@environments/environment';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxAppSourceService } from '@services/nx-app-source.service';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSystemAPI, NxSystemAPIService } from '@services/system-api.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
+import { NxMenuService } from '@src/menu';
+
+import { NxHealthService } from '../health.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -116,12 +120,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
-            if (this.menu.selectedSection !== selection) {
-                this.menu.selectedSection = selection;
-                this.menu = { ...this.menu }; // trigger onChang
-            }
-        });
+        this.selectedSubscription = this.menuService.selectedSectionSubject
+            .subscribe(selection => {
+                if (this.menu.selectedSection !== selection) {
+                    this.menu.selectedSection = selection;
+                    this.menu = { ...this.menu }; // trigger onChang
+                }
+            });
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {
@@ -189,9 +194,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.setHeaderHeight();
             }
 
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+            if (
+                this.scrollMechanicsService.mediaQueryMax(
+                    NxScrollMechanicsService.MEDIA.lg
+                )
+            ) {
                 this.mediaLayoutClass = 'mobileLayout';
-            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xl)) {
+            } else if (
+                this.scrollMechanicsService.mediaQueryMin(
+                    NxScrollMechanicsService.MEDIA.xl
+                )
+            ) {
                 this.mediaLayoutClass = 'wideLayout';
             } else {
                 this.mediaLayoutClass = '';
@@ -200,7 +213,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     setHeaderHeight() {
-        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight =
+            document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {
@@ -230,8 +244,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         const menu = { ...this.menu };
         Object.keys(this.healthService.manifest).forEach((asset) => {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
-            if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
-                const svgName = asset === 'cameras' ? 'camera' : asset === 'systems' ? 'system' : asset;
+            if (
+                this.healthService.values[asset] &&
+                Object.keys(this.healthService.values[asset]).length
+            ) {
+                const svgName = asset === 'cameras'
+                    ? 'camera'
+                    : asset === 'systems' ? 'system' : asset;
                 menu.level1.push({
                     id: asset,
                     label: this.healthService.manifest[asset].name,
@@ -528,7 +547,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 time
             };
             // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', [], 'alert');
+            this.ribbonService.show(
+                'You are viewing an imported report, refresh the page to get a fresh report',
+                [],
+                'alert'
+            );
             setTimeout(() => {
                 this.setHeaderHeight();
             });
@@ -549,13 +572,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             flatMap((result: any) => this.setupReport(result))
         ).subscribe(() => {}, () => {
             if (!this.system.id) {
-                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
+                !this.window.parent
+                    ? this.window.location.reload()
+                    : this.window.parent.location.reload();
             }
             this.hasServerError = this.system.isOnline;
         });
     }
 
     canShowOffline() {
-        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
+        return !this.healthService.ready &&
+            !this.hasServerError &&
+            !this.outdatedVersion;
     }
 }

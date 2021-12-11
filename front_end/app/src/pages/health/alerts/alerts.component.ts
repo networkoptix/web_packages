@@ -1,21 +1,26 @@
+import { Location } from '@angular/common';
 import {
-    AfterViewInit, Component, ElementRef,
-    OnDestroy, OnInit, ViewChild,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
-import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@src/menu';
-import { NxHealthService } from '../health.service';
-import { NxHealthLayoutService } from '../health-layout.service';
-import { NxUtilsService } from '@services/utils.service';
-import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { environment } from '@environments/environment';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+import { NxMenuService } from '@src/menu';
+
+import { NxHealthLayoutService } from '../health-layout.service';
+import { NxHealthService } from '../health.service';
 
 interface Params {
     [key: string]: any;
@@ -151,7 +156,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.healthLayoutService.mobileDetailMode = false;
             }
 
-            this.smallDesktopMode = this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.lg) && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
+            this.smallDesktopMode = this.scrollMechanicsService.mediaQueryMin(
+                NxScrollMechanicsService.MEDIA.lg
+            ) && this.scrollMechanicsService.mediaQueryMax(
+                NxScrollMechanicsService.MEDIA.xl
+            );
 
             this.setLayout();
         });
@@ -183,7 +192,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 if (this.metricId === selection) {
                     this.resetActiveEntity();
                     this.resetFilterModel();
-                    this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
+                    this.alerts = this.healthService.alertsSearch(
+                        this.healthService.alertsValues,
+                        this.filterModel
+                    );
                 } else {
                 // short circuit first subscription
                     this.metricId = 'alerts';
@@ -230,7 +242,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         if (!NxUtilsService.isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.healthService.tableReady = false;
             this.filterModel = NxUtilsService.deepCopy(model);
-            this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, model);
+            this.alerts = this.healthService.alertsSearch(
+                this.healthService.alertsValues,
+                model
+            );
             this.countAlerts();
 
             if (this.alerts.length) {
@@ -329,7 +344,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         let singleSelect = false;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
-                singleSelect = singleSelect || (select.selected.value > 0) || (select.selected.value !== '0'); // 0 is default choice
+                singleSelect = singleSelect ||
+                (select.selected.value > 0) ||
+                (select.selected.value !== '0'); // 0 is default choice
             });
         }
 
@@ -418,7 +435,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         if (alarm?.entity) {
             this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
-            this.healthLayoutService.metricsValuesCount = alarm.metric in this.healthService.values ? Object.values(this.healthService.values[alarm.metric]).length : 0;
+            this.healthLayoutService.metricsValuesCount =
+                alarm.metric in this.healthService.values
+                    ? Object.values(this.healthService.values[alarm.metric]).length
+                    : 0;
 
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
 
@@ -434,11 +454,16 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     });
             }
 
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+            if (
+                this.scrollMechanicsService.mediaQueryMax(
+                    NxScrollMechanicsService.MEDIA.lg
+                )
+            ) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
 
-            this.layoutReady = (Object.keys(this.healthLayoutService.activeEntity).length > 0);
+            this.layoutReady =
+                Object.keys(this.healthLayoutService.activeEntity).length > 0;
         } else {
             this.resetActiveEntity();
         }

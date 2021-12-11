@@ -1,15 +1,16 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Component, NgZone, ViewChild } from '@angular/core';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { EmailNotification } from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
-import { filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 
 const getTestEvents = (systemId?) => [
     {
