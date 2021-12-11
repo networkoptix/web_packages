@@ -493,8 +493,19 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     get mainUrl() {
-        return this.environment.isLocal ? '/settings'
-            : this.userEmail ? '/systems' : '/';
+        if (this.environment.isLocal) {
+            return '/view';
+        }
+
+        if (!this.userEmail) {
+            return '/';
+        }
+
+        if (this.singleSystem && this.headerService.activeSystem?.id) {
+            return `/systems/${this.headerService.activeSystem.id}/view`;
+        }
+
+        return '/systems';
     }
 
     get mainNode() {
