@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "尝试次数过多，请稍后重试。",
     "WRONG PASSWORD": "错误的密码。",
     "ACCOUNT NOT FOUND TEXT": "未找到该用户",
+    "ACCOUNT DOES NOT EXIST TEXT": "帐户不存在.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "不能发送确认电子邮件:",
     "ACCOUNT DOES NOT EXIST": "帐户不存在.",
     "CODE USED/INCORRECT": "确认代码已使用或不正确",

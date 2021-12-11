@@ -874,7 +874,9 @@
                 "success": "Systemnamnet sparat"
             }
         },
-        "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare"
+        "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"

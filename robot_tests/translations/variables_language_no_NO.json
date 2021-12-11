@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "For mange forsøk. Prøv igjen om et minutt.",
     "WRONG PASSWORD": "Feil passord",
     "ACCOUNT NOT FOUND TEXT": "Konto ikke funnet",
+    "ACCOUNT DOES NOT EXIST TEXT": "Kontoen eksisterer ikke.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Kan ikke sende bekreftelses e-post:",
     "ACCOUNT DOES NOT EXIST": "Kontoen eksisterer ikke.",
     "CODE USED/INCORRECT": "Bekreftelseskoden er allerede brukt eller feil",

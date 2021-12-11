@@ -874,7 +874,9 @@
                 "success": "システム名は保存されました"
             }
         },
-        "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください"
+        "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "システム {systemName} のヘルスレポート"

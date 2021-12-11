@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Příliš mnoho pokusů. Zkuste to znovu za chvíli.",
     "WRONG PASSWORD": "Chybné heslo",
     "ACCOUNT NOT FOUND TEXT": "Účet nebyl nalezen",
+    "ACCOUNT DOES NOT EXIST TEXT": "Účet neexistuje.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Nelze odeslat potvrzovací email:",
     "ACCOUNT DOES NOT EXIST": "Účet neexistuje.",
     "CODE USED/INCORRECT": "Potvrzovací kód je již použit nebo nesprávný",

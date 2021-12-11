@@ -874,7 +874,9 @@
                 "success": "Systeemnaam opgeslagen"
             }
         },
-        "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker"
+        "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"

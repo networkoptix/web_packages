@@ -874,7 +874,9 @@
                 "success": "Nom du système sauvegardé"
             }
         },
-        "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud"
+        "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "Rapport de santé pour le système {systemName}"

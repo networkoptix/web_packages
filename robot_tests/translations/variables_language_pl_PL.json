@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Zbyt wiele prób. Spróbuj ponownie za minutę.",
     "WRONG PASSWORD": "Nieprawidłowe hasło",
     "ACCOUNT NOT FOUND TEXT": "Nie znaleziono konta",
+    "ACCOUNT DOES NOT EXIST TEXT": "Konto nie istnieje.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Nie można wysłać e-maila z potwierdzeniem:",
     "ACCOUNT DOES NOT EXIST": "Konto nie istnieje.",
     "CODE USED/INCORRECT": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",

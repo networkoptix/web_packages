@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Alltför många försök. Försök igen om någon minut.",
     "WRONG PASSWORD": "Fel lösenord",
     "ACCOUNT NOT FOUND TEXT": "Kan inte hitta kontot",
+    "ACCOUNT DOES NOT EXIST TEXT": "Kontot existerar inte.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Kan inte skicka bekräftelse E-mail:",
     "ACCOUNT DOES NOT EXIST": "Kontot existerar inte.",
     "CODE USED/INCORRECT": "Bekräftelsekoden är redan använd eller felaktig",

@@ -874,7 +874,9 @@
                 "success": "Systemname wurde gespeichert"
             }
         },
-        "webAdminCloudCredentialError": "Melden Sie sich mit %CLOUD_NAME% an, um als Cloud-Benutzer auf dieses System zuzugreifen"
+        "webAdminCloudCredentialError": "Melden Sie sich mit %CLOUD_NAME% an, um als Cloud-Benutzer auf dieses System zuzugreifen",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "Bericht für System {systemName}"

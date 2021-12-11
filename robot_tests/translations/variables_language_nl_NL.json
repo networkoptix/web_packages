@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Te veel pogingen. Probeer het later opnieuw.",
     "WRONG PASSWORD": "Wachtwoord onjuist",
     "ACCOUNT NOT FOUND TEXT": "Account niet gevonden",
+    "ACCOUNT DOES NOT EXIST TEXT": "Dit account bestaat niet.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Kan geen bevestigingsmail versturen:",
     "ACCOUNT DOES NOT EXIST": "Dit account bestaat niet.",
     "CODE USED/INCORRECT": "Bevestigingscode is al gebruikt of niet correct",

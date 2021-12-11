@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "محاولات كثيرة. حاول مرة أخرى بعد دقيقة.",
     "WRONG PASSWORD": "كلمة مرور خاطئة",
     "ACCOUNT NOT FOUND TEXT": "تعذر العثور على الحساب",
+    "ACCOUNT DOES NOT EXIST TEXT": "Account does not exist.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Cannot send confirmation Email:",
     "ACCOUNT DOES NOT EXIST": "Account does not exist.",
     "CODE USED/INCORRECT": "Confirmation code is already used or incorrect",

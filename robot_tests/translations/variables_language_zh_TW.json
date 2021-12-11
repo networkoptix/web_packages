@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "嘗試次數過多，請稍後再試。",
     "WRONG PASSWORD": "密碼不正確",
     "ACCOUNT NOT FOUND TEXT": "該帳號不存在",
+    "ACCOUNT DOES NOT EXIST TEXT": "帳號不存在.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "無法發送確認郵件:",
     "ACCOUNT DOES NOT EXIST": "帳號不存在.",
     "CODE USED/INCORRECT": "確認代碼已使用或不正確",

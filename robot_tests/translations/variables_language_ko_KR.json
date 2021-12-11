@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "시도 횟수가 너무 많습니다. 1 분 후에 다시 시도하십시오.",
     "WRONG PASSWORD": "패스워드가 틀립니다.",
     "ACCOUNT NOT FOUND TEXT": "계정을 찾을 수 없습니다",
+    "ACCOUNT DOES NOT EXIST TEXT": "계정이 존재하지 않습니다.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "확인 이메일을 보낼 수 없습니다.:",
     "ACCOUNT DOES NOT EXIST": "계정이 존재하지 않습니다.",
     "CODE USED/INCORRECT": "확인 코드가 이미 사용되었거나 잘못되었습니다.",

@@ -9,4 +9,4 @@
 Пожалуйста, создайте учетную запись в %CLOUD_NAME%
 используя свой текущий адрес электронной почты, и следуйте дальнейшим инструкциям.
 
-Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}
+Зарегистрируйте свою учетную запись используя эту ссылку: {{ config.portal_url }}/authorize/register/{{ message.code }}

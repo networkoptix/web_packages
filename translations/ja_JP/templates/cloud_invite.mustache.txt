@@ -9,4 +9,4 @@
 %CLOUD_NAME%アカウントを作成してください
 メールアドレスを使用して指示に従ってください
 
-Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}
+このリンクを使用してアカウント登録してください: {{ config.portal_url }}/authorize/register/{{ message.code }}

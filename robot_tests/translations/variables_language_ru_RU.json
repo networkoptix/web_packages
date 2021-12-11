@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Слишком много попыток. Повторите позже.",
     "WRONG PASSWORD": "Неправильный пароль",
     "ACCOUNT NOT FOUND TEXT": "Учетная запись не найдена",
+    "ACCOUNT DOES NOT EXIST TEXT": "Учетная запись не существует.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Не удается отправить подтверждение по Email:",
     "ACCOUNT DOES NOT EXIST": "Учетная запись не существует.",
     "CODE USED/INCORRECT": "Код подтверждения уже используется или неверен",

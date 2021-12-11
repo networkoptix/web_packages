@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Quá nhiều lần thử. Vui lòng thử lại sau một phút.",
     "WRONG PASSWORD": "Sai mật khẩu",
     "ACCOUNT NOT FOUND TEXT": "Không tìm thấy tài khoản",
+    "ACCOUNT DOES NOT EXIST TEXT": "Tài khoản không tồn tại.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Không thể gửi Email xác nhận:",
     "ACCOUNT DOES NOT EXIST": "Tài khoản không tồn tại.",
     "CODE USED/INCORRECT": "Mã xác nhận đã được sử dụng hoặc không chính xác",

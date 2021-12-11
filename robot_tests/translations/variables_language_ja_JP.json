@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "試行回数が多すぎます 暫くしてからもう一度お試しください",
     "WRONG PASSWORD": "パスワードが違います",
     "ACCOUNT NOT FOUND TEXT": "アカウントが見つかりません",
+    "ACCOUNT DOES NOT EXIST TEXT": "アカウントが存在しません",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "確認メールを送信できません:",
     "ACCOUNT DOES NOT EXIST": "アカウントが存在しません",
     "CODE USED/INCORRECT": "確認コードは既に使用されているかまたは不正です",

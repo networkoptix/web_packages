@@ -72,6 +72,8 @@
     "TOO MANY ATTEMPTS TEXT": "Túl sok próbálkozás. Próbálkozzon újra egy perc múlva.",
     "WRONG PASSWORD": "Hibás jelszó",
     "ACCOUNT NOT FOUND TEXT": "A fiók nem található",
+    "ACCOUNT DOES NOT EXIST TEXT": "A fiók nem létezik.",
+    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL": "Megerősítő e-mailt nem lehet elküldeni:",
     "ACCOUNT DOES NOT EXIST": "A fiók nem létezik.",
     "CODE USED/INCORRECT": "Megerősítési kód már használt, vagy hibás",

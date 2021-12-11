@@ -874,7 +874,9 @@
                 "success": "Nombre del sistema guardado"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user"
+        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
+        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "loggingIn": "Logging in. Please wait."
     },
     "headerLabels": {
         "healthReportForSystem": "Informe de salud del sistema {systemName}"
