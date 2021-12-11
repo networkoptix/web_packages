@@ -258,6 +258,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.currentState = AuthorizeState.reset;
             return;
         }
+
+        if (this.clientType === 'renewSessionWeb') {
+            this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
+            this.window.close();
+            return;
+        }
         const params = link.includes('?') && new URLSearchParams(
             link.match(/.*(\?.*)/i)[1]
         );

@@ -15,6 +15,11 @@ import {
 
 import { MenuNode } from '../menus.service.types';
 
+interface OauthStoreFlags {
+    code: string;
+    verify2fa: string;
+}
+
 export interface BaseConfig {
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
@@ -54,6 +59,7 @@ export interface BaseConfig {
     meta: Meta;
     menus: Menus;
     newSystem: boolean;
+    oauthStore: OauthStoreFlags;
     permissions: Permissions;
     pollingTimeout: number;
     redirect: Redirect;

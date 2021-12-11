@@ -6,14 +6,17 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { OauthService } from '@services/oauth.service';
 import { WINDOW } from '@services/window-provider';
+import { IConfig, NxConfigService } from '../../services/nx-config';
 
 @Component({
     selector: 'cloud-owner-authorization',
     template: ''
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {
+    CONFIG: IConfig
     LANG: LanguageI18NStaticTypes
     constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) protected window: Window,
         private oauthService: OauthService,
@@ -21,10 +24,11 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         private activatedRoute: ActivatedRoute
     ) {
         this.LANG = languageService.translations;
+        this.CONFIG = configService.getConfig();
     }
 
     handleCode (code) {
-        this.storageService.store('new-code', code);
+        this.storageService.store(this.CONFIG.oauthStore.code, code);
         this.window.close();
     }
 
@@ -35,8 +39,10 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
             return this.handleCode(code);
         }
 
+        // eslint-disable-next-line camelcase
+        const accessToken = params?.access_token || '';
         const state = params?.state || 'renew';
-        const email = this.storageService.retrieve('loginState');
-        this.oauthService.redirectOauth(state, email.includes('@') ? email : '');
+        const email = this.storageService.retrieve('loginState') || '';
+        this.oauthService.redirectOauth(state, email.includes('@') ? email : '', '', accessToken);
     }
 }

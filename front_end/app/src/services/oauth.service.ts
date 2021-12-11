@@ -52,13 +52,16 @@ export class OauthService {
             ).toPromise();
     }
 
-    redirectOauth(state?: string, email?: string, code?: string) {
+    redirectOauth(state?: string, email?: string, code?: string, accessToken?: string) {
         const { href } = this.window.location;
         const cleanRedirect = (url) => {
             const [baseUrl, query] = url.split('?');
             const params = new URLSearchParams(query);
             if (params.has('code')) {
                 params.delete('code');
+            }
+            if (params.has('access_token')) {
+                params.delete('access_token');
             }
             const paramString = params.toString();
             return `${baseUrl}${paramString.length ? '?' + params.toString() : ''}`;
@@ -95,11 +98,20 @@ export class OauthService {
         if (code) {
             params.append('access_code', code);
         }
+
+        if (accessToken) {
+            params.append('access_token', accessToken);
+        }
         const host = environment.production
             ? `${this.CONFIG.cloudHost ?? ''}`
             : environment.cloudHost ? `https://${environment.cloudHost}` : this.CONFIG.cloudHost;
         this.window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
+    }
+
+    add2fa(accessToken) {
+        const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize?state=renew&access_token=${accessToken}`;
+        window.open(authorizeUrl, '_blank').focus();
     }
 
     setTokens(tokens) {

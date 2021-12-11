@@ -11,6 +11,7 @@ from django.contrib.auth.signals import user_login_failed
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -195,8 +196,14 @@ def login(request):
 def login_with_code(request):
     require_params(request, ["code"])
     ip = get_ip(request)
-    token = Auth.get_access_token(request.data.get("code"), ip)
-    validate_token = Auth.validate_token(token['access_token'])
+    tokens = None
+    try:
+        tokens = Auth.get_access_token(request.data.get("code"), ip)
+        validate_token = Auth.validate_token(tokens['access_token'])
+    except Exception as e:
+        if isinstance(e, APINotAuthorisedException) and tokens and e.error_text == "2FA is required":
+            return api_success(tokens, status_code=status.HTTP_401_UNAUTHORIZED)
+        raise e
 
     try:
         user = models.Account.objects.get(email=validate_token['username'])
@@ -204,7 +211,7 @@ def login_with_code(request):
         raise APINotFoundException("User not in cloud")
 
     request.session.set_expiry(get_authenticated_session_cookie_age())
-    return login_helper(request, token, user)
+    return login_helper(request, tokens, user)
 
 
 @api_view(["POST"])

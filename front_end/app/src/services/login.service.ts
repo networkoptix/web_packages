@@ -137,7 +137,7 @@ export class NxLoginService {
         if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;
             window.open(authorizeUrl, '_blank').focus();
-            return this.storage.observe('new-code')
+            return this.storage.observe(this.CONFIG.oauthStore.code)
                 .pipe(
                     takeUntil(this.done$),
                     take(1),

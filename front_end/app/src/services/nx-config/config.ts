@@ -497,6 +497,10 @@ export const nxConfig: IConfig = {
         }
     },
     newSystem: false,
+    oauthStore: {
+        code: 'code',
+        verify2fa: 'verify2fa'
+    },
     permissions: {
         canViewRelease: 'can_view_release'
     },

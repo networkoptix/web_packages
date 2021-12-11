@@ -959,6 +959,8 @@ export interface ToastMessage {
     reviewAccepted:               any;
     system:                       ToastMessageSystem;
     webAdminCloudCredentialError: any;
+    twoFaRequired:                any;
+    loggingIn:                    any;
 }
 
 export interface ToastMessageSystem {
@@ -1986,6 +1988,8 @@ const typeMap: any = {
         { json: "reviewAccepted", js: "reviewAccepted", typ: "any" },
         { json: "system", js: "system", typ: r("ToastMessageSystem") },
         { json: "webAdminCloudCredentialError", js: "webAdminCloudCredentialError", typ: "any" },
+        { json: "twoFaRequired", js: "twoFaRequired", typ: "any" },
+        { json: "loggingIn", js: "loggingIn", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },

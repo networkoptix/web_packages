@@ -1,8 +1,9 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -40,6 +41,8 @@ export abstract class BaseAccount implements OnDestroy {
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
     protected loginWithAuthKeyInProgress: boolean;
+    protected localStorage: any;
+    protected tokens: any;
 
     protected accountPoll: Observable<Account | string>;
     protected accountPollSubscription: Subscription;
@@ -124,6 +127,29 @@ export abstract class BaseAccount implements OnDestroy {
         this.dialogs = injector.get(NxSimpleDialogsService);
         this.applyService = injector.get(NxApplyService);
         this.loginService.accountService = this;
+
+        this.localStorage = injector.get(LocalStorageService);
+        this.localStorage.observe(this.CONFIG.oauthStore.verify2fa).pipe(
+            filter(() => !!this.tokens)
+        ).subscribe((accessToken) => {
+            if (this.tokens.access_token !== accessToken) {
+                return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
+            }
+            this.dialogs.notify(this.LANG.toastMessage.loggingIn(), 'success', false);
+            this.loginTokens(this.tokens).then(() => {});
+        });
+    }
+
+    private loginTokens(tokens) {
+        return this.cloudApi.loginTokens(tokens).then((res: any) => {
+            this.tokens = undefined;
+            this.sessionService.loginState = res.email;
+            this.clearCodeFromUri();
+            this.account = undefined;
+            this.localStorage.clear(this.CONFIG.oauthStore.verify2fa);
+            this.storageService.clear(); // Clear session
+            this.window.location.reload();
+        });
     }
 
     ngOnDestroy() {
@@ -335,9 +361,12 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    private handleCodeError = async (e, code: string) => {
-        if (e.error.errorText.includes('2FA')) {
-            return this.oauthService.redirectOauth('renew', '', code);
+    private handleCodeError = async (e) => {
+        const data = e.error;
+        if (data?.error === 'second_factor_required') {
+            this.tokens = data;
+            this.dialogs.notify(this.LANG.toastMessage.twoFaRequired(), 'info', false);
+            return this.oauthService.add2fa(data.access_token || '');
         } else {
             this.clearCodeFromUri();
             this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
@@ -355,7 +384,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.clearCodeFromUri();
                     this.window.location.reload();
                 })
-                .catch((e) => this.handleCodeError(e, code)
+                .catch((e) => this.handleCodeError(e)
                     .then((reload) => reload && this.window.location.reload())
                 ).finally(() => {
                     this.appStateService.ready = true;
@@ -377,20 +406,14 @@ export abstract class BaseAccount implements OnDestroy {
                 'long-cancel-button');
             if (res === true) {
                 this.stopAccountPoll();
-                return this.cloudApi.loginTokens(tokens).then((res: any) => {
-                    this.sessionService.loginState = res.email;
-                    this.clearCodeFromUri();
-                    this.account = undefined;
-                    this.storageService.clear(); // Clear session
-                    this.window.location.reload();
-                });
+                return this.loginTokens(tokens);
             }
             return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
                 this.clearCodeFromUri();
                 this.window.location.reload();
             });
         } catch (e) {
-            return this.handleCodeError(e, code).then(() => this.requireLogin());
+            return this.handleCodeError(e).then(() => this.requireLogin());
         } finally {
             this.appStateService.ready = true;
         }
