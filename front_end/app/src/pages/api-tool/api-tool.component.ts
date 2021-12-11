@@ -3,19 +3,21 @@ import {
     ElementRef,
     ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import { NxPageService }             from '@services/page.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { debounceTime, filter }              from 'rxjs/operators';
+} from '@angular/core';
 import {
     UntilDestroy,
     untilDestroyed
-}                                    from '@ngneat/until-destroy';
-import { IConfig, NxConfigService }  from '@services/nx-config';
-import { NxAppStateService }         from '@services/nx-app-state.service';
-import { NxScrollMechanicsService }  from '@services/scroll-mechanics.service';
-import { NxAPIToolService }          from './api-tool.service';
+} from '@ngneat/until-destroy';
+import { debounceTime, filter } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAppStateService } from '@services/nx-app-state.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+
+import { NxAPIToolService } from './api-tool.service';
 
 @UntilDestroy()
 @Component({

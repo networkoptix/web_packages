@@ -1,9 +1,9 @@
-import { Component }                 from '@angular/core';
+import { Component } from '@angular/core';
 
-import { NxPageService }             from '@services/page.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxPageService } from '@services/page.service';
 
 @Component({
     selector: 'nx-500',

@@ -1,7 +1,9 @@
 import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
+
 import type { APIDocVersion } from '../../services/nx-config/base-config';
+
 import type { APIDoc } from './api-tool-types';
 
 // This file contains functions that modify API files

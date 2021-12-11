@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component, ComponentFactoryResolver,
     ComponentRef,
@@ -7,25 +8,27 @@ import {
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+import { take } from 'rxjs/operators';
 import SwaggerUI from 'swagger-ui';
-import { NxAPIToolService } from '../api-tool.service';
+import { v4 as uuid } from 'uuid';
+
 import {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu.component';
-import { DOCUMENT } from '@angular/common';
+import { environment } from '@environments/environment';
+
+import { getPathAndMethodFromNodeName } from '../api-file-utils';
+import { highlightAllCode } from '../api-tool-utils';
+import { NxAPIToolService } from '../api-tool.service';
+
 import {
     NxCopyToClipboardComponent
 } from './copy-to-clipboard/copy-to-clipboard.component';
-import { fromEvent } from 'rxjs';
-import { getPathAndMethodFromNodeName } from '../api-file-utils';
-import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
-import { environment } from '@environments/environment';
-import { v4 as uuid } from 'uuid';
-import { take } from 'rxjs/operators';
-import { highlightAllCode } from '../api-tool-utils';
+import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 
 interface componentMap {
     [uuid: string]: ComponentRef<any>

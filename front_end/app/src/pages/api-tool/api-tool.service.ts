@@ -1,18 +1,6 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxSystemWithUserInfo, NxSystemsService } from '@services/systems.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
-import { NxAccountService } from '@services/account.service';
-import { NxHeaderService } from '@services/nx-header.service';
-import { APIDocVersion, MenuStructure } from '@services/nx-config/base-config';
-import {
-    ClickEvent, MenuNodeWithParent, NxDevelopersMenuComponent
-} from '@components/developers-menu/developers-menu.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
     delay,
@@ -23,6 +11,23 @@ import {
     retryWhen,
     take
 } from 'rxjs/operators';
+
+import {
+    ClickEvent, MenuNodeWithParent
+} from '@components/developers-menu/developers-menu.component';
+import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { MenuNode } from '@services/menus.service.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { APIDocVersion, MenuStructure } from '@services/nx-config/base-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemWithUserInfo, NxSystemsService } from '@services/systems.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
+
 import {
     modifyPathTags,
     modifyTagNames,
@@ -38,9 +43,6 @@ import type {
     APIInfoStore,
     ServerDropdownItem
 } from './api-tool-types';
-import { environment } from '@environments/environment';
-import { NxUriService } from '@services/uri.service';
-import { MenuNode } from '@services/menus.service.types';
 
 /** Provides the currently selected system and server. Also provides the content for the left menu.   */
 @UntilDestroy()

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
 @UntilDestroy()
 @Component({

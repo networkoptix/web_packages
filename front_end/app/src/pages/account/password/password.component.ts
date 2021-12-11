@@ -1,18 +1,21 @@
 import {
-    Component, OnInit,
-    ViewChild, ViewContainerRef
+    Component,
+    OnInit,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService, Account } from '@services/account.service';
+import { NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxApplyService } from '@services/apply.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxMenuService } from '@src/menu';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 @Component({
     selector: 'nx-account-password-component',
@@ -67,8 +70,12 @@ export class NxAccountPasswordComponent implements OnInit {
 
         this.changePassword = this.processService.createProcess(() => {
             return this.account.account2faEnabled
-                ? this.dialogs.passwordVerificationCode(this.pass.newPassword, this.pass.password)
-                : this.cloudApiService.changePassword(this.pass.newPassword, this.pass.password);
+                ? this.dialogs.passwordVerificationCode(
+                    this.pass.newPassword, this.pass.password
+                )
+                : this.cloudApiService.changePassword(
+                    this.pass.newPassword, this.pass.password
+                );
         }, {
             errorCodes: {
                 notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
@@ -91,7 +98,8 @@ export class NxAccountPasswordComponent implements OnInit {
                         this.passwordFormWatcher = this.applyService.createFormWatcher(
                             'passwordForm',
                             this.passwordForm,
-                            this.changePassword);
+                            this.changePassword
+                        );
                     });
                 }
             });

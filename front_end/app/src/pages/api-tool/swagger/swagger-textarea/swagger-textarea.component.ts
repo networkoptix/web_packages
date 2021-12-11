@@ -1,9 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+
 import { NxAPIToolService } from '@pages/api-tool/api-tool.service';
 import { WINDOW } from '@services/window-provider';
-import { fromEvent } from 'rxjs';
 
 @UntilDestroy()
 @Component({

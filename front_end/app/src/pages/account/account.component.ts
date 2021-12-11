@@ -1,14 +1,12 @@
-import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subscription }              from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxMenuService }             from '@src/menu';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxSessionService } from '@services/session.service';
+import { NxMenuService } from '@src/menu';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

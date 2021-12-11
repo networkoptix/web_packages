@@ -1,22 +1,26 @@
 import {
-    Component, OnInit, ViewChild,
-    ViewContainerRef, Inject
+    Component,
+    OnInit,
+    ViewChild,
+    ViewContainerRef,
+    Inject
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { NxAccountService, Account } from '@services/account.service';
+import { NxApplyService } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxSystemsService } from '@services/systems.service';
-import { NxApplyService } from '@services/apply.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxMenuService } from '@src/menu';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxStorageService } from '@services/storage.service';
+import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { environment } from '@environments/environment';
+import { NxMenuService } from '@src/menu';
 
 @Component({
     selector: 'nx-account-settings-component',
@@ -105,12 +109,14 @@ export class NxAccountSettingsComponent implements OnInit {
                         this.accountFormWatcher = this.applyService.createFormWatcher(
                             'accountForm',
                             this.accountForm,
-                            this.saveAccount);
+                            this.saveAccount
+                        );
 
                         this.langFormWatcher = this.applyService.createFormWatcher(
                             'langForm',
                             this.langForm,
-                            this.saveLang);
+                            this.saveLang
+                        );
                     });
                 }
             });
