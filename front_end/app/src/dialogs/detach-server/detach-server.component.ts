@@ -1,12 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxLoginService } from '@services/login.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
+import { WINDOW } from '@services/window-provider';
 
 import { NxToastService } from '../toast.service';
 
@@ -33,7 +35,9 @@ export class DetachServerModalContent {
         public activeModal: NgbActiveModal,
         private loginService: NxLoginService,
         private processService: NxProcessService,
-        private toastService: NxToastService
+        private simpleDialogService: NxSimpleDialogsService,
+        private toastService: NxToastService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -80,6 +84,8 @@ export class DetachServerModalContent {
                                     this.detachServer.run();
                                 }
                             });
+                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                        return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
                     }
                     this.system.currentServerNotBusy = true;
                     this.toastService.show(

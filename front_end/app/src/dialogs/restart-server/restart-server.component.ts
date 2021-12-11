@@ -1,4 +1,4 @@
-import { Component, Input, Injector } from '@angular/core';
+import { Component, Input, Injector, Inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { timer } from 'rxjs';
 import {
@@ -11,6 +11,7 @@ import {
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
@@ -18,6 +19,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
@@ -42,8 +44,10 @@ export class RestartServerModalContent {
         public activeModal: NgbActiveModal,
         private loginService: NxLoginService,
         private processService: NxProcessService,
+        private simpleDialogService: NxSimpleDialogsService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
+        @Inject(WINDOW) private window: Window,
         injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
@@ -223,6 +227,8 @@ export class RestartServerModalContent {
                                 this.restartServer.run();
                             }
                         });
+                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
                 }
                 this.toastService.show(message, options);
             });

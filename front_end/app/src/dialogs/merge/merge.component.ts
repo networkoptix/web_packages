@@ -1,12 +1,13 @@
 import {
     Component, Input, ViewChild,
-    ChangeDetectorRef, ElementRef
+    ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
@@ -17,6 +18,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 import { State } from './stateForMergeDialog';
 import StateMachine from './stateMachine';
@@ -105,10 +107,12 @@ export class MergeModalContent {
         private cdRef: ChangeDetectorRef,
         private loginService: NxLoginService,
         private processService: NxProcessService,
+        private simpleDialogService: NxSimpleDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private translate: TranslateService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -415,6 +419,8 @@ export class MergeModalContent {
                 err => {
                     if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
+                    }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                        return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
                     }
                     if (err !== 'canceled') {
                         this.checking = false;
@@ -503,6 +509,8 @@ export class MergeModalContent {
             }, (err) => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
+                }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
                 }
                 console.error(err);
                 if (this.machine.currentState !== this.serverUrlErrors) {
@@ -599,6 +607,8 @@ export class MergeModalContent {
             }, (error) => {
                 if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.mergingProcess);
+                } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
                 }
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data?.resultCode);

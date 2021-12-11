@@ -97,11 +97,8 @@ export abstract class BaseAccount implements OnDestroy {
             .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe((loginState) => {
                 if (!this.loggingOut && loginState === null) {
-                    return this.dialogs.confirm(
-                        this.LANG.dialogs.renewAuth.message(),
-                        this.LANG.dialogs.renewAuth.title(),
-                        this.LANG.dialogs.buttons.ok()
-                    ).then((res) => this.logout(res));
+                    return this.dialogs.expiredSession()
+                        .then((res) => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
                     this.get()
                         .then((account) => {

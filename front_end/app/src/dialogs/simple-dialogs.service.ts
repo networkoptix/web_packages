@@ -101,4 +101,12 @@ export class NxSimpleDialogsService {
 
         return this.createModal(GenericModalContent, options, params);
     }
+
+    public expiredSession() {
+        return this.confirm(
+            this.LANG.dialogs.renewAuth.message(),
+            this.LANG.dialogs.renewAuth.title(),
+            this.LANG.dialogs.buttons.ok()
+        );
+    }
 }

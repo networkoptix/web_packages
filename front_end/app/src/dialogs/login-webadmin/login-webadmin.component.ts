@@ -11,6 +11,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import type { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -61,6 +62,7 @@ export class LoginWebadminModalContent implements OnInit {
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
+        private simpleDialogService: NxSimpleDialogsService,
         private router: Router,
         private cookieService: CookieService,
         public activeModal: NgbActiveModal,
@@ -209,7 +211,15 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     redirectOauthLogin() {
-        this.account.mediaServerApi.redirectOauth();
+        if (this.window.navigator.onLine) {
+            this.account.mediaServerApi.redirectOauth();
+        } else {
+            this.simpleDialogService.notify(
+                this.LANG.toastMessage.noInternet(),
+                'warning',
+                true
+            );
+        }
     }
 
     oauthLogin(code: string) {

@@ -606,6 +606,7 @@ export interface Port {
 
 export interface ServerError {
     oldSessionErrorId: string;
+    unauthorized: string;
 }
 
 export interface ServersStatus {

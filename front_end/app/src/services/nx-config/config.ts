@@ -535,7 +535,8 @@ export const nxConfig: IConfig = {
             mismatchedcertificate: 'mismatchedcertificate'
         },
         errors: {
-            oldSessionErrorId: 'sessionExpired'
+            oldSessionErrorId: 'sessionExpired',
+            unauthorized: 'unauthorized'
         }
     },
     sessionFreshnessSec: 600, // s or 10 minutes

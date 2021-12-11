@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
@@ -15,6 +16,7 @@ import {
     NxSystemRestAPI
 } from '@services/system-api.service';
 import { NxSystem } from '@services/system.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -49,9 +51,11 @@ export class DisconnectModalContent {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private loginService: NxLoginService,
+        private simpleDialogService: NxSimpleDialogsService,
         // private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -113,6 +117,8 @@ export class DisconnectModalContent {
                             this.disconnect.run();
                         }
                     });
+            } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
             }
         });
     }
