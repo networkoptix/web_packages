@@ -42,8 +42,7 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/images/logo.png',
             '/swagger-ui',
-            '/web/api',
-            '/web/hls'
+            '/web'
         ],
         target: targets.host,
         changeOrigin: true,

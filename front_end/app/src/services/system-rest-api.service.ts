@@ -255,16 +255,18 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return headers;
     }
 
-    protected delete<ResponseType = any>(
-        url: string,
-        params?: any,
-        customHttpHeaders: IParams<string> = {},
-        requestTimeout = 8000
-    ) {
-        let headers = new HttpHeaders();
-        params = params || {};
+    // Checks if the url does not have swagger-ui in it.
+    private requiresWeb(url) {
+        return !url.includes('swagger-ui');
+    }
 
-        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+    private buildHeader(customHttpHeaders: IParams<string> = {}) {
+        const accessToken = this.accessToken;
+        let headers = new HttpHeaders();
+        headers = headers.set('x-runtime-guid', accessToken);
+
+        // Not used for the time being.
+        // headers = headers.set('Authorization', `Bearer ${accessToken}`);
 
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
@@ -273,6 +275,21 @@ export class NxSystemRestAPI extends NxSystemAPI {
         Object.entries(customHttpHeaders).forEach((entry) => {
             headers = headers.set(...entry);
         });
+        return headers;
+    }
+
+    protected delete<ResponseType = any>(
+        url: string,
+        params?: any,
+        customHttpHeaders: IParams<string> = {},
+        requestTimeout = 8000
+    ) {
+        params = params || {};
+
+        const headers = this.buildHeader(customHttpHeaders);
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
+        }
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.delete<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request)),
@@ -291,18 +308,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         customHttpHeaders: IParams<string> = {},
         requestTimeout = 8000
     ) {
-        let headers = new HttpHeaders();
         params = params || {};
 
-        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
-
-        if (this.serverId) {
-            headers = headers.set('X-Server-Guid', this.serverId);
+        const headers = this.buildHeader(customHttpHeaders);
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
         }
-
-        Object.entries(customHttpHeaders).forEach((entry) => {
-            headers = headers.set(...entry);
-        });
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request)),
@@ -321,20 +332,19 @@ export class NxSystemRestAPI extends NxSystemAPI {
         paramsToAdd = {},
         customTimeout = 8000
     ) {
-        let headers = new HttpHeaders();
-        let params = new HttpParams();
-        const fullUrl = `${this.urlBase}${url}`;
         data = data || {};
 
+        const headers = this.buildHeader();
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
+        }
+
+        let params = new HttpParams();
         Object.keys(paramsToAdd).forEach((key) => {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        if (this.serverId) {
-            headers = headers.set(`${this.systemId ?? ''}-${this.token}`, this.serverId);
-        }
-
-        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+        const fullUrl = `${this.urlBase}${url}`;
 
         return this.http
             .post<ResponseType>(fullUrl, data, { params, headers })

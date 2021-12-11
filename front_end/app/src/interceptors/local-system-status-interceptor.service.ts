@@ -57,16 +57,15 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.appState.systemAvailable$.next(false);
         } else if (res instanceof HttpErrorResponse && status === 401) {
             // Session expired
-            let dialogPromise = Promise.resolve();
-            if (!this.isDialogActive) {
-                this.isDialogActive = true;
-                dialogPromise = this.dialogService.confirm(
-                    this.LANG.dialogs.renewAuth.message(),
-                    this.LANG.dialogs.renewAuth.title(),
-                    this.LANG.dialogs.buttons.ok()
-                );
+            if (this.isDialogActive) {
+                return;
             }
-            return dialogPromise.then(() => this.window.location.reload());
+            this.isDialogActive = true;
+            return this.dialogService.confirm(
+                this.LANG.dialogs.renewAuth.message(),
+                this.LANG.dialogs.renewAuth.title(),
+                this.LANG.dialogs.buttons.ok()
+            ).then((res) => this.window.location.reload(res));
         } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
             this.appState.systemAvailable$.next(true);
 
