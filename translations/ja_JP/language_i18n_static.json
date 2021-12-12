@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "ログイン",
-            "message": "セッションの有効期限が切れました。再度ログインしてください。",
-            "title": "セッション期限切れ"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "エラー",

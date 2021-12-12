@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "De sessie is verlopen, log opnieuw in.",
-            "title": "Verlopen sessie"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Fout",

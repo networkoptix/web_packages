@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Hata",
@@ -875,8 +875,8 @@
             }
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen açılır pencereye doğrulama kodunuzu girin.",
+        "loggingIn": "Oturum açılıyor. Lütfen bekleyin."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

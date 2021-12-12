@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "오류",

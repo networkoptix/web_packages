@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Entrar",
-            "message": "Your session has expired. Please log in again.",
-            "title": "Expired session"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Erro",
@@ -875,8 +875,8 @@
             }
         },
         "webAdminCloudCredentialError": "Faça login com %CLOUD_NAME% para acessar este sistema como usuário da nuvem",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "A autenticação de dois fatores foi ativada para esta conta. Por favor, insira seu código de verificação na janela popup.",
+        "loggingIn": "Fazendo login. Aguarde."
     },
     "headerLabels": {
         "healthReportForSystem": "Relatório de saúde para o sistema {systemName}"

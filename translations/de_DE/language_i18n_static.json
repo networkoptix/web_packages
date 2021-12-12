@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
-            "title": "Abgelaufene Sitzung"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Fehler",

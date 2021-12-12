@@ -73,7 +73,7 @@
     "WRONG PASSWORD": "Hatalı parola",
     "ACCOUNT NOT FOUND TEXT": "Hesap bulunamadı",
     "ACCOUNT DOES NOT EXIST TEXT": "Hesap mevcut değil.",
-    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
+    "YOU CAN CREATE ACCOUNT TEXT": "Bu e-posta adresiyle bir hesap oluşturabilir veya farklı bir tane girmeyi deneyebilirsiniz.",
     "CANNOT SEND CONFIRMATION EMAIL": "Onay e-postası gönderilemedi:",
     "ACCOUNT DOES NOT EXIST": "Hesap mevcut değil.",
     "CODE USED/INCORRECT": "Onay kodu kullanılmış veya yanlış",

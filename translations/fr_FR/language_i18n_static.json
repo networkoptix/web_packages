@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Se connecter",
-            "message": "Votre session a expiré. Veuillez vous reconnecter.",
-            "title": "Session expirée"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Erreur",

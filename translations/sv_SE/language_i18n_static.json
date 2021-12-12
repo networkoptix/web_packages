@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Logga in",
-            "message": "Din session har gått ut. Vänligen logga in på nytt.",
-            "title": "Utgången session"
+            "message": "Please log in again.",
+            "title": "Your session has expired"
         },
         "titles": {
             "error": "Fel",
