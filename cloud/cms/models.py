@@ -2911,6 +2911,18 @@ class MaintenanceCompletion(models.Model):
         if portal_notification:
             portal_notification.maintenancecompletion_set.add(self)
 
+class OpenAPIJSON(models.Model):
+    JSON_TYPES = Choices((0, "VMS", "VMS"))
+
+    name = models.CharField(help_text="API display name", max_length=36)
+    version = models.CharField(help_text="API version", max_length=20)
+    content = JSONField(help_text="API JSON", default={})
+    type = models.IntegerField(
+        choices=JSON_TYPES, default=JSON_TYPES.VMS)
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.version}"
 
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'

@@ -1840,3 +1840,36 @@ class TestMaintenanceSchedulingAndCompletion:
             assert portal_notification.build == updated_build
             assert portal_notification.build_raw == updated_raw_build
 
+class TestOpenAPIJSON:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.version = str(uuid4())
+        self.name = str(uuid4())
+        self.model = baker.prepare('OpenAPIJSON', version=self.version, name=self.name)
+    
+    def test_str(self):
+        assert str(self.model) == f"{self.name} - {self.version}"
+
+    def test_name(self):
+        name = self.model._meta.get_field('name')
+        assert name.help_text == 'API display name'
+        assert name.max_length == 36
+
+    def test_version(self):
+        version = self.model._meta.get_field('version')
+        assert version.help_text == 'API version'
+        assert version.max_length == 20
+
+    def test_content(self):
+        content = self.model._meta.get_field('content')
+        assert content.help_text == "API JSON"
+        assert content.default == {}
+    
+    def test_type(self):
+        type = self.model._meta.get_field('type')
+        assert type.choices == OpenAPIJSON.JSON_TYPES
+
+    def test_enabled(self):
+        enabled = self.model._meta.get_field('enabled')
+        assert enabled.default == True
+
