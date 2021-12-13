@@ -1,15 +1,15 @@
-import { v4 as uuid } from 'uuid';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { v4 as uuid } from 'uuid';
 
 import { nxConfig } from '@services/nx-config/config';
-import { forUnitTest, NxDevConsoleMenuComponent } from './console-menu.component';
 
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { forUnitTest, NxDevConsoleMenuComponent } from './console-menu.component';
 
 const {
     NxConfigService,

@@ -1,20 +1,19 @@
-import { Component, Inject }         from '@angular/core';
-import { HttpClient }                from '@angular/common/http';
-import { filter }                    from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Component, Inject } from '@angular/core';
+import { filter } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAccountService } from '@services/account.service';
+import { Watcher } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService }          from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
-import { NxProcessService }          from '@services/process.service';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxUrlProtocolService }      from '@services/url-protocol.service';
-import { Watcher }                   from '@services/apply.service';
-import { NxSystemsService, NxSystemWithUserInfo }          from '@services/systems.service';
-import { NxSystem }                  from '@services/system.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { WINDOW }                    from '@services/window-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService } from '@services/process.service';
+import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'nx-debug',
@@ -108,21 +107,23 @@ export class NxDebugComponent {
     }
 
     private init() {
-        this.systemsService.systemsSubject.subscribe((systems: NxSystemWithUserInfo[]) => {
-            this.systems = systems;
-            if (!this.debugProxySettings.systemId.value && this.systems[0]) {
-                this.debugProxySettings.systemId.value = this.systems[0].id;
-                this.system = this.systems[0];
-            }
-        });
+        this.systemsService.systemsSubject
+            .subscribe((systems: NxSystemWithUserInfo[]) => {
+                this.systems = systems;
+                if (!this.debugProxySettings.systemId.value && this.systems[0]) {
+                    this.debugProxySettings.systemId.value = this.systems[0].id;
+                    this.system = this.systems[0];
+                }
+            });
         this.debugProxySettings.systemId.valueSubject.pipe(
             filter(systemId => systemId !== undefined)
         ).subscribe((systemId: string) => {
             this.system = this.systems.find(system => system.id === systemId);
-            this.cloudApiService.getSystemAuth(systemId).subscribe((authKeys: any) => {
-                this.debugProxySettings.authGet = authKeys.authGet;
-                this.debugProxySettings.authPost = authKeys.authPost;
-            });
+            this.cloudApiService.getSystemAuth(systemId)
+                .subscribe((authKeys: any) => {
+                    this.debugProxySettings.authGet = authKeys.authGet;
+                    this.debugProxySettings.authPost = authKeys.authPost;
+                });
         });
 
         const debugProcess = this.processService.createProcess(() => {
@@ -178,7 +179,9 @@ export class NxDebugComponent {
     }
 
     debugProxyUrl() {
-        const auth = (this.debugProxySettings.method === 'GET') ? this.debugProxySettings.authGet : this.debugProxySettings.authPost;
+        const auth = (this.debugProxySettings.method === 'GET')
+            ? this.debugProxySettings.authGet
+            : this.debugProxySettings.authPost;
         const protocol = window.location.protocol;
         const systemId = this.debugProxySettings.systemId.value;
         const proxyUrl = this.debugProxySettings.proxyUrl;
@@ -192,7 +195,9 @@ export class NxDebugComponent {
 
     generateLink() {
         this.parseActionParams();
-        return this.urlProtocol.generateLink(this.clearEmptyStrings(this.linkSettings));
+        return this.urlProtocol.generateLink(
+            this.clearEmptyStrings(this.linkSettings)
+        );
     }
 
     getTempKey() {
@@ -221,20 +226,25 @@ export class NxDebugComponent {
         const states = Object.values(this.CONFIG.toast);
         const type = states[Math.floor(Math.random() * states.length)];
         const hold = Math.random() > 0.9;
-        this.dialogsService.notify(`${this.notifyCounter++}: ${type}: ${hold}`, type, hold);
+        this.dialogsService.notify(
+            `${this.notifyCounter++}: ${type}: ${hold}`, type, hold
+        );
     }
 
     openLink() {
         this.parseActionParams();
-        this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings)).then((data: any) => {
-            const link = data.link;
-            // @ts-ignore
-            this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout, () => {
-                alert('Protocol not recognized');
-            }, () => {
-                alert('Ok - protocol is working');
+        this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings))
+            .then((data: any) => {
+                const link = data.link;
+                // @ts-ignore
+                this.window.protocolCheck(
+                    link,
+                    this.CONFIG.openClientTimeout,
+                    this.CONFIG.openMobileClientTimeout,
+                    () => { alert('Protocol not recognized'); },
+                    () => { alert('Ok - protocol is working'); }
+                );
             });
-        });
     }
 
     testNotification() {

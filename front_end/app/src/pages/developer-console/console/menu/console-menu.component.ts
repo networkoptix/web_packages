@@ -1,9 +1,9 @@
-import { Component, Input, SimpleChanges }        from '@angular/core';
-import { IConfig, NxConfigService }               from '@services/nx-config';
-import { NxHeaderService } from '@services/nx-header.service';
+import { Component, Input, SimpleChanges } from '@angular/core';
 
-import { ConsoleMode }    from '@pages/developer-console/console/console.component.types';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
+import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 
 export interface ConsoleMenuNode {
     title: string,
@@ -50,7 +50,9 @@ export class NxDevConsoleMenuComponent {
         for (const section in this.CONFIG.manifest) {
             const sectionConfig = this.menu.find(({ url }) => url === section);
             if (sectionConfig) {
-                const cmsTitle = parentNode.nodes.find(({ url }) => (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`)?.name;
+                const cmsTitle = parentNode.nodes.find(({ url }) =>
+                    (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
+                )?.name;
                 sectionConfig.title = cmsTitle || sectionConfig.title;
             }
         }

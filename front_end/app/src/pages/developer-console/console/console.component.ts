@@ -1,16 +1,17 @@
-import { Component }                    from '@angular/core';
-import { ActivatedRoute, Router }       from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable }                   from 'rxjs';
-import { map, tap }                     from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import { NxCloudApiService }        from '@services/nx-cloud-api';
-import { ContentManifest }          from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { ConsoleMenuNode }          from './menu/console-menu.component';
-import { ConsoleSection }           from '@components/console-table/console-table.component.types';
-import { NxHeaderService }          from '@services/nx-header.service';
+import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { ContentManifest } from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+
+import { ConsoleMenuNode } from './menu/console-menu.component';
 
 @UntilDestroy()
 @Component({
@@ -41,13 +42,21 @@ export class NxDevConsoleComponent {
         _route.params.pipe(
             map(this.mapRoute),
             tap(({ sectionParam, mode, context }) => {
-                (this.cloudApi.getSubAPI(sectionParam).getManifest() as Observable<ContentManifest>).pipe(
+                (this.cloudApi
+                    .getSubAPI(sectionParam)
+                    .getManifest() as Observable<ContentManifest>
+                ).pipe(
                     untilDestroyed(this)
                 ).subscribe(manifest => {
                     this.manifest = manifest;
                     const editMode = mode as ConsoleMode === ConsoleMode.EDIT;
                     if (editMode) {
-                        this.menu = this.manifest.manifest.contexts.map(({ name: url, label: title, icon }) => ({ url, title, icon }));
+                        this.menu = this.manifest.manifest.contexts
+                            .map(({ name: url, label: title, icon }) => ({
+                                url,
+                                title,
+                                icon
+                            }));
                     }
                 });
             }),
@@ -59,15 +68,17 @@ export class NxDevConsoleComponent {
             const developers = '/developers';
             this.sectionParam = sectionParam;
             this.selectedMode = mode;
-            this.base = mode ? `${developers}/${sectionParam}/${mode}/${id}` : developers;
+            this.base = mode
+                ? `${developers}/${sectionParam}/${mode}/${id}`
+                : developers;
 
             // Remove invalid dev console sections from header in case they get added for some reason
             const { parentNode } = this.headerService.currentLocation;
-            parentNode.nodes = parentNode.nodes.filter(({
-                url
-            }) => sections.find(({
-                url: sectionUrl
-            }) => (url.startsWith('/') ? url : '/' + url) === `${developers}/${sectionUrl}`));
+            parentNode.nodes = parentNode.nodes.filter(({ url }) =>
+                sections.find(({ url: sectionUrl }) =>
+                    (url.startsWith('/') ? url : '/' + url) === `${developers}/${sectionUrl}`
+                )
+            );
         });
     }
 
@@ -83,7 +94,8 @@ export class NxDevConsoleComponent {
         const sectionParam = (matchedSection || sections[0]).url as ConsoleSection;
 
         if (!matchedSection) {
-            const firstSection = `${this.router.url.split(`/${section}`)[0]}/${sections[0]?.url}`;
+            const firstSection =
+                `${this.router.url.split(`/${section}`)[0]}/${sections[0]?.url}`;
             this.headerService.setLocation(firstSection);
             this.router.navigateByUrl(firstSection, { replaceUrl: true });
         } else if (mode && !this.modes.includes(mode) || !id) {

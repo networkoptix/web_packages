@@ -1,21 +1,21 @@
+import { Location } from '@angular/common';
 import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
-
-import { ActivatedRoute, Router }                     from '@angular/router';
-import { Location }                                   from '@angular/common';
-import { Observable }                                 from 'rxjs';
-
-import { NxToastService }               from '@dialogs/toast.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { NxCloudApiService }            from '@services/nx-cloud-api';
-import { ContextManifest }              from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService }     from '@services/nx-config';
-import { NxProcessService, Process }    from '@services/process.service';
-import { ConfigType, ConsoleSection }   from '@components/console-table/console-table.component.types';
-import { NxHeaderService }              from '@services/nx-header.service';
-import { NxConsoleService }             from '@pages/developer-console/console/console.service';
-import { ConsoleMode }                  from '../console.component.types';
-import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
+import { Observable } from 'rxjs';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { ConfigType, ConsoleSection } from '@components/console-table/console-table.component.types';
+import { NxToastService } from '@dialogs/toast.service';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { ContextManifest } from '@services/nx-cloud-api.types';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService, Process } from '@services/process.service';
+
+import { ConsoleMode } from '../console.component.types';
 
 @UntilDestroy()
 @Component({
@@ -66,7 +66,17 @@ export class NxDevConsoleEditComponent {
             return this.cloudApi[subAPI][method];
         };
         this.saveContext = this.processService.createProcess(
-            () => this.asset.unsaved ? getMethod('create')(this.asset.name, this.asset.base_vms, this.asset.values) : getMethod('save')(this.asset.id, this.asset.name, this.asset),
+            () => this.asset.unsaved
+                ? getMethod('create')(
+                    this.asset.name,
+                    this.asset.base_vms,
+                    this.asset.values
+                )
+                : getMethod('save')(
+                    this.asset.id,
+                    this.asset.name,
+                    this.asset
+                ),
             { ignoreError: true },
             (res) => {
                 const tempId = this.asset.id;
@@ -74,11 +84,18 @@ export class NxDevConsoleEditComponent {
                 const isUUID = isNaN(parseInt(tempId) - tempId);
 
                 if (isUUID) {
-                    this.location.replaceState(this.router.url.replace(tempId, this.asset.id));
+                    this.location.replaceState(
+                        this.router.url.replace(tempId, this.asset.id)
+                    );
                 }
                 const [_, params = ''] = this.router.url.split('?');
-                this.consoleService.targetState = { id: this.asset.id, download: this.downloadClick };
-                this.router.navigateByUrl(`/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`);
+                this.consoleService.targetState = {
+                    id: this.asset.id,
+                    download: this.downloadClick
+                };
+                this.router.navigateByUrl(
+                    `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`
+                );
             },
             ({ values: errors }) => {
                 this.errors = errors;
@@ -87,39 +104,65 @@ export class NxDevConsoleEditComponent {
         );
     }
 
-    ngOnChanges({ contextList: { currentValue, previousValue, firstChange } }: SimpleChanges) {
+    ngOnChanges(
+        { contextList: { currentValue, previousValue, firstChange } }: SimpleChanges
+    ) {
         if (firstChange || currentValue !== previousValue) {
             if (!this.asset) {
                 const { section, id, context } = this.route.snapshot.params;
                 if (!this.contextList.length) {
                     return;
                 }
-                const foundContext = this.contextList.find(({ name }) => name === context);
+                const foundContext = this.contextList
+                    .find(({ name }) => name === context);
                 this.context = foundContext || this.contextList[0];
                 const baseEditUrl = this.router.url.split(`/${context}`)[0];
                 if (!foundContext) {
                     const [target, params = ''] = this.router.url.split('?');
-                    this.router.navigateByUrl(`${context ? baseEditUrl : target}/${this.context.name}${params ? '?' + params : ''}`,  { replaceUrl: true });
+                    this.router.navigateByUrl(
+                        `${context ? baseEditUrl : target}/${this.context.name}${params ? '?' + params : ''}`,
+                        { replaceUrl: true }
+                    );
                 }
 
                 const unsavedAsset = this.consoleService.unsavedAssets[id];
                 if (unsavedAsset) {
                     this.asset = unsavedAsset;
-                    this.asset.values = this.context.fields.reduce((values, field) => ({ ...values, [field.name]: values[field.name] || '' }), this.asset.values);
-                    this.headerService.addDynamicDevConsoleNode(this.asset, baseEditUrl.split(`/${this.asset.id}`)[0], this.contextList, this.router.url);
+                    this.asset.values = this.context.fields
+                        .reduce((values, field) => ({
+                            ...values,
+                            [field.name]: values[field.name] || ''
+                        }), this.asset.values);
+                    this.headerService.addDynamicDevConsoleNode(
+                        this.asset,
+                        baseEditUrl.split(`/${this.asset.id}`)[0],
+                        this.contextList,
+                        this.router.url
+                    );
                 } else {
-                    (this.cloudApi.getSubAPI(section).retrieve(id) as Observable<any>).pipe(
+                    (this.cloudApi
+                        .getSubAPI(section)
+                        .retrieve(id) as Observable<any>
+                    ).pipe(
                         untilDestroyed(this)
                     ).subscribe(asset => {
                         if (asset && asset.values) {
                             this.asset = asset;
-                            this.headerService.addDynamicDevConsoleNode(asset, baseEditUrl.split(`/${asset.id}`)[0], this.contextList, this.router.url);
+                            this.headerService.addDynamicDevConsoleNode(
+                                asset,
+                                baseEditUrl.split(`/${asset.id}`)[0],
+                                this.contextList,
+                                this.router.url
+                            );
                         } else {
                             // Navigate up a level
                         }
                     }, () => {
                         const [current, params = ''] = this.router.url.split('?');
-                        this.router.navigateByUrl(`${current.split('/' + ConsoleMode.EDIT)}${params ? '?' + params : ''}`,  { replaceUrl: true });
+                        this.router.navigateByUrl(
+                            `${current.split('/' + ConsoleMode.EDIT)}${params ? '?' + params : ''}`,
+                            { replaceUrl: true }
+                        );
                     });
                 }
             }
@@ -133,7 +176,9 @@ export class NxDevConsoleEditComponent {
     discard = () => {
         this.consoleService.targetState = { id: this.asset.id, download: false };
         const [_, params = ''] = this.router.url.split('?');
-        this.router.navigateByUrl(`/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`);
+        this.router.navigateByUrl(
+            `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`
+        );
     }
 
     clearErrors(structureName) {

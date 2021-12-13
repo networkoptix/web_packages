@@ -1,6 +1,6 @@
-import { Injectable }      from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { filter }          from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 export type TargetState = {
     id: number;

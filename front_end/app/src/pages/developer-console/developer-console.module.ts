@@ -1,19 +1,20 @@
-import { NgModule }                      from '@angular/core';
-import { CommonModule }                  from '@angular/common';
-import { RouterModule, Routes }          from '@angular/router';
-import { FormsModule }                   from '@angular/forms';
-import { TranslateModule }               from '@ngx-translate/core';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
-import { NgbModule }                     from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsModule }              from '@components/components.module';
-import { DirectivesModule }              from '@directives/directives.module';
-import { PipesModule }                   from '@src/pipes/pipes.module';
-import { MenuModule }                    from '@src/menu';
-import { ApplyGuard }                    from '@src/routeGuards';
-import { NxDevConsoleComponent }         from './console/console.component';
-import { NxDevConsoleMenuComponent }     from './console/menu/console-menu.component';
-import { NxDevConsoleEditComponent }     from './console/edit/console-edit.component';
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { MenuModule } from '@src/menu';
+import { PipesModule } from '@src/pipes/pipes.module';
+import { ApplyGuard } from '@src/routeGuards';
+
+import { NxDevConsoleComponent } from './console/console.component';
+import { NxDevConsoleEditComponent } from './console/edit/console-edit.component';
+import { NxDevConsoleMenuComponent } from './console/menu/console-menu.component';
 
 const appRoutes: Routes = [
     {

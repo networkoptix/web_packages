@@ -1,12 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
-import { v4 as uuid } from 'uuid';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, of } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 
 import { nxConfig } from '@services/nx-config/config';
+
 import { forUnitTest, NxDevConsoleComponent } from './console.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 const {
     NxConfigService,
@@ -91,9 +92,18 @@ describe('NxDevConsoleComponent', () => {
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: ActivatedRoute, useValue: routeMock },
-                    { provide: Router, useValue: { url: '', navigateByUrl: () => { } } },
+                    {
+                        provide: Router,
+                        useValue: { url: '', navigateByUrl: () => { } }
+                    },
                     { provide: NxCloudApiService, useValue: cloudMock },
-                    { provide: NxHeaderService, useValue: { currentLocation: { parentNode: { nodes: [] } }, setLocation: () => { } } }
+                    {
+                        provide: NxHeaderService,
+                        useValue: {
+                            currentLocation: { parentNode: { nodes: [] } },
+                            setLocation: () => { }
+                        }
+                    }
                 ],
                 imports: [
                     CommonModule,

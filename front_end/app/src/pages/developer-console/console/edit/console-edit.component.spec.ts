@@ -1,15 +1,15 @@
-import { v4 as uuid } from 'uuid';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { DebugElement, Component, Input } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement, Component, Input } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { v4 as uuid } from 'uuid';
 
 import { nxConfig } from '@services/nx-config/config';
-import { forUnitTest, NxDevConsoleEditComponent } from './console-edit.component';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { forUnitTest, NxDevConsoleEditComponent } from './console-edit.component';
 
 const {
     NxConfigService,
@@ -94,11 +94,13 @@ describe('NxDevConsoleEditComponent', () => {
         createProcess: () => Promise.resolve()
     };
     const cloudMock = {};
-    const headerMock = { currentLocation: { parentNode: { nodes: [] } }, setLocation: () => { } };
+    const headerMock = {
+        currentLocation: { parentNode: { nodes: [] } },
+        setLocation: () => { }
+    };
 
-    const getSection = (
-        field
-    ) => el.nativeElement.querySelector(`.section-${field.name}`);
+    const getSection =
+        (field) => el.nativeElement.querySelector(`.section-${field.name}`);
 
     beforeEach(waitForAsync(() => {
         TestBed

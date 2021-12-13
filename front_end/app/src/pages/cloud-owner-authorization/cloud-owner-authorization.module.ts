@@ -1,9 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { CloudOwnerAuthorizationComponent } from './cloud-owner-authorization.component';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { PipesModule } from '../../pipes/pipes.module';
+
+import { CloudOwnerAuthorizationComponent } from './cloud-owner-authorization.component';
 
 const appRoutes: Routes = [
     { path: '**', component: CloudOwnerAuthorizationComponent }
