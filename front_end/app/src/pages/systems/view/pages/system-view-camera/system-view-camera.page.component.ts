@@ -647,7 +647,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._log('toggleFullScreen');
         $event?.stopPropagation();
 
-        if (fullscreen.getElement() === null) { // if browser is currently not in full screen
+        if (!fullscreen.getElement()) { // if browser is currently not in full screen
             fullscreen.request().call(this.$self.parentElement);
             setTimeout(() => {
                 this.$self.classList.add('is-full-screen');
