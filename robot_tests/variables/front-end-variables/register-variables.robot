@@ -1,14 +1,14 @@
 *** Variables ***
-${REGISTER FORM}                      //form[@id='registerForm']
-${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
-${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//input[@id='lastName']
-${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail']
-${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
-${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
+${REGISTER FORM}                      //nx-authorize-create-account-component
+${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//form//input[@id='firstName']
+${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//form//input[@id='lastName']
+${REGISTER EMAIL INPUT}               ${REGISTER FORM}//form//nx-email-input/input[@id='email']
+${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//form//input[@name='registerEmailLocked']
+${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//form//nx-password-input//input[@id='createAccountPassword']
 ${REGISTER LOG IN BUTTON}             //nx-authorize-activate-account-component//button/span[text()="${LOG IN BUTTON TEXT}"]/..
 
-${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]
-${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
+${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//nx-checkbox[@name="termsAndConditions"]
+${TERMS AND CONDITIONS CHECKBOX REAL}       ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//input[@id='termsAndConditions']
 
 ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
@@ -20,6 +20,6 @@ ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
 
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 
-${ACCOUNT CREATION SUCCESS}           //h2[@name="ACCOUNT_CREATED" and contains(text(),"${ACCOUNT CREATED TEXT}")]
+${ACCOUNT CREATION SUCCESS}           //nx-authorize-activate-account-component
 ${ACCOUNT CREATION SUCCESS ICON}      //div[@name="ACCOUNT_CREATED"]/svg-icon
 ${ACCOUNT CREATION CONFIRMATION}      ${ACCOUNT CREATION SUCCESS}/following-sibling::div[@name="ACCOUNT_CREATED"]

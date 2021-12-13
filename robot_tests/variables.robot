@@ -88,8 +88,8 @@ ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-se
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
 ${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]
-${CREATE ACCOUNT HEADER}              //header//a[@href='/register']
-${CREATE ACCOUNT BODY}                //div[@class="jumbotron"]//a[@href='/register']
+${CREATE ACCOUNT HEADER}              //header//a[@href='/authorize?client_type=create']
+${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?client_type=create']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
@@ -290,8 +290,8 @@ ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas
 
 #Eye icons for password forms
-${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open ng-star-inserted"]
-${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close ng-star-inserted"]
+${EYE ICON OPEN}             //svg-icon[@data-src="/static/images/icons/text_buttons/eye.svg"]
+${EYE ICON CLOSED}           //svg-icon[@data-src="/static/images/icons/text_buttons/eye_closed.svg"]
 
 # Form validation passwords
 ${LOWERCASE PASSWORD}    adrhartjad

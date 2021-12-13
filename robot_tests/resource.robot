@@ -254,13 +254,11 @@ Log Out Japanese
     
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
-    Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
+    Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT}
 
 Register
-    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
-    Run Keyword If    '${from}'=='desktop'    Go To    ${ENV}/register
-    Run Keyword If    '${from}'=='mobile'     Go To    ${ENV}/register/?from=mobile
-    Run Keyword If    '${from}'=='client'     Go To    ${ENV}/register/?from=client
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
+    Go To    ${ENV}/authorize?client_type=create
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
@@ -284,8 +282,7 @@ Verify in Account Page
 Validate Register Success
     [Arguments]    ${location}=${ENV}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
-    Wait Until Location Is    ${location}
-    Run keyword and continue on failure    Title should be    ${WELCOME TEXT} ${PRODUCT_NAME}
+    Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT}
 
 Validate Register Email Received
     [Arguments]    ${recipient}
