@@ -219,7 +219,11 @@ export class NxSwaggerComponent implements OnChanges {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
         const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
         for (const button of buttons as any) {
-            fromEvent(button, 'click').pipe(take(1), untilDestroyed(this)).subscribe(() => {
+            fromEvent(button, 'click').pipe(take(1), untilDestroyed(this)).subscribe((event: any) => {
+                if (event?.target?.classList.contains('execute')) {
+                    const clearBtn: HTMLButtonElement = this.document.querySelector('.btn-clear');
+                    clearBtn?.click(); // CLOUD-8423, clear the response if the previous one is showing, then generate a new one
+                }
                 if (!this.customComponentsRendering) {
                     this.addCustomChanges();
                 }
