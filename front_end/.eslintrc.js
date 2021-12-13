@@ -191,7 +191,6 @@ module.exports = {
         }],
         'padded-blocks': ['error', { blocks: 'never', switches: 'never', classes: 'never' }],
         'prefer-const': ['error', { destructuring: 'all' }],
-        'prefer-promise-reject-errors': ['error', { allowEmptyReject: true }],
         'quote-props': ['error', 'as-needed'],
         quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
         'rest-spread-spacing': ['error', 'never'],

@@ -64,7 +64,6 @@ export class ChangePasswordModalContent {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({ dontMatch: true });
                         this.renderer.selectRootElement('#confirmNewPassword').focus();
-                        // eslint-disable-next-line prefer-promise-reject-errors
                         return Promise.reject('dontMatch');
                     }
 
@@ -74,7 +73,6 @@ export class ChangePasswordModalContent {
                             if (!response.reply) {
                                 this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
                                 this.renderer.selectRootElement('#currentPassword').focus();
-                                // eslint-disable-next-line prefer-promise-reject-errors
                                 return Promise.reject('wrongPassword');
                             }
 

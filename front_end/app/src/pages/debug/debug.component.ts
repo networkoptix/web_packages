@@ -136,7 +136,6 @@ export class NxDebugComponent {
                             }
                         });
                     } else {
-                        // eslint-disable-next-line prefer-promise-reject-errors
                         reject(false);
                     }
                 }, 2000);

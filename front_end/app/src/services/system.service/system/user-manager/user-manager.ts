@@ -152,7 +152,6 @@ export class UserManager {
     getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string | false> {
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
             const data = result.reply;
@@ -165,7 +164,6 @@ export class UserManager {
                 return resolve(this.processUsers(users, accessRights));
             });
         }, () => {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject('Media server cloud not be reached.');
         });
     }
@@ -248,7 +246,6 @@ export class UserManager {
         let userCreated = false;
         const isSelf = user.id === this.currentUser.id;
         if (isSelf && user.isCloud) {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
         }
 
@@ -264,7 +261,6 @@ export class UserManager {
         }
 
         if (!isSelf && !user.canBeEdited && !this.isMine) {
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 

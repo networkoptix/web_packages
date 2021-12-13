@@ -1,4 +1,3 @@
-/* eslint-disable prefer-promise-reject-errors */
 import {
     waitForAsync,
     TestBed,

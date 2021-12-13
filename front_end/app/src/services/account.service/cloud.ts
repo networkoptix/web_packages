@@ -130,7 +130,6 @@ export class CloudAccount extends BaseAccount {
                     }
                 });
             }
-            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ error: { resultCode: result.resultCode } });
         }).then(result => {
             // Add the reload back until we solve the issues with configservice
@@ -141,7 +140,6 @@ export class CloudAccount extends BaseAccount {
             return result;
         }).catch((result: any) => {
             if (this.cloudApi.checkResponseHasError(result.error)) {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: result.error.resultCode });
             }
         });

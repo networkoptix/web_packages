@@ -88,7 +88,6 @@ export class NxAccountSecurityComponent implements OnInit {
                         .toggleVerificationCode(this.verificationWatcher.value)
                         .then(action => {
                             if (action === 'canceled') {
-                                // eslint-disable-next-line prefer-promise-reject-errors
                                 return Promise.reject('dialogCancel');
                             } else {
                                 const newState = (action === 'enabled');

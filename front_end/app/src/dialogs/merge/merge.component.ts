@@ -530,7 +530,6 @@ export class MergeModalContent {
                     password = this.remotePassword;
                 }
                 if (!password && !this.environment.isLocal) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
 

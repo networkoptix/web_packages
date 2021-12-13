@@ -203,7 +203,6 @@ export class NxUrlProtocolService {
                                 this.window.onblur = undefined;
                                 this.window.onfocus = undefined;
                                 if (!visited && blurCount > 0) {
-                                    // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }
                                 return resolve(false);
@@ -222,7 +221,6 @@ export class NxUrlProtocolService {
                                      * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
                                      */
                                     if (!visited && (!hasBlur || hasOpened)) {
-                                        // eslint-disable-next-line prefer-promise-reject-errors
                                         return reject({ resultCode: this.CONFIG.openClientError });
                                     }
                                     return resolve(visited);

@@ -313,7 +313,6 @@ export class NxSystem extends System {
                 }
 
                 if (!response) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
                 if (this.info) {
@@ -389,7 +388,6 @@ export class NxSystem extends System {
     update = (): Promise<any> => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
-                // eslint-disable-next-line prefer-promise-reject-errors
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())

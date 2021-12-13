@@ -33,7 +33,6 @@ export class CameraManager {
             return Promise.resolve();
         } catch (error) {
             if (error.name === 'TimeoutError') {
-                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ offline: true });
             }
             return Promise.reject(Error(`Request to server has failed ${error}`));
