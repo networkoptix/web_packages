@@ -6,10 +6,12 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import type { IEnvironment } from '@environments/environment-config';
+import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService } from '@services/process.service';
+import { NxProcessService, Process } from '@services/process.service';
 import {
     NxSystemAPI,
     NxSystemAPIService,
@@ -24,15 +26,15 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: []
 })
 export class DisconnectModalContent {
-    @Input() account;
+    @Input() account: NxAccountService;
     @Input() system: NxSystem;
-    @Input() disconnect;
-    @Input() closable;
+    @Input() closable: boolean;
 
-    isLocal: boolean;
+    readonly environment: IEnvironment = environment;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     needsUpdate: boolean;
+    disconnect: Process;
     // password: string;
     // wrongPassword: boolean;
     // auth = {
@@ -41,7 +43,7 @@ export class DisconnectModalContent {
     // };
 
     // hideErrors = true;
-    mediaServerApi: Partial<NxSystemAPI|NxSystemRestAPI>;
+    mediaServerApi: Partial<NxSystemAPI | NxSystemRestAPI>;
 
     // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
@@ -59,7 +61,6 @@ export class DisconnectModalContent {
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
-        this.isLocal = environment.isLocal;
     }
 
     ngOnInit() {
@@ -83,7 +84,7 @@ export class DisconnectModalContent {
             // this.disconnectForm.controls.password.setErrors(undefined);
             // this.wrongPassword = false;
 
-            if (this.isLocal) {
+            if (this.environment.isLocal) {
                 return this.disconnectLocal();
             }
             return this.account.disconnect(this.system.id);

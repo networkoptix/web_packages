@@ -11,8 +11,11 @@
     </div>
     <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
         <div class="modal-body">
-            <p translate>You will be logged out.</p>
-            <p translate>System will be accessible through local network with local administrator account.</p>
+            <p
+                *ngIf="system.userManager.currentUser.isCloud && environment.isLocal"
+                translate
+            >You will be logged out</p>
+            <p translate>System will be accessible only through local network.</p>
             <p class="warning-label" translate>All cloud users will be deleted.</p>
         </div>
         <div class="modal-footer">
