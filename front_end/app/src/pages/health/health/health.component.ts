@@ -75,7 +75,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: any
+        @Inject(WINDOW) private window: Window
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();

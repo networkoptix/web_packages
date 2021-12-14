@@ -66,7 +66,7 @@ export class LoginWebadminModalContent implements OnInit {
         private router: Router,
         private cookieService: CookieService,
         public activeModal: NgbActiveModal,
-        @Inject(DOCUMENT) private document: any,
+        @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window
     ) {
         this.CONFIG = configService.getConfig();

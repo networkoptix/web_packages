@@ -73,8 +73,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: any,
-        @Inject(DOCUMENT) private document: any
+        @Inject(WINDOW) private window: Window,
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();

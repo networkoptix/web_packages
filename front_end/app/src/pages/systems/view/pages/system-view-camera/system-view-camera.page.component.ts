@@ -108,7 +108,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
         private dialogs: NxDialogsService,
-        @Inject(DOCUMENT) private document: any
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
