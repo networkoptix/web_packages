@@ -54,5 +54,6 @@
           this._listener = listener;
         }
     }
+    document.querySelectorAll('.submit-row button.btn').forEach(btn => btn.addEventListener('click', () => window.localStorage.setItem('forceRefresh', Date.now())))
 </script>
 {% endif %}

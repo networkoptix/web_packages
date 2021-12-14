@@ -502,7 +502,7 @@ class TestZendeskMapper:
 
         def _get_mapper_instance(customization_name=settings.CUSTOMIZATION):
             return ZendeskMapper(
-                customization_name=customization_name, cloud_portal=mocker.MagicMock())
+                customization_name=customization_name, cloud_portal=mocker.MagicMock(), default_permission_group_id=randint(1000, 9999))
 
         return _get_mapper_instance
 
@@ -519,6 +519,7 @@ class TestZendeskMapper:
         mock_item.name = str(uuid4())
         mock_item.parent_section_id = parent_section.section_id
         mock_item.category_id = parent_category.category_id
+        mock_item.position = randint(1, 20)
 
         return site, parent_category, parent_section, mock_item
 
@@ -534,7 +535,10 @@ class TestZendeskMapper:
             'name': mock_item.name,
             'site': site.id,
             'parent_category': parent_category.id,
-            'parent_section': parent_section.id
+            'parent_section': parent_section.id,
+            'section': parent_section.id,
+            'permission_group_id': mapper_instance.default_permission_group_id,
+            'position': mock_item.position
         }
 
     def test_map_item(self, mock_item, get_mapper_instance, db):

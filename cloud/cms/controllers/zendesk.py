@@ -335,14 +335,14 @@ class Importer:
 
 
 class ZendeskBase:
-    def __init__(self, customization_name=settings.CUSTOMIZATION, cloud_portal=None):
+    def __init__(self, customization_name=settings.CUSTOMIZATION, cloud_portal=None, default_permission_group_id=None):
         self.customization_name = customization_name
         self.cloud_portal = cloud_portal or get_cloud_portal_asset(
             self.customization_name)
         domain = self.cloud_portal.read_global_value('%ZENDESK_DOMAIN%')
         api_key = self.cloud_portal.read_global_value('%ZENDESK_API_KEY%')
         email = self.cloud_portal.read_global_value('%ZENDESK_API_EMAIL%')
-        self.default_permission_group_id = self.cloud_portal.read_global_value(
+        self.default_permission_group_id = default_permission_group_id or self.cloud_portal.read_global_value(
             '%ZENDESK_PERM_GROUP_ID%')
         if not domain or not api_key:
             raise ZendeskNotConfigured
@@ -361,8 +361,8 @@ class ZendeskMapper(ZendeskBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.site = ZendeskSite.objects.filter(
-            customization__name=self.customization_name).first()
+        self.site = ZendeskSite.objects.get_or_create(
+            customization=Customization.objects.filter(name=self.customization_name).first())[0]
         self.zd_categories = ZendeskCategory.objects.filter(site=self.site)
         self.zd_sections = ZendeskSection.objects.filter(site=self.site)
         self.zd_articles = ZendeskArticle.objects.filter(site=self.site)
@@ -372,6 +372,16 @@ class ZendeskMapper(ZendeskBase):
             category_id=category_id).first(), 'pk', None)
         parent_section_pk = getattr(self.zd_sections.filter(
             section_id=section_id).first(), 'pk', None)
+        is_article = label == 'article'
+        fields_from_article = 'author_id', 'created_at', 'edited_at', 'html_url', 'title', 'updated_at', 'user_segment_id'
+        article_params = {
+            field: getattr(item, field, None) for field in fields_from_article
+        } if is_article else {}
+
+        if is_article:
+            article_params['labels'] = ','.join(
+                str(ZendeskArticleLabel.objects.get_or_create(site=self.site, name=label)[0].id) for label in item.label_names)
+    
         return {
             k: v for k, v in
             {
@@ -379,7 +389,11 @@ class ZendeskMapper(ZendeskBase):
                 'name': item.name,
                 'site': self.site.id,
                 'parent_category': parent_category_pk,
-                'parent_section': parent_section_pk
+                'section': parent_section_pk,
+                'parent_section': parent_section_pk,
+                'permission_group_id': self.default_permission_group_id,
+                'position': getattr(item, 'position', None),
+                **article_params
             }.items()
             if v is not None
         }
@@ -430,7 +444,7 @@ class ZendeskMapper(ZendeskBase):
 
         existing = self.zd_articles.filter(article_id=item_id).first()
         if existing:
-            return existing.menu_node.admin_link, existing.admin_link, existing.asset.admin_link
+            return (existing.menu_node.admin_link if existing.menu_node else ''), existing.admin_link, existing.asset.admin_link
 
     def _get_section_admin_url(self, label, item_id):
         if label != 'section':
@@ -1076,7 +1090,7 @@ def check_if_article_can_sync(zendesk_sync_log, node):
         site=zendesk_sync_log.zendesk_site).first()
     sync_enabled = getattr(zd_article, 'sync', True)
 
-    if all([zendesk_sync_log, review, sync_enabled]):
+    if all([zendesk_sync_log, sync_enabled]):
         return zd_article, review
 
 

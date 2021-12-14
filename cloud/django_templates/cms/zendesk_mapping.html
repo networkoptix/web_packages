@@ -32,7 +32,10 @@
 </details>
 {% csrf_token %}
 {% if error_message %}
-<h2 class="error-message">{{error_message}}</h2>
+<h2 class="error-message">
+    <span>{{error_message}}</span>
+    <a href="{{settings_page}}" target="_blank">Update zendesk settings for this customization</a>
+</h2>
 {% endif %}
 {% include "cms/zendesk_mapping_list.html" with items=items wrapper="outer-level" only %}
 <script>
@@ -55,6 +58,18 @@
         }
     }
     document.querySelectorAll('button.zendesk-clean').forEach(cleanButton => cleanButton.addEventListener('click', runClean))
+    const originalRefreshValue = window.localStorage.getItem('forceRefresh')
+    function confirmReload() {
+        window.removeEventListener('focus', confirmReload)
+        if (window.confirm('Additional nodes have been mapped or created on a another window. Do you want to refresh to show latest data?')) {
+            window.location.reload()
+        }
+    }
+    window.addEventListener('storage', () => {
+        if (window.localStorage.getItem('forceRefresh') !== originalRefreshValue) {
+            window.addEventListener('focus', confirmReload)
+        }
+    })
 </script>
 {% endblock %}
     

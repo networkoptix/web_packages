@@ -666,7 +666,7 @@ class Asset(models.Model):
 
     @property
     def admin_link(self):
-        context_id = self.datarecord_set.first().context.id
+        context_id = context.id if (context := self.datarecord_set.first()) else Context.objects.get(asset_type=self.asset_type.type).id
         return reverse('admin:change_page', args=(self.id, context_id))
 
     def is_asset_type(self, asset_type):
@@ -2535,7 +2535,7 @@ class ZendeskArticle(models.Model):
         published_version = self.asset.version_id(customization=customization)
         successful_syncs = self.zendesksyncitem_set.filter(
             state=SYNC_STATES.success, sync_log__zendesk_site__customization__name=customization, zendesk_article=self)
-        update_to_date = next(filter(lambda sync: sync.review.version.id == published_version, successful_syncs), None)
+        update_to_date = next(filter(lambda sync: published_version == 0 or (sync.review.version.id == published_version), successful_syncs), None)
 
         if include_published or not published_version or not update_to_date:
             last_success = successful_syncs.last()
@@ -2662,7 +2662,7 @@ class ZendeskSyncItem(models.Model):
     menu_node = models.ForeignKey(
         MenuNode, on_delete=models.CASCADE, editable=False)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE, editable=False)
-    review = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE, editable=False)
+    review = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     zendesk_section = models.ForeignKey(
         ZendeskSection, on_delete=models.CASCADE, editable=False)
     zendesk_article = models.ForeignKey(
@@ -2695,7 +2695,7 @@ class ZendeskSyncItem(models.Model):
     def details(self):
         title_structure = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation, name='title').first()
         title = DataStructure.find_actual_values(
-                    [title_structure], asset=self.asset, version_id=self.review.id, customization_name=self.sync_log.zendesk_site.customization.name
+                    [title_structure], asset=self.asset, version_id=getattr(self.review, 'id', 0), customization_name=self.sync_log.zendesk_site.customization.name
         ).get(title_structure, self.zendesk_article.title)
         menu_node_id = getattr(self.zendesk_section.menu_node, 'id', 0)
         menu_node_admin_link = getattr(self.zendesk_section.menu_node, 'admin_link', '')
@@ -2717,8 +2717,8 @@ class ZendeskSyncItem(models.Model):
                 'asset_admin': self.zendesk_article.asset.admin_link,
                 'asset_title': title,
                 'failure_message': self.failure_message,
-                'review_id': self.review.id,
-                'review_admin': reverse('admin:cms_assetcustomizationreview_change', args=(self.review.id,)),
+                'review_id': getattr(self.review, 'id', 0),
+                'review_admin': reverse('admin:cms_assetcustomizationreview_change', args=(self.review.id,)) if self.review else '',
                 'state': SYNC_STATES[self.state]
             }
         }

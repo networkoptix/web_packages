@@ -97,6 +97,7 @@ strong.muted {
 h2.error-message {
     cursor: unset;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     padding: 144px 16px;
     color: red;
