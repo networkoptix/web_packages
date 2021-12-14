@@ -6,6 +6,7 @@ import {
     Input,
     ViewChild
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
@@ -17,6 +18,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
+import type { Process } from '@services/process.service';
 import { NxStorageService } from '@services/storage.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
@@ -35,8 +37,8 @@ export class LoginWebadminModalContent implements OnInit {
     CONFIG: IConfig;
 
     locationService: Location;
-    auth;
-    login;
+    auth: { email: string };
+    login: Process;
     next: string;
     password: string;
     remember: boolean;
@@ -45,9 +47,9 @@ export class LoginWebadminModalContent implements OnInit {
     wrongCredentials: boolean;
     accountBlocked: boolean;
 
-    @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
+    @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
@@ -76,22 +78,22 @@ export class LoginWebadminModalContent implements OnInit {
         this.setupDefaults();
     }
 
-    resendActivation(email) {
-        this.activeModal.close();
+    // resendActivation(email) {
+    //     this.activeModal.close();
 
-        this.processService.createProcess(() => {
-            return this.account.reactivate(email);
-        }, {
-            errorCodes: {
-                forbidden: this.LANG.errorCodes.accountAlreadyActivated(),
-                notFound: this.LANG.errorCodes.emailNotFound()
-            },
-            holdAlerts: true,
-            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
-        });
-    }
+    //     this.processService.createProcess(() => {
+    //         return this.account.reactivate(email);
+    //     }, {
+    //         errorCodes: {
+    //             forbidden: this.LANG.errorCodes.accountAlreadyActivated(),
+    //             notFound: this.LANG.errorCodes.emailNotFound()
+    //         },
+    //         holdAlerts: true,
+    //         errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
+    //     });
+    // }
 
-    resetForm() {
+    resetForm(): void {
         if (!this.loginForm.valid) {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
@@ -100,12 +102,12 @@ export class LoginWebadminModalContent implements OnInit {
         }
     }
 
-    setEmail(email) {
+    setEmail(email: string): void {
         this.auth.email = email;
         this.storageService.email = this.auth.email;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const url = new URL(this.document.location.href);
         const [hash, query] = url.hash.split('?');
         const params = new URLSearchParams(query || '');
@@ -127,15 +129,21 @@ export class LoginWebadminModalContent implements OnInit {
         // ****************************************************
 
         // Check the url queryParams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        const nextUrl = /\?next=(.*)/.exec(
+            this.document.location.search.replace(/%2F/g, '/')
+        );
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
         this.password = '';
         const showWrongCredentialsError = () => {
             this.wrongCredentials = true;
-            this.loginForm.controls.login_email.setErrors({ nx_wrong_credentials: true });
-            this.loginForm.controls.login_password.setErrors({ nx_wrong_credentials: true });
+            this.loginForm.controls.login_email.setErrors({
+                nx_wrong_credentials: true
+            });
+            this.loginForm.controls.login_password.setErrors({
+                nx_wrong_credentials: true
+            });
         };
 
         this.login = this.processService.createProcess(() => {
@@ -144,7 +152,11 @@ export class LoginWebadminModalContent implements OnInit {
             this.wrongCredentials = false;
             this.accountBlocked = false;
 
-            return this.account.login(this.auth.email, this.password, this.remember);
+            return this.account.login(
+                this.auth.email,
+                this.password,
+                this.remember
+            );
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
@@ -156,7 +168,9 @@ export class LoginWebadminModalContent implements OnInit {
                     this.loginForm.controls.login_password.markAsUntouched();
 
                     this.accountBlocked = true;
-                    this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
+                    this.loginForm.controls.login_password.setErrors({
+                        nx_account_blocked: true
+                    });
                 },
                 'This authorization method is forbidden. Please contact your system administrator.':
                     this.LANG.toastMessage.webAdminCloudCredentialError()
@@ -210,7 +224,7 @@ export class LoginWebadminModalContent implements OnInit {
         });
     }
 
-    redirectOauthLogin() {
+    redirectOauthLogin(): void {
         if (this.window.navigator.onLine) {
             this.account.mediaServerApi.redirectOauth();
         } else {
@@ -222,7 +236,7 @@ export class LoginWebadminModalContent implements OnInit {
         }
     }
 
-    oauthLogin(code: string) {
+    oauthLogin(code: string): void {
         this.account.mediaServerApi
             .loginOauth(code)
             .subscribe(() => {
