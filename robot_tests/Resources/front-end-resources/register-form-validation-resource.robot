@@ -27,7 +27,10 @@ Check Email Outline
 
 Check First Name Outline
     [Arguments]    ${first}
-    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-bottom-color    ${ERROR COLOR WITH OPACITY}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-top-color    ${ERROR COLOR WITH OPACITY}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-right-color    ${ERROR COLOR WITH OPACITY}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-left-color    ${ERROR COLOR WITH OPACITY}
     Element Style Should Be    ${REGISTER FIRST NAME INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 

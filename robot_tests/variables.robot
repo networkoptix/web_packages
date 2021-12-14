@@ -93,11 +93,11 @@ ${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?c
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
-${FIRST NAME IS REQUIRED}             //span[contains(@class,'input-error') and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}              //span[contains(@class,'input-error') and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
-${EMAIL IS REQUIRED}                  //span[contains(@class,'input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL ALREADY REGISTERED}           //span[contains(@class,'input-error') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
-${EMAIL INVALID}                      //span[contains(@class,'input-error') and contains(text(),"${EMAIL INVALID TEXT}")]
+${FIRST NAME IS REQUIRED}             ${REGISTER FIRST NAME INPUT}/following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${LAST NAME IS REQUIRED}              ${REGISTER LAST NAME INPUT}/following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${EMAIL IS REQUIRED}                  ${REGISTER EMAIL INPUT}/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
+${EMAIL ALREADY REGISTERED}           //p[contains(@class,'error-label') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
+${EMAIL INVALID}                      //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
 ${PASSWORD SPECIAL CHARS}             //div[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
 ${PASSWORD IS WEAK}                   //div[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 ${PASSWORD TOO SHORT}                 //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]

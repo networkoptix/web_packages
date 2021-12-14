@@ -12,7 +12,7 @@ ${TERMS AND CONDITIONS CHECKBOX REAL}       ${TERMS AND CONDITIONS CHECKBOX VISI
 
 ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
-${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(),"${TERMS AND CONDITIONS ERROR TEXT}")]
+${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//nx-checkbox/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
 ${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']
 ${RESEND ACTIVATION LINK BUTTON}      //nx-authorize-email-component//p[@class="fake-link" and text()="${RESEND ACTIVATION LINK BUTTON TEXT}"]
 ${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}

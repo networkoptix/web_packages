@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}/register
+Suite Setup       Open Browser and go to URL    ${url}/authorize?client_type=create
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
@@ -144,7 +144,7 @@ Test Register Invalid
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
     Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword
+    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    createAccountPassword
     Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
     Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
     Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
@@ -152,4 +152,4 @@ Test Register Invalid
 
 Restart
     Close Browser
-    Open Browser and go to URL    ${url}/register
+    Open Browser and go to URL    ${url}/authorize?client_type=create
