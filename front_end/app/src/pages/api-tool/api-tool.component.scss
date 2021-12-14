@@ -17,7 +17,7 @@
     overflow-x: visible !important;
     overflow-y: overlay !important;
 	margin        : 0 !important;
-	padding-left  : 1rem !important;
+	padding-left  : 0 !important;
 	padding-right : 0 !important;
     background: $additional_light2;
     height: 100% !important;
@@ -47,6 +47,7 @@
         margin: 1rem -1rem 1rem -1rem;
         grid-column: span 12;
         grid-row: 1 / -1;
+        width: 100%;
 
         @include media-breakpoint-up(md) {
             position: sticky;
@@ -60,6 +61,18 @@
 
         @include media-breakpoint-down(sm){
             margin: 0px 16px;
+        }
+
+        div.left-menu-arrow > svg-icon > svg {
+            width: 16px !important;
+            height: 16px !important;
+            > g > polyline  {
+                stroke: $dark10;
+            }
+        }
+
+        nx-search {
+            padding: 0 1rem;
         }
     }
 

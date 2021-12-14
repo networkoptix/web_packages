@@ -772,7 +772,9 @@
 			display: none;
 		}
 		tbody tr td:first-of-type {
-			@include typography.medium13dark10;
+			width: 25%;
+			min-width: 25%;
+			@include typography.medium14dark10;
 		}
 	}
 }

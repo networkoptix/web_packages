@@ -205,6 +205,7 @@ export class NxSwaggerComponent implements OnChanges {
             this.modifyCodeBlocksAndTextareas();
             this.addTabItemEventListener();
             this.changeRequestBodyText();
+            this.removeInputPlaceholders();
             this.addButtonEventListeners();
             this.insertCustomDropdown();
             this.moveExampleResponse();
@@ -246,6 +247,13 @@ export class NxSwaggerComponent implements OnChanges {
                 // Ignore code blocks that come from the markdown from the json
                 highlightAllCode(element);
             }
+        }
+    }
+
+    private removeInputPlaceholders = () => {
+        const inputs = this.document.querySelectorAll('input');
+        for (const input of inputs as any) {
+            input.removeAttribute('placeholder');
         }
     }
 
