@@ -77,7 +77,7 @@
     "WRONG PASSWORD"                       :    "Wrong password",
     "ACCOUNT NOT FOUND TEXT"               :    "Account not found",
     "ACCOUNT DOES NOT EXIST TEXT"          :    "Account does not exist.",
-    "YOU CAN CREATE ACCOUNT TEXT"          :    "You can create an account with this email address or try to enter a different one.",
+    "YOU CAN CREATE ACCOUNT TEXT"          :    "You can create account with this email address or try to enter a different one.",
     "CANNOT SEND CONFIRMATION EMAIL"       :    "Cannot send confirmation Email:",
     "ACCOUNT ALREADY EXISTS"               :    "Account already exists",
     "ACCOUNT DOES NOT EXIST"               :    "Account does not exist.",

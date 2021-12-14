@@ -1455,7 +1455,7 @@ Reset
         ...    ${LOCAL USER LOGIN}
         ...    ${LOCAL USER NAME}
         ...    ${LOCAL USER EMAIL}    
-        ...    ${DISABLE USER SWITCH}
+        ...    ${DISABLE USER SWITCH}/..
         ...    ${LOCAL USER DELETE BUTTON}
         ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+newApiUser

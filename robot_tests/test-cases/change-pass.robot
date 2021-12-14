@@ -197,6 +197,6 @@ Reset DB and Open New Browser On Failure
 
 11. should open change password page in anonymous state
     [tags]    anonymous
-    Open page anonymously    ${url}/account/password    ${PRODUCT_NAME}
+    Open page anonymously    ${url}/account/password    Authorization
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
