@@ -28,6 +28,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from notifications import urls as notifications_urls
 from cloud.views.meta import app_view, robots_txt
+from cloud.views.utils import serve_static
 
 
 def redirect_login(request):
@@ -100,6 +101,7 @@ urlpatterns = [
                              content_type='application/javascript')),
     url(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
     url(r'^robots.txt', robots_txt),
+    url(r'^serve/(?P<static_path>.+?)/?$', serve_static, name="serve_static"),
     url(r'^(?!static|preview|admin).*', app_view)
 ]
 

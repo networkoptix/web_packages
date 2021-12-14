@@ -954,7 +954,7 @@ class AdminUploadedFilter(SimpleListFilter):
 
 @admin.register(ExternalFile)
 class ExternalFileAdmin(CMSAdmin):
-    list_display = 'id', 'file', 'admin_uploaded', 'asset_ds_pair_count', 'size', 'md5'
+    list_display = 'id', 'file_path', 'download', 'admin_uploaded', 'asset_ds_pair_count', 'size', 'md5'
     fields = 'file',
     list_filter = AdminUploadedFilter,
 
@@ -964,11 +964,17 @@ class ExternalFileAdmin(CMSAdmin):
     def admin_uploaded(self, obj):
         return obj.admin_upload or 'No'
 
+    def download(sef, obj):
+        return mark_safe(f'<a class="btn btn-sm" href="/static{settings.MEDIA_URL}{obj}">Download File</a>')
+
+    def file_path(sef, obj):
+        return mark_safe(f'<a href="/serve/{obj}" target="_blank">{obj}</a>')
+
     def has_add_permission(self, request):
         return request.user.is_superuser
     
     def has_change_permission(self, request, obj=None):
-        return obj and obj.admin_upload == request.user
+        return obj.admin_upload == request.user if obj else  request.user.is_superuser
 
     def save_model(self, request, obj, form, change):
         obj = ExternalFile.objects.create(obj.file, user=request.user)

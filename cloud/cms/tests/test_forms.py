@@ -713,7 +713,7 @@ class TestLanguageForm:
     def test_initial_customizations_value_with_new_language(self, create_new_language):
         initial_customizations_value = self.form.fields['customizations'].initial
         assert isinstance(initial_customizations_value, QuerySet)
-        assert initial_customizations_value.count() is 0
+        assert initial_customizations_value.count() == 0
 
     def test_initial_customizations_value_with_existing_language(self, use_existing_language):
         initial_customizations_value = self.form.fields['customizations'].initial
