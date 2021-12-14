@@ -1,11 +1,12 @@
+<nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
-    <nx-page-placeholder
-            class="sectional-div licenses-placeholder"
-            type="NO_SETTINGS"
-            *ngIf="!system?.isOnline">
-    </nx-page-placeholder>
+<nx-page-placeholder
+        class="sectional-div licenses-placeholder"
+        type="NO_SETTINGS"
+        *ngIf="system && !system.isOnline">
+</nx-page-placeholder>
 
-    <div *ngIf="system?.isOnline">
+<div *ngIf="system?.isOnline">
         <nx-license-new-component
                 [system]="system"
                 [servers]="system?.servers"
@@ -22,5 +23,4 @@
                 [system]="system"
                 [licenses]="licenses">
         </nx-license-detail-component>
-    </div>
-
+</div>

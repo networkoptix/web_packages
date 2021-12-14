@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { forkJoin, SubscriptionLike } from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSettingsService } from '../settings.service';
 import { NxSystem, NxSystemServer } from '@services/system.service';
-import { NxMenuService } from '@src/menu/menu.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxUtilsService } from '@services/utils.service';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { NxMenuService } from '@src/menu/menu.service';
+
+import { NxSettingsService } from '../settings.service';
 
 @UntilDestroy()
 @Component({

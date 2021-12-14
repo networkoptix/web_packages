@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject }       from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+
 import { NxRibbonService } from '@components/ribbon';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
