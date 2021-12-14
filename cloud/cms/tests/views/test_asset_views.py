@@ -843,7 +843,8 @@ def test_handle_settings_file(mocker):
 
 
 def test_get_settings_from_request(arf, account_factory, db):
-    asset = baker.make(Asset)
+    asset_type = AssetType.objects.first() or baker.make(AssetType)
+    asset = baker.make(Asset, asset_type=asset_type)
     user = account_factory()
     data = {}
     request = arf.post('', data=data)
@@ -851,20 +852,24 @@ def test_get_settings_from_request(arf, account_factory, db):
     request.data = data
     request.session = {}
     context = {
+        'instance': asset_type,
+        'instance_type': AssetType.__name__,
         'asset': asset,
+        'asset_type': asset_type,
         'form': None,
         'conflicts': [],
         'file': '',
-        'user': user,
+        'user': request.user,
         'has_permission': admin.site.has_permission(request),
         'site_url': admin.site.site_url,
         'site_header': admin.site.site_header,
         'site_title': admin.site.site_title,
         'task_id': '',
-        'title': f'Settings for {asset.name}'
+        'title': f'Settings for {asset_type}',
+        'type_settings': True
     }
 
-    assert get_settings_from_request(request, asset.id) == (
+    assert get_settings_from_request(request, asset_type.id, target_class=AssetType) == (
         asset, None, context, None)
 
 

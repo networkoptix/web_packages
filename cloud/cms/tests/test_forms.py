@@ -331,37 +331,46 @@ class TestAssetSettingsForm:
     def setup(self, django_user_model):
         self.email = 'user_email@test.com'
         self.user = django_user_model(email=self.email)
-        self.form = AssetSettingsForm()
+        self.asset_form = AssetSettingsForm()
+        self.asset_type_form = AssetSettingsForm(target_class=AssetType)
+        self.forms = self.asset_form, self.asset_type_form
 
     def test_file(self):
-        field = self.form.fields['file']
-        assert field
-        assert field.required == False
-        assert field.label == "File"
-        assert isinstance(field, FileField)
+        for form in self.forms:
+            field = form.fields['file']
+            assert field
+            assert field.required == False
+            assert field.label == "File"
+            assert isinstance(field, FileField)
 
     def test_action(self):
-        field = self.form.fields['action']
-        assert field
-        assert field.required == True
-        assert field.choices == list(self.form.AVAILABLE_ACTIONS)
-        assert isinstance(field.widget, RadioSelect)
-        assert isinstance(field, ChoiceField)
+        forms_and_actions = (
+            (self.asset_form, AssetSettingsForm.ASSET_ACTIONS),
+            (self.asset_type_form, AssetSettingsForm.ASSET_TYPE_ACTIONS)
+        )
+        for form, actions in forms_and_actions:
+            field = form.fields['action']
+            assert field
+            assert field.required == True
+            assert field.choices == list(actions)
+            assert isinstance(field.widget, RadioSelect)
+            assert isinstance(field, ChoiceField)
 
     def test_force(self):
-        field = self.form.fields['force']
-        assert field
-        assert field.required == False
-        assert field.label == "Force Update"
-        assert isinstance(field, BooleanField)
+        for form in self.forms:
+            field = form.fields['force']
+            assert field
+            assert field.required == False
+            assert field.label == "Force Update"
+            assert isinstance(field, BooleanField)
 
     def test_normal_user_no_publish_choice(self):
-        import_assets_from_json_publish = [choice for choice in self.form.fields['action'].choices if choice[0] == 'import_assets_from_json_publish']
+        import_assets_from_json_publish = [choice for choice in self.asset_type_form.fields['action'].choices if choice[0] == 'import_assets_from_json_publish']
         assert not len(import_assets_from_json_publish)
 
     def test_superuser_has_publish_choice(self):
         self.user.is_superuser = True
-        form = AssetSettingsForm(user = self.user)
+        form = AssetSettingsForm(user = self.user, target_class=AssetType)
         import_assets_from_json_publish = [choice for choice in form.fields['action'].choices if choice[0] == 'import_assets_from_json_publish']
         assert len(import_assets_from_json_publish)
 
@@ -370,7 +379,7 @@ class TestAssetSettingsForm:
         assert form.errors
 
     def test_no_form_errors_from_required_fields(self):
-        form = AssetSettingsForm(data = {'action': 'generate_json'})
+        form = AssetSettingsForm(data = {'action': 'generate_json'}, target_class=AssetType)
         assert not form.errors
 
 

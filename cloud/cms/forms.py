@@ -325,30 +325,33 @@ class AssetSettingsForm(forms.Form):
         required=False
     )
 
-    AVAILABLE_ACTIONS = (
-            ('generate_json', mark_safe('Generate structure template based on archive<br>'
-                                        '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
+    ASSET_ACTIONS = (
             ('merge_with_db', mark_safe('Generate structure using archive and db<br>'
                               '<span class="radio-hint">Upload a zip archive to generate a structure.json file that uses values of the asset from the db and archive<br>'
                               'If a value doesn\'t exist in the db it takes the value from the zip archive.</span>')),
+            ('update_content', mark_safe('Upload content files for this asset<br>'
+                                         '<span class="radio-hint">Upload a zip archive to update content such as images for the asset.</span>')),
+            ('update_asset_by_json', mark_safe('Update data records for this asset from a json file<br>'
+                                               '<span class="radio-hint">Upload a structure.json to update the data records for the current asset</span>'))
+    )
+
+    ASSET_TYPE_ACTIONS = (
+            ('generate_json', mark_safe('Generate structure template based on archive<br>'
+                                        '<span class="radio-hint">Upload a zip archive to generate a structure.json file from the archive</em>')),
             ('update_structure',
              mark_safe(
                  'Update CMS structure and default values based on archive with structure.json and asset_type template, '
                  'or upload just the structure.json<br>'
                  '<span class="radio-hint">If you upload only structure.json it will only modify the structure of the asset_type.<br>'
                  'If you upload an archive with the structure.json in the base directory it will update contexts and datastructure in the asset_type.</span>')),
-            ('update_content', mark_safe('Upload content files for this asset<br>'
-                                         '<span class="radio-hint">Upload a zip archive to update content such as images for the asset.</span>')),
-            ('update_asset_by_json', mark_safe('Update data records for this asset from a json file<br>'
-                                               '<span class="radio-hint">Upload a structure.json to update the data records for the current asset</span>')),
             ('import_assets_from_json', mark_safe('Create assets and update data records for existing assets from a json file<br>'
                                                   '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets</span>')),
-        )
+    )
 
     action = forms.ChoiceField(
         widget=forms.RadioSelect,
         required=True,
-        choices=AVAILABLE_ACTIONS
+        choices=[]
     )
 
     force = forms.BooleanField(
@@ -358,9 +361,12 @@ class AssetSettingsForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        is_asset = kwargs.pop('target_class', Asset) is Asset
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user and user.is_superuser:
+        self.fields['action'].choices = AssetSettingsForm.ASSET_ACTIONS if is_asset else AssetSettingsForm.ASSET_TYPE_ACTIONS
+
+        if user and user.is_superuser and not is_asset:
             self.fields['action'].choices += ('import_assets_from_json_publish',
                                               mark_safe('Create assets and update data records for existing assets from a json file and publish/accept reviews<br>'
                                                         '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets. Also submits and accepts reviews</span>')),

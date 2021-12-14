@@ -659,10 +659,13 @@ def handle_settings_file(request, form, file, asset):
     return task_id, response, conflicts
 
 
-def get_settings_from_request(request, asset_id):
+def get_settings_from_request(request, obj_id, target_class=Asset):
     PACKAGE_CACHE = PackagesCache()
-    form = AssetSettingsForm(request.POST, request.FILES, user=request.user)
-    asset = Asset.objects.get(pk=asset_id)
+    form = AssetSettingsForm(request.POST, request.FILES, user=request.user, target_class=target_class)
+    instance = target_class.objects.get(pk=obj_id)
+    is_asset_type = isinstance(instance, AssetType)
+    asset = instance.asset_set.first() if is_asset_type else instance
+    asset_type = instance if is_asset_type else instance.asset_type
     file = request.FILES.get('file', None)
     form = form if form.is_valid() else None
 
@@ -672,7 +675,10 @@ def get_settings_from_request(request, asset_id):
         ]
 
     context = {
-        'asset': asset,
+        'instance': instance,
+        'instance_type': target_class.__name__,
+        'asset': asset or Asset(asset_type=asset_type),
+        'asset_type': asset_type,
         'form': form if file else None,
         'conflicts': [],
         'file': file.name if file and not isinstance(file, (list, dict)) else '',
@@ -682,16 +688,14 @@ def get_settings_from_request(request, asset_id):
         'site_header': admin.site.site_header,
         'site_title': admin.site.site_title,
         'task_id': '',
-        'title': f'Settings for {asset.name}'
+        'title': f'Settings for {instance.name or instance}',
+        'type_settings': is_asset_type
     }
     return asset, file, context, form
 
 
-@swagger_auto_schema(methods=["GET", "POST"], operation_description=asset_settings_wiki, auto_schema=None)
-@api_view(["GET", "POST"])
-@permission_classes((IsSuperuser,))
-def asset_settings(request, asset_id):
-    asset, file, context, *_ = get_settings_from_request(request, asset_id)
+def render_settings(request, instance_id, target_class=Asset):
+    asset, file, context, *_ = get_settings_from_request(request, instance_id, target_class=target_class)
 
     if context['form']:
         task_id, response, asset_name_conflicts = handle_settings_file(
@@ -707,12 +711,26 @@ def asset_settings(request, asset_id):
             return response
 
     else:
-        context['form'] = AssetSettingsForm(user=request.user)
+        context['form'] = AssetSettingsForm(user=request.user, target_class=target_class)
 
     if context['form'].is_valid() and not context['form'].cleaned_data['force']:
         messages.info(request, 'Checking asset names...')
 
     return shortcuts.render(request, 'cms/asset_settings.html', context)
+
+
+@swagger_auto_schema(methods=["GET", "POST"], operation_description=asset_settings_wiki, auto_schema=None)
+@api_view(["GET", "POST"])
+@permission_classes((IsSuperuser,))
+def asset_settings(request, asset_id):
+    return render_settings(request, asset_id)
+
+
+@swagger_auto_schema(methods=["GET", "POST"], operation_description=asset_settings_wiki, auto_schema=None)
+@api_view(["GET", "POST"])
+@permission_classes((IsSuperuser,))
+def asset_type_settings(request, asset_type_id):
+    return render_settings(request, asset_type_id, AssetType)
 
 
 @api_view(["GET", "POST"])

@@ -301,8 +301,15 @@ class CMSAdmin(admin.ModelAdmin):
 
 
 class AssetTypeAdmin(CMSAdmin):
-    list_display = ('name', 'type', 'can_preview', 'single_customization',)
+    list_display = ('name', 'type', 'asset_type_settings', 'can_preview', 'single_customization',)
     list_display_links = ('name', 'type')
+
+    def asset_type_settings(self, obj):
+        return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
+                           reverse('asset_type_settings', args=[obj.id]))
+
+    asset_type_settings.short_description = 'Asset Type settings'
+    asset_type_settings.allow_tags = True
 
 
 admin.site.register(AssetType, AssetTypeAdmin)
