@@ -41,6 +41,9 @@
                     </a>
                     <ng-template #disabledItem>
                         <a class="dropdown-item inset disabled" (click)="show = false">
+                            <ng-container *ngIf="item.icon">
+                                <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item: item, marginLeft: '15' }"></ng-container>
+                            </ng-container>
                             <span class="disabled" [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
                         </a>
                     </ng-template>

@@ -202,16 +202,19 @@ export class NxAPIToolService {
     }
 
     makeSystemName = (system) => {
-        const version = system.info?.version ? ' (' + system.info.version + ')' : '';
-        return system.info?.name + version || 'System';
+        const nameString = system.info?.name || system.name || 'System';
+        const version = system.info?.version || system.version || '';
+        const versionString = version ? ' (' + version + ')' : '';
+        return nameString + versionString;
     }
 
     async getSystem() {
         this.systems.forEach(system => {
             if (system.name !== undefined) {
                 const onlineSystem = this.systemIsOnline(system);
-                const sysName = onlineSystem ? system.name : system.name + ' - Offline';
-                this.systemsDropdown.push({ value: system.id, name: sysName, disabled: !onlineSystem, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' });
+                const sysName = this.makeSystemName(system);
+                const displayName = onlineSystem ? sysName : sysName + ' - Offline';
+                this.systemsDropdown.push({ value: system.id, name: displayName, disabled: !onlineSystem, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' });
                 if (onlineSystem) {
                     this.validSystems.push(system);
                 }
