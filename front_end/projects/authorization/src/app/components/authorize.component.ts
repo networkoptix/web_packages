@@ -7,8 +7,8 @@ import {
 import { ActivatedRoute, Router }     from '@angular/router';
 import { UntilDestroy }               from '@ngneat/until-destroy';
 import { LocalStorageService }        from 'ngx-webstorage';
-import { BehaviorSubject, defer, fromEvent } from 'rxjs';
-import { debounceTime, retryWhen, delay, take, map }   from 'rxjs/operators';
+import { BehaviorSubject, fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -17,6 +17,7 @@ import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxCloudApiService }         from '@services/nx-cloud-api';
 import { WINDOW }                    from '@services/window-provider';
+import { environment } from '@environments/environment';
 require('what-input');
 
 export interface AuthorizeParams {
@@ -172,7 +173,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
+    // method only used by child components to transition between child components
     setCurrentState(state: string) {
+        // when user uses link to go directly to create-account and presses back, sets them into normal login clientTypes
+        if (state === 'email' && this.clientType === ClientType.create) {
+            this.clientType = environment.isLocal ? ClientType.loginWebadmin : ClientType.loginCloud;
+        }
         this.currentState = AuthorizeState[state];
     }
 
