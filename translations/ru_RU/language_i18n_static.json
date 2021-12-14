@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",
         "nameFail": "Failed to change {type} name",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
         "system": {

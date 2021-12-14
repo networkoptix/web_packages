@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Se connecter",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Veuillez vous reconnecter.",
+            "title": "Votre session a expiré"
         },
         "titles": {
             "error": "Erreur",
@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Impossible d'appliquer les modifications",
         "reviewAccepted": "La révision a été acceptée",
         "system": {
@@ -875,8 +876,8 @@
             }
         },
         "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "L'authentification à deux facteurs a été activée pour ce compte. Veuillez entrer votre code de vérification dans la fenêtre contextuelle.",
+        "loggingIn": "Connexion en cours. Veuillez patienter."
     },
     "headerLabels": {
         "healthReportForSystem": "Rapport de santé pour le système {systemName}"
@@ -1026,7 +1027,7 @@
             "v5Warning_a4": "Client %VMS_NAME%",
             "v5Warning_a5": "car les versions précédentes du client %VMS_NAME% ne prennent pas en charge l'authentification à deux facteurs, vous ne serez donc pas en mesure d'entrer un code de vérification pour votre compte %CLOUD_NAME%.",
             "v5Warning_b": "{count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} {count, plural, =0{seront} one{sera} other{seront}} entièrement accessible dès qu'{count, plural, =0{ils seront} one{il sera} other{ils seront}} mis à niveau vers la version 5.0.",
-            "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
+            "disableWarning": "Vous avez {count, plural, one{# système} other{# systèmes}} qui {count, plural, one{requiert} other{requiert}} l'authentification à deux facteurs. Vous ne pourrez pas vous connecter à {count, plural, one{ce système} other{ces systèmes}}."
         }
     },
     "storage": {

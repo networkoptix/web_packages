@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Logga in",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Var god logga in igen.",
+            "title": "Din session har gått ut"
         },
         "titles": {
             "error": "Fel",
@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Det gick inte att tillämpa ändringar",
         "reviewAccepted": "Avtal har accepterats",
         "system": {

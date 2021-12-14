@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Log opnieuw in.",
+            "title": "Uw sessie is verlopen"
         },
         "titles": {
             "error": "Fout",
@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Wijzigingen toepassen is mislukt",
         "reviewAccepted": "De review is verwijderd",
         "system": {
@@ -875,8 +876,8 @@
             }
         },
         "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "Twee-factor-authenticatie is ingeschakeld voor dit account. Voer uw verificatiecode in het pop-upvenster in.",
+        "loggingIn": "Inloggen. Een ogenblik geduld."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"

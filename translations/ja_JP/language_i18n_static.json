@@ -355,7 +355,7 @@
             "targetSystemBoundToCloud": "このシステムはクラウドに接続されていません。クラウドに紐付けされたシステムとは統合できません。",
             "urlEmpty": "サーバーのアドレスを入力してください",
             "urlNotValid": "有効な URL を入力してください",
-            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>問い合わせください。",
+            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> まで問い合わせください。",
             "warning": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。"
         },
         "message": {
@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "ログイン",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "もう一度ログインしてください。",
+            "title": "セッションの期限が切れました"
         },
         "titles": {
             "error": "エラー",
@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "変更の適用に失敗しました",
         "reviewAccepted": "レビューが承認されました。",
         "system": {
@@ -875,8 +876,8 @@
             }
         },
         "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "このアカウントでは二要素認証が有効になっています。ポップアップウィンドウに認証コードを入力してください。",
+        "loggingIn": "ログイン中。お待ちください..."
     },
     "headerLabels": {
         "healthReportForSystem": "システム {systemName} のヘルスレポート"

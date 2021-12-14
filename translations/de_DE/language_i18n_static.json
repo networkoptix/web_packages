@@ -398,8 +398,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Bitte loggen Sie sich erneut ein.",
+            "title": "Ihre Sitzung ist abgelaufen"
         },
         "titles": {
             "error": "Fehler",
@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "nameFail": "Fehler beim Ändern des {type} Namens",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Änderungen konnten nicht gespeichert werden",
         "reviewAccepted": "Die Bewertung wurde akzeptiert",
         "system": {
@@ -875,8 +876,8 @@
             }
         },
         "webAdminCloudCredentialError": "Melden Sie sich mit %CLOUD_NAME% an, um als Cloud-Benutzer auf dieses System zuzugreifen",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "Die Zwei-Faktor-Authentifizierung wurde für dieses Konto aktiviert. Bitte geben Sie Ihren Verifizierungscode in das Popup-Fenster ein.",
+        "loggingIn": "Einloggen. Bitte warten."
     },
     "headerLabels": {
         "healthReportForSystem": "Bericht für System {systemName}"

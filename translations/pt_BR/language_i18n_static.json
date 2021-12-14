@@ -853,6 +853,7 @@
     "toastMessage": {
         "cloudUnavailable": "Algo deu errado. Atualize a página em cerca de 30 segundos.",
         "nameFail": "Falha ao alterar {type} nome",
+        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Falha ao aplicar as alterações",
         "reviewAccepted": "A revisão foi aceita",
         "system": {
