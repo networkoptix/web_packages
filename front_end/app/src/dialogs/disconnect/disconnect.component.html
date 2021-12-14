@@ -9,8 +9,7 @@
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate; else ready" [process]="disconnect" [system]="system"></nx-update-webadmin-session>
-    <ng-template #ready>
+    <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
         <div class="modal-body">
             <p translate>You will be logged out.</p>
             <p translate>System will be accessible through local network with local administrator account.</p>
@@ -24,5 +23,8 @@
                                buttonText="{{ 'Continue' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>
-    </ng-template>
+    </div>
+    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
+                                (loginSuccess)="needsUpdate = false; disconnect.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </form>

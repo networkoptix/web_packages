@@ -16,7 +16,7 @@
     </div>
 </form>
 <form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
-    <ng-template #showCheckMerge>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
         <div class="modal-body">
             <p>{{machine.state.template.bodyTitle}}</p>
             <nx-select
@@ -72,11 +72,13 @@
                 [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
-    </ng-template>
-    <nx-update-webadmin-session *ngIf="updateSession; else showCheckMerge" [process]="checkMergeabilityProcess" [system]="system"></nx-update-webadmin-session>
+    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkMergeabilityProcess.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
-    <ng-template #showAdminPassword>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
         <div class="modal-body">
             <p [innerHTML]="'dialogs.merge.adminPasswordTitle'| translate: {
                     secondarySystem: secondaryName
@@ -116,11 +118,13 @@
                 [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
-    </ng-template>
-    <nx-update-webadmin-session *ngIf="updateSession; else showAdminPassword" [process]="checkPasswordProcess" [system]="system"></nx-update-webadmin-session>
+    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
-    <ng-template #showServerUrlErrors>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
         <div class="modal-body">
             <p [innerHTML]="machine.state.template.urlErrorText | safe: 'html'"></p>
         </div>
@@ -134,8 +138,10 @@
                 actionType="primary"
                 buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
         </div>
-    </ng-template>
-    <nx-update-webadmin-session *ngIf="updateSession; else showServerUrlErrors" [process]="checkPasswordProcess" [system]="system"></nx-update-webadmin-session>
+    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
     <div class="modal-body">
@@ -167,7 +173,7 @@
     </div>
 </form>
 <form *ngIf="machine.currentState === 'confirmMerge'" #confirmMergeForm="ngForm" name="confirmMergeForm">
-    <ng-template #showConfirmMerge>
+    <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
         <div class="modal-body">
             <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
                     primarySystem: primaryName,
@@ -212,6 +218,8 @@
                 actionType="primary"
                 buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
         </div>
-    </ng-template>
-    <nx-update-webadmin-session *ngIf="updateSession; else showConfirmMerge" [process]="mergingProcess" [system]="system"></nx-update-webadmin-session>
+    </div>
+    <nx-update-webadmin-session *ngIf="updateSession"
+                                (loginSuccess)="updateSession = false; mergingProcess.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </form>

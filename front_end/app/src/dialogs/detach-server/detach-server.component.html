@@ -8,8 +8,7 @@
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate; else ready" [process]="detachServer" [system]="system"></nx-update-webadmin-session>
-    <ng-template #ready>
+    <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
         <div class="modal-body">
             <div class="form-group">
                 <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
@@ -38,5 +37,9 @@
                                buttonText="{{ 'Detach' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="detachServer" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>
-    </ng-template>
+    </div>
+    <nx-update-webadmin-session
+            *ngIf="system.useRest && needsUpdate"
+            (loginSuccess)="needsUpdate = false; detachServer.run()"
+            [system]="system"></nx-update-webadmin-session>
 </form>

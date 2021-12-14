@@ -76,6 +76,7 @@ export class MergeModalContent {
     readonly serverUrlErrors: string = 'serverUrlErrors';
     readonly confirmMerge: string = 'confirmMerge';
 
+    readonly bothSystemsConnectedToCloud: string = 'bothSystemsConnectedToCloud';
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
     readonly noServerFound: string = 'noServerFound';
@@ -718,6 +719,9 @@ export class MergeModalContent {
          * localSystemId = auto-discovered system
          * else = cloud-connected merge check
          */
+        if (this.environment.isLocal && this.targetSystem.cloudOwnerId && this.system.moduleInfo.cloudOwnerId) {
+            throw Error(this.bothSystemsConnectedToCloud);
+        }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true).toPromise()
                 .then(res => {

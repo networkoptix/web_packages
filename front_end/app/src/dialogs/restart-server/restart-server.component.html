@@ -8,8 +8,7 @@
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate; else ready" [process]="restartServer" [system]="system"></nx-update-webadmin-session>
-    <ng-template #ready>
+    <div [ngStyle]="{ display: needsUpdate ? 'none': 'unset'}">
         <div class="modal-footer">
             <nx-process-button [process]="restartServer"
                                [actionType]="'primary'"
@@ -17,5 +16,8 @@
                                buttonText="{{ 'Restart' | translate }}"></nx-process-button>
             <nx-cancel-button [process]="restartServer" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>
-    </ng-template>
+    </div>
+    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
+                                (loginSuccess)="needsUpdate=false; restartServer.run()"
+                                [system]="system"></nx-update-webadmin-session>
 </div>

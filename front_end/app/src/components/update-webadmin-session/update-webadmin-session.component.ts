@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -12,8 +12,8 @@ import { NxSystem } from '@services/system.service';
     templateUrl: 'update-webadmin-session.component.html'
 })
 export class UpdateWebadminSessionComponent implements OnInit {
-    @Input('process') externalProcess: Process;
     @Input() system: NxSystem;
+    @Output() loginSuccess = new EventEmitter<any>();
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
@@ -70,7 +70,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
             }
         };
         const successHandler = () => {
-            this.externalProcess.run();
+            this.loginSuccess.emit();
         };
         const errorHandler = () => {};
         this.login = this.processService.createProcess(() => {

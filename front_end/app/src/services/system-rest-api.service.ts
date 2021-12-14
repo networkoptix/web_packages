@@ -524,7 +524,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         password = '',
         takeRemoteSettings = true
     ) {
-        const [basicCredentials, _] = remoteEndpoint.split('@');
+        const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
         remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
@@ -571,7 +571,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     // remoteCertificatePem          : '', // Currently optional.
                     mergeOneServer: false,
                     ignoreIncompatible: false,
-                    ignoreOfflineServerDuplicates: true
+                    ignoreOfflineServerDuplicates: false
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
             })

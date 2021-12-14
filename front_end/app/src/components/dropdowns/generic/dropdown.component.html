@@ -9,7 +9,7 @@
         <div class="btn loading" *ngIf="stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
         </div>
-        <ng-container *ngIf="_selectedItem.icon && !stillLoading">
+        <ng-container *ngIf="_selectedItem?.icon && !stillLoading">
             <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item:_selectedItem, marginLeft: '4' }"></ng-container>
         </ng-container>
         <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHTML]="allowHTML ? (_selectedItem && _selectedItem.name) : (_selectedItem && _selectedItem.name | unsafe)"></span>
@@ -50,11 +50,11 @@
     </div>
 
     <ng-template #dropdownItemSVG let-item="item" let-marginLeft="marginLeft">
-        <svg-icon *ngIf="item.icon"  
+        <svg-icon *ngIf="item.icon"
         [applyClass]="true"
         class="item-icon"
-        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8', 'margin-left.px': marginLeft }" 
-        nx-add-svg-src 
+        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8', 'margin-left.px': marginLeft }"
+        nx-add-svg-src
         [src]="item.icon"></svg-icon>
     </ng-template>
 
