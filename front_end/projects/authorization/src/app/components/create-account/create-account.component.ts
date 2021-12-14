@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, Input, OnChanges, OnDestroy,
-    OnInit, Output, SimpleChanges, ViewChild
+    OnInit, Output, SimpleChanges, ViewChild, Inject
 }                                               from '@angular/core';
 import { UntilDestroy }                         from '@ngneat/until-destroy';
 
@@ -9,6 +9,7 @@ import { NxLanguageProviderService }            from '@services/nx-language-prov
 import { Process }                              from '@services/process.service';
 import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
 import { AuthorizeStateType } from '../authorize.component';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -58,7 +59,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -94,7 +96,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     externalLinkForDesktop(relativePath: string) {
         // @ts-ignore
-        if (nativeClient) {
+        if (this.window.nativeClient) {
             // @ts-ignore
             nativeClient.openUrlInBrowser(relativePath);
             return false;
