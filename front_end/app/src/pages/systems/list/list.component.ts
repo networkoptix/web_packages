@@ -1,24 +1,21 @@
-import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { Location }                  from '@angular/common';
-import { Router }                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { debounceTime }              from 'rxjs/operators';
-import { Subject, Subscription }     from 'rxjs';
+import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxAccountService, Account } from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUriService }              from '@services/uri.service';
-import { NxSystemsService }          from '@services/systems.service';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { NxMenusService }            from '@services/menus.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
-import { NxUtilsService }            from '@services/utils.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -32,7 +29,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     showSearch;
     fetchComplete;
-    search;
+    search: { value: string };
     gettingSystems: Process;
     openClient;
     systems;
@@ -55,9 +52,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private utilsService: NxUtilsService,
         private language: NxLanguageProviderService,
-        private genericModal: NxModalGenericComponent,
         private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
@@ -150,8 +145,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         }
     }
 
-    setSearch(value) {
-        this.search.value = value;
+    setSearch(model: { query: string }): void {
+        this.search.value = model.query;
         this.searchChanged.next();
     }
 

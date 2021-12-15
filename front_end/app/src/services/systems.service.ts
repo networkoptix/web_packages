@@ -125,21 +125,20 @@ export class NxSystemsService implements OnDestroy {
         return this.CONFIG.accessRoles.adminAccess.includes(userRole.toLowerCase());
     }
 
-    getSystemOwnerName(system: NxSystem, currentUserEmail: string, forOrder?: boolean) {
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
+    getSystemOwnerName(
+        system: NxSystemWithUserInfo,
+        currentUserEmail: string,
+        forOrder?: boolean
+    ): string {
         if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {
-                // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
             return this.LANG.system.yourSystem();
         }
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
-            // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
             return system.ownerFullName;
         }
-        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
         return system.ownerAccountEmail;
     }
 
