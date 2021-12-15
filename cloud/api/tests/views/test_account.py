@@ -204,8 +204,8 @@ class TestAccountViews:
 
     def test_security_missing_activate(self, active_user):
         req = self.request_security(active_user)
-        resp = security(req)
-        assert resp.status_code == status.HTTP_400_BAD_REQUEST
+        view = AccountSecurity().as_view()
+        assert view(req).status_code == status.HTTP_400_BAD_REQUEST
 
     def test_security_activate(self, active_user):
         two_fa = {
@@ -213,10 +213,10 @@ class TestAccountViews:
         }
         req = self.request_security(active_user, action="activate")
         security_mock = self.mock_update_2fa(two_fa)
-        resp = security(req)
+        view = AccountSecurity().as_view()
 
-        assert resp.status_code == status.HTTP_200_OK
-        assert resp.data == {'account2faEnabled': True}
+        assert view(req).status_code == status.HTTP_200_OK
+        assert view(req).data == {'account2faEnabled': True}
         assert security_mock.call_args.args[1] == '456723'
         assert security_mock.call_args.args[2] is True
         assert security_mock.call_args.kwargs['password'] == 'pass'
@@ -228,10 +228,10 @@ class TestAccountViews:
         req = self.request_security(active_user, action="deactivate")
         security_mock = self.mock_update_2fa(two_fa)
         self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={'account2faEnabled': False})
-        resp = security(req)
+        view = AccountSecurity().as_view()
 
-        assert resp.status_code == status.HTTP_200_OK
-        assert resp.data == {'account2faEnabled': False}
+        assert view(req).status_code == status.HTTP_200_OK
+        assert view(req).data == {'account2faEnabled': False}
         assert security_mock.call_args.args[1] == '456723'
         assert security_mock.call_args.args[2] is False
 
@@ -242,10 +242,10 @@ class TestAccountViews:
         req = self.request_security(active_user, "toggle")
         self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
         security_mock = self.mock_update_2fa(two_fa)
-        resp = security(req)
+        view = AccountSecurity().as_view()
 
-        assert resp.status_code == status.HTTP_200_OK
-        assert resp.data == {'account2faEnabled': False}
+        assert view(req).status_code == status.HTTP_200_OK
+        assert view(req).data == {'account2faEnabled': False}
         assert security_mock.call_args.args[1] == '456723'
         assert security_mock.call_args.args[2] is False
 
@@ -253,12 +253,33 @@ class TestAccountViews:
         req = self.request_security(active_user, "toggle")
         self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
         security_mock = self.mock_update_2fa(two_fa)
-        resp = security(req)
+        view = AccountSecurity().as_view()
 
-        assert resp.status_code == status.HTTP_200_OK
-        assert resp.data == {'account2faEnabled': True}
+        assert view(req).status_code == status.HTTP_200_OK
+        assert view(req).data == {'account2faEnabled': True}
         assert security_mock.call_args.args[1] == '456723'
         assert security_mock.call_args.args[2] is True
+
+    def test_security_delete_2fa_enabled(self, active_user):
+        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
+        req = self.arf.delete('/api/account/security')
+        req.user = active_user
+        req.session = {}
+
+        view = AccountSecurity().as_view()
+        assert view(req).status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_security_delete_2fa_disabled(self, active_user):
+        self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+        self.mocker.patch.object(Auth, 'delete_2fa_key', return_value={})
+        req = self.arf.delete('/api/account/security')
+        req.user = active_user
+        req.session = {}
+
+        view = AccountSecurity().as_view()
+        assert view(req).status_code == status.HTTP_200_OK
+
+
 
     def test_review_cookie(self):
         assert not self.user.cookie_reviewed

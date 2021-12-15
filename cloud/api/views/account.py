@@ -11,6 +11,7 @@ from django.contrib.auth.signals import user_login_failed
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
@@ -30,7 +31,7 @@ from api.helpers.exceptions import (
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
     require_params, kill_session)
 from api.views.account_serializers import (
-    AccountSerializer, CreateAccountSerializer, AccountUpdateSerializer)
+    AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from cloud.utils import get_authenticated_session_cookie_age
 
 logger = logging.getLogger(__name__)
@@ -375,41 +376,42 @@ class SecurityAction(enum.Enum):
         return list(cls.__members__.keys())
 
 
-@swagger_auto_schema(method="POST",  # auto_schema=None,
-                     operation_description="Configures 2fa settings for users account.",
-                     request_body=openapi.Schema(
-                         type=openapi.TYPE_OBJECT,
-                         properties={
-                             "action": action__body,
-                             "password": password__body,
-                             "totp": totp__body
-                         },
-                         required=["action", "totp"]
-                     ))
-@api_view(["POST"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
-def security(request):
-    require_params(request, ("action", "totp"))
+class AccountSecurity(APIView):
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
 
-    totp = request.data.get("totp")
-    action = request.data.get("action")
-    if action not in SecurityAction.actions():
-        raise APIRequestException(
-            f"Action is not valid. Should be one of the following {SecurityAction.actions()}",
-            ErrorCodes.bad_request)
+    @method_decorator(swagger_auto_schema(
+        # auto_schema=None,
+        operation_description="Configures 2fa settings for users account.",
+        request_body=AccountSecuritySerializer
+    ))
+    def post(self, request, *args, **kwargs):
+        account_security_serializer = AccountSecuritySerializer(data=request.data)
+        account_security_serializer.is_valid(raise_exception=True)
 
-    if action == SecurityAction.toggle.name:
-        account = Account.get(request)
-        return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
+        totp = account_security_serializer.validated_data.get("totp")
+        action = account_security_serializer.validated_data.get("action")
+        if action not in SecurityAction.actions():
+            raise APIRequestException(
+                f"Action is not valid. Should be one of the following {SecurityAction.actions()}",
+                ErrorCodes.bad_request)
 
-    if action == SecurityAction.activate.name:
-        require_params(request, ("password",))
-        password = request.data.get("password")
-        return api_success(Account.update_2fa_settings(request, totp, True, password=password))
-    else:
-        res = Account.update_2fa_settings(request, totp, False)
-        Auth.delete_2fa_key(request)
-        return api_success(res)
+        if action == SecurityAction.toggle.name:
+            account = Account.get(request)
+            return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
+
+        if action == SecurityAction.activate.name:
+            require_params(request, ("password",))
+            password = request.data.get("password")
+            return api_success(Account.update_2fa_settings(request, totp, True, password=password))
+        else:
+            res = Account.update_2fa_settings(request, totp, False)
+            Auth.delete_2fa_key(request)
+            return api_success(res)
+
+    def delete(self, request, *args, **kwargs):
+        if Account.get(request).get("account2faEnabled"):
+            raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
+        return api_success(Auth.delete_2fa_key(request))
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,

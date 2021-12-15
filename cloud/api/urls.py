@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^account/checkAuthCode$',      account.check_auth_code),
     url(r'^account/delete$',             account.delete_user),
     url(r'^account/renewSession$',       account.renew_session),
-    url(r'^account/security$',           account.security),
+    url(r'^account/security$',           account.AccountSecurity.as_view()),
     url(r'^account/timeSincePassword$',  account.time_since_password),
     url(r'^account/reviewCookie$',       account.review_cookie),
     url(r'^account/verify$',             account.verify_password),

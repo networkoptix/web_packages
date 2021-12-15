@@ -61,6 +61,12 @@ class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
     )
 
 
+class AccountSecuritySerializer(serializers.Serializer):
+    action = serializers.CharField(required=True)
+    password = serializers.CharField()
+    totp = serializers.CharField(required=True)
+
+
 class AccountUpdateSerializer(serializers.ModelSerializer):  # ModelSerializer
     class Meta:
         model = Account
