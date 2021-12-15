@@ -1,15 +1,17 @@
-import { NgModule }                      from '@angular/core';
-import { CommonModule }                  from '@angular/common';
-import { RouterModule, Routes }          from '@angular/router';
-import { NgbModule }                     from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }               from '@ngx-translate/core';
-import { AngularSvgIconModule }          from 'angular-svg-icon';
-import { PipesModule }                   from '@src/pipes/pipes.module';
-import { ComponentsModule }              from '@components/components.module';
-import { MenuModule }                    from '@src/menu/menu.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { ComponentsModule } from '@components/components.module';
+import { MenuModule } from '@src/menu/menu.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
 import { NxIntegrationDetailsComponent } from './details.component';
-import { NxOverviewComponent }           from './overview/overview.component';
-import { NxSetupComponent }              from './setup/setup.component';
+import { NxOverviewComponent } from './overview/overview.component';
+import { NxSetupComponent } from './setup/setup.component';
 
 const appRoutes: Routes = [
     {

@@ -1,12 +1,10 @@
-import { Injectable, OnDestroy }     from '@angular/core';
-import {
-    BehaviorSubject, Observable, Subscription
-}                                    from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { NxUtilsService }            from '@services/utils.service';
-import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxAccountService, Account } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
 
 interface Platform {
     file: string;
@@ -242,7 +240,9 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = NxUtilsService.htmlToEntity(this.formatVersion(plugin.versionDetails.version));
+            plugin.versionDetails.version = NxUtilsService.htmlToEntity(
+                this.formatVersion(plugin.versionDetails.version)
+            );
         } else {
             plugin.versionDetails = {
                 version: '&nbsp;'
@@ -250,7 +250,8 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.requirementsAndCompatibility?.platforms) {
-            plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
+            plugin.requirementsAndCompatibility.platforms.icons =
+                this.setPlatformIcons(plugin);
         }
 
         this.formatScreenshots(plugin.instructions);

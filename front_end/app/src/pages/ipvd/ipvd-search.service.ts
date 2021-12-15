@@ -95,11 +95,19 @@ export class IpvdSearchService {
                 return false;
             }
 
-            if (resolution && resolution.value !== '0' && camera.resolutionArea <= resolution.value * 0.9) {
+            if (
+                resolution &&
+                resolution.value !== '0' &&
+                camera.resolutionArea <= resolution.value * 0.9
+            ) {
                 return false;
             }
 
-            if (vendors && vendors.length > 0 && vendors.indexOf(camera.vendor) === -1) {
+            if (
+                vendors &&
+                vendors.length > 0 &&
+                !vendors.includes(camera.vendor)
+            ) {
                 return false;
             }
 
@@ -112,13 +120,15 @@ export class IpvdSearchService {
             if (events &&
                 events.length > 0 &&
                 !events.some(event => {
-                    return camera.analyticsEvents.indexOf(event.label) >= 0;
+                    return camera.analyticsEvents.includes(event.label);
                 })) {
                 return false;
             }
 
             if (this._showAnalytics && query.length) {
-                const matches = camera.analyticsEvents.filter(analytic => analytic.toLowerCase().includes(query));
+                const matches = camera.analyticsEvents.filter(analytic =>
+                    analytic.toLowerCase().includes(query)
+                );
                 if (matches.length) {
                     return true;
                 }
@@ -129,10 +139,10 @@ export class IpvdSearchService {
                 ? queryTerms.every(term => filterCamera(camera, term))
                 : true;
         }).sort((cameraA: any, cameraB: any) => {
-            if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
+            if (preferredVendors.includes(cameraA.vendor.toLowerCase())) {
                 return -1;
             }
-            if (preferredVendors.indexOf(cameraB.vendor.toLowerCase()) !== -1) {
+            if (preferredVendors.includes(cameraB.vendor.toLowerCase())) {
                 return 1;
             }
             return cameraA.sortKey < cameraB.sortKey ? -1 : 1;

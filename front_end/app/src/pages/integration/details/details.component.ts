@@ -1,26 +1,25 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { ActivatedRoute, Router }       from '@angular/router';
-import { DomSanitizer }                 from '@angular/platform-browser';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { combineLatest, Subscription }  from 'rxjs';
-import { map }                          from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { combineLatest, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { NxLanguageProviderService }    from '@services/nx-language-provider';
-import { NxConfigService, IConfig }     from '@services/nx-config';
-import { NxAccountService, Account }    from '@services/account.service';
-import { NxPageService }                from '@services/page.service';
-import {
-    NxRibbonService, RibbonActionInput
-}                                       from '@components/ribbon';
-import { IntegrationService }           from '../integration.service';
-import { NxMenuService }                from '@src/menu';
-import { NxDialogsService }             from '@dialogs/dialogs.service';
-import { MessageParams }                from '@dialogs/message/message.component';
-import { NxProcessService, Process }    from '@services/process.service';
-import { NxCloudApiService }            from '@services/nx-cloud-api';
-import { NxUriService }                 from '@services/uri.service';
-import { LanguageI18NStaticTypes }      from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { MessageParams } from '@dialogs/message/message.component';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService, Process } from '@services/process.service';
+import { NxUriService } from '@services/uri.service';
+import { NxMenuService } from '@src/menu';
+
+import { IntegrationService } from '../integration.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -1,4 +1,4 @@
-import { Component }            from '@angular/core';
+import { Component } from '@angular/core';
 import { Angular2CsvComponent } from 'angular2-csv';
 
 // Component to customize the "export to csv" button
