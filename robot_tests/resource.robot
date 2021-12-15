@@ -257,8 +257,12 @@ Validate on Register Page
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT}
 
 Register
-    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
-    Go To    ${ENV}/authorize?client_type=create
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${view type}=${EMPTY}
+    IF    '''${view type}''' != '''${EMPTY}'''
+        Go To    ${ENV}/authorize?client_type=create&view_type=${view type}
+    ELSE
+        Go To    ${ENV}/authorize?client_type=create
+    END
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
@@ -311,7 +315,7 @@ Get Email Link
 Activate
     [Arguments]    ${email}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
-    Go To    ${ENV}/activate/${code}
+    Go To    ${ENV}/authorize/activate/${code}
     Wait Until Elements Are Visible
     ...    ${ACTIVATION SUCCESS}
     ...    ${ACTIVATION SUCCESS ICON}

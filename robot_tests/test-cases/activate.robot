@@ -61,15 +61,15 @@ Open New Browser On Failure
     [Tags]    C41861
     Register and activate account with random email    mark    hamill    ${symbol password}
 
-7. Should show error if same link is used twice
+7. Should show activation success if same link is used twice
     [Tags]    email    C41566
     ${email}=   Get Random Email    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
     ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    activate_account
-    Go To    ${url}/activate/${code}
+    Go To    ${url}/authorize/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    Go To    ${url}/activate/${code}
-    Wait Until Element Is Visible    ${ALREADY ACTIVATED}
+    Go To    ${url}/authorize/activate/${code}
+    Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
 
 8. Should save user data to user account correctly
     [Tags]    email
@@ -94,16 +94,16 @@ Open New Browser On Failure
     Should be equal as strings    ${user data}[first_name]    mark
     Should be equal as strings    ${user data}[last_name]    hamill
 
-11. Should allow activation, if user is registered by link /register/?from=client
+11. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=desktop
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    from=client
+    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    view type=desktop
     Activate Account    ${email}    ${password}
 
-12. Should allow activation, if user is registered by link /register/?from=mobile
+12. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=mobile
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    from=mobile
+    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    view type=mobile
     Activate Account    ${email}    ${password}
 
 13. Link works and suggests to log out user, if he was logged in, buttons operate correctly
@@ -117,7 +117,7 @@ Open New Browser On Failure
     ${code2}=   Get Code From Email    ${url}    ${auth}    ${email2}    activate_account
 
     Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/activate/${code1}
+    Go To    ${url}/authorize/activate/${code1}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     # Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
@@ -125,7 +125,7 @@ Open New Browser On Failure
     Log Out
 
     Log In    ${email1}    ${password}
-    Go To    ${url}/activate/${code2}   
+    Go To    ${url}/authorize/activate/${code2}   
     Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
     Click Button    ${LOGGED IN CANCEL BUTTON}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
