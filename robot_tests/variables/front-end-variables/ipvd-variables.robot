@@ -51,8 +51,8 @@ ${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/a[con
 ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/a[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
 ${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//h4[@class="camera-vendor-model"]//span[2]
 ${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
 ${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
 ${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[contains(@class,'active-camera-info')]

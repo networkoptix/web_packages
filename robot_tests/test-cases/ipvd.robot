@@ -23,10 +23,10 @@ Force Tags        Threaded
     ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
     Should Be Equal as Strings    ${search_placeholder}    ${SEARCH PLACEHOLDER TEXT}    ignore_case=true
     Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
-    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    ${IPVD ADV FILTER MFRS}    ignore_case=true
+    Element should contain    ${IPVD MANUFACTURERS PANE}//header//span    ${IPVD ADV FILTER MFRS}    ignore_case=true
     ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not Be Equal As Numbers  ${num vendors}   0
-    Element should contain      ${IPVD DEVICES PANE}//header/span[2]    ${IPVD DEVICES TEXT}    ignore_case=true
+    Element should contain      ${IPVD DEVICES PANE}//header//span    ${IPVD DEVICES TEXT}    ignore_case=true
     ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/a
     Should Be Equal As Numbers  ${num device types}   10
     Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}    ignore_case=true
