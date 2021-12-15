@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "<strong>{secondarySystem}</strong> にオーナーアカウントのパスワードを入力してください。",
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "チェック中...",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
-            "connectToCloud": "統合したいサーバーを <strong>%cloudName%</strong> に接続するか、 <strong>%vmsName%</strong> クライアントを使用してローカルで統合してください。",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
@@ -324,11 +325,11 @@
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{primarySystem}</strong> と <strong>{secondarySystem}</strong> のシステムを統合しようとしています。</p><p>設定と名称は <strong>{primarySystem}</strong> の値を使用します。</p>",
             "mergeFailedTitle": "システム統合が失敗しました",
             "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました。",
-            "mergeSystemsTitle": "現在のシステムと統合",
+            "mergeSystemsTitle": "次のシステムと統合",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
             "otherSystem": "その他のシステム...",
-            "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
+            "ownerCanMergeText": "あなたがオーナー権限を所有しているシステムのみ統合できます",
             "passwordRequired": "パスワードが必要です",
             "passwordWrong": "間違ったパスワード",
             "primaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない新しいソフトウェアバージョンです。現在のシステムを {downloadHTML} に更新してから {targetSystem} システムと統合してください。",
@@ -625,7 +626,7 @@
     "menu": {
         "titles": {
             "cameras": "カメラ",
-            "systemAdministration": "システムアドミニストレーション",
+            "systemAdministration": "システム管理",
             "general": "一般",
             "licenses": "ライセンス",
             "users": "ユーザー"
@@ -853,7 +854,7 @@
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% は現在利用できません。後ほど再度お試しください。",
         "userChangesFail": "変更の適用に失敗しました",
         "reviewAccepted": "レビューが承認されました。",
         "system": {
@@ -946,7 +947,7 @@
         "autoDiscoveryEnabled": "デバイスの自動検出を有効にする",
         "autoUpdateThumbnails": "サムネイルの自動更新",
         "backupNewCamerasByDefault": "デフォルトで新しいカメラをバックアップする",
-        "backupQualities": "バックアップの画質",
+        "backupQualities": "バックアップするストリーム",
         "cameraSettingsOptimization": "デバイス設定の最適化を許可する",
         "clientStatisticsSettingsUrl": "クライアント統計の相対 url",
         "cloudAccountName": "クラウドオーナーアカウント",

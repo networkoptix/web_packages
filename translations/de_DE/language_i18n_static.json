@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{secondarySystem}</strong> ein",
             "adminPasswordWrong": "Das Passwort für den Administrator ist falsch",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Prüfung...",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>%cloudName%</strong> oder fusionieren Sie lokal mit dem <strong>%vmsName%</strong>-Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Sowohl das ausgewählte als auch das aktuelle System sind mit %CLOUD_NAME% verbunden und haben unterschiedliche Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
@@ -853,7 +854,7 @@
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "nameFail": "Fehler beim Ändern des {type} Namens",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% ist derzeit nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
         "userChangesFail": "Änderungen konnten nicht gespeichert werden",
         "reviewAccepted": "Die Bewertung wurde akzeptiert",
         "system": {

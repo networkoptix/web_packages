@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Ellenőrzés...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Mind a kiválasztott, mind a jelenlegi rendszer %CLOUD_NAME% csatlakoztatva van, és különböznek a tulajdonosok. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "duplicateServers": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

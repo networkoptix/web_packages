@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Controleren...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
@@ -646,7 +647,7 @@
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% integraties",
         "login": "Inloggen",
         "pageNotFound": "Pagina niet gevonden",
         "register": "Maak een account aan in",
@@ -663,7 +664,7 @@
         "security": "Security"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "De Integratie Marktplaats is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS producten zoals %VMS_NAME%, alle beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-video systeem te bouwen en aan te passen.",
         "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
@@ -851,7 +852,7 @@
         "unavailable": "niet beschikbaar"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Er is iets fout gegaan. Ververs de pagina over ongeveer 30 seconden.",
         "nameFail": "Failed to change {type} name",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
@@ -909,7 +910,7 @@
             "error": "Error",
             "expired": "Verlopen",
             "ok": "Oké",
-            "nvrError": "NVR Error",
+            "nvrError": "NVR fout",
             "serverNotFound": "Server niet gevonden"
         },
         "messages": {
@@ -1044,7 +1045,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Uitgeschakeld"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Перевірка...",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%cloudName%</strong> or merge locally using <strong>%vmsName%</strong> Client.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "І вибрана, і поточна система підключені до %CLOUD_NAME% і мають різних власників. Хмарні системи можна об’єднати, лише якщо обліковий запис власника однаковий.",
             "duplicateServers": "<p class=\"mb-2\">Здається, що сервер перелічує себе як у вибраній, так і в поточній системі.</p><p>Видаліть офлайн і несумісні сервери з кожної системи та повторіть спробу.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

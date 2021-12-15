@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Wprowadź hasło konta właściciela w <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Sprawdzanie...",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%cloudName%</strong> lub złącz je lokalnie za pomocą klienta <strong>%vmsName%</strong>.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",

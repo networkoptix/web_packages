@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Lösenord för administratörsanvändare är fel",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Kontrollerar...",
             "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%cloudName%</strong> eller slå samman lokalt med <strong>%vmsName%</strong> klienten.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",

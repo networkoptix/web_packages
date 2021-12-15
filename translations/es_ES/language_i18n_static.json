@@ -314,9 +314,10 @@
         "merge": {
             "adminPasswordTitle": "Ingrese la contraseña de la cuenta del propietario en <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "La contraseña para el usuario admin es incorrecta",
+            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Comprobación...",
             "commonText": "Error al combinar sistemas <strong>{primarySystem}</strong> y <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Conecte el sistema que desea combinar con éste a <strong>%cloudName%</strong> o fusionar localmente usando <strong>%vmsName%</strong> Cliente.",
+            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
