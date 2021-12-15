@@ -12,7 +12,8 @@ import { BehaviorSubject, EMPTY, of, ReplaySubject } from 'rxjs';
 
 import staticLang from '@app/language_compiled.json';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
-import { NxAccountService } from '@services/account.service';
+import { NxAccountService, DUMMY_ACCOUNT } from '@services/account.service';
+import type { Account } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
@@ -21,6 +22,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
+import { NxSystemsService } from '@services/systems.service';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';
@@ -64,24 +66,10 @@ ngMocks.defaultMock(NxCloudApiService, () => ({
     getCommonPasswords: () => of({ test1234: 1, 12345678: 1 })
 }));
 
-// @ts-ignore
 ngMocks.defaultMock(NxAccountService, () => ({
-    get: () => of({
-        can_publish_integration: false,
-        name: 'Test',
-        first_name: 'Test',
-        isCloud: false,
-        is_staff: false,
-        language: 'en_US',
-        last_name: '1234',
-        permissions: [],
-        is_superuser: false,
-        id: 'test',
-        email: 'test@test.com',
-        is_authenticated: false,
-        cookie_reviewed: true
-    }).toPromise(),
-    accountSubject: new BehaviorSubject(null)
+    get: () => of<Account>(DUMMY_ACCOUNT).toPromise(),
+    accountSubject: new BehaviorSubject<Account>(DUMMY_ACCOUNT),
+    account: DUMMY_ACCOUNT,
 }));
 
 ngMocks.defaultMock(LocalStorageService, () => ({
@@ -124,6 +112,11 @@ ngMocks.defaultMock(NxSettingsService, () => ({
     footerSubject: new BehaviorSubject(false),
     systemSubject: new BehaviorSubject<any>(false),
     selectedSectionSubject: new BehaviorSubject([])
+}));
+
+// @ts-ignore
+ngMocks.defaultMock(NxSystemsService, () => ({
+    systemsSubject: of([]),
 }));
 
 declare const require: {
