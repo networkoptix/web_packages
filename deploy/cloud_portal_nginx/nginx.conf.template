@@ -131,7 +131,7 @@ http {
             return 404;
         }
 
-        location ~* ^/(?=api|oauth|swagger|health|zapier|admin_tools) {
+        location ~* ^/(?=api|oauth|swagger|health|zapier|admin_tools|serve) {
             include proxy.conf;
             proxy_pass http://app_server;
         }
