@@ -206,19 +206,24 @@ export class NxSystemsService implements OnDestroy {
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             system.useRest = Object.keys(system.capabilities).some((capability) => capability.includes(this.restVersion));
-            if (system.mergeInfo !== undefined) {
-                this.addToMergeList(system.id);
-            } else if (this.mergingSystems.has(system.id)) {
-                const currentSystemId = this.storageService.systemId;
-                if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
-                    this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
-                }
-                if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
-                    this.ribbonService.hide();
-                }
-                this.removeFromMergeList(system.id);
-            }
+
+            this.checkMerge(system);
         });
+    }
+
+    checkMerge(system: NxSystem) {
+        if (system.mergeInfo !== undefined) {
+            this.addToMergeList(system.id);
+        } else if (this.mergingSystems.has(system.id)) {
+            const currentSystemId = this.storageService.systemId;
+            if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
+                this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
+            }
+            if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
+                this.ribbonService.hide();
+            }
+            this.removeFromMergeList(system.id);
+        }
     }
 
     private sortSystems(systems: NxSystemWithUserInfo[], currentUserEmail: string): NxSystemWithUserInfo[] {
