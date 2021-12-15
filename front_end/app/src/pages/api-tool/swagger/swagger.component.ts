@@ -215,7 +215,7 @@ export class NxSwaggerComponent implements OnChanges {
     private addButtonEventListeners = () => {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
         const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
-        for (const button of buttons as any) {
+        for (const button of buttons) {
             fromEvent(button, 'click').pipe(take(1), untilDestroyed(this)).subscribe((event: any) => {
                 if (event?.target?.classList.contains('execute')) {
                     const clearBtn: HTMLButtonElement = this.document.querySelector('.btn-clear');
@@ -236,10 +236,10 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private modifyCodeBlocksAndTextareas = () => {
-        const elements = this.document.querySelectorAll('pre, .text-area');
-        for (const element of elements as any) {
+        const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
+        for (const element of elements) {
             if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.nodeName === 'DIV' && element.classList.contains('highlight-code'))) {
-                const container = element.closest('div') as HTMLElement;
+                const container = element.closest('div');
                 container?.classList.add('highlight-code');
                 this.addLineCounter(element);
                 if (element.tagName === 'PRE') {
@@ -254,15 +254,15 @@ export class NxSwaggerComponent implements OnChanges {
 
     private removeInputPlaceholders = () => {
         const inputs = this.document.querySelectorAll('input');
-        for (const input of inputs as any) {
+        for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
     }
 
     private modifyTitlesInResponse = () => {
         const visibleResponseSections = this.document.querySelectorAll('.btn-group');
-        for (const visibleResponseSection of visibleResponseSections as any) {
-            const responsesWrapper: HTMLElement = visibleResponseSection.nextElementSibling;
+        for (const visibleResponseSection of visibleResponseSections) {
+            const responsesWrapper = visibleResponseSection.nextElementSibling;
             const titles = responsesWrapper.querySelectorAll('h4');
             if (titles[0]) {
                 titles[0].innerText = 'Server Response';
@@ -279,8 +279,8 @@ export class NxSwaggerComponent implements OnChanges {
 
     private addCustomTextareas() {
         const textareas = this.document.body.querySelectorAll('textarea:not(.custom-textarea):not([readonly])');
-        for (const textarea of textareas as any) {
-            const sibling: Element = textarea.previousElementSibling;
+        for (const textarea of textareas) {
+            const sibling = textarea.previousElementSibling;
             if (sibling?.tagName === 'NX-SWAGGER-TEXTAREA') {
                 // Swagger destroys and recreates the text area, so angular does that as well to rebind the custom component to the new textarea
                 this.triggerComponentDestroyFromElement(sibling);
@@ -326,7 +326,7 @@ export class NxSwaggerComponent implements OnChanges {
 
     private addTabItemEventListener = () => {
         const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
-        for (const tabItem of tabItems as any) {
+        for (const tabItem of tabItems) {
             tabItem.classList.add('tagged-tabitem');
             fromEvent(tabItem, 'click').pipe(untilDestroyed(this)).subscribe(() => {
                 setTimeout(() => {
@@ -363,7 +363,7 @@ export class NxSwaggerComponent implements OnChanges {
 
     addLineCounter = (parent: HTMLElement) => {
         parent.innerHTML = parent.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
-        for (const child of parent.childNodes as any) {
+        for (const child of parent.children) {
             if (!child.textContent.length && !child.childElementCount) {
                 child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
             }
@@ -384,13 +384,13 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private insertCustomDropdown = () => {
-        const selects = this.document.body.querySelectorAll('select:not(.custom-dropdown):not(.content-type)');
+        const selects = this.document.body.querySelectorAll<HTMLSelectElement>('select:not(.custom-dropdown):not(.content-type)');
 
-        for (const select of selects as any) {
+        for (const select of selects) {
             // The original select is hidden and an nx-select is inserted
             const { componentRef, element } = this.generateComponent(NxSwaggerDropdownComponent);
             componentRef.instance.swaggerSelect = select;
-            componentRef.instance.isMultiSelect = !!select.attributes.multiple;
+            componentRef.instance.isMultiSelect = select.multiple;
             const el = componentRef.location.nativeElement as HTMLElement;
             select.classList.add('custom-dropdown');
             select.insertAdjacentElement('beforebegin', element);

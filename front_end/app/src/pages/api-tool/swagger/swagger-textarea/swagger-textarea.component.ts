@@ -110,7 +110,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
     insertLineBreaks = () => {
         const lines = this.customTextareaRef.nativeElement.querySelectorAll('div.line');
-        for (const line of lines as any) {
+        for (const line of lines) {
             if (!line.innerText && !line.innerHTML.includes('<br>')) {
                 line.innerHTML = '<br>';
             }

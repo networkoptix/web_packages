@@ -39,8 +39,8 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const options = this.swaggerSelect.querySelectorAll('option');
-        for (const option of options as any) {
+        const options: NodeListOf<HTMLOptionElement> = this.swaggerSelect.querySelectorAll('option');
+        for (const option of options) {
             if (this.isMultiSelect) {
                 if (option.innerText !== '--') {
                     this.dropdownOptions.push({

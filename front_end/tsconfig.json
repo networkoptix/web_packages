@@ -4,7 +4,8 @@
     "module": "es2020",
     "lib": [
       "es2018",
-      "dom"
+      "dom",
+      "DOM.Iterable"
     ],
     "moduleResolution": "node",
     "resolveJsonModule": true,
