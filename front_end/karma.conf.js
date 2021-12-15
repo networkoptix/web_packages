@@ -64,6 +64,10 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [],
 
+        proxies: {
+            '/static/images/': 'images/'
+        },
+
         // list of files / patterns to exclude
         exclude: [],
 
@@ -104,8 +108,21 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['ChromeHeadless'],
-
+        browsers: ['ChromeHeadlessNoSandbox'],
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                // This custom launcher is required to allow attaching a debugger to the test
+                base: 'ChromeHeadless',
+                flags: [
+                    '--no-sandbox', // required to run without privileges in docker
+                    '--user-data-dir=/tmp/chrome-test-profile',
+                    '--disable-web-security',
+                    '--remote-debugging-address=0.0.0.0',
+                    '--remote-debugging-port=9222'
+                ],
+                debug: true
+            }
+        },
         restartOnFileChange: true,
 
         // Concurrency level
