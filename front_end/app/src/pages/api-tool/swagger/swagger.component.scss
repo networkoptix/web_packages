@@ -20,7 +20,7 @@
 }
 
 .swagger-ui .hidden {
-	display: none;
+	display: none !important;
 }
 
 .single-api-route-showing {
@@ -548,11 +548,6 @@
 	min-height : 6em;
 }
 
-.swagger-ui .highlight-code > .microlight code span {
-	color : $light1 !important;
-	line-height   : 1.23;
-}
-
 .RTSP-request{
 	.curl-command {
 		display: none;
@@ -871,7 +866,6 @@
 .swagger-ui .code, .swagger-ui code {
 	font-family: robotomonoregular, monospace;
 	font-size: rem(13px);
-	color: $additional_light1;
 	line-height: 1.23;
 }
 
@@ -890,7 +884,7 @@ pre, .text-area {
 	padding: 1em 0.5em 1.4em 1em !important;
 	counter-reset: line;
 	color         : $dark9 !important;
-	& > * {
+	& > div {
 		position: relative;
 		padding-left: 22px;
 		margin-bottom: -14px;
@@ -913,7 +907,7 @@ pre, .text-area {
 	background-color: $light1;
 	border: 1px solid $light4;
 	color: $dark9 !important;
-	& > * {
+	& > div {
 		padding-left: 20px !important;
 		margin-bottom: auto;
 	}

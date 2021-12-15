@@ -19,20 +19,16 @@ import {
 import { environment } from '@environments/environment';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
-import { highlightAllCode } from '../api-tool-utils';
 import { NxAPIToolService } from '../api-tool.service';
-
 import {
     NxCopyToClipboardComponent
 } from './copy-to-clipboard/copy-to-clipboard.component';
 import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
+import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
+import type { componentMap, textareaMap } from './swagger-types';
 import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
-
-interface componentMap {
-    [uuid: string]: ComponentRef<any>
-}
 
 @UntilDestroy()
 @Component({
@@ -57,6 +53,7 @@ export class NxSwaggerComponent implements OnChanges {
     uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     customComponentsRendering = false;
     componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
+    textareaMap: textareaMap = {} // textAreas innerHTMLs are preserved here to be reapplied to code blocks
 
     constructor(public APIToolService: NxAPIToolService,
                 private renderer2: Renderer2,
@@ -235,7 +232,7 @@ export class NxSwaggerComponent implements OnChanges {
         const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
         if (requestBody) {
             requestBody.innerText = 'Body';
-        }
+        };
     }
 
     private modifyCodeBlocksAndTextareas = () => {
@@ -244,10 +241,11 @@ export class NxSwaggerComponent implements OnChanges {
             if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.nodeName === 'DIV' && element.classList.contains('highlight-code'))) {
                 const container = element.closest('div') as HTMLElement;
                 container?.classList.add('highlight-code');
+                this.addLineCounter(element);
                 if (element.tagName === 'PRE') {
+                    setCodeBlockHTML(element, this.textareaMap, 'codeblock');
                     this.addCopyToClipBoardButton(element);
                 }
-                this.addLineCounter(element);
                 // Ignore code blocks that come from the markdown from the json
                 highlightAllCode(element);
             }
@@ -270,7 +268,7 @@ export class NxSwaggerComponent implements OnChanges {
                 titles[0].innerText = 'Server Response';
             }
             if (titles[3]) {
-                titles[3].remove();
+                titles[3].classList.add('hidden');
             }
             if (titles[4]) {
                 titles[4].innerText = 'Example Response';
@@ -289,8 +287,17 @@ export class NxSwaggerComponent implements OnChanges {
                 this.renderer2.removeChild(sibling.parentElement, sibling);
             }
             const { componentRef, element } = this.generateComponent(NxSwaggerTextareaComponent);
-            this.addComponentToComponentMap(componentRef, element);
+            // storing the uuid on the parent element and reapplying it to textareas/code-blocks that get recreated
+            const parentEl =  textarea.closest('.parameters-col_description, .opblock-description-wrapper');
+            const uuid = parentEl?.getAttribute('uuid');
+            if (!uuid) {
+                const { uuid } = this.addComponentToComponentMap(componentRef, element);
+                parentEl?.setAttribute('uuid', uuid);
+            } else {
+                element.setAttribute('uuid', uuid);
+            }
             componentRef.instance.textarea = textarea;
+            componentRef.instance.textareaMap = this.textareaMap;
             textarea.classList.add('custom-textarea');
             textarea.insertAdjacentElement('beforebegin', element);
         }
@@ -340,12 +347,12 @@ export class NxSwaggerComponent implements OnChanges {
         const id = uuid.v4();
         element.setAttribute('uuid', id);
         this.componentMap[id] = componentRef;
+        return { uuid: id };
     }
 
     triggerComponentDestroyFromElement = (element: Element) => {
         const uuid = element.getAttribute('uuid');
         this.componentMap[uuid].destroy();
-        delete this.componentMap[uuid];
     };
 
     addCopyToClipBoardButton = (parent: HTMLElement) => {
@@ -404,6 +411,8 @@ export class NxSwaggerComponent implements OnChanges {
             if (this.VCR) {
                 // Destroys custom components
                 this.VCR.clear();
+                this.componentMap = {};
+                this.textareaMap = {};
             }
             this.initSwagger(node.name, expand);
             if (!this.APIToolService.isAPIInfoMenuNode(node)) {
