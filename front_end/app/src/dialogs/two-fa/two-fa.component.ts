@@ -465,7 +465,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.activeModal.close(action || 'changed');
     }
 
-    closeWizard() {
+    closeWizard(action?) {
+        if (action === 'deactivate') {
+            this.accountService.deactivate2FaKey()
+                .catch((err) => {
+                    console.error('2FA cleanup failed ->', err);
+                });
+        }
         this.resetDefaults();
         this.activeModal.close('canceled');
     }

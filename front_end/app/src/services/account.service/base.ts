@@ -262,6 +262,10 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.get2FaKey();
     }
 
+    deactivate2FaKey() {
+        return this.cloudApi.deactivate2FaKey();
+    }
+
     get2FaBackupCode() {
         return this.cloudApi.get2FaBackupCode();
     }

@@ -164,6 +164,10 @@ export class NxCloudApiService {
         ).toPromise();
     }
 
+    deactivate2FaKey() {
+        return this.http.delete<t.CloudResponse>(this.CONFIG.apiBase + '/account/security').toPromise();
+    }
+
     get2FaKey() {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/2fa/verification', {}).toPromise();
     }
