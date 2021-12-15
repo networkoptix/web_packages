@@ -63,7 +63,7 @@
 
 .swagger-ui .opblock-body {
 	padding-top     : 2px;
-	padding-bottom  : 5px;
+	padding-bottom  : 18px;
 }
 
 .swagger-ui .tabitem {
@@ -440,7 +440,7 @@
 }
 
 .swagger-ui .responses-inner {
-	padding: 0px 16px 20px 16px;
+	padding: 0px 16px 8px 16px;
 	h4 {
 		@include typography.medium14dark9;
 		margin-top: 16px;
@@ -457,12 +457,6 @@
 
 .swagger-ui .responses-table.live-responses-table {
 	margin-top: 32px;
-}
-
-.swagger-ui .responses-table:not(.live-responses-table) tr.response {
-	display: -webkit-flex;
-	display: flex;
-	align-items: center;
 }
 
 .swagger-ui .response-col_status, .swagger-ui .response-col_description {
@@ -612,12 +606,10 @@
 .swagger-ui .btn {
 	background    : initial;
 	@include button;
-	color            : $dark9 !important;
+	@include typography.medium14dark9;
 	background-color : $light4 !important;
 	box-shadow       : inset 0 -1px 0 0 $light7 !important;
-	font-family      : $font-family-medium !important;
-	font-weight		 : 500 !important;
-	min-width: 110px;
+	min-width: 89px;
 
 	&.btn-dropdown-toggle {
 		max-width: initial;
@@ -640,6 +632,10 @@
 		width: 215px;
 		background-color: $blue1 !important;
 		color           : $light1 !important;
+	}
+
+	&.cancel {
+		@include typography.medium14dark9;
 	}
 
 	&.btn-clear {
@@ -796,6 +792,10 @@
 		background-color: $additional_light1;
 	}
 }
+.swagger-ui .opblock-body table:not(.parameters, .live-responses-table):not(.model) td {
+	height         : 48px;
+	vertical-align : middle;
+}
 
 .swagger-ui .parameter__name {
 	margin-right : initial;
@@ -826,7 +826,7 @@
 }
 
 .swagger-ui .table-container {
-	padding : 8px 16px;
+	padding : 0px 16px 8px 16px;
 }
 
 .swagger-ui table.model tr.description {
