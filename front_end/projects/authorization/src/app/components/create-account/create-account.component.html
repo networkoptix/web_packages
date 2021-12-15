@@ -57,7 +57,9 @@
                     maxlength="255"
                     required
                     nxFocusMe
-                    [setFocus]="!!existingEmail">
+                    [setFocus]="!!existingEmail"
+                    (change)="createFirstName=createFirstName.trim()"
+                >
                 <p *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
             </div>
             <div class="last-name" [ngClass]="{ 'hasError': lastName.invalid && (lastName.dirty || lastName.touched) }">
@@ -72,7 +74,9 @@
                     #lastName="ngModel"
                     autocomplete="off"
                     maxlength="255"
-                    required>
+                    required
+                    (change)="createLastName=createLastName.trim()"
+                >
                 <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
             </div>
         </div>
