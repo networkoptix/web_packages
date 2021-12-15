@@ -559,7 +559,7 @@
         "downloadPlatform": "Download %VMS_NAME% voor ",
         "failedToAccessSystem": "Het is niet gelukt toegang te krijgen tot het systeem",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% integraties",
         "login": "Inloggen",
         "pageNotFound": "Pagina niet gevonden",
         "register": "Maak een account aan in",
@@ -575,7 +575,7 @@
         "apiTool": "API testing tool"
     },
     "pageDescriptions": {
-        "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",
+        "integrations": "De Integratie Marktplaats is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS producten zoals %VMS_NAME%, alle beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-video systeem te bouwen en aan te passen.",
         "integrationSetup": "Setup instructions for {PLUGIN_NAME}. {PLUGIN_SHORT_DESCRIPTION}",
         "integrationDetails": "{PLUGIN_NAME} for {PLUGIN_SHORT_DESCRIPTION}"
     },
@@ -753,7 +753,7 @@
         "unavailable": "niet beschikbaar"
     },
     "toastMessage": {
-        "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "cloudUnavailable": "Er is iets fout gegaan. Ververs de pagina over ongeveer 30 seconden.",
         "nameFail": "Failed to change {type} name",
         "reviewAccepted": "The review has been accepted",
         "system": {
@@ -806,7 +806,7 @@
             "error": "Error",
             "expired": "Verlopen",
             "ok": "Oké",
-            "nvrError": "NVR Error",
+            "nvrError": "NVR fout",
             "serverNotFound": "Server niet gevonden"
         },
         "messages": {
@@ -927,7 +927,7 @@
             "reserved": "Reserved",
             "inaccessible": "Inaccessible",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Uitgeschakeld"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",

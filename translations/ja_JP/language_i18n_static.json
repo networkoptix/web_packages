@@ -262,11 +262,11 @@
             "mergeConfirmation": "<p class=\"mb-0\"><strong>{primarySystem}</strong> と <strong>{secondarySystem}</strong> のシステムを統合しようとしています。</p><p>設定と名称は <strong>{primarySystem}</strong> の値を使用します。</p>",
             "mergeFailedTitle": "システム統合が失敗しました",
             "mergeSuccess": "システム {primaryName} と {secondaryName} の統合が完了しました。",
-            "mergeSystemsTitle": "現在のシステムと統合",
+            "mergeSystemsTitle": "次のシステムと統合",
             "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
             "otherSystem": "その他のシステム...",
-            "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
+            "ownerCanMergeText": "あなたがオーナー権限を所有しているシステムのみ統合できます",
             "passwordRequired": "パスワードが必要です",
             "passwordWrong": "間違ったパスワード",
             "primaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない新しいソフトウェアバージョンです。現在のシステムを {downloadHTML} に更新してから {targetSystem} システムと統合してください。",
@@ -539,7 +539,7 @@
     "menu": {
         "titles": {
             "cameras": "カメラ",
-            "systemAdministration": "システムアドミニストレーション",
+            "systemAdministration": "システム管理",
             "general": "一般",
             "licenses": "ライセンス",
             "users": "ユーザー"
@@ -843,7 +843,7 @@
         "autoDiscoveryEnabled": "デバイスの自動検出を有効にする",
         "autoUpdateThumbnails": "サムネイルの自動更新",
         "backupNewCamerasByDefault": "デフォルトで新しいカメラをバックアップする",
-        "backupQualities": "バックアップの画質",
+        "backupQualities": "バックアップするストリーム",
         "cameraSettingsOptimization": "デバイス設定の最適化を許可する",
         "clientStatisticsSettingsUrl": "クライアント統計の相対 url",
         "cloudAccountName": "クラウドオーナーアカウント",
