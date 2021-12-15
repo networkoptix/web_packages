@@ -6,6 +6,7 @@ import {
     ViewChild,
     OnInit
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
@@ -36,7 +37,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
         password: ''
     };
 
-    @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
+    @ViewChild('deleteForm', { static: true }) deleteForm: NgForm;
 
     constructor(
         config: NxConfigService,

@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -21,12 +22,13 @@ export class DeleteCloudUserModalContent {
     passwordForUser: string = '';
     passwordError: string = '';
 
-    @ViewChild('deleteCloudUserForm') deleteForm: HTMLFormElement;
+    @ViewChild('deleteCloudUserForm') deleteForm: NgForm;
 
-    constructor(public activeModal: NgbActiveModal,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService
+    constructor(
+        public activeModal: NgbActiveModal,
+        private configService: NxConfigService,
+        private language: NxLanguageProviderService,
+        private processService: NxProcessService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;

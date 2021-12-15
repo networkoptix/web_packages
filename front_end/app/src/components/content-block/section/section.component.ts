@@ -32,7 +32,7 @@ export class NxContentBlockSectionComponent implements OnInit {
 
     haveSubheader: boolean;
 
-    @ViewChild('subHeaderWrapper', { static: true }) subHeaderWrapper: ElementRef;
+    @ViewChild('subHeaderWrapper', { static: true }) subHeaderWrapper: ElementRef<HTMLDivElement>;
 
     constructor() {
         // this.haveSubheader = true;

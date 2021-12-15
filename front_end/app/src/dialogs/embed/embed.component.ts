@@ -6,6 +6,7 @@ import {
     OnDestroy,
     AfterViewInit
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
@@ -36,7 +37,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     embedUrl: string;
     private formChangesSubscription: Subscription;
 
-    @ViewChild('embedForm', { static: true }) embedForm;
+    @ViewChild('embedForm', { static: true }) embedForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,

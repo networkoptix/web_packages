@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -15,7 +16,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
     @Input() system: NxSystem;
     @Output() loginSuccess = new EventEmitter<any>();
 
-    @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
+    @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

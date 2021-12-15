@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -24,7 +25,7 @@ export class ConnectCloudModalContent implements OnInit {
     @Input() account;
     @Input() system;
     @Input() closable;
-    @ViewChild('connectForm', { static: true }) connectForm: HTMLFormElement;
+    @ViewChild('connectForm', { static: true }) connectForm: NgForm;
 
     readonly isLocal: boolean;
     CONFIG: IConfig;

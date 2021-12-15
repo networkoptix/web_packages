@@ -7,6 +7,7 @@ import {
     TemplateRef,
     AfterViewInit
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
@@ -84,8 +85,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     private accessCode: string;
 
     // static property is needed for unit tests
-    @ViewChild('loginForm') loginForm: HTMLFormElement;
-    @ViewChild('codeForm') codeForm: HTMLFormElement;
+    @ViewChild('loginForm') loginForm: NgForm;
+    @ViewChild('codeForm') codeForm: NgForm;
 
     @ViewChild('changePassword', { static: true }) changePasswordTemplate: TemplateRef<any>;
     @ViewChild('code', { static: true }) codeTemplate: TemplateRef<any>;

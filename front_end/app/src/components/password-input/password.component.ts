@@ -62,7 +62,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     private passwordSubscription: Subscription;
 
-    @ViewChild('addons') addons : ElementRef;
+    @ViewChild('addons') addons : ElementRef<HTMLDivElement>;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

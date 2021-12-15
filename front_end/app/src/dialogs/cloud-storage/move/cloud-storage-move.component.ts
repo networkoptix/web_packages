@@ -6,6 +6,7 @@ import {
     Input,
     OnInit
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
@@ -42,7 +43,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     targetOnline$ = new BehaviorSubject(true);
     showNoOtherSystems = false;
 
-    @ViewChild('moveForm') moveForm: HTMLFormElement;
+    @ViewChild('moveForm') moveForm: NgForm;
 
     constructor(
         configService: NxConfigService,

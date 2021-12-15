@@ -4,6 +4,7 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -21,7 +22,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     @Input() system: NxSystem;
     @Input() updateCallback: () => Promise<any>;
     @Input() closable;
-    @ViewChild('updateForm') updateForm: HTMLFormElement;
+    @ViewChild('updateForm') updateForm: NgForm;
 
     LANG: LanguageI18NStaticTypes;
     update: Process;

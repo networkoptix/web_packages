@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
@@ -15,7 +16,7 @@ import { NxProcessService, Process } from '@services/process.service';
 export class AddUserModalContent {
     @Input() system;
     @Input() closable;
-    @ViewChild('addUserForm') form;
+    @ViewChild('addUserForm') form: NgForm;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;

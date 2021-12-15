@@ -32,7 +32,7 @@ import { BaseDropdown } from '../injDropdown';
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
     @Input() small = false;
-    @ViewChild('dropdown') dropdown: ElementRef;
+    @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
     rightOffset$ = new BehaviorSubject(0);

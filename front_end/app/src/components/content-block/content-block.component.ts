@@ -54,8 +54,8 @@ export class NxContentBlockComponent implements OnInit, OnChanges {
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
-    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
+    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef<HTMLDivElement>;
 
     constructor() {
         this.haveHeader = true;

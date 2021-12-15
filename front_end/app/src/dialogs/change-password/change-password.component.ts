@@ -4,6 +4,7 @@ import {
     Renderer2,
     ViewChild
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -31,7 +32,7 @@ export class ChangePasswordModalContent {
     currentPasswordToggle = true;
     confirmPasswordToggle = true;
 
-    @ViewChild('changePasswordForm') changePasswordForm: HTMLFormElement;
+    @ViewChild('changePasswordForm') changePasswordForm: NgForm;
 
     constructor(
         public activeModal: NgbActiveModal,

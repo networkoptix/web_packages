@@ -4,6 +4,7 @@ import {
     Renderer2,
     ViewChild
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -37,7 +38,7 @@ export class RemoveSystemModalContent {
     hideErrors = true;
     mediaServerApi: NxSystemAPI;
 
-    @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: HTMLFormElement;
+    @ViewChild('disconnectAccountForm', { static: true }) disconnectAccountForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
