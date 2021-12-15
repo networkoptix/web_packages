@@ -204,11 +204,15 @@ export class NxDevelopersMenuComponent implements OnInit {
             let inQuery = false;
             const name = menuNode.display_name.toLowerCase();
             const startInd = name.indexOf(query.toLowerCase());
+            const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase());  // For API-Tool: display_name is not always the path, need to check if the path matches the query
             const displayedNode = NxUtilsService.deepCopyWithCircularReference(menuNode);
             displayedNode.nodes = [];
             let newName = displayedNode.display_name || displayedNode.name;
             if (startInd !== -1) {
                 newName = highlightText(menuNode, startInd);
+                inQuery = true;
+            }
+            if (pathMatchesQuery) {
                 inQuery = true;
             }
             for (const node of menuNode.nodes) {
