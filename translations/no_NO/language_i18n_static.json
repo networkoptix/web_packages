@@ -676,7 +676,7 @@
         "good": "sterkt",
         "minLength": "for kort",
         "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-        "missingMessage": "Passord er påkrevd",
+        "missingMessage": "Required",
         "required": "stemmer ikke",
         "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
         "strongMessage": "Sterkt passord!",

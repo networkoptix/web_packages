@@ -676,7 +676,7 @@
         "good": "bon",
         "minLength": "trop court",
         "minLengthMessage": "Mot de passe doit contenir au moins 8 caractères",
-        "missingMessage": "Mot de passe requis",
+        "missingMessage": "Required",
         "required": "incorrect",
         "requiredMessage": "Utilisez uniquement les lettres latines, les chiffres et les symboles du clavier, éviter les espaces de début et de fin",
         "strongMessage": "Mot de passe fort!",

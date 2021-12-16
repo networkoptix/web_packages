@@ -676,7 +676,7 @@
         "good": "좋음",
         "minLength": "너무 짧음",
         "minLengthMessage": "패스워드는 8 자 이상이어야합니다.",
-        "missingMessage": "암호가 필요 합니다",
+        "missingMessage": "Required",
         "required": "부적합",
         "requiredMessage": "라틴 문자, 숫자 및 키보드 기호 만 사용하고 앞뒤 공백은 피하십시오.",
         "strongMessage": "강력한 패스워드!",

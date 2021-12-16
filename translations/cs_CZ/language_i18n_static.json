@@ -676,7 +676,7 @@
         "good": "dobré",
         "minLength": "příliš krátké",
         "minLengthMessage": "Heslo musí obsahovat nejméně 8 znaků",
-        "missingMessage": "Heslo je vyžadováno",
+        "missingMessage": "Required",
         "required": "nesprávné",
         "requiredMessage": "Používejte pouze latinskou abecedu, číslice a symboly na klávesnici, vyhněte se použití mezery na počátku a konci",
         "strongMessage": "Silné heslo!",

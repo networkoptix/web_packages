@@ -676,7 +676,7 @@
         "good": "dobre",
         "minLength": "za krótkie",
         "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
-        "missingMessage": "Hasło jest wymagane",
+        "missingMessage": "Required",
         "required": "nieprawidłowe",
         "requiredMessage": "Używaj tylko liter łacińskich, cyfr i symboli z klawiatury, unikając spacji na początku i na końcu",
         "strongMessage": "Bezpieczne hasło!",

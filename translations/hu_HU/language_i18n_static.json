@@ -676,7 +676,7 @@
         "good": "jó",
         "minLength": "túl rövid",
         "minLengthMessage": "A jelszónak legalább 8 karakterből kell állnia",
-        "missingMessage": "Jelszó megadása szükséges",
+        "missingMessage": "Required",
         "required": "nem megfelelő",
         "requiredMessage": "Csak latin betűket, számokat és billentyűzet szimbólumok használhatók, kerülje a szóközöket",
         "strongMessage": "Erős jelszó!",

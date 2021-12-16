@@ -399,8 +399,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Por favor, inicie sesión de nuevo.",
+            "title": "Su sesión ha expirado"
         },
         "titles": {
             "error": "Error",
@@ -676,7 +676,7 @@
         "good": "bueno",
         "minLength": "demasiado corto",
         "minLengthMessage": "La contraseña debe tener al menos 8 caracteres",
-        "missingMessage": "Se requiere contraseña",
+        "missingMessage": "Required",
         "required": "incorrecto",
         "requiredMessage": "Utilice sólo letras, números y símbolos de teclado, evite los espacios iniciales y finales",
         "strongMessage": "¡Contraseña segura!",

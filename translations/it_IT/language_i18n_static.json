@@ -676,7 +676,7 @@
         "good": "buono",
         "minLength": "troppo corto",
         "minLengthMessage": "La password deve contenere almeno 8 caratteri",
-        "missingMessage": "È richiesta la password",
+        "missingMessage": "Required",
         "required": "errato",
         "requiredMessage": "Usa solo lettere latine, numeri e simboli della tastiera, evita spazi iniziali e finali",
         "strongMessage": "Password sicura!",

@@ -676,7 +676,7 @@
         "good": "adequada",
         "minLength": "massa curta",
         "minLengthMessage": "La contrasenya ha de contenir com a mínim 8 caràcters",
-        "missingMessage": "La contrasenya és obligatòria",
+        "missingMessage": "Required",
         "required": "incorrecta",
         "requiredMessage": "Utilitzeu només lletres llatines, números i símbols del teclat, eviteu espais inicials i finals",
         "strongMessage": "Contrasenya segura!",

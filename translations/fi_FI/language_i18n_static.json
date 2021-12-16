@@ -676,7 +676,7 @@
         "good": "hyvä",
         "minLength": "liian lyhyt",
         "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
-        "missingMessage": "Salasana on pakollinen",
+        "missingMessage": "Required",
         "required": "virheellinen",
         "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
         "strongMessage": "Vahva salasana!",

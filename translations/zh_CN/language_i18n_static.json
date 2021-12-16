@@ -676,7 +676,7 @@
         "good": "良好",
         "minLength": "太短",
         "minLengthMessage": "密码必须包含至少 8 个字符",
-        "missingMessage": "密码为必填项",
+        "missingMessage": "Required",
         "required": "不正确",
         "requiredMessage": "使用只有拉丁文字母、 数字和符号键盘，避免前导和尾随空格",
         "strongMessage": "强密码 ！",

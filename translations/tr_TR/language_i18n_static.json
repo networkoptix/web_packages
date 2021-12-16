@@ -676,7 +676,7 @@
         "good": "iyi",
         "minLength": "çok kısa",
         "minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
-        "missingMessage": "Parola gerekmektedir",
+        "missingMessage": "Required",
         "required": "yanlış",
         "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
         "strongMessage": "Güçlü parola!",

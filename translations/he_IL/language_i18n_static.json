@@ -676,7 +676,7 @@
         "good": "טוב",
         "minLength": "קצר מדי",
         "minLengthMessage": "הסיסמא חייבת להכיל 8 תווים לפחות",
-        "missingMessage": "נדרשת סיסמא",
+        "missingMessage": "Required",
         "required": "שגוי",
         "requiredMessage": "השתמש רק באותיות לטיניות, מספרים וסמלים במקלדת, הימנע מרווחים בהתחלה ובסוף",
         "strongMessage": "סיסמה חזקה!",

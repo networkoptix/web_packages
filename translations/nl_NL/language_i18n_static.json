@@ -676,7 +676,7 @@
         "good": "goed",
         "minLength": "te kort",
         "minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
-        "missingMessage": "Wachtwoord is vereist",
+        "missingMessage": "Required",
         "required": "incorrect",
         "requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
         "strongMessage": "Sterk wachtwoord!",
