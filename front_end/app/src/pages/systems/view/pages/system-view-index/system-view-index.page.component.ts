@@ -27,6 +27,7 @@ import { LanguageI18NStaticTypes }               from '../../../../../../languag
 import { NxLanguageProviderService }             from '../../../../../services/nx-language-provider';
 import { NxRibbonService }                       from '../../../../../components/ribbon';
 import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
+import { NxSettingsService } from '../../../settings/settings.service';
 
 @UntilDestroy()
 @Component({
@@ -130,7 +131,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected ux: WebClientUxService,
         private utilsService: NxUtilsService,
         private dialogs: NxDialogsService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        private settingsService: NxSettingsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -152,10 +154,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 if (systems.length) {
                     this.systems = systems;
                 }
-                if (!this.system) {
-                    this._log('systemsService -> initSystem', [...systems]);
-                    this._initSystem();
-                }
+                setTimeout(() => {
+                    if (!this.system) {
+                        this._log('systemsService -> initSystem', [...systems]);
+                        this._initSystem();
+                    }
+                });
             });
     }
 
@@ -257,6 +261,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.ribbonService.hide();
 
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
+                    this.settingsService.system = this.system;
                     return this.system.update();
                 }
 

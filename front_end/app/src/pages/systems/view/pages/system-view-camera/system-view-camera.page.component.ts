@@ -34,7 +34,8 @@ import { LanguageI18NStaticTypes }       from '../../../../../../language_i18n_s
 import Hls                               from 'hls.js';
 import { NxDialogsService }              from '../../../../../dialogs/dialogs.service';
 
-import fullscreenInactivityCfg from '../fullscreenInactivity.cfg'
+import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
+import { NxSettingsService } from '../../../settings/settings.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -102,6 +103,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected systemService: NxSystemService,
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
+        private settingsService: NxSettingsService,
         private dialogs: NxDialogsService,
         @Inject(DOCUMENT) private document: any
     ) {
@@ -199,19 +201,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.selectedQuality$.next(this.selectedQuality);
             }
         });
-        this.accountService.get().then((account) => {
-            if (!account) {
-                this._warn('accountService returned no account');
-                return Promise.reject();
-            }
-            if (this.CONFIG.isLocal) {
-                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-                this._log('local system created', this.system);
-            } else {
-                this.system = this.systemService.createSystem(account.email, this.vms.systemId, undefined, true);
-            }
-            this._getRecords();
-        });
+
+        this.system = this.settingsService.system;
+        this._getRecords();
     }
 
     public get availableTransportsAndResolutions () {

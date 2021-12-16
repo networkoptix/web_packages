@@ -26,7 +26,7 @@
           [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
           [applyClass]="true"></svg-icon>
       </div>
-      <div class="cameras">
+      <div class="cameras" *ngIf="isServerExpanded[server.id]">
         <a
           class="camera"
           *ngFor="let camera of server.cameras; trackBy: cameraId"
@@ -48,7 +48,7 @@
             <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
             <svg-icon nx-add-svg-src
               *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
-              [src]="CONFIG.icons.dir + 'cameras_list_placeholder_' + 
+              [src]="CONFIG.icons.dir + 'cameras_list_placeholder_' +
                 (!camera.isOnline ? 'offline' : !camera.isAuthorized ? 'unauthorized' : 'alert')
                 + '.svg'"
               [applyClass]="true"></svg-icon>
