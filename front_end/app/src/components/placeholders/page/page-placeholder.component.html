@@ -1,6 +1,10 @@
 <div class="w-100" [ngClass]="{'show-preloader': preloader, 'h-100': condition}">
     <div class="page-placeholder"
-         [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}"
+         [ngClass]="{
+             'has-preloader':preloader,
+             'with-footer': withFooter,
+             'with-padding': addPadding
+        }"
          [ngStyle]="{'padding-top': (withFooter && iconVisible) ? '16px': undefined}">
         <div class="placeholder-content {{constrainWidth ? 'constrain-width' : ''}}">
             <div *ngIf="preloader && !condition" class="placeholder-preloader">

@@ -43,6 +43,7 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() constrainWidth: boolean;
     @Input() data: any;
     @Input() showMainButton = false;
+    @Input() addPadding = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
