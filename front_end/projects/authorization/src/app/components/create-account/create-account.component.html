@@ -54,6 +54,7 @@
                     [(ngModel)]="createFirstName"
                     #firstName="ngModel"
                     autocomplete="off"
+                    maxlength="255"
                     required
                     nxFocusMe
                     [setFocus]="!!existingEmail">
@@ -70,6 +71,7 @@
                     [(ngModel)]="createLastName"
                     #lastName="ngModel"
                     autocomplete="off"
+                    maxlength="255"
                     required>
                 <p *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
             </div>
