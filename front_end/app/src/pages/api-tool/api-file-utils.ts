@@ -4,9 +4,12 @@ import { MenuNode } from '@services/menus.service.types';
 
 import type { APIDocVersion } from '../../services/nx-config/base-config';
 
-import type { APIDoc } from './api-tool-types';
+import type { APIDoc, method } from './api-tool-types';
 
 // This file contains functions that modify API files
+
+const RTSPRoute = '/{deviceId}';
+const RTSPMethod = 'rtsp';
 
 export const getTagModifier = (type: APIDocVersion) => {
     switch (type) {
@@ -59,7 +62,6 @@ export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
     // We have to change the tags on apis
     // so that swagger can properly differentiate tags with the same name coming from multiple different API files
     const tagModifier = getTagModifier(type);
-    const baseRTPSRoute = '/{deviceID}';
 
     Object.keys(api.paths).forEach(endpoint => {
         const endpointObj = Object.entries(api.paths[endpoint]);
@@ -68,7 +70,7 @@ export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
             checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
-            api.paths[endpoint][method[0]].tags.push(addRequestTypeToAPIRoute(endpoint, endpoint === baseRTPSRoute ? 'RTSP' : method[0]));
+            api.paths[endpoint][method[0]].tags.push(addRequestTypeToAPIRoute(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]));
         });
     });
     return api;
@@ -140,7 +142,7 @@ export const createMenuContent = (API: APIDoc) => {
     let tag: MenuNodeWithParent;
     Object.keys(API.paths).forEach(endpoint => {
         const endpointObj = Object.entries(API.paths[endpoint]);
-        endpointObj.forEach(method => {
+        endpointObj.forEach((method: method) => {
             tag = menuContent.find((node) => {
                 return node.name === method[1].tags[0];
             });
@@ -162,8 +164,6 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
     menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
 
     // Replace RTSPRoute with the custom RTSPRoute to fix an issue with how swagger-ui filters routes
-    const RTSPRoute = '/{deviceId} - GET';
-    const CustomRTSPRoute = '/{deviceId} - RTSP';
 
     if (Object.keys(API || {}).length) {
         API.tags.forEach(tag => {
@@ -178,20 +178,16 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
 
     let tag: MenuNodeWithParent;
     Object.keys(API.paths).forEach(endpoint => {
-        if (endpoint === RTSPRoute) {
-            const ind = API.paths[endpoint].get.tags.indexOf(RTSPRoute);
-            API.paths[endpoint].get.tags[ind] = CustomRTSPRoute;
-        }
         const endpointObj = Object.entries(API.paths[endpoint]);
-        endpointObj.forEach((method: any) => {
+        endpointObj.forEach((method: method) => {
             tag = menuNodes.find(node => node.name === method[1].tags[0]);
+            if (endpoint === RTSPRoute) {
+                method[0] = RTSPMethod;
+            }
             checkMethodResponseDescription(method[1]);
             const methodName = addRequestTypeToAPIRoute(endpoint, method[0]);
             const url = generateNodeURL(endpoint, method[0]);
             const methodNode: MenuNodeWithParent = new MenuNode(methodName, url, method[1].summary || methodName);
-            if (methodNode.name === RTSPRoute) {
-                methodNode.name = CustomRTSPRoute;
-            }
             methodNode.parentNode = tag;
             tag.nodes.push(methodNode);
         });

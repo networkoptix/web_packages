@@ -2,6 +2,21 @@ import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 // Could make this type more accurate, but have to watch out for different/older versions of the API
+
+export interface MethodInfo {
+    description: string,
+    parameters: Array<object>,
+    responses: {
+        default: {
+            description: string
+        }
+    },
+    summary: string,
+    tags: string[]
+}
+
+export type method = [string, MethodInfo]
+
 export interface APIDoc {
     info? : APIInfo,
     tags  : {
@@ -10,14 +25,8 @@ export interface APIDoc {
                 [key:string]: any
             }[],
     paths : {
-                [key: string]: {
-                    [key in requestTypes]: {
-                        tags: string[],
-                        parameters: [{[key:string]: any}],
-                        [key: string] : any
-                    }
-                }
-            },
+        [key:string]: MethodInfo,
+    },
     servers?: { url: string}[]
 }
 

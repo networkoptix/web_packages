@@ -416,7 +416,6 @@ export class NxSwaggerComponent implements OnChanges {
             const { componentRef, element } = this.generateComponent(NxSwaggerDropdownComponent);
             componentRef.instance.swaggerSelect = select;
             componentRef.instance.isMultiSelect = select.multiple;
-            const el = componentRef.location.nativeElement as HTMLElement;
             select.classList.add('custom-dropdown');
             select.insertAdjacentElement('beforebegin', element);
         }
