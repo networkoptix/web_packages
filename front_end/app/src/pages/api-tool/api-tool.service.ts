@@ -148,7 +148,7 @@ export class NxAPIToolService {
     set selectedSystem(system: DropdownItem) {
         if (!environment.isLocal) {
             const queryParams = this.getQueryParams();
-            queryParams.system = system.name.toLowerCase();
+            queryParams.system = system.value;
             this.uri.updateURI(this.uri.getURL(), queryParams);
         }
         this._selectedSystem = system;
@@ -235,7 +235,7 @@ export class NxAPIToolService {
         } else {
             let validSystem: NxSystemWithUserInfo;
             if (this.queryParams.system) {
-                validSystem = this.systems.find(system => this.systemIsOnline(system) && system.name === this.queryParams.system);
+                validSystem = this.systems.find(system => this.systemIsOnline(system) && system.id === this.queryParams.system);
             }
             if (!validSystem) {
                 validSystem = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
