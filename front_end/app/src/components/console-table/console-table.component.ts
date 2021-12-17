@@ -141,9 +141,9 @@ export class NxConsoleTableComponent {
                     this.headerService.addDynamicDevConsoleNode(asset, `${this.base}/${this.sectionParam}/${ConsoleMode.EDIT}`, this.contentManifest.manifest.contexts);
                 }
                 this.dataLoaded = true;
-                const targetState = this.consoleService.targetState;
+                const targetState = this.consoleService.targetState || { id: this.route.snapshot.queryParams.download, download: true };
                 if (targetState && targetState.id !== undefined) {
-                    const { index, value } = this.selectedData.findElementIndex(targetState.id);
+                    const { index, value } = this.selectedData.findElementIndex(parseInt(targetState.id));
                     const page = this.selectedData.indexToPage(index);
                     setTimeout(_ => this.updatePageParam(page));
 

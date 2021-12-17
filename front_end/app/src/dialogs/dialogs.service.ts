@@ -9,6 +9,8 @@ import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ModalContent } from '@components/console-table/console-table.component.types';
+import { WidgetCard } from '@components/widgets/helper-classes';
+import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
 import { NxAccountService } from '@services/account.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -20,12 +22,12 @@ import { StorageManager } from '@services/system.service/system/storage-manager/
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
+import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalContent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
-import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
@@ -46,7 +48,6 @@ import { NxToastService } from './toast.service';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
-
 import '@dialogs/dialogs.scss';
 
 interface IParams<Value = any> {
@@ -188,6 +189,23 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddUserModalContent, options, params);
+    }
+
+    public addWidget (gridSize, gridGap, widgets) {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static',
+            size: 'lg'
+        };
+
+        const params: IParams = {
+            widgets,
+            gridSize,
+            gridGap,
+            closable: true
+        };
+
+        return this.createModal(AddWidgetModalContent, options, params) as Promise<WidgetCard>;
     }
 
     public addStorage (

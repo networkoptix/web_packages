@@ -1,4 +1,5 @@
 from functools import wraps
+from collections import defaultdict, OrderedDict
 from PIL import Image
 from django.core.files import base
 from waffle import flag_is_active
@@ -1065,6 +1066,118 @@ def prepare_asset_info_for_menu(request, menu_id):
 def get_asset_info_by_menu(request, menu_id):
     require_params(request, ('customization',))
     return api_success(prepare_asset_info_for_menu(request, menu_id))
+
+
+def dict_to_nodes(to_transform, sort_children=True):
+    if isinstance(to_transform, list):
+        if sort_children:
+            to_transform.sort(key=lambda item: item['name'])
+        return to_transform
+    return [{'name': name, 'children': dict_to_nodes(content, sort_children)} for name, content in to_transform.items()]
+
+
+def build_up(target_dict, name, asset_type, include_preview=True, include_admin=True):
+    assets = Asset.objects.filter(
+        asset_type__type=asset_type, customizations__name=settings.CUSTOMIZATION)
+    target_dict[name] = []
+
+    for asset in assets:
+        preview_links = [{
+            'name': preview_name,
+            'url': url,
+            'type': 'preview'
+        } for preview_name, url in modify_db.generate_preview_links(asset=asset)
+        if url] if include_preview else []
+
+        if len(preview_links) == 1:
+            preview_links[0]['name'] = 'Preview'
+
+        admin_links = [{
+            'name': 'Asset Admin Link',
+            'url': asset.admin_link,
+            'type': 'settings'
+        }] if include_admin else []
+
+        target_dict[name] += [{
+            'name': asset.name,
+            'id': asset.id,
+            'type': AssetType.ASSET_TYPES[asset_type],
+            'url': (admin_links[0] if admin_links else {}).get('url', (preview_links[0] if preview_links else {}).get('url', asset.admin_link)),
+            'actions': [
+                *admin_links,
+                *preview_links
+            ]
+        }]
+
+
+@api_view(["GET"])
+@permission_required('cms.change_asset')
+def get_assets(request):
+    max_age = int(request.GET.get('maxAge') or 0)
+    included_types = request.GET.getlist('type') or ['custom_clients', *[asset_type for asset_type in AssetType.ASSET_TYPES._identifier_map.keys()]]
+    selected_type_ids = [asset_type_id for identifier in included_types if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+
+    preview = request.GET.getlist('preview') or included_types
+    preview_type_ids = [asset_type_id for identifier in preview if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+
+    admin = request.GET.getlist('admin') or included_types
+    admin_type_ids = [asset_type_id for identifier in admin if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+
+    asset_dict = OrderedDict()
+
+    cache_key = '-'.join(str(val) for val in ([request.user.email] + selected_type_ids + preview_type_ids + admin_type_ids))
+    cached = PACKAGES_CACHE.get(cache_key)
+
+    if cached and cached['last'] > (datetime.utcnow() - timedelta(minutes=max_age)):
+        return api_success({**cached, 'last': f'{cached["last"]}Z'})
+
+    # Build up custom clients menu
+    if 'custom_clients' in included_types:
+        mapped_clients = defaultdict(lambda: [])
+        custom_clients = request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
+
+        for client in custom_clients:
+            settings_link = {
+                'name': 'Custom Client Settings',
+                'url': f'/developers/custom-clients/edit/{client.id}/information',
+                'type': 'settings'
+            }
+
+            download_link = {
+                'name': 'Download Package',
+                'url': '/developers/custom-clients',
+                'params': {'download': client.id},
+                'type': 'download'
+            }
+
+            mapped_clients[client.base_vms.name] += [{
+                'name': client.name,
+                'id': client.id,
+                'baseVmsId': client.base_vms.id,
+                'type': 'custom_client',
+                'url': settings_link['url'],
+                'actions': [
+                    settings_link,
+                    download_link
+                ]
+            }]
+
+        asset_dict['Custom Clients'] = mapped_clients
+
+    asset_mapping = (
+        ('Integrations', AssetType.ASSET_TYPES.integration),
+        ('Documentation', AssetType.ASSET_TYPES.documentation),
+        ('Agreements', AssetType.ASSET_TYPES.agreement),
+        ('VMS', AssetType.ASSET_TYPES.vms)
+    )
+
+    for args in asset_mapping:
+        if args[1] in selected_type_ids:
+            build_up(asset_dict, *args, include_preview=args[1] in preview_type_ids, include_admin=args[1] in admin_type_ids)
+
+    cached = PACKAGES_CACHE[cache_key] = {'last': datetime.utcnow(), 'data': dict_to_nodes(asset_dict)}
+
+    return api_success({**cached, 'last': f'{cached["last"]}Z'})
 
 
 class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):

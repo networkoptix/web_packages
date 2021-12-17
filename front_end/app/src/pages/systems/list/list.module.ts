@@ -6,14 +6,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { ComponentsModule } from '@components/components.module';
-import { DirectivesModule } from '@directives/directives.module';
+import { DirectivesModule }       from '@directives/directives.module';
+import { ComponentsModule }       from '@components/components.module';
+import { AuthGuard }              from '@src/routeGuards';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { AuthGuard } from '@src/routeGuards';
-
-import { NxNoSystemsComponent } from '../no-systems/no-systems.component';
-
-import { NxSystemsListComponent } from './list.component';
+import { NxSystemsListComponent } from '@components/systems-list/list.component';
 
 const appRoutes: Routes = [
     {
@@ -36,16 +33,10 @@ const appRoutes: Routes = [
     ],
     providers: [
     ],
-    declarations: [
-        NxSystemsListComponent,
-        NxNoSystemsComponent
-    ],
+    declarations: [],
     bootstrap: [
     ],
-    exports: [
-        NxSystemsListComponent,
-        NxNoSystemsComponent
-    ]
+    exports: []
 })
 export class NxSystemsListModule {
 }

@@ -84,8 +84,8 @@ export class ServerManager {
         }
     }
 
-    getPreviewUrl(cameraId, time, width, height, rotate) {
-        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
+    getPreviewUrl(cameraId, time, width, height, rotate, auth?) {
+        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }
 
     setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {

@@ -1386,7 +1386,11 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
 
-    getBookmarks() {
+    getBookmarks(): Observable<any> {
+        throw new Error('should only be using rest version');
+    }
+
+    getDevices(): Observable<any> {
         throw new Error('should only be using rest version');
     }
 

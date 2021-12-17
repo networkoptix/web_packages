@@ -1,22 +1,23 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
 import { Location }                  from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 
-import { NxSystemsListComponent } from './list.component';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-import { NxPageService } from '@services/page.service';
-import { NxSystemsService } from '@services/systems.service';
-import { NxAccountService } from '@services/account.service';
-import { NxProcessService } from '@services/process.service';
-import { NxUriService } from '@services/uri.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxMenusService } from '@services/menus.service';
-import { Router } from '@angular/router';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxProcessService } from '@services/process.service';
+import { NxSystemsService } from '@services/systems.service';
+import { NxUriService } from '@services/uri.service';
+
+import { NxSystemsListComponent } from './list.component';
 
 describe('NxSystemsListComponent', () => {
     let component: NxSystemsListComponent;

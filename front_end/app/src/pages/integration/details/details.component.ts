@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -20,6 +20,7 @@ import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu';
 
 import { IntegrationService } from '../integration.service';
+import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -59,7 +60,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private uriService: NxUriService,
-        private location: Location
+        private location: Location,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -221,6 +223,33 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         };
         this.dialogs
             .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)
-            .then(() => {});
+            .then(() => { });
+    }
+
+    handleDashboardOpen(open, queryParams, url) {
+        if (open === true) {
+            const route = ['dashboard'];
+            const options = { queryParams };
+
+            if (this.window.location === this.window.parent.location) {
+                this.router.navigate(route, options);
+            } else {
+                this.window.parent.postMessage({ route, options }, '*');
+            }
+        } else if (open === 'Download file') {
+            this.window.location.href = url;
+        }
+    }
+
+    async addWidgetDialog({ url, name }) {
+        const open = await this.dialogs.confirm(`Would you like to add "${name}" to your dashboard?`, 'Add widget to dashboard?', 'Add to dashboard', 'btn-primary', 'Download file');
+        const queryParams = { widgetUrl: url };
+        this.handleDashboardOpen(open, queryParams, url);
+    }
+
+    async updateDashboardDialog({ url }) {
+        const open = await this.dialogs.confirm('Would you like to replace your dashboard with the one from this config?', 'Update dashboard?', 'Update dashboard', 'btn-primary', 'Download file');
+        const queryParams = { dashboardUrl: url };
+        this.handleDashboardOpen(open, queryParams, url);
     }
 }

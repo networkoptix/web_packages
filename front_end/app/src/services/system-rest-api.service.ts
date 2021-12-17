@@ -175,7 +175,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const storageService = this.storageService;
         if (isSystem) {
             this.accessToken = tokens.access_token;
-            this.setAccessTokenAsCookie().catch(() => {});
+            this.setAccessTokenAsCookie().catch(() => { });
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
@@ -242,7 +242,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    generateHeaders (): any {
+    generateHeaders(): any {
         let headers = new HttpHeaders();
         // if (!environment.isLocal && this.authGet) {
         //     params.auth = this.authGet;
@@ -381,7 +381,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         } else if (environment.isLocal && !this.CONFIG.newSystem && this.accessToken) { // Local system mode ???
             const endpoint = `/rest/v1/login/sessions/${this.accessToken}`;
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
-                .then((result :any) => {
+                .then((result: any) => {
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
                 })
                 .then((result) => {
@@ -483,7 +483,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
-    getApiDoc(type: APIDocVersion  = 'main') {
+    getApiDoc(type: APIDocVersion = 'main') {
         return this.get(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
@@ -531,7 +531,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
         return request.pipe(
             // Gets the remoteServerID and checks if the remote system is connected to cloud.
-            switchMap((data : any) => {
+            switchMap((data: any) => {
                 if (!remoteServerId) {
                     remoteServerId = data.id.replace(/{|}/g, '');
                 }
@@ -643,6 +643,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }
 
+    getDevices(params = {}) {
+        return this.get('/rest/v1/devices', params);
+    }
+
     getLicenseSummaries() {
         const params = {
             _keepDefault: true
@@ -655,19 +659,21 @@ export class NxSystemRestAPI extends NxSystemAPI {
         time?: number,
         width?: number,
         height?: number,
-        rotate?: number
+        rotate?: number,
+        auth?: string
     ) {
         const data: {
             cameraId: string;
+            auth: string;
             time?: number | string;
             width?: number;
             height?: number;
             rotate?: number;
-            auth?: string;
         } = {
-            cameraId: this.cleanId(cameraId)
+            cameraId: this.cleanId(cameraId),
+            auth
         };
-        let endpoint = '/ec2/cameraThumbnail';
+        let endpoint = '/web/ec2/cameraThumbnail';
 
         if (time) {
             data.time = time;

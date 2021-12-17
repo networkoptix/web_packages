@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subject, Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -17,7 +17,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-systems-list-component',
     templateUrl: 'list.component.html',
@@ -38,10 +38,23 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     endpoint: any = {};
     userEmail: string;
     searchChanged = new Subject();
+
+    static SYSTEMS_BASE = '/systems';
+
+    @Input() base = NxSystemsListComponent.SYSTEMS_BASE;
+    @Input() size: 'full' | 'mid' | 'compact' = 'full';
+    @Input() disableSearch = false;
+    @Input() systemsToShow: string[];
+    @Input() linkHandler;
+
+    @Output() availableSystems = new EventEmitter();
+
+    get showCompact() {
+        return this.base !== NxSystemsListComponent.SYSTEMS_BASE;
+    }
+
     chosenSystemName: string;
     show2faRequired = false;
-    private searchSubscription: Subscription;
-    private systemSubscription: Subscription;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -80,8 +93,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
+        this.systemsService.systemsSubject.pipe(
+            untilDestroyed(this)
+        ).subscribe((systems) => {
             this.systems = systems;
+            this.availableSystems.emit(systems);
             if (this.systems === undefined) {
                 return;
             }
@@ -91,7 +107,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 system.name = NxUtilsService.htmlToEntity(system.name);
             });
 
-            if (this.location.path().indexOf('/systems') === 0) {
+            if (this.location.path().indexOf(this.base) === 0) {
                 if (this.systems.length === 1) {
                     this.openSystem(this.systems[0]);
                 }
@@ -110,9 +126,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             logoutForbidden: true
         });
 
-        this.searchSubscription = this.searchChanged
-            .pipe(debounceTime(this.CONFIG.search.debounceTime))
-            .subscribe(() => {
+        this.searchChanged
+            .pipe(
+                debounceTime(this.CONFIG.search.debounceTime),
+                untilDestroyed(this)
+            ).subscribe(() => {
                 this.searchSystems();
             });
     }
@@ -135,10 +153,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                        this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
-                        this.hasMatch(system.name, search) ||
-                        this.hasMatch(system.ownerFullName, search) ||
-                        this.hasMatch(system.ownerAccountEmail, search);
+                    this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
+                    this.hasMatch(system.name, search) ||
+                    this.hasMatch(system.ownerFullName, search) ||
+                    this.hasMatch(system.ownerAccountEmail, search);
             });
         } else {
             this.filteredSystems = this.systems;
@@ -164,7 +182,9 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     openSystem(system) {
-        if (this.needToConfigureTwoFactor(system)) {
+        if (this.linkHandler) {
+            this.linkHandler({ url: this.menusService.getUrl(system.id, this.endpoint), label: system.name });
+        } else if (this.needToConfigureTwoFactor(system)) {
             this.chosenSystemName = system.name;
             this.show2faRequired = true;
         } else {
@@ -193,5 +213,5 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         return system.system2faEnabled && !this.account.account2faEnabled;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 }

@@ -666,7 +666,7 @@ class Asset(models.Model):
 
     @property
     def admin_link(self):
-        context_id = context.id if (context := self.datarecord_set.first()) else Context.objects.get(asset_type=self.asset_type.type).id
+        context_id = context.id if (context := self.datarecord_set.first()) else Context.objects.filter(asset_type=self.asset_type.type).first().id
         return reverse('admin:change_page', args=(self.id, context_id))
 
     def is_asset_type(self, asset_type):
@@ -1611,7 +1611,7 @@ class ExternalFileManager(models.Manager):
 
         try:
             external_file_obj = ExternalFile.objects.get(md5=md5)
-            
+
             if not external_file_obj.admin_upload and user:
                 external_file_obj.admin_upload = user
 
@@ -2785,17 +2785,17 @@ class PortalNotification(models.Model):
     def __init__(self, *args, **kwargs):
         if (build_raw := kwargs.pop('build_raw', None)) and not isinstance(build_raw, float):
             raise ValueError("Don't use build_raw directly, instead use build kwarg")
-        
+
         if build := kwargs.pop('build', None):
             kwargs['build_raw'] = PortalNotification.calc_build(build)
-        
-        
+
+
         super().__init__(*args, **kwargs)
 
     @property
     def build(self):
         return PortalNotification.parse_build(self.build_raw)
-    
+
     @build.setter
     def build(self, value: str):
         self.build_raw = PortalNotification.calc_build(value)
@@ -2803,17 +2803,17 @@ class PortalNotification(models.Model):
     def get_serialized(self):
         attributes = ['title', 'id', 'body', 'url', 'build']
         return {attribute: getattr(self, attribute, '') for attribute in attributes}
-    
+
     @staticmethod
     def parse_build(build_version: float) -> str:
         friendly_version = "{:,}".format(build_version or 0).replace(',', '.')
-    
+
         friendly_version = re.sub("\.0",  ".", friendly_version)
         if (last_index := friendly_version.rindex('.')) > (expected_last := len(friendly_version) - 6):
             friendly_version += (last_index - expected_last) * '0'
 
-        
-        return friendly_version if friendly_version != '0' else '' 
+
+        return friendly_version if friendly_version != '0' else ''
 
     @staticmethod
     def calc_build(build_version: str) -> float:
@@ -2821,11 +2821,11 @@ class PortalNotification(models.Model):
 
         while build > 1:
             build /= 10
-        
+
         for index, segment in enumerate(segments):
             position = pow(1000, index) or 1
             build += segment * position
-        
+
         return build
 
 
@@ -2837,9 +2837,9 @@ class MaintenanceScheduling(models.Model):
     custom = models.TextField(help_text='Custom message text')
     portal_notification = models.ForeignKey(
         PortalNotification, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related notification')
-    
+
     MESSAGE_TITLE = 'Maintenance Scheduled'
-    
+
     def get_serialized_notification(self):
         return {
             'title': self.MESSAGE_TITLE,
@@ -2863,7 +2863,7 @@ class MaintenanceScheduling(models.Model):
 
             for attr, val in self.get_serialized_notification().items():
                 setattr(portal_notification, attr, val)
-            
+
             portal_notification.save()
 
         super().save(*args, **kwargs)
@@ -2893,12 +2893,12 @@ class MaintenanceCompletion(models.Model):
                 'min_ts': self.datetime,
                 'max_ts': self.datetime + timedelta(weeks=1)
             }
-    
+
             for attr, val in notification_dict.items():
                 setattr(portal_notification, attr, val)
-            
+
             portal_notification.save()
-            
+
             if scheduled.portal_notification:
                 scheduled.portal_notification.max_ts = self.datetime
                 scheduled.portal_notification.save()

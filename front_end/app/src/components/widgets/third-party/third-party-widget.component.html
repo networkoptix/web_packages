@@ -1,0 +1,20 @@
+<ng-template #uploadMode>
+    <ngx-file-drop dropZoneClassName="import-zone" accept="wgt html" [directory]="false" [multiple]="false"
+        [showBrowseBtn]="!card.config.source" browseBtnLabel="Upload Custom Widget" (onFileLeave)="fileLeave()"
+        (onFileDrop)="fileDropped($event)">
+    </ngx-file-drop>
+</ng-template>
+
+<ng-template #widget>
+    <iframe #widgetFrame [srcdoc]="card.config.source | safe:'html'"></iframe>
+</ng-template>
+
+<ng-template #edit>
+    <iframe #editFrame [srcdoc]="card.config.editSource | safe:'html'"></iframe>
+</ng-template>
+
+<div class="third-party-wrapper">
+    <ng-container *ngIf="card.config.source; else uploadMode">
+        <iframe #widgetFrame [srcdoc]="(card.editMode ? card.config.editSource : card.config.source) | safe:'html'" (load)="passStateToIframe(widgetFrame)"></iframe>
+    </ng-container>
+</div>

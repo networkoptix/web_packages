@@ -14,6 +14,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
+import { AddWidgetModalContent }          from './add-widget/add-widget.component';
 import { ApplyModalContent, NxModalApplyComponent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
@@ -88,6 +89,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         TwoFAModalContent,
         DownloadAsyncModalContent,
         Mandatory2faModalContent,
+        AddWidgetModalContent,
         ConnectCloudModalContent,
         SelectTimeRangeModalContent
     ],

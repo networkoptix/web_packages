@@ -505,7 +505,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return '/systems';
+        return this.CONFIG.featureFlags.dashboard ? '/dashboard' : '/systems';
     }
 
     get mainNode() {

@@ -205,7 +205,7 @@ export abstract class BaseAccount implements OnDestroy {
             .then((account: Account) => {
                 if (account && !environment.isLocal) {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised])
+                        .navigate([this.CONFIG.featureFlags.dashboard ? '/dashboard' : this.CONFIG.redirect.authorised])
                         .catch(error => {
                             console.error(error);
                         });

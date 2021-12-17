@@ -23,6 +23,7 @@ export interface LanguageI18NStaticTypes {
     cameraFilters:         CameraFilters;
     clientProtocol:        any;
     common:                Common;
+    dashboard:             Dashboard;
     devConsole:            DevConsole;
     dialogs:               Dialogs;
     downloads:             Downloads;
@@ -253,6 +254,13 @@ export interface VoiceCommands {
     search:                 any;
     "stop listening":       any;
     view:                   any;
+}
+
+export interface Dashboard {
+    dashboardEditEnabled: any;
+    dashboardLocked:      any;
+    unlockToUpload:       any;
+    unlockToMove:         any;
 }
 
 export interface DevConsole {
@@ -1143,6 +1151,7 @@ const typeMap: any = {
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
         { json: "clientProtocol", js: "clientProtocol", typ: "any" },
         { json: "common", js: "common", typ: r("Common") },
+        { json: "dashboard", js: "dashboard", typ: r("Dashboard") },
         { json: "devConsole", js: "devConsole", typ: r("DevConsole") },
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
@@ -1358,6 +1367,12 @@ const typeMap: any = {
         { json: "search", js: "search", typ: "any" },
         { json: "stop listening", js: "stop listening", typ: "any" },
         { json: "view", js: "view", typ: "any" },
+    ], false),
+    "Dashboard": o([
+        { json: "dashboardEditEnabled", js: "dashboardEditEnabled", typ: "any" },
+        { json: "dashboardLocked", js: "dashboardLocked", typ: "any" },
+        { json: "unlockToUpload", js: "unlockToUpload", typ: "any" },
+        { json: "unlockToMove", js: "unlockToMove", typ: "any" },
     ], false),
     "DevConsole": o([
         { json: "create", js: "create", typ: "any" },

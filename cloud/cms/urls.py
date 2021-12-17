@@ -17,6 +17,7 @@ urlpatterns = [
     path('agreement', agreement.get_agreement, name='get_agreement'),
     path('accept_agreement', agreement.accept_agreement, name='accept_agreement'),
     path('accept_review', asset.accept_review, name='accept_review'),
+    path('assets', asset.get_assets, name='get_assets'),
     path('documentation/struct/<str:name>', documentation.menu_to_endpoint),
     path('documentation/kb/<str:name>', documentation.get_pages, name='doc_pages'),
     path('documentation/kb/<str:name>/search', documentation.kb_search, name='kb_search'),

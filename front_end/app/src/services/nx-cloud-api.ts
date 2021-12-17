@@ -311,6 +311,13 @@ export class NxCloudApiService {
         });
     }
 
+    systems(systemId?: string) {
+        if (systemId) {
+            return this.http.get<any[]>(this.CONFIG.apiBase + '/systems/' + systemId);
+        }
+        return this.http.get<any[]>(this.CONFIG.apiBase + '/systems');
+    }
+
     users(systemId: string) {
         return this.http.get<t.CloudUsers>(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
     }
@@ -648,6 +655,8 @@ export class NxCloudApiService {
     logoutTokens(accessToken: string, refreshToken: string) {
         return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
+
+    getAssets = (maxAge = 0, params) => this.http.get<{last: string, data: t.ExplorerNode[]}>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);

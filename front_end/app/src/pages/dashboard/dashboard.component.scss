@@ -1,0 +1,160 @@
+@use "../styles/typography";
+@use "../../../styles/theme_variables" as *;
+
+.dashboard-base {
+  position: relative;
+  display: grid;
+}
+
+.drag-background {
+  background: repeating-linear-gradient(
+    135deg,
+    #fff7,
+    #fff7 12px,
+    transparent 12px,
+    transparent 24px
+  );
+}
+
+.dashboard-parent {
+  @extend .dashboard-base;
+  min-height: 360px;
+}
+
+.dashboard-card {
+  height: 100%;
+  border: 1px solid $light3;
+  border-radius: 8px;
+  background: $light1;
+}
+
+.heading {
+  background: $additional_light1;
+  border-bottom: 1px solid $light3;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 6px 6px 0 0;
+  & span {
+    padding: 8px;
+    color: white !important;
+  }
+}
+
+.cdk-drag-preview,
+.cdk-drag-dragging {
+  box-sizing: border-box;
+  opacity: 0.5;
+}
+
+.cdk-drag,
+.cdk-drag-dragging {
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-handle {
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.cdk-drag-disabled > .cdk-drag-handle {
+  cursor: not-allowed !important;
+}
+
+.cdk-drag-animating {
+  transition: unset;
+}
+
+.cdk-drag-placeholder {
+  display: none;
+}
+
+.size-update {
+  padding: 8px;
+
+  label {
+    width: 72px;
+    color: white !important;
+  }
+
+  input {
+    width: 72px;
+  }
+}
+
+.cdkDragHandle {
+}
+
+input[type="file"] {
+  display: none;
+  margin: 10px;
+}
+
+.active-widget {
+  border: 2px solid $brand_core;
+  box-shadow: 0 0 6px 2px $light7;
+}
+
+.card-draggable:not(.active-widget) {
+  box-shadow: 0 0 3px 1px $light3;
+}
+
+h3 {
+  @include typography.medium13dark9;
+  margin: 9px 10px 11px 10px;
+}
+
+nx-select {
+  min-width: 0;
+  width: auto;
+}
+
+.active-action {
+  position: fixed;
+  border-radius: 6px;
+  border: 1px solid var(--dark9);
+  z-index: 10000;
+  overflow: hidden;
+  box-shadow: 1px 1px 5px transparentize($dark4, 0.5);
+
+  bottom: 48px;
+  right: 48px;
+  width: 65vw;
+  height: calc(100vh - 128px);
+
+  @media (orientation: portrait) {
+    bottom: 8px;
+    right: 8px;
+    width: calc(100vw - 16px);
+    height: calc(75vw - 48px);
+  }
+  
+  .action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--brand_d4) !important;
+    border-bottom: 2px solid var(--dark9);
+    height: 48px;
+    padding: 16px 8px 16px 16px;
+  }
+
+  .action-header,
+  .action-header-heading {
+    color: var(--light1) !important;
+    margin: 0 !important;
+  }
+
+  iframe {
+    background: var(--additional_light1);
+    border: none;
+    width: 100%;
+    height: calc(100% - 48px);
+  }
+
+}
+
+.window-actions {
+  cursor: pointer;
+}

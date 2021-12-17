@@ -24,6 +24,10 @@ integration-detail-component {
     }
 }
 
+a {
+    cursor: pointer;
+}
+
 :host .add-ellipsis {
     @include ellipsis;
 }

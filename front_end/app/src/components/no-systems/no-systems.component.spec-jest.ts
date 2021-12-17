@@ -1,12 +1,13 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DebugElement }                            from '@angular/core';
-import { By }                                      from '@angular/platform-browser';
 import { HttpClientTestingModule }                 from '@angular/common/http/testing';
+import { DebugElement }                            from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By }                                      from '@angular/platform-browser';
 import { describe, expect, jest, beforeEach, it }  from '@jest/globals';
 
-import { NxNoSystemsComponent }      from './no-systems.component';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService }             from '@services/page.service';
+
+import { NxNoSystemsComponent }      from './no-systems.component';
 
 describe('NxNoSystemsComponent', () => {
     let component: NxNoSystemsComponent;

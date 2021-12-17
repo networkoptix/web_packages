@@ -1,6 +1,10 @@
+import { CdkAccordionModule }               from '@angular/cdk/accordion';
+import { DragDropModule }                   from '@angular/cdk/drag-drop';
+import { OverlayModule }                    from '@angular/cdk/overlay';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { CdkTreeModule }                    from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +13,7 @@ import { NgbModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { NgxFileDropModule }                from 'ngx-file-drop';
 import { QuicklinkModule } from 'ngx-quicklink';
 
 import { NxTextEditableComponent } from '@components/editable/editable.component';
@@ -57,6 +62,7 @@ import { NxMultiSelectDropdown } from './dropdowns/multi-select/multi-select.com
 import { NxNavLocationDropdown } from './dropdowns/nav-location/nav.component';
 import { NxPermissionsDropdown } from './dropdowns/permissions/permissions.component';
 import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
+import { NxDynamicWidgetComponent }         from './dynamic-widget/dynamic-widget.component';
 import { NxEditableHeading } from './editable/heading/editable-heading.component';
 import { NxExternalVideoComponent } from './external-video/external-video.component';
 import { NxFooterComponent } from './footer/footer.component';
@@ -67,6 +73,7 @@ import { NxTabsComponent } from './header/tabs/tabs.component';
 import { NxInfoBlockComponent } from './info-block/info-block.component';
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
 // import { NxLayoutRightComponent } from './layout-right/layout.component';
+import { NxNoSystemsComponent }             from './no-systems/no-systems.component';
 import { NxClientButtonComponent } from './open-client-button/client-button.component';
 import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
 import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
@@ -77,8 +84,15 @@ import { NxRibbonComponent } from './ribbon';
 import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
+import { NxSystemsListComponent }           from './systems-list/list.component';
 import { ToastsContainer } from './toast/toast.component';
 import { NxVendorListComponent } from './vendor-list/vendor-list.component';
+import { NxAssetExplorerWidgetComponent }   from './widgets/asset-explorer/asset-explorer-widget.component';
+import { NxBookmarksWidgetComponent }       from './widgets/bookmarks/bookmarks-widget.component';
+import { NxHealthMonitorWidgetComponent }   from './widgets/health-monitor/health-monitor-widget.component';
+import { NxLiveViewWidgetComponent }        from './widgets/live-view/live-view-widget.component';
+import { NxSystemsListWidgetComponent }     from './widgets/systems-list/systems-list-widget.component';
+import { NxThirdPartyWidgetComponent }      from './widgets/third-party/third-party-widget.component';
 
 @NgModule({
     imports: [
@@ -94,6 +108,13 @@ import { NxVendorListComponent } from './vendor-list/vendor-list.component';
         AngularSvgIconModule.forRoot(),
         QuicklinkModule,
         CdkTableModule,
+        CdkStepperModule,
+        CdkTreeModule,
+        NgxFileDropModule,
+        EditorModule,
+        CdkAccordionModule,
+        DragDropModule,
+        OverlayModule,
         TextFieldModule,
         EditorModule,
         SharedComponentsModule
@@ -146,6 +167,16 @@ import { NxVendorListComponent } from './vendor-list/vendor-list.component';
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
+        NxDynamicWidgetComponent,
+        NxHealthMonitorWidgetComponent,
+        NxAssetExplorerWidgetComponent,
+        NxStepperComponent,
+        NxThirdPartyWidgetComponent,
+        NxLiveViewWidgetComponent,
+        NxBookmarksWidgetComponent,
+        NxSystemsListComponent,
+        NxNoSystemsComponent,
+        NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         UpdateWebadminSessionComponent
@@ -182,6 +213,16 @@ import { NxVendorListComponent } from './vendor-list/vendor-list.component';
         NxHTMLComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
+        NxDynamicWidgetComponent,
+        NxHealthMonitorWidgetComponent,
+        NxAssetExplorerWidgetComponent,
+        NxStepperComponent,
+        NxThirdPartyWidgetComponent,
+        NxLiveViewWidgetComponent,
+        NxBookmarksWidgetComponent,
+        NxSystemsListComponent,
+        NxNoSystemsComponent,
+        NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         UpdateWebadminSessionComponent
@@ -234,6 +275,16 @@ import { NxVendorListComponent } from './vendor-list/vendor-list.component';
         NxCookieBannerComponent,
         NxAdvancedFilterComponent,
         NxConsoleTableComponent,
+        NxDynamicWidgetComponent,
+        NxHealthMonitorWidgetComponent,
+        NxAssetExplorerWidgetComponent,
+        NxStepperComponent,
+        NxThirdPartyWidgetComponent,
+        NxLiveViewWidgetComponent,
+        NxBookmarksWidgetComponent,
+        NxSystemsListComponent,
+        NxNoSystemsComponent,
+        NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         SharedComponentsModule,

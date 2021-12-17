@@ -110,8 +110,11 @@
                                 <div *ngFor="let platform of plugin.downloadFiles" class="mt-3">
                                     <div *ngIf="platform.name">{{ platform.name}}</div>
                                     <div>
-                                        <a [href]="platform.url" target="_self"
-                                           [attr.rel]="platform.noFollow ? 'nofollow' : ''">{{platform.file}}</a>
+                                        <ng-template #download>
+                                            <a [href]="platform.url" target="_self"
+                                               [attr.rel]="platform.noFollow ? 'nofollow' : ''">{{platform.file}}</a>
+                                        </ng-template>
+                                        <a *ngIf="platform.url.includes('.wgt') || platform.url.includes('.dsh'); else download" (click)="platform.url.includes('.wgt') ? addWidgetDialog(platform) : updateDashboardDialog(platform)">{{platform.file}}</a>
                                     </div>
                                 </div>
                             </nx-section>

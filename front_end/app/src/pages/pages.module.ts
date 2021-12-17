@@ -1,22 +1,22 @@
-import { NgModule }                  from '@angular/core';
-import { Angular2CsvModule }         from 'angular2-csv';
+import { NgModule } from '@angular/core';
+import { Angular2CsvModule } from 'angular2-csv';
 
-import { DirectivesModule }          from '@directives/directives.module';
-import { DownloadModule }            from './download/download.module';
-import { DownloadHistoryModule }     from './download-history/download-history.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { DownloadModule } from './download/download.module';
+import { DownloadHistoryModule } from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { NxAccountModule }           from './account/account.module';
-import { NxDebugModule }             from './debug/debug.module';
-import { Nx500Module }               from './500/500.module';
-import { Nx503Module }               from './503/503.module';
-import { RouterModule, Routes }      from '@angular/router';
-import { QuicklinkStrategy }         from 'ngx-quicklink';
-import { ApplyGuard }                from '@guards/applyGuard';
-import { AuthGuard }                 from '@guards/authGuard';
-import { FeatureGuard }              from '@src/routeGuards';
-import { FeatureFlagStrings }        from '@services/nx-config/base-config';
-import { BookmarksGuard }            from '@guards/bookmarksGuard';
-import { PipesModule }               from '@src/pipes/pipes.module';
+import { NxAccountModule } from './account/account.module';
+import { NxDebugModule } from './debug/debug.module';
+import { Nx500Module } from './500/500.module';
+import { Nx503Module } from './503/503.module';
+import { RouterModule, Routes } from '@angular/router';
+import { QuicklinkStrategy } from 'ngx-quicklink';
+import { ApplyGuard } from '@guards/applyGuard';
+import { AuthGuard } from '@guards/authGuard';
+import { FeatureGuard } from '@src/routeGuards';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { BookmarksGuard } from '@guards/bookmarksGuard';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 const lazyRoutes: Routes = [
     {
@@ -130,6 +130,15 @@ const lazyRoutes: Routes = [
     {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
+    },
+    {
+        path: 'dashboard',
+        canLoad: [FeatureGuard],
+        canActivate: [AuthGuard],
+        data: {
+            flags: FeatureFlagStrings.dashboard
+        },
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.NxDashboardModule)
     },
     {
         path: '**',

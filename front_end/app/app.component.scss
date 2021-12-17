@@ -2,6 +2,7 @@
 @use 'styles/css-variables/native-theme/theme_palette' as *;
 @use 'styles/css-variables/theme_palette' as *;
 @use 'styles/css-variables/theme_variables' as *;
+@import '~@angular/cdk/overlay-prebuilt.css';
 
 nx-app {
     .mainContainer {

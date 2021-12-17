@@ -21,6 +21,7 @@ const PROXY_CONFIG = [
             // django admin proxies
             '/admin',
             '/static/admin',
+            '/static/media',
             '/static/admin_tools',
             '/static/bootstrap',
             '/static/css/main.css',

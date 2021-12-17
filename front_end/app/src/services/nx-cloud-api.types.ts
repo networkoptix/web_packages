@@ -304,6 +304,14 @@ export interface TwoFactorBackupCodes {
     backup_code: string
 }
 
+export interface ExplorerNode {
+    name: string;
+    id?: number;
+    type?: string;
+    baseVmsId?: number;
+    children?: ExplorerNode[];
+}
+
 export interface InstantSearchOptions {
     query: string;
     kbMenus?: string[],

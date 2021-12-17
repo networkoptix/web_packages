@@ -28,7 +28,7 @@
                 <div class="float-left btn btn-big btn-tag-selected mt-3 mt-md-0 mr-1"
                         *ngIf="numberFilters != 0 && layout == 'full'">
 
-                    <span class="filter-label" [innerHTML]="filterSelected" dir="auto"></span>
+                    <span class="filter-label" [innerHTML]="filterSelected" [dir]="$any('auto')"></span>
                     <span class="close-button" (click)="resetFilters()">
                         <span class="glyphicon tag-close-icon"></span>
                     </span>
