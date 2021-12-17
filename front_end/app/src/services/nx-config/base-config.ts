@@ -105,8 +105,11 @@ export interface BaseConfig {
     browserNotSupported: boolean;
     sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
-    metaDefaults: Record<string, Record<string, string>>
+    metaDefaults: Record<string, Record<string, string>>,
+    webadminRoutesLookup: RouteCheckTuple[]
 }
+
+export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string]
 
 export interface Developers {
     landing: {

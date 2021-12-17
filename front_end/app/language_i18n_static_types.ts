@@ -50,6 +50,7 @@ export interface LanguageI18NStaticTypes {
     toastMessage:          ToastMessage;
     headerLabels:          HeaderLabels;
     license:               License;
+    redirects:             Redirects;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -758,6 +759,16 @@ export interface PrivacyPolicy {
     ipvd:        any;
 }
 
+export interface Redirects {
+    message:        any;
+    defaultMessage: any;
+    cloudLinks:     CloudLinks;
+}
+
+export interface CloudLinks {
+    supportLink: any;
+}
+
 export interface Registration {
     agreement: any;
 }
@@ -1178,6 +1189,7 @@ const typeMap: any = {
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "license", js: "license", typ: r("License") },
+        { json: "redirects", js: "redirects", typ: r("Redirects") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
@@ -1818,6 +1830,14 @@ const typeMap: any = {
     "PrivacyPolicy": o([
         { json: "integration", js: "integration", typ: "any" },
         { json: "ipvd", js: "ipvd", typ: "any" },
+    ], false),
+    "Redirects": o([
+        { json: "message", js: "message", typ: "any" },
+        { json: "defaultMessage", js: "defaultMessage", typ: "any" },
+        { json: "cloudLinks", js: "cloudLinks", typ: r("CloudLinks") },
+    ], false),
+    "CloudLinks": o([
+        { json: "supportLink", js: "supportLink", typ: "any" },
     ], false),
     "Registration": o([
         { json: "agreement", js: "agreement", typ: "any" },

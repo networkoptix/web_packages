@@ -471,6 +471,7 @@
     "header": "header",
     "manufacturers": "manufacturers",
     "or": "or",
+    "redirects.message": "redirects.message",
     "result": "result",
     "you": "you",
     "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system."

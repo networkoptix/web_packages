@@ -4,7 +4,7 @@ import {
     ConsoleSection,
     ModalType,
     OptionalFeatures
-}  from '@components/console-table/console-table.component.types';
+} from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import {
     GroupingOptions,
@@ -781,5 +781,15 @@ export const nxConfig: IConfig = {
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
     },
-    metaDefaults
+    metaDefaults,
+    webadminRoutesLookup: [
+        [/^developers\/events/g, '/api-tool/api-createevent-post'],
+        [/^developers/g, '/api-tool'],
+        [/^advanced/g, '/settings/advanced'],
+        [/^settings\/server/g, '/settings/servers'],
+        [/^settings\/system/g, '/settings'],
+        [/^help/g, 'supportLink'],
+        [/^info/g, '/health']
+        // [/^another/g, '/another-redirect', 'redirects.customMessage'] Example with custom translated message
+    ]
 };
