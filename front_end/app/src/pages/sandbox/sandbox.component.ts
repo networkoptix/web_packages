@@ -1,10 +1,10 @@
-import { Component, ViewChild }          from '@angular/core';
-import { NgForm }                        from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
-import { NxProcessService, Process }     from '@services/process.service';
-import { NxDialogsService }              from '@dialogs/dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ISelect } from '@pages/systems/settings/cameras/cameras.component';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
     selector: 'sandbox-component',
@@ -56,7 +56,9 @@ export class NxSandboxComponent {
             host += ':9000';
         }
 
-        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/ipvd');
+        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+            host + '/embed/ipvd'
+        );
 
         // camera auth should not be used with the same domain as it screws login info - test should be done in external
         // environment like JSFiddle

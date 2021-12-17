@@ -1,20 +1,19 @@
-import {
-    Component, OnDestroy, OnInit
-}                                       from '@angular/core';
-import { ActivatedRoute }               from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest }                from 'rxjs';
-import { switchMap }                    from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { SearchTag, SearchFilter } from '@components/search/search.component';
+import { NxAccountService, Account } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 import { BookmarkService, Bookmark } from './bookmark.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService, Account } from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { SearchTag, SearchFilter }   from '@components/search/search.component';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxSystem, NxSystemService } from '@services/system.service';
 
 @UntilDestroy()
 @Component({
@@ -48,13 +47,14 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.filterModel.tags = [];
     }
 
-    constructor(configService: NxConfigService,
-                private bookmarkService: BookmarkService,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private accountService: NxAccountService,
-                private systemService: NxSystemService,
-                private route: ActivatedRoute
+    constructor(
+        configService: NxConfigService,
+        private bookmarkService: BookmarkService,
+        private language: NxLanguageProviderService,
+        private pageService: NxPageService,
+        private accountService: NxAccountService,
+        private systemService: NxSystemService,
+        private route: ActivatedRoute
     ) {
         this.setupDefaults(configService);
     }
@@ -79,7 +79,10 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             .pipe(
                 switchMap(([params, account]: [any, Account]) => {
                     this.account = account;
-                    this.bookmarkService.system = this.systemService.createSystem(this.account.email, params.systemId);
+                    this.bookmarkService.system = this.systemService.createSystem(
+                        this.account.email,
+                        params.systemId
+                    );
                     return this.bookmarkService.getBookmarks();
                 }),
                 untilDestroyed(this)
@@ -101,7 +104,9 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     setBookmarks(bookmarks: Bookmark[]): void {
-        this.allElements = bookmarks.sort((a, b) => +b.creationTimeMs - +a.creationTimeMs);
+        this.allElements = bookmarks.sort((a, b) =>
+            +b.creationTimeMs - +a.creationTimeMs
+        );
         this.setTags();
         this.setFilter();
     }
@@ -115,15 +120,23 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                 bookmark.tagsFormatted.push({ type: 'default', label: tag });
             });
         });
-        this.filterModel.tags = Array.from(uniqueTags).map((tag: string): SearchTag =>  {
-            return { id: tag, label: tag, value: false };
-        });
+        this.filterModel.tags = Array.from(uniqueTags).map(
+            (tag: string): SearchTag =>  {
+                return { id: tag, label: tag, value: false };
+            }
+        );
 
         this.filterModel = NxUtilsService.deepCopy(this.filterModel);
     }
 
     setFilter(): void {
-        const IGNORE_KEYS = ['creationTimeMs', 'creatorUserId', 'durationMs', 'id', 'startTimeMs'];
+        const IGNORE_KEYS = [
+            'creationTimeMs',
+            'creatorUserId',
+            'durationMs',
+            'id',
+            'startTimeMs'
+        ];
         const searchBy = (item: Bookmark | string[], query: string) => {
             return Object.keys(item).some((key) => {
                 if (!item[key] || IGNORE_KEYS.includes(key)) {
@@ -138,7 +151,9 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.elements = this.allElements.map((obj: Bookmark) => ({ ...obj }));
         if (this.filterModel.query !== '') {
             const query = this.filterModel.query.toLowerCase();
-            this.elements = this.elements.filter((item: Bookmark) => searchBy(item, query));
+            this.elements = this.elements.filter((item: Bookmark) =>
+                searchBy(item, query)
+            );
         }
 
         if (this.filterModel.tags?.length) {

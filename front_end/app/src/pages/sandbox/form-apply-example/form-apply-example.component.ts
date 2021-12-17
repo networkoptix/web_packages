@@ -1,9 +1,10 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
-import { NxApplyService }        from '@services/apply.service';
-import { NxProcessService, Process }                      from '@services/process.service';
-import { NxToastService }                                 from '@dialogs/toast.service';
+import { FormGroup } from '@angular/forms';
+
+import { NxToastService } from '@dialogs/toast.service';
+import { NxApplyService } from '@services/apply.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { FormArray, FormGroup }     from '@angular/forms';
+import { NxProcessService, Process } from '@services/process.service';
 
 @Component({
     selector: 'form-apply-example',

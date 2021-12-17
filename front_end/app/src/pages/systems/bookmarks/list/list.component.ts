@@ -1,11 +1,11 @@
 import { Component, OnDestroy, Input, Inject } from '@angular/core';
-import { BehaviorSubject }             from 'rxjs';
 
-import { WINDOW }                    from '@services/window-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { Bookmark }                  from '../bookmark.service';
+import { WINDOW } from '@services/window-provider';
+
+import { Bookmark } from '../bookmark.service';
 
 @Component({
     selector: 'bookmarks-list-component',
