@@ -1,13 +1,13 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AngularFireMessaging }         from '@angular/fire/messaging';
-import { HttpClient, HttpHeaders }      from '@angular/common/http';
-import { Router }                       from '@angular/router';
-import { UntilDestroy }                 from '@ngneat/until-destroy';
-import { Subscription, timer }          from 'rxjs';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subscription, timer } from 'rxjs';
 
-import { NxSystemsService }             from '@services/systems.service';
-import { NxAccountService, isAccount }  from '@services/account.service';
-import { NxConfigService, IConfig }     from '@services/nx-config';
+import { NxAccountService, isAccount } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxSystemsService } from '@services/systems.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -76,7 +76,10 @@ export class PushComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
-            if (isAccount(account) && account.email.endsWith('@networkoptix.com')) {
+            if (
+                isAccount(account) &&
+                account.email.endsWith('@networkoptix.com')
+            ) {
                 this.account = account;
                 this.setSystems();
                 this.setFirebase();
@@ -87,7 +90,9 @@ export class PushComponent implements OnInit, OnDestroy {
     }
 
     setSystems() {
-        this.timeSubscription = timer(10000, 10000).subscribe(() => this.updateSubStates());
+        this.timeSubscription = timer(10000, 10000).subscribe(() =>
+            this.updateSubStates()
+        );
         this.systemsService.forceUpdateSystemsAsPromise().then(
             () => {
                 this.systems = this.systemsService.systems;
@@ -127,7 +132,8 @@ export class PushComponent implements OnInit, OnDestroy {
         this.deviceSubscriptions[token] = {};
         this.deviceSubscriptions[token].all = device.systems.includes('all');
         this.systems.forEach(system => {
-            this.deviceSubscriptions[token][system.id] = !!device.systems.includes(system.id);
+            this.deviceSubscriptions[token][system.id] =
+                !!device.systems.includes(system.id);
         });
     }
 
@@ -193,17 +199,24 @@ export class PushComponent implements OnInit, OnDestroy {
         let userId;
         if (form === undefined) {
             deviceToken = this.deviceToken;
-            deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
+            deviceInfo.name = this.currentDeviceName
+                ? this.currentDeviceName
+                : 'Browser';
             deviceInfo.model = window.navigator.userAgent;
             provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;
             deviceInfo.name = this.newDevice.name;
-            deviceInfo.model = this.newDevice.model ? this.newDevice.model : 'custom';
+            deviceInfo.model = this.newDevice.model
+                ? this.newDevice.model
+                : 'custom';
             provider = this.newDevice.provider;
             userId = this.newDevice.userId;
         }
-        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+        const headers = new HttpHeaders().set(
+            'Content-Type',
+            'application/json'
+        );
         this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
             deviceInfo, isEnabled, systems, provider, userId
         }, { headers }).subscribe(
@@ -272,7 +285,8 @@ export class PushComponent implements OnInit, OnDestroy {
             }
         }, httpOptions).subscribe(
             (response: any) => {
-                this.sendStatus = 'Sent, Notification Id:' + response.notificationId;
+                this.sendStatus =
+                    'Sent, Notification Id:' + response.notificationId;
             },
             (response: any) => {
                 this.sendStatus = 'Error: ' + JSON.stringify(response.error);
@@ -287,11 +301,13 @@ export class PushComponent implements OnInit, OnDestroy {
         if (systemId === 'all' && this.deviceSubscriptions[deviceToken].all) {
             systems.push('all');
         } else {
-            Object.entries(this.deviceSubscriptions[deviceToken]).forEach(([systemId, active]) => {
-                if (active && systemId !== 'all') {
-                    systems.push(systemId);
+            Object.entries(this.deviceSubscriptions[deviceToken]).forEach(
+                ([systemId, active]) => {
+                    if (active && systemId !== 'all') {
+                        systems.push(systemId);
+                    }
                 }
-            });
+            );
         }
         const httpOptions = {
             headers: new HttpHeaders({

@@ -1,13 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Router }                    from '@angular/router';
+import { Router } from '@angular/router';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxAccountService }          from '@services/account.service';
-import { NxPageService }             from '@services/page.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -49,7 +49,8 @@ export class NxLandingComponent implements OnInit {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
 
-        this.createUrl = environment.production ? '/authorize?client_type=create'
+        this.createUrl = environment.production
+            ? '/authorize?client_type=create'
             : `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}&client_type=create`;
     }
 

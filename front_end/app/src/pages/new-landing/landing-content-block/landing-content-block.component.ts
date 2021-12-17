@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { IConfig, NxConfigService } from '@services/nx-config';
 
 type InputType = 'small' | 'wide' | 'adaptive'

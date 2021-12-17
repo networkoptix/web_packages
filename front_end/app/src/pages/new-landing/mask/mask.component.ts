@@ -1,6 +1,16 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { NxConfigService, IConfig } from '@services/nx-config';
 import { Platform } from '@angular/cdk/platform';
+import {
+    AfterViewInit,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges
+} from '@angular/core';
+
+import { NxConfigService, IConfig } from '@services/nx-config';
+
 import { NxLandingService } from '../landing.service';
 
 @Component({
@@ -21,13 +31,23 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
 
     CONFIG: IConfig
 
-    constructor(configService: NxConfigService, platform: Platform, public landingService: NxLandingService) {
+    constructor(
+        configService: NxConfigService,
+        platform: Platform,
+        public landingService: NxLandingService
+    ) {
         this.CONFIG = configService.getConfig();
         this.isSafari = platform.SAFARI;
     }
 
     getMaskScale = (scrollPosition: number) => {
-        return ((150 / (1 - (scrollPosition * this.calculationProperties.scrollSpeedCoefficient * this.calculationProperties.maskCoefficient))) / 150) * 0.166;
+        const {
+            scrollSpeedCoefficient,
+            maskCoefficient
+        } = this.calculationProperties;
+        return 0.166 * (
+            1 - (scrollPosition * scrollSpeedCoefficient * maskCoefficient)
+        );
     }
 
     ngOnInit() {
@@ -39,11 +59,16 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this.landingService.introAnimationFinished$.value && changes.scrollPosition.previousValue !== changes.scrollPosition.currentValue) {
+        if (
+            this.landingService.introAnimationFinished$.value &&
+            changes.scrollPosition.previousValue !== changes.scrollPosition.currentValue
+        ) {
             if (this.scrollPosition < this.landingService.scrollBreakpoints.maskMaxSize) {
                 this.scale = this.getMaskScale(this.scrollPosition);
             } else {
-                this.scale = this.getMaskScale(this.landingService.scrollBreakpoints.maskMaxSize);
+                this.scale = this.getMaskScale(
+                    this.landingService.scrollBreakpoints.maskMaxSize
+                );
             }
         }
     }

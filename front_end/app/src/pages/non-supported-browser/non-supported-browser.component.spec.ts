@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 
-import { NonSupportedBrowserComponent }     from './non-supported-browser.component';
-import { NxCheckboxComponent }              from '@components/checkbox/checkbox.component';
+import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 describe('NonSupportedBrowserComponent', () => {
     let component: NonSupportedBrowserComponent;

@@ -1,8 +1,10 @@
 import { Platform } from '@angular/cdk/platform';
 import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
+
 import { NxLandingService } from '../landing.service';
 
 @UntilDestroy()
@@ -21,21 +23,34 @@ export class NxLearnMoreComponent implements OnChanges {
         screenHeight: 690
     }
 
-    constructor(public landingService: NxLandingService, private platform: Platform, private scrollMechanics: NxScrollMechanicsService, @Inject(WINDOW) private window: Window) {}
+    constructor(
+        public landingService: NxLandingService,
+        private platform: Platform,
+        private scrollMechanics: NxScrollMechanicsService,
+        @Inject(WINDOW) private window: Window
+    ) {}
 
     ngOnInit(): void {
         this.visible = this.renderLearnMore();
     }
 
     renderLearnMore = () => {
-        if (this.scrollPosition > this.isVisibleBreakpoints.scrollPosition || this.screenHeight < this.isVisibleBreakpoints.screenHeight) return false;
+        if (
+            this.scrollPosition > this.isVisibleBreakpoints.scrollPosition ||
+            this.screenHeight < this.isVisibleBreakpoints.screenHeight
+        ) {
+            return false;
+        };
         return true;
     }
 
     onClick() {
         if (this.landingService.contentStartRef) {
-            // Scroll behavior smooth not supported in safari... if smooth scroll is desired might need different implementation
-            this.landingService.contentStartRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+            // Scroll behavior smooth not supported in safari...
+            // if smooth scroll is desired might need different implementation
+            this.landingService.contentStartRef.nativeElement.scrollIntoView({
+                behavior: 'smooth'
+            });
             if (this.platform.SAFARI) {
                 this.scrollMechanics.windowScrollSubject.next(this.window.scrollY);
             }
