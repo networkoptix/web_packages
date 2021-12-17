@@ -32,16 +32,16 @@ export class NxEditableHeading implements OnInit, OnChanges {
     // TODO: remove it after CAMERAS and SERVERS has implemented FormWatcher
     // this adds support for watcher usage
     @Input() nameWatcherValue: string;
-    @Output() nameWatcherValueChanged = new EventEmitter();
+    @Output() nameWatcherValueChange = new EventEmitter();
     // *********************************************************************
 
     @Input() editEnabled = true;
-    @Output() editModeState = new EventEmitter();
+    @Input() editMode = false;
+    @Output() editModeChange = new EventEmitter();
 
     @HostBinding('class') hostClass = 'w-auto';
 
     CONFIG: IConfig;
-    editMode = false;
     componentId: string;
     value: string;
 
@@ -93,13 +93,13 @@ export class NxEditableHeading implements OnInit, OnChanges {
     }
 
     onChange() {
-        this.nameWatcherValueChanged.emit(this.value);
+        this.nameWatcherValueChange.emit(this.value);
         this.onChangeCallback(this.value);
     }
 
     editModeChanged(event) {
         this.hostClass = event ? 'w-100' : 'w-auto';
         this.editMode = event;
-        this.editModeState.emit(event);
+        this.editModeChange.emit(event);
     }
 }

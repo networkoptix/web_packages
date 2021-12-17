@@ -11,7 +11,7 @@
                     <div class="header-editable">
                             <nx-editable-heading
                                 name="systemName" id="systemName"
-                                (editModeState)="editMode = $event"
+                                [(editMode)]="editMode"
                                 [(ngModel)]="systemName"
                                 [editEnabled]="enableEdit"></nx-editable-heading>
                         <nx-client-button *ngIf="!CONFIG.isLocal && !editMode" [system]="system" [textOnly]="true"></nx-client-button>

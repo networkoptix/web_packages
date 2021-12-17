@@ -44,9 +44,8 @@
                         <div class="header-editable mb-3">
                             <nx-editable-heading
                                     name="cameraName"
-                                    (editModeState)="editMode = $event"
-                                    [nameWatcherValue]="cameraNameWatcher.value"
-                                    (nameWatcherValueChanged)="cameraNameWatcher.value = $event"
+                                    [(editMode)]="editMode"
+                                    [(nameWatcherValue)]="cameraNameWatcher.value"
                                     [editEnabled]="enableEdit"></nx-editable-heading>
                             <div *ngIf="!editMode" class="camera-button-div">
                                 <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">

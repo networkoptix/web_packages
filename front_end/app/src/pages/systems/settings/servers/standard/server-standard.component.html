@@ -71,9 +71,8 @@
                 <div class="header-editable">
                     <nx-editable-heading
                             name="serverName"
-                            (editModeState)="editMode = $event"
-                            [nameWatcherValue]="serverNameWatcher.value"
-                            (nameWatcherValueChanged)="serverNameWatcher.value = $event"
+                            [(editMode)]="editMode"
+                            [(nameWatcherValue)]="serverNameWatcher.value"
                             [editEnabled]="enableEdit"></nx-editable-heading>
                     <div *ngIf="!editMode" class="d-flex pb-2">
                         <button *ngIf="system.canViewInfo()" class="server-buttons"
