@@ -1,15 +1,18 @@
-import { NgModule }                  from '@angular/core';
-import { Angular2CsvModule }         from 'angular2-csv';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { Angular2CsvModule } from 'angular2-csv';
+import { QuicklinkStrategy } from 'ngx-quicklink';
 
-import { DirectivesModule }          from '@directives/directives.module';
-import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { NxDebugModule }             from './debug/debug.module';
-import { Nx500Module }               from './500/500.module';
-import { RouterModule, Routes }      from '@angular/router';
-import { QuicklinkStrategy }         from 'ngx-quicklink';
-import { ApplyGuard }                from '@guards/applyGuard';
-import { AuthGuard }                 from '@guards/authGuard';
-import { PipesModule }               from '@src/pipes/pipes.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { ApplyGuard } from '@guards/applyGuard';
+import { AuthGuard } from '@guards/authGuard';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { Nx500Module } from './500/500.module';
+import { NxDebugModule } from './debug/debug.module';
+import {
+    NonSupportedBrowserModule
+} from './non-supported-browser/non-supported-browser.module';
 
 const lazyRoutes: Routes = [
     {

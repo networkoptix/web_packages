@@ -1,16 +1,17 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { DragDropModule }       from '@angular/cdk/drag-drop';
-import { FormsModule }          from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }      from '@ngx-translate/core';
-import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-
-import { DirectivesModule }     from '@directives/directives.module';
-import { PipesModule }          from '@src/pipes/pipes.module';
-import { ComponentsModule }     from '@components/components.module';
-import { NxDashboardComponent } from './dashboard.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { ComponentsModule } from '@components/components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxDashboardComponent } from './dashboard.component';
 
 const appRoutes: Routes = [
     { path: '', component: NxDashboardComponent }

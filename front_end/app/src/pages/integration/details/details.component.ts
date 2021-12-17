@@ -17,10 +17,10 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
+import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu';
 
 import { IntegrationService } from '../integration.service';
-import { WINDOW } from '@services/window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

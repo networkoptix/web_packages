@@ -1,6 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
@@ -8,7 +9,6 @@ import { environment } from '@environments/environment';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { TranslateService } from '@ngx-translate/core';
 import { WINDOW } from '@services/window-provider';
 
 @Component({

@@ -20,15 +20,16 @@ import { environment } from '@environments/environment';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { NxAPIToolService } from '../api-tool.service';
+
 import {
     NxCopyToClipboardComponent
 } from './copy-to-clipboard/copy-to-clipboard.component';
 import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
-import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
-import type { componentMap, textareaMap } from './swagger-types';
 import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
+import type { componentMap, textareaMap } from './swagger-types';
+import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
 
 @UntilDestroy()
 @Component({

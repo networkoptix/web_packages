@@ -1,22 +1,27 @@
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { Angular2CsvModule } from 'angular2-csv';
+import { QuicklinkStrategy } from 'ngx-quicklink';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { DownloadModule } from './download/download.module';
-import { DownloadHistoryModule } from './download-history/download-history.module';
-import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { NxAccountModule } from './account/account.module';
-import { NxDebugModule } from './debug/debug.module';
-import { Nx500Module } from './500/500.module';
-import { Nx503Module } from './503/503.module';
-import { RouterModule, Routes } from '@angular/router';
-import { QuicklinkStrategy } from 'ngx-quicklink';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { FeatureGuard } from '@src/routeGuards';
-import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { BookmarksGuard } from '@guards/bookmarksGuard';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { FeatureGuard } from '@src/routeGuards';
+
+import { Nx500Module } from './500/500.module';
+import { Nx503Module } from './503/503.module';
+import { NxAccountModule } from './account/account.module';
+import { NxDebugModule } from './debug/debug.module';
+import {
+    DownloadHistoryModule
+} from './download-history/download-history.module';
+import { DownloadModule } from './download/download.module';
+import {
+    NonSupportedBrowserModule
+} from './non-supported-browser/non-supported-browser.module';
 
 const lazyRoutes: Routes = [
     {

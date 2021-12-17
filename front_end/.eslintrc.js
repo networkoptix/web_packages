@@ -243,20 +243,25 @@ module.exports = {
             }
         },
         {
-            files: [
-                // Progress so far
-                'app/*.ts',
-                'app/src/_mocks/**/*.ts',
-                'app/src/_testing/**/*.ts',
-                'app/src/components/**/*.ts',
-                'app/src/dialogs/**/*.ts',
-                'app/src/directives/**/*.ts',
-                'app/src/interceptors/**/*.ts',
-                'app/src/menu/**/*.ts',
-                // TODO 'app/src/pages/**/*.ts',
-                'app/src/pipes/**/*.ts',
-                'app/src/routeGuards/**/*.ts',
-                'app/src/services/**/*.ts',
+            files: ['app/**/*.ts'],
+            // Remaining to be done
+            excludedFiles: [
+                'app/src/pages/systems/settings/*.ts',
+                'app/src/pages/systems/settings/admin/**/*.ts',
+                'app/src/pages/systems/settings/cameras/**/*.ts',
+                'app/src/pages/systems/settings/cloud-storage/**/*.ts',
+                'app/src/pages/systems/settings/licenses/**/*.ts',
+                'app/src/pages/systems/settings/servers/**/*.ts',
+                'app/src/pages/systems/settings/users/**/*.ts',
+                'app/src/pages/systems/view/*.ts',
+                'app/src/pages/systems/view/pages/**/*.ts',
+                'app/src/pages/systems/view/services/**/*.ts',
+                'app/src/pages/systems/view/vms-client/*.ts',
+                'app/src/pages/systems/view/vms-client/pages/**/*.ts',
+                'app/src/pages/systems/view/vms-client/submodules/playback/**/*.ts',
+                'app/src/pages/systems/view/vms-client/submodules/timeline/**/*.ts',
+                'app/src/pages/systems/view/vms-client/submodules/vms/**/*.ts',
+                'app/src/pages/systems/view/vms-client/utils/**/*.ts',
             ],
             rules: {
                 'import/order': ['error', {

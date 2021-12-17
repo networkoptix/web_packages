@@ -1,30 +1,30 @@
-import { Component, ViewChildren, QueryList, HostListener, Inject, ElementRef, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import {
     CdkDropList,
     CdkDragEnter,
     moveItemInArray,
     CdkDragDrop
 } from '@angular/cdk/drag-drop';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { WINDOW } from '@services/window-provider';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { FirstPartyWidget, WidgetCard } from '@components/widgets/helper-classes';
-import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
-import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@environments/environment';
-import { NxToastService } from '@dialogs/toast.service';
+import { Component, ViewChildren, QueryList, HostListener, Inject, ElementRef, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
+import { FirstPartyWidget, WidgetCard } from '@components/widgets/helper-classes';
+import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { IConfig, NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
+import { WINDOW } from '@services/window-provider';
 
 export class DashboardConfiguration {
     constructor(

@@ -6,11 +6,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule }       from '@directives/directives.module';
-import { ComponentsModule }       from '@components/components.module';
-import { AuthGuard }              from '@src/routeGuards';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { ComponentsModule } from '@components/components.module';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+import { AuthGuard } from '@src/routeGuards';
 
 const appRoutes: Routes = [
     {
