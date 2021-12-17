@@ -4,7 +4,8 @@ import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import {
     CdkDropList,
     CdkDragEnter,
-    moveItemInArray
+    moveItemInArray,
+    CdkDragDrop
 } from '@angular/cdk/drag-drop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -22,14 +23,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { NxToastService } from '@dialogs/toast.service';
+import { v4 as uuid } from 'uuid';
+import { NxPageService } from '@services/page.service';
+
+export class DashboardConfiguration {
+    constructor(
+        public dashboardName = 'New Dashboard',
+        public cards: WidgetCard[] = [],
+        public id = uuid()
+    ) { }
+}
 
 /**
  * Configuration JSON format for saving, retrieving, uploading, or downloading dashboard settings
  */
-export interface DashboardConfiguration {
-    dashboardName: string,
+export interface DashboardGroup {
+    dashboardGroupName: string,
     dragEnabled: boolean,
-    cards: WidgetCard[]
+    activeId: string,
+    menu: DashboardConfiguration[]
 }
 
 @UntilDestroy()
@@ -38,7 +50,7 @@ export interface DashboardConfiguration {
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
-export class NxDashboardComponent {
+export class NxDashboardComponent implements DashboardGroup {
     readonly CUSTOM_PROPERTY_KEY = 'aggregated-dashboard';
     readonly MIN_COLUMNS = 4;
     readonly MAX_COLUMNS = 16;
@@ -50,7 +62,9 @@ export class NxDashboardComponent {
 
     readonly environment = environment;
 
-    dashboardName = 'Drag and Drop Dashboard';
+    dashboardGroupName = 'Drag and Drop Dashboard';
+    activeId: string;
+    activeDashboard: DashboardConfiguration;
     updatePersisted$ = new Subject();
     updated$ = new Subject();
     gridColumns = 12;
@@ -60,6 +74,7 @@ export class NxDashboardComponent {
     backupDownloadLink = ''
     dragEnabled: boolean;
     cards: WidgetCard[];
+    menu: DashboardConfiguration[] = [];
     loading = false;
     hidePreview = false;
     downloadFileName;
@@ -145,17 +160,18 @@ export class NxDashboardComponent {
 
     /**
      *
-     * @returns DashboardConfiguration
+     * @returns DashboardGroup
      */
-    getPreparedConfig(config?): DashboardConfiguration {
-        const { dashboardName, dragEnabled, cards } = config || this;
-        return { dashboardName, dragEnabled, cards: cards.map(({ editMode, ...card }) => card) };
+    getPreparedConfig(config?): DashboardGroup {
+        const { dashboardGroupName, dragEnabled, menu, activeId } = config || this;
+        return { dashboardGroupName, dragEnabled, activeId, menu: menu.map(({ id, ...menu }) => ({ ...menu, id: id || uuid() })) };
     }
 
     /**
      * Triggers saving changes to cloud. Subject is used to rate limit saves
      */
     updatePersistedConfig() {
+        this.menu = this.menu.map((dashboard) => dashboard.id === this.activeDashboard.id ? this.activeDashboard : dashboard);
         this.updatePersisted$.next('updated');
         return this.updated$.toPromise();
     }
@@ -220,16 +236,16 @@ export class NxDashboardComponent {
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({}));
         const beingUpdated = downloadedDashboard && downloadedDashboard?.cards.length;
+
+        // Update logic to replace or add to dashboard
         const dashboard = beingUpdated ? await this.confirmDashboardUpdate(downloadedDashboard, currentDashboard, dashboardUrl) : currentDashboard;
         this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '' }, queryParamsHandling: 'merge' });
-        const { dragEnabled = true, cards = [], dashboardName = 'Drag and Drop Dashboard' } = dashboard;
-        this.dragEnabled = widgetUrl || dragEnabled && cards.length;
-        this.dashboardName = cards.length ? dashboardName : this.LANG.pageTitles.systems();
+        const { dragEnabled = true, menu = [], dashboardGroupName = 'Drag and Drop Dashboard', activeId = '' } = dashboard;
+        this.menu = menu;
+        this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
+        this.pageService.pageTitle = this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
 
-        // Default to show systems widget if not configured
-        const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
-        systemsWidget.size = systemsWidget.sizes[2];
-        this.cards = this.validateCards(cards.length ? cards : [systemsWidget]);
+        this.updateCards(activeId, this.menu);
 
         const dashboardUpdated = dashboard === downloadedDashboard;
 
@@ -240,6 +256,31 @@ export class NxDashboardComponent {
         if (widgetUrl) {
             setTimeout(() => this.addWidget());
         }
+    }
+
+    updateSelectedDashboard = (dashboardId, dashboardToAddIfNotExisting?: DashboardConfiguration) => {
+        if (!this.menu.find(({ id }) => id === dashboardId) && dashboardToAddIfNotExisting) {
+            this.menu.push(dashboardToAddIfNotExisting);
+        }
+        this.updateCards(dashboardId);
+        this.router.navigate([], { queryParams: { dashboardId } });
+    }
+
+    private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu) {
+        // Default to show systems widget if not configured
+        const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
+        systemsWidget.size = systemsWidget.sizes[2];
+        this.activeDashboard = menu.find(({ id }) => id === activeId) || menu.find(({ cards }) => cards.length);
+        const hasCards = this.menu.length || !!this.activeDashboard?.cards?.length;
+        this.activeId = hasCards ? this.activeDashboard.id : uuid();
+
+        if (!hasCards) {
+            this.activeDashboard = { id: this.activeId, dashboardName: 'Systems', cards: [systemsWidget] };
+            menu = [this.activeDashboard];
+        }
+
+        this.menu = menu.map(({ id, ...menu }) => ({ id: id || uuid(), ...menu }));
+        this.cards = this.validateCards(hasCards ? this.activeDashboard.cards : [systemsWidget]);
     }
 
     @HostListener('window:message', ['$event'])
@@ -303,14 +344,27 @@ export class NxDashboardComponent {
      */
     async addWidget() {
         const firstPartyWidgets = NxDynamicWidgetComponent.getFirstPartyWidgetConfigs();
+        const newDashboard = new DashboardConfiguration();
         const card = await this.dialogsService.addWidget(
             this.gridSize,
             this.GRID_GAP,
-            firstPartyWidgets
+            firstPartyWidgets,
+            [...this.menu, newDashboard],
+            this.activeDashboard,
+            this.updateSelectedDashboard
         );
         if (card) {
             this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl: '' }, queryParamsHandling: 'merge' });
-            this.cards = this.validateCards([...this.cards, card]);
+            const activeMatchingId = this.menu.findIndex(({ id }) => id === this.activeId);
+            let activeIndex;
+
+            if (activeMatchingId >= 0) {
+                activeIndex = activeMatchingId;
+            } else {
+                this.menu.push(newDashboard);
+                activeIndex = newDashboard.id;
+            }
+            this.activeDashboard = this.menu[activeIndex].cards = this.cards = this.validateCards([...this.cards, card]);
             this.updatePersistedConfig();
             setTimeout(() => {
                 this.activeCellIndex = this.cards.length - 1;
@@ -318,6 +372,36 @@ export class NxDashboardComponent {
             });
             return true;
         }
+    }
+
+    moveDashboard(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.menu, event.previousIndex, event.currentIndex);
+        this.updatePersistedConfig();
+    }
+
+    async removeDashboard(dashboardId) {
+        const removeIndex = this.menu.findIndex(({ id }) => id === dashboardId);
+        const result = await this.dialogsService.confirm(`Are you sure that you want to remove "${this.menu[removeIndex].dashboardName}" dashboard?`, 'Confirm Remove Dashboard', 'Remove', 'btn-primary', 'Cancel');
+        if (result !== true) {
+            return;
+        }
+        this.menu = this.menu.filter((_, index) => index !== removeIndex);
+
+        if (dashboardId === this.activeId) {
+            const dashboardToShow = this.menu[Math.min(removeIndex, this.menu.length - 1)];
+            this.updateSelectedDashboard(dashboardToShow.id);
+        }
+
+        this.updatePersistedConfig();
+    }
+
+    addDashboard() {
+        const newDashboard = new DashboardConfiguration();
+        const existingNewDashboard = this.menu.find(({ dashboardName, cards }) => dashboardName === newDashboard.dashboardName && !cards.length);
+        if (!existingNewDashboard) {
+            this.menu.push(newDashboard);
+        }
+        this.updateSelectedDashboard((existingNewDashboard || newDashboard).id);
     }
 
     updateSelectedSize(size, card: WidgetCard) {
@@ -340,13 +424,13 @@ export class NxDashboardComponent {
         const settingsFile = files.item(0);
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
-            const { cards, dragEnabled, dashboardName } = JSON.parse(fileReader.result as string);
-            if (!cards) {
+            const { menu, dragEnabled, dashboardGroupName, activeId } = JSON.parse(fileReader.result as string);
+            if (!menu) {
                 return;
             }
-            this.cards = this.validateCards(cards);
+            this.updateCards(activeId, menu);
             this.dragEnabled = dragEnabled;
-            this.dashboardName = dashboardName;
+            this.pageService.pageTitle = this.dashboardGroupName = dashboardGroupName;
             this.updatePersistedConfig();
         };
         fileReader.readAsText(settingsFile);
@@ -371,6 +455,11 @@ export class NxDashboardComponent {
     }
 
     ngOnInit() {
+        this.route.queryParams.subscribe(({ dashboardId }) => {
+            if (this.menu?.length && dashboardId && dashboardId !== this.activeId) {
+                this.updateSelectedDashboard(dashboardId);
+            }
+        });
         this.updatePersisted$.pipe(
             debounceTime(250),
             switchMap(_ => this.cloudApi.saveCustomAccountProperty(this.getPreparedConfig(), this.CUSTOM_PROPERTY_KEY)),
@@ -392,6 +481,7 @@ export class NxDashboardComponent {
         private http: HttpClient,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
+        private pageService: NxPageService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;

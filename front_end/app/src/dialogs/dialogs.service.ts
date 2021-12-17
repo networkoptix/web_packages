@@ -11,6 +11,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ModalContent } from '@components/console-table/console-table.component.types';
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
+import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxAccountService } from '@services/account.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -48,6 +49,7 @@ import { NxToastService } from './toast.service';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
+
 import '@dialogs/dialogs.scss';
 
 interface IParams<Value = any> {
@@ -191,7 +193,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    public addWidget (gridSize, gridGap, widgets) {
+    public addWidget (gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static',
@@ -202,7 +204,10 @@ export class NxDialogsService {
             widgets,
             gridSize,
             gridGap,
-            closable: true
+            closable: true,
+            dashboardMenu,
+            activeDashboard,
+            updateSelectedDashboard,
         };
 
         return this.createModal(AddWidgetModalContent, options, params) as Promise<WidgetCard>;

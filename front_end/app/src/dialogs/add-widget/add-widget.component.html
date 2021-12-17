@@ -6,6 +6,12 @@
     </button>
 </div>
 <div class="modal-body">
+    <div *ngIf="dashboardOptions.length" class="mb-3">
+        <label translate>Select Dashboard</label>
+        <nx-select [items]="dashboardOptions" (onSelected)="updateSelectedDashboard($event.value, findDashboard($event.value))"
+            [selected]="selectedDashboard">
+        </nx-select>
+    </div>
     <div>
         <label translate>Select Widget</label>
         <nx-select [items]="widgetDropdownOptions" (onSelected)="updateSelected($event)" [selected]="selectedWidget">

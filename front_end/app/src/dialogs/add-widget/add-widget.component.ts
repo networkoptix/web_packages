@@ -8,6 +8,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
+import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -25,8 +26,14 @@ export class AddWidgetModalContent {
     @Input() gridSize: number;
     @Input() gridGap: number;
     @Input() closable: boolean;
+    @Input() dashboardMenu: DashboardConfiguration[];
+    @Input() activeDashboard: DashboardConfiguration;
+    @Input() updateSelectedDashboard: (id: string, dashboard: DashboardConfiguration) => void;
+
     addWidget: Process;
     selectedWidget: DropdownItem<WidgetCard>;
+    dashboardOptions: DropdownItem<string>[];
+    selectedDashboard: DropdownItem<string>;
 
     widgetDropdownOptions: DropdownItem<WidgetCard>[];
 
@@ -46,6 +53,10 @@ export class AddWidgetModalContent {
         this.selectedWidget = null;
         this.cd.detectChanges();
         this.selectedWidget = NxUtilsService.deepCopy(selected);
+    }
+
+    findDashboard(dashboardId) {
+        return this.dashboardMenu.find(({ id }) => id === dashboardId);
     }
 
     toggleEditMode(card: WidgetCard) {
@@ -74,6 +85,9 @@ export class AddWidgetModalContent {
     }
 
     ngOnInit() {
+        this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({ name, value }));
+        const { dashboardName: name, id: value } = this.activeDashboard || {};
+        this.selectedDashboard = { name, value };
         const { widgetUrl } = this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map((widget) => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl) {
