@@ -676,7 +676,7 @@
         "good": "良好",
         "minLength": "文字数不足",
         "minLengthMessage": "パスワードは8文字以上必要です",
-        "missingMessage": "Required",
+        "missingMessage": "必須",
         "required": "無効",
         "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けてください",
         "strongMessage": "強力なパスワード!",
@@ -1025,7 +1025,7 @@
             "v5Warning_a1": "現在、",
             "v5Warning_a2": "{count, plural, =0{# システム} one{# システム} other{# システム}}",
             "v5Warning_a3": "のソフトウェアバージョンが5.0未満です。以前のバージョンの %VMS_NAME% クライアントでは二要素認証をサポートしておらず、%CLOUD_NAME% アカウントのための確認コードが入力できないため、{count, plural, =0{当該システム} one{当該システム} other{当該システム}}は",
-            "v5Warning_a4": "%VMS_NAME% クライアント",
+            "v5Warning_a4": " %VMS_NAME% Client ",
             "v5Warning_a5": "でアクセスできなくなります。",
             "v5Warning_b": "{count, plural, =0{システム} 1{システム} other{システム}}は、バージョン5.0にアップデートすると完全にアクセスできるようになります。",
             "disableWarning": "二要素認証を必要とするシステムが {count, plural,other{# 個}} あります。\n{count, plural, other{当該システム}}にログインできなくなります。"

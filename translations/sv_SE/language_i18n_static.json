@@ -676,7 +676,7 @@
         "good": "bra",
         "minLength": "för kort",
         "minLengthMessage": "Lösenordet måste innehålla minst 8 tecken",
-        "missingMessage": "Required",
+        "missingMessage": "Krävs",
         "required": "felaktig",
         "requiredMessage": "Använd endast latinska bokstäver, siffror och tangentbordssymboler, undvik ledande och efterföljande mellanslag",
         "strongMessage": "Starkt lösenord!",
@@ -1025,7 +1025,7 @@
             "v5Warning_a1": "Du har",
             "v5Warning_a2": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
             "v5Warning_a3": "med mjukvaruversion lägre än 5.0. {count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer inte att vara tillgängliga via",
-            "v5Warning_a4": "%VMS_NAME% klient",
+            "v5Warning_a4": " %VMS_NAME% Client ",
             "v5Warning_a5": "eftersom tidigare versioner av %VMS_NAME% Client inte stöder tvåfaktorsautentisering, så kommer du inte att kunna ange en verifieringskod för ditt %CLOUD_NAME% konto.",
             "v5Warning_b": "{count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara fullt tillgänglig så snart som möjligt {count, plural, =0{dom är} one{det är} other{dom är}} uppgraderad till 5.0 -versionen.",
             "disableWarning": "Du har {count, plural, one{# ett system} other{# flera system}} som {count, plural, one{kräver} other{kräver}} tvåfaktorsautentisering. Du kommer inte att kunna logga in på {count, plural, one{detta system} other{dessa system}}."
