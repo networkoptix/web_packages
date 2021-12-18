@@ -5,7 +5,8 @@
     <ng-container *ngIf="systems.length">
         <nx-page-placeholder
             *ngIf="show2faRequired; else listOfSystems"
-            type="FAILED_TO_ACCESS_2FA" [data]="{ systemName: chosenSystemName }"
+            type="FAILED_TO_ACCESS_2FA"
+            [data]="{ systemName: chosenSystemName }"
             withFooter [showMainButton]="true">
         </nx-page-placeholder>
         <ng-template #listOfSystems>

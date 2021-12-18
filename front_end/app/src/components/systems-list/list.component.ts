@@ -1,5 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
@@ -14,8 +20,18 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
+import type { NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
+
+type Endpoint = Partial<{
+    ipvd: boolean;
+    integrations: boolean;
+    register: boolean;
+    view: boolean;
+    information: boolean;
+    settings: boolean;
+}>
 
 @UntilDestroy()
 @Component({
@@ -24,39 +40,38 @@ import { NxUtilsService } from '@services/utils.service';
     styleUrls: ['list.component.scss']
 })
 
-export class NxSystemsListComponent implements OnInit, OnDestroy {
+export class NxSystemsListComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    showSearch;
-    fetchComplete;
+    showSearch: boolean;
+    fetchComplete: boolean;
     search: { value: string };
     gettingSystems: Process;
-    openClient;
-    systems;
-    filteredSystems;
+    systems: NxSystemWithUserInfo[];
+    filteredSystems: NxSystemWithUserInfo[];
     account: Account;
-    endpoint: any = {};
+    endpoint: Endpoint = {};
     userEmail: string;
-    searchChanged = new Subject();
+    searchChanged = new Subject<void>();
 
     static SYSTEMS_BASE = '/systems';
 
-    @Input() base = NxSystemsListComponent.SYSTEMS_BASE;
+    @Input() base: string = NxSystemsListComponent.SYSTEMS_BASE;
     @Input() size: 'full' | 'mid' | 'compact' = 'full';
     @Input() disableSearch = false;
     @Input() systemsToShow: string[];
-    @Input() linkHandler;
+    @Input() linkHandler: Function;
 
-    @Output() availableSystems = new EventEmitter();
+    @Output() availableSystems = new EventEmitter<NxSystemWithUserInfo[]>();
 
-    get showCompact() {
+    get showCompact(): boolean {
         return this.base !== NxSystemsListComponent.SYSTEMS_BASE;
     }
 
     chosenSystemName: string;
     show2faRequired = false;
 
-    private setupDefaults(configService) {
+    private setupDefaults(configService: NxConfigService): void {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
@@ -84,14 +99,13 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.fetchComplete = false;
         this.search = { value: '' };
 
-        this.accountService.get()
-            .then((account) => {
-                if (account?.email) {
-                    this.account = account;
-                    this.userEmail = account.email;
-                    this.systemsService.getSystems(account.email);
-                }
-            });
+        this.accountService.get().then((account) => {
+            if (account?.email) {
+                this.account = account;
+                this.userEmail = account.email;
+                this.systemsService.getSystems(account.email);
+            }
+        });
 
         this.systemsService.systemsSubject.pipe(
             untilDestroyed(this)
@@ -107,7 +121,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 system.name = NxUtilsService.htmlToEntity(system.name);
             });
 
-            if (this.location.path().indexOf(this.base) === 0) {
+            if (this.location.path().startsWith(this.base)) {
                 if (this.systems.length === 1) {
                     this.openSystem(this.systems[0]);
                 }
@@ -135,25 +149,29 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             });
     }
 
-    trackItem(index, item) {
-        return item ? item.id : undefined;
+    trackItem(index: number, item: NxSystemWithUserInfo): string | undefined {
+        return item?.id;
     }
 
-    getSystemOwnerName(system, currentEmail) {
+    getSystemOwnerName(
+        system: NxSystemWithUserInfo,
+        currentEmail: string
+    ): string {
         return this.systemsService.getSystemOwnerName(system, currentEmail);
     }
 
-    hasMatch(str, search) {
-        return str.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+    hasMatch(str: string, search: string): boolean {
+        return str.toLowerCase().includes(search.toLowerCase());
     }
 
-    searchSystems() {
+    searchSystems(): void {
         const search = this.search.value;
 
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                    this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
+                    this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
+                        (system.ownerAccountEmail === this.accountService.email) ||
                     this.hasMatch(system.name, search) ||
                     this.hasMatch(system.ownerFullName, search) ||
                     this.hasMatch(system.ownerAccountEmail, search);
@@ -168,50 +186,58 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.searchChanged.next();
     }
 
-    private isActive(val: string) {
-        return this.router.url.indexOf(val) >= 0;
+    private isActive(val: string): boolean {
+        return this.router.url.includes(val);
     }
 
-    updateEndpoint(id: string) {
+    updateEndpoint(id: string): void {
         this.endpoint.ipvd = this.isActive('/ipvd');
         this.endpoint.integrations = this.isActive('/integrations');
         this.endpoint.register = this.isActive('/authorize/register');
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
-        this.endpoint.settings = id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+        this.endpoint.settings = id &&
+        this.isActive('/systems') &&
+            !this.isActive('/view') &&
+            !this.isActive('/health');
     }
 
-    openSystem(system) {
+    openSystem(system: NxSystemWithUserInfo): void {
         if (this.linkHandler) {
-            this.linkHandler({ url: this.menusService.getUrl(system.id, this.endpoint), label: system.name });
+            this.linkHandler({
+                url: this.menusService.getUrl(system.id, this.endpoint),
+                label: system.name
+            });
         } else if (this.needToConfigureTwoFactor(system)) {
             this.chosenSystemName = system.name;
             this.show2faRequired = true;
         } else {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;
-            this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
+            this.uriService
+                .updateURI(this.menusService.getUrl(system.id, this.endpoint))
                 .then(() => {
-                    const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
+                    const activeSystem = this.headerService.activeSystem ||
+                        this.headerService.lastActive$.value ||
+                        this.systems[0];
                     this.menusService.updateActiveSystemMenu(activeSystem);
                 })
                 .catch(err => { console.error(err); });
         }
     }
 
-    canShowTag(system) {
-        return system.stateOfHealth !== this.CONFIG.system.status.online && this.LANG.systemStatuses;
+    canShowTag(system: NxSystemWithUserInfo): boolean {
+        return system.stateOfHealth !== this.CONFIG.system.status.online &&
+            !!this.LANG.systemStatuses;
     }
 
-    canShowButton(system) {
+    canShowButton(system: NxSystemWithUserInfo): boolean {
         return this.LANG.system &&
             system.stateOfHealth === this.CONFIG.system.status.online &&
             !this.needToConfigureTwoFactor(system);
     }
 
-    needToConfigureTwoFactor(system) {
+    needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
         return system.system2faEnabled && !this.account.account2faEnabled;
     }
-
-    ngOnDestroy(): void { }
 }
