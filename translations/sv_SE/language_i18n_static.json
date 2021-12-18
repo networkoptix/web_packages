@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Skapa"
     },
@@ -918,6 +924,13 @@
             "activated": "Licensnyckel aktiverad",
             "inuse": "Licensnyckel har redan aktiverats och bundits till server med hårdvaru-ID {hwid} i ett annat system",
             "trialActivated": "Testlicens aktiverad. Från idag kan du spela in upp till 4 kameror under 30 dagar."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {

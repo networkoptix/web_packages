@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Sie sehen einen veralteten Bericht."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Erstellen"
     },
@@ -920,6 +926,13 @@
             "trialActivated": "Testlizenz aktiviert. Ab heute können Sie 30 Tage lang mit bis zu 4 Kameras aufnehmen."
         }
     },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
+        }
+    },
     "settingsConfig": {
         "additionalLocalFsTypes": "Zusätzliche lokale FS-Typen",
         "autoDiscoveryResponseEnabled": "Reaktion auf automatische Erkennung",
@@ -1025,7 +1038,7 @@
             "v5Warning_a1": "Sie haben",
             "v5Warning_a2": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}}",
             "v5Warning_a3": "mit einer Softwareversion kleiner als 5.0. {count, plural, =0{Diese Systeme sind} one{Dieses System ist} other{Diese Systeme sind}} nicht erreichbar über",
-            "v5Warning_a4": " %VMS_NAME% Client ",
+            "v5Warning_a4": " %VMS_NAME%-Client ",
             "v5Warning_a5": "da frühere Versionen von %VMS_NAME%-Client keine Zwei-Faktor-Authentifizierung unterstützen, können Sie keinen Verifizierungscode für Ihr %CLOUD_NAME%-Konto eingeben.",
             "v5Warning_b": "{count, plural, =0{Diese Systeme werden} one{Dieses System wird} other{Diese Systeme werden}} vollständig zugänglich sein, sobald {count, plural, =0{sie} one{es} other{sie}} auf die Version 5.0 aktualisiert {count, plural, =0{werden} one{wird} other{werden}}.",
             "disableWarning": "Sie haben {count, plural, one{# System, das} other{# Systeme, die}} eine Zwei-Faktor-Authentifizierung {count, plural, one{erfordert} other{erfordern}}. Sie können sich nicht bei {count, plural, one{diesem System} other{diesen Systemen}} anmelden."

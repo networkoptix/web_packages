@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Estás viendo un informe desactualizado."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Create"
     },
@@ -918,6 +924,13 @@
             "activated": "Clave de licencia activada",
             "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {hwid} en otro sistema",
             "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {

@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "您目前所查看的是旧版报告。"
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Create"
     },
@@ -918,6 +924,13 @@
             "activated": "授权已激活",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "试用授权已激活。从今天开始，您最多可以录制30天4台摄像机的试用。"
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {

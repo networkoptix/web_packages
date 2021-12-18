@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Güncel olmayan bir tarayıcı kullanıyorsunuz."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Create"
     },
@@ -918,6 +924,13 @@
             "activated": "Lisans deaktif edildi",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 adede kadar kamera kaydedebilirsiniz."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {

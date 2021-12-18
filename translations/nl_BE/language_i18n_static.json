@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Aanmaken"
     },
@@ -314,10 +320,10 @@
         "merge": {
             "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
-            "bothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "bothSystemsConnectedToCloud": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",
             "checking": "Controleren...",
             "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%CLOUD_NAME%</strong> of voeg lokaal samen met <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
             "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
@@ -854,7 +860,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% is momenteel niet beschikbaar. Probeer het later opnieuw.",
         "userChangesFail": "Wijzigingen toepassen is mislukt",
         "reviewAccepted": "De review is verwijderd",
         "system": {
@@ -918,6 +924,13 @@
             "activated": "Licentie geactiveerd",
             "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
             "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
@@ -1025,7 +1038,7 @@
             "v5Warning_a1": "U heeft",
             "v5Warning_a2": "{count, plural, =0{# systemen} one{# systeem} other{# systemen}}",
             "v5Warning_a3": "met softwareversie lager dan 5.0. {count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} zal niet toegankelijk zijn via",
-            "v5Warning_a4": " %VMS_NAME% Client ",
+            "v5Warning_a4": " %VMS_NAME% client ",
             "v5Warning_a5": "als eerdere versies van %VMS_NAME% Client ondersteunen geen tweestapsverificatie, dus u kunt geen verificatiecode invoeren voor uw account %CLOUD_NAME%.",
             "v5Warning_b": "{count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} zal volledig toegankelijk zijn zodra {count, plural, =0{zij zijn} one{het is} other{zij zijn}} geüpgraded naar de 5.0-versie.",
             "disableWarning": "Je hebt {count, plural, one{# systeem} other{# systemen}} die {count, plural, one{vereist} other{vereist}} authenticatie in twee stappen. Je kunt niet inloggen op {count, plural, one{dit systeem} other{deze systemen}}."

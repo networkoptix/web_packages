@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Вы просматриваете устаревший отчет."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Create"
     },
@@ -918,6 +924,13 @@
             "activated": "Лицензионный ключ активирован",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Активирована пробная лицензия. Начиная с сегодняшнего дня, можно записывать до 4 камер в течение 30 дней."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {

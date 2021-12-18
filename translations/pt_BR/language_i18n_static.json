@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Criar"
     },
@@ -920,6 +926,13 @@
             "trialActivated": "Licença de teste ativada. A partir de hoje, você pode gravar até 4 câmeras por 30 dias."
         }
     },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
+        }
+    },
     "settingsConfig": {
         "additionalLocalFsTypes": "Tipos de FS locais adicionais",
         "autoDiscoveryResponseEnabled": "Resposta de descoberta automática",
@@ -1025,7 +1038,7 @@
             "v5Warning_a1": "Você tem",
             "v5Warning_a2": "{count, plural, =0{# sistemas} one{# sistema} other{# sistemas}}",
             "v5Warning_a3": "com versão de software inferior a 5.0. {count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} estará inacessível via",
-            "v5Warning_a4": " %VMS_NAME% Client ",
+            "v5Warning_a4": " %VMS_NAME% cliente ",
             "v5Warning_a5": "já que as versões anteriores do %VMS_NAME% não oferecem suporte à autenticação de dois fatores, você não poderá inserir um código de verificação para a sua %CLOUD_NAME% conta.",
             "v5Warning_b": "{count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} estará totalmente acessível em breve {count, plural, =0{eles são} one{isto é} other{eles são}} atualizado para a versão 5.0.",
             "disableWarning": "Você tem {count, plural, one{# sistema} other{# sistemas}} naquela {count, plural, one{requer} other{exigir}} autenticação de dois fatores. Você não poderá fazer login no {count, plural, one{este sistema} other{esses sistemas}}."

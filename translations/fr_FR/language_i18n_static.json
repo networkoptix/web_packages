@@ -236,6 +236,12 @@
         },
         "viewingOutdatedReport": "Vous visualisez un rapport obsolète."
     },
+    "dashboard": {
+        "dashboardEditEnabled": "Dashboard editing is enabled",
+        "dashboardLocked": "Dashboard is locked",
+        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "unlockToMove": "Unlock dashboard to move widgets"
+    },
     "devConsole": {
         "create": "Créer"
     },
@@ -918,6 +924,13 @@
             "activated": "Clé de licence activée",
             "inuse": "La clé de licence a déjà été activée et liée au serveur avec l'ID matériel {hwid} dans un autre système",
             "trialActivated": "Licence d'essai activée. À partir d'aujourd'hui, vous pouvez enregistrer jusqu'à 4 caméras pendant 30 jours."
+        }
+    },
+    "redirects": {
+        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "defaultMessage": "Please update any links to reference the new route.",
+        "cloudLinks": {
+            "supportLink": "%SUPPORT_LINK%"
         }
     },
     "settingsConfig": {
