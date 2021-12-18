@@ -13,11 +13,21 @@
 
 #dashboard-heading {
   grid-area: Heading;
+  display: flex;
+  height: 56px;
+  align-items: center;
 }
 
 #dashboard-menu {
+  position: sticky;
+  top: 0;
   grid-area: Menu;
-  min-width: 240px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  max-height: calc(100vh - 48px);
+  align-self: flex-start;
 }
 
 .dashboard-base {
@@ -182,27 +192,28 @@ nx-select {
   display: flex;
   flex-direction: column;
   padding: 8px;
+  margin: 16px auto;
   & > * {
     margin-bottom: 8px;
   }
 }
 
 .menu-item {
+  @include typography.medium15dark9;
   cursor: pointer;
   padding: 8px 16px;
   display: flex;
   align-items: center;
+  user-select: none;
 
   &.active,
   &:active {
-    background: $light6;
-    &:hover {
-      background: $light7;
-    }
+    background: $light16 !important;
+    color: $light1 !important;
   }
   &:hover {
     background: $light4;
-    & .remove-button {
+    & .remove-button.visible {
       visibility: visible !important;
     }
   }
@@ -219,7 +230,7 @@ nx-select {
 }
 
 .add-dashboard {
-  color: $brand_core;
+  color: $brand_core !important;
 }
 
 .drag-cursor {
@@ -227,4 +238,14 @@ nx-select {
   &:active {
     cursor: grabbing;
   }
+}
+
+.dashboard-list {
+  overflow-y: auto;
+}
+
+nx-editable-heading {
+  margin-right: unset;
+  margin-left: 12px;
+  margin-bottom: 12px;
 }

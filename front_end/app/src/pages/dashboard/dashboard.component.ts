@@ -20,6 +20,7 @@ import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/s
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -37,11 +38,25 @@ export class DashboardConfiguration {
 /**
  * Configuration JSON format for saving, retrieving, uploading, or downloading dashboard settings
  */
-export interface DashboardGroup {
-    dashboardGroupName: string,
-    dragEnabled: boolean,
-    activeId: string,
-    menu: DashboardConfiguration[]
+export class DashboardGroup {
+    constructor(
+        public dashboardGroupName: string,
+        public menu?: DashboardConfiguration[],
+        public activeId?: string,
+        public dragEnabled = true
+    ) {
+        const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
+        systemsWidget.size = systemsWidget.sizes[2];
+        if (!this.menu || !this.menu.length) {
+            this.menu = [new DashboardConfiguration('Systems', [systemsWidget])];
+        }
+        this.activeId ||= this.menu[0].id;
+    }
+
+    static validateDashboard(dashboard: DashboardGroup, fallbackName: string) {
+        const invalid = dashboard?.dashboardGroupName === undefined || !dashboard?.menu?.length;
+        return invalid ? new DashboardGroup(fallbackName) : dashboard;
+    }
 }
 
 @UntilDestroy()
@@ -77,6 +92,7 @@ export class NxDashboardComponent implements DashboardGroup {
     menu: DashboardConfiguration[] = [];
     loading = false;
     hidePreview = false;
+    editingTitle = false;
     downloadFileName;
     activeAction;
 
@@ -234,18 +250,22 @@ export class NxDashboardComponent implements DashboardGroup {
     getPersistedConfig = async () => {
         const { widgetUrl, dashboardUrl } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
-        const currentDashboard = await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({}));
+        const currentDashboard = DashboardGroup.validateDashboard(
+            await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({})),
+            `${this.accountService.account.first_name}'s Dashboards`
+        );
         const beingUpdated = downloadedDashboard && downloadedDashboard?.cards.length;
 
         // Update logic to replace or add to dashboard
         const dashboard = beingUpdated ? await this.confirmDashboardUpdate(downloadedDashboard, currentDashboard, dashboardUrl) : currentDashboard;
-        this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '' }, queryParamsHandling: 'merge' });
         const { dragEnabled = true, menu = [], dashboardGroupName = 'Drag and Drop Dashboard', activeId = '' } = dashboard;
+        const dashboardId = this.route.snapshot.queryParams?.dashboardId || activeId;
+        this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '', dashboardId }, queryParamsHandling: 'merge' });
         this.menu = menu;
         this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
         this.pageService.pageTitle = this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
 
-        this.updateCards(activeId, this.menu);
+        this.updateCards(dashboardId, this.menu);
 
         const dashboardUpdated = dashboard === downloadedDashboard;
 
@@ -482,6 +502,7 @@ export class NxDashboardComponent implements DashboardGroup {
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
         private pageService: NxPageService,
+        private accountService: NxAccountService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
