@@ -219,7 +219,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private set transports (transports) {
-        this.transports$.next(transports || []);
+        this.transports$.next(transports.filter((transport) => ['hls', 'webm'].includes(transport)) || []);
     }
 
     get selectedTransport (): PlaybackTransport {
