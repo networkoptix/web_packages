@@ -396,7 +396,7 @@
                 "required": "Two-factor authentication is required.",
                 "configure": "You can configure it in your",
                 "accountLink": "account settings",
-                "codeRequired": "Verification code is required"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {

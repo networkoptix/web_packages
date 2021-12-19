@@ -433,7 +433,7 @@
     "Verification code from the authentication app allows you to log in to systems that require two-factor authentication.": "Verification code from the authentication app allows you to log in to systems that require two-factor authentication.",
     "Verification code from the authentication app will be requested on every login with %CLOUD_NAME% account.": "Verification code from the authentication app will be requested on every login with %CLOUD_NAME% account.",
     "Verification code from the authentication app will be requested only to log in to systems that require two-factor authentication.": "Verification code from the authentication app will be requested only to log in to systems that require two-factor authentication.",
-    "Verification code is required": "Verification code is required",
+    "Code is required": "Code is required",
     "Verify": "Verify",
     "Video archive will remain intact.": "Video archive will remain intact.",
     "View": "View",
