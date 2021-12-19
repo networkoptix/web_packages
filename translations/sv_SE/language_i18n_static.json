@@ -237,10 +237,10 @@
         "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Dashboard redigering är aktiverad",
+        "dashboardLocked": "Instrumentpanelen är låst",
+        "unlockToUpload": "Lås upp instrumentpanelen för att ladda upp konfiguration från json",
+        "unlockToMove": "Lås upp instrumentpanelen för att flytta widgetar"
     },
     "devConsole": {
         "create": "Skapa"
@@ -927,8 +927,8 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "Rutten \"{url}\" har flyttats till \"{redirectUrl}\".",
+        "defaultMessage": "Uppdatera eventuella länkar för att referera till den nya rutten.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }

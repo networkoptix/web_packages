@@ -237,10 +237,10 @@
         "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "A edição do painel está habilitada",
+        "dashboardLocked": "O painel está bloqueado",
+        "unlockToUpload": "Desbloqueie o painel para fazer o upload da configuração do json",
+        "unlockToMove": "Desbloqueie o painel para mover os widgets"
     },
     "devConsole": {
         "create": "Criar"
@@ -927,8 +927,8 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "A rota \"{url}\" foi movida para \"{redirectUrl}\".",
+        "defaultMessage": "Atualize todos os links para fazer referência à nova rota.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
