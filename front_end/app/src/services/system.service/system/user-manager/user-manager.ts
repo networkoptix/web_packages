@@ -273,8 +273,6 @@ export class UserManager {
             delete user.permissions;
         }
 
-        // TODO: remove later
-        // this.cloudApi.share(this.id, user.email, accessRole);
         return this.mediaserver.saveUser(user).toPromise().then(result => {
             user.id = result.id;
             user.role = role;

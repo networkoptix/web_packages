@@ -8,7 +8,7 @@ interface NameValue {
     value: string,
 }
 
-type MediaStreamInfo = any // TODO!
+type MediaStreamInfo = any;
 
 export class Camera implements ICamera {
     protected _birdViewTree: BirdViewTree

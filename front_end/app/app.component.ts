@@ -212,7 +212,6 @@ export class AppComponent {
         });
     }
 
-    // Todo: Revisit using this when the hybrid app is killed.
     @HostListener('window:popstate')
     windowListener() {
         if (this.applyService.locked) {

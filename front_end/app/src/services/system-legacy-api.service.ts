@@ -101,7 +101,9 @@ export class NxSystemAPI {
         this.appState = appState;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
-        // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
+        // This is to make it easy to access the systemService from the console for testing,
+        // uncomment to add systemService to global context.
+        // @ts-ignore
         // window.systemService = this;
         // console.log('systemService added to window');
         // console.log('to test system system api method just access the systemService from console');
@@ -315,16 +317,6 @@ export class NxSystemAPI {
 
     cleanId(id: string) {
         return id.replace('{', '').replace('}', '');
-    }
-
-    // TODO: Doesn't look like this is being used, maybe delete
-    protected apiHost() {
-        if (this.systemId) {
-            return this.CONFIG.trafficRelayHost
-                .replace('{host}', window.location.host)
-                .replace('{systemId}', this.systemId);
-        }
-        return window.location.host;
     }
 
     /* Authentication */
@@ -650,19 +642,6 @@ export class NxSystemAPI {
     setServerNetworkSettings(networkSettings: t.ServerNetworkSettings) {
         return this.post('/api/ifconfig', networkSettings).toPromise();
     }
-
-    // TODO: This doesn't look like it's being used
-    // protected checkPermissions(flag) {
-    //     // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
-    //     return this.getCurrentUser().then((user) => {
-    //         if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
-    //             return this.getRolePermissions(user.userRoleId).subscribe((role: unknown) => {
-    //                 return role.permissions.indexOf(flag) > -1;
-    //             });
-    //         }
-    //         return user.isAdmin || user.permissions.indexOf(flag) > -1;
-    //     });
-    // }
 
     setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;

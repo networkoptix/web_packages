@@ -7,7 +7,6 @@ import { NxUriService } from '@services/uri.service';
 
 import { NxMenuService } from '../menu.service';
 
-// TODO: Do we really need this? -- TT
 @Component({
     selector: 'nx-menu-button',
     template: `<button *ngIf="!environment.isLocal || CONFIG.cloudSystemId|| button.id !== 'addUser'"

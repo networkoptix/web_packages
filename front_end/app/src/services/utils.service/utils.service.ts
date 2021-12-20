@@ -174,6 +174,7 @@ export class NxUtilsService {
         }
     }
 
+    // TODO: In Angular13 branch when replacing exportCSV I modified file save too - this should go!
     public saveAs(data: BlobPart, filename: string, type: string): boolean | void {
         const a: HTMLAnchorElement = this.document.createElement('a');
         let objectUrl: string;
@@ -198,7 +199,6 @@ export class NxUtilsService {
         this.document.body.appendChild(a);
 
         // Safari in HM standalone does not work without timeout after appendChild, reason unclear
-        // TODO: Investigate why download doesn't work without timeout
         setTimeout(() => {
             a.click();
             this.document.body.removeChild(a);

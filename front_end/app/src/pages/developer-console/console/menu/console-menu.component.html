@@ -16,7 +16,6 @@
 </ng-template>
 
 <h3 *ngIf="(TYPES.EDIT === type) && !loading">
-    <!-- TODO: Need to replace svg -->
     <ng-container *ngTemplateOutlet="icon; context{
         icon: 'developers.svg'
     }"></ng-container>
@@ -33,7 +32,6 @@
 </ul>
 
 <div *ngIf="showAdditionalLinks && TYPES.EDIT === type" class="additional-links">
-    <!-- TODO: Need to replace svgs -->
     <ng-container *ngTemplateOutlet="additionalLink; context{
         icon: 'eye.svg', title: 'Show Preview' | translate
     }"></ng-container>

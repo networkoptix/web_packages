@@ -691,9 +691,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }, 500);
             return;
         }
-        // TODO: remove comment after task review
-        // this block changed in 20.1_hotfix to fix CLOUD-6788
-        // IF condition was removed as not necessary
+
         this.recording = switchValue;
     }
 

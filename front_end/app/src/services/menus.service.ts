@@ -216,7 +216,7 @@ export class NxMenusService {
         if (!activeSystem) {
             return;
         }
-        // TODO: unify system's name location once we remove promises
+
         let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.systemName;
         if (!name) {
             name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;

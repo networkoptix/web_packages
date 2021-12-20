@@ -339,7 +339,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.serversSubscription.unsubscribe();
         }
         // adding time to avoid server status flashing "Checking..." if system is offline
-        // TODO: Check spec for time
         this.serversSubscription = this.system.getForceServers()
             .pipe(
                 catchError(err => {

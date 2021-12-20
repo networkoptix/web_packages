@@ -37,17 +37,7 @@ export class NxLanguageProviderService {
         if (environment.isLocal) {
             this.currentLang = this.sessionService.language;
         }
-        // TODO: Delete this if no issues *****************
-        // setting translations here has no effect (beside unnecessary subscriptions running)
-        // as we don't use translation loader and setting translations
-        // manually via setTranslations -- TT
-        //
-        // this.translations = this.translate.translations[this.translate.currentLang];
-        // this.translateSubject.next(this.translations);
-        // this.translateSubject.subscribe(translations => {
-        //     this.translations = translations;
-        // });
-        // ************************************************
+
         this.storageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
             if (!environment.isLocal) {

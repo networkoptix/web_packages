@@ -285,13 +285,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.inline = params.inline !== 'undefined';
         });
 
-        // TODO: experiment iFrame
-        // this.headerService.visibilitySubject.subscribe((state) => {
-        //     if (state !== undefined) {
-        //         this.viewHeader = state;
-        //     }
-        // });
-
         this.navVisible = false;
         this.dropdownsVisible = false;
         this.viewHeader = this.CONFIG.showHeaderAndFooter;

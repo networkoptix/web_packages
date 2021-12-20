@@ -277,11 +277,6 @@ export const nxConfig: IConfig = {
     maintenanceTimeout: 60 * 1000,
     manifest: {
         [ConsoleSection.CUSTOM_CLIENTS]: {
-            // intro: {
-            //     // TODO: Remove once we decide how this will be provided from the CMS.
-            //     title   : 'About',
-            //     content : 'Custom client packages are needed for creating custom clients using open-source Meta VMS client: <a href="https://github.com/networkoptix/meta_open_client">https://github.com/networkoptix/meta_open_client</a>. More about building custom VMS clients: How to build your first custom VMS client?'
-            // },
             sort: 0,
             title: 'My Custom VMS Clients',
             url: 'custom-clients',

@@ -75,11 +75,6 @@ class BaseLanguageDropdown extends BaseDropdown {
             });
 
             if (this.instantApply && this.instantReload) {
-                /*  TODO: Currently this is not needed because the language file will
-                 be loaded during page reload. Once we transfer everything to Angular 5
-                 we should use this for seamless change of language
-                 // this.translate.use(lang.replace('_', '-'));
-                 */
                 if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
                     window.location.reload();

@@ -190,7 +190,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.healthLayoutService.dimensions = [];
 
-        // TODO: Create emitter inside search so we'll know when component is ready
         this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
             this.healthLayoutService.searchTableArea = this.areaElement;
             this.healthLayoutService.searchElement = this.searchElement;

@@ -147,7 +147,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         languageService: NxLanguageProviderService,
         private cloudApi: NxCloudApiService,
         private cameraSearchService: IpvdSearchService,
-        // TODO: Use dialog service when it is not being downgraded
         private dialogs: NxDialogsService,
         private uri: NxUriService,
         private route: ActivatedRoute,

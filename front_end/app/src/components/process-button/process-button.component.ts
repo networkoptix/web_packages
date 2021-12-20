@@ -71,7 +71,7 @@ export class NxProcessButtonComponent implements OnInit {
             // eslint-disable-next-line no-prototype-builtins
             if (form.controls.hasOwnProperty(ctrl)) {
                 if (form.get(ctrl).invalid) {
-                    // TODO : find how to set element's focus
+                    // TODO : Use Renderer2 to set focus
                     // control.focused = true;
                     return;
                 }

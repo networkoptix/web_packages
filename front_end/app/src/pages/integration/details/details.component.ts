@@ -52,7 +52,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private integrationService: IntegrationService,
         private ribbonService: NxRibbonService,
-        // TODO: Use dialog service when it is not being downgraded
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private accountService: NxAccountService,

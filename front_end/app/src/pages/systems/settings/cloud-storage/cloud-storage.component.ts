@@ -212,7 +212,7 @@ export class NxCloudStorageComponent implements OnInit {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();
         }
-        // TODO: Will implement erros on a future task when api service is finalized
+        // TODO: Will implement errors on a future task when api service is finalized
         );
     };
 

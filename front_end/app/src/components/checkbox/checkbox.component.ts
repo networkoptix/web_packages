@@ -98,8 +98,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.required = (this.required !== undefined);// optional param
         this.description = this.description || undefined;
 
-        // TODO: Remove hardcoded default state ... it messes up form watcher
-        // state should be controlled by ngModel -- TT
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {
