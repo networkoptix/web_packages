@@ -35,7 +35,7 @@ ${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
 
 #Log In Elements
 ${LOG IN MODAL}                       //nx-authorize-component/div[@class="authorize-main main-w"]
-${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit" and text()="${NEXT TEXT}"]
+${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit" and text()="${NEXT TEXT}" or text()="${LOG IN BUTTON TEXT}"]
 ${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
 ${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
@@ -98,10 +98,10 @@ ${LAST NAME IS REQUIRED}              ${REGISTER LAST NAME INPUT}/following-sibl
 ${EMAIL IS REQUIRED}                  ${REGISTER EMAIL INPUT}/../following-sibling::p[contains(@class,'error-label') and contains(text(),"${REQUIRED TEXT}")]
 ${EMAIL ALREADY REGISTERED}           //p[contains(@class,'error-label') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
 ${EMAIL INVALID}                      //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
-${PASSWORD SPECIAL CHARS}             //div[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
-${PASSWORD IS WEAK}                   //div[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
-${PASSWORD TOO SHORT}                 //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
-${PASSWORD TOO COMMON}                //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+${PASSWORD SPECIAL CHARS}             //div[contains(@class,'input-error') and contains(text(),"${PASSWORD SPECIAL CHARS TEXT}")]
+${PASSWORD IS WEAK}                   //div[contains(@class,'input-error') and contains(text(),"${PASSWORD IS WEAK TEXT}")]
+${PASSWORD TOO SHORT}                 //div[contains(@class,'input-error') and contains(text(),"${PASSWORD TOO SHORT TEXT}")]
+${PASSWORD TOO COMMON}                //div[contains(@class,'input-error') and contains(text(),"${PASSWORD TOO COMMON TEXT}")]
 
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 

@@ -1,22 +1,22 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Restore Password Dialog
+Suite Setup       Restore Pass Validation Setup
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Close Browser
+Suite Teardown    Restore Pass Validation Teardown
 Force Tags        email    form    Threaded
 
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),"${EMAIL INVALID TEXT}")]
-${EMAIL IS REQUIRED HEBREW}   //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-${EMAIL INVALID HEBREW}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
+${EMAIL IS REQUIRED}   //p[contains(@class,'error-label') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL INVALID}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
+${EMAIL IS REQUIRED HEBREW}   //p[contains(@class,'error-label') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL INVALID HEBREW}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
 
 *** Test Cases ***                        EMAIL
 1. Empty Email                               ${EMPTY}
-    [tags]    C26260
+    [tags]    C26260   CLOUD-8445
 2. Invalid Email 1 noptixqagmail.com         noptixqagmail.com
     [tags]    C41875
 3. Invalid Email 2 @gmail.com                @gmail.com
@@ -24,7 +24,7 @@ ${EMAIL INVALID HEBREW}       //span[contains(@class,'input-error') and contains
 4. Invalid Email 3 noptixqa@gmail..com       noptixqa@gmail..com
     [tags]    C41875
 5. Invalid Email 4 noptixqa@192.168.1.1.0    noptixqa@192.168.1.1.0
-    [tags]    C41875
+    [tags]    C41875    CLOUD-8445
 6. Invalid Email 5 noptixqa.@gmail.com       noptixqa.@gmail.com
     [tags]    C41875
 7. Invalid Email 6 noptixq..a@gmail.c        noptixq..a@gmail.c
@@ -36,7 +36,7 @@ ${EMAIL INVALID HEBREW}       //span[contains(@class,'input-error') and contains
 10. Invalid Email 9 myemail@                  myemail@
     [tags]    C41875
 11. Invalid Email 10 myemail@gmail            myemail@gmail
-    [tags]    C41875
+    [tags]    C41875    CLOUD-8445
 12. Invalid Email 11 myemail@.com             myemail@.com
     [tags]    C41875
 13. Invalid Email 12 my@email@gmail.com       my@email@gmail.com
@@ -46,20 +46,37 @@ ${EMAIL INVALID HEBREW}       //span[contains(@class,'input-error') and contains
 15. Invalid Email 14 myemail@gmail.com;       myemail@gmail.com;
     [tags]    C41875
 16. Space Email                               ${SPACE}
+    [tags]    CLOUD-8445
 17. Leading Space Email                       ${SPACE}myemail@gmail.com
     [tags]    C41875
 18. Trailing Space Email                      myemail@gmail.com${SPACE}
-    [tags]    C41875
+    [tags]    C41875   CLOUD-8445
 19. Unregistered Email                        ${EMAIL UNREGISTERED}
     [tags]    C41870
 
 *** Keywords ***
+Restore Pass Validation Setup
+    ${user}=   Get Random Email    ${BASE EMAIL}
+    Register And Activate Account    mark    hamill    ${user}    ${password}
+    Set Suite Variable     ${user}    ${user}
+
+Restore Pass Validation Teardown
+    Close Browser
+    Delete Account    ${url}    ${user}    ${password}
+
 Restart
     Close Browser
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    Open Browser and go to URL    ${url}/restore_password
+    Open Browser and go to URL    ${url}/authorize
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${user}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
+    Click Element    ${FORGOT PASSWORD BUTTON}
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Test Email Invalid
@@ -73,7 +90,7 @@ Test Email Invalid
 
 Check Email Outline
     [Arguments]    ${email}
-    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::nx-email-input/parent::form//span[contains(@class,'input-error')]
+    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::form[contains(@class,'ng-invalid')]
     IF    "${LANGUAGE}"=="he_IL"
         Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED HEBREW}
         Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID HEBREW}

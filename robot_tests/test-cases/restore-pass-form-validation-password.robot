@@ -1,10 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Restore Password Dialog With Link
+Suite Setup       Open Restore Password Dialog With Code
 Test Template     Test Password Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
-Force Tags        email    form    Threaded
+Force Tags        email    form
 
 *** Variables ***
 ${url}    ${ENV}
@@ -22,27 +22,27 @@ ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-passw
     [tags]    C41876    Password
 4. Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}
     [tags]    C41876    Password
-5. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                  ${SMILEY TEXT}
+5. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                       ${SMILEY TEXT}
     [tags]    C41876    Password
-6. Glyph Password 您都可以享受源源不絕的好禮及優惠          ${GLYPH TEXT}
+6. Glyph Password 您都可以享受源源不絕的好禮及優惠            ${GLYPH TEXT}
     [tags]    C41876    Password
 7. TM Password qweasdzxc123®™                            ${TM TEXT}
-    [tags]    C41876    Password
+    [tags]    C41876    Password    CLOUD-8457
 8. Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    ${symbol password}
     [tags]    C41876    Password
 9. Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876    Password
-10. Trailing Space Password                               ${BASE PASSWORD}${SPACE}
-    [tags]    C41876    Password
+10. Trailing Space Password                              ${BASE PASSWORD}${SPACE}
+    [tags]    C41876    Password    CLOUD-8457
 
 11. Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
-    [tags]    C41876    Password
+    [tags]    C41876    Password    CLOUD-8457
 12. Weak 2 Uppercase Password ADRHARTJAD                  ${uppercase password}
-    [tags]    C41876    Password
+    [tags]    C41876    Password    CLOUD-8457
 13. Weak 3 Numbers Password 13462344                      ${numbers password}
-    [tags]    C41876    Password
+    [tags]    C41876    Password    CLOUD-8457
 14. Weak 4 Symbol only Password !@#$%^&*()_-+=            ${symbol only password}
-    [tags]    C41876    Password
+    [tags]    C41876    Password    CLOUD-8457
 
 15. Fair 1 Lower and Uppercase                            ${lower upper password}
     [tags]    C41876    Password
@@ -67,6 +67,16 @@ ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-passw
     [tags]    C41876    Password
 
 *** Keywords ***
+Open Restore Password Dialog With Code
+    ${user} =   Register Random User
+    Open Browser and go to URL    ${url}/authorize
+    Send "Restore Password" Email   ${user}
+    Get Restore Code and Open the Link    ${user}
+    Set Suite Variable    ${user}   ${user}
+    ${speed normal} =  Get Selenium Speed
+    Set Suite Variable      ${speed normal}    ${speed normal}
+    Set Selenium Speed    .01
+
 Test Password Invalid
     [Arguments]   ${new pw}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
@@ -74,8 +84,14 @@ Test Password Invalid
     #Check New Password Badge    ${new pw}
     Check Password Badge    ${new pw}    ${SAVE PASSWORD}
     Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    newPassword
+    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
 
 Restart
     Close Browser
-    Open Restore Password Dialog With Link
+    Delete Account    ${url}    ${user}    ${password}
+    Open Restore Password Dialog With Code
+
+Teardown
+    Close Browser
+    Delete Account    ${url}    ${user}    ${password}
+    Set Selenium Speed     ${speed normal}

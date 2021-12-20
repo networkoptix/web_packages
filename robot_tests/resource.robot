@@ -107,23 +107,28 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}
     ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
 
 Log In Cloud
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     IF    '${validate}' == 'True'
         Check Language Logged In    ${email}    ${password}
     END
     Run Keyword Unless    '''${button}''' == "None"    Click Element    ${button}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
+    IF    '''${button}''' == '''${RESET LOGIN BUTTON}''' or ${reset}
+        Log     Reset autopopulates email
+    ELSE
+        Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+        Sleep    1
+        Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+        Sleep    1
+        Click Button    ${LOG IN NEXT BUTTON}
+    END
+
     IF    ${exists}
         Wait Until Element Is Visible    ${PASSWORD INPUT}
         Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
@@ -874,7 +879,7 @@ Move focus and check badge stays
     [Arguments]    ${badge}    ${new focus}
     Element Should Be Visible    ${badge}
     Click Element    ${new focus}
-    Element Should Be Visible    ${badge}
+    Wait Until Element Is Visible    ${badge}
 
 Move focus and check element
     [Arguments]    ${element}    ${new focus}
@@ -884,19 +889,34 @@ Move focus and check element
 Check New Password Outline and Error Message
     [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
     Click Element    ${new focus}
-    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
-    ...    Element Style Should Be    ${input}    border-color    ${ERROR COLOR}
+    IF    '''${new pw}''' not in ${fair passwords} or '''${new pw}''' not in ${good passwords}
+         Element Style Should Be    ${input}    border-bottom-color    ${ERROR COLOR WITH OPACITY}
+         Element Style Should Be    ${input}    border-top-color    ${ERROR COLOR WITH OPACITY}
+         Element Style Should Be    ${input}    border-right-color    ${ERROR COLOR WITH OPACITY}
+         Element Style Should Be    ${input}    border-left-color    ${ERROR COLOR WITH OPACITY}
+    END
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
     ...    Element Style Should Be    ${input}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
     ...    //nx-password-input[@name='${input name}' and contains(@class, 'ng-invalid')]//input[@id="${input name}"]
     # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
     Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
-    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${new focus}
-    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Move focus and check element    ${PASSWORD TOO SHORT}    ${new focus}
-    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${new focus}
-    ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
-    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
+    IF    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"
+        Move focus and check element    ${PASSWORD IS REQUIRED}    ${new focus}
+    ELSE IF    '''${new pw}'''=="${7char password}"
+        Move focus and check element    ${PASSWORD TOO SHORT}    ${new focus}
+    ELSE IF    '''${new pw}''' in "${incorrect passwords}"
+        Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${new focus}
+    ELSE IF    '''${new pw}'''=="${common password}"
+        Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
+    ELSE IF    '''${new pw}''' in "${weak passwords}"
+        Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
+    END
+#    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${new focus}
+#    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Move focus and check element    ${PASSWORD TOO SHORT}    ${new focus}
+#    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${new focus}
+#    ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
+#    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
 # ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
 
 Check System Text

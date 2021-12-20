@@ -33,7 +33,7 @@
     "CANNOT SHARE SYSTEM"                  :    "Cannot share System:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED" : "Changing own permissions is not allowed",
     "EMAIL IS ALREADY REGISTERED TEXT"     :    "This email has already been registered in the %SYSTEM% system",
-    "RESET SUCCESS MESSAGE TEXT"           :    "New password saved",
+    "RESET SUCCESS MESSAGE TEXT"           :    "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED"   :    "Your account is successfully saved",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT"  :    "Account Activated!",
     "SYSTEM NAME SAVED"                    :    "System name saved",
@@ -150,6 +150,7 @@
     "HEALTH VIEWER TEXT"                   :    "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT"  :    "Activate your account",
     "RESET PASSWORD EMAIL SUBJECT"         :    "Reset your password",
+    "RESET PASSWORD BUTTON TEXT"           :    "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT"      :    "Video system {{message.system_name}} was shared with you",
 
     "DISCONNECT FORM HEADER TEXT"          :    "Disconnect System from %PRODUCT_NAME%?",
@@ -542,5 +543,10 @@
     "STORAGES OUTDATED WARNING TEXT"	   :	"Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT"	   :	"Address",
     "STORAGE LOCATIONS MODE TEXT"		   :	"Mode",
-    "STORAGE LOCATIONS SPACE TEXT"		   :	"Space"
+    "STORAGE LOCATIONS SPACE TEXT"		   :	"Space",
+    "RESET SUCCESS INSTRUCTION TEXT"       :    "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT"          :    "First name is required",
+    "LAST NAME IS REQUIRED TEXT"           :    "Last name is required",
+    "EMAIL IS REQUIRED TEXT"               :    "Email is required",
+    "PASSWORD IS REQUIRED TEXT"            :    "Password is required"
 }
