@@ -18,14 +18,12 @@ import { NxOAuthRedirectModule } from './oauth-redirect/oauth-redirect.module';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 
-
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
 }
-
 
 @NgModule({
     declarations: [

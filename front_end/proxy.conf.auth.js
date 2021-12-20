@@ -6,7 +6,7 @@ const proxyTargetConfig = {
     prod: 'https://nxvms.com',
     stage: 'https://stage.nxvms.com/'
 };
-const target = process.env.CLOUD_TARGET || 'dev3';
+const target = process.env.CLOUD_TARGET || 'cloud-test';
 const PROXY_CONFIG = [
     {
         context: [
@@ -27,21 +27,22 @@ const PROXY_CONFIG = [
             // static content from cloud
             '/static/503.html',
             '/static/customization',
-            '/static/lang_en_US',
             '/static/lang_ru_RU',
             '/static/styles',
             '/static/images',
-            '/swagger-ui'
+            '/static/fonts',
+            '/swagger-ui',
+            '/static/scripts/commonPasswordsList.json',
         ],
         target: proxyTargetConfig[target],
         changeOrigin: true,
         secure: false
     }, {
         context: [
-            // '/static/lang_en_US',
+            '/static/lang_en_US',
             '/static'
         ],
-        target: 'https://localhost:9001',
+        target: 'https://localhost:9002',
         changeOrigin: true,
         secure: false,
         bypass: function (req, res, proxyOptions) {

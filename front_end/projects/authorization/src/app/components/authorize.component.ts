@@ -3,20 +3,22 @@
 import {
     Component, ElementRef, HostListener, Inject,
     OnDestroy, OnInit, ViewEncapsulation
-}                                     from '@angular/core';
-import { ActivatedRoute, Router }     from '@angular/router';
-import { UntilDestroy }               from '@ngneat/until-destroy';
-import { LocalStorageService }        from 'ngx-webstorage';
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxCloudApiService }         from '@services/nx-cloud-api';
-import { WINDOW }                    from '@services/window-provider';
+import { NxUtilsService } from '@services/utils.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { WINDOW } from '@services/window-provider';
+import { NxToastService } from '@dialogs/toast.service';
+
 import { environment } from '@environments/environment';
 require('what-input');
 
@@ -35,7 +37,7 @@ export interface AuthorizeParams {
     email?: string,
     access_code?: string,
     access_token?: string
-};
+}
 
 export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup'
 export enum AuthorizeState {
@@ -49,7 +51,7 @@ export enum AuthorizeState {
     error = 'error',
     auth = 'authCode',
     backup = 'backupCode'
-};
+}
 
 export enum ClientType {
     loginCloud = 'loginToCloud',
@@ -67,7 +69,7 @@ export enum ClientType {
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb',
     openClient = 'openClientFromCloud'
-};
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -164,7 +166,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private router: Router,
         private elem: ElementRef,
         private localStorageService: LocalStorageService,
-        @Inject(WINDOW) public window: Window
+        private toastService: NxToastService,
+        @Inject(WINDOW) public window: Window,
         // private pageService: NxPageService,
         // private uriService: NxUriService,
         // private scrollMechanicsService: NxScrollMechanicsService
@@ -476,6 +479,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 console.error('err in resetPassword process', err);
                 if (err.errorText === '2FA is required') {
                     this.currentState = AuthorizeState.auth;
+                } else if (err.errorText === 'unauthorized') {
+                    // loginCode is either invalid or already used
+                    this.toastService.notify(
+                        this.LANG.authorize.newPassInvalidCode(),
+                        'error',
+                    );
                 } else {
                     this.handleCloudConnectionError(err, this.resetPasswordProcess);
                 }

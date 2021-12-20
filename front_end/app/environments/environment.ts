@@ -6,8 +6,8 @@ import { IEnvironment } from './environment-config';
 export const environment: IEnvironment = {
     isLocal: false,
     production: false,
-    cloudHost: 'dev3.cloud.hdw.mx'
-    // cloudHost: 'cloud-test.hdw.mx'
+    // cloudHost: 'dev3.cloud.hdw.mx',
+    cloudHost: 'cloud-test.hdw.mx'
 };
 
 /*

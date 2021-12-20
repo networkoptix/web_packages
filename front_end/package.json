@@ -7,6 +7,7 @@
     "serve-cloud-test": "export CLOUD_TARGET=cloud-test && npm run serve:cloud",
     "serve-dev2": "export CLOUD_TARGET=dev2 && npm run serve:cloud",
     "serve-dev3": "export CLOUD_TARGET=dev3 && npm run serve:cloud",
+    "serve-stage": "export CLOUD_TARGET=stage && npm run serve:cloud",
     "serve-webadmin": "npm run serve:webadmin",
     "serve-webadmin-local": "export WEBADMIN_TARGET=local && npm run serve:webadmin",
     "serve-webadmin-demo": "export WEBADMIN_TARGET=demo && npm run serve:webadmin",
