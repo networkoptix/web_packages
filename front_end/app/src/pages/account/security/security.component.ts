@@ -66,17 +66,21 @@ export class NxAccountSecurityComponent implements OnInit {
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
             .subscribe((systems: NxSystemWithUserInfo[]) => {
+                const twoFaSystems: NxSystemWithUserInfo[] = [];
+                const subV5Systems: NxSystemWithUserInfo[] = [];
                 systems.forEach(system => {
                     system.name = NxUtilsService.htmlToEntity(system.name);
 
                     if (system.system2faEnabled) {
-                        this.twoFaSystems.push(system);
+                        twoFaSystems.push(system);
                     }
 
                     if (!system.useRest) {
-                        this.subV5Systems.push(system);
+                        subV5Systems.push(system);
                     }
                 });
+                this.twoFaSystems = twoFaSystems;
+                this.subV5Systems = subV5Systems;
             });
 
         // TODO: Replace with API logic
