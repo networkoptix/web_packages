@@ -29,20 +29,22 @@
 
 <div *ngIf="menu.length" id="dashboard-menu">
   <div *ngIf="dragEnabled && showSettings" class="settings-menu">
-    <div class="settings-heading">
-      <h3 translate>Dashboard Settings</h3>
-      <div class="settings-icon">
-        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'" (click)="showSettings = false"
-          [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '0'}" [applyClass]="true"></svg-icon>
+    <div class="settings-wrap">
+      <div class="settings-heading">
+        <h3 translate>Dashboard Settings</h3>
+        <div class="settings-icon">
+          <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'" (click)="showSettings = false"
+            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '0'}" [applyClass]="true"></svg-icon>
+        </div>
       </div>
-    </div>
-    <div class="dashboard-actions">
-      <div class="menu-item" (click)="addWidget()" translate>Add widget</div>
-      <a class="menu-item" (click)="prepareConfigDownload()" [href]="settingsDownloadLink" [download]="downloadFileName"
-        translate>Download dashboard config </a>
-      <label for="settings_upload" class="menu-item" [ngClass]="{disabled:!dragEnabled}"
-        [ngbTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''" translate>Apply existing config</label>
-      <input type="file" id="settings_upload" (change)="handleConfigUpload($event)" [disabled]="!dragEnabled">
+      <div class="dashboard-actions">
+        <div class="menu-item" (click)="addWidget()" translate>Add widget</div>
+        <a class="menu-item" (click)="prepareConfigDownload()" [href]="settingsDownloadLink"
+          [download]="downloadFileName" translate>Download dashboard config </a>
+        <label for="settings_upload" class="menu-item" [ngClass]="{disabled:!dragEnabled}"
+          [ngbTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''" translate>Apply existing config</label>
+        <input type="file" id="settings_upload" (change)="handleConfigUpload($event)" [disabled]="!dragEnabled">
+      </div>
     </div>
   </div>
   <div class="menu-heading">
@@ -59,6 +61,7 @@
     class="dashboard-list">
     <ng-container *ngFor="let dashboard of menu">
       <div *ngIf="dragEnabled || dashboard?.cards?.length" cdkDrag cdkDragLockAxis="y" [routerLink]="[]"
+        (mousedown)="showSettings = false"
         [ngbTooltip]="dragEnabled ? ('Drag dashboards to update order' | translate) : ''" [openDelay]="300"
         [queryParams]="{'dashboardId': dashboard.id}" routerLinkActive="active" class="menu-item"
         [ngClass]="{'drag-cursor': dragEnabled}">
@@ -69,13 +72,12 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="dragEnabled" (click)="addDashboard()" class="menu-item add-dashboard pointer" translate>Add New Dashboard
-    +
-  </div>
+  <div *ngIf="dragEnabled" (click)="addDashboard(); showSettings = false" class="menu-item add-dashboard pointer"
+    translate>Add New Dashboard +</div>
 </div>
 
 <div cdkDropListGroup *ngIf="cards && !loading; else preloader" (resize)="adjustGridHeight($event)"
-  (mousedown)="updateActive(-1)" (nxClickElsewhere)="updateActive(-1)" class="dashboard-parent"
+  (mousedown)="updateActive(-1); showSettings = false" (nxClickElsewhere)="updateActive(-1)" class="dashboard-parent"
   [ngClass]="{'drag-background': dragEnabled}" [ngStyle]="{
       'gap': GRID_GAP + 'px',
       'padding': gridColumns > 4 ? GRID_GAP + 'px' : 0,

@@ -283,35 +283,53 @@ nx-editable-heading {
 .settings-menu {
   position: absolute;
   background: $light4;
-  min-width: 240px;
   top: 0;
   left: 100%;
   height: calc(100vh - 48px);
   box-shadow: 6px 0 6px -6px $light7;
+  overflow-x: hidden;
+  width: 0px;
+  opacity: 0.5;
+  animation: show-menu 50ms ease-out forwards;
 
-  & > .settings-heading {
-    display: flex;
-    align-items: center;
-    padding-top: 8px;
+  & > .settings-wrap {
+    min-width: 240px;
 
-    & > h3 {
-      @include typography.medium20dark9;
-      margin: 8px 0 16px 16px;
-      width: 100%;
-    }
-  }
+    & > .settings-heading {
+      display: flex;
+      align-items: center;
+      padding-top: 8px;
 
-  & > .dashboard-actions {
-    padding: 4px 0;
-
-    & > .menu-item {
-      text-decoration: none !important;
-
-      &:hover,
-      &:active {
-        background: $light7 !important;
-        color: $dark9 !important;
+      & > h3 {
+        @include typography.medium20dark9;
+        margin: 8px 0 16px 16px;
+        width: 100%;
       }
     }
+
+    & > .dashboard-actions {
+      padding: 4px 0;
+
+      & > .menu-item {
+        text-decoration: none !important;
+
+        &:hover,
+        &:active {
+          background: $light7 !important;
+          color: $dark9 !important;
+        }
+      }
+    }
+  }
+}
+
+@keyframes show-menu {
+  0% {
+    width: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 240px;
+    opacity: 1;
   }
 }
