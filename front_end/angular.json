@@ -298,9 +298,9 @@
               ]
             },
             "development": {
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": true,
               "extractLicenses": true,

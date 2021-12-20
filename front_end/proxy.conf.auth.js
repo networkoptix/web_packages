@@ -27,6 +27,7 @@ const PROXY_CONFIG = [
             // static content from cloud
             '/static/503.html',
             '/static/customization',
+            '/static/lang_en_US',
             '/static/lang_ru_RU',
             '/static/styles',
             '/static/images',
@@ -39,7 +40,7 @@ const PROXY_CONFIG = [
         secure: false
     }, {
         context: [
-            '/static/lang_en_US',
+            // '/static/lang_en_US',
             '/static'
         ],
         target: 'https://localhost:9002',
