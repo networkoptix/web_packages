@@ -268,7 +268,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (!this.selectedTransport) {
             return;
         }
-        let quality = (initialQuality || '').toLowerCase();
+        const storedQuality = this.cameraQualityStorage.get(this.id);
+        let quality = (initialQuality || storedQuality || '').toLowerCase();
         if (quality === '') {
             const qualities = this.visibleQualities$.getValue();
             if (this.selectedTransport === 'hls') {
