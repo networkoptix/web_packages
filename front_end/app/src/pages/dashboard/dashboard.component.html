@@ -89,12 +89,12 @@
     }">
   <ng-container *ngFor="let card of cards; let i = index">
     <div cdkDropList *ngIf="isFirstPartyWidget(card.identifier)" [cdkDropListDisabled]="!dragEnabled"
-      [cdkDropListData]="i" [cdkDropListSortingDisabled]="true" (click)="showSettings = false" [ngStyle]="{
+      [cdkDropListData]="i" [cdkDropListSortingDisabled]="true" [ngStyle]="{
         'grid-column': 'span ' + (card.size.value.cols > gridColumns ? gridColumns : card.size.value.cols),
         'grid-row': 'span ' + card.size.value.rows
       }">
       <div cdkDrag cdkDragBoundary=".dashboard-parent" (cdkDragEntered)="entered($event)" [cdkDragData]="i"
-        (mousedown)="updateActive(i, $event)" class="dashboard-card" (mouseover)="hoverCellIndex = i"
+        (mousedown)="updateActive(i, $event); showSettings = false" class="dashboard-card" (mouseover)="hoverCellIndex = i"
         (mouseleave)="hoverCellIndex = -1"
         [ngClass]="{'active-widget': dragEnabled && activeCellIndex === i, 'drag-enabled': dragEnabled}">
         <div cdkDragHandle>
