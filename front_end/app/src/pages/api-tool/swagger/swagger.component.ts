@@ -363,16 +363,21 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     addLineCounter = (parent: HTMLElement) => {
-        parent.innerHTML = parent.innerText.split('\n').map(div => `<div>${div}</div>`).join('\n');
-        for (const child of parent.children) {
-            if (!child.textContent.length && !child.childElementCount) {
-                child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
+        const lines =  parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
+        if (lines.length > 1) { // Don't show line counters if only one line
+            parent.innerHTML = lines.join('\n');
+            for (const child of parent.childNodes as any) {
+                if (!child.textContent.length && !child.childElementCount) {
+                    child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
+                }
             }
-        }
-        if (parent.childElementCount > 1) {
-            // the code above adds one extra line, should be removed
-            parent.lastElementChild.remove();
-        }
+            if (parent.childElementCount > 1) {
+                // the code above adds one extra line, should be removed
+                parent.lastElementChild.remove();
+            }
+        } else {
+            parent.innerHTML = parent.innerText; // If no lines are added, remove code highlighting elements that comes from swagger-ui
+        };
     }
 
     private addLabelToRequest = () => {

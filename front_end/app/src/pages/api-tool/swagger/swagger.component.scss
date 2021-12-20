@@ -198,6 +198,9 @@
 	font-family: robotomonoregular, monospace !important;
 	font-size: rem(13px);
 	line-height: 1.23;
+	span {
+		color: $dark9 !important;
+	}
 }
 
 .swagger-ui .wrapper {
@@ -500,7 +503,7 @@
 	color           : $dark9;
 	width           : 100%;
 	margin-top	    : 10px;
-	padding	        : 1em 0.5em 1.4em 1em !important;
+	padding	        : .8em 0.5em .8em 1em !important;
 }
 
 .swagger-ui .model-box {
@@ -539,7 +542,10 @@
 }
 
 .swagger-ui .highlight-code > .microlight {
-	min-height : 6em;
+	min-height: 50px;
+}
+.swagger-ui .request-url.highlight-code >.microlight {
+	min-height: 32px;
 }
 
 .RTSP-request{
@@ -881,7 +887,7 @@
 pre, .text-area {
 	@extend .code-block-common;
 	margin: 10px 0 8px 0;
-	padding: 1em 0.5em 1.4em 1em !important;
+	padding: .8em 0.5em 1em 1em !important;
 	counter-reset: line;
 	color         : $dark9 !important;
 	& > div {
@@ -906,7 +912,6 @@ pre, .text-area {
 .text-area {
 	background-color: $light1;
 	border: 1px solid $light4;
-	color: $dark9 !important;
 	& > div {
 		padding-left: 20px !important;
 		margin-bottom: auto;
