@@ -28,13 +28,16 @@
 </ng-template>
 
 <div *ngIf="menu.length" id="dashboard-menu">
-  <nx-editable-heading name="groupName" [nameWatcherValue]="dashboardGroupName"
-    (nameWatcherValueChange)="dashboardGroupName = $event; updatePersistedConfig()" [editEnabled]="dragEnabled">
-  </nx-editable-heading>
+  <div class="d-flex">
+    <nx-editable-heading name="groupName" [nameWatcherValue]="dashboardGroupName"
+      (nameWatcherValueChange)="dashboardGroupName = $event; updatePersistedConfig()" [editEnabled]="dragEnabled">
+    </nx-editable-heading>
+  </div>
   <div cdkDropList (cdkDropListDropped)="moveDashboard($event)" [cdkDropListDisabled]="!dragEnabled"
     class="dashboard-list">
     <ng-container *ngFor="let dashboard of menu">
       <div *ngIf="dragEnabled || dashboard?.cards?.length" cdkDrag cdkDragLockAxis="y" [routerLink]="[]"
+        [ngbTooltip]="dragEnabled ? ('Drag dashboards to update order' | translate) : ''" [openDelay]="300"
         [queryParams]="{'dashboardId': dashboard.id}" routerLinkActive="active" class="menu-item"
         [ngClass]="{'drag-cursor': dragEnabled}">
         <span>{{dashboard.dashboardName}}</span>
@@ -44,7 +47,8 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="dragEnabled" (click)="addDashboard()" class="menu-item add-dashboard pointer" translate>Add Dashboard +
+  <div *ngIf="dragEnabled" (click)="addDashboard()" class="menu-item add-dashboard pointer" translate>Add New Dashboard
+    +
   </div>
   <div *ngIf="dragEnabled" class="buttons-wrapper">
     <button class="btn btn-primary" (click)="addWidget()" translate>Add Widget</button>
@@ -62,6 +66,8 @@
       'gap': GRID_GAP + 'px',
       'padding': gridColumns > 4 ? GRID_GAP + 'px' : 0,
       'padding-top': 0,
+      'padding-left': GRID_GAP ? 0 : gridColumns + 'px',
+      'padding-right': GRID_GAP ? 0 : gridColumns + 'px',
       'grid-auto-rows': gridSize + 'px',
       'grid-template-columns': 'repeat(' + gridColumns + ', [col-start] ' + gridSize + 'px)'
     }">
@@ -73,13 +79,16 @@
       }">
       <div cdkDrag cdkDragBoundary=".dashboard-parent" (cdkDragEntered)="entered($event)" [cdkDragData]="i"
         (mousedown)="updateActive(i, $event)" class="dashboard-card"
-        [ngClass]="{'active-widget': dragEnabled && activeCellIndex == i, 'card-draggable': dragEnabled}">
+        (mouseover)="hoverCellIndex = i"
+        (mouseleave)="hoverCellIndex = -1"
+        [ngClass]="{'active-widget': dragEnabled && activeCellIndex === i, 'drag-enabled': dragEnabled}">
         <div cdkDragHandle>
-          <div class="heading" [ngbTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()">
+          <div class="heading" [ngbTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()"
+            [ngClass]="{'drag-heading': dragEnabled && [activeCellIndex, hoverCellIndex].includes(i)}">
             <ng-template #cardTitle>
               <h3>{{card.title}}</h3>
             </ng-template>
-            <ng-container *ngIf="dragEnabled; else cardTitle">
+            <ng-container *ngIf="dragEnabled && [activeCellIndex, hoverCellIndex].includes(i); else cardTitle">
               <nx-select [items]="card.sizes" (onSelected)="updateSelectedSize($event, card)" [selected]="card.size"
                 type="transparent-button">
               </nx-select>

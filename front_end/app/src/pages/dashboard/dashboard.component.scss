@@ -6,9 +6,12 @@
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   gap: 0px 0px;
+  min-height: calc(100vh - 48px);
   grid-template-areas:
     "Menu Heading"
     "Menu Dashboard";
+  position: sticky;
+  top: 0;
 }
 
 #dashboard-heading {
@@ -16,6 +19,11 @@
   display: flex;
   height: 56px;
   align-items: center;
+  background: $light1;
+  & > nx-editable-heading {
+    margin-top: 12px;
+    margin-left: 0;
+  }
 }
 
 #dashboard-menu {
@@ -49,24 +57,46 @@
   @extend .dashboard-base;
   grid-area: Dashboard;
   min-height: 360px;
+  background: $light1;
+  padding-bottom: 12px !important;
 }
 
 .dashboard-card {
   height: 100%;
-  border: 1px solid $light3;
-  border-radius: 8px;
   background: $light1;
+  outline: 1px solid $light3;
+
+  &.drag-enabled:not(.active-widget):hover {
+    outline-color: $brand_l4 !important;
+    position: relative;
+    z-index: 5;
+  }
+  &:not(.drag-enabled):hover {
+    background: $additional_light1;
+  }
 }
 
 .heading {
-  background: $additional_light1;
-  border-bottom: 1px solid $light3;
+  border-bottom: 1px solid transparent;
   display: flex;
   justify-content: space-between;
   border-radius: 6px 6px 0 0;
   & span {
     padding: 8px;
     color: white !important;
+  }
+
+  & > h3 {
+    margin-bottom: 0px;
+  }
+
+  &.drag-heading {
+    background: $additional_light1;
+    border-bottom: 1px solid $light3;
+  }
+
+  &:not(.drag-heading) {
+    min-height: 33px;
   }
 }
 
@@ -122,12 +152,14 @@ input[type="file"] {
 }
 
 .active-widget {
-  border: 2px solid $brand_core;
-  box-shadow: 0 0 6px 2px $light7;
+  position: relative;
+  outline: 2px solid $brand_core;
+  z-index: 10;
+  // box-shadow: 0 0 6px 2px $light7;
 }
 
 .card-draggable:not(.active-widget) {
-  box-shadow: 0 0 3px 1px $light3;
+  // box-shadow: 0 0 3px 1px $light3;
 }
 
 h3 {
@@ -245,7 +277,7 @@ nx-select {
 }
 
 nx-editable-heading {
-  margin-right: unset;
+  max-width: calc(100% - 16px);
   margin-left: 12px;
   margin-bottom: 12px;
 }

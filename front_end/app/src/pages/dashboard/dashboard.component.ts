@@ -70,7 +70,7 @@ export class NxDashboardComponent implements DashboardGroup {
     readonly MIN_COLUMNS = 4;
     readonly MAX_COLUMNS = 16;
     readonly MIN_GRID_SIZE = 108;
-    readonly GRID_GAP = 16;
+    readonly GRID_GAP = 0;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -85,6 +85,7 @@ export class NxDashboardComponent implements DashboardGroup {
     gridColumns = 12;
     gridSize = 0;
     activeCellIndex = -1;
+    hoverCellIndex = -1;
     settingsDownloadLink: SafeUrl = ''
     backupDownloadLink = ''
     dragEnabled: boolean;
@@ -171,7 +172,7 @@ export class NxDashboardComponent implements DashboardGroup {
     adjustGridHeight({ width }: any) {
         const calculatedColumns = Math.floor(width / this.MIN_GRID_SIZE / this.MIN_COLUMNS) * this.MIN_COLUMNS;
         this.gridColumns = Math.min(Math.max(calculatedColumns, this.MIN_COLUMNS), this.MAX_COLUMNS);
-        this.gridSize = Math.ceil((width - (this.gridColumns * this.GRID_GAP)) / this.gridColumns);
+        this.gridSize = Math.ceil((width - (this.gridColumns * (this.GRID_GAP || 1))) / this.gridColumns);
     }
 
     /**
@@ -364,7 +365,7 @@ export class NxDashboardComponent implements DashboardGroup {
      */
     async addWidget() {
         const firstPartyWidgets = NxDynamicWidgetComponent.getFirstPartyWidgetConfigs();
-        const newDashboard = new DashboardConfiguration();
+        const newDashboard = new DashboardConfiguration('Add New Dashboard +');
         const card = await this.dialogsService.addWidget(
             this.gridSize,
             this.GRID_GAP,
