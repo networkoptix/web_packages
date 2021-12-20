@@ -1,22 +1,23 @@
 import {
     Component,
-    OnDestroy, Input, ViewChild
+    OnDestroy,
+    Input,
+    ViewChild
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-    map, delay, retryWhen, take, takeUntil
-} from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject, Subscription } from 'rxjs';
+import { map, delay, retryWhen, take, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxSettingsService } from '../../settings.service';
+import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
+
+import { NxSettingsService } from '../../settings.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,7 +31,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
-    @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm;
+    @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
 
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
@@ -72,7 +73,11 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             .subscribe(() => {
                 this.settingsService.footerSubject.next(true);
                 if (this.system.currentServerNotBusy) {
-                    if (this.system && this.system.servers && this.system.servers.length) {
+                    if (
+                        this.system &&
+                        this.system.servers &&
+                        this.system.servers.length
+                    ) {
                         this.getAdvancedSettings();
                     }
                 }
@@ -83,7 +88,10 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                 .updateOrGetSystemSettings(this.changedFields)
                 .toPromise()
                 .then((response: any) => {
-                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    if (
+                        typeof (response.error) !== 'undefined' &&
+                        response.error !== '0'
+                    ) {
                         const errorToShow = response.errorString;
                         this.dialogsService
                             .alert(errorToShow, this.LANG.dialogs.titles.error?.())
@@ -93,15 +101,19 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                     } else {
                         this.settingsToBeDisplayedOrUpdated(this.changedFields);
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved?.(), this.LANG.dialogs.titles.success?.())
-                            .catch(error => {
+                            .alert(
+                                this.LANG.dialogs.message.settingsSaved?.(),
+                                this.LANG.dialogs.titles.success?.()
+                            ).catch(error => {
                                 console.error(error);
                             });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved?.(), this.LANG.dialogs.titles.error?.())
-                        .catch(error => {
+                        .alert(
+                            this.LANG.dialogs.message.settingsNotSaved?.(),
+                            this.LANG.dialogs.titles.error?.()
+                        ).catch(error => {
                             console.error(error);
                         });
                 });
@@ -109,7 +121,9 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     canSee(key) {
-        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key]?.type);
+        return ['number', 'text', 'password'].includes(
+            this.CONFIG.settingsConfig[key]?.type
+        );
     }
 
     getAdvancedSettings() {
@@ -152,7 +166,9 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     getDescription(key) {
-        return this.LANG.settingsConfig[key] ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key]) : key;
+        return this.LANG.settingsConfig[key]
+            ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key])
+            : key;
     }
 
     settingsToBeDisplayedOrUpdated = (settings) => {
@@ -173,10 +189,14 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             }
             switch (type) {
                 case 'number':
-                    systemSettings[key] = (value !== '') ? parseInt(value as string) : '';
+                    systemSettings[key] = (value !== '')
+                        ? parseInt(value as string)
+                        : '';
                     break;
                 case 'checkbox':
-                    systemSettings[key] = (typeof value === 'boolean') ? value : (value === 'true');
+                    systemSettings[key] = (typeof value === 'boolean')
+                        ? value
+                        : (value === 'true');
                     break;
                 default:
                     systemSettings[key] = value;
