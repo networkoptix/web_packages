@@ -1,8 +1,8 @@
 import { ElementRef, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil, skip }          from 'rxjs/operators';
+import { takeUntil, skip } from 'rxjs/operators';
 
-import { Mask, Area, AreaTuple }    from './motion-detection-types';
+import { Mask, Area, AreaTuple } from './motion-detection-types';
 
 export class MotionMaskState {
     static readonly matrixColumns = 44;
@@ -22,8 +22,12 @@ export class MotionMaskState {
         private rotation: number = 0
     ) {
         const aspectChange = rotation % 180;
-        this.columns = aspectChange ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
-        this.rows = aspectChange ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
+        this.columns = aspectChange
+            ? MotionMaskState.matrixRows
+            : MotionMaskState.matrixColumns;
+        this.rows = aspectChange
+            ? MotionMaskState.matrixColumns
+            : MotionMaskState.matrixRows;
         const parsedInitial = this.initialToMaskZones(initialMask, this.rotation);
         this.maskZones = new BehaviorSubject(parsedInitial);
         this.maskMatrix = new BehaviorSubject(
@@ -31,10 +35,15 @@ export class MotionMaskState {
         );
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation, true);
+            const matrix = this.rotateMatrix(
+                this.zonesToMatrix(zones),
+                360 - this.rotation,
+                true
+            );
             const latestZones = this.matrixToZones(matrix);
             const maskString = latestZones.map(
-                ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
+                ({ sensitivity, x, y, width, height }) =>
+                    `${sensitivity},${x},${y},${width},${height}`
             ).join(';');
             updateMask.emit(maskString);
         });
@@ -70,9 +79,15 @@ export class MotionMaskState {
         if (!(rotation % 360)) return matrix;
         if (rotation % 360 === 180) return matrix.reverse().map(row => row.reverse());
         if (rotation % 180) {
-            const rows = toLandscape ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
-            const columns = toLandscape ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
-            const rotated = Array(rows).fill(Array(columns).fill(0)).map((_, column) => _.map((_, row) => matrix[row][column]));
+            const rows = toLandscape
+                ? MotionMaskState.matrixRows
+                : MotionMaskState.matrixColumns;
+            const columns = toLandscape
+                ? MotionMaskState.matrixColumns
+                : MotionMaskState.matrixRows;
+            const rotated = Array(rows)
+                .fill(Array(columns).fill(0))
+                .map((_, column) => _.map((_, row) => matrix[row][column]));
             if (rotation % 360 === 90) {
                 return rotated.map(row => row.reverse());
             } else {
@@ -97,7 +112,9 @@ export class MotionMaskState {
                         area.currentSelection = false;
                         return area;
                     });
-                    const { maskMatrix, zones } = this.mergeZones(this.maskZones.value, updatedZones);
+                    const { maskMatrix, zones } = this.mergeZones(
+                        this.maskZones.value, updatedZones
+                    );
                     this.maskMatrix.next(maskMatrix);
                     this.maskZones.next(zones);
                     this.selectionZones.next([]);
@@ -127,8 +144,12 @@ export class MotionMaskState {
 
     // Transform utilities
     public zonesToMatrix(zones: Area[]): Mask {
-        const rows = this.rotation % 180 ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
-        const columns = this.rotation % 180 ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
+        const rows = this.rotation % 180
+            ? MotionMaskState.matrixColumns
+            : MotionMaskState.matrixRows;
+        const columns = this.rotation % 180
+            ? MotionMaskState.matrixRows
+            : MotionMaskState.matrixColumns;
         let matrix: Mask = new Array(rows).fill(new Array(columns).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);
@@ -164,7 +185,9 @@ export class MotionMaskState {
                 }
                 height++;
             }
-            zones.push(new Area(sensitivity, column, row, width, height, sensitivity >= 100));
+            zones.push(
+                new Area(sensitivity, column, row, width, height, sensitivity >= 100)
+            );
         };
         matrix.forEach((_, row) => {
             _.forEach((_, column) => {
@@ -216,7 +239,8 @@ export class MotionMaskState {
                 groupPointer < group.length;
                 groupPointer++
             ) {
-                const borderingZones = sorted.filter((zone) => zone.borders(group[groupPointer]));
+                const borderingZones = sorted
+                    .filter((zone) => zone.borders(group[groupPointer]));
                 group = [...group, ...borderingZones];
                 sorted = sorted.filter(
                     (zone) => !zone.borders(group[groupPointer])
