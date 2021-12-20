@@ -232,7 +232,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 }
                 this.kbService.basePath = snapshot.paramMap.get('name');
                 const isContentType = this.kbService.basePath === 'content';
-                this.appStateService.altBackground = !isContentType;
+                setTimeout(() => {
+                    this.appStateService.altBackground = !isContentType;
+                });
                 const menuName = this.CONFIG.docMenuMap[this.kbService.basePath]?.[this.kbService.kbName];
                 if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
                     this.kbService.menuName = menuName;
@@ -388,7 +390,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy() {
-        this.appStateService.altBackground = false;
+        setTimeout(() => {
+            this.appStateService.altBackground = false;
+        });
         this.ribbonService.hide();
     }
 };
