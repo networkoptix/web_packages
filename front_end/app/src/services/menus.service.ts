@@ -216,8 +216,7 @@ export class NxMenusService {
         if (!activeSystem) {
             return;
         }
-
-        let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.systemName;
+        let name = activeSystem.info?.systemName || activeSystem.info?.name || activeSystem.systemName || activeSystem.name;
         if (!name) {
             name = (environment.isLocal) ? this.CONFIG.localServerId : activeSystem.moduleInfo?.id;
         }
