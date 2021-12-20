@@ -15,6 +15,7 @@
 }
 
 #dashboard-heading {
+  position: relative;
   grid-area: Heading;
   display: flex;
   height: 56px;
@@ -29,12 +30,14 @@
 #dashboard-menu {
   position: sticky;
   top: 0;
+  z-index: 15;
+  box-shadow: 6px 0 6px -6px $light7;
   grid-area: Menu;
   width: 360px;
   display: flex;
   flex-direction: column;
   padding-top: 8px;
-  max-height: calc(100vh - 48px);
+  height: calc(100vh - 48px);
   align-self: flex-start;
 }
 
@@ -106,20 +109,11 @@
   opacity: 0.5;
 }
 
-.cdk-drag,
-.cdk-drag-dragging {
-  // transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
-}
-
 .cdk-drag-handle {
   cursor: grab;
   &:active {
     cursor: grabbing;
   }
-}
-
-.cdk-drag-disabled > .cdk-drag-handle {
-  cursor: not-allowed !important;
 }
 
 .cdk-drag-animating {
@@ -143,9 +137,6 @@
   }
 }
 
-.cdkDragHandle {
-}
-
 input[type="file"] {
   display: none;
   margin: 10px;
@@ -156,10 +147,6 @@ input[type="file"] {
   outline: 2px solid $brand_core;
   z-index: 10;
   // box-shadow: 0 0 6px 2px $light7;
-}
-
-.card-draggable:not(.active-widget) {
-  // box-shadow: 0 0 3px 1px $light3;
 }
 
 h3 {
@@ -237,6 +224,7 @@ nx-select {
   display: flex;
   align-items: center;
   user-select: none;
+  height: 40px;
 
   &.active,
   &:active {
@@ -280,4 +268,50 @@ nx-editable-heading {
   max-width: calc(100% - 16px);
   margin-left: 12px;
   margin-bottom: 12px;
+}
+
+.menu-heading {
+  display: flex;
+  align-items: center;
+}
+
+.settings-icon {
+  cursor: pointer;
+  margin: 0 12px 12px 0;
+}
+
+.settings-menu {
+  position: absolute;
+  background: $light4;
+  min-width: 240px;
+  top: 0;
+  left: 100%;
+  height: calc(100vh - 48px);
+  box-shadow: 6px 0 6px -6px $light7;
+
+  & > .settings-heading {
+    display: flex;
+    align-items: center;
+    padding-top: 8px;
+
+    & > h3 {
+      @include typography.medium20dark9;
+      margin: 8px 0 16px 16px;
+      width: 100%;
+    }
+  }
+
+  & > .dashboard-actions {
+    padding: 4px 0;
+
+    & > .menu-item {
+      text-decoration: none !important;
+
+      &:hover,
+      &:active {
+        background: $light7 !important;
+        color: $dark9 !important;
+      }
+    }
+  }
 }

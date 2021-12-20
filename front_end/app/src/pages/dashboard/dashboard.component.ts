@@ -94,6 +94,7 @@ export class NxDashboardComponent implements DashboardGroup {
     loading = false;
     hidePreview = false;
     editingTitle = false;
+    showSettings = false;
     downloadFileName;
     activeAction;
 
@@ -458,6 +459,7 @@ export class NxDashboardComponent implements DashboardGroup {
     }
 
     toggleDragEnabled(enabled) {
+        this.showSettings &&= enabled;
         this.dragEnabled = enabled;
         if (!enabled) {
             this.cards.forEach(card => {
