@@ -65,18 +65,19 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
 
     bookmarks$ = this.updater$.pipe(
         tap(this.toggleLoading),
-        switchMap(_ => this.system.getBookmarks()),
-        map(getMockBookmarks),
-        switchMap(async(bookmarks) => {
+        switchMap(async (_) => {
             if (!this.system.mediaserver.authGet) {
                 await this.system.updateSystemAuth();
             }
-            return bookmarks.map(bookmark => {
-                const thumbnail = this.system.serverManager.getPreviewUrl(bookmark.deviceId, bookmark.startTimeMs, 800, 800, 0, this.system.mediaserver.authGet);
-                return { ...bookmark, thumbnail };
-            });
         }),
-        catchError(_ => Promise.resolve(getMockBookmarks())),
+        switchMap(_ => this.system.getBookmarks()),
+        // map(getMockBookmarks), Use in case you want to demo when no bookmarks
+        switchMap(async (bookmarks) => bookmarks.map(bookmark => {
+            const thumbnail = this.system.serverManager.getPreviewUrl(bookmark.deviceId, bookmark.startTimeMs, 800, 800, 0, this.system.mediaserver.authGet);
+            return { ...bookmark, thumbnail };
+        })
+        ),
+        catchError(_ => Promise.resolve([])), // Promise.resolve(getMockBookmarks()) if demo
         tap(this.toggleLoading)
     ) as Observable<BookmarkWithOpener[]>;
 

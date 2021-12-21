@@ -671,7 +671,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             rotate?: number;
         } = {
             cameraId: this.cleanId(cameraId),
-            auth
+            auth: auth || this.authGet
         };
         let endpoint = '/web/ec2/cameraThumbnail';
 

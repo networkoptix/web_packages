@@ -19,12 +19,13 @@
 
 <div class="bookmarks-wrapper">
     <div *ngIf="!card.editMode && card.config.selectedSystem; else editMode">
-        <h4 [ngClass]="{'animate-rotation':loading}">
+        <h4 [ngClass]="{'animate-rotation': loading}">
             <span>{{selectedSystem?.name}}</span>
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'reload.svg'" (click)="refreshData()"
                 [svgStyle]="{'width.px': '20', 'height.px': '20', 'margin.px': '4'}" [applyClass]="true"></svg-icon>
         </h4>
         <cdk-accordion *ngIf="(bookmarks$ | async) as bookmarks; else preloader">
+            <div *ngIf="!bookmarks.length">No bookmarks</div>
             <cdk-accordion-item *ngFor="let bookmark of bookmarks; let index = index" #accordionItem="cdkAccordionItem">
                 <section class="bookmark-wrapper" [ngClass]="{'active':accordionItem.expanded}">
                     <header (click)="accordionItem.toggle()" class="bookmark-heading"
