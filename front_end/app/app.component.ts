@@ -1,30 +1,33 @@
 import {
-    Component, HostListener, Inject,
-    ViewEncapsulation, ViewChild, ElementRef
+    Component,
+    HostListener,
+    Inject,
+    ViewEncapsulation,
+    ViewChild,
+    ElementRef,
 } from '@angular/core';
 import {
-    ActivationEnd, ActivatedRoute, ActivationStart, Event,
-    GuardsCheckEnd, GuardsCheckStart, Router
+    ActivationEnd,
+    ActivationStart,
+    Event,
+    GuardsCheckEnd,
+    GuardsCheckStart,
+    Router,
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import type { DeviceInfo } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
-import {
-    debounceTime,
-    filter
-} from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 
-import { NxRibbonService } from '@components/ribbon';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
@@ -37,22 +40,33 @@ require('./scripts/vendor/protocolcheck');
     selector: 'nx-app',
     template: `
         <div *ngIf="!reauthorizing" class="headerContainer">
-            <nx-header *ngIf="(appStateService.ready || environment.isLocal) && !CONFIG.browserNotSupported"></nx-header>
+            <nx-header *ngIf="
+                (appStateService.ready || environment.isLocal) &&
+                !CONFIG.browserNotSupported
+            "></nx-header>
             <nx-ribbon></nx-ribbon>
         </div>
-        <div class="outerContainer"
-             *ngIf="appStateService.ready || reauthorizing"
-            [ngStyle]="{ 'height': appStateService.appContainerHeight }">
-            <div class="mainContainer" [ngClass]="{
-                altMainBackground: appStateService.altBackground
-            }" nxScrollHelper #mainContainer>
+        <div
+            class="outerContainer"
+            *ngIf="appStateService.ready || reauthorizing"
+            [ngStyle]="{ 'height': appStateService.appContainerHeight }"
+        >
+            <div
+                class="mainContainer"
+                [ngClass]="{ altMainBackground: appStateService.altBackground }"
+                nxScrollHelper
+                #mainContainer
+            >
                 <nx-cookie-banner></nx-cookie-banner>
                 <router-outlet></router-outlet>
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
             <nx-overlay-modal *ngIf="appStateService.ready && environment.isLocal"></nx-overlay-modal>
-            <nx-pre-loader type="page" *ngIf="(!appStateService.ready && !newSystem) || loading"></nx-pre-loader>
+            <nx-pre-loader
+                type="page"
+                *ngIf="(!appStateService.ready && !newSystem) || loading"
+            ></nx-pre-loader>
             <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
         </ng-container>`,
     styleUrls: ['./app.component.scss'],
@@ -60,8 +74,8 @@ require('./scripts/vendor/protocolcheck');
 })
 
 export class AppComponent {
-    deviceInfo: any;
-    browserBlacklist: {};
+    deviceInfo: DeviceInfo;
+    browserBlacklist: Record<string, number>;
     isInIframe: boolean;
     newSystem: boolean;
     loading: boolean;
@@ -77,16 +91,12 @@ export class AppComponent {
         configService: NxConfigService,
         public appStateService: NxAppStateService,
         public systemGuard: SystemGuard,
-        private cloudApiService: NxCloudApiService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
-        private route: ActivatedRoute,
-        private ribbonService: NxRibbonService,
         private uriService: NxUriService,
-        private pageService: NxPageService,
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
@@ -100,7 +110,11 @@ export class AppComponent {
         const code = url.searchParams.get('code');
         if (!this.environment.isLocal && auth) {
             this.accountService.handleAuthKeyLogin(auth);
-        } else if (!this.environment.isLocal && code && !url.toString().includes('cloud-authorize')) {
+        } else if (
+            !this.environment.isLocal &&
+            code &&
+            !url.toString().includes('cloud-authorize')
+        ) {
             this.accountService.handleCodeLogin(code);
         } else {
             this.appStateService.ready = true;
@@ -123,16 +137,19 @@ export class AppComponent {
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        let browserMatchVersion = this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
+        let browserMatchVersion =
+            this.browserBlacklist[this.deviceInfo.browser.toLowerCase()] || 0;
 
         // Special case for Kyle's robot tests
         // ... device detector doesn't detect it correctly
-        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
+        if (this.deviceInfo.userAgent.includes('HeadlessChrome')) {
             browserMatchVersion = undefined;
         }
 
         if (browserMatchVersion !== undefined) {
-            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
+            const majorVersion = Number(
+                this.deviceInfo.browser_version.split('.')[0]
+            );
 
             if (majorVersion < browserMatchVersion) {
                 this.router.navigate(['/browser'])
@@ -172,13 +189,19 @@ export class AppComponent {
         }
         // in case user switches to a different system before setting up reset system again
         this.localStorageService.store('resetServer', false);
-        this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
+        this.scrollMechanicsService.setWindowSize(
+            window.innerHeight,
+            window.innerWidth
+        );
 
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);
 
         // Route check if page is displayed inside an iframe
-        this.CONFIG.isInIframe = (this.window.location.pathname.indexOf('/embed') === 0 || this.window.location.search.indexOf('adminPreview=true') !== -1);
+        this.CONFIG.isInIframe = (
+            this.window.location.pathname.startsWith('/embed') ||
+            this.window.location.search.includes('adminPreview=true')
+        );
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
@@ -187,8 +210,16 @@ export class AppComponent {
         // Updates query params for components without routes.
         this.router.events
             .pipe(
-                filter((event: Event) => event instanceof ActivationStart || event instanceof ActivationEnd || event instanceof GuardsCheckStart || event instanceof GuardsCheckEnd)
-            ).subscribe((event: ActivationStart | ActivationEnd | GuardsCheckStart | GuardsCheckEnd) => {
+                filter((event: Event) => event instanceof ActivationStart ||
+                    event instanceof ActivationEnd ||
+                    event instanceof GuardsCheckStart ||
+                    event instanceof GuardsCheckEnd
+                )
+            ).subscribe((event: ActivationStart |
+                ActivationEnd |
+                GuardsCheckStart |
+                GuardsCheckEnd
+            ) => {
                 if (event instanceof GuardsCheckStart) {
                     this.loading = true;
                     return;
@@ -207,9 +238,14 @@ export class AppComponent {
                 }
             });
 
-        fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
-            this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
-        });
+        fromEvent(window, 'resize')
+            .pipe(debounceTime(100))
+            .subscribe((event: FocusEvent) => {
+                this.scrollMechanicsService.setWindowSize(
+                    (event.target as Window).innerHeight,
+                    (event.target as Window).innerWidth
+                );
+            });
     }
 
     @HostListener('window:popstate')
