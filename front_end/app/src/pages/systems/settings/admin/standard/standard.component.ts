@@ -77,6 +77,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     is2faDialogActive: Promise<any>;
     system2faEnabled = false;
     settingsWatchersSet = false;
+    canChange2fa = false;
 
     systemAndSecuritySettings = {
         autoDiscoveryEnabled: false,
@@ -215,12 +216,21 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                         this.sessionLimitToggle = false;
                     }
                 });
-
-            this.systemSettingsFormWatcher = this.applyService.createFormWatcher(
-                'systemSettingsForm',
-                this.systemSettingsForm,
-                this.saveSettings);
         });
+    }
+
+    private updateSettings() {
+        const sw = this.systemAndSecuritySettings;
+        // handle sessionLimitMinutes when saving an empty value
+        if (this.timeValue === null || this.timeValue === 0) {
+            this.sessionLimitToggle = false;
+            sw.sessionLimitMinutes = 0;
+        } else {
+            this.divideTimeValue(sw.sessionLimitMinutes);
+        }
+        const changes = { ...sw };
+
+        return this.system.updateOrGetSystemSettings(changes).toPromise();
     }
 
     initProcess(): void {
@@ -233,20 +243,17 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         };
 
         this.saveSettings = this.processService.createProcess(() => {
-            const sw = this.systemAndSecuritySettings;
-            // handle sessionLimitMinutes when saving an empty value
-            if (this.timeValue === null || this.timeValue === 0) {
-                this.sessionLimitToggle = false;
-                sw.sessionLimitMinutes = 0;
+            if (this.applyService.forms.securitySettingsForm.changedFields.has('mandatory2fa')) {
+                return this.handleMandatory2fa().finally(() => {
+                    if (this.applyService.forms.securitySettingsForm.changedFields.size > 1) {
+                        return this.updateSettings();
+                    } else {
+                        return Promise.resolve();
+                    }
+                });
             } else {
-                this.divideTimeValue(sw.sessionLimitMinutes);
+                return this.updateSettings();
             }
-            const changes = {};
-            Object.keys(sw).forEach(key => {
-                changes[key] = sw[key];
-            });
-
-            return this.system.updateOrGetSystemSettings(changes).toPromise();
         });
     }
 
@@ -298,18 +305,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     // handle mandatory 2fa
-    handleMandatory2fa() {
+    async handleMandatory2fa(): Promise<any> {
         if (this.is2faDialogActive) {
             return;
         }
 
-        this.is2faDialogActive = this.dialogService.toggleSystem2fa(this.system, this.system2faEnabled).then((res) => {
-            if (!res || res === 'cancel') {
-                this.system2faEnabled = !this.system2faEnabled;
-            }
-        }).finally(() => {
-            this.is2faDialogActive = undefined;
-        });
+        // @ts-ignore
+        this.is2faDialogActive = await this.dialogService
+            .toggleSystem2fa(this.system, this.system2faEnabled)
+            .then((res) => {
+                if (!res || res === 'cancel') {
+                    this.system2faEnabled = !this.system2faEnabled;
+                    this.applyService.forms.securitySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;
+                }
+            }).finally(() => {
+                this.is2faDialogActive = undefined;
+                return Promise.resolve();
+            });
     }
 
     // Alexa Methods

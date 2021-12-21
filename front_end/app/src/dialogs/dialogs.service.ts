@@ -606,7 +606,7 @@ export class NxDialogsService {
         return this.createModal(TwoFAModalContent, options, params);
     }
 
-    public toggleSystem2fa(system: NxSystem, system2faEnabled: boolean) {
+    public toggleSystem2fa(system: NxSystem, system2faEnabled: boolean): Promise<any> {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static'

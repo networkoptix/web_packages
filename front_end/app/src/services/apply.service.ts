@@ -36,7 +36,8 @@ export type extNgForm = {
     originalForm: {},
     save: Process,
     discard: () => void,
-    hasChange: boolean
+    hasChange: boolean,
+    changedFields: Set<string>
 }
 
 /**
@@ -147,7 +148,7 @@ export class FormWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(false);
     changed: boolean;
-    identity: Symbol
+    identity: Symbol;
 
     get value() {
         return this.valueSubject.value;
@@ -410,6 +411,7 @@ export class NxApplyService {
                 .forEach((key) => {
                     const item = forms[key];
                     item.hasChange = false;
+                    item.changedFields.clear();
 
                     const form = item.form.form;
                     Object.keys(form.controls).forEach((key) => {
@@ -431,6 +433,7 @@ export class NxApplyService {
                     const item = forms[key];
                     if (item.hasChange) {
                         item.hasChange = false;
+                        item.changedFields.clear();
 
                         Object.keys(item.originalForm).forEach((key) => {
                             item.form.form.controls[key].setValue(item.originalForm[key]);
@@ -486,7 +489,8 @@ export class NxApplyService {
                 originalForm: initialForm,
                 save: saveFunction,
                 discard: discardFunction,
-                hasChange: false
+                hasChange: false,
+                changedFields: new Set(),
             };
 
             extNgForm.form.valueChanges
@@ -517,10 +521,16 @@ export class NxApplyService {
                             });
                     }
 
-                    const hasChange = !NxUtilsService.isEqual(extNgForm.originalForm, change);
-                    extNgForm.hasChange = hasChange;
+                    extNgForm.changedFields.clear();
+                    Object.keys(extNgForm.originalForm).forEach(key => {
+                        if (extNgForm.originalForm[key] !== change[key]) {
+                            extNgForm.changedFields.add(key);
+                        }
+                    });
+                    extNgForm.hasChange = (extNgForm.changedFields.size > 0);
+
                     if (this.applyComponentRef) {
-                        this.applyComponentInstance.show = hasChange;
+                        this.applyComponentInstance.show = extNgForm.hasChange;
                         const hasInvalid = Object.keys(this.applyComponentInstance.forms).some(key => this.applyComponentInstance.forms[key].form.invalid);
                         this.applyComponentInstance.setInvalid(hasInvalid);
                     }

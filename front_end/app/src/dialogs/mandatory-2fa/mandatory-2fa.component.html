@@ -4,7 +4,7 @@
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -27,7 +27,7 @@
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">
-            <div class="close-content"><span class="close-icon"></span></div>
+            <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
@@ -39,15 +39,18 @@
                    [translateParams]="{numUsers: usersWithout2fa}"></p>
                 <span translate>Enter verification code from your authentication app to continue</span><span>.</span>
             </div>
-            <input class="form-control"
+            <input class="form-control" #verificationCodeInput="ngModel"
                    [(ngModel)]="verificationCode"
+                   (ngModelChange)="notAuthorized = false"
                    id="verificationCode"
                    name="verificationCode"
-                   required nxFocusMe>
-            <p class="help-block"
-               *ngIf="!mandatory2faForm.controls['verificationCode']?.valid && mandatory2faForm.controls['verificationCode']?.touched">
-                    <span class="input-error" translate>Code is required</span>
-            </p>
+                   required nxFocusMe autocomplete="off">
+            <ng-container *ngIf="verificationCodeInput.invalid">
+                <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
+                <div class="input-error"
+                     *ngIf="!verificationCodeInput.pristine && verificationCodeInput.errors?.required"
+                     [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
+            </ng-container>
         </div>
     </div>
     <div class="modal-footer">

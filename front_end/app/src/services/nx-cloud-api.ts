@@ -188,7 +188,7 @@ export class NxCloudApiService {
     }
 
     toggle2faForSystem(systemId, totp) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/toggle2fa', { systemId, totp });
+        return this.http.post(this.CONFIG.apiBase + '/systems/toggle2fa', { systemId, totp }).toPromise();
     }
 
     getStaticLanding() {

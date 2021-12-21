@@ -145,7 +145,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private toastService: NxToastService,
         private clipboardService: ClipboardService,
         private systemsService: NxSystemsService,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;

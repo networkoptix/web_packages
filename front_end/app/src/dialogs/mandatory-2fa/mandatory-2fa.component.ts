@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Renderer2, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -27,6 +28,10 @@ export class Mandatory2faModalContent {
     verificationCode: string;
     showError = false;
 
+    public notAuthorized: boolean;
+
+    @ViewChild('mandatory2faForm') mandatory2faForm: NgForm;
+
     // TODO: get the number of user's without 2fa for system
     usersWithout2fa = 0;
 
@@ -37,7 +42,8 @@ export class Mandatory2faModalContent {
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        private renderer: Renderer2,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -53,26 +59,37 @@ export class Mandatory2faModalContent {
             delay: this.CONFIG.alertTimeout
         };
         this.mandatory2fa = this.processService
-            .createProcess(
-                () => this.cloudApiService.toggle2faForSystem(
+            .createProcess(() => {
+                return this.cloudApiService.toggle2faForSystem(
                     this.system.id,
                     this.verificationCode
-                ).toPromise(),
-                { ignoreError: true },
-                () => {
-                    this.system.currentServerNotBusy = true;
-                    this.activeModal.close('success');
-                    options.classname = this.CONFIG.toast.success;
-                    const successMessage = this.system2faEnabled
-                        ? this.LANG.dialogs.message.system2faEnabled()
-                        : this.LANG.dialogs.message.system2faDisabled();
-                    this.toastService.show(successMessage, options);
-                },
-                () => {
+                );
+            }, {
+                ignoreUnauthorized: true,
+                ignoreError: true,
+                errorCodes: {
+                    badRequest: () => {
+                        this.notAuthorized = true;
+                        this.mandatory2faForm.controls.verificationCode.markAsTouched();
+                        this.mandatory2faForm.controls.verificationCode.setErrors({ invalid: true });
+                        this.renderer.selectRootElement('#verificationCode').focus();
+                    }
+                }
+            }, () => {
+                this.system.currentServerNotBusy = true;
+                this.activeModal.close('success');
+                options.classname = this.CONFIG.toast.success;
+                const successMessage = this.system2faEnabled
+                    ? this.LANG.dialogs.message.system2faEnabled()
+                    : this.LANG.dialogs.message.system2faDisabled();
+                this.toastService.show(successMessage, options);
+            // });
+            }, (err) => {
+                if (!err.resultCode) {
                     this.system.currentServerNotBusy = true;
                     this.showError = true;
                 }
-            );
+            });
     }
 
     close() {
