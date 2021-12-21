@@ -48,7 +48,7 @@
     "RESERVED NONSYSTEM TOOLTIP": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest zbyt mała, a dostępne są inne większe lokalizacje.",
     "RESERVED SYSTEM TOOLTIP": "Ta lokalizacja nie może być używana do nagrywania, ponieważ jest na dysku systemowym, a dostępne są inne większe lokalizacje.",
     "REINDEX TOOLTIP FIRST": "Indeksowanie znacznie zwiększa obciążenie dysków.",
-    "REINDEX TOOLTIP SECOND": "You can cancel it anytime without data loss.",
+    "REINDEX TOOLTIP SECOND": "Możesz to anulować w dowolnym momencie bez utraty danych.",
     "REINDEXING MAIN": "Indeksowanie głównego archiwum...",
     "REINDEXING BACKUP": "Indeksowanie zapasowego archiwum...",
     "REINDEX ARCHIVE MSG TEXT": "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)",

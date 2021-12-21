@@ -678,9 +678,9 @@
         "successRename": "Nazwa serwera została zapisana."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information"
+        "View": "Widok",
+        "Settings": "Ustawienia",
+        "Information": "Informacje"
     },
     "system": {
         "connected": "Połączony",
