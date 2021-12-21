@@ -90,7 +90,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
             this.innerValue.push(item.id);
         }
 
-        item.selected = (this.innerValue.indexOf(item.id) > -1);
+        item.selected = this.innerValue.includes(item.id);
         this.updateModel();
 
         // break anchor nav event
@@ -112,7 +112,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     updateItems() {
         this.items.forEach((item: any) => {
             item.selected = (this.innerValue !== undefined)
-                ? (this.innerValue.indexOf(item.id) > -1)
+                ? this.innerValue.includes(item.id)
                 : false;
         });
 

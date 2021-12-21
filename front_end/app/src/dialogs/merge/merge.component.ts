@@ -880,10 +880,10 @@ export class MergeModalContent {
             stateOfHealth = 'Incompatible';
         }
 
-        if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
+        if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.includes('offline')) {
             return this.systemOffline;
         }
-        if ((Object.prototype.hasOwnProperty.call(system, 'isAvailable') && !system.isAvailable) || stateOfHealth.indexOf('unavailable') > -1) {
+        if ((Object.prototype.hasOwnProperty.call(system, 'isAvailable') && !system.isAvailable) || stateOfHealth.includes('unavailable')) {
             return this.secondarySystemUnavailable;
         }
         if (Object.prototype.hasOwnProperty.call(system, 'canMerge') && !system.canMerge) {

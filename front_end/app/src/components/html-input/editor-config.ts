@@ -16,12 +16,12 @@ export const DEFAULT_EDITOR_CONFIG = {
     relative_urls: false,
     images_dataimg_filter: () => false,
     paste_preprocess: (plugin, args) => {
-        const isImage = args.content.indexOf('img') !== -1;
+        const isImage = args.content.includes('img');
         const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
         function replaceElements(matched, tagName) {
-            if (validPasteElements.indexOf(tagName) === -1) {
+            if (!validPasteElements.includes(tagName)) {
                 return '';
             }
             return matched;
@@ -40,7 +40,7 @@ export const DEFAULT_EDITOR_CONFIG = {
 
         const { settings, documentBaseURI } = this as any; // Callback gets attached to JE instance
         // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-        if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.indexOf('file:') === 0) {
+        if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.startsWith('file:')) {
             return url;
         }
 
@@ -95,7 +95,7 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
 
     for (let i = 0; i < items.length; i++) {
         // Skip content if not image
-        if (items[i].type.indexOf('image') === -1) continue;
+        if (!items[i].type.includes('image')) continue;
         // Retrieve image on clipboard as blob
         const blob = items[i].getAsFile();
 

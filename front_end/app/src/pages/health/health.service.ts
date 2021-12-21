@@ -181,7 +181,7 @@ export class NxHealthService {
 
         function filterItem(c, queryTerms) {
             return queryTerms.every(queryTerm => {
-                if (queryTerm.indexOf('-') > -1) {
+                if (queryTerm.includes('-')) {
                     // If dash in query -> perform exact match
                     return (c.searchTags.includes(queryTerm));
                 } else {

@@ -67,7 +67,7 @@ export class IntegrationService implements OnDestroy {
     }
 
     formatVersion(elm) {
-        if (!elm || elm && elm !== '' && elm.indexOf('v.') !== 0) {
+        if (!elm || elm && elm !== '' && !elm.startsWith('v.')) {
             elm = (elm) ? 'v.&nbsp;' + elm : '';
         }
 
@@ -185,7 +185,7 @@ export class IntegrationService implements OnDestroy {
                 .platforms
                 .find(platform => {
                     // 32 or 64 bit? ... it doesn't matter :)
-                    return platform.toLowerCase().indexOf(icon.name) > -1;
+                    return platform.toLowerCase().includes(icon.name);
                 });
             if (platform) {
                 platformIcons.push({ name: platform, src: icon.src });

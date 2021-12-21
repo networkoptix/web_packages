@@ -253,7 +253,7 @@ export class NxUtilsService {
             server.ip = ip;
             server.port = port || '';
         } else if (addresses.ipv6.length > 0) {
-            if (addresses.ipv6[0].indexOf('[') === 0) {
+            if (addresses.ipv6[0].startsWith('[')) {
                 const [ip, port] = addresses.ipv6[0].split(']:');
                 server.ip = ip.substring(1);
                 server.port = port || '';

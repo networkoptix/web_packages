@@ -116,8 +116,10 @@ export class NxGenericDropdown extends BaseDropdown {
         }
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected && changes.selected.currentValue) {
-            if (changes.selected.currentValue.help &&
-                changes.selected.currentValue.name.indexOf('additional-help') === -1) {
+            if (
+                changes.selected.currentValue.help &&
+                !changes.selected.currentValue.name.includes('additional-help')
+            ) {
                 changes.selected.currentValue.name +=
                     `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }

@@ -49,7 +49,7 @@ export class NxSearchService {
         }
 
         if (model.queryStartsWith) {
-            return (_searchFor.indexOf(model.queryStartsWith) === 0);
+            return (_searchFor.startsWith(model.queryStartsWith));
             // queryStartsWith have only one item
         }
 
@@ -85,7 +85,7 @@ export class NxSearchService {
         }
 
         // "WILDCARD" match
-        if (model.query.indexOf('*') === 0) {
+        if (model.query.startsWith('*')) {
             model.queryEndsWith = [model.query.substring(1).toLowerCase()];
             return;
         }

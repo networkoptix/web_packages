@@ -711,6 +711,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
+        return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 }

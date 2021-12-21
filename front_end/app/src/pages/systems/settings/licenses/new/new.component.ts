@@ -82,7 +82,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         }
 
                         const error = response.errorString.toLowerCase();
-                        const matchError = errorString => error.indexOf(errorString) !== -1;
+                        const matchError = errorString => error.includes(errorString);
 
                         switch (response.error) {
                             case '1':

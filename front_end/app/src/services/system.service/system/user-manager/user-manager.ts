@@ -65,7 +65,7 @@ export class UserManager {
 
     isAdmin(user: NxSystemRole) {
         return user.permissions &&
-            user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
+            user.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
     }
 
     isEmptyGuid(guid?: string) {

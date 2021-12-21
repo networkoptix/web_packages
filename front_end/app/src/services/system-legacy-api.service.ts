@@ -177,7 +177,7 @@ export class NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
+        return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
 
     protected get<ResponseType = any>(
@@ -390,7 +390,7 @@ export class NxSystemAPI {
             userName: login
         };
         if (url) {
-            if (url.indexOf('http') < 0) {
+            if (!url.includes('http')) {
                 url = 'http://' + url;
             }
             params.url = url;
@@ -552,7 +552,7 @@ export class NxSystemAPI {
                     'GET'
                 );
 
-                if (url.indexOf('http') !== 0) {
+                if (!url.startsWith('http')) {
                     url = 'http://' + url;
                 }
 
@@ -1205,7 +1205,7 @@ export class NxSystemAPI {
     setCameraPath(cameraId: string) {
         let systemLink = '';
         const route =
-            this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
+            this.location.path().startsWith('/embed') ? '/embed/' : '';
 
         if (this.systemId) {
             if (route !== '') {

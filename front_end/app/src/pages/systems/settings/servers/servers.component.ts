@@ -80,9 +80,10 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 .replace('%7B', '{')
                 .replace('%7D', '}');
 
-            if (this.serverIdFromParams.indexOf('?') > -1) {
+            if (this.serverIdFromParams.includes('?')) {
                 this.serverIdFromParams = this.serverIdFromParams.substring(
-                    0, this.serverIdFromParams.indexOf('?')
+                    0,
+                    this.serverIdFromParams.indexOf('?')
                 );
             }
 

@@ -155,8 +155,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
         const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.name || node.display_name;
-        const nodeIndex = this.openNodes.indexOf(name);
-        if (nodeIndex === -1) {
+        if (!this.openNodes.includes(name)) {
             this.openNodes.push(name);
         } else {
             this.openNodes = this.openNodes.filter(filterTree(name));

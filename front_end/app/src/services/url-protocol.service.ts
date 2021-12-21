@@ -31,16 +31,16 @@ export class NxUrlProtocolService {
         const search = this.window.location.search.replace('?', '').split('&');
 
         let fromLocation = '';
-        const from       = search.find((param) => {
-            return param.indexOf('from') >= 0;
+        const from = search.find((param) => {
+            return param.includes('from');
         });
         if (from) {
             fromLocation = from.split('=')[1];
         }
 
         let contextParam = '';
-        const context    = search.find((param) => {
-            return param.indexOf('context') >= 0;
+        const context = search.find((param) => {
+            return param.includes('context');
         });
         if (context) {
             contextParam = from.split('=')[1];
