@@ -56,7 +56,7 @@ Force Tags        cloud
     Wait until element is visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
-    Click Element    ${LARGE CREATE ACCOUNT BUTTON}
+    Click Element    //header
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
 5. Anonymous: Different page widths

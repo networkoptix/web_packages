@@ -158,6 +158,10 @@ Clear Register Fields
 
     Clear Register Fields
     Press Keys    None    TAB
+    Element Should Be Focused    ${REGISTER LOG IN BUTTON}
+    Press Keys    None    TAB
+    Element Should Be Focused    ${REGISTER BACK BUTTON}
+    Press Keys    None    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
     Press Keys    None    ENTER
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //nx-register-component//span[(text()='${EMAIL IS REQUIRED TEXT}')]
