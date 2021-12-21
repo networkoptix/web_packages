@@ -51,7 +51,7 @@ ${ACCOUNT DOES NOT EXIST}             //nx-authorize-component//p[contains(text(
 ${YOU CAN CREATE AN ACCOUNT}          //nx-authorize-component//p[contains(text(),'${YOU CAN CREATE ACCOUNT TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
 ${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
-${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST}"]
+${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST TEXT}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
