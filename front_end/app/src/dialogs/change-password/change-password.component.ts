@@ -68,19 +68,19 @@ export class ChangePasswordModalContent {
                         return Promise.reject('dontMatch');
                     }
 
-                    return this.system.userManager
-                        .authCurrentUser('admin', this.currentPasswordForUser)
-                        .then(response => {
-                            if (!response.reply) {
-                                this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
-                                this.renderer.selectRootElement('#currentPassword').focus();
-                                return Promise.reject('wrongPassword');
-                            }
-
-                            return this.system
-                                .saveUser(this.user, this.user.role)
-                                .then(() => this.closeModal(true));
-                        });
+                    return this.system.mediaserver.loginToken(
+                        'admin',
+                        this.currentPasswordForUser,
+                        true
+                    ).toPromise().then(() => {
+                        return this.system
+                            .saveUser(this.user, this.user.role)
+                            .then(() => this.closeModal(true));
+                    }, () => {
+                        this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
+                        this.renderer.selectRootElement('#currentPassword').focus();
+                        return Promise.reject('wrongPassword');
+                    });
                 }
 
                 return this.system
