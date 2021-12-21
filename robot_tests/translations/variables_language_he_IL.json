@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "אין אפשרות לשתף את המערכת:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "שינוי הרשאות של המשתמש אינו מאופשר",
     "EMAIL IS ALREADY REGISTERED TEXT": "דוא\"ל זה כבר נרשם במערכת %SYSTEM%",
-    "RESET SUCCESS MESSAGE TEXT": "סיסמא חדשה נשמרה",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "החשבון שלך נשמר בהצלחה",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "שם המערכת נשמר",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "הפעל את חשבונך",
     "RESET PASSWORD EMAIL SUBJECT": "אפס את סיסמתך",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "מערכת הווידאו {{message.system_name}} שותפה איתך",
     "DISCONNECT FORM HEADER TEXT": "נתק את מערכת מ %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Address",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS SPACE TEXT": "Space",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "נדרש שם פרטי",
+    "LAST NAME IS REQUIRED TEXT": "נדרש שם משפחה",
+    "EMAIL IS REQUIRED TEXT": "נדרש דוא\"ל",
+    "PASSWORD IS REQUIRED TEXT": "נדרשת סיסמא"
 }

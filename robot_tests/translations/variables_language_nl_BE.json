@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "Kan het systeem niet delen:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Het wijzigen van eigen machtigingen is niet toegestaan",
     "EMAIL IS ALREADY REGISTERED TEXT": "Deze e-mail is al geregistreerd in het %SYSTEM% systeem",
-    "RESET SUCCESS MESSAGE TEXT": "Nieuw wachtwoord opgeslagen",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Uw account is succesvol opgeslagen",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account geactiveerd!",
     "SYSTEM NAME SAVED": "Systeemnaam opgeslagen",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report-kijker",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Account activeren",
     "RESET PASSWORD EMAIL SUBJECT": "Uw wachtwoord opnieuw instellen",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "Videosysteem {{message.system_name}} is met u gedeeld",
     "DISCONNECT FORM HEADER TEXT": "Ontkoppel het systeem van %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Vereist",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Opslag verouderd. Herlaad pagina om te updaten.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Adres",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Ruimte"
+    "STORAGE LOCATIONS SPACE TEXT": "Ruimte",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "Voornaam is verplicht",
+    "LAST NAME IS REQUIRED TEXT": "Achternaam is verplicht",
+    "EMAIL IS REQUIRED TEXT": "E-mail is vereist",
+    "PASSWORD IS REQUIRED TEXT": "Wachtwoord is vereist"
 }

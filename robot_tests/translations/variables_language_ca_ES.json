@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "No es pot compartir el sistema:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "No es permet canviar els permisos propis",
     "EMAIL IS ALREADY REGISTERED TEXT": "Aquest email ja s'ha registrat al sistema %SYSTEM%",
-    "RESET SUCCESS MESSAGE TEXT": "Contrasenya nova desada",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "El compte s'ha desat correctament",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "S'ha desat el nom del sistema",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Activeu el compte",
     "RESET PASSWORD EMAIL SUBJECT": "Restabliu la contrasenya",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "El sistema de vídeo {{message.system_name}} s'ha compartit amb vós",
     "DISCONNECT FORM HEADER TEXT": "Voleu desconnectar el sistema de %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Address",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS SPACE TEXT": "Space",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "El nom és obligatori",
+    "LAST NAME IS REQUIRED TEXT": "El cognom és obligatori",
+    "EMAIL IS REQUIRED TEXT": "L'email és obligatori",
+    "PASSWORD IS REQUIRED TEXT": "La contrasenya és obligatòria"
 }

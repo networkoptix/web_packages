@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "시스템을 공유 할 수 없습니다:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "자신의 사용 권한 변경은 허용 되지 않습니다.",
     "EMAIL IS ALREADY REGISTERED TEXT": "이 이메일은 이미 %SYSTEM% 시스템에 등록되었습니다.",
-    "RESET SUCCESS MESSAGE TEXT": "새 패스워드가 저장되었습니다",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "계정이 성공적으로 저장되었습니다.",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "시스템 이름 저장",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "귀하의 계정을 활성화합니다",
     "RESET PASSWORD EMAIL SUBJECT": "사용자 암호 초기화",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "비디오 시스템 {{message.system_name}} 공유 되었습니다.",
     "DISCONNECT FORM HEADER TEXT": "%PRODUCT_NAME%에서 시스템을 분리하실래요?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Address",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS SPACE TEXT": "Space",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "이름이 필요합니다",
+    "LAST NAME IS REQUIRED TEXT": "성이 필요합니다",
+    "EMAIL IS REQUIRED TEXT": "이메일이 필요합니다",
+    "PASSWORD IS REQUIRED TEXT": "암호가 필요 합니다"
 }

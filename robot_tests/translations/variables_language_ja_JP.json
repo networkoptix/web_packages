@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "システムを共有できません:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "自分のアクセス権限を変更することはできません",
     "EMAIL IS ALREADY REGISTERED TEXT": "このメールアドレスは %SYSTEM% システムに既に登録されています",
-    "RESET SUCCESS MESSAGE TEXT": "新しいパスワードが保存されました",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "アカウントは正常に保存されました",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "アカウントが有効になりました！",
     "SYSTEM NAME SAVED": "システム名は保存されました",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "ヘルスレポートビューアー",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "アカウントの有効化",
     "RESET PASSWORD EMAIL SUBJECT": "パスワードを再設定してください",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "ビデオシステムが共有されました。",
     "DISCONNECT FORM HEADER TEXT": "%PRODUCT_NAME% からシステムを切断しますか？",
     "REQUIRED TEXT": "必須",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "ストレージ情報が古くなっています。ページを再読み込みして更新してください。",
     "STORAGE LOCATIONS ADDRESS TEXT": "アドレス",
     "STORAGE LOCATIONS MODE TEXT": "モード",
-    "STORAGE LOCATIONS SPACE TEXT": "スペース"
+    "STORAGE LOCATIONS SPACE TEXT": "スペース",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "名前を入力してください",
+    "LAST NAME IS REQUIRED TEXT": "苗字を入力してください",
+    "EMAIL IS REQUIRED TEXT": "メールアドレスが必要です",
+    "PASSWORD IS REQUIRED TEXT": "パスワードが必要です"
 }

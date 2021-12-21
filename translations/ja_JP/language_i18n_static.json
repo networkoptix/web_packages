@@ -114,6 +114,7 @@
         "passResetHeader": "パスワードの再設定",
         "newPassHeader": "新しいパスワードを設定",
         "newPassConfirmText": "パスワードが設定されました。",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "システムは %CLOUD_NAME% に接続されました!",
         "loginError": "%CLOUD_NAME% に接続できません",
         "loginErrorAdditional": "再試行するか、ローカルアカウントでシステムに直接ログインしてください。",
@@ -395,7 +396,7 @@
                 "required": "二段階認証が必要です。",
                 "configure": "設定はこちらから: ",
                 "accountLink": "アカウント設定",
-                "codeRequired": "認証コードが必要です"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {

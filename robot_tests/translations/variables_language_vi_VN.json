@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "Không thể chia sẻ Hệ thống:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Không cho phép thay đổi quyền riêng tư",
     "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
-    "RESET SUCCESS MESSAGE TEXT": "Đã lưu mật khẩu mới",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Tài khoản của bạn đã được lưu thành công",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "Đã lưu tên hệ thống",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Kích hoạt tài khoản của bạn",
     "RESET PASSWORD EMAIL SUBJECT": "Đặt lại mật khẩu của bạn",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "Hệ thống video {{message.system_name}} đã được chia sẻ với bạn",
     "DISCONNECT FORM HEADER TEXT": "Hệ thống đã ngắt kết nối từ %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Address",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS SPACE TEXT": "Space",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "Họ là bắt buộc",
+    "LAST NAME IS REQUIRED TEXT": "Họ là bắt buộc",
+    "EMAIL IS REQUIRED TEXT": "Email là bắt buộc",
+    "PASSWORD IS REQUIRED TEXT": "Mật khẩu là bắt buộc"
 }

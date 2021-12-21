@@ -114,6 +114,7 @@
         "passResetHeader": "Passwort zurücksetzen",
         "newPassHeader": "Neues Passwort festlegen",
         "newPassConfirmText": "Das Passwort ist gesetzt!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "System verbunden mit %CLOUD_NAME%!",
         "loginError": "Verbindung zu %CLOUD_NAME% nicht möglich",
         "loginErrorAdditional": "Bitte versuchen Sie es erneut oder melden Sie sich direkt mit Ihrem lokalen Konto am System an.",
@@ -237,10 +238,10 @@
         "viewingOutdatedReport": "Sie sehen einen veralteten Bericht."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Bearbeitung des Dashboards ist aktiviert",
+        "dashboardLocked": "Dashboard ist gesperrt",
+        "unlockToUpload": "Dashboard zum Hochladen der Konfiguration via JSON freischalten",
+        "unlockToMove": "Dashboard entsperren, um Widgets zu verschieben"
     },
     "devConsole": {
         "create": "Erstellen"
@@ -395,7 +396,7 @@
                 "required": "Eine Zwei-Faktor-Authentifizierung ist erforderlich.",
                 "configure": "Konfiguration in Ihrer",
                 "accountLink": "Accounteinstellungen",
-                "codeRequired": "Verifizierungscode ist erforderlich"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
@@ -927,8 +928,8 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "Die Route \"{url}\" wurde nach \"{redirectUrl}\" verschoben.",
+        "defaultMessage": "Bitte aktualisieren Sie alle Links, um auf die neue Route zu verweisen.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }

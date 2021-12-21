@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "No se puede compartir el sistema:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Cambiar permisos propios no está permitido",
     "EMAIL IS ALREADY REGISTERED TEXT": "Este correo electrónico ya ha sido registrado en el sistema %SYSTEM%",
-    "RESET SUCCESS MESSAGE TEXT": "Nueva contraseña guardada",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Su cuenta se guardó con éxito",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "Nombre del sistema guardado",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Visor de informes de salud",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Activar tu cuenta",
     "RESET PASSWORD EMAIL SUBJECT": "Restablecer su contraseña",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "Sistema de video {{message.system_name}} fue compartido con usted",
     "DISCONNECT FORM HEADER TEXT": "¿Desconectar el sistema de %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Almacenamientos desactualizados. Vuelva a cargar la página para actualizar.",
     "STORAGE LOCATIONS ADDRESS TEXT": " Dirección ",
     "STORAGE LOCATIONS MODE TEXT": "Modo",
-    "STORAGE LOCATIONS SPACE TEXT": "Espacio"
+    "STORAGE LOCATIONS SPACE TEXT": "Espacio",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "Se requiere el primer nombre",
+    "LAST NAME IS REQUIRED TEXT": "Se requiere apellido",
+    "EMAIL IS REQUIRED TEXT": "Correo electronico es requerido",
+    "PASSWORD IS REQUIRED TEXT": "Se requiere contraseña"
 }

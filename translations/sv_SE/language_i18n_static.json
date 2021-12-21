@@ -114,6 +114,7 @@
         "passResetHeader": "Återställ lösenord",
         "newPassHeader": "Ange nytt lösenord",
         "newPassConfirmText": "Lösenord sparat!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "System anslutet till %CLOUD_NAME%!",
         "loginError": "Kan inte ansluta till %CLOUD_NAME%",
         "loginErrorAdditional": "Försök igen eller logga in på systemet direkt med ditt lokala konto.",
@@ -395,7 +396,7 @@
                 "required": "Tvåfaktorsautentisering krävs.",
                 "configure": "Du kan konfigurera det i din",
                 "accountLink": "kontoinställningar",
-                "codeRequired": "Verifieringskod krävs"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {

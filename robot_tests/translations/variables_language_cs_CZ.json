@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "Systém nelze sdílet:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Změna vlastních oprávnění není povolena",
     "EMAIL IS ALREADY REGISTERED TEXT": "This email has already been registered in the %SYSTEM% system",
-    "RESET SUCCESS MESSAGE TEXT": "Nové heslo uloženo",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Váš účet byl úspěšně uložen",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "Název systému byl uložen",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Health Report Viewer",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Aktivujte svůj účet",
     "RESET PASSWORD EMAIL SUBJECT": "Resetovat heslo",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "Byl s vámi sdílí video systém {{message.system_name}}",
     "DISCONNECT FORM HEADER TEXT": "Odpojit systém od %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Required",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Storages outdated. Reload page to update.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Address",
     "STORAGE LOCATIONS MODE TEXT": "Mode",
-    "STORAGE LOCATIONS SPACE TEXT": "Space"
+    "STORAGE LOCATIONS SPACE TEXT": "Space",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "Jméno je povinné",
+    "LAST NAME IS REQUIRED TEXT": "Příjmení je povinné",
+    "EMAIL IS REQUIRED TEXT": "Je vyžadován e-mail",
+    "PASSWORD IS REQUIRED TEXT": "Heslo je vyžadováno"
 }

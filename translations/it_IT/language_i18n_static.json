@@ -114,6 +114,7 @@
         "passResetHeader": "Reimpostare la password",
         "newPassHeader": "Imposta nuova password",
         "newPassConfirmText": "Password impostata!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "Sistema connesso a %CLOUD_NAME%!",
         "loginError": "Impossibile connettersi a %CLOUD_NAME%",
         "loginErrorAdditional": "Riprova o accedi al sistema direttamente con il tuo account locale.",
@@ -395,7 +396,7 @@
                 "required": "Autenticazione a due fattori obbligatoria.",
                 "configure": "Puoi configurarlo nel tuo",
                 "accountLink": "impostazioni dell'account",
-                "codeRequired": "Verification code is required"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {

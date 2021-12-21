@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "Kan inte dela System:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Ändring av egna behörigheter är inte tillåtet",
     "EMAIL IS ALREADY REGISTERED TEXT": "Det här e-postmeddelandet har redan registrerats i %SYSTEM% systemet",
-    "RESET SUCCESS MESSAGE TEXT": "Nytt lösenord sparat",
+    "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ditt konto har sparats",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Kontot aktiverat!",
     "SYSTEM NAME SAVED": "Systemnamnet sparat",
@@ -139,6 +139,7 @@
     "HEALTH VIEWER TEXT": "Visare för hälsorapporter",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "Aktivera ditt konto",
     "RESET PASSWORD EMAIL SUBJECT": "Återställ ditt lösenord",
+    "RESET PASSWORD BUTTON TEXT": "Reset Password",
     "INVITED TO SYSTEM EMAIL SUBJECT": "Videosystemet {{message.system_name}} delades med dig",
     "DISCONNECT FORM HEADER TEXT": "Koppla bort systemet från %PRODUCT_NAME%?",
     "REQUIRED TEXT": "Krävs",
@@ -514,5 +515,10 @@
     "STORAGES OUTDATED WARNING TEXT": "Lagring föråldrat. Ladda om sidan för att uppdatera.",
     "STORAGE LOCATIONS ADDRESS TEXT": "Adress",
     "STORAGE LOCATIONS MODE TEXT": "Läge",
-    "STORAGE LOCATIONS SPACE TEXT": "Utrymme"
+    "STORAGE LOCATIONS SPACE TEXT": "Utrymme",
+    "RESET SUCCESS INSTRUCTION TEXT": "Now you may continue to log in to %PRODUCT_NAME% here or elsewhere",
+    "FIRST NAME IS REQUIRED TEXT": "Förnamn krävs",
+    "LAST NAME IS REQUIRED TEXT": "Efternamn krävs",
+    "EMAIL IS REQUIRED TEXT": "E-postadress måste anges",
+    "PASSWORD IS REQUIRED TEXT": "Lösenord krävs"
 }

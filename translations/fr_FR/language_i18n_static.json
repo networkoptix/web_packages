@@ -114,6 +114,7 @@
         "passResetHeader": "Réinitialiser mot de passe",
         "newPassHeader": "Définir un nouveau mot de passe",
         "newPassConfirmText": "Mot de passe défini !",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "Système connecté à %CLOUD_NAME%!",
         "loginError": "Impossible de se connecter à %CLOUD_NAME%",
         "loginErrorAdditional": "Veuillez réessayer ou vous connecter au système directement avec votre compte local.",
@@ -395,7 +396,7 @@
                 "required": "Une authentification à deux facteurs est requise.",
                 "configure": "Vous pouvez le configurer dans votre",
                 "accountLink": "paramètres du compte",
-                "codeRequired": "Le code de vérification est requis"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {

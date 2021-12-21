@@ -114,6 +114,7 @@
         "passResetHeader": "Reset wachtwoord",
         "newPassHeader": "Stel nieuw wachtwoord in",
         "newPassConfirmText": "Wachtwoord is ingesteld!",
+        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "confirmHeader": "Systeem verbonden met %CLOUD_NAME%!",
         "loginError": "Kan geen verbinding maken met %CLOUD_NAME%",
         "loginErrorAdditional": "Probeer het opnieuw of log rechtstreeks in op het systeem met uw lokale account.",
@@ -237,10 +238,10 @@
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "Bewerken van dashboard is ingeschakeld",
+        "dashboardLocked": "Dashboard is vergrendeld",
+        "unlockToUpload": "Ontgrendel dashboard om configuratie vanuit json te uploaden",
+        "unlockToMove": "Ontgrendel dashboard om widgets te verplaatsen"
     },
     "devConsole": {
         "create": "Aanmaken"
@@ -395,7 +396,7 @@
                 "required": "Tweestapsverificatie is vereist.",
                 "configure": "U kunt het configureren in uw",
                 "accountLink": "account instellingen",
-                "codeRequired": "Verificatiecode is vereist"
+                "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
@@ -927,7 +928,7 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "message": "De route \"{url}\" is verplaatst naar \"{redirectUrl}\".",
         "defaultMessage": "Please update any links to reference the new route.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
