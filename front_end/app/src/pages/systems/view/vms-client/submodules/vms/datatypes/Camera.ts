@@ -113,8 +113,14 @@ export class Camera implements ICamera {
                 result.high = isHls ? 'hi' : high[high.length - 1];
             }
             const low = resolutions.filter(r => this._resolutionIsLow(r)).sort();
-            if (!this.disableDualStreaming && low.length) {
-                result.low = isHls ? 'lo' : low[0];
+            if (!this.disableDualStreaming) {
+                if(isHls) {
+                    result.low = 'lo'
+                } else if (low.length) {
+                    result.low = low[0];
+                } else {
+                    result.low = high[0]; // If there is no low use the lowest high stream.
+                }
             }
         }
 

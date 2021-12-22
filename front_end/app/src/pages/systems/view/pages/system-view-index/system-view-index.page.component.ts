@@ -334,7 +334,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     const serverTimeInfos = await this.system.getServerTimes();
                     this.vms.serverTimes = serverTimeInfos;
                     serverTimeInfos.forEach(sti => {
-                        const mediaServer = mediaServers.find(ms => ms.id === sti.serverId);
+                        const mediaServer = mediaServers?.find(ms => ms.id === sti.serverId);
                         if (mediaServer) {
                             mediaServer.timeInfo = sti;
                         }

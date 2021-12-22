@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { CookieService } from 'ngx-cookie-service';
-
 import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service';
 import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState';
 import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer';
 import ICamera from '../../datatypes/ICamera';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxUtilsService } from '../../../../../../../../services/utils.service';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Component({
     selector    : 'media-server-list',
@@ -41,8 +40,8 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public activeCameraId: string
 
     constructor(
+        private localStorage: LocalStorageService,
         private vms: VideoManagementSystemService,
-        protected cookieService: CookieService,
         configService: NxConfigService
     ) {
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
@@ -98,8 +97,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             this.isServerExpanded = this._mediaservers.reduce(
                 (acc, ms) => {
                     const systemId = this.vms.systemId;
-                    const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
-                    acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true;
+                    const key = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
+                    const status = this.localStorage.retrieve(key);
+                    acc[ms.id] = status ? JSON.parse(status) : true;
                     return acc;
                 },
                 {}
@@ -112,8 +112,8 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public changeServerVisibility (serverId: string) {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
         const systemId = this.vms.systemId;
-        const cookieName = `nx_system_${systemId}_server_${serverId}_expansion_status`;
-        this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]));
+        const key = `nx_system_${systemId}_server_${serverId}_expansion_status`;
+        this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
     public updateShowIP (newValue: boolean) {

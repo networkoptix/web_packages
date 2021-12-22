@@ -292,6 +292,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedQuality$.next(quality);
     }
 
+    public currentQuality(quality) {
+        return quality ? this.LANG.common.resolution[quality]?.() || quality : this.LANG.common.resolution.auto();
+    }
+
     public qualityToVerbose (q: PlaybackQuality) {
         switch (q) {
             case 'hi':
@@ -371,6 +375,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._log('polling started');
                 this.startPollingForNewlyRecordedChunks();
                 this.getRecordsInProgress = undefined;
+            }).catch(() => {
+                // Handles the case where the request for the archive times out.
+                this._log('unable to fetch the archive');
+                this.playback.restore(false);
+                setTimeout(() => {
+                    this.getRecordsInProgress = undefined;
+                    this._getRecords();
+                }, this.CONFIG.pollingTimeout);
             });
         }
 
@@ -423,12 +435,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (!response?.reply.length) {
             return [];
         }
-        return response.reply
-            .reduce((records, { periods }) => {
-                records.splice(-1, 0, ...periods);
-                return records;
-            }, [])
-            .sort((a, b) => a.startTimeMs - b.startTimeMs);
+        const records = [];
+        response.reply.forEach(({ periods }) => {
+            const chunks = periods.length;
+            const batchSize = 10000; // Arbitrary size
+            const batches = Math.ceil(chunks / batchSize);
+            // Too many chunks. So it gets split up into manageable batches for copying.
+            for (let i = 0; i < batches; ++i) {
+                const start = i * batchSize;
+                const end = Math.min((i + 1) * batchSize, periods.length) - 1;
+                records.push(...periods.slice(start, end));
+            }
+        });
+        return records.sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
     public ngAfterViewInit () {
@@ -528,7 +547,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get showTimeline (): boolean {
-        return this.camera && this.camera.hasArchive && this.canViewArchives;
+        return this.camera && this.camera.hasArchive && this.canViewArchives && this.getRecordsInProgress === undefined;
     }
 
     public get enableControls (): boolean {

@@ -17,7 +17,7 @@
     <span class="name">
       {{ camera.name }}
       (<span *ngIf="CONFIG.allowDebugMode" class="transport">{{ selectedTransport$ | async | uppercase }},&nbsp;</span>
-      <span class="quality">{{ (LANG.common.resolution[(selectedQuality$ | async)] || (selectedQuality$ | async) || LANG.common.resolution.auto)()}}</span>)
+      <span class="quality">{{ currentQuality(selectedQuality$ | async)}}</span>)
     </span>
 
     <div class="buttons">
